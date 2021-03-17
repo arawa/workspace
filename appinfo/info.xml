@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>workspace</id>
+    <name>Workspace</name>
+    <summary>It&#39;s an interface to manage groupfolders with a group manage.</summary>
+    <description><![CDATA[It&#39;s a layer additional of groupfolders app to manage them and manage group by simple users]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="baptiste.fotia@arawa.fr" >Baptiste Fotia</author>
+    <namespace>Workspace</namespace>
+    <category>files</category>
+    <bugs>https://www.arawa.fr/contact/</bugs>
+    <dependencies>
+        <nextcloud min-version="15" max-version="15"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Workspace</name>
+            <route>workspace.page.index</route>
+        </navigation>
+    </navigations>
+</info>

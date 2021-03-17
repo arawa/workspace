@@ -1,0 +1,15 @@
+{
+    "name": "Workspace",
+    "description": "It&#39;s an interface to manage groupfolders with a group manage.",
+    "type": "project",
+    "license": "AGPL",
+    "authors": [
+        {
+            "name": "Baptiste Fotia"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5.4"
+    }
+}
