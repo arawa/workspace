@@ -12,7 +12,7 @@
     <category>files</category>
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="15" max-version="15"/>
+        <nextcloud min-version="15" max-version="21"/>
     </dependencies>
     <navigations>
         <navigation>
