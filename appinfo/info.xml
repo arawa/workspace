@@ -18,6 +18,7 @@
         <navigation>
             <name>Workspace</name>
             <route>workspace.page.index</route>
+            <icon>group.png</icon>
         </navigation>
     </navigations>
 </info>
