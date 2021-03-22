@@ -1,17 +1,16 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
+use OCP\Util;
 
 class PageController extends Controller {
-	private $userId;
 
-	public function __construct($AppName, IRequest $request, $UserId){
-		parent::__construct($AppName, $request);
-		$this->userId = $UserId;
+	public function __construct(IRequest $request){
+		parent::__construct(Application::APP_ID, $request);
 	}
 
 	/**
@@ -25,7 +24,8 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		return new TemplateResponse('workspace', 'index');  // templates/index.php
+		Util::addScript(Application::APP_ID, 'workspace-main');		// js/main.js
+		return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
 }
