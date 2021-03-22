@@ -1,11 +1,12 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
+use OCP\Util;
 
 class PageController extends Controller {
 	
@@ -30,10 +31,8 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-
-		$usersManager = $this->userManager->searchDisplayName('');
-		
-		return new TemplateResponse('workspace', 'index', [ "users" => $usersManager ]);  // templates/index.php
+		Util::addScript(Application::APP_ID, 'workspace-main');		// js/main.js
+		return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
 }
