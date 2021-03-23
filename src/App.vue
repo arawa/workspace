@@ -10,6 +10,7 @@
 	<Content id="content" app-name="workspace">
 		<AppNavigation>
 			<AppNavigationNewItem
+				icon="icon-add"
 				title="New space"
 				@new-item="onNewSpace" />
 			<AppNavigationItem v-for="space in spaces"
@@ -41,7 +42,7 @@
 								<th>User</th>
 								<th>Role</th>
 								<th>Email</th>
-								<th></th>
+								<th />
 							</tr>
 						</thead>
 						<tr v-for="user in selectedSpace.users"
@@ -49,7 +50,20 @@
 							<td> {{ user.name }} </td>
 							<td> {{ user.role }} </td>
 							<td> {{ user.email }} </td>
-							<td></td>
+							<td>
+								<Actions>
+									<ActionButton
+										icon="icon-delete"
+										@click="deleteUser">
+										Delete user
+									</ActionButton>
+									<ActionButton
+										icon="icon-user"
+										@click="setUserAdmin">
+										Make administrator
+									</ActionButton>
+								</Actions>
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -59,6 +73,8 @@
 </template>
 
 <script>
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
@@ -69,6 +85,8 @@ import Content from '@nextcloud/vue/dist/Components/Content'
 export default {
 	name: 'App',
 	components: {
+		Actions,
+		ActionButton,
 		AppContent,
 		AppContentDetails,
 		AppNavigation,
