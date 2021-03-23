@@ -15,10 +15,45 @@
 			<AppNavigationItem v-for="space in spaces"
 				:key="space.name"
 				:title="space.name"
-				@click="onOpenSpace" />
+				@click="onOpenSpace(space)" />
 		</AppNavigation>
 		<AppContent>
-			<AppContentDetails />
+			<AppContentDetails>
+				<table v-if="selectedSpace === undefined">
+					<thead>
+						<tr>
+							<th>Workspace name</th>
+							<th>Administrator</th>
+							<th>Quota</th>
+						</tr>
+					</thead>
+					<tr v-for="space in spaces"
+						:key="space.name">
+						<td> {{ space.name }} </td>
+						<td> {{ adminUsers(space).join(', ') }} </td>
+						<td> {{ space.quota }} </td>
+					</tr>
+				</table>
+				<div v-else>
+					<table>
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Role</th>
+								<th>Email</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tr v-for="user in selectedSpace.users"
+							:key="user.name">
+							<td> {{ user.name }} </td>
+							<td> {{ user.role }} </td>
+							<td> {{ user.email }} </td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+			</AppContentDetails>
 		</AppContent>
 	</Content>
 </template>
@@ -44,31 +79,76 @@ export default {
 	data() {
 		// TODO: spaces should be retrieved from groupfolders' API
 		return {
+			selectedSpace: undefined,
 			spaces: [
 				{
 					name: 'spaceA',
+					users: [
+						{
+							name: 'cyrille',
+							role: 'admin',
+							email: 'cyrille@bollu.be',
+						},
+						{
+							name: 'dorianne',
+							role: 'user',
+							email: 'dorianne@arawa.fr',
+						},
+					],
 					quota: '',
 				},
 				{
 					name: 'spaceB',
+					users: [
+						{
+							name: 'cyrille',
+							role: 'admin',
+							email: 'cyrille@bollu.be',
+						},
+						{
+							name: 'baptiste',
+							role: 'admin',
+							email: 'baptiste@arawa.fr',
+						},
+						{
+							name: 'dorianne',
+							role: 'user',
+							email: 'dorianne@arawa.fr',
+						},
+					],
 					quota: '10GB',
 				},
 			],
 		}
 	},
 	methods: {
+		// Returns the list of administrators of a space
+		adminUsers(space) {
+			// eslint-disable-next-line
+			console.log('space')
+			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
+		},
 		onNewSpace() {
 			// TODO
 		},
-		onOpenSpace() {
-			// TODO
+		onOpenSpace(space) {
+			this.selectedSpace = space
 		},
 	},
 }
 </script>
 
 <style scoped>
-#app-navigation-vue {
+
+.app-navigation {
 	display: block;
 }
+
+table {
+	width: 100%;
+}
+tr:hover {
+	background-color: #f5f5f5;
+}
+
 </style>
