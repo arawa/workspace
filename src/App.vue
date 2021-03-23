@@ -7,7 +7,7 @@
   -->
 
 <template>
-	<div id="content">
+	<Content id="content" app-name="workspace">
 		<AppNavigation>
 			<AppNavigationNewItem
 				title="New space"
@@ -17,20 +17,29 @@
 				:title="space.name"
 				@click="onOpenSpace" />
 		</AppNavigation>
-	</div>
+		<AppContent>
+			<AppContentDetails />
+		</AppContent>
+	</Content>
 </template>
 
 <script>
+import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
+import Content from '@nextcloud/vue/dist/Components/Content'
 
 export default {
 	name: 'App',
 	components: {
+		AppContent,
+		AppContentDetails,
 		AppNavigation,
 		AppNavigationItem,
 		AppNavigationNewItem,
+		Content,
 	},
 	data() {
 		// TODO: spaces should be retrieved from groupfolders' API
@@ -38,9 +47,11 @@ export default {
 			spaces: [
 				{
 					name: 'spaceA',
+					quota: '',
 				},
 				{
 					name: 'spaceB',
+					quota: '10GB',
 				},
 			],
 		}
@@ -57,4 +68,7 @@ export default {
 </script>
 
 <style scoped>
+#app-navigation-vue {
+	display: block;
+}
 </style>
