@@ -2,16 +2,21 @@
 namespace OCA\Workspace\Controller;
 
 use OCP\IRequest;
+use OCP\IUserManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 
 class PageController extends Controller {
+	
 	private $userId;
 
-	public function __construct($AppName, IRequest $request, $UserId){
+	protected $userManager;
+
+	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users){
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId;
+		$this->userManager = $users;
 	}
 
 	/**
@@ -25,7 +30,10 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		return new TemplateResponse('workspace', 'index');  // templates/index.php
+
+		$usersManager = $this->userManager->searchDisplayName('');
+		
+		return new TemplateResponse('workspace', 'index', [ "users" => $usersManager ]);  // templates/index.php
 	}
 
 }
