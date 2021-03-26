@@ -3,6 +3,7 @@ namespace OCA\Workspace\Controller;
 
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IGroupManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
@@ -17,10 +18,15 @@ class PageController extends Controller {
 
 	protected $userManager;
 
-	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, GeneralManagerMiddleware $middleware){
+	protected $groupManager;
+
+	private $ESPACE_MANAGER = "GE-";
+
+	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, GeneralManagerMiddleware $middleware, IGroupManager $group){
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId;
 		$this->userManager = $users;
+		$this->groupManager = $group;
 		$this->middleware = $middleware;
 	}
 
@@ -36,16 +42,26 @@ class PageController extends Controller {
 	 */
 	public function index() {
 
-		// $userId = $this->userManager->get($this->userId)->getUID();
 		$userObject = $this->userManager->get($this->userId);
 		$userId = $userObject->getUID();
 
-		// $middleware = new GeneralManagerMiddleware();
 		$this->middleware->beforeController(__CLASS__, __FUNCTION__, $userId);
 
 		$usersManager = $this->userManager->searchDisplayName('');
+		
+		$allUsersByEspaceManagerGroup = [];
 
-		return new TemplateResponse('workspace', 'index', [ "users" => $usersManager ]);  // templates/index.php
+		$allGEGroups = $this->groupManager->search($this->ESPACE_MANAGER);
+
+		for ($i = 0; $i < count($usersManager) ; $i++ ) {
+			for($j = 0; $j < count($allGEGroups); $j++){
+				if( $this->groupManager->isInGroup($usersManager[$i]->getUID(), $allGEGroups[$j]->getGID()) ){
+					$allUsersByEspaceManagerGroup[] = [ "uid" => $usersManager[$i]->getUID(), "email_address" => $usersManager[$i]->getEMailAddress(), "gid" => $allGEGroups[$j]->getGID() ];
+				}
+			}
+		}
+		
+		return new TemplateResponse('workspace', 'index', [ "users" => $usersManager, "usersByEspaceManagerGroup" => $allUsersByEspaceManagerGroup ]);  // templates/index.php
 	}
 
 	/**
