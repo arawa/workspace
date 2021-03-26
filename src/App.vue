@@ -113,7 +113,7 @@ export default {
 							email: 'dorianne@arawa.fr',
 						},
 					],
-					quota: '',
+					quota: undefined,
 				},
 				{
 					name: 'spaceB',
@@ -146,8 +146,14 @@ export default {
 			console.log('space')
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
-		onNewSpace() {
-			// TODO
+		onNewSpace(name) {
+			this.spaces.push(
+				{
+					name,
+					users: [],
+					quota: undefined,
+				}
+			)
 		},
 		onOpenSpace(space) {
 			this.selectedSpace = space
