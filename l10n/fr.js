@@ -8,5 +8,5 @@ OC.L10N.register(
 		'Users': 'Utilisateurs',
 		'Role': 'Role',
 		'Email': 'Email',
-	}
-)
+	},
+"nplurals=2; plural=(n > 1)");
