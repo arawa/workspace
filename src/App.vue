@@ -11,7 +11,7 @@
 		<AppNavigation>
 			<AppNavigationNewItem
 				icon="icon-add"
-				title="New space"
+				:title="t('workspace', 'New space')"
 				@new-item="onNewSpace" />
 			<AppNavigationItem v-for="space in spaces"
 				:key="space.name"
@@ -23,9 +23,9 @@
 				<table v-if="selectedSpace === undefined">
 					<thead>
 						<tr>
-							<th>Workspace name</th>
-							<th>Administrator</th>
-							<th>Quota</th>
+							<th>{{ t('workspace', 'Workspace name') }}</th>
+							<th>{{ t('workspace', 'Administrators') }}</th>
+							<th>{{ t('workspace', 'Quota') }}</th>
 						</tr>
 					</thead>
 					<tr v-for="space in spaces"
@@ -39,9 +39,9 @@
 					<table>
 						<thead>
 							<tr>
-								<th>User</th>
-								<th>Role</th>
-								<th>Email</th>
+								<th>{{ t('workspace', 'Users') }}</th>
+								<th>{{ t('workspace', 'Role') }}</th>
+								<th>{{ t('workspace', 'Email') }}</th>
 								<th />
 							</tr>
 						</thead>
@@ -60,7 +60,7 @@
 									<ActionButton
 										icon="icon-user"
 										@click="setUserAdmin">
-										Make administrator
+										{{ t('workspace', 'Make administrator') }}
 									</ActionButton>
 								</Actions>
 							</td>
