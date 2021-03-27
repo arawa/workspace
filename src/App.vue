@@ -35,64 +35,31 @@
 						<td> {{ space.quota }} </td>
 					</tr>
 				</table>
-				<div v-else>
-					<table>
-						<thead>
-							<tr>
-								<th>{{ t('workspace', 'Users') }}</th>
-								<th>{{ t('workspace', 'Role') }}</th>
-								<th>{{ t('workspace', 'Email') }}</th>
-								<th />
-							</tr>
-						</thead>
-						<tr v-for="user in selectedSpace.users"
-							:key="user.name">
-							<td> {{ user.name }} </td>
-							<td> {{ user.role }} </td>
-							<td> {{ user.email }} </td>
-							<td>
-								<Actions>
-									<ActionButton
-										icon="icon-delete"
-										@click="deleteUser">
-										Delete user
-									</ActionButton>
-									<ActionButton
-										icon="icon-user"
-										@click="setUserAdmin">
-										{{ t('workspace', 'Make administrator') }}
-									</ActionButton>
-								</Actions>
-							</td>
-						</tr>
-					</table>
-				</div>
+				<SpaceDetails v-else :space="selectedSpace" />
 			</AppContentDetails>
 		</AppContent>
 	</Content>
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import SpaceDetails from './SpaceDetails'
 
 export default {
 	name: 'App',
 	components: {
-		Actions,
-		ActionButton,
 		AppContent,
 		AppContentDetails,
 		AppNavigation,
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+		SpaceDetails,
 	},
 	data() {
 		// TODO: spaces should be retrieved from groupfolders' API
@@ -142,8 +109,6 @@ export default {
 	methods: {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
-			// eslint-disable-next-line
-			console.log('space')
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
 		onNewSpace(name) {
