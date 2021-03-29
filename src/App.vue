@@ -13,6 +13,10 @@
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="onNewSpace" />
+			<AppNavigationItem
+				icon="icon-home"
+				:title="t('workspace', 'All spaces')"
+				@click="showAllSpaces" />
 			<AppNavigationItem v-for="space in spaces"
 				:key="space.name"
 				:title="space.name"
@@ -111,6 +115,7 @@ export default {
 		adminUsers(space) {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
+		// Create a new space
 		onNewSpace(name) {
 			this.spaces.push(
 				{
@@ -120,9 +125,14 @@ export default {
 				}
 			)
 		},
+		// Open a space's detail page
 		onOpenSpace(space) {
 			this.selectedSpace = space
 		},
+		// Show the list of all known spaces
+		showAllSpaces() {
+			this.selectedSpace = undefined
+		}
 	},
 }
 </script>
