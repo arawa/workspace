@@ -50,6 +50,7 @@
 								id="newUser"
 								v-model="selectedUsers"
 								:options="selectableUsers"
+								:label="displayName"
 								:multiple="true"
 								:placeholder="t('workspace', 'Select new user')"
 								@search-change="lookupUsers" />
@@ -65,9 +66,6 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-// import debouncePromise from 'debounce-promise'
-import { generateOcsUrl } from '@nextcloud/router'
-import xmlToJSON from 'xmltojson'
 
 export default {
 	name: 'SpaceDetails',
@@ -97,22 +95,11 @@ export default {
 
 			// TODO: Users must be filtered to only those groups used in this EP
 			// TODO: limit max results?
-			// fetch users using OCS API
-			let url = generateOcsUrl('/core/autocomplete/get?search=' + term, 2)
-			url = url.endsWith('/') ? url.slice(0, -1) : url
-			fetch(url, {
-				headers: { 'OCS-APIRequest': 'true' },
-			})
-				.then((resp) => resp.text())
-				.then(text => {
-					const data = xmlToJSON.parseString(text).ocs[0].data[0].element
-					this.selectableUsers = data.map(user => {
-						// eslint-disable-next-line
-						console.log('user', user)
-						return {
-							label: user.label[0]._text
-						}
-					})
+			axios.get(
+				generateUrl('/apps/workspace/api/autoComplete/{term}', { term })
+			)
+				.then((resp) => {
+					this.selectableUsers = resp.data
 					// eslint-disable-next-line
 					console.log(this.selectableUsers)
 				})
