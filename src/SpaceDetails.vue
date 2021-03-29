@@ -8,18 +8,20 @@
 
 <template>
 	<div>
-		<div id="space-header">
-			<div id="space-name">
+		<div class="space-header">
+			<div class="space-name">
 				<span>
 					{{ space.name }}
 				</span>
 			</div>
-			<div>
-				<Actions>
-					<ActionButton
-						icon="icon-add"
-						@click="toggleShowSelectUsersModal" />
-				</Actions>
+			<div class="space-actions">
+				<div>
+					<Actions>
+						<ActionButton
+							icon="icon-add"
+							@click="toggleShowSelectUsersModal" />
+					</Actions>
+				</div>
 				<Actions>
 					<ActionButton
 						icon="icon-rename"
@@ -115,3 +117,14 @@ export default {
 	},
 }
 </script>
+
+<style>
+.space-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.space-actions {
+	display: flex;
+}
+</style>

@@ -1,11 +1,15 @@
 { "translations": {
-	"New space" : "Nouvel espace",
-	"Workspace name" : "Nom",
+	"admin" : "Administrateur",
 	"Administrators" : "Gestionnaires généraux",
+	"Delete space" : "Effacer l'espace",
+	"Email" : "Email",
+	"New space" : "Nouvel espace",
 	"Quota" : "Quota",
-	"Users" : "Utilisateurs",
 	"Role" : "Role",
-	"Email" : "Email"
+	"Rename space": "Renommer l'espace",
+	"user" : "Utilisateur",
+	"Users" : "Utilisateurs",
+	"Workspace name" : "Nom"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
 }
