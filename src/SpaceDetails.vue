@@ -10,7 +10,7 @@
 	<div>
 		<div class="space-header">
 			<div class="space-name">
-				<span>
+				<span class="space-title">
 					{{ space.name }}
 				</span>
 			</div>
@@ -53,7 +53,7 @@
 						<td> {{ t('workspace', user.role) }} </td>
 						<td> {{ user.email }} </td>
 						<td>
-							<Actions id="user-actions">
+							<Actions class="user-actions">
 								<ActionButton
 									icon="icon-delete"
 									@click="deleteUser">
@@ -61,8 +61,12 @@
 								</ActionButton>
 								<ActionButton
 									icon="icon-user"
-									@click="setUserAdmin">
-									{{ t('workspace', 'Make administrator') }}
+									@click="toggleUserRole(user)">
+									{{
+										user.role === 'user' ?
+											t('workspace', 'Make administrator')
+											: t('workspace', 'Make simple user')
+									}}
 								</ActionButton>
 							</Actions>
 						</td>
@@ -103,23 +107,24 @@ export default {
 		}
 	},
 	methods: {
-		deleteUser() {
-			// TODO
+		// Make user an admin or a simple user
+		toggleUserRole(user) {
+			// this.space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
+			// TODO: update backend
 		},
 		setUserAdmin() {
 			// TODO
 		},
 		toggleShowSelectUsersModal() {
-			// eslint-disable-next-line
-			console.log('show', this.showSelectUsersModal)
 			this.showSelectUsersModal = !this.showSelectUsersModal
-		}
+		},
 	},
 }
 </script>
 
 <style>
 .space-header {
+	margin-top: 10px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -127,8 +132,12 @@ export default {
 .space-actions {
 	display: flex;
 }
-#user-actions {
+.user-actions {
 	display: flex;
 	justify-content: end;
+}
+.space-title {
+	font-weight: bold;
+	font-size: x-large;
 }
 </style>
