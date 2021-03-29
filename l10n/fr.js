@@ -8,6 +8,7 @@ OC.L10N.register(
 		'Make administrator': "Promouvoir en gestionaire d'espace",
 		'New space': 'Nouvel espace',
 		'Quota': 'Quota',
+		'Remove admin rights': "Enlever les droits de gestionaire d'espace",
 		'Rename space': "Renommer l'espace",
 		'Role': 'Role',
 		'Users': 'Utilisateurs',
