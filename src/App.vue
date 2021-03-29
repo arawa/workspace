@@ -132,7 +132,7 @@ export default {
 		// Show the list of all known spaces
 		showAllSpaces() {
 			this.selectedSpace = undefined
-		}
+		},
 	},
 }
 </script>

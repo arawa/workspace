@@ -9,25 +9,18 @@
 <template>
 	<div class="select-users-wrapper">
 		<Multiselect
-			v-model="selectedUsers"
 			class="select-users-input"
 			label="displayName"
+			v-model="selectedUsers"
 			:options="selectableUsers"
 			:loading="isLookingUpUsers"
 			:multiple="true"
 			:placeholder="t('workspace', 'Select new user')"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
-			<div v-if="allSelectedUsers.length === 0">
-				<span class="select-users-list-empty">
-					{{ t('workspace', 'No users selected') }}
-				</span>
-			</div>
-			<div v-else>
-				<div v-for="user in allSelectedUsers"
-					:key="user.name">
-					<span> {{ user.name }} </span>
-				</div>
+			<div v-for="user in allSelectedUsers"
+				:key="user.name">
+				<span> {{ user.name }} </span>
 			</div>
 		</div>
 		<div class="select-users-actions">
@@ -81,10 +74,7 @@ export default {
 					this.selectableUsers = resp.data
 					this.isLookingUpUsers = false
 				})
-				.catch((e) => {
-					// TODO: add some user feedback
-					this.isLookingUpUsers = false
-				})
+				.catch(
 		},
 	},
 }
