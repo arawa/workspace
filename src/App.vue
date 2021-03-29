@@ -133,11 +133,4 @@ export default {
 	display: block;
 }
 
-table {
-	width: 100%;
-}
-tr:hover {
-	background-color: #f5f5f5;
-}
-
 </style>

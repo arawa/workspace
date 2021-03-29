@@ -35,9 +35,10 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "@nextcloud/axios": "^1.6.0",
     "@nextcloud/l10n": "^1.4.1",
     "@nextcloud/router": "^1.2.0",
     "@nextcloud/vue": "^3.7.2",
-    "vue": "^2.6.12",
+    "vue": "^2.6.12"
   }
 }
