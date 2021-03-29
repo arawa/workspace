@@ -18,19 +18,25 @@ return [
 			'url' => '/api/autoComplete/{term}',
 			'verb' => 'GET'
 		],
-
-        // Endpoint
-	   ['name' => 'workspace_group_manager#addUserGroupUser', 'url' => '/add/user/{uid}/toWspUserGroup/{gid}', 'verb' => 'POST'],
-       [
-           'name' => 'acl_manager#addGroupAdvancedPermissions',
-           'url' => '/space/{folderId}/group/{gid}/acl',
-           'verb' => 'POST'
-       ],
-
-       [
-           'name' => 'workspace_group_manager#removeUserFromGroup', 
-           'url' => '/remove/user/{uid}/groups',
-           'verb' => 'DELETE'
-       ],
-    ]
+		[
+			'name' => 'workspace_group_manager#addUserGroupUser',
+			'url' => '/add/user/{uid}/toWspUserGroup/{gid}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'acl_manager#addGroupAdvancedPermissions',
+			'url' => '/space/{folderId}/group/{gid}/acl',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'workspace_group_manager#removeUserFromGroup', 
+			'url' => '/remove/user/{uid}/groups',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'page#createGroup',
+			'url' => '/group/add/{group}',
+			'verb' => 'GET',
+		],
+	]
 ];

@@ -2,6 +2,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http\JSONResponse;
@@ -15,10 +16,11 @@ class PageController extends Controller {
 	/** @var string */
 	private $userId;
 
-  /** @var IUserManager */
-	private $userManager;
+	/** @var IGroupManager */
+	private $groupManager;
 
-	protected $groupManager;
+	/** @var IUserManager */
+	private $userManager;
 
 	// TODO: Move them to lib/Application.php
 	private $ESPACE_MANAGER_01 = "GE-";
@@ -49,7 +51,7 @@ class PageController extends Controller {
 		return new TemplateResponse('workspace', 'index');  // templates/index.php
 	}
 
-   /**
+	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
@@ -77,6 +79,13 @@ class PageController extends Controller {
 		// return info
 		return new JSONResponse($data);
 
-  }
+	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function createGroup($group) {
+		$this->groupManager->createGroup($group);
+	}
 }
