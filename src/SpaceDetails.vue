@@ -9,9 +9,30 @@
 <template>
 	<div>
 		<div id="space-header">
-			<span>
-				{{ space.name }}
-			</span>
+			<div id="space-name">
+				<span>
+					{{ space.name }}
+				</span>
+			</div>
+			<div>
+				<Actions>
+					<ActionButton
+						icon="icon-add"
+						@click="toggleShowSelectUsersModal" />
+				</Actions>
+				<Actions>
+					<ActionButton
+						icon="icon-rename"
+						@click="renameSpace">
+						{{ t('workspace', 'Rename space') }}
+					</ActionButton>
+					<ActionButton
+						icon="icon-delete"
+						@click="deleteSpace">
+						{{ t('workspace', 'Delete space') }}
+					</ActionButton>
+				</Actions>
+			</div>
 		</div>
 		<div id="space-details">
 			<table>
@@ -44,35 +65,29 @@
 							</Actions>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<Multiselect
-								id="newUser"
-								v-model="selectedUsers"
-								:options="selectableUsers"
-								:label="displayName"
-								:multiple="true"
-								:placeholder="t('workspace', 'Select new user')"
-								@search-change="lookupUsers" />
-						</td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
+		<Modal v-if="showSelectUsersModal"
+			@close="toggleShowSelectUsersModal">
+			<SelectUsers />
+		</Modal>
 	</div>
 </template>
 
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
+import SelectUsers from './SelectUsers'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
 		Actions,
 		ActionButton,
-		Multiselect,
+		Modal,
+		SelectUsers,
 	},
 	props: {
 		space: {
@@ -82,34 +97,21 @@ export default {
 	},
 	data() {
 		return {
-			selectedUsers: [],
-			selectableUsers: [],
+			showSelectUsersModal: false,
 		}
 	},
 	methods: {
-		lookupUsers(term) {
-			// safeguard for initialisation
-			if (term === undefined || term === '') {
-				return
-			}
-
-			// TODO: Users must be filtered to only those groups used in this EP
-			// TODO: limit max results?
-			axios.get(
-				generateUrl('/apps/workspace/api/autoComplete/{term}', { term })
-			)
-				.then((resp) => {
-					this.selectableUsers = resp.data
-					// eslint-disable-next-line
-					console.log(this.selectableUsers)
-				})
-		},
 		deleteUser() {
 			// TODO
 		},
 		setUserAdmin() {
 			// TODO
 		},
+		toggleShowSelectUsersModal() {
+			// eslint-disable-next-line
+			console.log('show', this.showSelectUsersModal)
+			this.showSelectUsersModal = !this.showSelectUsersModal
+		}
 	},
 }
 </script>

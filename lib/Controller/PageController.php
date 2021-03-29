@@ -32,6 +32,7 @@ class PageController extends Controller {
 	 */
 	public function index() {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
+		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 		return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
@@ -51,10 +52,10 @@ class PageController extends Controller {
 		// transform in a format suitable for the app
 		$data = [];
 		foreach($users as $user) {
-			array_push($data, [
+			$data[] = [
 				'displayName' => $user->getDisplayName(),
 				'email' => $user->getEmailAddress(),
-			]);
+			];
 		}
 
 		// return info
