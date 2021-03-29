@@ -53,6 +53,7 @@ class PageController extends Controller {
 		foreach($users as $user) {
 			array_push($data, [
 				'displayName' => $user->getDisplayName(),
+				'email' => $user->getEmailAddress(),
 			]);
 		}
 
