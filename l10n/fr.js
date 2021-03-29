@@ -3,7 +3,9 @@ OC.L10N.register(
 	{
 		'Administrators': 'Gestionnaires généraux',
 		'Delete space': "Effacer l'espace",
+		'Delete user': "Supprimer les accès de l'utilisateur",
 		'Email': 'Email',
+		'Make administrator': "Promouvoir en gestionaire d'espace",
 		'New space': 'Nouvel espace',
 		'Quota': 'Quota',
 		'Rename space': "Renommer l'espace",
