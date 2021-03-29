@@ -55,18 +55,18 @@
 						<td>
 							<Actions class="user-actions">
 								<ActionButton
-									icon="icon-delete"
-									@click="deleteUser">
-									{{ t('workspace', 'Delete user') }}
-								</ActionButton>
-								<ActionButton
-									icon="icon-user"
+									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
 									@click="toggleUserRole(user)">
 									{{
 										user.role === 'user' ?
 											t('workspace', 'Make administrator')
-											: t('workspace', 'Make simple user')
+											: t('workspace', 'Remove admin rights')
 									}}
+								</ActionButton>
+								<ActionButton
+									icon="icon-delete"
+									@click="deleteUser">
+									{{ t('workspace', 'Delete user') }}
 								</ActionButton>
 							</Actions>
 						</td>
