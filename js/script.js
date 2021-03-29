@@ -3,33 +3,12 @@ const btnGroupElt = document.getElementById('btnGroup');
 const inputGroupFoldrElt = document.getElementById('inputGF');
 const form = document.getElementById('workspaceform');
 
-btnGroupFolderElt.addEventListener('click', function(e){
-
-    const inputGroupFoldrElt = document.getElementById('inputGF');
-
-    var request = new XMLHttpRequest();
-    request.open('POST', 'https://nc21.dev.arawa.fr/apps/groupfolders/folders');
-    request.setRequestHeader('OCS-APIRequest', 'true');
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.send( 'mountpoint=' + inputGroupFoldrElt.value );
-});
-
-btnGroupElt.addEventListener('click', function(e){
-    const inputGroupElt = document.getElementById('inputGroup');
-
-    var myData = new FormData();
-    myData.append('groupid', inputGroupElt.value);
-
-    var requestGroup = new XMLHttpRequest();
-    requestGroup.open('POST', 'https://nc21.dev.arawa.fr/ocs/v1.php/cloud/groups');
-    requestGroup.setRequestHeader('OCS-APIRequest', 'true');
-    requestGroup.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    requestGroup.send( "groupid=" + inputGroupElt.value );
-});
-
 inputGroupFoldrElt.addEventListener('input', function(e){
     var espaceManagerName = document.getElementById('espaceManagerName');
+    var workspaceUserGroupName = document.getElementById('workspaceUserGroupName');
+    
     espaceManagerName.value = e.target.value;
+    workspaceUserGroupName.value = e.target.value;
 });
 
 form.addEventListener('submit', async function(e){
@@ -43,12 +22,13 @@ form.addEventListener('submit', async function(e){
     
     if(form.espaceManagerName.value !== ''){
         createGroupEspaceManager(form.espaceManagerName.value);
+        createWorkspaceUserGroup(form.workspaceUserGroupName.value);
     }
 
     if(form.espaceManagerName.value !== '' && folderId !== null){
         addEspaceManagerToGroupFolder(form.espaceManagerName.value, folderId);
+        addWorkspaceUserGroupToGroupFolder(form.workspaceUserGroupName.value, folderId);
     }
-
 });
 
 const createGroupFolder = (mountpoint) => {
@@ -78,6 +58,15 @@ function createGroupEspaceManager(groupname){
     requestGroup.send( "groupid=" + 'GE-' + groupname );
 }
 
+function createWorkspaceUserGroup(groupname){
+
+    var requestGroup = new XMLHttpRequest();
+    requestGroup.open('POST', 'https://nc21.dev.arawa.fr/ocs/v1.php/cloud/groups');
+    requestGroup.setRequestHeader('OCS-APIRequest', 'true');
+    requestGroup.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    requestGroup.send( "groupid=" + 'wsp_' + groupname + '_U');
+}
+
 function addEspaceManagerToGroupFolder(gid, folderId){
 
     const myHeaders = new Headers();
@@ -88,6 +77,25 @@ function addEspaceManagerToGroupFolder(gid, folderId){
     fetch(
         'https://nc21.dev.arawa.fr/apps/groupfolders/folders/' + folderId + '/groups',
         { method: 'POST', headers: myHeaders, body: "group="+ "GE-" + gid }
+        )
+        .then(
+            console.log('Add an Espace Manager to groupfolder : Succed !')
+        )
+        .catch(
+            console.log('Add an Espace Manager to groupfolder : Failled !')
+        );
+}
+
+function addWorkspaceUserGroupToGroupFolder(gid, folderId){
+
+    const myHeaders = new Headers();
+    myHeaders.append('OCS-APIRequest', 'true');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+
+    fetch(
+        'https://nc21.dev.arawa.fr/apps/groupfolders/folders/' + folderId + '/groups',
+        { method: 'POST', headers: myHeaders, body: "group="+ "wsp_" + gid + '_U'}
         )
         .then(
             console.log('Add an Espace Manager to groupfolder : Succed !')

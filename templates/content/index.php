@@ -18,16 +18,21 @@
 <div class="section">
     <form id="workspaceform" action="https://nc21.dev.arawa.fr/apps/groupfolders/folders" method="POST">
         <input type="text" id="inputGF" placeholder="<?php p($l->t('Enter the groupfolder name')); ?>" name="mountpoint" style="width: 320px;">
-        <button id='btnGF' type="button">Create</button>
 
         <br>
 
-        <input type="text" id="inputGroup" placeholder="<?php p($l->t('Enter the group name'));?>" name="groupid" style="width: 320px;">
-        <button type="button" id='btnGroup'>Create</button>
-
-        <br>
         <label><?php p($l->t('This is the Espace Manager name :')) ?></label>
         <input type="text" disabled value="GE-" style="width:42px;" ><input name="espaceManagerName" id="espaceManagerName" type="text" disabled>
+
+        <br>
+
+        <label><?php p($l->t('This is the User Workspace Group name :')) ?></label>
+        <input type="text" disabled value="wsp_" style="width:42px;" ><input name="workspaceUserGroupName" id="workspaceUserGroupName" type="text" disabled><input type="text" disabled value="_U" style="width:42px;" >
+        
+        <br>
+
+        <label for="userEspaceManager"><?php p($l->t('Select the Espace Manager')) ?></label>
+        <input type="text" name="userEspaceManager" id="userEspaceManager" style="width:200px;">
 
         <p>
             <label for="espacemanager"><?php p($l->t('Select the Espace Manager')) ?></label>
