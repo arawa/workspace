@@ -36,7 +36,7 @@
 				</Actions>
 			</div>
 		</div>
-		<div id="space-details">
+		<div class="space-details">
 			<table>
 				<thead>
 					<tr>
@@ -53,11 +53,11 @@
 						<td> {{ t('workspace', user.role) }} </td>
 						<td> {{ user.email }} </td>
 						<td>
-							<Actions>
+							<Actions id="user-actions">
 								<ActionButton
 									icon="icon-delete"
 									@click="deleteUser">
-									{{ t('worksapce', 'Delete user') }}
+									{{ t('workspace', 'Delete user') }}
 								</ActionButton>
 								<ActionButton
 									icon="icon-user"
@@ -126,5 +126,9 @@ export default {
 }
 .space-actions {
 	display: flex;
+}
+#user-actions {
+	display: flex;
+	justify-content: end;
 }
 </style>
