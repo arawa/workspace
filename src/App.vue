@@ -128,9 +128,14 @@ export default {
 </script>
 
 <style scoped>
+.app-content-details {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
 
 .app-navigation {
 	display: block;
 }
-
 </style>
