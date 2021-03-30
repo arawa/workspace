@@ -24,21 +24,24 @@
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<table v-if="selectedSpace === undefined">
-					<thead>
-						<tr>
-							<th>{{ t('workspace', 'Workspace name') }}</th>
-							<th>{{ t('workspace', 'Administrators') }}</th>
-							<th>{{ t('workspace', 'Quota') }}</th>
+				<div v-if="selectedSpace === undefined">
+					<div class="header" />
+					<table>
+						<thead>
+							<tr>
+								<th>{{ t('workspace', 'Workspace name') }}</th>
+								<th>{{ t('workspace', 'Administrators') }}</th>
+								<th>{{ t('workspace', 'Quota') }}</th>
+							</tr>
+						</thead>
+						<tr v-for="space in spaces"
+							:key="space.name">
+							<td> {{ space.name }} </td>
+							<td> {{ adminUsers(space).join(', ') }} </td>
+							<td> {{ space.quota }} </td>
 						</tr>
-					</thead>
-					<tr v-for="space in spaces"
-						:key="space.name">
-						<td> {{ space.name }} </td>
-						<td> {{ adminUsers(space).join(', ') }} </td>
-						<td> {{ space.quota }} </td>
-					</tr>
-				</table>
+					</table>
+				</div>
 				<SpaceDetails v-else :space="selectedSpace" />
 			</AppContentDetails>
 		</AppContent>
