@@ -8,7 +8,7 @@
 
 <template>
 	<div>
-		<div class="space-header">
+		<div class="header">
 			<div class="space-name">
 				<span class="space-title">
 					{{ space.name }}
@@ -123,12 +123,6 @@ export default {
 </script>
 
 <style>
-.space-header {
-	margin-top: 10px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
 .space-actions {
 	display: flex;
 }
