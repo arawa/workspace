@@ -38,7 +38,13 @@
 							:key="space.name">
 							<td> {{ space.name }} </td>
 							<td> {{ adminUsers(space).join(', ') }} </td>
-							<td> {{ space.quota }} </td>
+							<td>
+								<Multiselect
+									class="quota-select"
+									:value="space.quota"
+									:options="['1GB', '5GB', '10GB', 'unlimited']"
+									@change="setSpaceQuota" />
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -55,6 +61,7 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SpaceDetails from './SpaceDetails'
 
 export default {
@@ -66,6 +73,7 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+		Multiselect,
 		SpaceDetails,
 	},
 	data() {
@@ -132,6 +140,10 @@ export default {
 		onOpenSpace(space) {
 			this.selectedSpace = space
 		},
+		// Set a space's quota
+		setSpaceQuota(quota) {
+			// TODO
+		},
 		// Show the list of all known spaces
 		showAllSpaces() {
 			this.selectedSpace = undefined
@@ -150,5 +162,8 @@ export default {
 
 .app-navigation {
 	display: block;
+}
+.quota-select {
+	max-width: 50px;
 }
 </style>
