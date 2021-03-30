@@ -18,8 +18,9 @@
 			:placeholder="t('workspace', 'Select new user')"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
-			<div v-if="allSelectedUsers.length === 0">
-				<span class="select-users-list-empty">
+			<div v-if="allSelectedUsers.length === 0"
+				class="select-users-list-empty">
+				<span>
 					{{ t('workspace', 'No users selected') }}
 				</span>
 			</div>
@@ -102,6 +103,14 @@ export default {
 	min-height: 400px;
 	max-height: 400px;
 	min-width: 500px;
+	margin-top: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #dbdbdb;
+}
+.select-users-list-empty {
+	text-align: center;
+	line-height: 400px;
 }
 .select-users-wrapper {
 	margin: 10px;
