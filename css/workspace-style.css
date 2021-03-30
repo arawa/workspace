@@ -5,6 +5,9 @@ table {
 th {
 	font-weight: bold
 }
+tr {
+	height: 50px;
+}
 tr:hover {
         background-color: #f5f5f5;
 }
