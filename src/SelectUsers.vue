@@ -14,8 +14,8 @@
 			label="displayName"
 			:options="selectableUsers"
 			:loading="isLookingUpUsers"
-			:multiple="true"
 			:placeholder="t('workspace', 'Select new user')"
+			@change="addUsersToBatch"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
@@ -26,8 +26,8 @@
 			</div>
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
-					:key="user.name">
-					<span> {{ user.name }} </span>
+					:key="user.displayName">
+					<span> {{ user.displayName }} </span>
 				</div>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 				<ActionButton
 					icon="icon-add"
 					@click="addUsers">
-					{{ t('workspiace', 'Add users') }}
+					{{ t('workspace', 'Add users') }}
 				</ActionButton>
 			</Actions>
 		</div>
@@ -66,6 +66,11 @@ export default {
 		}
 	},
 	methods: {
+		// Adds users to the batch when user selects users in the MultiSelect
+		addUsersToBatch(selectedUsers) {
+			this.allSelectedUsers.push(selectedUsers)
+		},
+		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
 			// safeguard for initialisation
 			if (term === undefined || term === '') {
