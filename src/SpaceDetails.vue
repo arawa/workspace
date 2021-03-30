@@ -52,8 +52,8 @@
 						<td> {{ user.name }} </td>
 						<td> {{ t('workspace', user.role) }} </td>
 						<td> {{ user.email }} </td>
-						<td>
-							<Actions class="user-actions">
+						<td class="user-actions">
+							<Actions>
 								<ActionButton
 									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
 									@click="toggleUserRole(user)">
@@ -128,7 +128,7 @@ export default {
 }
 .user-actions {
 	display: flex;
-	justify-content: end;
+	flex-flow: row-reverse;
 }
 .space-title {
 	font-weight: bold;
