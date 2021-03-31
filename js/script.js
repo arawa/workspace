@@ -22,14 +22,29 @@ form.addEventListener('submit', async function(e){
     
     if(form.espaceManagerName.value !== ''){
         createGroupEspaceManager(form.espaceManagerName.value);
-        createWorkspaceUserGroup(form.workspaceUserGroupName.value);
+        await createWorkspaceUserGroup(form.workspaceUserGroupName.value);
     }
 
     if(form.espaceManagerName.value !== '' && folderId !== null){
         addEspaceManagerToGroupFolder(form.espaceManagerName.value, folderId);
         addWorkspaceUserGroupToGroupFolder(form.workspaceUserGroupName.value, folderId);
     }
+
+    if(form.userEspaceManager.value !== ''){
+        addUserToWorkspaceUserGroup(form.userEspaceManager.value, form.workspaceUserGroupName.value);
+    }
 });
+
+const addUserToWorkspaceUserGroup = (uid, gid) =>{
+
+    return fetch(
+        'https://nc21.dev.arawa.fr/apps/workspace/add/user/'+ uid + '/toWspUserGroup/' + 'GE-' + gid,
+        {
+            method: 'POST',
+        }
+    );
+
+}
 
 const createGroupFolder = (mountpoint) => {
 

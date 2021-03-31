@@ -33,18 +33,11 @@
 
         <label for="userEspaceManager"><?php p($l->t('Select the Espace Manager')) ?></label>
         <input type="text" name="userEspaceManager" id="userEspaceManager" style="width:200px;">
-
-        <p>
-            <label for="espacemanager"><?php p($l->t('Select the Espace Manager')) ?></label>
-            <select name="espacemanager" id="espacemanager">
-                <option value="default"><?php p($l->t('No Espace Manager')) ?></option>
-                <?php for($number = 0; $number < count($_['usersByEspaceManagerGroup']) ; $number++){?>
-                        <option value="<?php p($_['usersByEspaceManagerGroup'][$number]['gid']); ?>"><?php p($_['usersByEspaceManagerGroup'][$number]['email_address']); ?> - <?php p($_['usersByEspaceManagerGroup'][$number]['gid']) ?> </option>
-                <?php } ?>
-            </select>
-        </p>
+       
+        <br>
 
         <button type="submit" id='workspaceSubmit'><?php p($l->t('Send')); ?></button>
+
 
     </form>
 </div>
