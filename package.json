@@ -29,6 +29,7 @@
     "@nextcloud/webpack-vue-config": "^3.0.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^4.3.0",
+    "stylelint-config-recommended-scss": "^4.2.0",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",

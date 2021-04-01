@@ -163,7 +163,11 @@ export default {
 .app-navigation {
 	display: block;
 }
+
 .quota-select {
 	max-width: 50px;
+
+tr:hover {
+	background-color: #f5f5f5;
 }
 </style>
