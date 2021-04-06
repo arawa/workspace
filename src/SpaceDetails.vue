@@ -113,6 +113,9 @@ export default {
 		deleteUser() {
 			// TODO
 		},
+		renameSpace() {
+			// TODO
+		},
 		setUserAdmin() {
 			// TODO
 		},
