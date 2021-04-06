@@ -22,5 +22,8 @@ Vue.mixin({
 
 export default new Vue({
 	el: '#content',
+	data: {
+		spaces: {},
+	},
 	render: (h) => h(App),
 })

@@ -17,14 +17,14 @@
 				icon="icon-home"
 				:title="t('workspace', 'All spaces')"
 				@click="showAllSpaces" />
-			<AppNavigationItem v-for="space in spaces"
-				:key="space.name"
-				:title="space.name"
-				@click="onOpenSpace(space)" />
+			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
+				:key="name"
+				:title="name"
+				@click="onOpenSpace(name)" />
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<div v-if="selectedSpace === undefined">
+				<div v-if="selectedSpaceName === 'all'">
 					<div class="header" />
 					<table>
 						<thead>
@@ -34,21 +34,21 @@
 								<th>{{ t('workspace', 'Quota') }}</th>
 							</tr>
 						</thead>
-						<tr v-for="space in spaces"
-							:key="space.name">
-							<td> {{ space.name }} </td>
+						<tr v-for="(space,name) in $root.$data.spaces"
+							:key="name">
+							<td> {{ name }} </td>
 							<td> {{ adminUsers(space).join(', ') }} </td>
 							<td>
 								<Multiselect
 									class="quota-select"
 									:value="space.quota"
 									:options="['1GB', '5GB', '10GB', 'unlimited']"
-									@change="setSpaceQuota" />
+									@change="setSpaceQuota(name, $event)" />
 							</td>
 						</tr>
 					</table>
 				</div>
-				<SpaceDetails v-else :space="selectedSpace" />
+				<SpaceDetails v-else :space-name="selectedSpaceName" />
 			</AppContentDetails>
 		</AppContent>
 	</Content>
@@ -63,6 +63,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SpaceDetails from './SpaceDetails'
+import Vue from 'vue'
 
 export default {
 	name: 'App',
@@ -77,49 +78,47 @@ export default {
 		SpaceDetails,
 	},
 	data() {
-		// TODO: spaces should be retrieved from groupfolders' API
 		return {
-			selectedSpace: undefined,
-			spaces: [
+			selectedSpaceName: 'all',
+		}
+	},
+	created() {
+		// TODO: spaces should be retrieved from groupfolders' API
+		Vue.set(this.$root.$data.spaces, 'spaceA', {
+			users: [
 				{
-					name: 'spaceA',
-					users: [
-						{
-							name: 'cyrille',
-							role: 'admin',
-							email: 'cyrille@bollu.be',
-						},
-						{
-							name: 'dorianne',
-							role: 'user',
-							email: 'dorianne@arawa.fr',
-						},
-					],
-					quota: undefined,
+					name: 'cyrille',
+					role: 'admin',
+					email: 'cyrille@bollu.be',
 				},
 				{
-					name: 'spaceB',
-					users: [
-						{
-							name: 'cyrille',
-							role: 'admin',
-							email: 'cyrille@bollu.be',
-						},
-						{
-							name: 'baptiste',
-							role: 'admin',
-							email: 'baptiste@arawa.fr',
-						},
-						{
-							name: 'dorianne',
-							role: 'user',
-							email: 'dorianne@arawa.fr',
-						},
-					],
-					quota: '10GB',
+					name: 'dorianne',
+					role: 'user',
+					email: 'dorianne@arawa.fr',
 				},
 			],
-		}
+			quota: undefined,
+		})
+		Vue.set(this.$root.$data.spaces, 'spaceB', {
+			users: [
+				{
+					name: 'cyrille',
+					role: 'admin',
+					email: 'cyrille@bollu.be',
+				},
+				{
+					name: 'baptiste',
+					role: 'admin',
+					email: 'baptiste@arawa.fr',
+				},
+				{
+					name: 'dorianne',
+					role: 'user',
+					email: 'dorianne@arawa.fr',
+				},
+			],
+			quota: '10GB',
+		})
 	},
 	methods: {
 		// Returns the list of administrators of a space
@@ -127,26 +126,26 @@ export default {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
 		// Create a new space
-		onNewSpace(name) {
-			this.spaces.push(
-				{
-					name,
-					users: [],
-					quota: undefined,
-				}
-			)
+		onNewSpace(spaceName) {
+			Vue.set(this.$root.$data.spaces, spaceName, {
+				name,
+				users: [],
+				quota: undefined,
+			})
 		},
 		// Open a space's detail page
-		onOpenSpace(space) {
-			this.selectedSpace = space
+		onOpenSpace(spaceName) {
+			this.selectedSpaceName = spaceName
 		},
 		// Set a space's quota
-		setSpaceQuota(quota) {
-			// TODO
+		setSpaceQuota(name, quota) {
+			const space = this.$root.$data.spaces[name]
+			space.quota = quota
+			Vue.set(this.$root.$data.spaces, name, space)
 		},
 		// Show the list of all known spaces
 		showAllSpaces() {
-			this.selectedSpace = undefined
+			this.selectedSpaceName = 'all'
 		},
 	},
 }
@@ -166,6 +165,7 @@ export default {
 
 .quota-select {
 	max-width: 50px;
+}
 
 tr:hover {
 	background-color: #f5f5f5;
