@@ -41,9 +41,12 @@
 							<td>
 								<Multiselect
 									class="quota-select"
+									tag-placeholder="t('workspace', 'Add specific quota')"
+									:taggable="true"
 									:value="space.quota"
 									:options="['1GB', '5GB', '10GB', 'unlimited']"
-									@change="setSpaceQuota(name, $event)" />
+									@change="setSpaceQuota(name, $event)"
+									@tag="setSpaceQuota(name, $event)" />
 							</td>
 						</tr>
 					</table>
