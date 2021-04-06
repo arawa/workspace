@@ -62,6 +62,7 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { generateUrl } from '@nextcloud/router'
+import Vue from 'vue'
 
 export default {
 	name: 'SelectUsers',
@@ -69,6 +70,12 @@ export default {
 		Actions,
 		ActionButton,
 		Multiselect,
+	},
+	props: {
+		spaceName: {
+			type: String,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -79,9 +86,15 @@ export default {
 		}
 	},
 	methods: {
+		// Adds users to workspace
+		addUsersToWorkspace() {
+			const space = this.$root.$data.spaces[this.spaceName]
+			space.users = space.users.concat(this.allSelectedUsers)
+			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+		},
 		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(selectedUsers) {
-			this.allSelectedUsers.push(selectedUsers)
+		addUsersToBatch(user) {
+			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -104,6 +117,12 @@ export default {
 					// TODO: add some user feedback
 					this.isLookingUpUsers = false
 				})
+		},
+		removeUserFromBatch() {
+			// TODO
+		},
+		toggleUserRole() {
+			// TODO
 		},
 	},
 }
@@ -136,5 +155,20 @@ export default {
 
 .select-users-wrapper {
 	margin: 10px;
+}
+
+.user-entry {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.user-entry-actions {
+	display: flex;
+	flex-flow: row;
+}
+
+.role-toggle {
+	cursor: pointer !important;
 }
 </style>
