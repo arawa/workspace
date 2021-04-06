@@ -26,8 +26,21 @@
 			</div>
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
-					:key="user.displayName">
-					<span> {{ user.displayName }} </span>
+					:key="user.displayName"
+					class="user-entry">
+					<div>
+						<span> {{ user.displayName }} </span>
+					</div>
+					<div class="user-entry-actions">
+						<input type="checkbox" class="role-toggle" @change="toggleUserRole" />
+						<Actions>
+							<ActionButton
+								icon="icon-delete"
+								@click="removeUserFromBatch">
+								{{ t('workspace', 'remove users from selection') }}
+							</ActionButton>
+						</Actions>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -35,7 +48,7 @@
 			<Actions>
 				<ActionButton
 					icon="icon-add"
-					@click="addUsers">
+					@click="addUsersToWorkspace">
 					{{ t('workspace', 'Add users') }}
 				</ActionButton>
 			</Actions>

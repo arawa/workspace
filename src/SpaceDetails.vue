@@ -107,16 +107,22 @@ export default {
 		}
 	},
 	methods: {
-		// Make user an admin or a simple user
-		toggleUserRole(user) {
-			// this.space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
-			// TODO: update backend
+		deleteSpace() {
+			// TODO
+		},
+		deleteUser() {
+			// TODO
 		},
 		setUserAdmin() {
 			// TODO
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
+		},
+		// Make user an admin or a simple user
+		toggleUserRole(user) {
+			// this.space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
+			// TODO: update backend
 		},
 	},
 }
