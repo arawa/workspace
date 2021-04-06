@@ -12,9 +12,9 @@
 			v-model="selectedUsers"
 			class="select-users-input"
 			label="displayName"
-			:options="selectableUsers"
 			:loading="isLookingUpUsers"
-			:placeholder="t('workspace', 'Select new user')"
+			:placeholder="t('workspace', 'Start typing to lookup users')"
+			:options="selectableUsers"
 			@change="addUsersToBatch"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
@@ -86,11 +86,17 @@ export default {
 		}
 	},
 	methods: {
-		// Adds users to workspace
+		// Adds users to workspace and close dialog
 		addUsersToWorkspace() {
 			const space = this.$root.$data.spaces[this.spaceName]
-			space.users = space.users.concat(this.allSelectedUsers)
+			space.users = space.users.concat(this.allSelectedUsers.map(user => {
+				return {
+					name: user.displayName,
+					email: user.email,
+				}
+			}))
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+			this.$emit('close')
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
 		addUsersToBatch(user) {

@@ -76,7 +76,7 @@
 		</div>
 		<Modal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="spaceName" />
+			<SelectUsers :space-name="spaceName" @close="toggleShowSelectUsersModal" />
 		</Modal>
 	</div>
 </template>
