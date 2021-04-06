@@ -166,6 +166,7 @@ export default {
 
 .quota-select {
 	max-width: 50px;
+}
 
 tr:hover {
 	background-color: #f5f5f5;

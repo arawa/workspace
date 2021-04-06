@@ -126,10 +126,12 @@ export default {
 .space-actions {
 	display: flex;
 }
+
 .user-actions {
 	display: flex;
 	flex-flow: row-reverse;
 }
+
 .space-title {
 	font-weight: bold;
 	font-size: x-large;

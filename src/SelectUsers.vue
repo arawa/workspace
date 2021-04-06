@@ -101,9 +101,11 @@ export default {
 	display: flex;
 	flex-flow: row-reverse;
 }
+
 .select-users-input {
 	width: 100%;
 }
+
 .select-users-list {
 	min-height: 400px;
 	max-height: 400px;
@@ -113,10 +115,12 @@ export default {
 	border-width: 1px;
 	border-color: #dbdbdb;
 }
+
 .select-users-list-empty {
 	text-align: center;
 	line-height: 400px;
 }
+
 .select-users-wrapper {
 	margin: 10px;
 }
