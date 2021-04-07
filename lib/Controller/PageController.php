@@ -7,9 +7,6 @@ use OCP\IGroupManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
-use OCA\Workspace\Middleware\GeneralManagerMiddleware;
-// use OCA\Workspace\AppInfo\Application;
-
 
 class PageController extends Controller {
 	
@@ -22,12 +19,11 @@ class PageController extends Controller {
 
 	private $ESPACE_MANAGER = "GE-";
 
-	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, GeneralManagerMiddleware $middleware, IGroupManager $group){
+	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, IGroupManager $group){
 		parent::__construct($AppName, $request);
 		$this->userId = $UserId;
 		$this->userManager = $users;
 		$this->groupManager = $group;
-		$this->middleware = $middleware;
 	}
 
 	/**
@@ -44,8 +40,6 @@ class PageController extends Controller {
 
 		$userObject = $this->userManager->get($this->userId);
 		$userId = $userObject->getUID();
-
-		$this->middleware->beforeController(__CLASS__, __FUNCTION__, $userId);
 
 		$usersManager = $this->userManager->searchDisplayName('');
 		

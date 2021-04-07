@@ -7,7 +7,7 @@ use OCP\IGroupManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IURLGenerator;
-use OCP\IUser;
+use OCP\IUserSession;
 use OCA\Workspace\Middleware\Exceptions\NotGeneralManagerException;
 
 class GeneralManagerMiddleware extends Middleware{
@@ -16,15 +16,22 @@ class GeneralManagerMiddleware extends Middleware{
 
     private $groupManager;
 
-    public function __construct(IGroupManager $groupManager, IURLGenerator $urlGenerator)
+    private $userSession;
+
+    public function __construct(
+        IGroupManager $groupManager,
+        IURLGenerator $urlGenerator,
+        IUserSession $userSession
+    )
     {
         $this->groupManager = $groupManager;
         $this->urlGenerator = $urlGenerator;
+        $this->userSession = $userSession;
     }
 
-    public function beforeController($controller, $methodName, string $userId ){
+    public function beforeController($controller, $methodName ){
 
-        if(! $this->groupManager->isInGroup($userId, $this->GENERAL_MANAGER)){
+        if(! $this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $this->GENERAL_MANAGER)){
 
             throw new NotGeneralManagerException();
 
@@ -33,17 +40,18 @@ class GeneralManagerMiddleware extends Middleware{
     }
 
     // TODO: Find a solution to use this method.
-    public function afterException($controller, $methodName, \Exception $exception): RedirectResponse{
+    public function afterException($controller, $methodName, \Exception $exception){
         if($exception instanceof NotGeneralManagerException){
-            var_dump('coucou');
-            $route = 'workspace.page.errorAccess';
-            $params = [];
+            $route = 'workspace.page.errorAccess';          
             
-            $url = $this->urlGenerator->linkToRoute($route, $params);
-
-            return new RedirectResponse($url);
+            $url = $this->urlGenerator->linkToRouteAbsolute($route, [ ]);
+            
+            return new TemplateResponse('workspace', 'errorAccess');
+            // TODO: Find a solution to use RedirectResponse class
+            // return new RedirectResponse($url);
 
         }
+
     }
 
 }
