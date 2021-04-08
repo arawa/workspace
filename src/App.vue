@@ -10,8 +10,14 @@
 	<Content id="content" app-name="workspace">
 		<AppNavigation>
 			<AppNavigationNewItem
-				title="New space"
+				icon="icon-add"
+				:title="t('workspace', 'New space')"
 				@new-item="onNewSpace" />
+			<AppNavigationItem
+				icon="icon-home"
+				:title="t('workspace', 'All spaces')"
+				@click="showAllSpaces" />
+
 			<AppNavigationItem v-for="space in spaces"
 				:key="space.name"
 				:title="space.name"
@@ -19,40 +25,31 @@
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<table v-if="selectedSpace === undefined">
-					<thead>
-						<tr>
-							<th>Workspace name</th>
-							<th>Administrator</th>
-							<th>Quota</th>
-						</tr>
-					</thead>
-					<tr v-for="space in spaces"
-						:key="space.name">
-						<td> {{ space.name }} </td>
-						<td> {{ adminUsers(space).join(', ') }} </td>
-						<td> {{ space.quota }} </td>
-					</tr>
-				</table>
-				<div v-else>
+				<div v-if="selectedSpace === undefined">
+					<div class="header" />
 					<table>
 						<thead>
 							<tr>
-								<th>User</th>
-								<th>Role</th>
-								<th>Email</th>
-								<th></th>
+								<th>{{ t('workspace', 'Workspace name') }}</th>
+								<th>{{ t('workspace', 'Administrators') }}</th>
+								<th>{{ t('workspace', 'Quota') }}</th>
 							</tr>
 						</thead>
-						<tr v-for="user in selectedSpace.users"
-							:key="user.name">
-							<td> {{ user.name }} </td>
-							<td> {{ user.role }} </td>
-							<td> {{ user.email }} </td>
-							<td></td>
+						<tr v-for="space in spaces"
+							:key="space.name">
+							<td> {{ space.name }} </td>
+							<td> {{ adminUsers(space).join(', ') }} </td>
+							<td>
+								<Multiselect
+									class="quota-select"
+									:value="space.quota"
+									:options="['1GB', '5GB', '10GB', 'unlimited']"
+									@change="setSpaceQuota" />
+							</td>
 						</tr>
 					</table>
 				</div>
+				<SpaceDetails v-else :space="selectedSpace" />
 			</AppContentDetails>
 		</AppContent>
 	</Content>
@@ -65,6 +62,8 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import SpaceDetails from './SpaceDetails'
 
 export default {
 	name: 'App',
@@ -75,6 +74,8 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+		Multiselect,
+		SpaceDetails,
 	},
 	data() {
 		// TODO: spaces should be retrieved from groupfolders' API
@@ -95,7 +96,7 @@ export default {
 							email: 'dorianne@arawa.fr',
 						},
 					],
-					quota: '',
+					quota: undefined,
 				},
 				{
 					name: 'spaceB',
@@ -124,31 +125,51 @@ export default {
 	methods: {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
-			// eslint-disable-next-line
-			console.log('space')
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
-		onNewSpace() {
-			// TODO
+		// Create a new space
+		onNewSpace(name) {
+			this.spaces.push(
+				{
+					name,
+					users: [],
+					quota: undefined,
+				}
+			)
 		},
+		// Open a space's detail page
 		onOpenSpace(space) {
 			this.selectedSpace = space
+		},
+		// Set a space's quota
+		setSpaceQuota(quota) {
+			// TODO
+		},
+		// Show the list of all known spaces
+		showAllSpaces() {
+			this.selectedSpace = undefined
 		},
 	},
 }
 </script>
 
 <style scoped>
+.app-content-details {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
 
 .app-navigation {
 	display: block;
 }
 
-table {
-	width: 100%;
+.quota-select {
+	max-width: 50px;
 }
+
 tr:hover {
 	background-color: #f5f5f5;
 }
-
 </style>
