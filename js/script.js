@@ -30,21 +30,7 @@ form.addEventListener('submit', async function(e){
         addWorkspaceUserGroupToGroupFolder(form.workspaceUserGroupName.value, folderId);
     }
 
-    if(form.userEspaceManager.value !== ''){
-        addUserToWorkspaceUserGroup(form.userEspaceManager.value, form.workspaceUserGroupName.value);
-    }
 });
-
-const addUserToWorkspaceUserGroup = (uid, gid) =>{
-
-    return fetch(
-        'https://nc21.dev.arawa.fr/apps/workspace/add/user/'+ uid + '/toWspUserGroup/' + 'GE-' + gid,
-        {
-            method: 'POST',
-        }
-    );
-
-}
 
 const createGroupFolder = (mountpoint) => {
 
