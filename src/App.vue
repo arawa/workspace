@@ -17,6 +17,7 @@
 				icon="icon-home"
 				:title="t('workspace', 'All spaces')"
 				@click="showAllSpaces" />
+
 			<AppNavigationItem v-for="space in spaces"
 				:key="space.name"
 				:title="space.name"

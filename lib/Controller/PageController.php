@@ -12,8 +12,6 @@ use OCP\IUserManager;
 use OCP\Util;
 
 class PageController extends Controller {
-	
-	private $userId;
 
 	/** @var IUserManager */
 	private $userManager;
