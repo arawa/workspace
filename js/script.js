@@ -37,7 +37,28 @@ form.addEventListener('submit', async function(e){
     if(form.userEspaceManager.value !== ''){
         addUserToWorkspaceUserGroup(form.userEspaceManager.value, form.workspaceUserGroupName.value);
     }
+
+    if(form.checkBoxAcl.checked && folderId !== null){
+        activateAcl(form.espaceManagerName.value, folderId);
+    }
 });
+
+const activateAcl = (groupname, folderId) => {
+
+    const myHeaders = new Headers();
+    myHeaders.append('OCS-APIRequest', 'true');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    fetch(
+        'https://nc21.dev.arawa.fr/apps/groupfolders/folders/'+ folderId +'/acl',
+        {
+            method: 'POST',
+            headers: myHeaders,
+            body: "acl=1"
+        }
+    );
+
+}
 
 const addUserToWorkspaceUserGroup = (uid, gid) =>{
 
