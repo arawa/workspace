@@ -11,7 +11,7 @@
 		<div class="header">
 			<div class="space-name">
 				<span class="space-title">
-					{{ space.name }}
+					{{ spaceName }}
 				</span>
 			</div>
 			<div class="space-actions">
@@ -47,7 +47,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="user in space.users"
+					<tr v-for="user in $root.$data.spaces[spaceName].users"
 						:key="user.name">
 						<td> {{ user.name }} </td>
 						<td> {{ t('workspace', user.role) }} </td>
@@ -96,8 +96,8 @@ export default {
 		SelectUsers,
 	},
 	props: {
-		space: {
-			type: Object,
+		spaceName: {
+			type: String,
 			required: true,
 		},
 	},
