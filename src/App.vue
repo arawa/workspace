@@ -42,7 +42,13 @@
 							</td>
 							<td> {{ name }} </td>
 							<td> {{ space.quota }} </td>
-							<td> {{ adminUsers(space).join(', ') }} </td>
+							<td>
+								<Avatar v-for="user in adminUsers(space)"
+									:key="user"
+									:style="{ marginRight: 2 + 'px' }"
+									:display-name="user"
+									:user="user" />
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -58,6 +64,7 @@ import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import SpaceDetails from './SpaceDetails'
 import Vue from 'vue'
@@ -70,6 +77,7 @@ export default {
 		AppNavigation,
 		AppNavigationItem,
 		AppNavigationNewItem,
+		Avatar,
 		Content,
 		SpaceDetails,
 	},
@@ -79,44 +87,7 @@ export default {
 		}
 	},
 	created() {
-		// TODO: spaces should be retrieved from groupfolders' API
-		Vue.set(this.$root.$data.spaces, 'spaceA', {
-			users: [
-				{
-					name: 'cyrille',
-					role: 'admin',
-					email: 'cyrille@bollu.be',
-				},
-				{
-					name: 'dorianne',
-					role: 'user',
-					email: 'dorianne@arawa.fr',
-				},
-			],
-			quota: undefined,
-			color: 'blue',
-		})
-		Vue.set(this.$root.$data.spaces, 'spaceB', {
-			users: [
-				{
-					name: 'cyrille',
-					role: 'admin',
-					email: 'cyrille@bollu.be',
-				},
-				{
-					name: 'baptiste',
-					role: 'admin',
-					email: 'baptiste@arawa.fr',
-				},
-				{
-					name: 'dorianne',
-					role: 'user',
-					email: 'dorianne@arawa.fr',
-				},
-			],
-			quota: '10GB',
-			color: 'purple',
-		})
+		// TODO: spaces should be retrieved from backend
 	},
 	methods: {
 		// Returns the list of administrators of a space
@@ -129,6 +100,7 @@ export default {
 				name,
 				users: [],
 				quota: undefined,
+				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 			})
 		},
 		// Open a space's detail page
