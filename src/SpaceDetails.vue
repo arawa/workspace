@@ -13,6 +13,14 @@
 				<span class="space-title">
 					{{ spaceName }}
 				</span>
+				<Multiselect
+					class="quota-select"
+					tag-placeholder="t('workspace', 'Add specific quota')"
+					:taggable="true"
+					:value="$root.$data.spaces[spaceName].quota"
+					:options="['1GB', '5GB', '10GB', 'unlimited']"
+					@change="setSpaceQuota"
+					@tag="setSpaceQuota" />
 			</div>
 			<div class="space-actions">
 				<div>
@@ -84,8 +92,10 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
+import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
@@ -93,6 +103,7 @@ export default {
 		Actions,
 		ActionButton,
 		Modal,
+		Multiselect,
 		SelectUsers,
 	},
 	props: {
@@ -116,6 +127,12 @@ export default {
 		renameSpace() {
 			// TODO
 		},
+		// Set a space's quota
+		setSpaceQuota(quota) {
+			const space = this.$root.$data.spaces[this.spaceName]
+			space.quota = quota
+			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+		},
 		setUserAdmin() {
 			// TODO
 		},
@@ -123,8 +140,10 @@ export default {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
 		// Make user an admin or a simple user
-		toggleUserRole(user) {
-			// this.space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
+		toggleUserRole(name, user) {
+			const space = this.$root.$data.spaces[name]
+			space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
+			Vue.set(this.$root.$data.spaces, name, space)
 			// TODO: update backend
 		},
 	},
@@ -141,8 +160,18 @@ export default {
 	flex-flow: row-reverse;
 }
 
+.quota-select {
+	margin-left: 20px !important;
+	min-width: 100px;
+	max-width: 100px;
+}
+
+.space-name {
+	display: flex;
+}
+
 .space-title {
 	font-weight: bold;
-	font-size: x-large;
+	font-size: xxx-large;
 }
 </style>

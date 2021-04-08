@@ -41,16 +41,7 @@
 								<span class="color-dot" :style="{background: space.color}" />
 							</td>
 							<td> {{ name }} </td>
-							<td>
-								<Multiselect
-									class="quota-select"
-									tag-placeholder="t('workspace', 'Add specific quota')"
-									:taggable="true"
-									:value="space.quota"
-									:options="['1GB', '5GB', '10GB', 'unlimited']"
-									@change="setSpaceQuota(name, $event)"
-									@tag="setSpaceQuota(name, $event)" />
-							</td>
+							<td> {{ space.quota }} </td>
 							<td> {{ adminUsers(space).join(', ') }} </td>
 						</tr>
 					</table>
@@ -68,7 +59,6 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SpaceDetails from './SpaceDetails'
 import Vue from 'vue'
 
@@ -81,7 +71,6 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
-		Multiselect,
 		SpaceDetails,
 	},
 	data() {
@@ -145,12 +134,6 @@ export default {
 		// Open a space's detail page
 		onOpenSpace(spaceName) {
 			this.selectedSpaceName = spaceName
-		},
-		// Set a space's quota
-		setSpaceQuota(name, quota) {
-			const space = this.$root.$data.spaces[name]
-			space.quota = quota
-			Vue.set(this.$root.$data.spaces, name, space)
 		},
 		// Show the list of all known spaces
 		showAllSpaces() {
