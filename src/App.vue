@@ -30,14 +30,13 @@
 						<thead>
 							<tr>
 								<th>{{ t('workspace', 'Workspace name') }}</th>
-								<th>{{ t('workspace', 'Administrators') }}</th>
 								<th>{{ t('workspace', 'Quota') }}</th>
+								<th>{{ t('workspace', 'Administrators') }}</th>
 							</tr>
 						</thead>
 						<tr v-for="(space,name) in $root.$data.spaces"
 							:key="name">
 							<td> {{ name }} </td>
-							<td> {{ adminUsers(space).join(', ') }} </td>
 							<td>
 								<Multiselect
 									class="quota-select"
@@ -48,6 +47,7 @@
 									@change="setSpaceQuota(name, $event)"
 									@tag="setSpaceQuota(name, $event)" />
 							</td>
+							<td> {{ adminUsers(space).join(', ') }} </td>
 						</tr>
 					</table>
 				</div>
