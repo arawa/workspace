@@ -33,7 +33,7 @@
 					</div>
 					<div class="user-entry-actions">
 						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
-						<label>{{ t('workspace', 'S.A') }}</label>
+						<label>{{ t('workspace', 'S.A.') }}</label>
 						<Actions>
 							<ActionButton
 								icon="icon-delete"
