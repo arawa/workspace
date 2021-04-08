@@ -12,12 +12,14 @@ use OCP\Util;
 
 class PageController extends Controller {
 
-	/** @var IUserManager */
+  /** @var IUserManager */
 	private $userManager;
 
-	public function __construct(IRequest $request,
+	public function __construct(
+      IRequest $request,
 			IUserManager $userManager){
-		parent::__construct(Application::APP_ID, $request);
+		
+    parent::__construct(Application::APP_ID, $request);
 		$this->userManager = $userManager;
 	}
 
@@ -28,9 +30,11 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
+
+    Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-		return new TemplateResponse('workspace', 'index');  	// templates/index.php
+	
+    return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
 	/**
@@ -57,7 +61,7 @@ class PageController extends Controller {
 
 		// return info
 		return new JSONResponse($data);
-	}
 
-
+  }
+  
 }
