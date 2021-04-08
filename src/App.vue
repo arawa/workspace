@@ -31,7 +31,7 @@
 							<tr>
 								<th>{{ t('workspace', 'Workspace name') }}</th>
 								<th>{{ t('workspace', 'Quota') }}</th>
-								<th>{{ t('workspace', 'Administrators') }}</th>
+								<th>{{ t('workspace', 'Space administrators') }}</th>
 							</tr>
 						</thead>
 						<tr v-for="(space,name) in $root.$data.spaces"

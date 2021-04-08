@@ -10,6 +10,7 @@
 	"Role" : "Role",
 	"Remove admin rights": "Enlever les droits de gestionnaire d'espace",
 	"Rename space": "Renommer l'espace",
+	"Space administrators" : "Gestionnaires d'espace",
 	"user" : "Utilisateur",
 	"Users" : "Utilisateurs",
 	"Workspace name" : "Nom"
