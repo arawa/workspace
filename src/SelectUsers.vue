@@ -32,11 +32,12 @@
 						<span> {{ user.displayName }} </span>
 					</div>
 					<div class="user-entry-actions">
-						<input type="checkbox" class="role-toggle" @change="toggleUserRole" />
+						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+						<label>{{ t('workspace', 'S.A') }}</label>
 						<Actions>
 							<ActionButton
 								icon="icon-delete"
-								@click="removeUserFromBatch">
+								@click="removeUserFromBatch(user)">
 								{{ t('workspace', 'remove users from selection') }}
 							</ActionButton>
 						</Actions>
@@ -93,6 +94,7 @@ export default {
 				return {
 					name: user.displayName,
 					email: user.email,
+					role: user.role,
 				}
 			}))
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
@@ -124,11 +126,20 @@ export default {
 					this.isLookingUpUsers = false
 				})
 		},
-		removeUserFromBatch() {
-			// TODO
+		removeUserFromBatch(user) {
+			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
+				return u.displayName !== user.displayName
+			})
 		},
-		toggleUserRole() {
-			// TODO
+		toggleUserRole(user) {
+			this.allSelectedUsers = this.allSelectedUsers.map(u => {
+				if (u.displayName === user.displayName) {
+					u.role = u.role === 'user' ? 'admin' : 'user'
+					return u
+				} else {
+					return u
+				}
+			})
 		},
 	},
 }
@@ -167,11 +178,13 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	margin-left: 5px;
 }
 
 .user-entry-actions {
 	display: flex;
 	flex-flow: row;
+	align-items: center;
 }
 
 .role-toggle {

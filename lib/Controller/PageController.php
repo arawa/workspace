@@ -58,6 +58,7 @@ class PageController extends Controller {
 			$data[] = [
 				'displayName' => $user->getDisplayName(),
 				'email' => $user->getEmailAddress(),
+				'role' => 'user', // by default, users get the 'user' role
 			];
 		}
 
