@@ -29,6 +29,7 @@
 					<table>
 						<thead>
 							<tr>
+								<th />
 								<th>{{ t('workspace', 'Workspace name') }}</th>
 								<th>{{ t('workspace', 'Quota') }}</th>
 								<th>{{ t('workspace', 'Space administrators') }}</th>
@@ -36,6 +37,9 @@
 						</thead>
 						<tr v-for="(space,name) in $root.$data.spaces"
 							:key="name">
+							<td style="width: 50px;">
+								<span class="color-dot" :style="{background: space.color}" />
+							</td>
 							<td> {{ name }} </td>
 							<td>
 								<Multiselect
@@ -101,6 +105,7 @@ export default {
 				},
 			],
 			quota: undefined,
+			color: 'blue',
 		})
 		Vue.set(this.$root.$data.spaces, 'spaceB', {
 			users: [
@@ -121,6 +126,7 @@ export default {
 				},
 			],
 			quota: '10GB',
+			color: 'purple',
 		})
 	},
 	methods: {
@@ -168,6 +174,13 @@ export default {
 
 .quota-select {
 	max-width: 50px;
+}
+
+.color-dot {
+	height: 35px;
+	width: 35px;
+	border-radius: 50%;
+	display: block;
 }
 
 tr:hover {
