@@ -11,7 +11,8 @@ import Vue from 'vue'
 import App from './App.vue'
 
 /**
- * TODO: Fix this mixin issue to get translation utilities */
+ * TODO: Fix this mixin issue to get translation utilities 
+ */
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 Vue.mixin({
 	methods: {

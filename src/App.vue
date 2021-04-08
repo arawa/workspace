@@ -150,6 +150,14 @@ export default {
 		showAllSpaces() {
 			this.selectedSpaceName = 'all'
 		},
+		// Set a space's quota
+		setSpaceQuota(quota) {
+			// TODO
+		},
+		// Show the list of all known spaces
+		showAllSpaces() {
+			this.selectedSpace = undefined
+		},
 	},
 }
 </script>

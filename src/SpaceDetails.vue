@@ -11,7 +11,7 @@
 		<div class="header">
 			<div class="space-name">
 				<span class="space-title">
-					{{ spaceNname }}
+					{{ spaceName }}
 				</span>
 			</div>
 			<div class="space-actions">

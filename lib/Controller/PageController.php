@@ -21,6 +21,7 @@ class PageController extends Controller {
 		
     parent::__construct(Application::APP_ID, $request);
 		$this->userManager = $userManager;
+    
 	}
 
 	/**
@@ -35,6 +36,7 @@ class PageController extends Controller {
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
     return new TemplateResponse('workspace', 'index');  	// templates/index.php
+
 	}
 
 	/**
@@ -63,5 +65,5 @@ class PageController extends Controller {
 		return new JSONResponse($data);
 
   }
-  
+
 }
