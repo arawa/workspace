@@ -58,6 +58,13 @@ const activateAcl = (groupname, folderId) => {
         }
     );
 
+    fetch(
+        'https://nc21.dev.arawa.fr/apps/workspace/space/' + folderId + '/group/' + PREFIX + groupname + SUFFIX_GE + '/acl',
+        {
+            method: 'GET',
+        }
+    );
+
 }
 
 const addUserToWorkspaceUserGroup = (uid, gid) =>{
