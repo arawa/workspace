@@ -40,6 +40,18 @@
             <input type="checkbox" name="checkBoxAcl" id="checkBoxAcl"><label for="checkBoxAcl">Enabled Advanced Permissions</label>
         </div>
 
+
+        <br>
+
+        <div>
+            <select name="spaceQuota" id="spaceQuota">
+                <option value="1073741274">1 GB</option>
+                <option value="5368709120">5 GB</option>
+                <option value="10737418240">10 GB</option>
+                <option value="-3" selected>Unlimited</option>
+            </select>
+        </div>
+
         <br>
 
         <button type="submit" id='workspaceSubmit'><?php p($l->t('Send')); ?></button>

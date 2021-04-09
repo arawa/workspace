@@ -41,7 +41,25 @@ form.addEventListener('submit', async function(e){
     if(form.checkBoxAcl.checked && folderId !== null){
         activateAcl(form.espaceManagerName.value, folderId);
     }
+
+    defineQuota(form.spaceQuota.value, folderId);
 });
+
+const defineQuota = (quota, folderId) =>{
+    const myHeaders = new Headers();
+    myHeaders.append('OCS-APIRequest', 'true');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    fetch(
+        'https://nc21.dev.arawa.fr/apps/groupfolders/folders/'+ folderId +'/quota',
+        {
+            method: 'POST',
+            headers: myHeaders,
+            body: `quota=${quota}`
+        }
+    );
+   
+}
 
 const activateAcl = (groupname, folderId) => {
 
