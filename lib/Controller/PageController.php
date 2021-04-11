@@ -59,6 +59,8 @@ class PageController extends Controller {
 				'displayName' => $user->getDisplayName(),
 				'email' => $user->getEmailAddress(),
 				'role' => 'user', // by default, users get the 'user' role
+				'subtitle' => $user->getEmailAddress(), // for the Avatar compoments
+				'user' => $user->getDisplayName(), // for the Avatar components
 			];
 		}
 

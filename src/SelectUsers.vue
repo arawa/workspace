@@ -15,6 +15,7 @@
 			:loading="isLookingUpUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:options="selectableUsers"
+			:user-select="true"
 			@change="addUsersToBatch"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
@@ -29,7 +30,10 @@
 					:key="user.displayName"
 					class="user-entry">
 					<div>
-						<span> {{ user.displayName }} </span>
+						<Avatar :display-name="user.displayName" :user="user.displayName" />
+						<div class="user-name">
+							<span> {{ user.displayName }} </span>
+						</div>
 					</div>
 					<div class="user-entry-actions">
 						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
@@ -59,6 +63,7 @@
 
 <script>
 import axios from '@nextcloud/axios'
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
@@ -68,6 +73,7 @@ import Vue from 'vue'
 export default {
 	name: 'SelectUsers',
 	components: {
+		Avatar,
 		Actions,
 		ActionButton,
 		Multiselect,
@@ -175,16 +181,19 @@ export default {
 }
 
 .user-entry {
-	display: flex;
-	align-items: center;
 	justify-content: space-between;
 	margin-left: 5px;
 }
 
-.user-entry-actions {
+.user-entry,
+.user-entry div {
+	align-items: center;
 	display: flex;
 	flex-flow: row;
-	align-items: center;
+}
+
+.user-name {
+	margin-left: 10px;
 }
 
 .role-toggle {
