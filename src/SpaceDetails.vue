@@ -50,33 +50,42 @@
 					<tr>
 						<th>{{ t('workspace', 'Users') }}</th>
 						<th>{{ t('workspace', 'Role') }}</th>
-						<th>{{ t('workspace', 'Email') }}</th>
+						<th>{{ t('workspace', 'Groups') }}</th>
 						<th />
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="user in $root.$data.spaces[spaceName].users"
 						:key="user.name">
-						<td> {{ user.name }} </td>
+						<td>
+							<div class="user-name">
+								{{ user.name }}
+							</div>
+							<div class="user-email">
+								{{ user.email }}
+							</div>
+						</td>
 						<td> {{ t('workspace', user.role) }} </td>
-						<td> {{ user.email }} </td>
-						<td class="user-actions">
-							<Actions>
-								<ActionButton
-									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
-									@click="toggleUserRole(user)">
-									{{
-										user.role === 'user' ?
-											t('workspace', 'Make administrator')
-											: t('workspace', 'Remove admin rights')
-									}}
-								</ActionButton>
-								<ActionButton
-									icon="icon-delete"
-									@click="deleteUser">
-									{{ t('workspace', 'Delete user') }}
-								</ActionButton>
-							</Actions>
+						<td> user groups should go here </td>
+						<td>
+							<div class="user-actions">
+								<Actions>
+									<ActionButton
+										:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
+										@click="toggleUserRole(user)">
+										{{
+											user.role === 'user' ?
+												t('workspace', 'Make administrator')
+												: t('workspace', 'Remove admin rights')
+										}}
+									</ActionButton>
+									<ActionButton
+										icon="icon-delete"
+										@click="deleteUser">
+										{{ t('workspace', 'Delete user') }}
+									</ActionButton>
+								</Actions>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -173,5 +182,14 @@ export default {
 .space-title {
 	font-weight: bold;
 	font-size: xxx-large;
+}
+
+.user-name {
+	font-size: large;
+}
+
+.user-email {
+	color: gray;
+	padding-left: 10px;
 }
 </style>
