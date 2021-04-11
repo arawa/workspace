@@ -160,12 +160,13 @@ export default {
 </script>
 
 <style>
-.space-actions {
+.space-actions,
+.space-name,
+.user-actions {
 	display: flex;
 }
 
 .user-actions {
-	display: flex;
 	flex-flow: row-reverse;
 }
 
@@ -173,10 +174,6 @@ export default {
 	margin-left: 20px !important;
 	min-width: 100px;
 	max-width: 100px;
-}
-
-.space-name {
-	display: flex;
 }
 
 .space-title {
