@@ -67,4 +67,33 @@ class PageController extends Controller {
 		return new TemplateResponse('workspace', 'errorAccess');
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function getSubGoupCreate(){
+
+		// $api = curl_init();
+
+		// curl_setopt($api, CURLOPT_URL, "https://nc21.dev.arawa.fr/apps/groupfolders/folders");
+		// curl_setopt($api, CURLOPT_HEADER, 1);
+
+		// curl_setopt($api, CURLOPT_HTTPHEADER, [
+		// 	'OCS-APIRequest: true',
+		// 	'Accept: Application/Json'
+		// ]);
+
+		// curl_setopt($api, CURLOPT_COOKIE, $_SESSION['encrypted_session_data']);
+
+		// $res = curl_exec($api);
+
+		// var_dump($api);
+
+		// curl_close($api);
+
+		// var_dump($_COOKIE);
+
+		return new TemplateResponse('workspace', 'subgroupCreation');
+	}
+
 }

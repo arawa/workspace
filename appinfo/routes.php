@@ -1,4 +1,4 @@
-<?php
+appinfo/routes.php<?php
 /**
  * Create your routes in here. The name is the lowercase name of the controller
  * without the controller part, the stuff after the hash is the method.
@@ -14,6 +14,8 @@ return [
        // TODO: Find a solution to use this route.
        ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
 	   
+       ['name' => 'page#getSubGoupCreate', 'url' => '/subgroup', 'verb' => 'GET'],
+
 	   // Endpoint
 	   ['name' => 'workspace_group_manager#addUserGroupUser', 'url' => '/add/user/{uid}/toWspUserGroup/{gid}', 'verb' => 'POST'],
        [
