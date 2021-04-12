@@ -9,7 +9,7 @@
 
         <br>
         
-        <input type="text" id="subGroup" name="subGroup" value="wsp_" disabled style="width:320px;">
+        <input type="text" id="subGroup" name="subGroup" value="champLibre_" disabled style="width:320px;">
 
         <div>
             <p id="msg_subgoup"></p>

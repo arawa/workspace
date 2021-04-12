@@ -69,12 +69,11 @@ getAllFolders();
 
 form.selectCreateSubGroup.addEventListener('change', function(e){
 
-    console.log(e.target.value);
+    document.getElementById('msg_subgoup').textContent = "";
 
     if(e.target.value === "None"){
-        form.subGroup.value = "wsp_";
+        form.subGroup.value = "champLibre_";
         form.subGroup.setAttribute('disabled', true);
-        document.getElementById('msg_subgoup').textContent = "";
     }
     else{
 
@@ -87,7 +86,7 @@ form.selectCreateSubGroup.addEventListener('change', function(e){
         request.onreadystatechange = function(){
             if(this.readyState == XMLHttpRequest.DONE && this.status == 200){
                 var response = JSON.parse(this.responseText);
-                    form.subGroup.value = "wsp_" + response.ocs.data.mount_point + '_champLibre';
+                    form.subGroup.value = 'champLibre_' + response.ocs.data.id;
                     form.subGroup.removeAttribute('disabled');
             }
         }
