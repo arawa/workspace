@@ -12,7 +12,7 @@
         <input type="text" id="subGroup" name="subGroup" value="wsp_" disabled style="width:320px;">
 
         <div>
-            <p></p>
+            <p id="msg_subgoup"></p>
         </div>
 
         <button type="sumbit">Create</button>

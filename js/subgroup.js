@@ -68,30 +68,32 @@ function attachSubGroupToGroupFolder(gid, folderId){
 getAllFolders();
 
 form.selectCreateSubGroup.addEventListener('change', function(e){
-    console.log("Par là");
+
     console.log(e.target.value);
 
     if(e.target.value === "None"){
         form.subGroup.value = "wsp_";
         form.subGroup.setAttribute('disabled', true);
+        document.getElementById('msg_subgoup').textContent = "";
     }
+    else{
 
-    var request = new XMLHttpRequest();
-    request.open('GET', 'https://nc21.dev.arawa.fr/apps/groupfolders/folders/'+ e.target.value );
-    request.setRequestHeader('OCS-APIRequest', 'true');
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.setRequestHeader('Accept', 'application/json');
+        var request = new XMLHttpRequest();
+        request.open('GET', 'https://nc21.dev.arawa.fr/apps/groupfolders/folders/'+ e.target.value );
+        request.setRequestHeader('OCS-APIRequest', 'true');
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.setRequestHeader('Accept', 'application/json');
 
-    request.onreadystatechange = function(){
-        if(this.readyState == XMLHttpRequest.DONE && this.status == 200){
-            var response = JSON.parse(this.responseText);
-                form.subGroup.value = "wsp_" + response.ocs.data.mount_point + '_champLibre';
-                form.subGroup.removeAttribute('disabled');
+        request.onreadystatechange = function(){
+            if(this.readyState == XMLHttpRequest.DONE && this.status == 200){
+                var response = JSON.parse(this.responseText);
+                    form.subGroup.value = "wsp_" + response.ocs.data.mount_point + '_champLibre';
+                    form.subGroup.removeAttribute('disabled');
+            }
         }
+        
+        request.send();
     }
-    
-    request.send();
-
 });
 
 form.addEventListener('submit', async function(e){
@@ -100,4 +102,6 @@ form.addEventListener('submit', async function(e){
 
     await createSubGroup(form.subGroup.value);
     attachSubGroupToGroupFolder(form.subGroup.value, form.selectCreateSubGroup.value);
+
+    document.getElementById('msg_subgoup').textContent = "Sub group created with succed !";
 });
