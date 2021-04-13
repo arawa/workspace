@@ -32,15 +32,13 @@ form.addEventListener('submit', async function(e){
     if(form.espaceManagerName.value !== '' && folderId !== null){
         addEspaceManagerToGroupFolder(form.espaceManagerName.value, folderId);
         addWorkspaceUserGroupToGroupFolder(form.workspaceUserGroupName.value, folderId);
+        activateAcl(form.espaceManagerName.value, folderId);
     }
 
     if(form.userEspaceManager.value !== ''){
         addUserToWorkspaceUserGroup(form.userEspaceManager.value, form.workspaceUserGroupName.value);
     }
 
-    if(form.checkBoxAcl.checked && folderId !== null){
-        activateAcl(form.espaceManagerName.value, folderId);
-    }
 });
 
 const activateAcl = (groupname, folderId) => {

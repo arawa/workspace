@@ -36,12 +36,6 @@
        
         <br>
 
-        <div>
-            <input type="checkbox" name="checkBoxAcl" id="checkBoxAcl"><label for="checkBoxAcl">Enabled Advanced Permissions</label>
-        </div>
-
-        <br>
-
         <button type="submit" id='workspaceSubmit'><?php p($l->t('Send')); ?></button>
 
     </form>
