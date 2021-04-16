@@ -9,8 +9,15 @@
  */
 return [
     'routes' => [
-	   ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-	   ['name' => 'page#do_echo', 'url' => '/echo', 'verb' => 'POST'],
+        [
+			'name' => 'page#index',
+			'url' => '/', 'verb' => 'GET'
+		],
+		[
+			'name' => 'page#autoComplete',
+			'url' => '/api/autoComplete/{term}',
+			'verb' => 'GET'
+		],
        // TODO: Find a solution to use this route.
        ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
 	   
