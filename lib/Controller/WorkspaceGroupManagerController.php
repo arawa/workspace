@@ -43,4 +43,47 @@ class WorkspaceGroupManagerController extends Controller {
 
     }
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function removeUserToGroup($uid, $gid){
+
+        $response = [ 
+            "response" => "",
+            "code" => "",
+            "status" => "pending",
+            "command" => 'DELETE',
+            "target" => "Group",
+            "uid" => $uid,
+            "gid" => $gid,
+            "message" => "",
+        ];
+
+        $group = $this->groupManager->get($gid);
+
+        $user = $this->userManager->get($uid);
+
+        if($group->removeUser($user) === null){
+            $response['response'] = "ok";
+            $response['code'] = 200;
+            $response['status'] = "statefull";
+            $response['message'] = "Remove user from the group : success !";
+            
+        }
+        // TODO: 
+        //  1) Find a solution to send a json error.
+        //  2) Check if is it the good code.
+        // else{application/json
+        //     $response['response'] = "error";
+        //     $response['code'] = 500;
+        //     $response['status'] = "error";
+        //     $response['message'] = "Cannot find the ressource : gid or uid.";
+            
+        // }
+
+
+        return new JSONResponse( $response, Http::STATUS_OK);
+    }
+
 }

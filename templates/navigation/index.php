@@ -8,4 +8,5 @@
 		</ul>
 	</li>
 	<li><a href="/apps/workspace/subgroup">Créer un sous-groupe</a></li>
+	<li><a href="/apps/workspace/change/generalManager">Changer le groupe gestionnaire général</a></li>
 </ul>
