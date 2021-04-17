@@ -3,9 +3,8 @@ const btnGroupElt = document.getElementById('btnGroup');
 const inputGroupFoldrElt = document.getElementById('inputGF');
 const form = document.getElementById('workspaceform');
 
-const PREFIX = "wsp_";
-const SUFFIX_GE = "_GE";
-const SUFFIX_U = "_U";
+const PREFIX_MANAGER = "Manager_";
+const PREFIX_USERS = "Users_";
 
 inputGroupFoldrElt.addEventListener('input', function(e){
     var espaceManagerName = document.getElementById('espaceManagerName');
@@ -68,7 +67,7 @@ const activateAcl = (groupname, folderId) => {
 const addUserToWorkspaceUserGroup = (uid, gid) =>{
 
     return fetch(
-        'https://nc21.dev.arawa.fr/apps/workspace/add/user/'+ uid + '/toWspUserGroup/' + PREFIX + gid + SUFFIX_GE,
+        'https://nc21.dev.arawa.fr/apps/workspace/add/user/'+ uid + '/toWspUserGroup/' + PREFIX_MANAGER + gid,
         {
             method: 'POST',
         }
@@ -101,7 +100,7 @@ function createGroupEspaceManager(groupname){
     requestGroup.open('POST', 'https://nc21.dev.arawa.fr/ocs/v1.php/cloud/groups');
     requestGroup.setRequestHeader('OCS-APIRequest', 'true');
     requestGroup.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    requestGroup.send( "groupid=" + PREFIX + groupname + SUFFIX_GE );
+    requestGroup.send( "groupid=" + PREFIX_MANAGER + groupname );
 }
 
 function createWorkspaceUserGroup(groupname){
@@ -110,7 +109,7 @@ function createWorkspaceUserGroup(groupname){
     requestGroup.open('POST', 'https://nc21.dev.arawa.fr/ocs/v1.php/cloud/groups');
     requestGroup.setRequestHeader('OCS-APIRequest', 'true');
     requestGroup.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    requestGroup.send( "groupid=" + PREFIX + groupname + SUFFIX_U );
+    requestGroup.send( "groupid=" + PREFIX_USERS + groupname );
 }
 
 function addEspaceManagerToGroupFolder(gid, folderId){
@@ -122,7 +121,7 @@ function addEspaceManagerToGroupFolder(gid, folderId){
 
     fetch(
         'https://nc21.dev.arawa.fr/apps/groupfolders/folders/' + folderId + '/groups',
-        { method: 'POST', headers: myHeaders, body: "group="+ PREFIX + gid + SUFFIX_GE }
+        { method: 'POST', headers: myHeaders, body: "group="+ PREFIX_MANAGER + gid }
         )
         .then(
             console.log('Add an Espace Manager to groupfolder : Succed !')
@@ -141,7 +140,7 @@ function addWorkspaceUserGroupToGroupFolder(gid, folderId){
 
     fetch(
         'https://nc21.dev.arawa.fr/apps/groupfolders/folders/' + folderId + '/groups',
-        { method: 'POST', headers: myHeaders, body: "group="+ PREFIX + gid + SUFFIX_U }
+        { method: 'POST', headers: myHeaders, body: "group="+ PREFIX_USERS + gid }
         )
         .then(
             console.log('Add an Espace Manager to groupfolder : Succed !')
