@@ -22,12 +22,12 @@
         <br>
 
         <label><?php p($l->t('This is the Espace Manager name :')) ?></label>
-        <input type="text" disabled value="wsp_" style="width:42px;" ><input name="espaceManagerName" id="espaceManagerName" type="text" disabled><input type="text" disabled value="_GE" style="width:42px;" >
+        <input type="text" disabled value="Manager_" style="width:75px;" ><input name="espaceManagerName" id="espaceManagerName" type="text" disabled>
 
         <br>
 
         <label><?php p($l->t('This is the User Workspace Group name :')) ?></label>
-        <input type="text" disabled value="wsp_" style="width:42px;" ><input name="workspaceUserGroupName" id="workspaceUserGroupName" type="text" disabled><input type="text" disabled value="_U" style="width:42px;" >
+        <input type="text" disabled value="Users_" style="width:75px;" ><input name="workspaceUserGroupName" id="workspaceUserGroupName" type="text" disabled>
         
         <br>
 
@@ -53,7 +53,7 @@
         </div>
 
         <br>
-
+  
         <button type="submit" id='workspaceSubmit'><?php p($l->t('Send')); ?></button>
 
     </form>

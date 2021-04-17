@@ -1,0 +1,18 @@
+{ "translations": {
+	"admin" : "Administrateur",
+	"Administrators" : "Gestionnaires généraux",
+	"Delete space" : "Effacer l'espace",
+	"Delete user" : "Supprimer les accès de l'utilisateur",
+	"Email" : "Email",
+	"Make administrator" : "Promouvoir en gestionnaire d'espace",
+	"New space" : "Nouvel espace",
+	"Quota" : "Quota",
+	"Role" : "Role",
+	"Remove admin rights": "Enlever les droits de gestionnaire d'espace",
+	"Rename space": "Renommer l'espace",
+	"user" : "Utilisateur",
+	"Users" : "Utilisateurs",
+	"Workspace name" : "Nom"
+},
+"pluralForm" : "nplurals=2; plural=(n > 1);"
+}

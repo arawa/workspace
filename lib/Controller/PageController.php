@@ -1,19 +1,22 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCP\IRequest;
-use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\Util;
 
 class PageController extends Controller {
-	
 	/** @var string */
 	private $userId;
 
-	protected $userManager;
+  /** @var IUserManager */
+	private $userManager;
 
 	protected $groupManager;
 
@@ -32,16 +35,14 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * CAUTION: the @Stuff turns off security checks; for this page no admin is
-	 *          required and no CSRF check. If you don't know what CSRF is, read
-	 *          it up in the docs or you might create a security hole. This is
-	 *          basically the only required method to add this exemption, don't
-	 *          add it to any other method if you don't exactly know what it does
+	 * Application's main page
 	 *
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
 	public function index() {
+		
+		// TODO: Move my algo in a new Class & funtion (?)
 
 		$userObject = $this->userManager->get($this->userId);
 		$userId = $userObject->getUID();
@@ -60,6 +61,9 @@ class PageController extends Controller {
 			}
 		}
 		
+		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
+		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
+
 		return new TemplateResponse('workspace', 'index', [ "users" => $usersManager, "usersByEspaceManagerGroup" => $allUsersByEspaceManagerGroup ]);  // templates/index.php
 	}
 
@@ -114,5 +118,32 @@ class PageController extends Controller {
 
 			return new TemplateResponse('workspace', 'changeManagerGeneral', [ 'users' => $usersByGroup ]);
 	}
+
+   /**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $term
+	 * @return JSONResponse
+	 */
+	public function autoComplete(string $term) {
+		// lookup users
+		$users = $this->userManager->searchDisplayName($term);
+
+		// transform in a format suitable for the app
+		$data = [];
+		foreach($users as $user) {
+			$data[] = [
+				'displayName' => $user->getDisplayName(),
+				'email' => $user->getEmailAddress(),
+			];
+		}
+
+		// return info
+		return new JSONResponse($data);
+
+  }
 
 }
