@@ -8,8 +8,8 @@
  * it's instantiated in there
  */
 return [
-    'routes' => [
-        [
+	'routes' => [
+		[
 			'name' => 'page#index',
 			'url' => '/', 'verb' => 'GET'
 		],
