@@ -1,4 +1,5 @@
 node_modules/
 vendor/
-js/
+# Ignore all in js folder except script.js.
+js/* !js/script.js
 package-lock.json

@@ -18,5 +18,8 @@ return [
 			'url' => '/api/autoComplete/{term}',
 			'verb' => 'GET'
 		],
-	]
+       // TODO: Find a solution to use this route.
+       ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
+	   
+    ]
 ];
