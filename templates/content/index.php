@@ -22,7 +22,7 @@
         <br>
 
         <label><?php p($l->t('This is the Espace Manager name :')) ?></label>
-        <input type="text" disabled value="GE-" style="width:42px;" ><input name="espaceManagerName" id="espaceManagerName" type="text" disabled>
+        <input type="text" disabled value="wsp_" style="width:42px;" ><input name="espaceManagerName" id="espaceManagerName" type="text" disabled><input type="text" disabled value="_GE" style="width:42px;" >
 
         <br>
 
@@ -37,7 +37,6 @@
         <br>
 
         <button type="submit" id='workspaceSubmit'><?php p($l->t('Send')); ?></button>
-
 
     </form>
 </div>

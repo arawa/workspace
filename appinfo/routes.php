@@ -21,5 +21,12 @@ return [
        // TODO: Find a solution to use this route.
        ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
 	   
+	   // Endpoint
+	   ['name' => 'workspace_group_manager#addUserGroupUser', 'url' => '/add/user/{uid}/toWspUserGroup/{gid}', 'verb' => 'POST'],
+       [
+           'name' => 'acl_manager#addGroupAdvancedPermissions',
+           'url' => '/space/{folderId}/group/{gid}/acl',
+           'verb' => 'GET'
+        ],
     ]
 ];
