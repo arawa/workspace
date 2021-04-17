@@ -22,6 +22,7 @@ return [
        ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
 	   
        ['name' => 'page#getSubGoupCreate', 'url' => '/subgroup', 'verb' => 'GET'],
+       ['name' => 'page#editGeneralManagerGroup', 'url' => '/change/generalManager', 'verb' => 'GET'],
 
 	   // Endpoint
 	   ['name' => 'workspace_group_manager#addUserGroupUser', 'url' => '/add/user/{uid}/toWspUserGroup/{gid}', 'verb' => 'POST'],
@@ -29,6 +30,12 @@ return [
            'name' => 'acl_manager#addGroupAdvancedPermissions',
            'url' => '/space/{folderId}/group/{gid}/acl',
            'verb' => 'GET'
-        ],
+       ],
+
+       [
+           'name' => 'workspace_group_manager#removeUserToGroup', 
+           'url' => '/remove/user/{uid}/groups',
+           'verb' => 'DELETE'
+       ],
     ]
 ];

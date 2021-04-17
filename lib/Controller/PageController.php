@@ -20,7 +20,12 @@ class PageController extends Controller {
 
 	protected $groupManager;
 
-	private $ESPACE_MANAGER = "GE-";
+	private $ESPACE_MANAGER_01 = "GE-";
+	private $ESPACE_MANAGER_02 = "Manager_";
+	private $ESPACE_MANAGER_03 = "_GE";
+	private $ESPACE_USERS_01 = "_U";
+	private $ESPACE_USERS_02 = "Users_";
+	private $ESPACE_USERS_03 = "U-";
 
 	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, IGroupManager $group){
 		parent::__construct($AppName, $request);
@@ -46,7 +51,7 @@ class PageController extends Controller {
 		
 		$allUsersByEspaceManagerGroup = [];
 
-		$allGEGroups = $this->groupManager->search($this->ESPACE_MANAGER);
+		$allGEGroups = $this->groupManager->search($this->ESPACE_MANAGER_01);
 
 		for ($i = 0; $i < count($usersManager) ; $i++ ) {
 			for($j = 0; $j < count($allGEGroups); $j++){
@@ -78,6 +83,40 @@ class PageController extends Controller {
 	public function getSubGoupCreate(){
 
 		return new TemplateResponse('workspace', 'subgroupCreation');
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function editGeneralManagerGroup(){
+
+		$usersByGroup = [];
+
+		$users = $this->userManager->searchDisplayName('');
+
+		for($i = 0 ; $i < count($users); $i++){
+
+			$userGroups = $this->groupManager->getUserGroups($users[$i]);
+
+			$usersByGroup[$i]['uid'] = $users[$i]->getUID();
+			$usersByGroup[$i]['gids'] = [];
+
+			foreach($userGroups as $key => $value){
+				if( preg_match("/^$this->ESPACE_MANAGER_01/", $key) === 1 || 
+					preg_match("/^$this->ESPACE_MANAGER_02/", $key) === 1 ||
+					preg_match("/$this->ESPACE_MANAGER_03$/", $key) === 1 ||
+					preg_match("/$this->ESPACE_USERS_01$/", $key) === 1 ||
+					preg_match("/^$this->ESPACE_USERS_02/", $key) === 1 ||
+					preg_match("/^$this->ESPACE_USERS_03/", $key) === 1
+				)
+				{
+					$usersByGroup[$i]['gids'][] = $key;
+				}
+			};
+		}
+
+			return new TemplateResponse('workspace', 'changeManagerGeneral', [ 'users' => $usersByGroup ]);
 	}
 
    /**
