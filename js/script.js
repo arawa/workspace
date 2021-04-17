@@ -76,6 +76,7 @@ const addUserToWorkspaceUserGroup = (uid, gid) =>{
 
 }
 
+
 const createGroupFolder = (mountpoint) => {
 
     const myHeaders = new Headers();
