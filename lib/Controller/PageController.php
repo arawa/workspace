@@ -72,6 +72,15 @@ class PageController extends Controller {
 	}
 
 	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function getSubGoupCreate(){
+
+		return new TemplateResponse('workspace', 'subgroupCreation');
+	}
+
+   /**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
