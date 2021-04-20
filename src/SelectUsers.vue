@@ -12,9 +12,10 @@
 			v-model="selectedUsers"
 			class="select-users-input"
 			label="displayName"
+			multiple="true"
 			:loading="isLookingUpUsers"
-			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:options="selectableUsers"
+			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:user-select="true"
 			@change="addUsersToBatch"
 			@search-change="lookupUsers" />
@@ -108,7 +109,7 @@ export default {
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
 		addUsersToBatch(user) {
-			this.allSelectedUsers.push(user)
+			this.allSelectedUsers = [...new Set(this.allSelectedUsers.concat(user))]
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
