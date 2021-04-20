@@ -102,6 +102,8 @@ export default {
 				quota: undefined,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 			})
+			// display new space's detail page
+			this.selectedSpaceName = spaceName
 		},
 		// Open a space's detail page
 		onOpenSpace(spaceName) {
