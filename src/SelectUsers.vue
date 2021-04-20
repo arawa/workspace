@@ -13,6 +13,7 @@
 			class="select-users-input"
 			label="displayName"
 			multiple="true"
+			tag-width="50"
 			:loading="isLookingUpUsers"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
