@@ -15,7 +15,7 @@
 				</span>
 				<Multiselect
 					class="quota-select"
-					tag-placeholder="t('workspace', 'Add specific quota')"
+					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
 					:value="$root.$data.spaces[spaceName].quota"
 					:options="['1GB', '5GB', '10GB', 'unlimited']"
