@@ -24,10 +24,16 @@
 			</div>
 			<div class="space-actions">
 				<div>
-					<Actions>
+					<Actions default-icon="icon-add">
 						<ActionButton
-							icon="icon-add"
+							icon="icon-user"
+							:title="t('workspace', 'Add user')"
 							@click="toggleShowSelectUsersModal" />
+						<ActionInput
+							icon="icon-group"
+							@submit="onNewGroup">
+							{{ t('workspace', 'Create group') }}
+						</ActionInput>
 					</Actions>
 				</div>
 				<Actions>
@@ -101,6 +107,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
@@ -111,6 +118,7 @@ export default {
 	components: {
 		Actions,
 		ActionButton,
+		ActionInput,
 		Modal,
 		Multiselect,
 		SelectUsers,
@@ -131,6 +139,9 @@ export default {
 			// TODO
 		},
 		deleteUser() {
+			// TODO
+		},
+		onNewGroup() {
 			// TODO
 		},
 		renameSpace() {
