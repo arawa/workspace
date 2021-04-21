@@ -142,8 +142,10 @@ export default {
 		deleteUser() {
 			// TODO
 		},
-		onNewGroup() {
-			// TODO
+		onNewGroup(e) {
+			const space = this.$root.$data.spaces[this.spaceName]
+			space.groups = space.groups.concat(e.target[1].value)
+			Vue.set(this.$root.$data.spaces, this.spaceName, space)
 		},
 		renameSpace() {
 			// TODO

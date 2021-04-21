@@ -19,8 +19,16 @@
 				@click="showAllSpaces" />
 			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
 				:key="name"
+				:allow-collapse="true"
 				:title="name"
-				@click="onOpenSpace(name)" />
+				@click="onOpenSpace(name)">
+				<div>
+					<AppNavigationItem v-for="group in $root.$data.spaces[name].groups"
+						:key="group"
+						:title="group"
+						@click="onOpenGroup(group)" />
+				</div>
+			</AppNavigationItem>
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -94,22 +102,25 @@ export default {
 		adminUsers(space) {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
-		// Create a new space
+		// Creates a new space and directly display its details page
 		onNewSpace(spaceName) {
 			Vue.set(this.$root.$data.spaces, spaceName, {
 				name,
 				users: [],
 				quota: undefined,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+				groups: [],
 			})
-			// display new space's detail page
 			this.selectedSpaceName = spaceName
 		},
-		// Open a space's detail page
+		onOpenGroup(groupName) {
+			// TODO
+		},
+		// Opens a space's detail page
 		onOpenSpace(spaceName) {
 			this.selectedSpaceName = spaceName
 		},
-		// Show the list of all known spaces
+		// Shows the list of all known spaces
 		showAllSpaces() {
 			this.selectedSpaceName = 'all'
 		},
