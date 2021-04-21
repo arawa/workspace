@@ -12,11 +12,11 @@
 			v-model="selectedUsers"
 			class="select-users-input"
 			label="displayName"
-			multiple="true"
-			tag-width="50"
 			:loading="isLookingUpUsers"
+			:multiple="true"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
+			:tag-width="50"
 			:user-select="true"
 			@change="addUsersToBatch"
 			@search-change="lookupUsers" />

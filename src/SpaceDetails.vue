@@ -26,8 +26,8 @@
 				<div>
 					<Actions default-icon="icon-add">
 						<ActionButton
-							close-after-click="true"
 							icon="icon-user"
+							:close-after-click="true"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
 						<ActionInput
