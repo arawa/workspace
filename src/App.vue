@@ -152,7 +152,7 @@ export default {
 }
 
 .space-selected {
-	background-color: #f5f5f5;
+	background-color: #EAF5FC;
 }
 
 tr:hover {
