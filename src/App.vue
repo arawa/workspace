@@ -18,6 +18,7 @@
 				@click="showAllSpaces" />
 			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
 				:key="name"
+				:class="selectedSpaceName === name ? 'space-selected' : ''"
 				:allow-collapse="true"
 				:title="name"
 				@click="onOpenSpace(name)">
@@ -148,6 +149,10 @@ export default {
 	width: 35px;
 	border-radius: 50%;
 	display: block;
+}
+
+.space-selected {
+	background-color: #f5f5f5;
 }
 
 tr:hover {
