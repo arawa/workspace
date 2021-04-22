@@ -14,7 +14,6 @@
 				:title="t('workspace', 'New space')"
 				@new-item="onNewSpace" />
 			<AppNavigationItem
-				icon="icon-home"
 				:title="t('workspace', 'All spaces')"
 				@click="showAllSpaces" />
 			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
