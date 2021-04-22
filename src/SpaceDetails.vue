@@ -67,7 +67,8 @@
 				</thead>
 				<tbody>
 					<tr v-for="user in $root.$data.spaces[spaceName].users"
-						:key="user.name">
+						:key="user.name"
+						:class="user.role==='admin' ? 'user-admin' : ''">
 						<td>
 							<div class="user-name">
 								{{ user.name }}
@@ -206,6 +207,10 @@ export default {
 .space-title {
 	font-weight: bold;
 	font-size: xxx-large;
+}
+
+.user-admin {
+	background-color: #F7FBFE;
 }
 
 .user-name {
