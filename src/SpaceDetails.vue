@@ -30,10 +30,14 @@
 							:close-after-click="true"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionInput
+						<ActionButton v-if="!createGroup"
+							icon="icon-group"
+							:title="t('workspace', 'Create group')"
+							@click="toggleCreateGroup" />
+						<ActionInput v-if="createGroup"
 							icon="icon-group"
 							@submit="onNewGroup">
-							{{ t('workspace', 'Create group') }}
+							{{ t('workspace', 'Group name') }}
 						</ActionInput>
 					</Actions>
 				</div>
@@ -132,7 +136,8 @@ export default {
 	},
 	data() {
 		return {
-			showSelectUsersModal: false,
+			createGroup: false, // true to display ActionInput
+			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
 	methods: {
@@ -142,15 +147,20 @@ export default {
 		deleteUser() {
 			// TODO
 		},
+		// Creates a group
 		onNewGroup(e) {
 			const space = this.$root.$data.spaces[this.spaceName]
 			space.groups = space.groups.concat(e.target[1].value)
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+			// eslint-disable-next-line
+			console.log(space)
+			// Hide ActionInput
+			this.toggleCreateGroup()
 		},
 		renameSpace() {
 			// TODO
 		},
-		// Set a space's quota
+		// Sets a space's quota
 		setSpaceQuota(quota) {
 			const space = this.$root.$data.spaces[this.spaceName]
 			space.quota = quota
@@ -159,10 +169,13 @@ export default {
 		setUserAdmin() {
 			// TODO
 		},
+		toggleCreateGroup() {
+			this.createGroup = !this.createGroup
+		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
-		// Make user an admin or a simple user
+		// Makes user an admin or a simple user
 		toggleUserRole(name, user) {
 			const space = this.$root.$data.spaces[name]
 			space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
