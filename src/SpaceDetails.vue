@@ -152,10 +152,9 @@ export default {
 			const space = this.$root.$data.spaces[this.spaceName]
 			space.groups = space.groups.concat(e.target[1].value)
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
-			// eslint-disable-next-line
-			console.log(space)
 			// Hide ActionInput
 			this.toggleCreateGroup()
+			// TODO update backend
 		},
 		renameSpace() {
 			// TODO
@@ -165,6 +164,7 @@ export default {
 			const space = this.$root.$data.spaces[this.spaceName]
 			space.quota = quota
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+			// TODO Update backend
 		},
 		setUserAdmin() {
 			// TODO

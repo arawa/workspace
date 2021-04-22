@@ -52,13 +52,9 @@
 			</div>
 		</div>
 		<div class="select-users-actions">
-			<Actions>
-				<ActionButton
-					icon="icon-add"
-					@click="addUsersToWorkspace">
-					{{ t('workspace', 'Add users') }}
-				</ActionButton>
-			</Actions>
+			<button @click="addUsersToWorkspace">
+				{{ t('workspace', 'Add users') }}
+			</button>
 		</div>
 	</div>
 </template>
