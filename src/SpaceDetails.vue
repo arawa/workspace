@@ -177,10 +177,16 @@ export default {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
 		// Makes user an admin or a simple user
-		toggleUserRole(name, user) {
-			const space = this.$root.$data.spaces[name]
-			space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
-			Vue.set(this.$root.$data.spaces, name, space)
+		toggleUserRole(user) {
+			const space = this.$root.$data.spaces[this.spaceName]
+			space.users.every(u => {
+				if (u.name === user.name) {
+					user.role = (user.role === 'admin') ? 'user' : 'admin'
+					return false
+				}
+				return true
+			})
+			Vue.set(this.$root.$data.spaces, this.spaceName, space)
 			// TODO: update backend
 		},
 	},
