@@ -7,6 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
     "dev": "NODE_ENV=development webpack --progress --config webpack.dev.config.js",
+    "serve": "vue-cli-service serve",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -28,6 +29,7 @@
     "@nextcloud/eslint-config": "^4.0.0",
     "@nextcloud/eslint-plugin": "^2.0.0",
     "@nextcloud/webpack-vue-config": "^3.0.0",
+    "@vue/cli-service": "^4.5.12",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^4.3.0",
