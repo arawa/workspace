@@ -19,6 +19,9 @@ Vue.mixin({
 	},
 })
 
+// For development only
+Vue.config.devtools = true
+
 export default new Vue({
 	el: '#content',
 	data: {
