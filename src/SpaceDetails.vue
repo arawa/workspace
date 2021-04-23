@@ -13,13 +13,28 @@
 				<span class="space-title">
 					{{ spaceName }}
 				</span>
+				<Multiselect
+					class="quota-select"
+					:placeholder="t('workspace', 'Set quota')"
+					:taggable="true"
+					:value="$root.$data.spaces[spaceName].quota"
+					:options="['1GB', '5GB', '10GB', 'unlimited']"
+					@change="setSpaceQuota"
+					@tag="setSpaceQuota" />
 			</div>
 			<div class="space-actions">
 				<div>
-					<Actions>
+					<Actions default-icon="icon-add">
 						<ActionButton
-							icon="icon-add"
+							icon="icon-user"
+							:close-after-click="true"
+							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
+						<ActionInput
+							icon="icon-group"
+							@submit="onNewGroup">
+							{{ t('workspace', 'Create group') }}
+						</ActionInput>
 					</Actions>
 				</div>
 				<Actions>
@@ -42,33 +57,42 @@
 					<tr>
 						<th>{{ t('workspace', 'Users') }}</th>
 						<th>{{ t('workspace', 'Role') }}</th>
-						<th>{{ t('workspace', 'Email') }}</th>
+						<th>{{ t('workspace', 'Groups') }}</th>
 						<th />
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="user in $root.$data.spaces[spaceName].users"
 						:key="user.name">
-						<td> {{ user.name }} </td>
+						<td>
+							<div class="user-name">
+								{{ user.name }}
+							</div>
+							<div class="user-email">
+								{{ user.email }}
+							</div>
+						</td>
 						<td> {{ t('workspace', user.role) }} </td>
-						<td> {{ user.email }} </td>
-						<td class="user-actions">
-							<Actions>
-								<ActionButton
-									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
-									@click="toggleUserRole(user)">
-									{{
-										user.role === 'user' ?
-											t('workspace', 'Make administrator')
-											: t('workspace', 'Remove admin rights')
-									}}
-								</ActionButton>
-								<ActionButton
-									icon="icon-delete"
-									@click="deleteUser">
-									{{ t('workspace', 'Delete user') }}
-								</ActionButton>
-							</Actions>
+						<td> user groups should go here </td>
+						<td>
+							<div class="user-actions">
+								<Actions>
+									<ActionButton
+										:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
+										@click="toggleUserRole(user)">
+										{{
+											user.role === 'user' ?
+												t('workspace', 'Make administrator')
+												: t('workspace', 'Remove admin rights')
+										}}
+									</ActionButton>
+									<ActionButton
+										icon="icon-delete"
+										@click="deleteUser">
+										{{ t('workspace', 'Delete user') }}
+									</ActionButton>
+								</Actions>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -76,7 +100,7 @@
 		</div>
 		<Modal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
-			<SelectUsers />
+			<SelectUsers :space-name="spaceName" @close="toggleShowSelectUsersModal" />
 		</Modal>
 	</div>
 </template>
@@ -84,15 +108,20 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
+import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
 		Actions,
 		ActionButton,
+		ActionInput,
 		Modal,
+		Multiselect,
 		SelectUsers,
 	},
 	props: {
@@ -107,10 +136,23 @@ export default {
 		}
 	},
 	methods: {
-		// Make user an admin or a simple user
-		toggleUserRole(user) {
-			// this.space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
-			// TODO: update backend
+		deleteSpace() {
+			// TODO
+		},
+		deleteUser() {
+			// TODO
+		},
+		onNewGroup() {
+			// TODO
+		},
+		renameSpace() {
+			// TODO
+		},
+		// Set a space's quota
+		setSpaceQuota(quota) {
+			const space = this.$root.$data.spaces[this.spaceName]
+			space.quota = quota
+			Vue.set(this.$root.$data.spaces, this.spaceName, space)
 		},
 		setUserAdmin() {
 			// TODO
@@ -118,22 +160,45 @@ export default {
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
+		// Make user an admin or a simple user
+		toggleUserRole(name, user) {
+			const space = this.$root.$data.spaces[name]
+			space.users[user].role = user.role === 'admin' ? 'user' : 'admin'
+			Vue.set(this.$root.$data.spaces, name, space)
+			// TODO: update backend
+		},
 	},
 }
 </script>
 
 <style>
-.space-actions {
+.space-actions,
+.space-name,
+.user-actions {
 	display: flex;
 }
 
 .user-actions {
-	display: flex;
 	flex-flow: row-reverse;
+}
+
+.quota-select {
+	margin-left: 20px !important;
+	min-width: 100px;
+	max-width: 100px;
 }
 
 .space-title {
 	font-weight: bold;
-	font-size: x-large;
+	font-size: xxx-large;
+}
+
+.user-name {
+	font-size: large;
+}
+
+.user-email {
+	color: gray;
+	padding-left: 10px;
 }
 </style>

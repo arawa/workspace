@@ -11,6 +11,8 @@ OC.L10N.register(
 		'Remove admin rights': "Enlever les droits de gestionaire d'espace",
 		'Rename space': "Renommer l'espace",
 		'Role': 'Role',
+		'S.A.': 'G.E',
+		'Space administrators': "Gestionnaires d'espace",
 		'Users': 'Utilisateurs',
 		'Workspace name': 'Nom',
 	},
