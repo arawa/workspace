@@ -49,6 +49,20 @@
 									@tag="setSpaceQuota(name, $event)" />
 							</td>
 						</tr>
+						<tr v-for="(workspace, index) in workspaces" :key="index">
+							<td>{{ workspace.mount_point }}</td>
+							<td>{{ index }}</td>
+							<td>
+								<Multiselect
+									class="quota-select"
+									tag-placeholder="t('workspace', 'Add specific quota')"
+									:taggable="true"
+									:value="workspace.quota"
+									:options="['1GB', '5GB', '10GB', 'unlimited']"
+									@change="setSpaceQuota(index, $event)"
+									@tag="setSpaceQuota(index, $event)" />
+							</td>
+						</tr>
 					</table>
 				</div>
 				<SpaceDetails v-else :space-name="selectedSpaceName" />
@@ -66,6 +80,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import SpaceDetails from './SpaceDetails'
+import axios from '@nextcloud/axios'
 import Vue from 'vue'
 
 export default {
@@ -83,7 +98,19 @@ export default {
 	data() {
 		return {
 			selectedSpaceName: 'all',
+			workspaces: undefined,
 		}
+	},
+	beforeCreate() {
+		axios.get(OC.generateUrl('apps/groupfolders/folders'))
+			.then(response => {
+				this.workspaces = response.data.ocs.data
+				const spaces = response.data.ocs.data
+				console.debug(typeof (spaces))
+				for (const workspace of spaces) {
+					console.debug(workspace)
+				}
+			})
 	},
 	created() {
 		// TODO: spaces should be retrieved from groupfolders' API
