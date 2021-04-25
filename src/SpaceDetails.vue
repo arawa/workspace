@@ -30,11 +30,12 @@
 							:close-after-click="true"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionButton v-if="!createGroup"
+						<ActionButton v-show="!createGroup"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
 							@click="toggleCreateGroup" />
-						<ActionInput v-if="createGroup"
+						<ActionInput v-show="createGroup"
+							ref="createGroupInput"
 							icon="icon-group"
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
@@ -150,11 +151,19 @@ export default {
 		},
 		// Creates a group
 		onNewGroup(e) {
+			// Hides ActionInput
+			this.toggleCreateGroup()
+			// Don't accept empty names
+			if (e.target[1].value === '') {
+				return
+			}
+			// Creates group
 			const space = this.$root.$data.spaces[this.spaceName]
 			space.groups = space.groups.concat(e.target[1].value)
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
-			// Hide ActionInput
-			this.toggleCreateGroup()
+			// Opens group details page
+			this.$root.$data.spaces[this.spaceName].isOpen = true
+			// TODO open group details page
 			// TODO update backend
 		},
 		renameSpace() {
@@ -172,6 +181,9 @@ export default {
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup
+			if (this.createGroup === true) {
+				this.$refs.createGroupInput.$el.focus()
+			}
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal

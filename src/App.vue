@@ -20,11 +20,13 @@
 				:key="name"
 				:class="selectedSpaceName === name ? 'space-selected' : ''"
 				:allow-collapse="true"
+				:open="space.isOpen"
 				:title="name"
 				@click="onOpenSpace(name)">
 				<div>
 					<AppNavigationItem v-for="group in $root.$data.spaces[name].groups"
 						:key="group"
+						icon="icon-group"
 						:title="group"
 						@click="onOpenGroup(group)" />
 				</div>
@@ -106,10 +108,11 @@ export default {
 		onNewSpace(spaceName) {
 			Vue.set(this.$root.$data.spaces, spaceName, {
 				name,
-				users: [],
-				quota: undefined,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+				isOpen: false,
+				quota: undefined,
 				groups: [],
+				users: [],
 			})
 			this.selectedSpaceName = spaceName
 		},
@@ -122,7 +125,7 @@ export default {
 		},
 		// Shows the list of all known spaces
 		showAllSpaces() {
-			this.selectedSpaceName = 'all'
+			this.$root.$data.spaces[this.selectedSpaceName].isOpen = false
 		},
 	},
 }
