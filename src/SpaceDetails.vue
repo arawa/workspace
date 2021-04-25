@@ -56,54 +56,7 @@
 				</Actions>
 			</div>
 		</div>
-		<div class="space-details">
-			<table>
-				<thead>
-					<tr>
-						<th>{{ t('workspace', 'Users') }}</th>
-						<th>{{ t('workspace', 'Role') }}</th>
-						<th>{{ t('workspace', 'Groups') }}</th>
-						<th />
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="user in $root.$data.spaces[spaceName].users"
-						:key="user.name"
-						:class="user.role==='admin' ? 'user-admin' : ''">
-						<td>
-							<div class="user-name">
-								{{ user.name }}
-							</div>
-							<div class="user-email">
-								{{ user.email }}
-							</div>
-						</td>
-						<td> {{ t('workspace', user.role) }} </td>
-						<td> user groups should go here </td>
-						<td>
-							<div class="user-actions">
-								<Actions>
-									<ActionButton
-										:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
-										@click="toggleUserRole(user)">
-										{{
-											user.role === 'user' ?
-												t('workspace', 'Make administrator')
-												: t('workspace', 'Remove admin rights')
-										}}
-									</ActionButton>
-									<ActionButton
-										icon="icon-delete"
-										@click="deleteUser">
-										{{ t('workspace', 'Delete user') }}
-									</ActionButton>
-								</Actions>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<UserTable :space-name="spaceName" />
 		<Modal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="spaceName" @close="toggleShowSelectUsersModal" />
@@ -118,6 +71,7 @@ import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
+import UserTable from './UserTable'
 import Vue from 'vue'
 
 export default {
@@ -129,6 +83,7 @@ export default {
 		Modal,
 		Multiselect,
 		SelectUsers,
+		UserTable,
 	},
 	props: {
 		spaceName: {
@@ -144,9 +99,6 @@ export default {
 	},
 	methods: {
 		deleteSpace() {
-			// TODO
-		},
-		deleteUser() {
 			// TODO
 		},
 		// Creates a group
@@ -176,9 +128,6 @@ export default {
 			Vue.set(this.$root.$data.spaces, this.spaceName, space)
 			// TODO Update backend
 		},
-		setUserAdmin() {
-			// TODO
-		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup
 			if (this.createGroup === true) {
@@ -187,19 +136,6 @@ export default {
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
-		},
-		// Makes user an admin or a simple user
-		toggleUserRole(user) {
-			const space = this.$root.$data.spaces[this.spaceName]
-			space.users.every(u => {
-				if (u.name === user.name) {
-					user.role = (user.role === 'admin') ? 'user' : 'admin'
-					return false
-				}
-				return true
-			})
-			Vue.set(this.$root.$data.spaces, this.spaceName, space)
-			// TODO: update backend
 		},
 	},
 }
