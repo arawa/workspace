@@ -9,12 +9,13 @@
 <template>
 	<div>
 		<div class="header">
-			<div class="space-name">
-				<span class="space-title">
+			<div class="group-name">
+				<div class="icon-group" />
+				<span class="group-title">
 					{{ $route.params.group }}
 				</span>
 			</div>
-			<div class="space-actions">
+			<div class="group-actions">
 				<div>
 					<Actions default-icon="icon-add">
 						<ActionButton
@@ -119,8 +120,13 @@ export default {
 </script>
 
 <style>
-.space-actions,
-.space-name,
+.icon-group {
+	min-width: 42px;
+	min-height: 42px;
+}
+
+.group-actions,
+.group-name,
 .user-actions {
 	display: flex;
 }
@@ -129,13 +135,7 @@ export default {
 	flex-flow: row-reverse;
 }
 
-.quota-select {
-	margin-left: 20px !important;
-	min-width: 100px;
-	max-width: 100px;
-}
-
-.space-title {
+.group-title {
 	font-weight: bold;
 	font-size: xxx-large;
 }
