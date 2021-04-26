@@ -22,12 +22,12 @@
 				:allow-collapse="true"
 				:open="space.isOpen"
 				:title="name"
-				:to="{path: `workspace/${name}`}">
+				:to="{path: `/workspace/${name}`}">
 				<div>
 					<AppNavigationItem v-for="group in $root.$data.spaces[name].groups"
 						:key="group"
 						icon="icon-group"
-						:to="{path: `group/${name}/${group}`}"
+						:to="{path: `/group/${name}/${group}`}"
 						:title="group" />
 				</div>
 			</AppNavigationItem>
