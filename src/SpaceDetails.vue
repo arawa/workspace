@@ -95,21 +95,24 @@ export default {
 		deleteSpace() {
 			// TODO
 		},
-		// Creates a group
+		// Creates a group and navigates to its details page
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 			// Don't accept empty names
-			if (e.target[1].value === '') {
+			const group = e.target[1].value
+			if (group === '') {
 				return
 			}
 			// Creates group
 			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.groups = space.groups.concat(e.target[1].value)
+			space.groups = space.groups.concat(group)
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// Opens group details page
+			// Navigates to the group's details page
 			this.$root.$data.spaces[this.$route.params.space].isOpen = true
-			// TODO open group details page
+			this.$router.push({
+				path: `/group/${space.name}/${group}`,
+			})
 			// TODO update backend
 		},
 		renameSpace() {

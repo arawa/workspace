@@ -18,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="user in $root.$data.spaces[spaceName].users"
+				<tr v-for="user in $root.$data.spaces[$route.params.space].users"
 					:key="user.name"
 					:class="user.role==='admin' ? 'user-admin' : ''">
 					<td>
@@ -68,12 +68,6 @@ export default {
 		Actions,
 		ActionButton,
 	},
-	props: {
-		spaceName: {
-			type: String,
-			required: true,
-		},
-	},
 	data() {
 		return {
 			createGroup: false, // true to display ActionInput
@@ -86,7 +80,7 @@ export default {
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
-			const space = this.$root.$data.spaces[this.spaceName]
+			const space = this.$root.$data.spaces[this.$route.params.space]
 			space.users.every(u => {
 				if (u.name === user.name) {
 					user.role = (user.role === 'admin') ? 'user' : 'admin'
@@ -94,7 +88,7 @@ export default {
 				}
 				return true
 			})
-			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 			// TODO: update backend
 		},
 	},

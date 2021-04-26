@@ -15,20 +15,20 @@
 				@new-item="onNewSpace" />
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
-				@click="showAllSpaces" />
+				:to="{path: '/'}" />
 			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
 				:key="name"
-				:class="selectedSpaceName === name ? 'space-selected' : ''"
+				:class="$route.params.space === name ? 'space-selected' : ''"
 				:allow-collapse="true"
 				:open="space.isOpen"
 				:title="name"
-				@click="onOpenSpace(name)">
+				:to="{path: `workspace/${name}`}">
 				<div>
 					<AppNavigationItem v-for="group in $root.$data.spaces[name].groups"
 						:key="group"
 						icon="icon-group"
-						:title="group"
-						@click="onOpenGroup(group)" />
+						:to="{path: `group/${name}/${group}`}"
+						:title="group" />
 				</div>
 			</AppNavigationItem>
 		</AppNavigation>
@@ -59,11 +59,6 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
-	data() {
-		return {
-			selectedSpaceName: 'all',
-		}
-	},
 	created() {
 		// TODO: spaces should be retrieved from backend
 	},
@@ -72,9 +67,9 @@ export default {
 		adminUsers(space) {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
-		// Creates a new space and directly display its details page
-		onNewSpace(spaceName) {
-			Vue.set(this.$root.$data.spaces, spaceName, {
+		// Creates a new space and navigates to its details page
+		onNewSpace(name) {
+			Vue.set(this.$root.$data.spaces, name, {
 				name,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 				isOpen: false,
@@ -82,18 +77,9 @@ export default {
 				groups: [],
 				users: [],
 			})
-			this.selectedSpaceName = spaceName
-		},
-		onOpenGroup(groupName) {
-			// TODO
-		},
-		// Opens a space's detail page
-		onOpenSpace(spaceName) {
-			this.selectedSpaceName = spaceName
-		},
-		// Shows the list of all known spaces
-		showAllSpaces() {
-			this.$root.$data.spaces[this.selectedSpaceName].isOpen = false
+			this.$router.push({
+				path: `/workspace/${name}`,
+			})
 		},
 	},
 }

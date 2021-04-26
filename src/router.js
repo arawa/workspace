@@ -27,7 +27,7 @@ export default new Router({
 					component: SpaceDetails,
 				},
 				{
-					path: 'group/:group',
+					path: 'group/:space/:group',
 					component: GroupDetails,
 				},
 			],
