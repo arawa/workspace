@@ -69,6 +69,10 @@ export default {
 		},
 		// Creates a new space and navigates to its details page
 		onNewSpace(name) {
+			if (name === '') {
+				// TODO inform user?
+				return
+			}
 			Vue.set(this.$root.$data.spaces, name, {
 				name,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
@@ -80,6 +84,7 @@ export default {
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})
+			// TODO update backend
 		},
 	},
 }
