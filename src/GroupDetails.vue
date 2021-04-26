@@ -75,7 +75,7 @@ import UserTable from './UserTable'
 import Vue from 'vue'
 
 export default {
-	name: 'SpaceDetails',
+	name: 'GroupDetails',
 	components: {
 		Actions,
 		ActionButton,
