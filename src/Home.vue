@@ -24,11 +24,11 @@
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
 				<div>
-					<AppNavigationItem v-for="group in $root.$data.spaces[name].groups"
-						:key="group"
+					<AppNavigationItem v-for="group in Object.entries($root.$data.spaces[name].groups)"
+						:key="group[0]"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group}`}"
-						:title="group" />
+						:to="{path: `/group/${name}/${group[0]}`}"
+						:title="group[0]" />
 				</div>
 			</AppNavigationItem>
 		</AppNavigation>
@@ -41,12 +41,14 @@
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import { generateUrl } from '@nextcloud/router'
 import Vue from 'vue'
 
 export default {
@@ -60,7 +62,25 @@ export default {
 		Content,
 	},
 	created() {
-		// TODO: spaces should be retrieved from backend
+		axios.get(generateUrl('/apps/groupfolders/folders?format=json'))
+			.then(resp => {
+				const spaces = {}
+				const gf = Object.entries(resp.data.ocs.data)
+				// TODO: gf should be send to the backend to retrieve the missing info and filter in case user is not GG
+				gf.forEach(entry => {
+					const folder = entry[1]
+					spaces[folder.mount_point] = {
+						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+						groups: folder.groups,
+						id: folder.id,
+						isOpen: false,
+						name: folder.mount_point,
+						quota: folder.quota,
+						users: [],
+					}
+				})
+				this.$root.$data.spaces = spaces
+			})
 	},
 	methods: {
 		// Returns the list of administrators of a space
@@ -74,11 +94,11 @@ export default {
 				return
 			}
 			Vue.set(this.$root.$data.spaces, name, {
-				name,
 				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-				isOpen: false,
-				quota: undefined,
 				groups: [],
+				isOpen: false,
+				name,
+				quota: undefined,
 				users: [],
 			})
 			this.$router.push({
