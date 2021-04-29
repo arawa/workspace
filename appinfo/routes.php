@@ -37,5 +37,11 @@ return [
            'url' => '/remove/user/{uid}/groups',
            'verb' => 'DELETE'
        ],
+       
+       [
+            'name' => 'users_manager#getUsersWorkSpace',
+            'url' => '/group/{gid}/users',
+            'verb' => 'GET'
+       ],
     ]
 ];
