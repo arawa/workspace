@@ -87,5 +87,6 @@ class PageController extends Controller {
 	 */
 	public function createGroup($group) {
 		$this->groupManager->createGroup($group);
+		// TODO Handle error (eg: group already exists)
 	}
 }
