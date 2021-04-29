@@ -38,5 +38,10 @@ return [
 			'url' => '/group/add/{group}',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'users_manager#getUsersWorkSpace',
+			'url' => '/group/{gid}/users',
+			'verb' => 'GET'
+		],
 	]
 ];
