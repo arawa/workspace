@@ -56,10 +56,10 @@ class UsersManagerController extends Controller{
 
         $users = [];
 
-        foreach($usersFromGroup as $user){
+        foreach($usersFromGroup as $username => $values){
             $users[] = [
-                'username' => $user->getUID(),
-                'email' => $user->getEmailAddress(),
+                'username' => $this->userManager->get($username)->getUID(),
+                'email' => $this->userManager->get($username)->getEmailAddress(),
                 'group' => $gid,
                 'role' => $role,
             ];
