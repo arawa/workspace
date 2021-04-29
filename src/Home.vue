@@ -75,7 +75,7 @@ export default {
 						id: folder.id,
 						isOpen: false,
 						name: folder.mount_point,
-						quota: folder.quota,
+						quota: this.convertQuotaForFrontend(folder.quota),
 						users: [],
 					}
 				})
@@ -86,6 +86,19 @@ export default {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
+		},
+		convertQuotaForFrontend(quota) {
+			if (quota === '-3') {
+				return 'unlimited'
+			} else {
+				const units = ['', 'KB', 'MB', 'GB', 'TB']
+				let i = 0
+				while (quota > 1024) {
+					quota = quota / 1024
+					i++
+				}
+				return quota + units[i]
+			}
 		},
 		// Creates a new space and navigates to its details page
 		onNewSpace(name) {

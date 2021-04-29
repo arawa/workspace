@@ -142,8 +142,6 @@ export default {
 				break
 			case 'gb':
 				quota = quota.substr(0, quota.length - 2) * 1024 ** 3
-				// eslint-disable-next-line
-				console.log('quota', quota)
 				break
 			case 'mb':
 				quota = quota.substr(0, quota.length - 2) * 1024 ** 2
