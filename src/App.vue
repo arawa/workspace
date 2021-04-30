@@ -44,7 +44,7 @@
 									tag-placeholder="t('workspace', 'Add specific quota')"
 									:taggable="true"
 									:value="space.quota"
-									:options="['1GB', '5GB', '10GB', 'unlimited']"
+									:options="['1GigaByte', '5GigaByte', '10GigaByte', 'unlimited']"
 									@change="setSpaceQuota(name, $event)"
 									@tag="setSpaceQuota(name, $event)" />
 							</td>
@@ -57,8 +57,8 @@
 									class="quota-select"
 									tag-placeholder="t('workspace', 'Add specific quota')"
 									:taggable="true"
-									:value="convertByteToGigaByte(workspace.quota)"
 									:options="['1GB', '5GB', '10GB', 'unlimited']"
+									:value="convertByteToGigaByte(workspace.quota)"
 									@change="setSpaceQuota(index, $event)"
 									@tag="setSpaceQuota(index, $event)" />
 							</td>
@@ -83,6 +83,13 @@ import SpaceDetails from './SpaceDetails'
 import axios from '@nextcloud/axios'
 import Vue from 'vue'
 
+const options = [
+	{ id: 1073741824, label: '1GigaByte' },
+	{ id: 5368709120, label: '5GigaByte' },
+	{ id: 10737418240, label: '10GigaByte' },
+	{ id: -3, label: 'unlimited' }
+]
+
 export default {
 	name: 'App',
 	components: {
@@ -99,11 +106,13 @@ export default {
 		return {
 			selectedSpaceName: 'all',
 			workspaces: { },
-			groupfolders: undefined,
+			groupfolders: undefined, // TODO : delete
+			options,
+			value: options[3],
+			selectValue: this.convertByteToGigaByte(options[3].id)
 		}
 	},
 	created() {
-		console.debug('created')
 		// TODO: spaces should be retrieved from groupfolders' API
 		Vue.set(this.$root.$data.spaces, 'spaceA', {
 			users: [
@@ -149,11 +158,26 @@ export default {
 	methods: {
 		convertByteToGigaByte(bytes) {
 			if (bytes > 0) {
-				const gb = (parseInt(bytes) / Math.pow(1024, 3))
-				return gb.toString() + 'GB'
+				const gigaByte = (parseInt(bytes) / Math.pow(1024, 3))
+				return gigaByte.toString() + 'GB'
 			} else {
 				return 'unlimited'
 			}
+		},
+		convertGigaByteToByte(gigaByte) {
+			if (gigaByte > 0) {
+				const byte = (parseInt(gigaByte) * Math.pow(1024, 3))
+				return byte
+			} else {
+				return -3
+			}
+		},
+		filterGigabyteNumber(gigaByte) {
+			if (gigaByte === 'unlimited') {
+				return -3
+			}
+			const findNumber = gigaByte.match(/\d+/)
+			return parseInt(findNumber[0])
 		},
 		searchUsersForGroupfolders(groupfolders) {
 			for (const i in groupfolders) {
@@ -185,10 +209,31 @@ export default {
 			this.selectedSpaceName = spaceName
 		},
 		// Set a space's quota
-		setSpaceQuota(name, quota) {
-			const space = this.$root.$data.spaces[name]
-			space.quota = quota
-			Vue.set(this.$root.$data.spaces, name, space)
+		setSpaceQuota(index, setQuota) {
+			// to comment
+			const gigaByte = this.filterGigabyteNumber(setQuota)
+			const byte = this.convertGigaByteToByte(gigaByte)
+		    const myHeaders = new Headers()
+			myHeaders.append('OCS-APIRequest', 'true')
+			myHeaders.append('Accept', 'application/json')
+			// This code doesn't work because I get a 500 error code...
+			axios.post(OC.generateUrl(`/apps/groupfolders/folders/${index}/quota`, { quota: byte }, myHeaders))
+				.then(response => {
+					if (response.status === 200) {
+						console.debug('This request work !')
+						const workspace = this.workspaces.result[index]
+						workspace.quota = byte
+						Vue.set(this.workspaces, index, workspace)
+					}
+				})
+				.catch(error => {
+					const workspace = this.workspaces.result[index]
+					console.error('Error request', error)
+					console.error('Error to define the quota for this workspace', workspace)
+				})
+			// const space = this.$root.$data.spaces[name]
+			// space.quota = setQuota
+			// Vue.set(this.$root.$data.spaces, name, space)
 		},
 		// Show the list of all known spaces
 		showAllSpaces() {
