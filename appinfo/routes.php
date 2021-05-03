@@ -28,7 +28,7 @@ return [
        ],
 
        [
-           'name' => 'workspace_group_manager#removeUserToGroup', 
+           'name' => 'workspace_group_manager#removeUserFromGroup', 
            'url' => '/remove/user/{uid}/groups',
            'verb' => 'DELETE'
        ],

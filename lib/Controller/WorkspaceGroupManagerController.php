@@ -47,7 +47,7 @@ class WorkspaceGroupManagerController extends Controller {
      * @NoAdminRequired
      * @NoCSRFRequired
      */
-    public function removeUserToGroup($uid, $gid){
+    public function removeUserFromGroup($uid, $gid){
 
         $response = [ 
             "response" => "",
