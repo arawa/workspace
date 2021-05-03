@@ -23,10 +23,10 @@
 							:close-after-click="true"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionButton v-show="!createGroup"
+						<ActionButton v-show="!showCreateGroupInput"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
-							@click="toggleCreateGroup" />
+							@click="toggleShowCreateGroupInput" />
 						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
@@ -78,7 +78,7 @@ export default {
 	},
 	data() {
 		return {
-			createGroup: false, // true to display ActionInput
+			showCreateGroupInput: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
@@ -89,7 +89,7 @@ export default {
 		// Creates a group
 		createGroup(e) {
 			// Hides ActionInput
-			this.toggleCreateGroup()
+			this.toggleShowCreateGroupInput()
 			// Don't accept empty names
 			if (e.target[1].value === '') {
 				return
@@ -106,9 +106,9 @@ export default {
 		renameGroup() {
 			// TODO
 		},
-		toggleCreateGroup() {
-			this.createGroup = !this.createGroup
-			if (this.createGroup === true) {
+		toggleShowCreateGroupInput() {
+			this.showCreateGroupInput = !this.showCreateGroupInput
+			if (this.showCreateGroupInput === true) {
 				this.$refs.createGroupInput.$el.focus()
 			}
 		},
