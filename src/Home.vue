@@ -12,7 +12,7 @@
 			<AppNavigationNewItem
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
-				@new-item="onNewSpace" />
+				@new-item="createSpace" />
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
@@ -101,7 +101,7 @@ export default {
 			}
 		},
 		// Creates a new space and navigates to its details page
-		onNewSpace(name) {
+		createSpace(name) {
 			if (name === '') {
 				// TODO inform user?
 				return
