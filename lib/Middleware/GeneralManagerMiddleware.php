@@ -3,16 +3,16 @@
 namespace OCA\Workspace\Middleware;
 
 use OCP\AppFramework\Middleware;
+use OCA\Workspace\AppInfo\Application;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use OCA\Workspace\Middleware\Exceptions\NotGeneralManagerException;
 
 class GeneralManagerMiddleware extends Middleware{
-
-    private $GENERAL_MANAGER = "GeneralManager";
 
     private $groupManager;
 
@@ -31,7 +31,7 @@ class GeneralManagerMiddleware extends Middleware{
 
     public function beforeController($controller, $methodName ){
 
-        if(! $this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $this->GENERAL_MANAGER)){
+        if(! $this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
 
             throw new NotGeneralManagerException();
 
@@ -42,13 +42,22 @@ class GeneralManagerMiddleware extends Middleware{
     // TODO: Find a solution to use this method.
     public function afterException($controller, $methodName, \Exception $exception){
         if($exception instanceof NotGeneralManagerException){
+            /**
+             * errorAccess tempalte is not exist.
+            */ 
             $route = 'workspace.page.errorAccess';          
-            
             $url = $this->urlGenerator->linkToRouteAbsolute($route, [ ]);
             
-            return new TemplateResponse('workspace', 'errorAccess');
-            // TODO: Find a solution to use RedirectResponse class
-            // return new RedirectResponse($url);
+            /** 
+             * TODO: Find a solution to use RedirectResponse class
+             * return new RedirectResponse($url);
+             * 
+             * For example : return new TemplateResponse('workspace', 'errorAccess');
+             */
+            return new JSONResponse([
+                'status' => 'forbidden',
+                'msg' => 'You cannot to access this application.'
+            ]);
 
         }
 
