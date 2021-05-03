@@ -20,6 +20,7 @@ class PageController extends Controller {
 
 	protected $groupManager;
 
+	// TODO: Move them to lib/Application.php
 	private $ESPACE_MANAGER_01 = "GE-";
 	private $ESPACE_MANAGER_02 = "Manager_";
 	private $ESPACE_MANAGER_03 = "_GE";
