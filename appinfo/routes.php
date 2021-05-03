@@ -18,13 +18,8 @@ return [
 			'url' => '/api/autoComplete/{term}',
 			'verb' => 'GET'
 		],
-       // TODO: Find a solution to use this route.
-       ['name' => 'page#errorAccess', 'url' => '/errorAccess', 'verb' => 'GET'],
-	   
-       ['name' => 'page#getSubGoupCreate', 'url' => '/subgroup', 'verb' => 'GET'],
-       ['name' => 'page#editGeneralManagerGroup', 'url' => '/change/generalManager', 'verb' => 'GET'],
 
-	   // Endpoint
+        // Endpoint
 	   ['name' => 'workspace_group_manager#addUserGroupUser', 'url' => '/add/user/{uid}/toWspUserGroup/{gid}', 'verb' => 'POST'],
        [
            'name' => 'acl_manager#addGroupAdvancedPermissions',
