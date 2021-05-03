@@ -30,7 +30,7 @@
 						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
-							@submit="onNewGroup">
+							@submit="createGroup">
 							{{ t('workspace', 'Group name') }}
 						</ActionInput>
 					</Actions>
@@ -87,7 +87,7 @@ export default {
 			// TODO
 		},
 		// Creates a group
-		onNewGroup(e) {
+		createGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 			// Don't accept empty names
