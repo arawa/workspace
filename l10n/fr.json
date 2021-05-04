@@ -1,20 +1,23 @@
 { "translations": {
-	"admin" : "Administrateur",
+	"Add users": "Ajouter des utilisateurs",
+	"All spaces": "Tous les Espaces Projet",
 	"Administrators" : "Gestionnaires généraux",
-	"Delete space" : "Effacer l'espace",
-	"Delete user" : "Supprimer les accès de l'utilisateur",
-	"Email" : "Email",
-	"Make administrator" : "Promouvoir en gestionnaire d'espace",
-	"New space" : "Nouvel espace",
+	"Create group": "Créer un groupe",
+	"Delete space" : "Supprimer l'Espace Projet",
+	"Delete user" : "Supprimer de l'Espace",
+	"Groups": "Groupes",
+	"Make administrator" : "Assigner en tant que G.E.",
+	"New space" : "Créer un Espace Projet",
 	"Quota" : "Quota",
 	"Role" : "Role",
-	"Remove admin rights": "Enlever les droits de gestionnaire d'espace",
-	"Rename space": "Renommer l'espace",
+	"Remove admin rights": "Retirer les droits de G.E.",
+	"Rename space": "Renommer l'Espace Projet",
+	"Role": "Rôle",
 	"S.A.": "G.E.",
+	"Set quota": "Définir un quota",
 	"Space administrators" : "Gestionnaires d'espace",
-	"user" : "Utilisateur",
 	"Users" : "Utilisateurs",
-	"Workspace name" : "Nom"
+	"Workspace name" : "Nom de l'espace"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
 }
