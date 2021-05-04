@@ -52,13 +52,9 @@
 			</div>
 		</div>
 		<div class="select-users-actions">
-			<Actions>
-				<ActionButton
-					icon="icon-add"
-					@click="addUsersToWorkspace">
-					{{ t('workspace', 'Add users') }}
-				</ActionButton>
-			</Actions>
+			<button @click="addUsersToWorkspace">
+				{{ t('workspace', 'Add users') }}
+			</button>
 		</div>
 	</div>
 </template>
@@ -80,12 +76,6 @@ export default {
 		ActionButton,
 		Multiselect,
 	},
-	props: {
-		spaceName: {
-			type: String,
-			required: true,
-		},
-	},
 	data() {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
@@ -97,7 +87,7 @@ export default {
 	methods: {
 		// Adds users to workspace and close dialog
 		addUsersToWorkspace() {
-			const space = this.$root.$data.spaces[this.spaceName]
+			const space = this.$root.$data.spaces[this.$route.params.space]
 			space.users = space.users.concat(this.allSelectedUsers.map(user => {
 				return {
 					name: user.displayName,
@@ -105,7 +95,7 @@ export default {
 					role: user.role,
 				}
 			}))
-			Vue.set(this.$root.$data.spaces, this.spaceName, space)
+			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 			this.$emit('close')
 		},
 		// Adds users to the batch when user selects users in the MultiSelect

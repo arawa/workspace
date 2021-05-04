@@ -9,20 +9,13 @@
 <template>
 	<div>
 		<div class="header">
-			<div class="space-name">
-				<span class="space-title">
-					{{ $route.params.space }}
+			<div class="group-name">
+				<div class="icon-group" />
+				<span class="group-title">
+					{{ $route.params.group }}
 				</span>
-				<Multiselect
-					class="quota-select"
-					:placeholder="t('workspace', 'Set quota')"
-					:taggable="true"
-					:value="$root.$data.spaces[$route.params.space].quota"
-					:options="['1GB', '5GB', '10GB', 'unlimited']"
-					@change="setSpaceQuota"
-					@tag="setSpaceQuota" />
 			</div>
-			<div class="space-actions">
+			<div class="group-actions">
 				<div>
 					<Actions default-icon="icon-add">
 						<ActionButton
@@ -45,21 +38,21 @@
 				<Actions>
 					<ActionButton
 						icon="icon-rename"
-						@click="renameSpace">
-						{{ t('workspace', 'Rename space') }}
+						@click="renameGroup">
+						{{ t('workspace', 'Rename group') }}
 					</ActionButton>
 					<ActionButton
 						icon="icon-delete"
-						@click="deleteSpace">
-						{{ t('workspace', 'Delete space') }}
+						@click="deleteGroup">
+						{{ t('workspace', 'Delete group') }}
 					</ActionButton>
 				</Actions>
 			</div>
 		</div>
-		<UserTable :space-name="$route.params.space" />
+		<UserTable :space-name="$route.params.group" />
 		<Modal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
+			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
 		</Modal>
 	</div>
 </template>
@@ -68,20 +61,18 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
 import Vue from 'vue'
 
 export default {
-	name: 'SpaceDetails',
+	name: 'GroupDetails',
 	components: {
 		Actions,
 		ActionButton,
 		ActionInput,
 		Modal,
-		Multiselect,
 		SelectUsers,
 		UserTable,
 	},
@@ -92,38 +83,28 @@ export default {
 		}
 	},
 	methods: {
-		deleteSpace() {
+		deleteGroup() {
 			// TODO
 		},
-		// Creates a group and navigates to its details page
+		// Creates a group
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 			// Don't accept empty names
-			const group = e.target[1].value
-			if (group === '') {
+			if (e.target[1].value === '') {
 				return
 			}
 			// Creates group
 			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.groups = space.groups.concat(group)
+			space.groups = space.groups.concat(e.target[1].value)
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// Navigates to the group's details page
+			// Opens group details page
 			this.$root.$data.spaces[this.$route.params.space].isOpen = true
-			this.$router.push({
-				path: `/group/${space.name}/${group}`,
-			})
+			// TODO open group details page
 			// TODO update backend
 		},
-		renameSpace() {
+		renameGroup() {
 			// TODO
-		},
-		// Sets a space's quota
-		setSpaceQuota(quota) {
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.quota = quota
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// TODO Update backend
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup
@@ -139,8 +120,13 @@ export default {
 </script>
 
 <style>
-.space-actions,
-.space-name,
+.icon-group {
+	min-width: 42px;
+	min-height: 42px;
+}
+
+.group-actions,
+.group-name,
 .user-actions {
 	display: flex;
 }
@@ -149,13 +135,7 @@ export default {
 	flex-flow: row-reverse;
 }
 
-.quota-select {
-	margin-left: 20px !important;
-	min-width: 100px;
-	max-width: 100px;
-}
-
-.space-title {
+.group-title {
 	font-weight: bold;
 	font-size: xxx-large;
 }
