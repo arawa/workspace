@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
@@ -120,10 +122,45 @@ export default {
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
+			// Controls quota
+			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
+			if (!control.test(quota)) {
+				return
+				// TODO inform user
+			}
+
+			// Updates frontend
 			const space = this.$root.$data.spaces[this.$route.params.space]
+			const oldQuota = space.quota
 			space.quota = quota
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// TODO Update backend
+
+			// Transforms quota for backend
+			switch (quota.substr(-2).toLowerCase()) {
+			case 'tb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 4
+				break
+			case 'gb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 3
+				break
+			case 'mb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 2
+				break
+			case 'kb':
+				quota = quota.substr(0, quota.length - 2) * 1024
+				break
+			}
+			quota = (quota === 'unlimited') ? -3 : quota
+
+			// Updates backend
+			const url = generateUrl(`/apps/groupfolders/folders/${space.id}/quota`)
+			axios.post(url, { quota })
+				.catch((e) => {
+					// Reverts change made in the frontend in case of error
+					space.quota = oldQuota
+					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+					// TODO Inform user
+				})
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup

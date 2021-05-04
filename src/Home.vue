@@ -12,7 +12,7 @@
 			<AppNavigationNewItem
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
-				@new-item="onNewSpace" />
+				@new-item="createSpace" />
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
@@ -65,17 +65,17 @@ export default {
 		axios.get(generateUrl('/apps/groupfolders/folders?format=json'))
 			.then(resp => {
 				const spaces = {}
-				const gf = Object.entries(resp.data.ocs.data)
-				// TODO: gf should be send to the backend to retrieve the missing info and filter in case user is not GG
-				gf.forEach(entry => {
-					const folder = entry[1]
+				const groupfolders = Object.entries(resp.data.ocs.data)
+				// TODO: groupfolders should be send to the backend to retrieve the missing info and filter in case user is not GG
+				groupfolders.forEach(groupfolder => {
+					const folder = groupfolder[1]
 					spaces[folder.mount_point] = {
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 						groups: folder.groups,
 						id: folder.id,
 						isOpen: false,
 						name: folder.mount_point,
-						quota: folder.quota,
+						quota: this.convertQuotaForFrontend(folder.quota),
 						users: [],
 					}
 				})
@@ -87,8 +87,21 @@ export default {
 		adminUsers(space) {
 			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
 		},
+		convertQuotaForFrontend(quota) {
+			if (quota === '-3') {
+				return 'unlimited'
+			} else {
+				const units = ['', 'KB', 'MB', 'GB', 'TB']
+				let i = 0
+				while (quota > 1024) {
+					quota = quota / 1024
+					i++
+				}
+				return quota + units[i]
+			}
+		},
 		// Creates a new space and navigates to its details page
-		onNewSpace(name) {
+		createSpace(name) {
 			if (name === '') {
 				// TODO inform user?
 				return

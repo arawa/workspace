@@ -48,7 +48,7 @@ export default {
 	methods: {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
-			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
+			return space.users.filter(user => user.role === 'admin').map(user => user.name)
 		},
 	},
 }
