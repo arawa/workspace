@@ -24,7 +24,7 @@ return [
        [
            'name' => 'acl_manager#addGroupAdvancedPermissions',
            'url' => '/space/{folderId}/group/{gid}/acl',
-           'verb' => 'GET'
+           'verb' => 'POST'
        ],
 
        [
