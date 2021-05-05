@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
@@ -91,17 +93,38 @@ export default {
 			// Hides ActionInput
 			this.toggleShowCreateGroupInput()
 			// Don't accept empty names
-			if (e.target[1].value === '') {
+			const group = e.target[1].value
+			if (!group) {
 				return
 			}
-			// Creates group
+			// Creates group in frontend
 			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.groups = space.groups.concat(e.target[1].value)
+			const oldGroups = space.groups
+			space.groups[group] = group
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// Opens group details page
-			this.$root.$data.spaces[this.$route.params.space].isOpen = true
-			// TODO open group details page
-			// TODO update backend
+
+			// Creates group in backend
+			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
+				.then((resp) => {
+					// Give group access to space
+					axios.post(generateUrl(`/apps/groupfolders/folders/${space.id}/groups`), { group })
+						.then((resp) => {
+							// Navigates to the group's details page
+							this.$root.$data.spaces[this.$route.params.space].isOpen = true
+							this.$router.push({
+								path: `/group/${space.name}/${group}`,
+							})
+						})
+						.catch((e) => {
+							// TODO revert frontend change, delete group in backend, inform user
+						})
+				})
+				.catch((e) => {
+					space.groups = oldGroups
+					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+					// TODO Inform user
+				})
+
 		},
 		renameGroup() {
 			// TODO
