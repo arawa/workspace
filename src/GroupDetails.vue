@@ -27,7 +27,7 @@
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
 							@click="toggleShowCreateGroupInput" />
-						<ActionInput v-show="createGroup"
+						<ActionInput v-show="showCreateGroupInput"
 							ref="createGroupInput"
 							icon="icon-group"
 							@submit="createGroup">
