@@ -6,6 +6,7 @@ use OCP\AppFramework\Controller;
 use OCP\Http\Client\IClientService;
 use OCP\AppFramework\Http\JSONResponse;
 // use OCP\IUserSession;
+use OCP\IURLGenerator;
 
 class AclManagerController extends Controller {
     
@@ -13,11 +14,20 @@ class AclManagerController extends Controller {
     
     // private $userSession;
 
-    public function __construct($AppName, IRequest $request, IClientService $clientService, IUserSession $userSession)
+    private $urlGenerator;
+
+    public function __construct(
+        $AppName,
+        IRequest $request,
+        IClientService $clientService,
+        // IUserSession $userSession,
+        IURLGenerator $urlGenerator
+    )
     {
         parent::__construct($AppName, $request);
         $this->clientService =  $clientService;
-        $this->userSession = $userSession;
+        // $this->userSession = $userSession;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -37,12 +47,12 @@ class AclManagerController extends Controller {
         // 1. Find a solution in order not to define the username & password to authentication.
         // 2. Find a solution to check if connected and add it in the conditional operator with '||' of GeneralManagerMiddleware.php
         $dataResponse = $client->post(
-            'https://nc21.dev.arawa.fr/apps/groupfolders/folders/'. $folderId .'/manageACL',
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/manageACL',
             [
-                // 'auth' => [
-                //     'username',
-                //     'password'
-                // ],
+                'auth' => [
+                    'username',
+                    'password'
+                ],
                 'body' => [
                         'mappingType' => 'group',
                         'mappingId' => $gid,
