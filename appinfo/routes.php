@@ -34,9 +34,9 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
-			'name' => 'page#createGroup',
+			'name' => 'group#create',
 			'url' => '/group/add/{group}',
-			'verb' => 'GET',
+			'verb' => 'POST',
 		],
 	]
 ];

@@ -2,7 +2,6 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
-use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,11 +43,10 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-
-		return new TemplateResponse('workspace', 'index');  // templates/index.php
+	
+		return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
 	/**
@@ -78,15 +76,6 @@ class PageController extends Controller {
 
 		// return info
 		return new JSONResponse($data);
-
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
-	public function createGroup($group) {
-		$this->groupManager->createGroup($group);
-		// TODO Handle error (eg: group already exists)
-	}
 }

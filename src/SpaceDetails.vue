@@ -108,14 +108,12 @@ export default {
 
 			// Creates group in frontend
 			const space = this.$root.$data.spaces[this.$route.params.space]
-			// eslint-disable-next-line
-			console.log(space.groups)
 			const oldGroups = space.groups
 			space.groups[group] = group
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 
 			// Creates group in backend
-			axios.get(generateUrl(`/apps/workspace/group/add/${group}`))
+			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
 				.then((resp) => {
 					// Give group access to space
 					axios.post(generateUrl(`/apps/groupfolders/folders/${space.id}/groups`), { group })
