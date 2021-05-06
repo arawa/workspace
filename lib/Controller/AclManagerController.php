@@ -5,29 +5,29 @@ use OCP\IRequest;
 use OCP\AppFramework\Controller;
 use OCP\Http\Client\IClientService;
 use OCP\AppFramework\Http\JSONResponse;
-// use OCP\IUserSession;
 use OCP\IURLGenerator;
+use OCP\Authentication\LoginCredentials\IStore;
 
 class AclManagerController extends Controller {
     
     private $clientService;
     
-    // private $userSession;
-
     private $urlGenerator;
+
+    private $IStore;
 
     public function __construct(
         $AppName,
         IRequest $request,
         IClientService $clientService,
-        // IUserSession $userSession,
-        IURLGenerator $urlGenerator
+        IURLGenerator $urlGenerator,
+        IStore $IStore
     )
     {
         parent::__construct($AppName, $request);
         $this->clientService =  $clientService;
-        // $this->userSession = $userSession;
         $this->urlGenerator = $urlGenerator;
+        $this->IStore = $IStore;
     }
 
     /**
@@ -37,21 +37,18 @@ class AclManagerController extends Controller {
      * @var string $folderId
      * @var string $gid
      */
-    public function addGroupAdvancedPermissions($folderId, $gid){
+    public function addGroupAdvancedPermissions($folderId, $gid, $token){
 
-        // print_r($this->userSession->isLoggedIn()); // return 1 from cli.
+        $login = $this->IStore->getLoginCredentials();
 
         $client = $this->clientService->newClient();
         
-        // TOFIX: 
-        // 1. Find a solution in order not to define the username & password to authentication.
-        // 2. Find a solution to check if connected and add it in the conditional operator with '||' of GeneralManagerMiddleware.php
         $dataResponse = $client->post(
             $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/manageACL',
             [
                 'auth' => [
-                    'username',
-                    'password'
+                    $login->getUID(),
+                    $login->getPassword()
                 ],
                 'body' => [
                         'mappingType' => 'group',
@@ -69,8 +66,6 @@ class AclManagerController extends Controller {
         $jsonResponse = $dataResponse->getBody();
         $response = json_decode($jsonResponse, true);
         
-        // TODO: If needed to filter like this : $response['ocs']['meta']['statuscode'].
-
         return new JSONResponse($response);
     }
 }
