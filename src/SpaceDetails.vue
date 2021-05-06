@@ -103,19 +103,37 @@ export default {
 			this.toggleCreateGroup()
 			// Don't accept empty names
 			const group = e.target[1].value
-			if (group === '') {
+			if (!group) {
 				return
 			}
-			// Creates group
+
+			// Creates group in frontend
 			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.groups = space.groups.concat(group)
+			const oldGroups = space.groups
+			space.groups[group] = group
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-			// Navigates to the group's details page
-			this.$root.$data.spaces[this.$route.params.space].isOpen = true
-			this.$router.push({
-				path: `/group/${space.name}/${group}`,
-			})
-			// TODO update backend
+
+			// Creates group in backend
+			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
+				.then((resp) => {
+					// Give group access to space
+					axios.post(generateUrl(`/apps/groupfolders/folders/${space.id}/groups`), { group })
+						.then((resp) => {
+							// Navigates to the group's details page
+							this.$root.$data.spaces[this.$route.params.space].isOpen = true
+							this.$router.push({
+								path: `/group/${space.name}/${group}`,
+							})
+						})
+						.catch((e) => {
+							// TODO revert frontend change, delete group in backend, inform user
+						})
+				})
+				.catch((e) => {
+					space.groups = oldGroups
+					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+					// TODO Inform user
+				})
 		},
 		renameSpace() {
 			// TODO

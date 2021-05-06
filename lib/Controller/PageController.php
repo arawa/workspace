@@ -15,10 +15,11 @@ class PageController extends Controller {
 	/** @var string */
 	private $userId;
 
-  /** @var IUserManager */
-	private $userManager;
+	/** @var IGroupManager */
+	private $groupManager;
 
-	protected $groupManager;
+	/** @var IUserManager */
+	private $userManager;
 
 	// TODO: Move them to lib/Application.php
 	private $ESPACE_MANAGER_01 = "GE-";
@@ -42,14 +43,13 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-
-		return new TemplateResponse('workspace', 'index');  // templates/index.php
+	
+		return new TemplateResponse('workspace', 'index');  	// templates/index.php
 	}
 
-   /**
+	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
@@ -76,7 +76,6 @@ class PageController extends Controller {
 
 		// return info
 		return new JSONResponse($data);
-
-  }
+	}
 
 }
