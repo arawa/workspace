@@ -42,7 +42,7 @@
 						</ActionInput>
 					</Actions>
 				</div>
-				<Actions>
+				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
 					<ActionButton
 						icon="icon-rename"
 						@click="renameSpace">
