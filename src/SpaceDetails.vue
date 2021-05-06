@@ -15,6 +15,7 @@
 				</span>
 				<Multiselect
 					class="quota-select"
+					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
 					:value="$root.$data.spaces[$route.params.space].quota"
