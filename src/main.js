@@ -22,6 +22,7 @@ Vue.mixin({
 export default new Vue({
 	el: '#content',
 	data: {
+		isUserGeneralAdmin: false,
 		spaces: {},
 	},
 	router,
