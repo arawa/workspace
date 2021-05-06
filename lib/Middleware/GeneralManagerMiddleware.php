@@ -31,7 +31,8 @@ class GeneralManagerMiddleware extends Middleware{
 
     public function beforeController($controller, $methodName ){
 
-        if(! $this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
+        // TODO We must also allow space admins 
+        if(!$this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
 
             throw new NotGeneralManagerException();
 
