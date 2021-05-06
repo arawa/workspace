@@ -1,4 +1,4 @@
 node_modules/
 vendor/
-js/
+js/*
 package-lock.json
