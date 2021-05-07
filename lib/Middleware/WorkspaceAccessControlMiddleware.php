@@ -38,6 +38,7 @@ class WorkspaceAccessControlMiddleware extends Middleware{
     }
 
     private function isSpaceManager() {
+	// TODO: Use global constant instead of 'GE-'
         $workspaceAdminGroups = $this->groupManager->search('GE-');
         foreach($workspaceAdminGroups as $group) {
             if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
