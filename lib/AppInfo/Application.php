@@ -7,7 +7,7 @@ use OCP\AppFramework\App;
 use OCP\IURLGenerator;
 use OCP\IUser;
 
-use \OCA\Workspace\Middleware\GeneralManagerMiddleware;
+use \OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 
 class Application extends App {
         public const APP_ID = 'workspace';
@@ -19,13 +19,13 @@ class Application extends App {
 
                 $container = $this->getContainer();
 
-                $container->registerService('GeneralManagerMiddleware', function($c){
-                    return new GeneralManagerMiddleware(
+                $container->registerService('WorkspaceAccessControlMiddleware', function($c){
+                    return new WorkspaceAccessControlMiddleware(
                         $c->query(IURLGenerator::class),
                         $c->query(IUser::class)
                     );
                 });
 
-                $container->registerMiddleware('OCA\Workspace\Middleware\GeneralManagerMiddleware');
+                $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
         }
 }
