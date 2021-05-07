@@ -11,5 +11,8 @@
     "require": {},
     "require-dev": {
         "phpunit/phpunit": "^8.2"
+    },
+    "scripts": {
+	"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning"
     }
 }
