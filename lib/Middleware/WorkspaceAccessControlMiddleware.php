@@ -4,6 +4,7 @@ namespace OCA\Workspace\Middleware;
 
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;

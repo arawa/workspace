@@ -2,14 +2,17 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Constants;
 use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Controller;
 use OCP\IUserManager;
 use OCP\Util;
 
 class PageController extends Controller {
+	/** @var string */
+	private $userId;
 
 	/** @var IUserManager */
 	private $usersManager;
@@ -17,21 +20,12 @@ class PageController extends Controller {
 	/** @var UserService */
 	private $userService;
 
-	// TODO: Move them to lib/Application.php
-	private $ESPACE_MANAGER_01 = "GE-";
-	private $ESPACE_MANAGER_02 = "Manager_";
-	private $ESPACE_MANAGER_03 = "_GE";
-	private $ESPACE_USERS_01 = "_U";
-	private $ESPACE_USERS_02 = "Users_";
-	private $ESPACE_USERS_03 = "U-";
-
 	public function __construct(
 		IUserManager $usersManager,
 		UserService $userService) {
 
 		$this->userManager = $usersManager;
 		$this->userService = $userService;
-
 	}
 
 	/**
