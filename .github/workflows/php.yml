@@ -10,24 +10,37 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [7.3, 7.4]
+        nextcloud-versions: ['stable20', 'stable21', 'master']
+        include:
+            - php: 8.0
+              nextcloud-version: master
 
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
+    - name: Set up php${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@master
       with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
+        php-version: ${{ matrix.php-versions }}
+        tools: composer:v2
+        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
+        coverage: xdebug
+    - name: Checkout Nextcloud
+      run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+    - name: Install Nextcloud
+      run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+    - name: Checkout workspace
+      uses: actions/checkout@main
+      with:
+        path: nextcloud/apps/workspace
+    - name: Validate composer.json and composer.lock
+      working-directory: nextcloud/apps/workspace
+      run: composer validate --strict
     - name: Install dependencies
+      working-directory: nextcloud/apps/workspace
       run: composer install --prefer-dist --no-progress
-
     - name: Run test suite
+      working-directory: nextcloud/apps/workspace
       run: composer run-script test
