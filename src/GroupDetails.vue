@@ -93,12 +93,16 @@ export default {
 			// Hides ActionInput
 			this.toggleShowCreateGroupInput()
 			// Don't accept empty names
-			const group = e.target[1].value
+			let group = e.target[1].value
 			if (!group) {
 				return
 			}
-			// Creates group in frontend
+
+			// Groups must be postfixed with the ID of the space they relate to
 			const space = this.$root.$data.spaces[this.$route.params.space]
+			group = group + '-' + space.id
+
+			// Creates group in frontend
 			const oldGroups = space.groups
 			space.groups[group] = group
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
