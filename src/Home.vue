@@ -16,7 +16,7 @@
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
-			<AppNavigationItem v-for="(space, name) in $root.$data.spaces"
+			<AppNavigationItem v-for="(space, name) in sortedSpaces"
 				:key="name"
 				:class="$route.params.space === name ? 'space-selected' : ''"
 				:allow-collapse="true"
@@ -81,6 +81,16 @@ export default {
 				})
 				this.$root.$data.spaces = spaces
 			})
+	},
+	computed: {
+		// Returns a sorted version of this.$root.$data.spaces
+		sortedSpaces() {
+			const sortedSpaces = {}
+			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
+				sortedSpaces[value] = this.$root.$data.spaces[value]
+			})
+			return sortedSpaces
+		},
 	},
 	methods: {
 		// Returns the list of administrators of a space
