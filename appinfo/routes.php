@@ -24,8 +24,13 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'workspace#getUserWorkspaces',
+			'url' => '/spaces',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
-			'url' => '/space/{folderId}/group/{gid}/acl',
+			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
 		],
 		[
