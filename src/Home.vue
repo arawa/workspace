@@ -9,7 +9,7 @@
 <template>
 	<Content id="content" app-name="workspace">
 		<AppNavigation>
-			<AppNavigationNewItem
+			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
