@@ -1,14 +1,18 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
+use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class WorkspaceController extends Controller {
+<<<<<<< HEAD
     
     /** @var IStore */
     private $IStore;
@@ -91,16 +95,12 @@ class WorkspaceController extends Controller {
      */
     public function addGroupAdvancedPermissions($folderId, $gid){
 
-        $login = $this->IStore->getLoginCredentials();
-
-        $client = $this->clientService->newClient();
-        
-        $dataResponse = $client->post(
+        $dataResponse = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/manageACL',
             [
                 'auth' => [
-                    $login->getUID(),
-                    $login->getPassword()
+                    $this->login->getUID(),
+                    $$this->login->getPassword()
                 ],
                 'body' => [
                         'mappingType' => 'group',
@@ -115,9 +115,8 @@ class WorkspaceController extends Controller {
             ]
         );
 
-        $jsonResponse = $dataResponse->getBody();
-        $response = json_decode($jsonResponse, true);
-        
+        $response = json_decode($dataResponse->getBody(), true);
+
         return new JSONResponse($response);
     }
 }
