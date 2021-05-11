@@ -9,17 +9,21 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Controller;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use OCP\Util;
 
 class PageController extends Controller {
 	/** @var string */
 	private $userId;
 
-	/** @var IGroupManager */
-	private $groupManager;
-
 	/** @var IUserManager */
 	private $userManager;
+
+	/** @var IUserSession */
+	private $userSession;
+
+	/** @var $groupManager */
+	private $groupManager;
 
 	// TODO: Move them to lib/Application.php
 	private $ESPACE_MANAGER_01 = "GE-";
@@ -29,11 +33,33 @@ class PageController extends Controller {
 	private $ESPACE_USERS_02 = "Users_";
 	private $ESPACE_USERS_03 = "U-";
 
-	public function __construct($AppName, IRequest $request, $UserId, IUserManager $users, IGroupManager $group){
-		parent::__construct($AppName, $request);
+	public function __construct($AppName,
+		$UserId,
+		IGroupManager $group,
+		IRequest $request,
+		IUserManager $users,
+		IUserSession $userSession) {
+
+		$this->groupManager = $group;
 		$this->userId = $UserId;
 		$this->userManager = $users;
-		$this->groupManager = $group;
+		$this->userSession = $userSession;
+
+	}
+
+	/**
+	 * TODO This function should be moved in a dedicated file
+	 *
+	 * @return boolean true if user is general admin, false otherwise 
+	 */
+	private function isUserGeneralAdmin() {
+		$user = $this->userSession->getUser();
+
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -46,7 +72,7 @@ class PageController extends Controller {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
-		return new TemplateResponse('workspace', 'index');  	// templates/index.php
+		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->isUserGeneralAdmin()]);  	// templates/index.php
 	}
 
 	/**

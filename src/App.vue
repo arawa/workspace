@@ -13,5 +13,9 @@
 <script>
 export default {
 	name: 'App',
+	created() {
+		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
+	},
 }
+
 </script>

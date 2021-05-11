@@ -15,6 +15,7 @@
 				</span>
 				<Multiselect
 					class="quota-select"
+					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
 					:value="$root.$data.spaces[$route.params.space].quota"
@@ -42,7 +43,7 @@
 						</ActionInput>
 					</Actions>
 				</div>
-				<Actions>
+				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
 					<ActionButton
 						icon="icon-rename"
 						@click="renameSpace">
