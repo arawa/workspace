@@ -26,18 +26,23 @@ class WorkspaceController extends Controller {
     /** @var IURLGenerator */
     private $urlGenerator;
 
+    /** @var UserService */
+    private $userService;
+
     public function __construct(
         $AppName,
         IClientService $clientService,
 	IRequest $request,
         IURLGenerator $urlGenerator,
+	UserService $userService,
         IStore $IStore
     )
     {
         parent::__construct($AppName, $request);
 
-        $this->urlGenerator = $urlGenerator;
         $this->IStore = $IStore;
+        $this->urlGenerator = $urlGenerator;
+        $this->userService = $userService;
 
 	$this->login = $this->IStore->getLoginCredentials();
 
@@ -66,7 +71,8 @@ class WorkspaceController extends Controller {
                         'Content-Type' => 'application/x-www-form-urlencoded',
                         'OCS-APIRequest' => 'true',
                         'Accept' => 'application/json',
-                ]
+                ],
+		'verify' => false,
             ]
         );
 
