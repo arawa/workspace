@@ -12,6 +12,8 @@ use \OCA\Workspace\Middleware\GeneralManagerMiddleware;
 class Application extends App {
         public const APP_ID = 'workspace';
 
+        public const GENERAL_MANAGER = "GeneralManager";
+
         public function __construct(array $urlParams=[] ) {
                 parent::__construct(self::APP_ID, $urlParams);
 

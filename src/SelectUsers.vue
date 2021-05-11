@@ -12,9 +12,12 @@
 			v-model="selectedUsers"
 			class="select-users-input"
 			label="displayName"
-			:options="selectableUsers"
 			:loading="isLookingUpUsers"
-			:placeholder="t('workspace', 'Select new user')"
+			:multiple="true"
+			:options="selectableUsers"
+			:placeholder="t('workspace', 'Start typing to lookup users')"
+			:tag-width="50"
+			:user-select="true"
 			@change="addUsersToBatch"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
@@ -26,33 +29,49 @@
 			</div>
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
-					:key="user.displayName">
-					<span> {{ user.displayName }} </span>
+					:key="user.displayName"
+					class="user-entry">
+					<div>
+						<Avatar :display-name="user.displayName" :user="user.displayName" />
+						<div class="user-name">
+							<span> {{ user.displayName }} </span>
+						</div>
+					</div>
+					<div class="user-entry-actions">
+						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+						<label>{{ t('workspace', 'S.A.') }}</label>
+						<Actions>
+							<ActionButton
+								icon="icon-delete"
+								@click="removeUserFromBatch(user)">
+								{{ t('workspace', 'remove users from selection') }}
+							</ActionButton>
+						</Actions>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="select-users-actions">
-			<Actions>
-				<ActionButton
-					icon="icon-add"
-					@click="addUsers">
-					{{ t('workspace', 'Add users') }}
-				</ActionButton>
-			</Actions>
+			<button @click="addUsersToWorkspace">
+				{{ t('workspace', 'Add users') }}
+			</button>
 		</div>
 	</div>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { generateUrl } from '@nextcloud/router'
+import Vue from 'vue'
 
 export default {
 	name: 'SelectUsers',
 	components: {
+		Avatar,
 		Actions,
 		ActionButton,
 		Multiselect,
@@ -66,9 +85,22 @@ export default {
 		}
 	},
 	methods: {
+		// Adds users to workspace and close dialog
+		addUsersToWorkspace() {
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			space.users = space.users.concat(this.allSelectedUsers.map(user => {
+				return {
+					name: user.displayName,
+					email: user.email,
+					role: user.role,
+				}
+			}))
+			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			this.$emit('close')
+		},
 		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(selectedUsers) {
-			this.allSelectedUsers.push(selectedUsers)
+		addUsersToBatch(user) {
+			this.allSelectedUsers = [...new Set(this.allSelectedUsers.concat(user))]
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -91,6 +123,21 @@ export default {
 					// TODO: add some user feedback
 					this.isLookingUpUsers = false
 				})
+		},
+		removeUserFromBatch(user) {
+			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
+				return u.displayName !== user.displayName
+			})
+		},
+		toggleUserRole(user) {
+			this.allSelectedUsers = this.allSelectedUsers.map(u => {
+				if (u.displayName === user.displayName) {
+					u.role = u.role === 'user' ? 'admin' : 'user'
+					return u
+				} else {
+					return u
+				}
+			})
 		},
 	},
 }
@@ -123,5 +170,25 @@ export default {
 
 .select-users-wrapper {
 	margin: 10px;
+}
+
+.user-entry {
+	justify-content: space-between;
+	margin-left: 5px;
+}
+
+.user-entry,
+.user-entry div {
+	align-items: center;
+	display: flex;
+	flex-flow: row;
+}
+
+.user-name {
+	margin-left: 10px;
+}
+
+.role-toggle {
+	cursor: pointer !important;
 }
 </style>

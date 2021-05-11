@@ -13,31 +13,16 @@
 # * tar: for building the archive
 # * npm: for building and testing everything JS
 #
-# If no composer.json is in the app root directory, the Composer step
-# will be skipped. The same goes for the package.json which can be located in
-# the app root or the js/ directory.
-#
-# The npm command by launches the npm build script:
-#
-#    npm run build
-#
-# The npm test command launches the npm test script:
-#
-#    npm run test
+# Uses the following commands:
+# * make, make all, make build: to build your app for a production environment
+# * make dev: to build your app for a development environment
+# * make dist: to build your app for the offical Nextcloud appstore (doesn't work atm)
+# * make clean: to clean your project folder from the appstore build artifacts
+# * make fullclean: same as 'make clean' but also removes all project dependencies
 #
 # The idea behind this is to be completely testing and build tool agnostic. All
 # build tools and additional package managers should be installed locally in
 # your project, since this won't pollute people's global namespace.
-#
-# The following npm scripts in your package.json install and update the bower
-# and npm dependencies and use gulp as build system (notice how everything is
-# run from the node_modules folder):
-#
-#    "scripts": {
-#        "test": "node node_modules/gulp-cli/bin/gulp.js karma",
-#        "prebuild": "npm install && node_modules/bower/bin/bower install && node_modules/bower/bin/bower update",
-#        "build": "node node_modules/gulp-cli/bin/gulp.js"
-#    },
 
 app_name=$(notdir $(CURDIR))
 build_tools_directory=$(CURDIR)/build/tools
@@ -47,22 +32,24 @@ appstore_build_directory=$(CURDIR)/build/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
 npm=$(shell which npm 2> /dev/null)
 composer=$(shell which composer 2> /dev/null)
+flavor=prod
 
+.PHONY: all
 all: build
 
-# Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
-# is present, the composer step is skipped, if no package.json or js/package.json
-# is present, the npm step is skipped
+.PHONY: dev
+dev: flavor=dev
+dev: build
+
+# Fetches the PHP and JS dependencies and compiles the JS.
 .PHONY: build
 build:
 ifneq (,$(wildcard $(CURDIR)/composer.json))
 	make composer
 endif
 ifneq (,$(wildcard $(CURDIR)/package.json))
-	make npm
-endif
-ifneq (,$(wildcard $(CURDIR)/js/package.json))
-	make npm
+	npm install
+	make npm-$(flavor)
 endif
 
 # Installs and updates the composer dependencies. If composer is not installed
@@ -79,14 +66,15 @@ else
 	composer install --prefer-dist
 endif
 
-# Installs npm dependencies
+# Builds the js part of the app for production use
 .PHONY: npm
-npm:
-ifeq (,$(wildcard $(CURDIR)/package.json))
-	cd js && $(npm) run build
-else
+npm-prod:
 	npm run build
-endif
+
+# Builds the js part of the app for development use
+.PHONY: npm
+npm-dev:
+	npm run dev
 
 # Removes the appstore build
 .PHONY: clean
@@ -96,11 +84,23 @@ clean:
 # Same as clean but also removes dependencies installed by composer, bower and
 # npm
 .PHONY: distclean
-distclean: clean
+fullclean: clean
 	rm -rf vendor
 	rm -rf node_modules
 	rm -rf js/vendor
 	rm -rf js/node_modules
+
+.PHONY: test
+test: composer
+	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.xml
+	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml
+
+######################################################
+#
+# Everything from here relates to building a valid app
+# for Nextcloud's official appstore
+#
+######################################################
 
 # Builds the source and appstore package
 .PHONY: dist
@@ -148,8 +148,3 @@ appstore:
 	--exclude="../$(app_name)/protractor\.*" \
 	--exclude="../$(app_name)/.*" \
 	--exclude="../$(app_name)/js/.*" \
-
-.PHONY: test
-test: composer
-	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.xml
-	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml

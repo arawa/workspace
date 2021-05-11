@@ -8,6 +8,7 @@
  */
 
 import Vue from 'vue'
+import router from './router'
 import App from './App.vue'
 
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
@@ -26,5 +27,6 @@ export default new Vue({
 	data: {
 		spaces: {},
 	},
+	router,
 	render: (h) => h(App),
 })

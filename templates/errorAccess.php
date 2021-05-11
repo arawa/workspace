@@ -1,1 +1,0 @@
-<h1>Vous n'avez pas le droit d'aller à cette page</h1>
