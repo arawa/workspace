@@ -24,7 +24,7 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'acl_manager#addGroupAdvancedPermissions',
+			'name' => 'workspace#addGroupAdvancedPermissions',
 			'url' => '/space/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
 		],
