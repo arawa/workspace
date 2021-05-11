@@ -10,9 +10,9 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
-use OCA\Workspace\Middleware\Exceptions\NotGeneralManagerException;
+use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 
-class GeneralManagerMiddleware extends Middleware{
+class WorkspaceAccessControlMiddleware extends Middleware{
 
     private $groupManager;
 
@@ -29,23 +29,44 @@ class GeneralManagerMiddleware extends Middleware{
         $this->userSession = $userSession;
     }
 
+    private function isGeneralManager() {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
+            return true;
+		} else {
+	    	return false;
+		}
+    }
+
+    private function isSpaceManager() {
+        $workspaceAdminGroups = $this->groupManager->search('GE-');
+        foreach($workspaceAdminGroups as $group) {
+            if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function beforeController($controller, $methodName ){
 
-        // TODO We must also allow space admins 
-        if(!$this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
+        // Checks if user is member of the General managers group
+        if ($this->isGeneralManager()){
+                return;
+        }
 
-            throw new NotGeneralManagerException();
+        // Checks if user if member of a Space managers group
+        if ($this->isSpaceManager()){
+                return;
+        }
 
-        }        
+        throw new AccessDeniedException();
 
     }
 
     // TODO: Find a solution to use this method.
     public function afterException($controller, $methodName, \Exception $exception){
-        if($exception instanceof NotGeneralManagerException){
-            /**
-             * errorAccess tempalte is not exist.
-            */ 
+        if($exception instanceof AccessDeniedException){
+            // errorAccess template doesn't exist.
             $route = 'workspace.page.errorAccess';          
             $url = $this->urlGenerator->linkToRouteAbsolute($route, [ ]);
             
