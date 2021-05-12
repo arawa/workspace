@@ -36,7 +36,7 @@ Class UserService {
 	/**
 	* @return boolean true if user is a space manager, false otherwise
 	*/
-	public function isSpaceManager() {
+	private function isSpaceManager() {
 		// TODO This must use the application constants
 		$workspaceAdminGroups = $this->groupManager->search('GE-');
 		foreach($workspaceAdminGroups as $group) {

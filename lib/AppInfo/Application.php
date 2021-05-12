@@ -3,9 +3,9 @@
 namespace OCA\Workspace\AppInfo;
 
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
 use OCP\IURLGenerator;
-use OCP\IUser;
 
 class Application extends App {
         public const APP_ID = 'workspace';
@@ -20,7 +20,7 @@ class Application extends App {
                 $container->registerService('WorkspaceAccessControlMiddleware', function($c){
                     return new WorkspaceAccessControlMiddleware(
                         $c->query(IURLGenerator::class),
-                        $c->query(IUser::class)
+                        $c->query(UserService::class)
                     );
                 });
 

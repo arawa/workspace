@@ -80,8 +80,8 @@ class WorkspaceController extends Controller {
 	$spaces = json_decode($response->getBody());
 
 	// TODO Filter to show only workspaces
-	//
-	// Only returns those workspaces for which the connected user is a manager
+	
+	// We only want to return those workspaces for which the connected user is a manager
 	if (!$this->userService->isUserGeneralAdmin()) {
 
 	}

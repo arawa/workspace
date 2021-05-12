@@ -2,21 +2,18 @@
 
 namespace OCA\Workspace\Middleware;
 
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Middleware;
-use OCP\IGroupManager;
 use OCP\IURLGenerator;
-use OCP\IUserSession;
 
 class WorkspaceAccessControlMiddleware extends Middleware{
 
-    /** @var IGroupManager */
-    private $groupManager;
+    /** @var IURLGenerator */
+    private $urlGenerator;
 
     /** @var IUserSession */
     private $userSession;
@@ -25,35 +22,12 @@ class WorkspaceAccessControlMiddleware extends Middleware{
     private $userService;
 
     public function __construct(
-        IGroupManager $groupManager,
         IURLGenerator $urlGenerator,
-	IUserSession $userSession,
 	UserService $userService
     )
     {
-        $this->groupManager = $groupManager;
         $this->urlGenerator = $urlGenerator;
-        $this->userSession = $userSession;
         $this->userService = $userService;
-    }
-
-    private function isGeneralManager() {
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)){
-            return true;
-		} else {
-	    	return false;
-		}
-    }
-
-    private function isSpaceManager() {
-	// TODO: Use global constant instead of 'GE-'
-        $workspaceAdminGroups = $this->groupManager->search('GE-');
-        foreach($workspaceAdminGroups as $group) {
-            if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public function beforeController($controller, $methodName ){
@@ -63,9 +37,8 @@ class WorkspaceAccessControlMiddleware extends Middleware{
                 return;
         }
 
-        // TODO We must also allow space admins 
         // Checks if user if member of a Space managers group
-        if ($this->isSpaceManager()){
+        if ($this->userService->isSpaceManager()){
                 return;
         }
 
