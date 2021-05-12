@@ -62,7 +62,7 @@ export default {
 		Content,
 	},
 	created() {
-		axios.get(generateUrl('/apps/groupfolders/folders?format=json'))
+		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
 				const spaces = {}
 				const groupfolders = Object.entries(resp.data.ocs.data)

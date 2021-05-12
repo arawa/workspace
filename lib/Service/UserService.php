@@ -23,18 +23,17 @@ Class UserService {
 	}
 
 	/**
-	* @return boolean true if user is general admin, false otherwise
+	 * @return boolean true if user is general admin, false otherwise
 	*/
 	public function isUserGeneralAdmin() {
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* @return boolean true if user is a space manager, false otherwise
+	 * @return boolean true if user is a space manager, false otherwise
 	*/
 	private function isSpaceManager() {
 		// TODO This must use the application constants
@@ -50,7 +49,6 @@ Class UserService {
 	/**
 	 * @param string $name The workspace name
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
-	 *
 	*/
 	public function isSpaceManagerOfSpace($name) {
 		// TODO This must use the application constants
