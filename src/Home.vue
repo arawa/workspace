@@ -65,11 +65,9 @@ export default {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
 				const spaces = {}
-				const groupfolders = Object.entries(resp.data.ocs.data)
-				// TODO: groupfolders should be send to the backend to retrieve the missing info and filter in case user is not GG
-				groupfolders.forEach(groupfolder => {
-					const folder = groupfolder[1]
+				Object.values(resp.data).forEach(folder => {
 					spaces[folder.mount_point] = {
+						// TODO color should be returned by backend
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 						groups: folder.groups,
 						id: folder.id,
