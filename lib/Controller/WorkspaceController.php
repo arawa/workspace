@@ -12,7 +12,6 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class WorkspaceController extends Controller {
-<<<<<<< HEAD
     
     /** @var IStore */
     private $IStore;
