@@ -78,9 +78,10 @@ class WorkspaceController extends Controller {
 	// TODO Check response first
 	// TODO Filter to show only workspaces, not regular groupfolders
 	
-	// We only want to return those workspaces for which the connected user is a manager
 	$spaces = json_decode($response->getBody(), true);
 	$spaces = $spaces['ocs']['data'];
+	
+	// We only want to return those workspaces for which the connected user is a manager
 	if (!$this->userService->isUserGeneralAdmin()) {
 		$filteredSpaces = array_filter($spaces, function($space) {
 			return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
