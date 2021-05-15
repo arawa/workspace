@@ -154,6 +154,10 @@ export default {
 	display: block;
 }
 
+.app-navigation-entry {
+	padding-right: 5px;
+}
+
 .space-selected {
 	background-color: #EAF5FC;
 }
