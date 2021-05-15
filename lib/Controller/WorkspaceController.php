@@ -8,6 +8,7 @@ use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -22,6 +23,9 @@ class WorkspaceController extends Controller {
     /** @var ICredentials */
     private $login;
 
+    /** @var IGroupManager */
+    private $groupManager;
+
     /** @var IURLGenerator */
     private $urlGenerator;
 
@@ -31,6 +35,7 @@ class WorkspaceController extends Controller {
     public function __construct(
         $AppName,
         IClientService $clientService,
+	IGroupManager $groupManager,
 	IRequest $request,
         IURLGenerator $urlGenerator,
 	UserService $userService,
@@ -39,6 +44,7 @@ class WorkspaceController extends Controller {
     {
         parent::__construct($AppName, $request);
 
+	$this->groupManager = $groupManager;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
@@ -86,10 +92,19 @@ class WorkspaceController extends Controller {
 		$filteredSpaces = array_filter($spaces, function($space) {
 			return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
 		});
-        	return new JSONResponse($filteredSpaces);
+        	$spaces = $filteredSpaces;
 	}
 
-        return new JSONResponse($spaces);
+	// Adds workspace users
+	// TODO We still need to get the workspace color here
+	$augmentedSpaces = array_map(function($space) {
+		$space['admins'] = $this->groupManager->get('GE-' . $space['mount_point'])->getUsers();
+		$space['users'] = $this->groupManager->get('U-' . $space['mount_point'])->getUsers();
+		return $space;
+		
+	},$spaces);
+
+        return new JSONResponse($augmentedSpaces);
     }
 
     /**

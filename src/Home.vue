@@ -23,6 +23,9 @@
 				:open="space.isOpen"
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
+				<CounterBubble slot="counter">
+					{{ workspaceUsersCount(name) }}
+				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($root.$data.spaces[name].groups)"
 						:key="group[0]"
@@ -74,7 +77,8 @@ export default {
 						isOpen: false,
 						name: folder.mount_point,
 						quota: this.convertQuotaForFrontend(folder.quota),
-						users: [],
+						admins: folder.admins,
+						users: folder.users,
 					}
 				})
 				this.$root.$data.spaces = spaces
@@ -126,6 +130,13 @@ export default {
 				path: `/workspace/${name}`,
 			})
 			// TODO update backend
+		},
+		// Returns the number of users having access to a space
+		workspaceUsersCount(name) {
+			const space = this.$root.$data.spaces[name]
+			let count = Array.isArray(space.admins) ? 0 : Object.keys(space.admins).length
+			count += Array.isArray(space.users) ? 0 : Object.keys(space.users).length
+			return count
 		},
 	},
 }
