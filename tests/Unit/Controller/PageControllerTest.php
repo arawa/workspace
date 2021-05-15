@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use OCA\Workspace\Controller\PageController;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IGroupManager;
+use OCP\IRequest;
 use OCP\IUserManager;
 
 class PageControllerTest extends TestCase {
@@ -14,11 +15,9 @@ class PageControllerTest extends TestCase {
 	private $userId = 'john';
 
 	public function setUp(): void {
-		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
-
 		$this->controller = new PageController(
 			'workspace',
-			$request,
+			$this->createMock(IRequest::class),
 			$this->userId,
 			$this->createMock(IUserManager::class),
 			$this->createMock(IGroupManager::class),
