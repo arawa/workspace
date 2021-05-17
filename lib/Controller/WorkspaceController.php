@@ -97,14 +97,14 @@ class WorkspaceController extends Controller {
 
 	// Adds workspace users
 	// TODO We still need to get the workspace color here
-	$augmentedSpaces = array_map(function($space) {
+	$spacesWithUsers = array_map(function($space) {
 		$space['admins'] = $this->groupManager->get('GE-' . $space['mount_point'])->getUsers();
 		$space['users'] = $this->groupManager->get('U-' . $space['mount_point'])->getUsers();
 		return $space;
 		
 	},$spaces);
 
-        return new JSONResponse($augmentedSpaces);
+        return new JSONResponse($spacesWithUsers);
     }
 
     /**
