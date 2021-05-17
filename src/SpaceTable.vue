@@ -20,6 +20,7 @@
 			</thead>
 			<tr v-for="(space,name) in sortedSpaces"
 				:key="name">
+				@click="openSpace(name)">
 				<td style="width: 50px;">
 					<span class="color-dot" :style="{background: space.color}" />
 				</td>
@@ -59,6 +60,12 @@ export default {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
 			return space.users.filter(user => user.role === 'admin').map(user => user.name)
+		},
+		openSpace(name) {
+			this.$root.$data.spaces[name].isOpen = true
+			this.$router.push({
+				path: `/workspace/${name}`,
+			})
 		},
 	},
 }
