@@ -2,28 +2,20 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
-use OCP\IRequest;
-use OCP\IGroupManager;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Controller;
-use OCP\IUser;
 use OCP\IUserManager;
-use OCP\IUserSession;
 use OCP\Util;
 
 class PageController extends Controller {
-	/** @var string */
-	private $userId;
 
 	/** @var IUserManager */
-	private $userManager;
+	private $usersManager;
 
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var $groupManager */
-	private $groupManager;
+	/** @var UserService */
+	private $userService;
 
 	// TODO: Move them to lib/Application.php
 	private $ESPACE_MANAGER_01 = "GE-";
@@ -33,33 +25,13 @@ class PageController extends Controller {
 	private $ESPACE_USERS_02 = "Users_";
 	private $ESPACE_USERS_03 = "U-";
 
-	public function __construct($AppName,
-		$UserId,
-		IGroupManager $group,
-		IRequest $request,
-		IUserManager $users,
-		IUserSession $userSession) {
+	public function __construct(
+		IUserManager $usersManager,
+		UserService $userService) {
 
-		$this->groupManager = $group;
-		$this->userId = $UserId;
-		$this->userManager = $users;
-		$this->userSession = $userSession;
+		$this->userManager = $usersManager;
+		$this->userService = $userService;
 
-	}
-
-	/**
-	 * TODO This function should be moved in a dedicated file
-	 *
-	 * @return boolean true if user is general admin, false otherwise 
-	 */
-	private function isUserGeneralAdmin() {
-		$user = $this->userSession->getUser();
-
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GENERAL_MANAGER)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/**
@@ -72,7 +44,7 @@ class PageController extends Controller {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
-		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->isUserGeneralAdmin()]);  	// templates/index.php
+		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin()]); 	// templates/index.php
 	}
 
 	/**
