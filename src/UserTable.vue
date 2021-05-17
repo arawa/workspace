@@ -18,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="user in $root.$data.spaces[$route.params.space].users"
+				<tr v-for="user in workspaceUsers($route.params.space)"
 					:key="user.name"
 					:class="user.role==='admin' ? 'user-admin' : ''">
 					<td>
@@ -90,6 +90,29 @@ export default {
 			})
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 			// TODO: update backend
+		},
+		// Returns the users of the workspace in a format suitable for this component
+		workspaceUsers(name) {
+			const space = this.$root.$data.spaces[name]
+			let allUsers = []
+			// Let's first process the admins
+			let users = Array.isArray(space.admins) ? [] : Object.keys(space.admins)
+			allUsers = users.map((user) => {
+				return {
+					name: user,
+					role: 'admin',
+				}
+			})
+			// And then the regular users
+			users = Array.isArray(space.users) ? [] : Object.keys(space.users)
+			allUsers = [...allUsers, ...users.map((user) => {
+				return {
+					name: user,
+					role: 'user',
+				}
+			})]
+
+			return allUsers
 		},
 	},
 }

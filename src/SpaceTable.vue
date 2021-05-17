@@ -27,11 +27,13 @@
 				<td> {{ name }} </td>
 				<td> {{ space.quota }} </td>
 				<td>
-					<Avatar v-for="user in adminUsers(space)"
-						:key="user"
-						:style="{ marginRight: 2 + 'px' }"
-						:display-name="user"
-						:user="user" />
+					<div class="admin-avatars">
+						<Avatar v-for="user in Array.isArray(space.admins) ? [] : Object.keys(space.admins)"
+							:key="user"
+							:style="{ marginRight: 2 + 'px' }"
+							:display-name="user"
+							:user="user" />
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -77,5 +79,10 @@ export default {
 	width: 35px;
 	border-radius: 50%;
 	display: block;
+}
+
+.admin-avatars {
+	display: flex;
+	flex-flow: row-reverse;
 }
 </style>

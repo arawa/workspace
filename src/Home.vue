@@ -23,6 +23,9 @@
 				:open="space.isOpen"
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
+				<CounterBubble slot="counter">
+					{{ workspaceUsersCount(name) }}
+				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($root.$data.spaces[name].groups)"
 						:key="group[0]"
@@ -61,6 +64,16 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
+	computed: {
+		// Returns a sorted version of this.$root.$data.spaces
+		sortedSpaces() {
+			const sortedSpaces = {}
+			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
+				sortedSpaces[value] = this.$root.$data.spaces[value]
+			})
+			return sortedSpaces
+		},
+	},
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
@@ -74,21 +87,12 @@ export default {
 						isOpen: false,
 						name: folder.mount_point,
 						quota: this.convertQuotaForFrontend(folder.quota),
-						users: [],
+						admins: folder.admins,
+						users: folder.users,
 					}
 				})
 				this.$root.$data.spaces = spaces
 			})
-	},
-	computed: {
-		// Returns a sorted version of this.$root.$data.spaces
-		sortedSpaces() {
-			const sortedSpaces = {}
-			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
-				sortedSpaces[value] = this.$root.$data.spaces[value]
-			})
-			return sortedSpaces
-		},
 	},
 	methods: {
 		// Returns the list of administrators of a space
@@ -127,6 +131,13 @@ export default {
 			})
 			// TODO update backend
 		},
+		// Returns the number of users having access to a space
+		workspaceUsersCount(name) {
+			const space = this.$root.$data.spaces[name]
+			let count = Array.isArray(space.admins) ? 0 : Object.keys(space.admins).length
+			count += Array.isArray(space.users) ? 0 : Object.keys(space.users).length
+			return count
+		},
 	},
 }
 </script>
@@ -141,6 +152,10 @@ export default {
 
 .app-navigation {
 	display: block;
+}
+
+.app-navigation-entry {
+	padding-right: 5px;
 }
 
 .space-selected {
