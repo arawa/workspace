@@ -35,10 +35,10 @@ class WorkspaceController extends Controller {
     public function __construct(
         $AppName,
         IClientService $clientService,
-	IGroupManager $groupManager,
-	IRequest $request,
+        IGroupManager $groupManager,
+        IRequest $request,
         IURLGenerator $urlGenerator,
-	UserService $userService,
+	    UserService $userService,
         IStore $IStore
     )
     {
@@ -107,6 +107,142 @@ class WorkspaceController extends Controller {
         return new JSONResponse($spacesWithUsers);
     }
 
+    
+    /**
+     * TODO: I'm finish all calls API (REST) to create a workspace.
+     * I should create a json response followings calls API (REST) and manage different errors.
+     * Then, call the route from front-end.
+     * 
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * 
+     * @var string $spaceName
+     * @return JSONResponse with informations from new workspace - { 'msg': Sting, 'statuscode': Int, 'data': Object }
+     * @example { 'msg': 'Worspace created', 'statuscode': 201, 'data': Object }
+     */
+    public function create($spaceName) {
+
+        $newSpaceManagerGroup = $this->groupManager->createGroup('GE-' . $spaceName);
+        $newSpaceUsersGroup = $this->groupManager->createGroup('U-' . $spaceName);
+
+        // TODO: add admin group to the app’s « limit to groups » field
+
+        $dataResponseCreateGroupFolder = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'mountpoint' => $spaceName
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        // TODO: Manage the error case creating groupfolder
+
+        $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
+        
+        $dataNewGroupFolder = $responseCreateGroupFolder['ocs']['data'];
+
+        $dataResponseAssignSpaceManagerGroup = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'group' => $newSpaceManagerGroup->getGID()
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        $responseAssignSpaceManagerGroup = json_decode($dataResponseAssignSpaceManagerGroup->getBody(), true);
+
+        // TODO: Manage the error case assigning space managere group to groupfolder
+
+        $dataResponseAssignSpaceUsersGroup = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'group' => $newSpaceUsersGroup->getGID()
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        $responseAssignSpaceUsersGroup = json_decode($dataResponseAssignSpaceUsersGroup->getBody(), true);
+
+        // TODO: Manage the error case assigning space users group to groupfolder
+
+        $dataEnableACLGroupFolder = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/acl',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'acl' => 1
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        $responseEnableACLGroupFolder = json_decode($dataEnableACLGroupFolder->getBody(), true);
+
+        // TODO: Manage the error case enabling acl to groupfolder
+
+        $dataEnableAdvancedPermissionsGroupFolder = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups/' . $newSpaceManagerGroup->getGID() ,
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'permissions' => 31
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        $responseEnableAdvancedPermissionsGroupFolder = json_decode($dataEnableAdvancedPermissionsGroupFolder->getBody(), true);
+
+        // TODO: Manage the error case enabling advanced permissions to groupfolder
+
+        return [];
+    }
+
+
     /**
      *
      * TODO This is a single API call. It should probably be moved to the frontend
@@ -124,7 +260,7 @@ class WorkspaceController extends Controller {
             [
                 'auth' => [
                     $this->login->getUID(),
-                    $$this->login->getPassword()
+                    $this->login->getPassword()
                 ],
                 'body' => [
                         'mappingType' => 'group',
