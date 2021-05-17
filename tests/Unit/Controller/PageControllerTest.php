@@ -5,6 +5,7 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use PHPUnit\Framework\TestCase;
 
 use OCA\Workspace\Controller\PageController;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -16,11 +17,8 @@ class PageControllerTest extends TestCase {
 
 	public function setUp(): void {
 		$this->controller = new PageController(
-			'workspace',
-			$this->createMock(IRequest::class),
-			$this->userId,
 			$this->createMock(IUserManager::class),
-			$this->createMock(IGroupManager::class),
+			$this->createMock(UserService::class),
 		);
 	}
 
