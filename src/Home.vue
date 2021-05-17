@@ -64,6 +64,16 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
+	computed: {
+		// Returns a sorted version of this.$root.$data.spaces
+		sortedSpaces() {
+			const sortedSpaces = {}
+			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
+				sortedSpaces[value] = this.$root.$data.spaces[value]
+			})
+			return sortedSpaces
+		},
+	},
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
@@ -83,16 +93,6 @@ export default {
 				})
 				this.$root.$data.spaces = spaces
 			})
-	},
-	computed: {
-		// Returns a sorted version of this.$root.$data.spaces
-		sortedSpaces() {
-			const sortedSpaces = {}
-			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
-				sortedSpaces[value] = this.$root.$data.spaces[value]
-			})
-			return sortedSpaces
-		},
 	},
 	methods: {
 		// Returns the list of administrators of a space
