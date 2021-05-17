@@ -18,7 +18,7 @@
 					<th>{{ t('workspace', 'Space administrators') }}</th>
 				</tr>
 			</thead>
-			<tr v-for="(space,name) in $root.$data.spaces"
+			<tr v-for="(space,name) in sortedSpaces"
 				:key="name">
 				<td style="width: 50px;">
 					<span class="color-dot" :style="{background: space.color}" />
@@ -44,6 +44,16 @@ export default {
 	name: 'SpaceTable',
 	components: {
 		Avatar,
+	},
+	computed: {
+		// Returns a sorted version of this.$root.$data.spaces
+		sortedSpaces() {
+			const sortedSpaces = {}
+			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
+				sortedSpaces[value] = this.$root.$data.spaces[value]
+			})
+			return sortedSpaces
+		},
 	},
 	methods: {
 		// Returns the list of administrators of a space
