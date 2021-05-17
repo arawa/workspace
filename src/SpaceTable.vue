@@ -19,7 +19,7 @@
 				</tr>
 			</thead>
 			<tr v-for="(space,name) in sortedSpaces"
-				:key="name">
+				:key="name"
 				@click="openSpace(name)">
 				<td style="width: 50px;">
 					<span class="color-dot" :style="{background: space.color}" />
