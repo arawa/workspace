@@ -21,91 +21,32 @@ namespace OCA\Workspace\Tests\Unit\Middleware;
 
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
-use OCP\IGroupManager;
-use OCP\IGroup;
 use OCP\IUrlGenerator;
-use OCP\IUser;
-use OCP\IUserSession;
 
 class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	
-	/** @var Midddleware */
-	private $middleware;
-
-	/** @var IUser */
-	private $user;
-
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	public function setUp(): void {
-
-		// Sets up the user'session
-		$this->userSession = $this->createMock(IUserSession::class);
-		$this->user = $this->createTestUser('John Doe', 'John Doe', 'john@acme.org');
-		$this->userSession->expects($this->any())
-			->method('getUser')
-			->willReturn($this->user);
-
-		// Creates General Manager group 
-		$this->groupManager = $this->createMock(IGroupManager::class);
-	}
-
-	private function createTestUser($id, $name, $email) {
-		$mockUser = $this->createMock(IUser::class);
-		$mockUser->expects($this->any())
-			->method('getUID')
-			->will($this->returnValue($id));
-		$mockUser->expects($this->any())
-			->method('getDisplayName')
-			->will($this->returnValue($name));
-		$mockUser->expects($this->any())
-			->method('getEMailAddress')
-			->willReturn($email);
-		return $mockUser;
-	}
-
-	private function createTestGroup($id, $name, $users) {
-		echo "\n";
-		$mockGroup = $this->createMock(IGroup::class);
-		$mockGroup->expects($this->any())
-			->method('getGID')
-			->will($this->returnValue($id));
-		$mockGroup->expects($this->any())
-			->method('getDisplayName')
-			->will($this->returnValue($name));
-		$mockGroup->expects($this->any())
-			->method('getUsers')
-			->willReturn($users);
-		return $mockGroup;
-	}
-
 	/**
 	 * This test makes sure that the middleware allows general managers to use the app
 	 */
 	public function testGeneralManagerAllowed(): void {
 
-		// Let's say user is in General manager group
-		$this->groupManager->expects($this->once())
-	       		->method('isInGroup')
-			->with($this->user->getUID(), Application::GENERAL_MANAGER)
+		// Setup UserService so that isUserGeneralAdmin will return true
+		$userService = $this->createMock(UserService::class);
+		$userService->expects($this->once())
+	       		->method('isUserGeneralAdmin')
 			->willReturn(true);
 
 		// Instantiates our middleware
-		$this->middleware = new WorkspaceAccessControlMiddleware(
-			$this->groupManager,
+		$middleware = new WorkspaceAccessControlMiddleware(
 			$this->createMock(IURLGenerator::class),
-			$this->userSession);
+			$userService);
 
 		// Runs the beforeController method
-		$result = $this->middleware->beforeController(
+		$result = $middleware->beforeController(
 			$this->createMock(Controller::class),
 			'dummy',
 		);
@@ -118,29 +59,23 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	 */
 	public function testSpaceManagerAllowed() {
 
-		// Let's say user is only in a space manager group
-		$this->groupManager->method('isInGroup')
-			->withConsecutive(
-				[$this->user->getUID(), Application::GENERAL_MANAGER],
-			        [$this->user->getUID(), 'GE-Test'],
-			)
-			->willReturnOnConsecutiveCalls(false, true);
-
-		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-	       		->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('GE-')
-			->willReturn([$groups]);
+		// Setup UserService so that isUserGeneralAdmin will return false
+		// but isSpaceManager will return true
+		$userService = $this->createMock(UserService::class);
+		$userService->expects($this->once())
+	       		->method('isUserGeneralAdmin')
+			->willReturn(false);
+		$userService->expects($this->once())
+	       		->method('isSpaceManager')
+			->willReturn(true);
 
 		// Instantiates our middleware
-		$this->middleware = new WorkspaceAccessControlMiddleware(
-			$this->groupManager,
+		$middleware = new WorkspaceAccessControlMiddleware(
 			$this->createMock(IURLGenerator::class),
-			$this->userSession);
+			$userService);
 
 		// Runs the beforeController method
-		$result = $this->middleware->beforeController(
+		$result = $middleware->beforeController(
 			$this->createMock(Controller::class),
 			'dummy',
 		);
@@ -153,34 +88,27 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	 */
 	public function testRegularUserDenied(): void {
 
-		// Let's say user is not in General manager group, nor in a Space manager group
-		$this->groupManager->method('isInGroup')
-			->withConsecutive(
-				[$this->user->getUID(), Application::GENERAL_MANAGER],
-			        [$this->user->getUID(), 'GE-Test'],
-			)
-			->willReturnOnConsecutiveCalls(false, false);
-
-		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-	       		->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('GE-')
-			->willReturn([$groups]);
+		// Setup UserService so that both isUserGeneralAdmin() and
+		// isSpaceManager() will return false
+		$userService = $this->createMock(UserService::class);
+		$userService->expects($this->once())
+	       		->method('isUserGeneralAdmin')
+			->willReturn(false);
+		$userService->expects($this->once())
+	       		->method('isSpaceManager')
+			->willReturn(false);
 
 		// Instantiates our middleware
-		$this->middleware = new WorkspaceAccessControlMiddleware(
-			$this->groupManager,
+		$middleware = new WorkspaceAccessControlMiddleware(
 			$this->createMock(IURLGenerator::class),
-			$this->userSession);
+			$userService);
 
 		// Runs the beforeController method
 		$this->expectException(AccessDeniedException::class);
-		$this->middleware->beforeController(
+		$result = $middleware->beforeController(
 			$this->createMock(Controller::class),
 			'dummy',
 		);
-
 	}
 }
 
