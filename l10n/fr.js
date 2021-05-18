@@ -8,6 +8,7 @@ OC.L10N.register(
 		'Delete space': "Supprimer l'Esapce Projet",
 		'Delete user': "Supprimer de l'Espace",
 		'Email': 'Email',
+		'Groups': 'Groupes',
 		'Make administrator': "Assigner en tant que G.E.",
 		'New space': 'Créer un Espace Projet',
 		'No users selected': 'Aucun utilisateur selectionné',
