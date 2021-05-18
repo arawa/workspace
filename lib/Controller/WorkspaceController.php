@@ -65,7 +65,7 @@ class WorkspaceController extends Controller {
     public function getUserWorkspaces() {
         
 	// Gets all groupfolders
-        $response = $this->httpClient->post(
+        $response = $this->httpClient->get(
             $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
             [
                 'auth' => [
