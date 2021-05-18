@@ -5,7 +5,7 @@ OC.L10N.register(
 		'All spaces': 'Tous les Espaces Projet',
 		'Administrators': 'Gestionnaires généraux',
 		'Create group': 'Créer un groupe',
-		'Delete space': "Supprimer l'Esapce Projet",
+		'Delete space': "Supprimer l'Espace Projet",
 		'Delete user': "Supprimer de l'Espace",
 		'Email': 'Email',
 		'Groups': 'Groupes',
