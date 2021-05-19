@@ -24,7 +24,7 @@
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
 				<CounterBubble slot="counter">
-					{{ workspaceUsersCount(name) }}
+					{{ space.admins.length + space.users.length }}
 				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($root.$data.spaces[name].groups)"
@@ -140,13 +140,6 @@ export default {
 						path: `/workspace/${name}`,
 					})
 				})
-		},
-		// Returns the number of users having access to a space
-		workspaceUsersCount(name) {
-			const space = this.$root.$data.spaces[name]
-			let count = Array.isArray(space.admins) ? 0 : Object.keys(space.admins).length
-			count += Array.isArray(space.users) ? 0 : Object.keys(space.users).length
-			return count
 		},
 	},
 }
