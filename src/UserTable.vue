@@ -96,18 +96,20 @@ export default {
 			const space = this.$root.$data.spaces[name]
 			let allUsers = []
 			// Let's first process the admins
-			let users = Array.isArray(space.admins) ? [] : Object.keys(space.admins)
+			let users = Array.isArray(space.admins) ? [] : Object.values(space.admins)
 			allUsers = users.map((user) => {
 				return {
-					name: user,
+					email: user.email,
+					name: user.name,
 					role: 'admin',
 				}
 			}).sort()
 			// And then the regular users
-			users = Array.isArray(space.users) ? [] : Object.keys(space.users)
+			users = Array.isArray(space.users) ? [] : Object.values(space.users)
 			allUsers = [...allUsers, ...users.map((user) => {
 				return {
-					name: user,
+					email: user.email,
+					name: user.name,
 					role: 'user',
 				}
 			}).sort()]
