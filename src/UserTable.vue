@@ -20,7 +20,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="user in workspaceUsers($route.params.space)"
+				<tr v-for="user in users"
 					:key="user.name"
 					:class="user.role==='admin' ? 'user-admin' : ''">
 					<td class="avatar">
@@ -79,6 +79,58 @@ export default {
 		return {
 			createGroup: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			users: [], // The users to list
+		}
+	},
+	created() {
+		if (this.$route.params.group !== undefined) {
+			// We are showing a group's users, so we have to filter the users
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			const group = this.$route.params.group
+			// Let's first process the admins
+			// eslint-disable-next-line
+			console.log('group', group)
+			// eslint-disable-next-line
+			console.log('space', space)
+			this.users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'admin',
+				}
+			})
+			// And then the regular users
+			this.users = [...this.users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'user',
+				}
+			})]
+		} else {
+			// We are showing all users of a workspace
+			// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			// Let's first process the admins
+			this.users = space.admins.map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'admin',
+				}
+			}).sort()
+			// And then the regular users
+			this.users = [...this.users, ...space.users.map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'user',
+				}
+			}).sort()]
 		}
 	},
 	methods: {
@@ -97,31 +149,6 @@ export default {
 			})
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 			// TODO: update backend
-		},
-		// Returns the users of the workspace in a format suitable for this component
-		workspaceUsers(name) {
-			const space = this.$root.$data.spaces[name]
-			let allUsers = []
-			// Let's first process the admins
-			allUsers = space.admins.map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'admin',
-				}
-			}).sort()
-			// And then the regular users
-			allUsers = [...allUsers, ...space.users.map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'user',
-				}
-			}).sort()]
-
-			return allUsers
 		},
 	},
 }
