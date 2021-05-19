@@ -74,6 +74,39 @@ class WorkspaceController extends Controller {
 
     /**
      *
+     * Given a IUser, returns an array containing all the user information
+     * needed for the frontend
+     *
+     * @param IUser $user
+     * @param string $spaceId
+     *
+     * @return array
+     *
+     */
+    private function formatUser($user, $spaceId) {
+
+	if (is_null($user)) {
+		return;
+	}
+
+	// Gets the workspace subgroups the user is member of
+	$groups = [];
+	foreach($this->groupManager->getUserGroups($user) as $group) {
+		if (str_ends_with($group->getGID(), $spaceId)) {
+			array_push($groups, $group->getGID());
+		}
+	};   
+
+	// Returns a user that is valid for the frontend
+	return array(
+		'name' => $user->getDisplayName(),
+		'email' => $user->getEmailAddress(),
+		'groups' => $groups
+	);
+    }
+
+    /**
+     *
      * Returns a list of all the workspaces that the connected user
      * may use.
      *
@@ -120,18 +153,16 @@ class WorkspaceController extends Controller {
 	// TODO We still need to get the workspace color here
 	$this->logger->debug('Adding users to workspaces');
 	$spacesWithUsers = array_map(function($space) {
-		$space['admins'] = array_map(function($user) {
-			return array(
-				'name' => $user->getDisplayName(),
-				'email' => $user->getEmailAddress()
-			);
-		},$this->groupManager->get('GE-' . $space['mount_point'])->getUsers());
-		$space['users'] = array_map(function($user) {
-			return array(
-				'name' => $user->getDisplayName(),
-				'email' => $user->getEmailAddress()
-			);
-		},$this->groupManager->get('U-' . $space['mount_point'])->getUsers());
+		$users = [];
+		foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
+			array_push($users, $this->formatUser($user, $space['id']));
+		};
+		$space['admins'] = $users;
+		$users = [];
+		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
+			array_push($users, $this->formatUser($user, $space['id']));
+		};
+		$space['users'] = $users;
 		return $space;
 		
 	},$spaces);
