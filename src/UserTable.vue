@@ -35,7 +35,7 @@
 						</div>
 					</td>
 					<td> {{ t('workspace', user.role) }} </td>
-					<td> user groups should go here </td>
+					<td> {{ user.groups.join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>
@@ -106,6 +106,7 @@ export default {
 			allUsers = space.admins.map((user) => {
 				return {
 					email: user.email,
+					groups: user.groups,
 					name: user.name,
 					role: 'admin',
 				}
@@ -114,6 +115,7 @@ export default {
 			allUsers = [...allUsers, ...space.users.map((user) => {
 				return {
 					email: user.email,
+					groups: user.groups,
 					name: user.name,
 					role: 'user',
 				}
