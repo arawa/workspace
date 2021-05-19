@@ -11,7 +11,9 @@
 		<table>
 			<thead>
 				<tr>
-					<th>{{ t('workspace', 'Users') }}</th>
+					<th colspan="2">
+						{{ t('workspace', 'Users') }}
+					</th>
 					<th>{{ t('workspace', 'Role') }}</th>
 					<th>{{ t('workspace', 'Groups') }}</th>
 					<th />
@@ -21,6 +23,9 @@
 				<tr v-for="user in workspaceUsers($route.params.space)"
 					:key="user.name"
 					:class="user.role==='admin' ? 'user-admin' : ''">
+					<td class="avatar">
+						<Avatar :display-name="user.name" :user="user.name" />
+					</td>
 					<td>
 						<div class="user-name">
 							{{ user.name }}
@@ -58,6 +63,7 @@
 </template>
 
 <script>
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Vue from 'vue'
@@ -65,6 +71,7 @@ import Vue from 'vue'
 export default {
 	name: 'UserTable',
 	components: {
+		Avatar,
 		Actions,
 		ActionButton,
 	},
@@ -121,6 +128,10 @@ export default {
 </script>
 
 <style>
+.avatar {
+	width: 40px;
+}
+
 .user-actions {
 	display: flex;
 	flex-flow: row-reverse;
