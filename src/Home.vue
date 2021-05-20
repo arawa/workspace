@@ -124,6 +124,7 @@ export default {
 				isOpen: false,
 				name,
 				quota: undefined,
+				admins: [],
 				users: [],
 			})
 			this.$router.push({
