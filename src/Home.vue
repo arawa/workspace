@@ -118,19 +118,35 @@ export default {
 				// TODO inform user?
 				return
 			}
-			Vue.set(this.$root.$data.spaces, name, {
-				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-				groups: [],
-				isOpen: false,
-				name,
-				quota: undefined,
-				admins: [],
-				users: [],
-			})
-			this.$router.push({
-				path: `/workspace/${name}`,
-			})
-			// TODO update backend
+
+			axios.post(generateUrl('/apps/workspace/spaces'),
+				{
+					spaceName: name
+				}
+			)
+				.then(resp => {
+					const data = resp.data
+
+					Vue.set(this.$root.$data.spaces, name, {
+						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+						groups: [
+							{
+								[data.admin_group]: 31,
+							},
+							{
+								[data.user_group]: 31,
+							}
+						],
+						isOpen: false,
+						name,
+						quota: undefined,
+						admins: [],
+						users: [],
+					})
+					this.$router.push({
+						path: `/workspace/${name}`,
+					})
+				})
 		},
 		// Returns the number of users having access to a space
 		workspaceUsersCount(name) {
