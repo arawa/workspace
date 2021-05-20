@@ -132,8 +132,11 @@ class WorkspaceController extends Controller {
         $newSpaceManagerGroup = $this->groupManager->createGroup('GE-' . $spaceName);
         $newSpaceUsersGroup = $this->groupManager->createGroup('U-' . $spaceName);
 
-        $jsonResponse['admin_group'] = $newSpaceManagerGroup->getGID();
-        $jsonResponse['user_group'] = $newSpaceUsersGroup->getGID();
+        $jsonResponse['space'] = $spaceName;
+        $jsonResponse['groups'] = [ 
+            $newSpaceManagerGroup->getGID() => 31,
+            $newSpaceUsersGroup->getGID() => 31
+        ];
 
         // TODO: add admin group to the app’s « limit to groups » field
 
@@ -158,7 +161,6 @@ class WorkspaceController extends Controller {
 
         $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
         
-
         if ( $responseCreateGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
 
             $newSpaceManagerGroup->delete();

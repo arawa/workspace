@@ -129,14 +129,7 @@ export default {
 
 					Vue.set(this.$root.$data.spaces, name, {
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: [
-							{
-								[data.admin_group]: 31,
-							},
-							{
-								[data.user_group]: 31,
-							}
-						],
+						groups: data.groups,
 						isOpen: false,
 						name,
 						quota: undefined,
