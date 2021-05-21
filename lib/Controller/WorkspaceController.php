@@ -2,6 +2,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Authentication\LoginCredentials\ICredentials;
@@ -37,6 +38,9 @@ class WorkspaceController extends Controller {
     /** @var UserService */
     private $userService;
 
+    /** @var GroupfolderService */
+    private $groupfolder;
+
     public function __construct(
         $AppName,
         IClientService $clientService,
@@ -44,19 +48,22 @@ class WorkspaceController extends Controller {
         IRequest $request,
         IURLGenerator $urlGenerator,
 	    UserService $userService,
-        IStore $IStore
+        IStore $IStore,
+        GroupfolderService $groupfolder
     )
     {
         parent::__construct($AppName, $request);
 
-	$this->groupManager = $groupManager;
+	    $this->groupManager = $groupManager;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
 
-	$this->login = $this->IStore->getLoginCredentials();
+	    $this->login = $this->IStore->getLoginCredentials();
 
         $this->httpClient = $clientService->newClient();
+
+        $this->groupfolder = $groupfolder;
     }
 
     /**
@@ -114,9 +121,7 @@ class WorkspaceController extends Controller {
 
     
     /**
-     * TODO: I'm finish all calls API (REST) to create a workspace.
-     * I should create a json response followings calls API (REST) and manage different errors.
-     * Then, call the route from front-end.
+     * TODO: https://github.com/arawa/workspace/pull/53
      * 
      * @NoAdminRequired
      * @NoCSRFRequired
@@ -127,37 +132,14 @@ class WorkspaceController extends Controller {
      */
     public function create($spaceName) {
 
-        $jsonResponse = [];
-
+        // create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup('GE-' . $spaceName);
         $newSpaceUsersGroup = $this->groupManager->createGroup('U-' . $spaceName);
 
-        $jsonResponse['space'] = $spaceName;
-        $jsonResponse['groups'] = [ 
-            $newSpaceManagerGroup->getGID() => 31,
-            $newSpaceUsersGroup->getGID() => 31
-        ];
-
         // TODO: add admin group to the app’s « limit to groups » field
 
-        $dataResponseCreateGroupFolder = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'mountpoint' => $spaceName
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
-        );
-
+        // create groupfolder
+        $dataResponseCreateGroupFolder = $this->groupfolder->create($spaceName);
 
         $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
         
@@ -170,126 +152,42 @@ class WorkspaceController extends Controller {
 
         }
 
-        $dataNewGroupFolder = $responseCreateGroupFolder['ocs']['data'];
-            
-        $jsonResponse['id_space'] = $dataNewGroupFolder['id'];
-        $jsonResponse['statuscode'] = Http::STATUS_CREATED;
-
-        $dataResponseAssignSpaceManagerGroup = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'group' => $newSpaceManagerGroup->getGID()
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
-        );
+        // Add groups to groupfolder
+        $dataResponseAssignSpaceManagerGroup = $this->groupfolder->addGroup($responseCreateGroupFolder['ocs']['data']['id'], $newSpaceManagerGroup->getGID());
 
         $responseAssignSpaceManagerGroup = json_decode($dataResponseAssignSpaceManagerGroup->getBody(), true);
         
         if ( $responseAssignSpaceManagerGroup['ocs']['meta']['statuscode'] !== 100 ) {
             
-            $gid = $newSpaceManagerGroup->getGID();
-
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
 
-            $this->httpClient->delete(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'],
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
-            throw new AssignGroupToGroupFolderException($gid);
+            throw new AssignGroupToGroupFolderException($newSpaceManagerGroup->getGID());
 
         }
 
-        $jsonResponse['space_assign_groups'][] = $newSpaceManagerGroup->getGID();
-
-
-        $dataResponseAssignSpaceUsersGroup = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'group' => $newSpaceUsersGroup->getGID()
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
+        $dataResponseAssignSpaceUsersGroup = $this->groupfolder->addGroup(
+            $responseCreateGroupFolder['ocs']['data']['id'],
+            $newSpaceUsersGroup->getGID()
         );
 
         $responseAssignSpaceUsersGroup = json_decode($dataResponseAssignSpaceUsersGroup->getBody(), true);
 
         if ( $responseAssignSpaceUsersGroup['ocs']['meta']['statuscode'] !== 100 ) {
 
-            $gid = $newSpaceUsersGroup->getGID();
-
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
 
-            $this->httpClient->delete(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'],
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
-            throw new AssignGroupToGroupFolderException($gid);
+            throw new AssignGroupToGroupFolderException($newSpaceUsersGroup->getGID());
 
         }
 
-        $jsonResponse['space_assign_groups'][] = $newSpaceUsersGroup->getGID();
-
-
-        $dataResponseEnableACLGroupFolder = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/acl',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'acl' => 1
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
-        );
+        // enable ACL
+        $dataResponseEnableACLGroupFolder = $this->groupfolder->enableAcl($responseCreateGroupFolder['ocs']['data']['id']);
 
         $responseEnableACLGroupFolder = json_decode($dataResponseEnableACLGroupFolder->getBody(), true);
 
@@ -298,75 +196,49 @@ class WorkspaceController extends Controller {
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
-            $this->httpClient->delete(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'],
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new AclGroupFolderException();
 
         }
 
-        $jsonResponse['space_acl'] = true;
-
-        $dataResponseEnableAdvancedPermissionsGroupFolder = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'] . '/groups/' . $newSpaceManagerGroup->getGID() ,
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'permissions' => 31
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
+        // enable advanced permissions groupfolder
+        $dataResponseEnableAdvancedPermissionsGroupFolder = $this->groupfolder->enableAdvancedPermissions(
+            $responseCreateGroupFolder['ocs']['data']['id'],
+            $newSpaceManagerGroup->getGID()
         );
 
-        $responseEnableAdvancedPermissionsGroupFolder = json_decode($dataResponseEnableAdvancedPermissionsGroupFolder->getBody(), true);
+        $responseEnableAdvancedPermissionsGroupFolder = json_decode(
+            $dataResponseEnableAdvancedPermissionsGroupFolder->getBody(),
+            true
+        );
 
         if ( $responseEnableAdvancedPermissionsGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
 
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
-            $this->httpClient->delete(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $dataNewGroupFolder['id'],
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new AdvancedPermissionsGroupFolderException();
 
         }
 
-        $jsonResponse['space_advanced_permissions'] = true;
-
-
-        return new JSONResponse($jsonResponse);
+        return new JSONResponse([
+            'space' => $spaceName,
+            'id_space' => $responseCreateGroupFolder['ocs']['data']['id'],
+            'groups' => [
+                $newSpaceManagerGroup->getGID() => 31,
+                $newSpaceUsersGroup->getGID() => 31
+            ],
+            'space_advanced_permissions' => true,
+            'space_assign_groups' => [
+                $newSpaceManagerGroup->getGID(),
+                $newSpaceUsersGroup->getGID()
+            ],
+            'statuscode' => Http::STATUS_CREATED,
+            'space_acl' => true,
+        ]);
     }
 
 
