@@ -27,6 +27,7 @@ class GroupfolderService {
         'Content-Type' => 'application/x-www-form-urlencoded',
         'OCS-APIRequest' => 'true',
         'Accept' => 'application/json',
+        'verify' => 'false',
     ];
 
     private const ALL_PERMISSIONS = 31;
