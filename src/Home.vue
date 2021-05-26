@@ -95,10 +95,6 @@ export default {
 			})
 	},
 	methods: {
-		// Returns the list of administrators of a space
-		adminUsers(space) {
-			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
-		},
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
 				return 'unlimited'
