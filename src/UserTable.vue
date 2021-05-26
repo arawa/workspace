@@ -102,7 +102,7 @@ export default {
 					name: user,
 					role: 'admin',
 				}
-			})
+			}).sort()
 			// And then the regular users
 			users = Array.isArray(space.users) ? [] : Object.keys(space.users)
 			allUsers = [...allUsers, ...users.map((user) => {
@@ -110,7 +110,7 @@ export default {
 					name: user,
 					role: 'user',
 				}
-			})]
+			}).sort()]
 
 			return allUsers
 		},
