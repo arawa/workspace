@@ -23,6 +23,7 @@
 				:open="space.isOpen"
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
+				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter">
 					{{ space.admins.length + space.users.length }}
 				</CounterBubble>
@@ -48,6 +49,7 @@ import axios from '@nextcloud/axios'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
+import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
@@ -60,6 +62,7 @@ export default {
 		AppContent,
 		AppContentDetails,
 		AppNavigation,
+		AppNavigationIconBullet,
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
