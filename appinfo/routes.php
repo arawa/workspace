@@ -14,16 +14,6 @@ return [
 			'url' => '/',
 			'verb' => 'GET',
 		],
-		// The following route is there to prevent redirection to NC's general homepage
-		// when reloading a page in the application (If we don't add it all pages that
-		// don't have a route registered here redirect to NC's general homepage upon refresh)
-		[
-			'name' => 'page#index',
-			'url' => '/{path}',
-			'verb' => 'GET',
-			'requirements' => array('path' => '.+'),
-			'defaults' => array('path' => 'dummy'),
-		],
 		[
 			'name' => 'page#autoComplete',
 			'url' => '/api/autoComplete/{term}',
@@ -63,6 +53,16 @@ return [
 			'name' => 'users_manager#getUsersWorkSpace',
 			'url' => '/group/{gid}/users',
 			'verb' => 'GET'
+		],
+		// The following route is there to prevent redirection to NC's general homepage
+		// when reloading a page in the application (If we don't add it all pages that
+		// don't have a route registered here redirect to NC's general homepage upon refresh)
+		[
+			'name' => 'page#index',
+			'url' => '/{path}',
+			'verb' => 'GET',
+			'requirements' => array('path' => '.+'),
+			'defaults' => array('path' => 'dummy'),
 		],
 	]
 ];
