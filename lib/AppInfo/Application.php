@@ -19,7 +19,7 @@ class Application extends App {
         public const ESPACE_USERS_03 = "U-";
 
         public function __construct(array $urlParams=[] ) {
-                parent::__construct(APP_ID, $urlParams);
+                parent::__construct($this->APP_ID, $urlParams);
 
                 $container = $this->getContainer();
 
