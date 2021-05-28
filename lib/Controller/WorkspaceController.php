@@ -1,6 +1,7 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
@@ -109,12 +110,12 @@ class WorkspaceController extends Controller {
 	$this->logger->debug('Adding users to workspaces');
 	$spacesWithUsers = array_map(function($space) {
 		$users = [];
-		foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
+		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
 			array_push($users, $this->userService->formatUser($user, $space['id']));
 		};
 		$space['admins'] = $users;
 		$users = [];
-		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
+		foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
 			array_push($users, $this->userService->formatUser($user, $space['id']));
 		};
 		$space['users'] = $users;
