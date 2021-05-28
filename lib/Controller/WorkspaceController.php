@@ -264,6 +264,144 @@ class WorkspaceController extends Controller {
 
 
     /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * TODO: Manage errors.
+     * @param int $folderId
+     * @param string $newSpaceName
+     * @return JSONResponse
+     */
+    public function rename($folderId, $newSpaceName) {
+
+        // Todo : create the groupfolderService with this method.
+        // $oldSpaceName = $this->groupfolder->getMountPoint($folderId),
+        // $oldSpaceName = $this->groupfolder->getGroups($folderId),
+     
+        $responseGetGroupfolder = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                    'verify' => 'false',
+                ]
+            ]);
+
+        $groupfolder = json_decode($responseGetGroupfolder->getBody(), true);
+
+        $oldSpaceName = $groupfolder['ocs']['data']['mount_point'];
+        $groups = array_keys($groupfolder['ocs']['data']['groups']);
+     
+        $responseGroupfolder = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/mountpoint',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'mountpoint' => $newSpaceName
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                    'verify' => 'false',
+                ]
+            ]);
+
+        $responseRename = json_decode($responseGroupfolder->getBody(), true);
+
+        if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
+            $response = [
+                "statuscode" => Http::STATUS_NO_CONTENT,
+                "space" => $newSpaceName
+            ];
+            
+            // Todo : create the groupService with this method.
+            // newGroupGE = this->groupService->renameGroupSpace($oldSpaceName, 'GE-'.$newSpace)
+            // newGroupU = this->groupService->renameGroupSpace($oldSpaceName, 'U-'.$newSpace)
+
+            // [X] Get list users' interfaces in one group
+            $groupGE = $this->groupManager->get('GE-' . $oldSpaceName);
+            $groupU = $this->groupManager->get('U-' . $oldSpaceName);
+
+            $IUsersGE = $groupGE->getUsers();
+            $IUsersU = $groupU->getUsers();
+            
+            // [X] Create groups which are the same name that the space renamed
+            $newGroupGE = $this->groupManager->createGroup('GE-' . $newSpaceName);
+            $newGroupU = $this->groupManager->createGroup('U-' . $newSpaceName);
+
+            // [X] Affect users in new groups with respect the order (GE/U)
+            foreach ($IUsersGE as $IUserGE) {
+                $newGroupGE->addUser($IUserGE);
+            }
+
+            foreach ($IUsersU as $IUserU) {
+                $newGroupU->addUser($IUsersU);
+            }
+
+            // [X] Attach new groups in space renamed
+            $respAttachGroupGE = $this->httpClient->post(
+                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
+                [
+                    'auth' => [
+                        $this->login->getUID(),
+                        $this->login->getPassword()
+                    ],
+                    'body' => [
+                        'group' => $newGroupGE->getGID()
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'OCS-APIRequest' => 'true',
+                        'Accept' => 'application/json',
+                    ]
+                ]
+            );
+            
+            if ($respAttachGroupGE->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupGE->getGID();
+            }
+
+            $respAttachGroupU = $this->httpClient->post(
+                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
+                [
+                    'auth' => [
+                        $this->login->getUID(),
+                        $this->login->getPassword()
+                    ],
+                    'body' => [
+                        'group' => $newGroupU->getGID()
+                    ],
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'OCS-APIRequest' => 'true',
+                        'Accept' => 'application/json',
+                    ]
+                ]
+            );
+
+            if ($respAttachGroupU->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupU->getGID();
+            }
+        
+            // [X] Delete old groups
+            foreach( $groups as $group ) {
+                $this->groupManager->get($group)->delete();
+            }
+        }
+
+        return new JSONResponse($response);
+    }
+
+    /**
      *
      * TODO This is a single API call. It should probably be moved to the frontend
      *

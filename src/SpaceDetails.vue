@@ -44,11 +44,11 @@
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionButton
+					<ActionInput
 						icon="icon-rename"
-						@click="renameSpace">
-						{{ t('workspace', 'Rename space') }}
-					</ActionButton>
+						@submit="renameSpace">
+						{{ t('workspace', 'Rename spaceAAAAA') }}
+					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
 						@click="deleteSpace">
@@ -136,8 +136,35 @@ export default {
 					// TODO Inform user
 				})
 		},
-		renameSpace() {
+		renameSpace(e) {
 			// TODO
+			const oldSpaceName = this.$root.$data.spaces[this.$route.params.space].name
+
+			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
+			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
+			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$root.$data.spaces[this.$route.params.space].id}`),
+				{
+					newSpaceName: e.target[1].value
+				})
+				.then(resp => {
+					const data = resp.data
+
+					if (data.statuscode === 204) {
+						this.$root.$data.spaces[data.space] = this.$root.$data.spaces[oldSpaceName]
+						this.$root.$data.spaces[data.space].name = data.space
+
+						delete this.$root.$data.spaces[oldSpaceName]
+						
+						this.$router.push({
+							path: `/workspace/${data.space}`,
+						})
+					}
+				})
+				.catch((e) => {
+					Vue.set(this.$root.$data.spaces[this.$route.params.space], 'name', oldSpaceName)
+				})
+			// update back-end
+			// update front-end
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
