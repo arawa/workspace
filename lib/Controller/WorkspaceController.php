@@ -393,9 +393,8 @@ class WorkspaceController extends Controller {
             }
         
             // [X] Delete old groups
-            foreach( $groups as $group ) {
-                $this->groupManager->get($group)->delete();
-            }
+            $groupGE->delete();
+            $groupU->delete();
         }
 
         return new JSONResponse($response);
