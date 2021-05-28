@@ -29,6 +29,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'workspace#create',
+			'url' => '/spaces',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
 			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
@@ -47,6 +52,11 @@ return [
 			'name' => 'users_manager#getUsersWorkSpace',
 			'url' => '/group/{gid}/users',
 			'verb' => 'GET'
+		],
+		[
+			'name' => 'workspace#rename',
+			'url' => '/spaces/{folderId}',
+			'verb' => 'PATCH'
 		],
 	]
 ];
