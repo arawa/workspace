@@ -23,6 +23,40 @@ Class UserService {
 	}
 
 	/**
+	 *
+	 * Given a IUser, returns an array containing all the user information
+	 * needed for the frontend
+	 *
+	 * @param IUser $user
+	 * @param string $spaceId
+	 *
+	 * @return array
+	 *
+	 */
+	private function formatUser($user, $spaceId) {
+	
+		if (is_null($user)) {
+			return;
+		}
+
+		// Gets the workspace subgroups the user is member of
+		$groups = [];
+		foreach($this->groupManager->getUserGroups($user) as $group) {
+			if (str_ends_with($group->getGID(), $spaceId)) {
+				array_push($groups, $group->getGID());
+			}
+		};
+
+		// Returns a user that is valid for the frontend
+		return array(
+			'name' => $user->getDisplayName(),
+			'email' => $user->getEmailAddress(),
+			'groups' => $groups
+		);
+
+	}
+
+	/**
 	 * @return boolean true if user is general admin, false otherwise
 	*/
 	public function isUserGeneralAdmin() {
