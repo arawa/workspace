@@ -33,7 +33,6 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * Creates a group
 	 *
