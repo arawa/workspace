@@ -202,6 +202,7 @@ class WorkspaceController extends Controller {
 
         }
 
+        // Todo : Replace by apps/groupfolders/folders/$folderId/manageACL => https://github.com/nextcloud/groupfolders/tree/master
         // enable advanced permissions groupfolder
         $dataResponseEnableAdvancedPermissionsGroupFolder = $this->groupfolder->enableAdvancedPermissions(
             $responseCreateGroupFolder['ocs']['data']['id'],
