@@ -89,14 +89,12 @@ export default {
 			// Update frontend first and keep a backup of the changes should something fail
 			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const spaceBackup = this.$root.$data.spaces[this.$route.params.space]
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			space.users = space.users.concat(this.allSelectedUsers
-				.filter(user => user.role === 'user')
-			)
-			space.admins = space.users.concat(this.allSelectedUsers
-				.filter(user => user.role === 'admin')
-			)
+			this.allSelectedUsers.filter(user => user.role === 'user').forEach(user => {
+				space.users[user.name] = user
+			})
+			this.allSelectedUsers.filter(user => user.role === 'admin').forEach(user => {
+				space.admins[user.name] = user
+			})
 			this.$store.addSpace(space)
 			this.$emit('close')
 
@@ -146,7 +144,7 @@ export default {
 					const space = this.$root.$data.spaces[this.$route.params.space]
 					// Show only those users who are not already member of the space
 					this.selectableUsers = resp.data.filter(user => {
-						return (typeof space.users[user.name] === 'undefined' || typeof space.users[user.name] === 'undefined')
+						return (typeof space.admins[user.name] === 'undefined' || typeof space.users[user.name] === 'undefined')
 					}, space)
 					this.isLookingUpUsers = false
 				})
