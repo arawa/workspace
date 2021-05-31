@@ -89,14 +89,28 @@ export default {
 			// Update frontend first and keep a backup of the changes should something fail
 			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
-			space.users = space.users.concat(this.allSelectedUsers.map(user => {
-				return {
-					name: user.displayName,
-					email: user.email,
-					role: user.role,
-					groups: [],
-				}
-			}))
+			const spaceBackup = this.$root.$data.spaces[this.$route.params.space]
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			space.users = space.users.concat(this.allSelectedUsers
+				.filter(user => { user.role === 'user' })
+				.map(user => {
+					return {
+						name: user.displayName,
+						email: user.email,
+						role: user.role,
+					}
+				})
+			)
+			space.admins = space.users.concat(this.allSelectedUsers
+				.filter(user => { user.role === 'admin' })
+				.map(user => {
+					return {
+						name: user.displayName,
+						email: user.email,
+						role: user.role,
+					}
+				})
+			)
 			this.$store.addSpace(space)
 			this.$emit('close')
 
