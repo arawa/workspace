@@ -45,7 +45,6 @@ class PageController extends Controller {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param string $term
 	 * @param string $spaceId
