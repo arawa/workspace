@@ -115,7 +115,7 @@ class WorkspaceController extends Controller {
 		$space['admins'] = $users;
 		$users = array();
 		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'user');
 		};
 		$space['users'] = $users;
 		return $space;
