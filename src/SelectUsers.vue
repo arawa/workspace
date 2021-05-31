@@ -11,7 +11,7 @@
 		<Multiselect
 			v-model="selectedUsers"
 			class="select-users-input"
-			label="displayName"
+			label="name"
 			:loading="isLookingUpUsers"
 			:multiple="true"
 			:options="selectableUsers"
@@ -29,12 +29,12 @@
 			</div>
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
-					:key="user.displayName"
+					:key="user.name"
 					class="user-entry">
 					<div>
-						<Avatar :display-name="user.displayName" :user="user.displayName" />
+						<Avatar :display-name="user.name" :user="user.name" />
 						<div class="user-name">
-							<span> {{ user.displayName }} </span>
+							<span> {{ user.name }} </span>
 						</div>
 					</div>
 					<div class="user-entry-actions">
@@ -92,24 +92,10 @@ export default {
 			const spaceBackup = this.$root.$data.spaces[this.$route.params.space]
 			const space = this.$root.$data.spaces[this.$route.params.space]
 			space.users = space.users.concat(this.allSelectedUsers
-				.filter(user => { user.role === 'user' })
-				.map(user => {
-					return {
-						name: user.displayName,
-						email: user.email,
-						role: user.role,
-					}
-				})
+				.filter(user => user.role === 'user')
 			)
 			space.admins = space.users.concat(this.allSelectedUsers
-				.filter(user => { user.role === 'admin' })
-				.map(user => {
-					return {
-						name: user.displayName,
-						email: user.email,
-						role: user.role,
-					}
-				})
+				.filter(user => user.role === 'admin')
 			)
 			this.$store.addSpace(space)
 			this.$emit('close')
@@ -127,7 +113,7 @@ export default {
 					}),
 					{
 						group,
-						user: user.user,
+						user: user.name,
 					}
 				).then((resp) => {
 					if (resp.status !== '204') {
@@ -150,14 +136,18 @@ export default {
 				return
 			}
 
-			// TODO: Users must be filtered to only those groups used in this EP
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.get(
-				generateUrl('/apps/workspace/api/autoComplete/{term}', { term })
-			)
+			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
+				term,
+				spaceId: this.$route.params.space,
+			}))
 				.then((resp) => {
-					this.selectableUsers = resp.data
+					const space = this.$root.$data.spaces[this.$route.params.space]
+					// Show only those users who are not already member of the space
+					this.selectableUsers = resp.data.filter(user => {
+						return (typeof space.users[user.name] === 'undefined' || typeof space.users[user.name] === 'undefined')
+					}, space)
 					this.isLookingUpUsers = false
 				})
 				.catch((e) => {
@@ -167,12 +157,12 @@ export default {
 		},
 		removeUserFromBatch(user) {
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
-				return u.displayName !== user.displayName
+				return u.name !== user.name
 			})
 		},
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
-				if (u.displayName === user.displayName) {
+				if (u.name === user.name) {
 					u.role = u.role === 'user' ? 'admin' : 'user'
 					return u
 				} else {

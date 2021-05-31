@@ -43,6 +43,7 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
+			// TODO str_ends_with is only available since PHP8
 			if (str_ends_with($group->getGID(), $spaceId)) {
 				array_push($groups, $group->getGID());
 			}
@@ -52,6 +53,7 @@ Class UserService {
 		return array(
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
+			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
 		);

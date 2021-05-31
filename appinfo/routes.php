@@ -16,7 +16,7 @@ return [
 		],
 		[
 			'name' => 'page#autoComplete',
-			'url' => '/api/autoComplete/{term}',
+			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'GET'
 		],
 		[
