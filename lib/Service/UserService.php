@@ -33,7 +33,7 @@ Class UserService {
 	 * @return array
 	 *
 	 */
-	private function formatUser($user, $spaceId) {
+	public function formatUser($user, $spaceId) {
 	
 		if (is_null($user)) {
 			return;
