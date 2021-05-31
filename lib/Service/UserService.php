@@ -29,11 +29,12 @@ Class UserService {
 	 *
 	 * @param IUser $user
 	 * @param string $spaceId
+	 * @param string $role
 	 *
 	 * @return array
 	 *
 	 */
-	public function formatUser($user, $spaceId) {
+	public function formatUser($user, $spaceId, $role) {
 	
 		if (is_null($user)) {
 			return;
@@ -51,7 +52,8 @@ Class UserService {
 		return array(
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
-			'groups' => $groups
+			'groups' => $groups,
+			'role' => $role
 		);
 
 	}

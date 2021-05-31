@@ -108,14 +108,14 @@ class WorkspaceController extends Controller {
 	// TODO We still need to get the workspace color here
 	$this->logger->debug('Adding users to workspaces');
 	$spacesWithUsers = array_map(function($space) {
-		$users = [];
+		$users = array();
 		foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space['id']));
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
 		};
 		$space['admins'] = $users;
-		$users = [];
+		$users = array();
 		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space['id']));
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
 		};
 		$space['users'] = $users;
 		return $space;
