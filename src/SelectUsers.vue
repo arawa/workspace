@@ -66,7 +66,6 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { generateUrl } from '@nextcloud/router'
-import Vue from 'vue'
 
 export default {
 	name: 'SelectUsers',
@@ -87,6 +86,8 @@ export default {
 	methods: {
 		// Adds users to workspace and close dialog
 		addUsersToWorkspace() {
+			// Update frontend first and keep a backup of the changes should something fail
+			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
 			space.users = space.users.concat(this.allSelectedUsers.map(user => {
 				return {
@@ -96,8 +97,33 @@ export default {
 					groups: [],
 				}
 			}))
-			Vue.set(this.$store.state.spaces, this.$route.params.space, space)
+			this.$store.addSpace(space)
 			this.$emit('close')
+
+			// Update backend and revert frontend changes if something fails
+			this.allSelectedUsers.forEach((user) => {
+				// TODO Use application-wide constants
+				let group = user.role === 'admin' ? 'GE-' : 'U-'
+				group = group + this.$route.params.space
+
+				// Add user to proper workspace group
+				axios.patch(
+					generateUrl('/apps/workspace/group/addUser/{space}', {
+						space: this.$route.params.space,
+					}),
+					{
+						group,
+						user: user.user,
+					}
+				).then((resp) => {
+					if (resp.status !== '204') {
+						// TODO
+					}
+				}).catch((e) => {
+					// TODO: Inform user
+					this.$store.addSpace(spaceBackup)
+				})
+			})
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
 		addUsersToBatch(user) {

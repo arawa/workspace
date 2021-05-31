@@ -45,6 +45,11 @@ return [
 			'verb' => 'POST',
 		],
 		[
+			'name' => 'group#addUser',
+			'url' => '/group/addUser/{space}',
+			'verb' => 'PATCH',
+		],
+		[
 			'name' => 'users_manager#getUsersWorkSpace',
 			'url' => '/group/{gid}/users',
 			'verb' => 'GET'
