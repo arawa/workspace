@@ -111,14 +111,14 @@ class WorkspaceController extends Controller {
 	// Adds workspace users
 	$this->logger->debug('Adding users information to workspaces');
 	$spacesWithUsers = array_map(function($space) {
-		$users = [];
+		$users = array();
 		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space));
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
 		};
 		$space['admins'] = $users;
-		$users = [];
+		$users = array();
 		foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space));
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
 		};
 		$space['users'] = $users;
 		return $space;
