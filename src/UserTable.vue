@@ -83,53 +83,25 @@ export default {
 	},
 	computed: {
 		users() {
-			let allUsers = []
+			let result = []
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				const space = this.$store.state.spaces[this.$route.params.space]
 				const group = this.$route.params.group
-				// Let's first process the admins
-				allUsers = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'admin',
-					}
-				})
-				// And then the regular users
-				allUsers = [...allUsers, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'user',
-					}
-				})]
+				result = Object.entries(space.admins)
+					.map(user => user[1])
+					.filter((user) => user.groups.includes(group))
+					.sort((a, b) => a.name.localeCompare(b.name))
+				result = [...result, ...Object.entries(space.users)
+					.map(user => user[1])
+					.filter((user) => user.groups.includes(group))
+					.sort((a, b) => a.name.localeCompare(b.name))]
 			} else {
 				// We are showing all users of a workspace
-				// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
-				const space = this.$store.state.spaces[this.$route.params.space]
-				// Let's first process the admins
-				allUsers = space.admins.map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'admin',
-					}
-				}).sort()
-				// And then the regular users
-				allUsers = [...allUsers, ...space.users.map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'user',
-					}
-				}).sort()]
+				result = Object.entries(space.admins).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))
+				result = [...result, ...Object.entries(space.users).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))]
 			}
-			return allUsers
+			return result
 		},
 	},
 	methods: {
