@@ -11,7 +11,8 @@ return [
 	'routes' => [
 		[
 			'name' => 'page#index',
-			'url' => '/', 'verb' => 'GET'
+			'url' => '/',
+			'verb' => 'GET',
 		],
 		[
 			'name' => 'page#autoComplete',
@@ -57,6 +58,16 @@ return [
 			'name' => 'workspace#rename',
 			'url' => '/spaces/{folderId}',
 			'verb' => 'PATCH'
+    ],
+		// The following route is there to prevent redirection to NC's general homepage
+		// when reloading a page in the application (If we don't add it all pages that
+		// don't have a route registered here redirect to NC's general homepage upon refresh)
+		[
+			'name' => 'page#index',
+			'url' => '/{path}',
+			'verb' => 'GET',
+			'requirements' => array('path' => '.+'),
+			'defaults' => array('path' => 'dummy'),
 		],
 	]
 ];

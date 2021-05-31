@@ -11,16 +11,21 @@
 		<table>
 			<thead>
 				<tr>
-					<th>{{ t('workspace', 'Users') }}</th>
+					<th colspan="2">
+						{{ t('workspace', 'Users') }}
+					</th>
 					<th>{{ t('workspace', 'Role') }}</th>
 					<th>{{ t('workspace', 'Groups') }}</th>
 					<th />
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="user in workspaceUsers($route.params.space)"
+				<tr v-for="user in users"
 					:key="user.name"
 					:class="user.role==='admin' ? 'user-admin' : ''">
+					<td class="avatar">
+						<Avatar :display-name="user.name" :user="user.name" />
+					</td>
 					<td>
 						<div class="user-name">
 							{{ user.name }}
@@ -30,7 +35,7 @@
 						</div>
 					</td>
 					<td> {{ t('workspace', user.role) }} </td>
-					<td> user groups should go here </td>
+					<td> {{ user.groups.join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>
@@ -58,6 +63,7 @@
 </template>
 
 <script>
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Vue from 'vue'
@@ -65,6 +71,7 @@ import Vue from 'vue'
 export default {
 	name: 'UserTable',
 	components: {
+		Avatar,
 		Actions,
 		ActionButton,
 	},
@@ -72,6 +79,58 @@ export default {
 		return {
 			createGroup: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			users: [], // The users to list
+		}
+	},
+	created() {
+		if (this.$route.params.group !== undefined) {
+			// We are showing a group's users, so we have to filter the users
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			const group = this.$route.params.group
+			// Let's first process the admins
+			// eslint-disable-next-line
+			console.log('group', group)
+			// eslint-disable-next-line
+			console.log('space', space)
+			this.users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'admin',
+				}
+			})
+			// And then the regular users
+			this.users = [...this.users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'user',
+				}
+			})]
+		} else {
+			// We are showing all users of a workspace
+			// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			// Let's first process the admins
+			this.users = space.admins.map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'admin',
+				}
+			}).sort()
+			// And then the regular users
+			this.users = [...this.users, ...space.users.map((user) => {
+				return {
+					email: user.email,
+					groups: user.groups,
+					name: user.name,
+					role: 'user',
+				}
+			}).sort()]
 		}
 	},
 	methods: {
@@ -91,34 +150,15 @@ export default {
 			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
 			// TODO: update backend
 		},
-		// Returns the users of the workspace in a format suitable for this component
-		workspaceUsers(name) {
-			const space = this.$root.$data.spaces[name]
-			let allUsers = []
-			// Let's first process the admins
-			let users = Array.isArray(space.admins) ? [] : Object.keys(space.admins)
-			allUsers = users.map((user) => {
-				return {
-					name: user,
-					role: 'admin',
-				}
-			})
-			// And then the regular users
-			users = Array.isArray(space.users) ? [] : Object.keys(space.users)
-			allUsers = [...allUsers, ...users.map((user) => {
-				return {
-					name: user,
-					role: 'user',
-				}
-			})]
-
-			return allUsers
-		},
 	},
 }
 </script>
 
 <style>
+.avatar {
+	width: 40px;
+}
+
 .user-actions {
 	display: flex;
 	flex-flow: row-reverse;

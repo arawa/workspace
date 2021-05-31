@@ -9,6 +9,7 @@ use OCP\Authentication\LoginCredentials\IStore;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\IGroupManager;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\AppFramework\Http;
@@ -27,6 +28,9 @@ class WorkspaceController extends Controller {
     /** @var IGroupManager */
     private $groupManager;
 
+    /** @var ILogger */
+    private $logger;
+
     /** @var IURLGenerator */
     private $urlGenerator;
 
@@ -36,16 +40,17 @@ class WorkspaceController extends Controller {
     public function __construct(
         $AppName,
         IClientService $clientService,
-        IGroupManager $groupManager,
-        IRequest $request,
+	      IGroupManager $groupManager,
+	      ILogger $logger,
+	      IRequest $request,
         IURLGenerator $urlGenerator,
-	    UserService $userService,
+	      UserService $userService,
         IStore $IStore
     )
     {
         parent::__construct($AppName, $request);
-
-	    $this->groupManager = $groupManager;
+	      $this->groupManager = $groupManager;
+	      $this->logger = $logger;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
@@ -66,6 +71,7 @@ class WorkspaceController extends Controller {
     public function getUserWorkspaces() {
         
 	// Gets all groupfolders
+	$this->logger->debug('Fetching groupfolders');
         $response = $this->httpClient->get(
             $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
             [
@@ -87,9 +93,11 @@ class WorkspaceController extends Controller {
 	
 	$spaces = json_decode($response->getBody(), true);
 	$spaces = $spaces['ocs']['data'];
+	$this->logger->debug('groupfolders fetched', [ 'spaces' => $spaces ]);
 	
 	// We only want to return those workspaces for which the connected user is a manager
 	if (!$this->userService->isUserGeneralAdmin()) {
+		$this->logger->debug('Filtering workspaces');
 		$filteredSpaces = array_filter($spaces, function($space) {
 			return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
 		});
@@ -98,13 +106,24 @@ class WorkspaceController extends Controller {
 
 	// Adds workspace users
 	// TODO We still need to get the workspace color here
+	$this->logger->debug('Adding users to workspaces');
 	$spacesWithUsers = array_map(function($space) {
-		$space['admins'] = $this->groupManager->get('GE-' . $space['mount_point'])->getUsers();
-		$space['users'] = $this->groupManager->get('U-' . $space['mount_point'])->getUsers();
+		$users = [];
+		foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
+			array_push($users, $this->userService->formatUser($user, $space['id']));
+		};
+		$space['admins'] = $users;
+		$users = [];
+		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
+			array_push($users, $this->userService->formatUser($user, $space['id']));
+		};
+		$space['users'] = $users;
 		return $space;
 		
 	},$spaces);
 
+	// TODO We still need to get the workspace color here
+	
         return new JSONResponse($spacesWithUsers);
     }
 
