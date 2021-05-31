@@ -55,6 +55,7 @@ Class UserService {
 		return array(
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
+			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
 		);
