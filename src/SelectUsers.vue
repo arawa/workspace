@@ -144,7 +144,7 @@ export default {
 					const space = this.$root.$data.spaces[this.$route.params.space]
 					// Show only those users who are not already member of the space
 					this.selectableUsers = resp.data.filter(user => {
-						return (typeof space.admins[user.name] === 'undefined' || typeof space.users[user.name] === 'undefined')
+						return (!(user.name in space.users) && !(user.name in space.admins))
 					}, space)
 					this.isLookingUpUsers = false
 				})
