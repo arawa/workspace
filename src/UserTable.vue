@@ -88,46 +88,18 @@ export default {
 				// We are showing a group's users, so we have to filter the users
 				const space = this.$store.state.spaces[this.$route.params.space]
 				const group = this.$route.params.group
-				// Let's first process the admins
-				users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'admin',
-					}
-				})
-				// And then the regular users
-				users = [...users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'user',
-					}
-				})]
+				users = Object.entries(space.admins)
+					.map(user => user[1])
+					.filter((user) => user.groups.includes(group))
+					.sort((a, b) => a.name.localeCompare(b.name))
+				users = [...users, ...Object.entries(space.users)
+					.map(user => user[1])
+					.filter((user) => user.groups.includes(group))
+					.sort((a, b) => a.name.localeCompare(b.name))]
 			} else {
 				// We are showing all users of a workspace
-				// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
-				const space = this.$store.state.spaces[this.$route.params.space]
-				// Let's first process the admins
-				users = space.admins.map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'admin',
-					}
-				}).sort()
-				// And then the regular users
-				users = [...users, ...space.users.map((user) => {
-					return {
-						email: user.email,
-						groups: user.groups,
-						name: user.name,
-						role: 'user',
-					}
-				}).sort()]
+				users = Object.entries(space.admins).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))
+				users = [...this.users, ...Object.entries(space.users).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))]
 			}
 			return users
 		},
