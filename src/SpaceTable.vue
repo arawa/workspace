@@ -28,11 +28,11 @@
 				<td> {{ space.quota }} </td>
 				<td>
 					<div class="admin-avatars">
-						<Avatar v-for="user in Array.isArray(space.admins) ? [] : Object.keys(space.admins)"
-							:key="user"
+						<Avatar v-for="user in space.admins"
+							:key="user.name"
 							:style="{ marginRight: 2 + 'px' }"
-							:display-name="user"
-							:user="user" />
+							:display-name="user.name"
+							:user="user.name" />
 					</div>
 				</td>
 			</tr>
@@ -59,10 +59,6 @@ export default {
 		},
 	},
 	methods: {
-		// Returns the list of administrators of a space
-		adminUsers(space) {
-			return space.users.filter(user => user.role === 'admin').map(user => user.name)
-		},
 		openSpace(name) {
 			this.$root.$data.spaces[name].isOpen = true
 			this.$router.push({
