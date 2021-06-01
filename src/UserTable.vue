@@ -79,59 +79,58 @@ export default {
 		return {
 			createGroup: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
-			users: [], // The users to list
 		}
 	},
-	created() {
-		if (this.$route.params.group !== undefined) {
-			// We are showing a group's users, so we have to filter the users
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			const group = this.$route.params.group
-			// Let's first process the admins
-			// eslint-disable-next-line
-			console.log('group', group)
-			// eslint-disable-next-line
-			console.log('space', space)
-			this.users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'admin',
-				}
-			})
-			// And then the regular users
-			this.users = [...this.users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'user',
-				}
-			})]
-		} else {
-			// We are showing all users of a workspace
-			// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			// Let's first process the admins
-			this.users = space.admins.map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'admin',
-				}
-			}).sort()
-			// And then the regular users
-			this.users = [...this.users, ...space.users.map((user) => {
-				return {
-					email: user.email,
-					groups: user.groups,
-					name: user.name,
-					role: 'user',
-				}
-			}).sort()]
-		}
+	computed: {
+		users() {
+			let users = []
+			if (this.$route.params.group !== undefined) {
+				// We are showing a group's users, so we have to filter the users
+				const space = this.$store.state.spaces[this.$route.params.space]
+				const group = this.$route.params.group
+				// Let's first process the admins
+				users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
+					return {
+						email: user.email,
+						groups: user.groups,
+						name: user.name,
+						role: 'admin',
+					}
+				})
+				// And then the regular users
+				users = [...users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
+					return {
+						email: user.email,
+						groups: user.groups,
+						name: user.name,
+						role: 'user',
+					}
+				})]
+			} else {
+				// We are showing all users of a workspace
+				// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
+				const space = this.$store.state.spaces[this.$route.params.space]
+				// Let's first process the admins
+				users = space.admins.map((user) => {
+					return {
+						email: user.email,
+						groups: user.groups,
+						name: user.name,
+						role: 'admin',
+					}
+				}).sort()
+				// And then the regular users
+				users = [...users, ...space.users.map((user) => {
+					return {
+						email: user.email,
+						groups: user.groups,
+						name: user.name,
+						role: 'user',
+					}
+				}).sort()]
+			}
+			return users
+		},
 	},
 	methods: {
 		deleteUser() {
@@ -139,7 +138,7 @@ export default {
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
-			const space = this.$root.$data.spaces[this.$route.params.space]
+			const space = this.$store.state.spaces[this.$route.params.space]
 			space.users.every(u => {
 				if (u.name === user.name) {
 					user.role = (user.role === 'admin') ? 'user' : 'admin'
@@ -147,7 +146,7 @@ export default {
 				}
 				return true
 			})
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			Vue.set(this.$store.state.spaces, this.$route.params.space, space)
 			// TODO: update backend
 		},
 	},
