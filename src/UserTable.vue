@@ -84,10 +84,10 @@ export default {
 	computed: {
 		users() {
 			let result = []
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const group = this.$route.params.group
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
-				const space = this.$store.state.spaces[this.$route.params.space]
-				const group = this.$route.params.group
 				result = Object.entries(space.admins)
 					.map(user => user[1])
 					.filter((user) => user.groups.includes(group))
