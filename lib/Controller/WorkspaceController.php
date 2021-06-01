@@ -1,17 +1,20 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
+use OCP\AppFramework\Http;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
     
@@ -33,6 +36,9 @@ class WorkspaceController extends Controller {
     /** @var IURLGenerator */
     private $urlGenerator;
 
+    /** @var IUserManager */
+    private $userManager;
+
     /** @var UserService */
     private $userService;
 
@@ -43,6 +49,7 @@ class WorkspaceController extends Controller {
 	ILogger $logger,
 	IRequest $request,
         IURLGenerator $urlGenerator,
+	IUserManager $userManager,
 	UserService $userService,
         IStore $IStore
     )
@@ -53,6 +60,7 @@ class WorkspaceController extends Controller {
 	$this->logger = $logger;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
+        $this->userManager = $userManager;
         $this->userService = $userService;
 
 	$this->login = $this->IStore->getLoginCredentials();
@@ -126,6 +134,53 @@ class WorkspaceController extends Controller {
 	
         return new JSONResponse($spacesWithUsers);
     }
+
+	/**
+	*
+	* Removes a user from a workspace
+	*
+	* @NoAdminRequired
+	*
+	* @var string $spaceName
+	* @var string $userName
+	* 
+	*/
+	public function removeUserFromWorkspace(string $spaceName, string $userName) {
+		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
+			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
+		}
+
+		$user = $this->userManager->get($userName);
+		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
+
+		// If user is a general manager we may first have to remove it from the list of users allowed to use
+		// the application
+		if ($GEgroup->inGroup($user)) {
+			$groups = $this->groupManager->getUserGroups($user);
+			$found = false;
+			foreach($groups as $group) {
+				$groupName = $group->getGID();
+				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
+					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
+					$groupName !== Application::GROUP_WKSUSER
+				) {
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
+				$workspaceUserGroup->removeUser($user);
+			}
+		}
+
+		// We can now blindly remove the user from the space's admin and user groups
+		$GEgroup->removeUser($user);
+		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
+		$UserGroup->removeUser($user);
+
+	        return new JSONResponse();
+	}
 
     /**
      *

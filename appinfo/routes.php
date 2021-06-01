@@ -30,6 +30,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'workspace#removeUserFromWorkspace',
+			'url' => '/api/space/{spaceName}/user/{userName}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
 			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
