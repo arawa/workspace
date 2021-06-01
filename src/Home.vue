@@ -129,7 +129,7 @@ export default {
 			let count = 0
 			// We count all users in the space who have the 'groupName' listed in their
 			// 'groups' property
-			this.$root.$data.spaces[spaceName].users.forEach($user => {
+			this.$store.state.spaces[spaceName].users.forEach($user => {
 				if ($user.groups.find(group => group === groupName) !== undefined) {
 					count += 1
 				}
