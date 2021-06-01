@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import mutations from './mutations'
 
 Vue.use(Vuex)
+Vue.config.devtools = true // Debug mode
 
 export default new Vuex.Store({
 	state: {
