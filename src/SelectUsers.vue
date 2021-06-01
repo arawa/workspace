@@ -87,15 +87,16 @@ export default {
 	methods: {
 		// Adds users to workspace and close dialog
 		addUsersToWorkspace() {
-			const space = this.$root.$data.spaces[this.$route.params.space]
+			const space = this.$store.state.spaces[this.$route.params.space]
 			space.users = space.users.concat(this.allSelectedUsers.map(user => {
 				return {
 					name: user.displayName,
 					email: user.email,
 					role: user.role,
+					groups: [],
 				}
 			}))
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			Vue.set(this.$store.state.spaces, this.$route.params.space, space)
 			this.$emit('close')
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
