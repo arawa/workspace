@@ -83,25 +83,25 @@ export default {
 	},
 	computed: {
 		users() {
-			let users = []
+			let result = []
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const group = this.$route.params.group
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
-				const space = this.$store.state.spaces[this.$route.params.space]
-				const group = this.$route.params.group
-				users = Object.entries(space.admins)
+				result = Object.entries(space.admins)
 					.map(user => user[1])
 					.filter((user) => user.groups.includes(group))
 					.sort((a, b) => a.name.localeCompare(b.name))
-				users = [...users, ...Object.entries(space.users)
+				result = [...result, ...Object.entries(space.users)
 					.map(user => user[1])
 					.filter((user) => user.groups.includes(group))
 					.sort((a, b) => a.name.localeCompare(b.name))]
 			} else {
 				// We are showing all users of a workspace
-				users = Object.entries(space.admins).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))
-				users = [...this.users, ...Object.entries(space.users).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))]
+				result = Object.entries(space.admins).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))
+				result = [...result, ...Object.entries(space.users).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))]
 			}
-			return users
+			return result
 		},
 	},
 	methods: {
