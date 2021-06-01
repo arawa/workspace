@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
+Vue.config.devtools = true // Debug mode
 
 export default new Vuex.Store({
 	state: {
