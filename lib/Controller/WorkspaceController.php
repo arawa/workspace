@@ -2,24 +2,26 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
+use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
+use OCP\AppFramework\Http;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http;
-use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
-use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
+use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
     
@@ -28,9 +30,6 @@ class WorkspaceController extends Controller {
 
     /** @var IClient */
     private $httpClient;
-
-    /** @var ICredentials */
-    private $login;
 
     /** @var IGroupManager */
     private $groupManager;
@@ -41,36 +40,39 @@ class WorkspaceController extends Controller {
     /** @var IURLGenerator */
     private $urlGenerator;
 
+    /** @var IUserManager */
+    private $userManager;
+
     /** @var UserService */
     private $userService;
 
     /** @var GroupfolderService */
-    private $groupfolder;
+    private $groupfolderService;
 
     public function __construct(
         $AppName,
+        GroupfolderService $groupfolderService,
         IClientService $clientService,
         IGroupManager $groupManager,
         IRequest $request,
       	ILogger $logger,
+        IStore $IStore
         IURLGenerator $urlGenerator,
-  	    UserService $userService,
-        IStore $IStore,
-        GroupfolderService $groupfolder
+	IUserManager $userManager,
+	UserService $userService
     )
     {
         parent::__construct($AppName, $request);
+        $this->groupfolderService = $groupfolderService;
       	$this->groupManager = $groupManager;
         $this->logger = $logger;
-        $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
+        $this->userManager = $userManager;
         $this->userService = $userService;
 
         $this->login = $this->IStore->getLoginCredentials();
-
         $this->httpClient = $clientService->newClient();
 
-        $this->groupfolder = $groupfolder;
     }
 
     /**
@@ -130,7 +132,6 @@ class WorkspaceController extends Controller {
         return new JSONResponse($spacesWithUsers);
     }
 
-    
     /**
      * TODO: https://github.com/arawa/workspace/pull/53
      * 
@@ -253,6 +254,52 @@ class WorkspaceController extends Controller {
         ]);
     }
 
+	/**
+	*
+	* Removes a user from a workspace
+	*
+	* @NoAdminRequired
+	*
+	* @var string $spaceName
+	* @var string $userName
+	* 
+	*/
+	public function removeUserFromWorkspace(string $spaceName, string $userName) {
+		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
+			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
+		}
+
+		$user = $this->userManager->get($userName);
+		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
+
+		// If user is a general manager we may first have to remove it from the list of users allowed to use
+		// the application
+		if ($GEgroup->inGroup($user)) {
+			$groups = $this->groupManager->getUserGroups($user);
+			$found = false;
+			foreach($groups as $group) {
+				$groupName = $group->getGID();
+				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
+					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
+					$groupName !== Application::GROUP_WKSUSER
+				) {
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
+				$workspaceUserGroup->removeUser($user);
+			}
+		}
+
+		// We can now blindly remove the user from the space's admin and user groups
+		$GEgroup->removeUser($user);
+		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
+		$UserGroup->removeUser($user);
+
+	        return new JSONResponse();
+	}
 
     /**
      *

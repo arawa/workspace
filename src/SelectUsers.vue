@@ -95,7 +95,7 @@ export default {
 			this.allSelectedUsers.filter(user => user.role === 'admin').forEach(user => {
 				space.admins[user.name] = user
 			})
-			this.$store.addSpace(space)
+			this.$store.commit('addSpace', space)
 			this.$emit('close')
 
 			// Update backend and revert frontend changes if something fails
@@ -119,7 +119,7 @@ export default {
 					}
 				}).catch((e) => {
 					// TODO: Inform user
-					this.$store.addSpace(spaceBackup)
+					this.$store.commit('addSpace', spaceBackup)
 				})
 			})
 		},
@@ -141,7 +141,7 @@ export default {
 				spaceId: this.$route.params.space,
 			}))
 				.then((resp) => {
-					const space = this.$root.$data.spaces[this.$route.params.space]
+					const space = this.$store.state.spaces[this.$route.params.space]
 					// Show only those users who are not already member of the space
 					this.selectableUsers = resp.data.filter(user => {
 						return (!(user.name in space.users) && !(user.name in space.admins))

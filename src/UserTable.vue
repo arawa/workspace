@@ -41,6 +41,7 @@
 							<Actions>
 								<ActionButton
 									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
+									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{
 										user.role === 'user' ?
@@ -50,7 +51,8 @@
 								</ActionButton>
 								<ActionButton
 									icon="icon-delete"
-									@click="deleteUser">
+									:close-after-click="true"
+									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</ActionButton>
 							</Actions>
@@ -105,8 +107,12 @@ export default {
 		},
 	},
 	methods: {
-		deleteUser() {
-			// TODO
+		// Remove a user's access to a workspace
+		deleteUser(user) {
+			this.$store.dispatch('removeUserFromSpace', {
+				spaceName: this.$route.params.space,
+				user,
+			})
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
