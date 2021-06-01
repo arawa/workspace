@@ -34,7 +34,7 @@ Class UserService {
 	 *
 	 */
 	public function formatUser($user, $spaceId) {
-	
+
 		if (is_null($user)) {
 			return;
 		}

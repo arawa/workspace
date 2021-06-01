@@ -82,59 +82,59 @@ class WorkspaceController extends Controller {
      */
     public function getUserWorkspaces() {
         
-	// Gets all groupfolders
-	$this->logger->debug('Fetching groupfolders');
-        $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                ],
-		'verify' => false,
-            ]
-        );
+        // Gets all groupfolders
+        $this->logger->debug('Fetching groupfolders');
+            $response = $this->httpClient->get(
+                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
+                [
+                    'auth' => [
+                        $this->login->getUID(),
+                        $this->login->getPassword()
+                    ],
+                    'headers' => [
+                            'Content-Type' => 'application/x-www-form-urlencoded',
+                            'OCS-APIRequest' => 'true',
+                            'Accept' => 'application/json',
+                    ],
+            'verify' => false,
+                ]
+            );
 
-	// TODO Check response first
-	// TODO Filter to show only workspaces, not regular groupfolders
-	
-	$spaces = json_decode($response->getBody(), true);
-	$spaces = $spaces['ocs']['data'];
-	$this->logger->debug('groupfolders fetched', [ 'spaces' => $spaces ]);
-	
-	// We only want to return those workspaces for which the connected user is a manager
-	if (!$this->userService->isUserGeneralAdmin()) {
-		$this->logger->debug('Filtering workspaces');
-		$filteredSpaces = array_filter($spaces, function($space) {
-			return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
-		});
-        	$spaces = $filteredSpaces;
-	}
+        // TODO Check response first
+        // TODO Filter to show only workspaces, not regular groupfolders
+        
+        $spaces = json_decode($response->getBody(), true);
+        $spaces = $spaces['ocs']['data'];
+        $this->logger->debug('groupfolders fetched', [ 'spaces' => $spaces ]);
+        
+        // We only want to return those workspaces for which the connected user is a manager
+        if (!$this->userService->isUserGeneralAdmin()) {
+            $this->logger->debug('Filtering workspaces');
+            $filteredSpaces = array_filter($spaces, function($space) {
+                return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
+            });
+                $spaces = $filteredSpaces;
+        }
 
-	// Adds workspace users
-	// TODO We still need to get the workspace color here
-	$this->logger->debug('Adding users to workspaces');
-	$spacesWithUsers = array_map(function($space) {
-		$users = [];
-		foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space['id']));
-		};
-		$space['admins'] = $users;
-		$users = [];
-		foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
-			array_push($users, $this->userService->formatUser($user, $space['id']));
-		};
-		$space['users'] = $users;
-		return $space;
-		
-	},$spaces);
+        // Adds workspace users
+        // TODO We still need to get the workspace color here
+        $this->logger->debug('Adding users to workspaces');
+        $spacesWithUsers = array_map(function($space) {
+            $users = [];
+            foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
+                array_push($users, $this->userService->formatUser($user, $space['id']));
+            };
+            $space['admins'] = $users;
+            $users = [];
+            foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
+                array_push($users, $this->userService->formatUser($user, $space['id']));
+            };
+            $space['users'] = $users;
+            return $space;
+            
+        },$spaces);
 
-	// TODO We still need to get the workspace color here
+	    // TODO We still need to get the workspace color here
 	
         return new JSONResponse($spacesWithUsers);
     }
@@ -400,6 +400,7 @@ class WorkspaceController extends Controller {
         return new JSONResponse($response);
     }
 
+   
     /**
      *
      * TODO This is a single API call. It should probably be moved to the frontend
