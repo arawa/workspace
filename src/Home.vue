@@ -141,6 +141,8 @@ export default {
 					count += 1
 				}
 			})
+			return count
+		},
 		// Returns the number of users in the space
 		userCount(space) {
 			let count = space.admins.length === 0 ? 0 : Object.keys(space.admins).length
