@@ -13,6 +13,7 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCA\Workspace\Service\GroupfolderService;
 
 class WorkspaceController extends Controller {
     
@@ -37,28 +38,34 @@ class WorkspaceController extends Controller {
     /** @var UserService */
     private $userService;
 
+    /** @var GroupfolderSrvice */
+    private $groupfolder;
+
     public function __construct(
         $AppName,
         IClientService $clientService,
-	IGroupManager $groupManager,
-	ILogger $logger,
-	IRequest $request,
+	    IGroupManager $groupManager,
+	    ILogger $logger,
+	    IRequest $request,
         IURLGenerator $urlGenerator,
-	UserService $userService,
-        IStore $IStore
+	    UserService $userService,
+        IStore $IStore,
+        GroupfolderService $groupfolder
     )
     {
         parent::__construct($AppName, $request);
 
-	$this->groupManager = $groupManager;
-	$this->logger = $logger;
+	    $this->groupManager = $groupManager;
+	    $this->logger = $logger;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
 
-	$this->login = $this->IStore->getLoginCredentials();
+	    $this->login = $this->IStore->getLoginCredentials();
 
         $this->httpClient = $clientService->newClient();
+
+        $this->groupfolder = $groupfolder;
     }
 
     /**
@@ -164,4 +171,34 @@ class WorkspaceController extends Controller {
 
         return new JSONResponse($response);
     }
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * 
+     * @var string $folderId
+     * @return JSONResponse
+     */
+    public function delete($folderId) {
+
+        $responseGroupfolderGet = $this->groupfolder->get($folderId);
+
+        $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
+
+        $responseGroupfolderDelete = $this->groupfolder->delete($folderId);
+
+        $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
+
+        if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
+            return;
+        }
+
+        return new JSONResponse([
+            'statuscode' => 200,
+            'space' => $groupfolder['ocs']['data']['mount_point'],
+            'state' => 'delete'
+        ]);
+
+    }
+    
 }
