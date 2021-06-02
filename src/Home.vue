@@ -135,7 +135,7 @@ export default {
 			let count = 0
 			// We count all users in the space who have the 'groupName' listed in their
 			// 'groups' property
-			const users = [...space.users, ...space.admins]
+			const users = [...Object.values(space.users), ...Object.values(space.admins)]
 			users.forEach($user => {
 				if ($user.groups.includes(groupName)) {
 					count += 1
