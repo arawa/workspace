@@ -31,7 +31,7 @@
 						:key="group[0]"
 						icon="icon-group"
 						:to="{path: `/group/${name}/${group}`}"
-						:title="group">
+						:title="group[0]">
 						<CounterBubble slot="counter">
 							{{ groupUserCount(name, group) }}
 						</CounterBubble>
