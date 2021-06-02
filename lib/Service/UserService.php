@@ -42,7 +42,7 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (str_ends_with($group->getGID(), $spaceId)) {
+			if (substr_compare($group->getGID(), $spaceId, -strlen($spaceId)) === 0) {
 				array_push($groups, $group->getGID());
 			}
 		};
