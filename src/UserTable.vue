@@ -83,13 +83,13 @@ export default {
 	},
 	computed: {
 		users() {
-			let users = []
+			let allUsers = []
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				const space = this.$store.state.spaces[this.$route.params.space]
 				const group = this.$route.params.group
 				// Let's first process the admins
-				users = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
+				allUsers = space.admins.filter((user) => user.groups.includes(group)).map((user) => {
 					return {
 						email: user.email,
 						groups: user.groups,
@@ -98,7 +98,7 @@ export default {
 					}
 				})
 				// And then the regular users
-				users = [...users, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
+				allUsers = [...allUsers, ...space.users.filter((user) => user.groups.includes(group)).map((user) => {
 					return {
 						email: user.email,
 						groups: user.groups,
@@ -111,7 +111,7 @@ export default {
 				// Adds role 'admin' or 'user' to each users (would probably best be done in the backend directly)
 				const space = this.$store.state.spaces[this.$route.params.space]
 				// Let's first process the admins
-				users = space.admins.map((user) => {
+				allUsers = space.admins.map((user) => {
 					return {
 						email: user.email,
 						groups: user.groups,
@@ -120,7 +120,7 @@ export default {
 					}
 				}).sort()
 				// And then the regular users
-				users = [...users, ...space.users.map((user) => {
+				allUsers = [...allUsers, ...space.users.map((user) => {
 					return {
 						email: user.email,
 						groups: user.groups,
@@ -129,7 +129,7 @@ export default {
 					}
 				}).sort()]
 			}
-			return users
+			return allUsers
 		},
 	},
 	methods: {
