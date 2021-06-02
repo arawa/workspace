@@ -16,7 +16,7 @@
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
-			<AppNavigationItem v-for="(space, name) in sortedSpaces"
+			<AppNavigationItem v-for="(space, name) in $store.getters.sortedSpaces"
 				:key="name"
 				:class="$route.params.space === name ? 'space-selected' : ''"
 				:allow-collapse="true"
@@ -27,11 +27,15 @@
 					{{ space.admins.length + space.users.length }}
 				</CounterBubble>
 				<div>
-					<AppNavigationItem v-for="group in Object.entries($root.$data.spaces[name].groups)"
+					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
 						:key="group[0]"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group[0]}`}"
-						:title="group[0]" />
+						:to="{path: `/group/${name}/${group}`}"
+						:title="group[0]">
+						<CounterBubble slot="counter">
+							{{ groupUserCount(space, group[0]) }}
+						</CounterBubble>
+					</AppNavigationItem>
 				</div>
 			</AppNavigationItem>
 		</AppNavigation>
@@ -64,22 +68,11 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
-	computed: {
-		// Returns a sorted version of this.$root.$data.spaces
-		sortedSpaces() {
-			const sortedSpaces = {}
-			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
-				sortedSpaces[value] = this.$root.$data.spaces[value]
-			})
-			return sortedSpaces
-		},
-	},
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
-				const spaces = {}
 				Object.values(resp.data).forEach(folder => {
-					spaces[folder.mount_point] = {
+					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 						groups: folder.groups,
@@ -89,9 +82,8 @@ export default {
 						quota: this.convertQuotaForFrontend(folder.quota),
 						admins: folder.admins,
 						users: folder.users,
-					}
+					})
 				})
-				this.$root.$data.spaces = spaces
 			})
 	},
 	methods: {
@@ -105,7 +97,7 @@ export default {
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
 				let i = 0
-				while (quota > 1024) {
+				while (quota >= 1024) {
 					quota = quota / 1024
 					i++
 				}
@@ -139,6 +131,19 @@ export default {
 						path: `/workspace/${name}`,
 					})
 				})
+		},
+		// Gets the number of member in a group
+		groupUserCount(space, groupName) {
+			let count = 0
+			// We count all users in the space who have the 'groupName' listed in their
+			// 'groups' property
+			const users = [...space.users, ...space.admins]
+			users.forEach($user => {
+				if ($user.groups.includes(groupName)) {
+					count += 1
+				}
+			})
+			return count
 		},
 	},
 }

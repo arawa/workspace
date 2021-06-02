@@ -1,6 +1,7 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
@@ -132,7 +133,7 @@ class WorkspaceController extends Controller {
             return $space;
             
         },$spaces);
-	    // TODO We still need to get the workspace color here
+	      // TODO We still need to get the workspace color here
 	
         return new JSONResponse($spacesWithUsers);
     }

@@ -28,7 +28,7 @@ Class UserService {
 	 * needed for the frontend
 	 *
 	 * @param IUser $user
-	 * @param string $spaceId
+	 * @param array $space
 	 *
 	 * @return array
 	 *
@@ -42,7 +42,10 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (str_ends_with($group->getGID(), $spaceId)) {
+			if (substr_compare($group->getGID(), $space['id'], -strlen($spacei['id'])) === 0
+				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['mount_point']
+				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['mount_point']
+			) {
 				array_push($groups, $group->getGID());
 			}
 		};
