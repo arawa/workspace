@@ -18,7 +18,7 @@
 					<th>{{ t('workspace', 'Space administrators') }}</th>
 				</tr>
 			</thead>
-			<tr v-for="(space,name) in sortedSpaces"
+			<tr v-for="(space,name) in $store.getters.sortedSpaces"
 				:key="name"
 				@click="openSpace(name)">
 				<td style="width: 50px;">
@@ -48,19 +48,9 @@ export default {
 	components: {
 		Avatar,
 	},
-	computed: {
-		// Returns a sorted version of this.$root.$data.spaces
-		sortedSpaces() {
-			const sortedSpaces = {}
-			Object.keys(this.$root.$data.spaces).sort().forEach((value, index) => {
-				sortedSpaces[value] = this.$root.$data.spaces[value]
-			})
-			return sortedSpaces
-		},
-	},
 	methods: {
 		openSpace(name) {
-			this.$root.$data.spaces[name].isOpen = true
+			this.$store.state.spaces[name].isOpen = true
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})

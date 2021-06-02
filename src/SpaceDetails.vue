@@ -18,7 +18,7 @@
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
-					:value="$root.$data.spaces[$route.params.space].quota"
+					:value="$store.state.spaces[$route.params.space].quota"
 					:options="['1GB', '5GB', '10GB', 'unlimited']"
 					@change="setSpaceQuota"
 					@tag="setSpaceQuota" />
@@ -75,7 +75,6 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
-import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
@@ -109,21 +108,18 @@ export default {
 			}
 
 			// Creates group in frontend
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			const oldGroups = space.groups
-			space.groups[group] = group
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			this.$store.addGroupToSpace(this.$route.params.space, group)
 
 			// Creates group in backend
 			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
 				.then((resp) => {
 					// Give group access to space
-					axios.post(generateUrl(`/apps/groupfolders/folders/${space.id}/groups`), { group })
+					axios.post(generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/groups`), { group })
 						.then((resp) => {
 							// Navigates to the group's details page
-							this.$root.$data.spaces[this.$route.params.space].isOpen = true
+							this.$store.state.spaces[this.$route.params.space].isOpen = true
 							this.$router.push({
-								path: `/group/${space.name}/${group}`,
+								path: `/group/${this.$route.params.space}/${group}`,
 							})
 						})
 						.catch((e) => {
@@ -131,8 +127,7 @@ export default {
 						})
 				})
 				.catch((e) => {
-					space.groups = oldGroups
-					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+					this.$store.removeGroupFromSpace(this.$route.params.space, group)
 					// TODO Inform user
 				})
 		},
@@ -170,10 +165,8 @@ export default {
 			}
 
 			// Updates frontend
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			const oldQuota = space.quota
-			space.quota = quota
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			const oldQuota = this.$store.state.spaces[this.$route.params.space].quota
+			this.$store.setSpaceQuota(this.$route.params.space, quota)
 
 			// Transforms quota for backend
 			switch (quota.substr(-2).toLowerCase()) {
@@ -193,12 +186,11 @@ export default {
 			quota = (quota === 'unlimited') ? -3 : quota
 
 			// Updates backend
-			const url = generateUrl(`/apps/groupfolders/folders/${space.id}/quota`)
+			const url = generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/quota`)
 			axios.post(url, { quota })
 				.catch((e) => {
 					// Reverts change made in the frontend in case of error
-					space.quota = oldQuota
-					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+					this.$store.setSpaceQuota(this.$route.params.space, oldQuota)
 					// TODO Inform user
 				})
 		},
