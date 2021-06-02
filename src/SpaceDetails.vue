@@ -47,7 +47,7 @@
 					<ActionInput
 						icon="icon-rename"
 						@submit="renameSpace">
-						{{ t('workspace', 'Rename spaceAAAAA') }}
+						{{ t('workspace', 'Rename space') }}
 					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
@@ -154,7 +154,6 @@ export default {
 						this.$root.$data.spaces[data.space].name = data.space
 
 						delete this.$root.$data.spaces[oldSpaceName]
-						
 						this.$router.push({
 							path: `/workspace/${data.space}`,
 						})
