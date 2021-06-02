@@ -165,12 +165,12 @@ class WorkspaceController extends Controller {
 	$spacesWithUsers = array_map(function($space) {
 		$users = array();
 		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
 		};
 		$space['admins'] = $users;
 		$users = array();
 		foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'user');
+			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
 		};
 		$space['users'] = $users;
 		return $space;
