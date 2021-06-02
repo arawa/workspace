@@ -33,7 +33,7 @@
 						:to="{path: `/group/${name}/${group}`}"
 						:title="group[0]">
 						<CounterBubble slot="counter">
-							{{ groupUserCount(name, group) }}
+							{{ groupUserCount(space, group[0]) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
@@ -125,12 +125,13 @@ export default {
 			// TODO update backend
 		},
 		// Gets the number of member in a group
-		groupUserCount(spaceName, groupName) {
+		groupUserCount(space, groupName) {
 			let count = 0
 			// We count all users in the space who have the 'groupName' listed in their
 			// 'groups' property
-			this.$store.state.spaces[spaceName].users.forEach($user => {
-				if ($user.groups.find(group => group === groupName) !== undefined) {
+			const users = [...space.users, ...space.admins]
+			users.forEach($user => {
+				if ($user.groups.includes(groupName)) {
 					count += 1
 				}
 			})
