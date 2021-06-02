@@ -138,7 +138,7 @@ export default {
 		},
 		renameSpace(e) {
 			// TODO
-			const oldSpaceName = this.$root.$data.spaces[this.$route.params.space].name
+			const oldSpaceName = this.$route.params.space
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
@@ -150,20 +150,15 @@ export default {
 					const data = resp.data
 
 					if (data.statuscode === 204) {
-						this.$root.$data.spaces[data.space] = this.$root.$data.spaces[oldSpaceName]
-						this.$root.$data.spaces[data.space].name = data.space
-
+						const space = this.$root.$data.spaces[oldSpaceName]
+						space.name = data.space
+						Vue.set(this.$root.$data.spaces, data.space, space)
 						delete this.$root.$data.spaces[oldSpaceName]
 						this.$router.push({
 							path: `/workspace/${data.space}`,
 						})
 					}
 				})
-				.catch((e) => {
-					Vue.set(this.$root.$data.spaces[this.$route.params.space], 'name', oldSpaceName)
-				})
-			// update back-end
-			// update front-end
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
