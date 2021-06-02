@@ -14,14 +14,13 @@ export default new Vuex.Store({
 	mutations,
 	actions: {
 		removeUserFromSpace(context, { spaceName, user }) {
-			context.commit('removeUserFromSpace', spaceName, user.name)
+			context.commit('removeUserFromAdminList', { spaceName, user })
+			context.commit('removeUserFromUserList', { spaceName, user })
 			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userName}', {
 				spaceName,
 				userName: user.name,
 			}))
 				.then((resp) => {
-					// eslint-disable-next-line
-					console.log('resp', resp)
 					if (resp.status !== 200) {
 						// Revert action an inform user
 						// TODO Inform user
@@ -40,7 +39,54 @@ export default new Vuex.Store({
 						context.commit('addUserToUserList', user)
 					}
 				})
+			// eslint-disable-next-line no-console
+			console.log('User ' + user.name + ' removed from space ' + spaceName)
 		},
+		toggleUserRole(context, { spaceName, user }) {
+			if (user.role === 'admin') {
+				user.role = 'user'
+				context.commit('addUserToUserList', { spaceName, user })
+				context.commit('removeUserFromAdminList', { spaceName, user })
+			} else {
+				user.role = 'admin'
+				context.commit('addUserToAdminList', { spaceName, user })
+				context.commit('removeUserFromUserList', { spaceName, user })
+			}
+			axios.patch(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userName}', {
+				spaceName,
+				userName: user.name,
+			}))
+				.then((resp) => {
+					if (resp.status !== 200) {
+						// Revert action an inform user
+						// TODO Inform user
+						if (user.role === 'admin') {
+							user.role = 'user'
+							context.commit('addUserToUserList', { spaceName, user })
+							context.commit('removeUserFromAdminList', { spaceName, user })
+						} else {
+							user.role = 'admin'
+							context.commit('addUserToAdminList', { spaceName, user })
+							context.commit('removeUserFromUserList', { spaceName, user })
+						}
+					}
+				}).catch((e) => {
+					// Revert action an inform user
+					// TODO Inform user
+					if (user.role === 'admin') {
+						user.role = 'user'
+						context.commit('addUserToUserList', { spaceName, user })
+						context.commit('removeUserFromAdminList', { spaceName, user })
+					} else {
+						user.role = 'admin'
+						context.commit('addUserToAdminList', { spaceName, user })
+						context.commit('removeUserFromUserList', { spaceName, user })
+					}
+				})
+			// eslint-disable-next-line no-console
+			console.log('Role of user ' + user.name + ' changed')
+		},
+
 	},
 	getters: {
 		sortedSpaces(state) {

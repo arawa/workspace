@@ -75,6 +75,56 @@ class WorkspaceController extends Controller {
 
     }
 
+	/**
+	*
+	* Change a user's role in a workspace
+	*
+	* @NoAdminRequired
+	*
+	* @var string $spaceName
+	* @var string $userName
+	* 
+	*/
+	public function changeUserRole(string $spaceName, string $userName) {
+		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
+			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
+		}
+
+		$user = $this->userManager->get($userName);
+		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
+
+		if ($GEgroup->inGroup($user)) {
+			// If user is a general manager we may first have to remove it from the list of users allowed to use
+			// the application
+			$groups = $this->groupManager->getUserGroups($user);
+			$found = false;
+			foreach($groups as $group) {
+				$groupName = $group->getGID();
+				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
+					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
+					$groupName !== Application::GROUP_WKSUSER
+				) {
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
+				$workspaceUserGroup->removeUser($user);
+			}
+			// We can now remove the user from the space's admin group
+			$GEgroup->removeUser($user);
+			// And add it to the space's user group
+			$this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName)->addUser($user);
+		} else {
+			$this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName)->removeUser($user);
+			$this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName)->addUser($user);
+			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
+		}
+
+	        return new JSONResponse();
+	}
+
     /**
      *
      * Returns a list of all the workspaces that the connected user

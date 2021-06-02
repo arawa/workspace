@@ -68,7 +68,6 @@
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Vue from 'vue'
 
 export default {
 	name: 'UserTable',
@@ -116,16 +115,10 @@ export default {
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
-			const space = this.$store.state.spaces[this.$route.params.space]
-			space.users.every(u => {
-				if (u.name === user.name) {
-					user.role = (user.role === 'admin') ? 'user' : 'admin'
-					return false
-				}
-				return true
+			this.$store.dispatch('toggleUserRole', {
+				spaceName: this.$route.params.space,
+				user,
 			})
-			Vue.set(this.$store.state.spaces, this.$route.params.space, space)
-			// TODO: update backend
 		},
 	},
 }

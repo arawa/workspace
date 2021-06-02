@@ -26,6 +26,7 @@ return [
 		],
 		[
 			'name' => 'workspace#getUserWorkspaces',
+			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'GET'
 		],
@@ -40,6 +41,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'workspace#changeUserRole',
+			'url' => '/api/space/{spaceName}/user/{userName}',
+			'verb' => 'PATCH'
+		],
+		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
 			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
@@ -51,11 +57,13 @@ return [
 		],
 		[
 			'name' => 'group#create',
+			// TODO move this route to /api/group/add/{group}
 			'url' => '/group/add/{group}',
 			'verb' => 'POST',
 		],
 		[
 			'name' => 'group#addUser',
+			// TODO move this route to /api/group/addUser/{space}
 			'url' => '/group/addUser/{space}',
 			'verb' => 'PATCH',
 		],
