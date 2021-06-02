@@ -30,8 +30,12 @@
 					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
 						:key="group[0]"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group[0]}`}"
-						:title="group[0]" />
+						:to="{path: `/group/${name}/${group}`}"
+						:title="group">
+						<CounterBubble slot="counter">
+							{{ groupUserCount(name, group) }}
+						</CounterBubble>
+					</AppNavigationItem>
 				</div>
 			</AppNavigationItem>
 		</AppNavigation>
@@ -119,6 +123,18 @@ export default {
 				path: `/workspace/${name}`,
 			})
 			// TODO update backend
+		},
+		// Gets the number of member in a group
+		groupUserCount(spaceName, groupName) {
+			let count = 0
+			// We count all users in the space who have the 'groupName' listed in their
+			// 'groups' property
+			this.$store.state.spaces[spaceName].users.forEach($user => {
+				if ($user.groups.find(group => group === groupName) !== undefined) {
+					count += 1
+				}
+			})
+			return count
 		},
 	},
 }

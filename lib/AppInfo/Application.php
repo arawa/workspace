@@ -14,9 +14,9 @@ class Application extends App {
         public const ESPACE_MANAGER_01 = "GE-";
         public const ESPACE_MANAGER_02 = "Manager_";
         public const ESPACE_MANAGER_03 = "_GE";
-        public const ESPACE_USERS_01 = "_U";
+        public const ESPACE_USERS_03 = "_U";
         public const ESPACE_USERS_02 = "Users_";
-        public const ESPACE_USERS_03 = "U-";
+        public const ESPACE_USERS_01 = "U-";
 
         public function __construct(array $urlParams=[] ) {
                 parent::__construct(self::APP_ID, $urlParams);
