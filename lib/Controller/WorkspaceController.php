@@ -78,27 +78,27 @@ class WorkspaceController extends Controller {
      * may use.
      *
      * @NoAdminRequired
-     * 
+     * @NoCSRFRequired
      */
     public function getUserWorkspaces() {
         
         // Gets all groupfolders
         $this->logger->debug('Fetching groupfolders');
-            $response = $this->httpClient->get(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => [
-                            'Content-Type' => 'application/x-www-form-urlencoded',
-                            'OCS-APIRequest' => 'true',
-                            'Accept' => 'application/json',
-                    ],
-            'verify' => false,
-                ]
-            );
+        $response = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'OCS-APIRequest' => 'true',
+                        'Accept' => 'application/json',
+                ],
+                'verify' => false,
+            ]
+        );
 
         // TODO Check response first
         // TODO Filter to show only workspaces, not regular groupfolders
@@ -115,7 +115,6 @@ class WorkspaceController extends Controller {
             });
                 $spaces = $filteredSpaces;
         }
-
         // Adds workspace users
         // TODO We still need to get the workspace color here
         $this->logger->debug('Adding users to workspaces');
@@ -133,7 +132,6 @@ class WorkspaceController extends Controller {
             return $space;
             
         },$spaces);
-
 	    // TODO We still need to get the workspace color here
 	
         return new JSONResponse($spacesWithUsers);
@@ -266,7 +264,10 @@ class WorkspaceController extends Controller {
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
-     * TODO: Manage errors.
+     * 
+     * TODO: Manage errors & may be refactor
+     * groupfolder->rename & groupfolder->attachGroup.
+     * 
      * @param int $folderId
      * @param string $newSpaceName
      * @return JSONResponse
@@ -274,46 +275,13 @@ class WorkspaceController extends Controller {
     public function rename($folderId, $newSpaceName) {
 
         // Todo : create the groupfolderService with this method.
-        // $oldSpaceName = $this->groupfolder->getMountPoint($folderId),
-        // $oldSpaceName = $this->groupfolder->getGroups($folderId),
+        $responseCurrentSpaceName = $this->groupfolder->get($folderId);
      
-        $responseGetGroupfolder = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                    'verify' => 'false',
-                ]
-            ]);
+        $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
 
-        $groupfolder = json_decode($responseGetGroupfolder->getBody(), true);
-
-        $oldSpaceName = $groupfolder['ocs']['data']['mount_point'];
-        $groups = array_keys($groupfolder['ocs']['data']['groups']);
+        $currentMountPointSpaceName = $currentSpaceName['ocs']['data']['mount_point'];
      
-        $responseGroupfolder = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/mountpoint',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'mountpoint' => $newSpaceName
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                    'verify' => 'false',
-                ]
-            ]);
+        $responseGroupfolder = $this->groupfolder->rename($folderId, $newSpaceName);
 
         $responseRename = json_decode($responseGroupfolder->getBody(), true);
 
@@ -323,22 +291,15 @@ class WorkspaceController extends Controller {
                 "space" => $newSpaceName
             ];
             
-            // Todo : create the groupService with this method.
-            // newGroupGE = this->groupService->renameGroupSpace($oldSpaceName, 'GE-'.$newSpace)
-            // newGroupU = this->groupService->renameGroupSpace($oldSpaceName, 'U-'.$newSpace)
-
-            // [X] Get list users' interfaces in one group
-            $groupGE = $this->groupManager->get('GE-' . $oldSpaceName);
-            $groupU = $this->groupManager->get('U-' . $oldSpaceName);
+            $groupGE = $this->groupManager->get('GE-' . $currentMountPointSpaceName);
+            $groupU = $this->groupManager->get('U-' . $currentMountPointSpaceName);
 
             $IUsersGE = $groupGE->getUsers();
             $IUsersU = $groupU->getUsers();
             
-            // [X] Create groups which are the same name that the space renamed
             $newGroupGE = $this->groupManager->createGroup('GE-' . $newSpaceName);
             $newGroupU = $this->groupManager->createGroup('U-' . $newSpaceName);
 
-            // [X] Affect users in new groups with respect the order (GE/U)
             foreach ($IUsersGE as $IUserGE) {
                 $newGroupGE->addUser($IUserGE);
             }
@@ -347,52 +308,18 @@ class WorkspaceController extends Controller {
                 $newGroupU->addUser($IUsersU);
             }
 
-            // [X] Attach new groups in space renamed
-            $respAttachGroupGE = $this->httpClient->post(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'body' => [
-                        'group' => $newGroupGE->getGID()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $respAttachGroupGE = $this->groupfolder->attachGroup($folderId, $newGroupGE->getGID());
             
             if ($respAttachGroupGE->getStatusCode() === 200) {
                 $response['groups'][] = $newGroupGE->getGID();
             }
 
-            $respAttachGroupU = $this->httpClient->post(
-                $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'body' => [
-                        'group' => $newGroupU->getGID()
-                    ],
-                    'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                    ]
-                ]
-            );
+            $respAttachGroupU = $this->groupfolder->attachGroup($folderId, $newGroupU->getGID());
 
             if ($respAttachGroupU->getStatusCode() === 200) {
                 $response['groups'][] = $newGroupU->getGID();
             }
         
-            // [X] Delete old groups
             $groupGE->delete();
             $groupU->delete();
         }

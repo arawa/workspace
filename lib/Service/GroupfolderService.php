@@ -67,6 +67,25 @@ class GroupfolderService {
         return $response;
     }
 
+        /**
+     * @NoAdminRequired
+     * @param int $folderId
+     * @return object that is the response from httpClient
+     */
+    public function get($folderId) {
+        $response = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'headers' => self::HEADERS
+            ]);
+
+        return $response;
+    }
+
     /**
      * @NoAdminRequired
      * @param $id is the groupfolder's id.
@@ -162,6 +181,57 @@ class GroupfolderService {
                     $this->login->getPassword()
                 ],
                 'headers' => self::HEADERS
+            ]
+        );
+
+        return $response;
+    }
+
+    /**
+     * @NoAdminRequired
+     * @param int $folderId
+     * @param string $newSpaceName
+     * @return object that is the response from httpClient
+     */
+    public function rename($folderId, $newSpaceName) {
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/mountpoint',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'mountpoint' => $newSpaceName
+                ],
+                'headers' => self::HEADERS
+            ]);
+        
+        return $response;
+    }
+
+    /**
+     * @NoAdminRequired
+     * @param int $folderId
+     * @param string $gid
+     * @return object that is the response from httpClient
+     */
+    public function attachGroup($folderId, $gid) {
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'group' => $gid
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
             ]
         );
 
