@@ -30,6 +30,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'workspace#create',
+			'url' => '/spaces',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
 			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'

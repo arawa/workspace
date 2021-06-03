@@ -110,19 +110,28 @@ export default {
 				// TODO inform user?
 				return
 			}
-			Vue.set(this.$root.$data.spaces, name, {
-				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-				groups: [],
-				isOpen: false,
-				name,
-				quota: undefined,
-				admins: [],
-				users: [],
-			})
-			this.$router.push({
-				path: `/workspace/${name}`,
-			})
-			// TODO update backend
+
+			axios.post(generateUrl('/apps/workspace/spaces'),
+				{
+					spaceName: name
+				}
+			)
+				.then(resp => {
+					const data = resp.data
+
+					Vue.set(this.$root.$data.spaces, name, {
+						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+						groups: data.groups,
+						isOpen: false,
+						name,
+						quota: undefined,
+						admins: [],
+						users: [],
+					})
+					this.$router.push({
+						path: `/workspace/${name}`,
+					})
+				})
 		},
 		// Gets the number of member in a group
 		groupUserCount(space, groupName) {
