@@ -16,7 +16,7 @@ use OCP\AppFramework\Http;
 use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AdvancedPermissionsGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 
 class WorkspaceController extends Controller {
     
@@ -202,26 +202,23 @@ class WorkspaceController extends Controller {
 
         }
 
-        // Todo : Replace by apps/groupfolders/folders/$folderId/manageACL => https://github.com/nextcloud/groupfolders/tree/master
-        // enable advanced permissions groupfolder
-        $dataResponseEnableAdvancedPermissionsGroupFolder = $this->groupfolder->enableAdvancedPermissions(
+        // Add one group to manage acl
+
+        $dataResponseManageAcl = $this->groupfolder->manageAcl(
             $responseCreateGroupFolder['ocs']['data']['id'],
             $newSpaceManagerGroup->getGID()
         );
 
-        $responseEnableAdvancedPermissionsGroupFolder = json_decode(
-            $dataResponseEnableAdvancedPermissionsGroupFolder->getBody(),
-            true
-        );
+        $responseManageAcl = json_decode($dataResponseManageAcl->getBody(), true);
 
-        if ( $responseEnableAdvancedPermissionsGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
+        if ( $responseManageAcl['ocs']['meta']['statuscode'] !== 100 ) {
 
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
             $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
-            throw new AdvancedPermissionsGroupFolderException();
+            throw new ManageAclGroupFolderException();
 
         }
 
@@ -237,8 +234,11 @@ class WorkspaceController extends Controller {
                 $newSpaceManagerGroup->getGID(),
                 $newSpaceUsersGroup->getGID()
             ],
+            'acl' => [
+                'state' => true,
+                'group_manage' => $newSpaceManagerGroup->getGID()
+            ],
             'statuscode' => Http::STATUS_CREATED,
-            'space_acl' => true,
         ]);
     }
 

@@ -124,6 +124,35 @@ class GroupfolderService {
 
     /**
      * @NoAdminRequired
+     * @param int $folderId
+     * @param string $gid
+     * @param boolean $manageAcl
+     * 
+     * @return object that is the response from httpClient
+     */
+    public function manageAcl($folderId, $gid, $manageAcl=true) {
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/manageACL',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'mappingType' => 'group',
+                    'mappingId' => $gid,
+                    'manageAcl' => $manageAcl
+                ],
+                'headers' => self::HEADERS
+            ]
+        );
+
+        return $response;
+    }
+
+
+    /**
+     * @NoAdminRequired
      * @param $id is the groupfolder's id.
      * @param $gid
      * @return object that is the response from httpClient
