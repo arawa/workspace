@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
     "dev": "NODE_ENV=development webpack --progress --config webpack.dev.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.config.js \"src/tests/**/*.js\"",
     "lint": "eslint --ext .js,.vue src"
   },
   "repository": {
@@ -30,8 +30,10 @@
     "@nextcloud/webpack-vue-config": "^3.0.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
+    "chai": "^4.3.4",
     "css-loader": "^4.3.0",
     "eslint-webpack-plugin": "^2.5.3",
+    "mochapack": "^2.1.2",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.19.0",
@@ -39,7 +41,8 @@
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-merge": "^5.7.3"
+    "webpack-merge": "^5.7.3",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@babel/core": "^7.13.14",
@@ -54,9 +57,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-vue": "^7.8.0",
+    "fsevents": "^2.3.2",
     "stylelint-webpack-plugin": "^2.1.1",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
