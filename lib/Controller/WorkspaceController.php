@@ -51,7 +51,6 @@ class WorkspaceController extends Controller {
         IGroupManager $groupManager,
         IRequest $request,
       	ILogger $logger,
-	      IRequest $request,
         IURLGenerator $urlGenerator,
   	    UserService $userService,
         IStore $IStore,
@@ -60,12 +59,12 @@ class WorkspaceController extends Controller {
     {
         parent::__construct($AppName, $request);
       	$this->groupManager = $groupManager;
-	      $this->logger = $logger;
+        $this->logger = $logger;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
 
-	      $this->login = $this->IStore->getLoginCredentials();
+        $this->login = $this->IStore->getLoginCredentials();
 
         $this->httpClient = $clientService->newClient();
 
@@ -96,7 +95,7 @@ class WorkspaceController extends Controller {
                         'OCS-APIRequest' => 'true',
                         'Accept' => 'application/json',
                 ],
-		'verify' => false,
+		        'verify' => false,
             ]
         );
 
