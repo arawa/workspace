@@ -68,11 +68,6 @@ return [
 			'verb' => 'GET',
 			'requirements' => array('path' => '.+'),
 			'defaults' => array('path' => 'dummy'),
-		],
-		[
-			'name' => 'workspace#rename',
-			'url' => '/spaces/{folderId}',
-			'verb' => 'PATCH'
-		],
+		]
 	]
 ];
