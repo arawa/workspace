@@ -181,6 +181,8 @@ class WorkspaceController extends Controller {
      */
     public function delete($folderId) {
 
+        $groups = [];
+
         $responseGroupfolderGet = $this->groupfolder->get($folderId);
 
         $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
@@ -207,6 +209,11 @@ class WorkspaceController extends Controller {
 
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
 
+        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $group ) {
+            $groups[] = $group;
+            $this->groupManager->get($group)->delete();
+        }
+
         if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
             return;
         }
@@ -218,6 +225,7 @@ class WorkspaceController extends Controller {
             ],
             'data' => [
                 'space' => $groupfolder['ocs']['data']['mount_point'],
+                'groups' => $groups,
                 'state' => 'delete'
             ]
         ]);
