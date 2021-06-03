@@ -45,10 +45,9 @@ class GroupfolderService {
 
 
     /**
-     * @NoAdminRequired
      * @param int $folderId the space name to delete.
      * @return object that is the response from httpClient
-     * DELETE apps/groupfolders/folders/$folderId
+     * 
      */
     public function delete($folderId) {
         $response = $this->httpClient->delete(
