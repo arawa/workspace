@@ -185,6 +185,24 @@ class WorkspaceController extends Controller {
 
         $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
 
+        if (
+            !$this->userService->isSpaceManagerOfSpace($groupfolder['ocs']['data']['mount_point']) &&
+            !$this->userService->isUserGeneralAdmin()
+            ) 
+        {
+            return new JSONResponse(
+                [
+                    'data' => [],
+                    'http' => [
+                        'message' => 'You are not a manager for this space.',
+                        'statuscode' => Http::STATUS_FORBIDDEN
+                    ]
+                ]
+            );
+        }
+    
+
+
         $responseGroupfolderDelete = $this->groupfolder->delete($folderId);
 
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
@@ -194,9 +212,14 @@ class WorkspaceController extends Controller {
         }
 
         return new JSONResponse([
-            'statuscode' => 200,
-            'space' => $groupfolder['ocs']['data']['mount_point'],
-            'state' => 'delete'
+            'http' => [
+                'statuscode' => 200,
+                'message' => 'The space is deleted.'
+            ],
+            'data' => [
+                'space' => $groupfolder['ocs']['data']['mount_point'],
+                'state' => 'delete'
+            ]
         ]);
 
     }
