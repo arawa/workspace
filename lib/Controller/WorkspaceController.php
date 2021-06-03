@@ -79,7 +79,6 @@ class WorkspaceController extends Controller {
      * may use.
      *
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function getUserWorkspaces() {
         
