@@ -96,6 +96,17 @@ export default {
 	methods: {
 		deleteSpace() {
 			// TODO
+			const space = this.$route.params.space
+			axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+				.then(resp => {
+					console.debug(resp)
+					console.debug(resp.data.http.statuscode)
+					if (resp.data.http.statuscode === 200) {
+						// TODO: Update in Front-end with Vuex
+						
+					}
+				})
+
 		},
 		// Creates a group and navigates to its details page
 		onNewGroup(e) {
