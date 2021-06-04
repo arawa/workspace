@@ -75,6 +75,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
+import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
@@ -137,7 +138,7 @@ export default {
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
-			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$root.$data.spaces[this.$route.params.space].id}`),
+			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
 				{
 					newSpaceName: e.target[1].value
 				})
