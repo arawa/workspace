@@ -96,6 +96,16 @@ export default {
 	methods: {
 		deleteSpace() {
 			// TODO
+			const space = this.$route.params.space
+			axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+				.then(resp => {
+					if (resp.data.http.statuscode === 200) {
+						this.$router.push({
+							path: '/'
+						})
+					}
+				})
+
 		},
 		// Creates a group and navigates to its details page
 		onNewGroup(e) {
