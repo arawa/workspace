@@ -14,7 +14,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
-use OCP\AppFramework\Http;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\IGroupManager;
@@ -56,7 +55,7 @@ class WorkspaceController extends Controller {
         IGroupManager $groupManager,
         IRequest $request,
       	ILogger $logger,
-        IStore $IStore
+        IStore $IStore,
         IURLGenerator $urlGenerator,
 	IUserManager $userManager,
 	UserService $userService
@@ -70,7 +69,7 @@ class WorkspaceController extends Controller {
         $this->userManager = $userManager;
         $this->userService = $userService;
 
-        $this->login = $this->IStore->getLoginCredentials();
+        $this->login = $IStore->getLoginCredentials();
         $this->httpClient = $clientService->newClient();
 
     }
