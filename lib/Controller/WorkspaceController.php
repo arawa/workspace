@@ -315,6 +315,7 @@ class WorkspaceController extends Controller {
 	* 
 	*/
 	public function removeUserFromWorkspace(string $spaceName, string $userName) {
+    $this->logger->debug('Removing user ' . $userName . ' from workspace ' . $spaceName);
 		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
 			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
 		}
@@ -325,8 +326,9 @@ class WorkspaceController extends Controller {
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
 		// the application
 		if ($GEgroup->inGroup($user)) {
-			$groups = $this->groupManager->getUserGroups($user);
+      $this->logger->debug('User is admin of the workspace, figuring out if we must remove it from the general workspace admins group.');
 			$found = false;
+      $groups = $this->groupManager->getUserGroups($user);
 			foreach($groups as $group) {
 				$groupName = $group->getGID();
 				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
@@ -338,17 +340,19 @@ class WorkspaceController extends Controller {
 				}
 			}
 			if (!$found) {
+        $this->logger->debug('User is not admin of any other workspace, removing it from the general workspace admins group.');
 				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 				$workspaceUserGroup->removeUser($user);
 			}
 		}
 
 		// We can now blindly remove the user from the space's admin and user groups
+    $this->logger->debug('Removing user from workspace.');
 		$GEgroup->removeUser($user);
 		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
 		$UserGroup->removeUser($user);
 
-	        return new JSONResponse();
+    return new JSONResponse();
 	}
 
     /**
