@@ -82,15 +82,15 @@ class WorkspaceController extends Controller {
 	* @NoAdminRequired
 	*
 	* @var string $spaceName
-	* @var string $userName
+	* @var string $userId
 	* 
 	*/
-	public function changeUserRole(string $spaceName, string $userName) {
+	public function changeUserRole(string $spaceName, string $userId) {
 		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
 			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
 		}
 
-		$user = $this->userManager->get($userName);
+		$user = $this->userManager->get($userId);
 		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
 
 		if ($GEgroup->inGroup($user)) {
@@ -311,16 +311,16 @@ class WorkspaceController extends Controller {
 	* @NoAdminRequired
 	*
 	* @var string $spaceName
-	* @var string $userName
+	* @var string $userId
 	* 
 	*/
-	public function removeUserFromWorkspace(string $spaceName, string $userName) {
-    $this->logger->debug('Removing user ' . $userName . ' from workspace ' . $spaceName);
+	public function removeUserFromWorkspace(string $spaceName, string $userId) {
+    $this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceName);
 		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
 			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
 		}
 
-		$user = $this->userManager->get($userName);
+		$user = $this->userManager->get($userId);
 		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
 
 		// If user is a general manager we may first have to remove it from the list of users allowed to use

@@ -53,6 +53,7 @@ Class UserService {
 
 		// Returns a user that is valid for the frontend
 		return array(
+      'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),

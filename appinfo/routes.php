@@ -37,12 +37,12 @@ return [
 		],
 		[
 			'name' => 'workspace#removeUserFromWorkspace',
-			'url' => '/api/space/{spaceName}/user/{userName}',
+			'url' => '/api/space/{spaceName}/user/{userId}',
 			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'workspace#changeUserRole',
-			'url' => '/api/space/{spaceName}/user/{userName}',
+			'url' => '/api/space/{spaceName}/user/{userId}',
 			'verb' => 'PATCH'
 		],
 		[

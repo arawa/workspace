@@ -16,9 +16,9 @@ export default new Vuex.Store({
 		removeUserFromSpace(context, { spaceName, user }) {
 			context.commit('removeUserFromAdminList', { spaceName, user })
 			context.commit('removeUserFromUserList', { spaceName, user })
-			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userName}', {
+			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
-				userName: user.name,
+				userId: user.uid,
 			}))
 				.then((resp) => {
 					if (resp.status !== 200) {
@@ -52,9 +52,9 @@ export default new Vuex.Store({
 				context.commit('addUserToAdminList', { spaceName, user })
 				context.commit('removeUserFromUserList', { spaceName, user })
 			}
-			axios.patch(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userName}', {
+			axios.patch(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
-				userName: user.name,
+				userId: user.uid,
 			}))
 				.then((resp) => {
 					if (resp.status !== 200) {
