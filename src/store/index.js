@@ -7,6 +7,16 @@ export default new Vuex.Store({
 	state: {
 		spaces: {},
 	},
+	actions: {
+		updateSpace(context, { space }) {
+			context.commit('addSpace', space)
+		},
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space
+			})
+		}
+	},
 	mutations: {
 		addGroupToSpace(state, name, group) {
 			const space = state.spaces[name]
@@ -25,6 +35,9 @@ export default new Vuex.Store({
 			const space = state.spaces[name]
 			space.quota = quota
 			Vue.set(state.spaces, name, space)
+		},
+		deleteSpace(state, { space }) {
+			delete state.spaces[space.name]
 		},
 	},
 	getters: {

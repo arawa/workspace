@@ -75,7 +75,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
@@ -146,12 +146,16 @@ export default {
 					const data = resp.data
 
 					if (data.statuscode === 204) {
-						const space = this.$root.$data.spaces[oldSpaceName]
+						const space = { ...this.$store.state.spaces[oldSpaceName] }
 						space.name = data.space
-						Vue.set(this.$root.$data.spaces, data.space, space)
-						delete this.$root.$data.spaces[oldSpaceName]
+						this.$store.dispatch('updateSpace', {
+							space
+						})
+						this.$store.dispatch('removeSpace', {
+							space: this.$store.state.spaces[oldSpaceName]
+						})
 						this.$router.push({
-							path: `/workspace/${data.space}`,
+							path: `/workspace/${space.name}`,
 						})
 					}
 				})
