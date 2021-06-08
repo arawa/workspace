@@ -14,6 +14,7 @@ namespace OCA\Workspace\Migration;
 use OCA\Workspace\AppInfo\Application;
 use OCP\IConfig;
 use OCP\IGroupManager;
+use OCP\ILogger;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
@@ -25,11 +26,18 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 	/** @var IGroupManager */
 	private $groupManager;
 
+	/** @var ILogger */
+	private $logger;
+
 	public function __construct(IConfig $config,
-		IGroupManager $groupManager) {
+		IGroupManager $groupManager,
+		ILogger $logger) {
 
 		$this->config = $config;
 		$this->groupManager = $groupManager;
+		$this->logger = $logger;
+
+		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 	
 	public function getName() {
@@ -39,7 +47,10 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function run(IOutput $output) {
 		// The group already exists when we upgrade the app
 		if (!$this->groupManager->groupExists(Application::GROUP_WKSUSER)) {
+			$this->logger->debug('Group ' . Application::GROUP_WKSUSER . ' does not exist. Let\'s create it.');
 			$this->groupManager->createGroup(Application::GROUP_WKSUSER);
+		} else {
+			$this->logger->debug('Group ' . Application::GROUP_WKSUSER . ' already exists. No need to create it.');
 		}
 	}
 }
