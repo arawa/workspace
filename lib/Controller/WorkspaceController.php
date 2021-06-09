@@ -137,7 +137,7 @@ class WorkspaceController extends Controller {
 	// Gets all groupfolders
 	$this->logger->debug('Fetching groupfolders');
 
-        $response = $this->groupfolder->getAll();
+        $response = $this->groupfolderService->getAll();
         $responseBody = json_decode($response->getBody(), true);
         if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
 
@@ -200,7 +200,7 @@ class WorkspaceController extends Controller {
         // TODO: add admin group to the app’s « limit to groups » field
 
         // create groupfolder
-        $dataResponseCreateGroupFolder = $this->groupfolder->create($spaceName);
+        $dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
 
         $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
         
@@ -214,7 +214,7 @@ class WorkspaceController extends Controller {
         }
 
         // Add groups to groupfolder
-        $dataResponseAssignSpaceManagerGroup = $this->groupfolder->addGroup($responseCreateGroupFolder['ocs']['data']['id'], $newSpaceManagerGroup->getGID());
+        $dataResponseAssignSpaceManagerGroup = $this->groupfolderService->addGroup($responseCreateGroupFolder['ocs']['data']['id'], $newSpaceManagerGroup->getGID());
 
         $responseAssignSpaceManagerGroup = json_decode($dataResponseAssignSpaceManagerGroup->getBody(), true);
         
@@ -223,13 +223,13 @@ class WorkspaceController extends Controller {
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
 
-            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new AssignGroupToGroupFolderException($newSpaceManagerGroup->getGID());
 
         }
 
-        $dataResponseAssignSpaceUsersGroup = $this->groupfolder->addGroup(
+        $dataResponseAssignSpaceUsersGroup = $this->groupfolderService->addGroup(
             $responseCreateGroupFolder['ocs']['data']['id'],
             $newSpaceUsersGroup->getGID()
         );
@@ -241,14 +241,14 @@ class WorkspaceController extends Controller {
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
 
-            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new AssignGroupToGroupFolderException($newSpaceUsersGroup->getGID());
 
         }
 
         // enable ACL
-        $dataResponseEnableACLGroupFolder = $this->groupfolder->enableAcl($responseCreateGroupFolder['ocs']['data']['id']);
+        $dataResponseEnableACLGroupFolder = $this->groupfolderService->enableAcl($responseCreateGroupFolder['ocs']['data']['id']);
 
         $responseEnableACLGroupFolder = json_decode($dataResponseEnableACLGroupFolder->getBody(), true);
 
@@ -257,7 +257,7 @@ class WorkspaceController extends Controller {
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
-            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new AclGroupFolderException();
 
@@ -265,7 +265,7 @@ class WorkspaceController extends Controller {
 
         // Add one group to manage acl
 
-        $dataResponseManageAcl = $this->groupfolder->manageAcl(
+        $dataResponseManageAcl = $this->groupfolderService->manageAcl(
             $responseCreateGroupFolder['ocs']['data']['id'],
             $newSpaceManagerGroup->getGID()
         );
@@ -277,7 +277,7 @@ class WorkspaceController extends Controller {
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
-            $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
             throw new ManageAclGroupFolderException();
 
