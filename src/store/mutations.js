@@ -13,8 +13,8 @@ export default {
 		const space = state.spaces[spaceName]
 		space.admins[user.name] = user
 		Vue.set(state.spaces, spaceName, space)
- 	},
- 		addUserToUserList(state, { spaceName, user }) {
+	},
+	addUserToUserList(state, { spaceName, user }) {
 		const space = state.spaces[spaceName]
 		space.users[user.name] = user
 		Vue.set(state.spaces, spaceName, space)
