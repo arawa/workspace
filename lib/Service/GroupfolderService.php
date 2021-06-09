@@ -62,7 +62,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param $name the space name to create.
      * @return object that is the response from httpClient
      */
@@ -85,7 +84,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param $id is the groupfolder's id.
      * @param $gid
      * @return object that is the response from httpClient
@@ -115,7 +113,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param $id is the groupfolder's id.
      * @return object that is the response from httpClient
      */
@@ -140,7 +137,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $gid
      * @param boolean $manageAcl
@@ -169,7 +165,6 @@ class GroupfolderService {
 
 
     /**
-     * @NoAdminRequired
      * @param $id is the groupfolder's id.
      * @param $gid
      * @return object that is the response from httpClient
@@ -195,7 +190,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param $id that is groupfolder's id
      * @return object that is the response from httpClient
      */
