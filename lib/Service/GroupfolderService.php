@@ -43,7 +43,6 @@ class GroupfolderService {
         $this->login = $this->IStore->getLoginCredentials();
     }
 
-
     /**
      * @NoAdminRequired
      * @param $name the space name to create.
@@ -51,7 +50,7 @@ class GroupfolderService {
      */
     public function create($name) {
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -76,7 +75,7 @@ class GroupfolderService {
     public function addGroup($id, $gid) {
 
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $id . '/groups',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -105,7 +104,7 @@ class GroupfolderService {
     public function enableAcl($id) {
 
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $id . '/acl',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/acl',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -132,7 +131,7 @@ class GroupfolderService {
      */
     public function manageAcl($folderId, $gid, $manageAcl=true) {
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/manageACL',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId . '/manageACL',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -161,7 +160,7 @@ class GroupfolderService {
     public function enableAdvancedPermissions($id, $gid) {
 
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -184,7 +183,7 @@ class GroupfolderService {
      */
     public function delete($id) {
         $response = $this->httpClient->delete(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $id,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id,
             [
                 'auth' => [
                     $this->login->getUID(),
