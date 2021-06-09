@@ -15,9 +15,10 @@ use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\AppFramework\Http;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 
 class WorkspaceController extends Controller {
@@ -84,28 +85,19 @@ class WorkspaceController extends Controller {
         
 	// Gets all groupfolders
 	$this->logger->debug('Fetching groupfolders');
-        $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                ],
-		        'verify' => false,
-            ]
-        );
 
-	// TODO Check response first
-	// TODO Filter to show only workspaces, not regular groupfolders
+        $response = $this->groupfolder->getAll();
+        $responseBody = json_decode($response->getBody(), true);
+        if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
+
+            throw new getAllGroupFoldersException();  
+
+        }
+
+	$spaces = $responseBody['ocs']['data'];
+	$this->logger->debug('groupfolders fetched');
 	
-	$spaces = json_decode($response->getBody(), true);
-	$spaces = $spaces['ocs']['data'];
-	$this->logger->debug('groupfolders fetched', [ 'spaces' => $spaces ]);
+	// TODO Filter to show only workspaces, not regular groupfolders
 	
 	// We only want to return those workspaces for which the connected user is a manager
 	if (!$this->userService->isUserGeneralAdmin()) {
@@ -117,8 +109,7 @@ class WorkspaceController extends Controller {
 	}
 
 	// Adds workspace users
-	// TODO We still need to get the workspace color here
-	$this->logger->debug('Adding users to workspaces');
+	$this->logger->debug('Adding users information to workspaces');
 	$spacesWithUsers = array_map(function($space) {
 		$users = [];
 		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {

@@ -44,6 +44,24 @@ class GroupfolderService {
     }
 
     /**
+     * @return object that is the response from httpClient
+     */
+    public function getAll() {
+        $response = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'headers' => self::HEADERS
+            ]
+        );
+
+        return $response;
+    }
+
+    /**
      * @NoAdminRequired
      * @param $name the space name to create.
      * @return object that is the response from httpClient
