@@ -118,7 +118,7 @@ export default {
 				.then(resp => {
 					this.$store.commit('addSpace', {
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: [],
+						groups: resp.data.groups,
 						isOpen: false,
 						name,
 						quota: undefined,
