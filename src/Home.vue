@@ -56,7 +56,6 @@ import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
-import Vue from 'vue'
 
 export default {
 	name: 'Home',
@@ -113,15 +112,13 @@ export default {
 
 			axios.post(generateUrl('/apps/workspace/spaces'),
 				{
-					spaceName: name
+					spaceName: name,
 				}
 			)
 				.then(resp => {
-					const data = resp.data
-
-					Vue.set(this.$root.$data.spaces, name, {
+					this.$store.commit('addSpace', {
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: data.groups,
+						groups: [],
 						isOpen: false,
 						name,
 						quota: undefined,
