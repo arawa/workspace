@@ -31,7 +31,7 @@
 					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
 						:key="group[0]"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group}`}"
+						:to="{path: `/group/${name}/${group[0]}`}"
 						:title="group[0]">
 						<CounterBubble slot="counter">
 							{{ groupUserCount(space, group[0]) }}
