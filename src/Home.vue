@@ -113,7 +113,7 @@ export default {
 
 			axios.post(generateUrl('/apps/workspace/spaces'),
 				{
-					spaceName: name
+					spaceName: name,
 				}
 			)
 				.then(resp => {

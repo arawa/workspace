@@ -11,7 +11,7 @@
 		<div class="header">
 			<div class="space-name">
 				<span class="space-title">
-					{{ $route.params.space }}
+					{{ title }}
 				</span>
 				<Multiselect
 					class="quota-select"
@@ -92,6 +92,12 @@ export default {
 			createGroup: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
+	},
+	computed: {
+		// The title to display at the top of the page
+		title() {
+			return this.$route.params.space + ' [ID: ' + this.$store.state.spaces[this.$route.params.space].id + ']'
+		},
 	},
 	methods: {
 		deleteSpace() {
