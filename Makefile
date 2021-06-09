@@ -152,3 +152,11 @@ appstore:
 	--exclude="../$(app_name)/.*" \
 	--exclude="../$(app_name)/js/.*" \
 	../$(app_name)
+	zip -r "$(appstore_package_name).zip" ../$(app_name) \
+	--exclude "../$(app_name)/.git/*" "../$(app_name)/build/*" "../$(app_name)/tests/*" \
+	"../$(app_name)/Makefile" "../$(app_name)/*.log" "../$(app_name)/phpunit*xml" \
+	"../$(app_name)/composer.*" "../$(app_name)/js/node_modules/*" "../$(app_name)/js/tests/*" \
+	"../$(app_name)/js/test/*" "../$(app_name)/js/*.log" "../$(app_name)/js/package.json" \
+	"../$(app_name)/js/bower.json" "../$(app_name)/js/karma.*" "../$(app_name)/js/protractor.*" \
+	"../$(app_name)/package.json" "../$(app_name)/bower.json" "../$(app_name)/karma.*" \
+	"../$(app_name)/protractor.*" "../$(app_name)/.*" "../$(app_name)/js/.*"
