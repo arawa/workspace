@@ -25,7 +25,7 @@
 				:to="{path: `/workspace/${name}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter">
-					{{ userCount(space) }}
+					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
@@ -138,10 +138,6 @@ export default {
 				}
 			})
 			return count
-		},
-		// Returns the number of users in the space
-		userCount(space) {
-			return space.users.length === 0 ? 0 : Object.keys(space.users).length
 		},
 	},
 }

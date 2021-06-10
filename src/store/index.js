@@ -75,7 +75,16 @@ export default new Vuex.Store({
 		},
 	},
 	getters: {
-		sortedSpaces(state) {
+		// Returns the number of users in a space
+		spaceUserCount: state => name => {
+			const users = state.spaces[name].users
+			if (users.length === 0) {
+				return 0
+			} else {
+				return Object.keys(users).length
+			}
+		},
+		sortedSpaces: state => {
 			const sortedSpaces = {}
 			Object.keys(state.spaces).sort().forEach((value, index) => {
 				sortedSpaces[value] = state.spaces[value]

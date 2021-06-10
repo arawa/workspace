@@ -103,14 +103,8 @@ export default {
 		getUsers() {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const group = this.$route.params.group
-			// eslint-disable-next-line
-			console.log(this.$route.params)
-			// eslint-disable-next-line
-			console.log(Object.values(space.users))
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
-				// eslint-disable-next-line
-				console.log(Object.values(space.users))
 				this.users = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
 					.sort((a, b) => a.name.localeCompare(b.name))
