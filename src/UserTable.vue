@@ -110,7 +110,7 @@ export default {
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
 			this.$store.dispatch('toggleUserRole', {
-				spaceName: this.$route.params.space,
+				name: this.$route.params.space,
 				user,
 			})
 		},

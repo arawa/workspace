@@ -37,4 +37,10 @@ export default {
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, space.name, space)
 	},
+	updateUser(state, { name, user }) {
+		const space = state.spaces[name]
+		space.users[user.name] = user
+		delete state.spaces[space.name]
+		Vue.set(state.spaces, name, space)
+	},
 }

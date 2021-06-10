@@ -38,14 +38,15 @@ export default new Vuex.Store({
 			// eslint-disable-next-line no-console
 			console.log('User ' + user.name + ' removed from space ' + name)
 		},
-		toggleUserRole(context, { spaceName, user }) {
+		toggleUserRole(context, { name, user }) {
 			if (user.role === 'admin') {
 				user.role = 'user'
 			} else {
 				user.role = 'admin'
 			}
-			axios.patch(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
-				spaceName,
+			context.commit('updateUser', { name, user })
+			axios.patch(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+				name,
 				userId: user.uid,
 			}))
 				.then((resp) => {
@@ -57,6 +58,7 @@ export default new Vuex.Store({
 						} else {
 							user.role = 'admin'
 						}
+						context.commit('updateUser', { name, user })
 					}
 				}).catch((e) => {
 					// Revert action an inform user
@@ -66,6 +68,7 @@ export default new Vuex.Store({
 					} else {
 						user.role = 'admin'
 					}
+					context.commit('updateUser', { name, user })
 				})
 			// eslint-disable-next-line no-console
 			console.log('Role of user ' + user.name + ' changed')
