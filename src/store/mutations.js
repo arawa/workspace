@@ -22,6 +22,7 @@ export default {
 	removeUserFromWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
 		delete space.users[user.name]
+		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 	},
 	setSpaceQuota(state, { name, quota }) {
