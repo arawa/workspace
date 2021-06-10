@@ -16,7 +16,6 @@ describe('Vuex store tests', () => {
 			isOpen: false,
 			name: 'test-space',
 			quota: 'unlimited',
-			admins: [],
 			users: [],
 		})
 

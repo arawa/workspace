@@ -13,10 +13,15 @@ export default new Vuex.Store({
 	},
 	mutations,
 	actions: {
-		removeUserFromSpace(context, { spaceName, user }) {
-			context.commit('removeUserFromWorkspace', { spaceName, user })
-			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
-				spaceName,
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space,
+			})
+		},
+		removeUserFromSpace(context, { name, user }) {
+			context.commit('removeUserFromWorkspace', { name, user })
+			axios.delete(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+				name,
 				userId: user.uid,
 			}))
 				.then((resp) => {
@@ -31,7 +36,7 @@ export default new Vuex.Store({
 					context.commit('addUserToWorkspace', user)
 				})
 			// eslint-disable-next-line no-console
-			console.log('User ' + user.name + ' removed from space ' + spaceName)
+			console.log('User ' + user.name + ' removed from space ' + name)
 		},
 		toggleUserRole(context, { spaceName, user }) {
 			if (user.role === 'admin') {
@@ -75,6 +80,16 @@ export default new Vuex.Store({
 		},
 	},
 	getters: {
+		// Returns the number of users in a group
+		groupUserCount: state => (spaceName, groupName) => {
+			const users = state.spaces[spaceName].users
+			if (users.length === 0) {
+				return 0
+			} else {
+				// We count all users in the space who have 'groupName' listed in their 'groups' property
+				return Object.values(users).filter(user => user.groups.includes(groupName)).length
+			}
+		},
 		// Returns the number of users in a space
 		spaceUserCount: state => name => {
 			const users = state.spaces[name].users

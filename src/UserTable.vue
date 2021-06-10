@@ -95,7 +95,7 @@ export default {
 		// Remove a user's access to a workspace
 		deleteUser(user) {
 			this.$store.dispatch('removeUserFromSpace', {
-				spaceName: this.$route.params.space,
+				name: this.$route.params.space,
 				user,
 			})
 		},
