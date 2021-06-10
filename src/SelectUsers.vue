@@ -89,11 +89,8 @@ export default {
 			// Update frontend first and keep a backup of the changes should something fail
 			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
-			this.allSelectedUsers.filter(user => user.role === 'user').forEach(user => {
+			this.allSelectedUsers.forEach(user => {
 				space.users[user.name] = user
-			})
-			this.allSelectedUsers.filter(user => user.role === 'admin').forEach(user => {
-				space.admins[user.name] = user
 			})
 			this.$store.commit('updateSpace', space)
 			this.$emit('close')
@@ -144,7 +141,7 @@ export default {
 					const space = this.$store.state.spaces[this.$route.params.space]
 					// Show only those users who are not already member of the space
 					this.selectableUsers = resp.data.filter(user => {
-						return (!(user.name in space.users) && !(user.name in space.admins))
+						return (!(user.name in space.users))
 					}, space)
 					this.isLookingUpUsers = false
 				})

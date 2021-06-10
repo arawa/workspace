@@ -14,9 +14,8 @@ export default new Vuex.Store({
 	mutations,
 	actions: {
 		removeUserFromSpace(context, { spaceName, user }) {
-			context.commit('removeUserFromAdminList', { spaceName, user })
-			context.commit('removeUserFromUserList', { spaceName, user })
-			axios.delete(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
+			context.commit('removeUserFromWorkspace', { spaceName, user })
+			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
 				userId: user.uid,
 			}))
@@ -24,20 +23,12 @@ export default new Vuex.Store({
 					if (resp.status !== 200) {
 						// Revert action an inform user
 						// TODO Inform user
-						if (user.role === 'admin') {
-							context.commit('addUserToAdminList', user)
-						} else {
-							context.commit('addUserToUserList', user)
-						}
+						context.commit('addUserToWorkspace', user)
 					}
 				}).catch((e) => {
 					// Revert action an inform user
 					// TODO Inform user
-					if (user.role === 'admin') {
-						context.commit('addUserToAdminList', user)
-					} else {
-						context.commit('addUserToUserList', user)
-					}
+					context.commit('addUserToWorkspace', user)
 				})
 			// eslint-disable-next-line no-console
 			console.log('User ' + user.name + ' removed from space ' + spaceName)
@@ -45,12 +36,8 @@ export default new Vuex.Store({
 		toggleUserRole(context, { spaceName, user }) {
 			if (user.role === 'admin') {
 				user.role = 'user'
-				context.commit('addUserToUserList', { spaceName, user })
-				context.commit('removeUserFromAdminList', { spaceName, user })
 			} else {
 				user.role = 'admin'
-				context.commit('addUserToAdminList', { spaceName, user })
-				context.commit('removeUserFromUserList', { spaceName, user })
 			}
 			axios.patch(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
@@ -62,12 +49,8 @@ export default new Vuex.Store({
 						// TODO Inform user
 						if (user.role === 'admin') {
 							user.role = 'user'
-							context.commit('addUserToUserList', { spaceName, user })
-							context.commit('removeUserFromAdminList', { spaceName, user })
 						} else {
 							user.role = 'admin'
-							context.commit('addUserToAdminList', { spaceName, user })
-							context.commit('removeUserFromUserList', { spaceName, user })
 						}
 					}
 				}).catch((e) => {
@@ -75,12 +58,8 @@ export default new Vuex.Store({
 					// TODO Inform user
 					if (user.role === 'admin') {
 						user.role = 'user'
-						context.commit('addUserToUserList', { spaceName, user })
-						context.commit('removeUserFromAdminList', { spaceName, user })
 					} else {
 						user.role = 'admin'
-						context.commit('addUserToAdminList', { spaceName, user })
-						context.commit('removeUserFromUserList', { spaceName, user })
 					}
 				})
 			// eslint-disable-next-line no-console

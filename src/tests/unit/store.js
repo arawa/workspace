@@ -42,7 +42,7 @@ describe('Vuex store tests', () => {
 	})
 
 
-	it('Set space quota', () => {
+	it('Sets space quota', () => {
 		mutations.setSpaceQuota(state, {
 			name: 'test-space',
 			quota: '1TB',
@@ -51,4 +51,35 @@ describe('Vuex store tests', () => {
 		expect(state.spaces['test-space'].quota).equal('1TB')
 	})
 
+	it('Adds a user to the space', () => {
+		mutations.addUserToWorkspace(state, {
+			name: 'test-space',
+			user: {
+				uid: 123,
+				name: 'John Doe',
+				email: 'john@acme.org',
+				subtitle: 'john@acme.org',
+				groups: [],
+				role: 'user',
+			},
+		})
+
+		expect(state.spaces['test-space'].users['John Doe']).not.undefined
+	})
+
+	it('Removes a user from the space', () => {
+		mutations.removeUserFromWorkspace(state, {
+			name: 'test-space',
+			user: {
+				uid: 123,
+				name: 'John Doe',
+				email: 'john@acme.org',
+				subtitle: 'john@acme.org',
+				groups: [],
+				role: 'user',
+			},
+		})
+
+		expect(state.spaces['test-space'].users['John Doe']).undefined
+	})
 })

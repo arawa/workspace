@@ -82,7 +82,6 @@ export default {
 						isOpen: false,
 						name: folder.mount_point,
 						quota: this.convertQuotaForFrontend(folder.quota),
-						admins: folder.admins,
 						users: folder.users,
 					})
 				})
@@ -121,7 +120,6 @@ export default {
 						isOpen: false,
 						name,
 						quota: undefined,
-						admins: [],
 						users: [],
 					})
 					this.$router.push({
@@ -134,8 +132,7 @@ export default {
 			let count = 0
 			// We count all users in the space who have the 'groupName' listed in their
 			// 'groups' property
-			const users = [...Object.values(space.users), ...Object.values(space.admins)]
-			users.forEach($user => {
+			Object.values(space.users).forEach($user => {
 				if ($user.groups.includes(groupName)) {
 					count += 1
 				}
@@ -144,9 +141,7 @@ export default {
 		},
 		// Returns the number of users in the space
 		userCount(space) {
-			let count = space.admins.length === 0 ? 0 : Object.keys(space.admins).length
-			count += space.users.length === 0 ? 0 : Object.keys(space.users).length
-			return count
+			return space.users.length === 0 ? 0 : Object.keys(space.users).length
 		},
 	},
 }

@@ -28,7 +28,7 @@
 				<td> {{ space.quota }} </td>
 				<td>
 					<div class="admin-avatars">
-						<Avatar v-for="user in space.admins"
+						<Avatar v-for="user in adminUsers(space)"
 							:key="user.name"
 							:style="{ marginRight: 2 + 'px' }"
 							:display-name="user.name"
@@ -49,6 +49,10 @@ export default {
 		Avatar,
 	},
 	methods: {
+		// Returns the list of administrators of a space
+		adminUsers(space) {
+			return Object.values(space.users).filter((u) => u.role === 'admin').map((u) => u.name)
+		},
 		openSpace(name) {
 			this.$store.state.spaces[name].isOpen = true
 			this.$router.push({
