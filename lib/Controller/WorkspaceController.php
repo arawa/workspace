@@ -14,11 +14,12 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
+use OCP\AppFramework\Http;  
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AdvancedPermissionsGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
+use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
+use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 
 class WorkspaceController extends Controller {
     
@@ -50,10 +51,10 @@ class WorkspaceController extends Controller {
         $AppName,
         IClientService $clientService,
         IGroupManager $groupManager,
-        ILogger $logger,
         IRequest $request,
+      	ILogger $logger,
         IURLGenerator $urlGenerator,
-	    UserService $userService,
+  	    UserService $userService,
         IStore $IStore,
         GroupfolderService $groupfolder
     )
@@ -61,12 +62,13 @@ class WorkspaceController extends Controller {
         parent::__construct($AppName, $request);
 
         $this->groupManager = $groupManager;
+
         $this->logger = $logger;
         $this->IStore = $IStore;
         $this->urlGenerator = $urlGenerator;
         $this->userService = $userService;
 
-	    $this->login = $this->IStore->getLoginCredentials();
+        $this->login = $this->IStore->getLoginCredentials();
 
         $this->httpClient = $clientService->newClient();
 
@@ -82,57 +84,49 @@ class WorkspaceController extends Controller {
      */
     public function getUserWorkspaces() {
         
-        // Gets all groupfolders
-        $this->logger->debug('Fetching groupfolders');
-        $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders?format=json',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                ],
-                'verify' => false,
-            ]
-        );
+      // Gets all groupfolders
+      $this->logger->debug('Fetching groupfolders');
 
-        // TODO Check response first
-        // TODO Filter to show only workspaces, not regular groupfolders
-        
-        $spaces = json_decode($response->getBody(), true);
-        $spaces = $spaces['ocs']['data'];
-        $this->logger->debug('groupfolders fetched', [ 'spaces' => $spaces ]);
-        
-        // We only want to return those workspaces for which the connected user is a manager
-        if (!$this->userService->isUserGeneralAdmin()) {
-            $this->logger->debug('Filtering workspaces');
-            $filteredSpaces = array_filter($spaces, function($space) {
-                return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
-            });
-                $spaces = $filteredSpaces;
-        }
-        // Adds workspace users
-        // TODO We still need to get the workspace color here
-        $this->logger->debug('Adding users to workspaces');
-        $spacesWithUsers = array_map(function($space) {
-            $users = [];
-            foreach($this->groupManager->get('GE-' . $space['mount_point'])->getUsers() as $user) {
-                array_push($users, $this->userService->formatUser($user, $space['id']));
-            };
-            $space['admins'] = $users;
-            $users = [];
-            foreach($this->groupManager->get('U-' . $space['mount_point'])->getUsers() as $user) {
-                array_push($users, $this->userService->formatUser($user, $space['id']));
-            };
-            $space['users'] = $users;
-            return $space;
-            
-        },$spaces);
-	      // TODO We still need to get the workspace color here
+            $response = $this->groupfolder->getAll();
+            $responseBody = json_decode($response->getBody(), true);
+            if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
+
+                throw new getAllGroupFoldersException();  
+
+            }
+
+      $spaces = $responseBody['ocs']['data'];
+      $this->logger->debug('groupfolders fetched');
+
+      // TODO Filter to show only workspaces, not regular groupfolders
+
+      // We only want to return those workspaces for which the connected user is a manager
+      if (!$this->userService->isUserGeneralAdmin()) {
+        $this->logger->debug('Filtering workspaces');
+        $filteredSpaces = array_filter($spaces, function($space) {
+          return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
+        });
+              $spaces = $filteredSpaces;
+      }
+
+      // Adds workspace users
+      $this->logger->debug('Adding users information to workspaces');
+      $spacesWithUsers = array_map(function($space) {
+        $users = [];
+        foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
+          array_push($users, $this->userService->formatUser($user, $space));
+        };
+        $space['admins'] = $users;
+        $users = [];
+        foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
+          array_push($users, $this->userService->formatUser($user, $space));
+        };
+        $space['users'] = $users;
+        return $space;
+
+      },$spaces);
+
+      // TODO We still need to get the workspace color here
 	
         return new JSONResponse($spacesWithUsers);
     }
@@ -220,26 +214,23 @@ class WorkspaceController extends Controller {
 
         }
 
-        // Todo : Replace by apps/groupfolders/folders/$folderId/manageACL => https://github.com/nextcloud/groupfolders/tree/master
-        // enable advanced permissions groupfolder
-        $dataResponseEnableAdvancedPermissionsGroupFolder = $this->groupfolder->enableAdvancedPermissions(
+        // Add one group to manage acl
+
+        $dataResponseManageAcl = $this->groupfolder->manageAcl(
             $responseCreateGroupFolder['ocs']['data']['id'],
             $newSpaceManagerGroup->getGID()
         );
 
-        $responseEnableAdvancedPermissionsGroupFolder = json_decode(
-            $dataResponseEnableAdvancedPermissionsGroupFolder->getBody(),
-            true
-        );
+        $responseManageAcl = json_decode($dataResponseManageAcl->getBody(), true);
 
-        if ( $responseEnableAdvancedPermissionsGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
+        if ( $responseManageAcl['ocs']['meta']['statuscode'] !== 100 ) {
 
             $newSpaceManagerGroup->delete();
             $newSpaceUsersGroup->delete();
             
             $this->groupfolder->delete($responseCreateGroupFolder['ocs']['data']['id']);
 
-            throw new AdvancedPermissionsGroupFolderException();
+            throw new ManageAclGroupFolderException();
 
         }
 
@@ -255,11 +246,13 @@ class WorkspaceController extends Controller {
                 $newSpaceManagerGroup->getGID(),
                 $newSpaceUsersGroup->getGID()
             ],
+            'acl' => [
+                'state' => true,
+                'group_manage' => $newSpaceManagerGroup->getGID()
+            ],
             'statuscode' => Http::STATUS_CREATED,
-            'space_acl' => true,
         ]);
     }
-
 
     /**
      * @NoAdminRequired
