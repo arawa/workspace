@@ -80,24 +80,16 @@ export default {
 		return {
 			createGroup: false, // true to display ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			users: [], // the users to be listed in the component
 		}
 	},
-	computed: {
-		users() {
-			let result = []
-			const space = this.$store.state.spaces[this.$route.params.space]
-			const group = this.$route.params.group
-			if (this.$route.params.group !== undefined) {
-				// We are showing a group's users, so we have to filter the users
-				result = Object.values(space.users)
-					.filter((user) => user.groups.includes(group))
-					.sort((a, b) => a.name.localeCompare(b.name))
-			} else {
-				// We are showing all users of a workspace
-				result = Object.values(space.users).sort((a, b) => a.name.localeCompare(b.name))
-			}
-			return result
+	watch: {
+		$route(params) {
+			this.getUsers()
 		},
+	},
+	created() {
+		this.getUsers()
 	},
 	methods: {
 		// Remove a user's access to a workspace
@@ -106,6 +98,26 @@ export default {
 				spaceName: this.$route.params.space,
 				user,
 			})
+		},
+		// Gets users to be listed
+		getUsers() {
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const group = this.$route.params.group
+			// eslint-disable-next-line
+			console.log(this.$route.params)
+			// eslint-disable-next-line
+			console.log(Object.values(space.users))
+			if (this.$route.params.group !== undefined) {
+				// We are showing a group's users, so we have to filter the users
+				// eslint-disable-next-line
+				console.log(Object.values(space.users))
+				this.users = Object.values(space.users)
+					.filter((user) => user.groups.includes(group))
+					.sort((a, b) => a.name.localeCompare(b.name))
+			} else {
+				// We are showing all users of a workspace
+				this.users = Object.values(space.users).sort((a, b) => a.name.localeCompare(b.name))
+			}
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
