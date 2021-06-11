@@ -8,6 +8,7 @@ use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
+use OCP\ILogger;
 
 class GroupfolderService {
 
@@ -19,6 +20,9 @@ class GroupfolderService {
 
     /** @var IStore */
     private $IStore;
+
+    /** @var ILogger */
+    private $logger;
 
     /** @var ICredentials */
     private $login;
@@ -33,14 +37,16 @@ class GroupfolderService {
     private const ALL_PERMISSIONS = 31;
 
     public function __construct(
-        IURLGenerator $urlGenerator,
         IClientService $clientService,
-        IStore $IStore
+	ILogger $logger,
+        IStore $IStore,
+        IURLGenerator $urlGenerator
     ){
-        $this->urlGenerator = $urlGenerator;
         $this->httpClient = $clientService->newClient();
         $this->IStore = $IStore;
+	$this->logger = $logger;
         $this->login = $this->IStore->getLoginCredentials();
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -66,6 +72,7 @@ class GroupfolderService {
      * @return object that is the response from httpClient
      */
     public function create($name) {
+	$this->logger->debug('calling groupfolder "create groupfolder" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
             [
@@ -90,6 +97,7 @@ class GroupfolderService {
      */
     public function addGroup($id, $gid) {
 
+	$this->logger->debug('calling groupfolder "assign group to groupfolder" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups',
             [
@@ -118,6 +126,7 @@ class GroupfolderService {
      */
     public function enableAcl($id) {
 
+	$this->logger->debug('calling groupfolder "enable ACL" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/acl',
             [
@@ -144,6 +153,7 @@ class GroupfolderService {
      * @return object that is the response from httpClient
      */
     public function manageAcl($folderId, $gid, $manageAcl=true) {
+	$this->logger->debug('calling groupfolder "manage ACL" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId . '/manageACL',
             [
@@ -172,6 +182,7 @@ class GroupfolderService {
      */
     public function enableAdvancedPermissions($id, $gid) {
 
+	$this->logger->debug('calling groupfolder "enable advanced permissions" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
             [
@@ -194,6 +205,7 @@ class GroupfolderService {
      * @return object that is the response from httpClient
      */
     public function delete($id) {
+	$this->logger->debug('calling groupfolder "delete groupfolder" API');
         $response = $this->httpClient->delete(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id,
             [
