@@ -45,25 +45,20 @@ class PageController extends Controller {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param string $term
+	 * @param string $spaceId
+	 *
 	 * @return JSONResponse
 	 */
-	public function autoComplete(string $term) {
+	public function autoComplete(string $term, string $spaceId) {
 		// lookup users
 		$users = $this->userManager->searchDisplayName($term);
 
 		// transform in a format suitable for the app
 		$data = [];
 		foreach($users as $user) {
-			$data[] = [
-				'displayName' => $user->getDisplayName(),
-				'email' => $user->getEmailAddress(),
-				'role' => 'user', // by default, users get the 'user' role
-				'subtitle' => $user->getEmailAddress(), // for the Avatar compoments
-				'user' => $user->getDisplayName(), // for the Avatar components
-			];
+			$data[] = $this->userService->formatUser($user, $spaceId, 'user');
 		}
 
 		// return info
