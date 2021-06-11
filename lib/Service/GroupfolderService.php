@@ -51,7 +51,7 @@ class GroupfolderService {
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId,
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -217,7 +217,7 @@ class GroupfolderService {
      */
     public function delete($id) {
         $response = $this->httpClient->delete(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $id,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id,
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -238,7 +238,7 @@ class GroupfolderService {
      */
     public function rename($folderId, $newSpaceName) {
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/mountpoint',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/mountpoint',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -261,7 +261,7 @@ class GroupfolderService {
      */
     public function attachGroup($folderId, $gid) {
         $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId . '/groups',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId . '/groups',
             [
                 'auth' => [
                     $this->login->getUID(),
