@@ -104,8 +104,13 @@ export default {
 				axios.delete(generateUrl(`index.php/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
 					.then(resp => {
 						if (resp.data.http.statuscode === 200) {
+
+							this.$store.dispatch('removeSpace', {
+								space: this.$store.state.spaces[space]
+							})
+
 							this.$router.push({
-								path: '/'
+								path: '/',
 							})
 						}
 					})
