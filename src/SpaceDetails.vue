@@ -1,4 +1,4 @@
-<!--
+lib/Controller/WorkspaceController.php<!--
   - @copyright 2021 Arawa <TODO>
   -
   - @author 2021 Cyrille Bollu <cyrille@bollu.be>
@@ -157,6 +157,11 @@ export default {
 						this.$router.push({
 							path: `/workspace/${space.name}`,
 						})
+					}
+
+					if (data.statuscode === 401) {
+						// TODO: May be to print an error message temporary
+						console.error(data.message)
 					}
 				})
 		},

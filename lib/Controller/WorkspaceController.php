@@ -272,6 +272,13 @@ class WorkspaceController extends Controller {
      
         $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
 
+        if ( ! $this->userService->isSpaceManagerOfSpace($currentSpaceName['ocs']['data']['mount_point']) ) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_UNAUTHORIZED,
+                'message' => 'You are not authorized to rename the ' . $currentSpaceName['ocs']['data']['mount_point'] . ' space.'
+            ]);
+        }
+
         $currentMountPointSpaceName = $currentSpaceName['ocs']['data']['mount_point'];
      
         $responseGroupfolder = $this->groupfolder->rename($folderId, $newSpaceName);
