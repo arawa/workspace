@@ -8,6 +8,16 @@ export default new Vuex.Store({
 	state: {
 		spaces: {},
 	},
+	actions: {
+		updateSpace(context, { space }) {
+			context.commit('addSpace', space)
+		},
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space
+			})
+		}
+	},
 	mutations,
 	getters: {
 		sortedSpaces(state) {

@@ -19,4 +19,7 @@ export default {
 		space.quota = quota
 		Vue.set(state.spaces, name, space)
 	},
+	deleteSpace(state, { space }) {
+		delete state.spaces[space.name]
+	},
 }
