@@ -1,4 +1,10 @@
 <?php
+/**
+ * @copyright 2021 Arawa <TODO>
+ *
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * @license <TODO>
+ */
 
 namespace OCA\Workspace\AppInfo;
 
@@ -10,12 +16,10 @@ use OCP\IURLGenerator;
 class Application extends App {
 
         public const APP_ID = 'workspace';
-        public const GENERAL_MANAGER = "GeneralManager";
+	public const GROUP_WKSUSER = 'GE-general';	// Group that holds all workspace users (members managed by the application)
+        public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
+	// TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";
-        public const ESPACE_MANAGER_02 = "Manager_";
-        public const ESPACE_MANAGER_03 = "_GE";
-        public const ESPACE_USERS_03 = "_U";
-        public const ESPACE_USERS_02 = "Users_";
         public const ESPACE_USERS_01 = "U-";
 
         public function __construct(array $urlParams=[] ) {

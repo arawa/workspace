@@ -11,7 +11,7 @@
 		<Multiselect
 			v-model="selectedUsers"
 			class="select-users-input"
-			label="displayName"
+			label="name"
 			:loading="isLookingUpUsers"
 			:multiple="true"
 			:options="selectableUsers"
@@ -29,12 +29,12 @@
 			</div>
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
-					:key="user.displayName"
+					:key="user.name"
 					class="user-entry">
 					<div>
-						<Avatar :display-name="user.displayName" :user="user.displayName" />
+						<Avatar :display-name="user.name" :user="user.name" />
 						<div class="user-name">
-							<span> {{ user.displayName }} </span>
+							<span> {{ user.name }} </span>
 						</div>
 					</div>
 					<div class="user-entry-actions">
@@ -66,7 +66,6 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { generateUrl } from '@nextcloud/router'
-import Vue from 'vue'
 
 export default {
 	name: 'SelectUsers',
@@ -87,17 +86,42 @@ export default {
 	methods: {
 		// Adds users to workspace and close dialog
 		addUsersToWorkspace() {
+			// Update frontend first and keep a backup of the changes should something fail
+			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
-			space.users = space.users.concat(this.allSelectedUsers.map(user => {
-				return {
-					name: user.displayName,
-					email: user.email,
-					role: user.role,
-					groups: [],
-				}
-			}))
-			Vue.set(this.$store.state.spaces, this.$route.params.space, space)
+			this.allSelectedUsers.filter(user => user.role === 'user').forEach(user => {
+				space.users[user.name] = user
+			})
+			this.allSelectedUsers.filter(user => user.role === 'admin').forEach(user => {
+				space.admins[user.name] = user
+			})
+			this.$store.commit('addSpace', space)
 			this.$emit('close')
+
+			// Update backend and revert frontend changes if something fails
+			this.allSelectedUsers.forEach((user) => {
+				// TODO Use application-wide constants
+				let group = user.role === 'admin' ? 'GE-' : 'U-'
+				group = group + this.$route.params.space
+
+				// Add user to proper workspace group
+				axios.patch(
+					generateUrl('/apps/workspace/group/addUser/{space}', {
+						space: this.$route.params.space,
+					}),
+					{
+						group,
+						user: user.name,
+					}
+				).then((resp) => {
+					if (resp.status !== '204') {
+						// TODO
+					}
+				}).catch((e) => {
+					// TODO: Inform user
+					this.$store.commit('addSpace', spaceBackup)
+				})
+			})
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
 		addUsersToBatch(user) {
@@ -110,14 +134,18 @@ export default {
 				return
 			}
 
-			// TODO: Users must be filtered to only those groups used in this EP
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.get(
-				generateUrl('/apps/workspace/api/autoComplete/{term}', { term })
-			)
+			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
+				term,
+				spaceId: this.$route.params.space,
+			}))
 				.then((resp) => {
-					this.selectableUsers = resp.data
+					const space = this.$store.state.spaces[this.$route.params.space]
+					// Show only those users who are not already member of the space
+					this.selectableUsers = resp.data.filter(user => {
+						return (!(user.name in space.users) && !(user.name in space.admins))
+					}, space)
 					this.isLookingUpUsers = false
 				})
 				.catch((e) => {
@@ -127,12 +155,12 @@ export default {
 		},
 		removeUserFromBatch(user) {
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
-				return u.displayName !== user.displayName
+				return u.name !== user.name
 			})
 		},
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
-				if (u.displayName === user.displayName) {
+				if (u.name === user.name) {
 					u.role = u.role === 'user' ? 'admin' : 'user'
 					return u
 				} else {
