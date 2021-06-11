@@ -113,21 +113,24 @@ dist:
 source:
 	rm -rf $(source_build_directory)
 	mkdir -p $(source_build_directory)
-	tar cvzf $(source_package_name).tar.gz ../$(app_name) \
+	tar cvzf ${source_package_name} \
 	--exclude-vcs \
+	--exclude="../$(app_name)/.git" \
 	--exclude="../$(app_name)/build" \
 	--exclude="../$(app_name)/js/node_modules" \
 	--exclude="../$(app_name)/node_modules" \
 	--exclude="../$(app_name)/*.log" \
 	--exclude="../$(app_name)/js/*.log" \
+	../$(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
 appstore:
 	rm -rf $(appstore_build_directory)
 	mkdir -p $(appstore_build_directory)
-	tar cvzf $(appstore_package_name).tar.gz ../$(app_name) \
+	tar cvzf "$(appstore_package_name).tar.gz" \
 	--exclude-vcs \
+	--exclude="../$(app_name)/.git" \
 	--exclude="../$(app_name)/build" \
 	--exclude="../$(app_name)/tests" \
 	--exclude="../$(app_name)/Makefile" \
@@ -148,3 +151,12 @@ appstore:
 	--exclude="../$(app_name)/protractor\.*" \
 	--exclude="../$(app_name)/.*" \
 	--exclude="../$(app_name)/js/.*" \
+	../$(app_name)
+	zip -r "$(appstore_package_name).zip" ../$(app_name) \
+	--exclude "../$(app_name)/.git/*" "../$(app_name)/build/*" "../$(app_name)/tests/*" \
+	"../$(app_name)/Makefile" "../$(app_name)/*.log" "../$(app_name)/phpunit*xml" \
+	"../$(app_name)/composer.*" "../$(app_name)/js/node_modules/*" "../$(app_name)/js/tests/*" \
+	"../$(app_name)/js/test/*" "../$(app_name)/js/*.log" "../$(app_name)/js/package.json" \
+	"../$(app_name)/js/bower.json" "../$(app_name)/js/karma.*" "../$(app_name)/js/protractor.*" \
+	"../$(app_name)/package.json" "../$(app_name)/bower.json" "../$(app_name)/karma.*" \
+	"../$(app_name)/protractor.*" "../$(app_name)/.*" "../$(app_name)/js/.*"
