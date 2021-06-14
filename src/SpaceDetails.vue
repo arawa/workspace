@@ -110,7 +110,7 @@ export default {
 			// TODO
 			const space = this.$route.params.space
 
-			const res = window.confirm(`Do you sure to delete the ${space} space ?`)
+			const res = window.confirm(`Are you sure you want to delete the ${space} space ?`)
 
 			if (res) {
 				axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
