@@ -20,7 +20,9 @@ describe('Vuex store tests', () => {
 			users: [],
 		})
 
-		expect(state.spaces['test-space']).not.undefined
+		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
+		/* eslint-disable-next-line no-unused-expressions */
+		expect(state.spaces['test-space']).to.not.be.undefined
 	})
 
 	it('Adds a group to the space', () => {
@@ -38,9 +40,10 @@ describe('Vuex store tests', () => {
 			group: 'test-group',
 		})
 
-		expect(state.spaces['test-space'].groups['test-group']).undefined
+		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
+		/* eslint-disable-next-line no-unused-expressions */
+		expect(state.spaces['test-space'].groups['test-group']).to.be.undefined
 	})
-
 
 	it('Set space quota', () => {
 		mutations.setSpaceQuota(state, {
