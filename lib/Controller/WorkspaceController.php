@@ -371,7 +371,7 @@ class WorkspaceController extends Controller {
     public function addGroupAdvancedPermissions($folderId, $gid){
 
         $dataResponse = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/manageACL',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/manageACL',
             [
                 'auth' => [
                     $this->login->getUID(),

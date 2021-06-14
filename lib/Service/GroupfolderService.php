@@ -154,7 +154,7 @@ class GroupfolderService {
     public function delete($folderId) {
         $this->logger->debug('calling groupfolder "delete groupfolder" API');
         $response = $this->httpClient->delete(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId,
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -174,7 +174,7 @@ class GroupfolderService {
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId,
             [
               'auth' => [
                   $this->login->getUID(),
