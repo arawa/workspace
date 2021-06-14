@@ -95,7 +95,7 @@ export default {
 			this.allSelectedUsers.filter(user => user.role === 'admin').forEach(user => {
 				space.admins[user.name] = user
 			})
-			this.$store.commit('addSpace', space)
+			this.$store.commit('updateSpace', space)
 			this.$emit('close')
 
 			// Update backend and revert frontend changes if something fails

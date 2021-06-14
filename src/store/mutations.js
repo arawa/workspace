@@ -42,4 +42,8 @@ export default {
 	deleteSpace(state, { space }) {
 		delete state.spaces[space.name]
 	},
+	updateSpace(state, space) {
+		delete state.spaces[space.name]
+		Vue.set(state.spaces, space.name, space)
+	},
 }

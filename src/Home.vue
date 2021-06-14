@@ -23,6 +23,7 @@
 				:open="space.isOpen"
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
+				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter">
 					{{ userCount(space) }}
 				</CounterBubble>
@@ -52,6 +53,7 @@ import axios from '@nextcloud/axios'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
+import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
@@ -63,6 +65,7 @@ export default {
 		AppContent,
 		AppContentDetails,
 		AppNavigation,
+		AppNavigationIconBullet,
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
@@ -86,10 +89,7 @@ export default {
 			})
 	},
 	methods: {
-		// Returns the list of administrators of a space
-		adminUsers(space) {
-			return space.users.filter((u) => u.role === 'admin').map((u) => u.name)
-		},
+		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
 				return 'unlimited'

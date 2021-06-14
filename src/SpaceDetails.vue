@@ -1,4 +1,4 @@
-lib/Controller/WorkspaceController.php<!--
+<!--
   - @copyright 2021 Arawa <TODO>
   -
   - @author 2021 Cyrille Bollu <cyrille@bollu.be>
@@ -10,6 +10,9 @@ lib/Controller/WorkspaceController.php<!--
 	<div>
 		<div class="header">
 			<div class="space-name">
+				<ColorPicker v-model="$root.$data.spaces[$route.params.space].color" class="space-color-picker">
+					<button class="color-dot" :style="{background: $root.$data.spaces[$route.params.space].color}" />
+				</ColorPicker>
 				<span class="space-title">
 					{{ title }}
 				</span>
@@ -71,6 +74,7 @@ import { generateUrl } from '@nextcloud/router'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
@@ -83,6 +87,7 @@ export default {
 		Actions,
 		ActionButton,
 		ActionInput,
+		ColorPicker,
 		Modal,
 		Multiselect,
 		SelectUsers,
@@ -101,8 +106,28 @@ export default {
 		},
 	},
 	methods: {
+		// Deletes a space
 		deleteSpace() {
 			// TODO
+			const space = this.$route.params.space
+
+			const res = window.confirm(`Do you sure to delete the ${space} space ?`)
+
+			if (res) {
+				axios.delete(generateUrl(`index.php/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+					.then(resp => {
+						if (resp.data.http.statuscode === 200) {
+
+							this.$store.dispatch('removeSpace', {
+								space: this.$store.state.spaces[space]
+							})
+
+							this.$router.push({
+								path: '/',
+							})
+						}
+					})
+			}
 		},
 		// Creates a group and navigates to its details page
 		onNewGroup(e) {
@@ -225,13 +250,10 @@ export default {
 
 <style>
 .space-actions,
+.space-color-picker,
 .space-name,
 .user-actions {
 	display: flex;
-}
-
-.user-actions {
-	flex-flow: row-reverse;
 }
 
 .quota-select {
@@ -240,21 +262,29 @@ export default {
 	max-width: 100px;
 }
 
+.space-color-picker {
+	margin-right: 8px;
+}
+
 .space-title {
 	font-weight: bold;
 	font-size: xxx-large;
+}
+
+.user-actions {
+	flex-flow: row-reverse;
 }
 
 .user-admin {
 	background-color: #F7FBFE;
 }
 
-.user-name {
-	font-size: large;
-}
-
 .user-email {
 	color: gray;
 	padding-left: 10px;
+}
+
+.user-name {
+	font-size: large;
 }
 </style>
