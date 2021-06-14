@@ -8,7 +8,6 @@ use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -20,12 +19,7 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http;  
-use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
-use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
+use OCA\Workspace\Service\GroupfolderService;
 use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
@@ -56,15 +50,15 @@ class WorkspaceController extends Controller {
 
     public function __construct(
         $AppName,
-        GroupfolderService $groupfolderService,
         IClientService $clientService,
         IGroupManager $groupManager,
+        ILogger $logger,
         IRequest $request,
-      	ILogger $logger,
-        IStore $IStore,
         IURLGenerator $urlGenerator,
-	IUserManager $userManager,
-	UserService $userService
+        UserService $userService,
+        IStore $IStore,
+        GroupfolderService $groupfolderService,
+        IUserManager $userManager
     )
     {
         parent::__construct($AppName, $request);
@@ -72,13 +66,17 @@ class WorkspaceController extends Controller {
         $this->groupfolderService = $groupfolderService;
       	$this->groupManager = $groupManager;
         $this->logger = $logger;
+        $this->IStore = $IStore;
+
         $this->urlGenerator = $urlGenerator;
         $this->userManager = $userManager;
         $this->userService = $userService;
 
-        $this->login = $IStore->getLoginCredentials();
+        $this->login = $this->IStore->getLoginCredentials();
+
         $this->httpClient = $clientService->newClient();
 
+        $this->groupfolderService = $groupfolderService;
     }
 
 	/**
@@ -447,7 +445,7 @@ class WorkspaceController extends Controller {
     public function addGroupAdvancedPermissions($folderId, $gid){
 
         $dataResponse = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/'. $folderId .'/manageACL',
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/manageACL',
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -470,4 +468,63 @@ class WorkspaceController extends Controller {
 
         return new JSONResponse($response);
     }
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * 
+     * @var string $folderId
+     * @return JSONResponse
+     */
+    public function delete($folderId) {
+
+        $groups = [];
+
+        $responseGroupfolderGet = $this->groupfolder->get($folderId);
+
+        $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
+
+        if (
+            !$this->userService->isSpaceManagerOfSpace($groupfolder['ocs']['data']['mount_point']) &&
+            !$this->userService->isUserGeneralAdmin()
+            ) 
+        {
+            return new JSONResponse(
+                [
+                    'data' => [],
+                    'http' => [
+                        'message' => 'You are not a manager for this space.',
+                        'statuscode' => Http::STATUS_FORBIDDEN
+                    ]
+                ]
+            );
+        }
+    
+        $responseGroupfolderDelete = $this->groupfolderService->delete($folderId);
+
+        $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
+
+        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $group ) {
+            $groups[] = $group;
+            $this->groupManager->get($group)->delete();
+        }
+
+        if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
+            return;
+        }
+
+        return new JSONResponse([
+            'http' => [
+                'statuscode' => 200,
+                'message' => 'The space is deleted.'
+            ],
+            'data' => [
+                'space' => $groupfolder['ocs']['data']['mount_point'],
+                'groups' => $groups,
+                'state' => 'delete'
+            ]
+        ]);
+
+    }
+    
 }
