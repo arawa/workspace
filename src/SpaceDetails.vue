@@ -102,6 +102,25 @@ export default {
 	methods: {
 		deleteSpace() {
 			// TODO
+			const space = this.$route.params.space
+
+			const res = window.confirm(`Do you sure to delete the ${space} space ?`)
+
+			if (res) {
+				axios.delete(generateUrl(`index.php/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+					.then(resp => {
+						if (resp.data.http.statuscode === 200) {
+
+							this.$store.dispatch('removeSpace', {
+								space: this.$store.state.spaces[space]
+							})
+
+							this.$router.push({
+								path: '/',
+							})
+						}
+					})
+			}
 		},
 		// Creates a group and navigates to its details page
 		onNewGroup(e) {

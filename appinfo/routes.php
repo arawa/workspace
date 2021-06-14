@@ -82,5 +82,10 @@ return [
 			'requirements' => array('path' => '.+'),
 			'defaults' => array('path' => 'dummy'),
 		],
+		[
+			'name' => 'workspace#delete',
+			'url' => '/spaces/{folderId}',
+			'verb' => 'DELETE'
+		]
 	]
 ];
