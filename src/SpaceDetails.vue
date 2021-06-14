@@ -54,6 +54,7 @@
 					</ActionButton>
 					<ActionButton
 						icon="icon-delete"
+						:close-after-click="true"
 						@click="deleteSpace">
 						{{ t('workspace', 'Delete space') }}
 					</ActionButton>
