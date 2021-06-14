@@ -10,8 +10,8 @@
 	<div>
 		<div class="header">
 			<div class="space-name">
-				<ColorPicker v-model="$root.$data.spaces[$route.params.space].color" class="space-color-picker">
-					<button class="color-dot" :style="{background: $root.$data.spaces[$route.params.space].color}" />
+				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker">
+					<button class="color-dot" :style="{background: $store.state.spaces[$route.params.space].color}" />
 				</ColorPicker>
 				<span class="space-title">
 					{{ title }}
@@ -118,7 +118,7 @@ export default {
 						if (resp.data.http.statuscode === 200) {
 
 							this.$store.dispatch('removeSpace', {
-								space: this.$store.state.spaces[space]
+								space: this.$store.state.spaces[space],
 							})
 
 							this.$router.push({

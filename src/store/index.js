@@ -15,7 +15,7 @@ export default new Vuex.Store({
 	actions: {
 		removeSpace(context, { space }) {
 			context.commit('deleteSpace', {
-				space
+				space,
 			})
 		},
 		removeUserFromSpace(context, { spaceName, user }) {
