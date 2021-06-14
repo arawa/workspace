@@ -118,10 +118,10 @@ export default {
 			this.$store.addGroupToSpace(this.$route.params.space, group)
 
 			// Creates group in backend
-			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
+			axios.post(generateUrl(`/index.php/apps/workspace/group/add/${group}`))
 				.then((resp) => {
 					// Give group access to space
-					axios.post(generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/groups`), { group })
+					axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${this.$route.params.space}/groups`), { group })
 						.then((resp) => {
 							// Navigates to the group's details page
 							this.$store.state.spaces[this.$route.params.space].isOpen = true
@@ -144,7 +144,7 @@ export default {
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
-			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
+			axios.patch(generateUrl(`/index.php/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
 				{
 					newSpaceName: e.target[1].value
 				})
@@ -202,7 +202,7 @@ export default {
 			quota = (quota === 'unlimited') ? -3 : quota
 
 			// Updates backend
-			const url = generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/quota`)
+			const url = generateUrl(`/index.php/apps/groupfolders/folders/${this.$route.params.space}/quota`)
 			axios.post(url, { quota })
 				.catch((e) => {
 					// Reverts change made in the frontend in case of error

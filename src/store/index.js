@@ -11,22 +11,12 @@ export default new Vuex.Store({
 	state: {
 		spaces: {},
 	},
-	actions: {
-		updateSpace(context, { space }) {
-			context.commit('addSpace', space)
-		},
-		removeSpace(context, { space }) {
-			context.commit('deleteSpace', {
-				space
-			})
-		}
-	},
 	mutations,
 	actions: {
 		removeUserFromSpace(context, { spaceName, user }) {
 			context.commit('removeUserFromAdminList', { spaceName, user })
 			context.commit('removeUserFromUserList', { spaceName, user })
-			axios.delete(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
+			axios.delete(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
 				userId: user.uid,
 			}))
@@ -62,7 +52,7 @@ export default new Vuex.Store({
 				context.commit('addUserToAdminList', { spaceName, user })
 				context.commit('removeUserFromUserList', { spaceName, user })
 			}
-			axios.patch(generateUrl('/apps/workspace/api/space/{spaceName}/user/{userId}', {
+			axios.patch(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
 				spaceName,
 				userId: user.uid,
 			}))
@@ -96,7 +86,14 @@ export default new Vuex.Store({
 			// eslint-disable-next-line no-console
 			console.log('Role of user ' + user.name + ' changed')
 		},
-
+		updateSpace(context, { space }) {
+			context.commit('addSpace', space)
+		},
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space
+			})
+		}
 	},
 	getters: {
 		sortedSpaces(state) {

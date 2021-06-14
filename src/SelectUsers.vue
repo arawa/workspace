@@ -106,7 +106,7 @@ export default {
 
 				// Add user to proper workspace group
 				axios.patch(
-					generateUrl('/apps/workspace/group/addUser/{space}', {
+					generateUrl('/index.php/apps/workspace/group/addUser/{space}', {
 						space: this.$route.params.space,
 					}),
 					{
@@ -136,7 +136,7 @@ export default {
 
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
+			axios.get(generateUrl('/index.php/apps/workspace/api/autoComplete/{term}/{spaceId}', {
 				term,
 				spaceId: this.$route.params.space,
 			}))
