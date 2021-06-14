@@ -60,13 +60,6 @@ export default {
 </script>
 
 <style>
-.color-dot {
-	height: 35px;
-	width: 35px;
-	border-radius: 50%;
-	display: block;
-}
-
 .admin-avatars {
 	display: flex;
 	flex-flow: row-reverse;

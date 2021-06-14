@@ -72,9 +72,10 @@ return [
 			'url' => '/group/{gid}/users',
 			'verb' => 'GET'
 		],
-		// The following route is there to prevent redirection to NC's general homepage
-		// when reloading a page in the application (If we don't add it all pages that
-		// don't have a route registered here redirect to NC's general homepage upon refresh)
+		// The following route must always be the last route in the list. It is here
+		// to prevent redirection to NC's general homepage when reloading a page in 
+		// the application (If we don't add it all pages that don't have a route registered
+		// here redirect to NC's general homepage upon refresh).
 		[
 			'name' => 'page#index',
 			'url' => '/{path}',
