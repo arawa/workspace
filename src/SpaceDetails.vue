@@ -10,8 +10,8 @@
 	<div>
 		<div class="header">
 			<div class="space-name">
-				<ColorPicker v-model="$root.$data.spaces[$route.params.space].color" class="space-color-picker">
-					<button class="color-dot" :style="{background: $root.$data.spaces[$route.params.space].color}" />
+				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker">
+					<button class="color-dot" :style="{background: $store.state.spaces[$route.params.space].color}" />
 				</ColorPicker>
 				<span class="space-title">
 					{{ title }}
@@ -54,6 +54,7 @@
 					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
+						:close-after-click="true"
 						@click="deleteSpace">
 						{{ t('workspace', 'Delete space') }}
 					</ActionButton>
@@ -111,15 +112,15 @@ export default {
 			// TODO
 			const space = this.$route.params.space
 
-			const res = window.confirm(`Do you sure to delete the ${space} space ?`)
+			const res = window.confirm(`Are you sure you want to delete the ${space} space ?`)
 
 			if (res) {
-				axios.delete(generateUrl(/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+				axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
 					.then(resp => {
 						if (resp.data.http.statuscode === 200) {
 
-							his.$store.dispatch('removeSpace', {
-								space: this.$store.state.spaces[space]
+							this.$store.dispatch('removeSpace', {
+								space: this.$store.state.spaces[space],
 							})
 
 							this.$router.push({

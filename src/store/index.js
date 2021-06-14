@@ -13,6 +13,11 @@ export default new Vuex.Store({
 	},
 	mutations,
 	actions: {
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space,
+			})
+		},
 		removeUserFromSpace(context, { spaceName, user }) {
 			context.commit('removeUserFromAdminList', { spaceName, user })
 			context.commit('removeUserFromUserList', { spaceName, user })
