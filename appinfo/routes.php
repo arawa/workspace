@@ -80,7 +80,7 @@ return [
 			'name' => 'page#index',
 			'url' => '/{path}',
 			'verb' => 'GET',
-			'requirements' => array('path' => '.+'),
+			'requirements' => array('path' => '.*'),
 			'defaults' => array('path' => 'dummy'),
 		],
 		[
