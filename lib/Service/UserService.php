@@ -29,11 +29,12 @@ Class UserService {
 	 *
 	 * @param IUser $user
 	 * @param array $space
+	 * @param string $role
 	 *
 	 * @return array
 	 *
 	 */
-	public function formatUser($user, $space) {
+	public function formatUser($user, $space, $role) {
 	
 		if (is_null($user)) {
 			return;
@@ -42,7 +43,7 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (substr_compare($group->getGID(), $space['id'], -strlen($spacei['id'])) === 0
+			if (substr_compare($group->getGID(), $space['id'], -strlen($space['id'])) === 0
 				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['mount_point']
 				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['mount_point']
 			) {
@@ -52,9 +53,12 @@ Class UserService {
 
 		// Returns a user that is valid for the frontend
 		return array(
+      'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
-			'groups' => $groups
+			'subtitle' => $user->getEmailAddress(),
+			'groups' => $groups,
+			'role' => $role
 		);
 
 	}

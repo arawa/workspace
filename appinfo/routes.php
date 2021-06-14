@@ -16,7 +16,7 @@ return [
 		],
 		[
 			'name' => 'page#autoComplete',
-			'url' => '/api/autoComplete/{term}',
+			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'GET'
 		],
 		[
@@ -26,8 +26,24 @@ return [
 		],
 		[
 			'name' => 'workspace#getUserWorkspaces',
+			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'GET'
+		],
+		[
+			'name' => 'workspace#create',
+			'url' => '/spaces',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'workspace#removeUserFromWorkspace',
+			'url' => '/api/space/{spaceName}/user/{userId}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'workspace#changeUserRole',
+			'url' => '/api/space/{spaceName}/user/{userId}',
+			'verb' => 'PATCH'
 		],
 		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
@@ -41,8 +57,15 @@ return [
 		],
 		[
 			'name' => 'group#create',
+			// TODO move this route to /api/group/add/{group}
 			'url' => '/group/add/{group}',
 			'verb' => 'POST',
+		],
+		[
+			'name' => 'group#addUser',
+			// TODO move this route to /api/group/addUser/{space}
+			'url' => '/group/addUser/{space}',
+			'verb' => 'PATCH',
 		],
 		[
 			'name' => 'users_manager#getUsersWorkSpace',

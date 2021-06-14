@@ -24,7 +24,7 @@
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
 				<CounterBubble slot="counter">
-					{{ space.admins.length + space.users.length }}
+					{{ userCount(space) }}
 				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
@@ -56,7 +56,6 @@ import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
-import Vue from 'vue'
 
 export default {
 	name: 'Home',
@@ -110,31 +109,44 @@ export default {
 				// TODO inform user?
 				return
 			}
-			Vue.set(this.$root.$data.spaces, name, {
-				color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-				groups: [],
-				isOpen: false,
-				name,
-				quota: undefined,
-				admins: [],
-				users: [],
-			})
-			this.$router.push({
-				path: `/workspace/${name}`,
-			})
-			// TODO update backend
+
+			axios.post(generateUrl('/apps/workspace/spaces'),
+				{
+					spaceName: name,
+				}
+			)
+				.then(resp => {
+					this.$store.commit('addSpace', {
+						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+						groups: resp.data.groups,
+						isOpen: false,
+						name,
+						quota: undefined,
+						admins: [],
+						users: [],
+					})
+					this.$router.push({
+						path: `/workspace/${name}`,
+					})
+				})
 		},
 		// Gets the number of member in a group
 		groupUserCount(space, groupName) {
 			let count = 0
 			// We count all users in the space who have the 'groupName' listed in their
 			// 'groups' property
-			const users = [...space.users, ...space.admins]
+			const users = [...Object.values(space.users), ...Object.values(space.admins)]
 			users.forEach($user => {
 				if ($user.groups.includes(groupName)) {
 					count += 1
 				}
 			})
+			return count
+		},
+		// Returns the number of users in the space
+		userCount(space) {
+			let count = space.admins.length === 0 ? 0 : Object.keys(space.admins).length
+			count += space.users.length === 0 ? 0 : Object.keys(space.users).length
 			return count
 		},
 	},
