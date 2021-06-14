@@ -8,7 +8,6 @@ use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -51,23 +50,21 @@ class WorkspaceController extends Controller {
 
     public function __construct(
         $AppName,
-        GroupfolderService $groupfolderService,
         IClientService $clientService,
-	      IGroupManager $groupManager,
-	      ILogger $logger,
-	      IRequest $request,
+        IGroupManager $groupManager,
+        ILogger $logger,
+        IRequest $request,
         IURLGenerator $urlGenerator,
-	      UserService $userService,
+        UserService $userService,
         IStore $IStore,
         GroupfolderService $groupfolderService,
-      	IUserManager $userManager,
-	      UserService $userService
+        IUserManager $userManager
     )
     {
         parent::__construct($AppName, $request);
 
-	      $this->groupManager = $groupManager;
-	      $this->logger = $logger;
+        $this->groupManager = $groupManager;
+        $this->logger = $logger;
         $this->IStore = $IStore;
 
         $this->urlGenerator = $urlGenerator;
@@ -78,7 +75,7 @@ class WorkspaceController extends Controller {
 
         $this->httpClient = $clientService->newClient();
 
-        $this->groupfolder = $groupfolder;
+        $this->groupfolderService = $groupfolderService;
     }
 
 	/**
@@ -429,9 +426,7 @@ class WorkspaceController extends Controller {
             );
         }
     
-
-
-        $responseGroupfolderDelete = $this->groupfolder->delete($folderId);
+        $responseGroupfolderDelete = $this->groupfolderService->delete($folderId);
 
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
 

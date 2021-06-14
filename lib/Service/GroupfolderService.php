@@ -40,8 +40,9 @@ class GroupfolderService {
         IURLGenerator $urlGenerator,
         IClientService $clientService,
         IStore $IStore,
-        ILogger $logger,
-    ){
+        ILogger $logger
+    )
+    {
         $this->urlGenerator = $urlGenerator;
         $this->httpClient = $clientService->newClient();
         $this->IStore = $IStore;
@@ -151,14 +152,15 @@ class GroupfolderService {
      * 
     */
     public function delete($folderId) {
+        $this->logger->debug('calling groupfolder "delete groupfolder" API');
         $response = $this->httpClient->delete(
-            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,$groupfolderService
+            $this->urlGenerator->getBaseUrl() . '/apps/groupfolders/folders/' . $folderId,
             [
                 'auth' => [
                     $this->login->getUID(),
                     $this->login->getPassword()
                 ],
-                  'headers' => self::HEADERS
+                'headers' => self::HEADERS
             ]
         );
 
@@ -180,6 +182,8 @@ class GroupfolderService {
               ],
               'headers' => self::HEADERS
         ]);
+
+        return $response;
     }
 
     /**
@@ -215,11 +219,10 @@ class GroupfolderService {
      * @param $id is the groupfolder's id.
      * @param $gid
      * @return object that is the response from httpClient
-
      */
     public function enableAdvancedPermissions($id, $gid) {
 
-	      $this->logger->debug('calling groupfolder "enable advanced permissions" API');
+        $this->logger->debug('calling groupfolder "enable advanced permissions" API');
         $response = $this->httpClient->post(
             $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
             [
@@ -236,26 +239,5 @@ class GroupfolderService {
 
         return $response;
     }
-
-    /**
-     * @param $id that is groupfolder's id
-     * @return object that is the response from httpClient
-     */
-    public function delete($id) {
-	      $this->logger->debug('calling groupfolder "delete groupfolder" API');
-        $response = $this->httpClient->delete(
-            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id,
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => self::HEADERS
-            ]
-        );
-      
-        return $response;
-    }
-
 }
 

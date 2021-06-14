@@ -13,7 +13,7 @@ export default new Vuex.Store({
 	},
 	mutations,
 	actions: {
-    removeSpace(context, { space }) {
+		removeSpace(context, { space }) {
 			context.commit('deleteSpace', {
 				space
 			})
@@ -90,9 +90,6 @@ export default new Vuex.Store({
 				})
 			// eslint-disable-next-line no-console
 			console.log('Role of user ' + user.name + ' changed')
-		},
-		deleteSpace(state, { space }) {
-			delete state.spaces[space.name]
 		},
 	},
 	getters: {
