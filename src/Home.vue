@@ -71,7 +71,7 @@ export default {
 		Content,
 	},
 	created() {
-		axios.get(generateUrl('/index.php/apps/workspace/spaces'))
+		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
 				Object.values(resp.data).forEach(folder => {
 					this.$store.commit('addSpace', {
@@ -109,7 +109,7 @@ export default {
 				// TODO inform user?
 				return
 			}
-			axios.post(generateUrl('/index.php/apps/workspace/spaces'),
+			axios.post(generateUrl('/apps/workspace/spaces'),
 				{
 					spaceName: name,
 				}
