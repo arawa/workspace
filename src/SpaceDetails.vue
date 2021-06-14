@@ -113,7 +113,7 @@ export default {
 			const res = window.confirm(`Do you sure to delete the ${space} space ?`)
 
 			if (res) {
-				axios.delete(generateUrl(`index.php/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+				axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
 					.then(resp => {
 						if (resp.data.http.statuscode === 200) {
 
