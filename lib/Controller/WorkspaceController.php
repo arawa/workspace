@@ -406,7 +406,7 @@ class WorkspaceController extends Controller {
 
         $groups = [];
 
-        $responseGroupfolderGet = $this->groupfolder->get($folderId);
+        $responseGroupfolderGet = $this->groupfolderService->get($folderId);
 
         $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
 
