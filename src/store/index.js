@@ -77,11 +77,6 @@ export default new Vuex.Store({
 		updateSpace(context, { space }) {
 			context.commit('addSpace', space)
 		},
-		removeSpace(context, { space }) {
-			context.commit('deleteSpace', {
-				space,
-			})
-		},
 	},
 	getters,
 })
