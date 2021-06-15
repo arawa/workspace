@@ -91,9 +91,9 @@ export default new Vuex.Store({
 		},
 		removeSpace(context, { space }) {
 			context.commit('deleteSpace', {
-				space
+				space,
 			})
-		}
+		},
 	},
 	getters: {
 		sortedSpaces(state) {

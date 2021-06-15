@@ -172,7 +172,7 @@ export default {
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
 				{
-					newSpaceName: e.target[1].value
+					newSpaceName: e.target[1].value,
 				})
 				.then(resp => {
 					const data = resp.data
@@ -181,10 +181,10 @@ export default {
 						const space = { ...this.$store.state.spaces[oldSpaceName] }
 						space.name = data.space
 						this.$store.dispatch('updateSpace', {
-							space
+							space,
 						})
 						this.$store.dispatch('removeSpace', {
-							space: this.$store.state.spaces[oldSpaceName]
+							space: this.$store.state.spaces[oldSpaceName],
 						})
 						this.$router.push({
 							path: `/workspace/${space.name}`,
