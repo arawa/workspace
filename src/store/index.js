@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getters } from './getters'
 import mutations from './mutations'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
@@ -13,47 +14,40 @@ export default new Vuex.Store({
 	},
 	mutations,
 	actions: {
-		removeUserFromSpace(context, { spaceName, user }) {
-			context.commit('removeUserFromAdminList', { spaceName, user })
-			context.commit('removeUserFromUserList', { spaceName, user })
-			axios.delete(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
-				spaceName,
+		removeSpace(context, { space }) {
+			context.commit('deleteSpace', {
+				space,
+			})
+		},
+		removeUserFromSpace(context, { name, user }) {
+			context.commit('removeUserFromWorkspace', { name, user })
+			axios.delete(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+				name,
 				userId: user.uid,
 			}))
 				.then((resp) => {
 					if (resp.status !== 200) {
 						// Revert action an inform user
 						// TODO Inform user
-						if (user.role === 'admin') {
-							context.commit('addUserToAdminList', user)
-						} else {
-							context.commit('addUserToUserList', user)
-						}
+						context.commit('addUserToWorkspace', user)
 					}
 				}).catch((e) => {
 					// Revert action an inform user
 					// TODO Inform user
-					if (user.role === 'admin') {
-						context.commit('addUserToAdminList', user)
-					} else {
-						context.commit('addUserToUserList', user)
-					}
+					context.commit('addUserToWorkspace', user)
 				})
 			// eslint-disable-next-line no-console
-			console.log('User ' + user.name + ' removed from space ' + spaceName)
+			console.log('User ' + user.name + ' removed from space ' + name)
 		},
-		toggleUserRole(context, { spaceName, user }) {
+		toggleUserRole(context, { name, user }) {
 			if (user.role === 'admin') {
 				user.role = 'user'
-				context.commit('addUserToUserList', { spaceName, user })
-				context.commit('removeUserFromAdminList', { spaceName, user })
 			} else {
 				user.role = 'admin'
-				context.commit('addUserToAdminList', { spaceName, user })
-				context.commit('removeUserFromUserList', { spaceName, user })
 			}
-			axios.patch(generateUrl('/index.php/apps/workspace/api/space/{spaceName}/user/{userId}', {
-				spaceName,
+			context.commit('updateUser', { name, user })
+			axios.patch(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+				name,
 				userId: user.uid,
 			}))
 				.then((resp) => {
@@ -62,26 +56,20 @@ export default new Vuex.Store({
 						// TODO Inform user
 						if (user.role === 'admin') {
 							user.role = 'user'
-							context.commit('addUserToUserList', { spaceName, user })
-							context.commit('removeUserFromAdminList', { spaceName, user })
 						} else {
 							user.role = 'admin'
-							context.commit('addUserToAdminList', { spaceName, user })
-							context.commit('removeUserFromUserList', { spaceName, user })
 						}
+						context.commit('updateUser', { name, user })
 					}
 				}).catch((e) => {
 					// Revert action an inform user
 					// TODO Inform user
 					if (user.role === 'admin') {
 						user.role = 'user'
-						context.commit('addUserToUserList', { spaceName, user })
-						context.commit('removeUserFromAdminList', { spaceName, user })
 					} else {
 						user.role = 'admin'
-						context.commit('addUserToAdminList', { spaceName, user })
-						context.commit('removeUserFromUserList', { spaceName, user })
 					}
+					context.commit('updateUser', { name, user })
 				})
 			// eslint-disable-next-line no-console
 			console.log('Role of user ' + user.name + ' changed')
@@ -89,19 +77,6 @@ export default new Vuex.Store({
 		updateSpace(context, { space }) {
 			context.commit('addSpace', space)
 		},
-		removeSpace(context, { space }) {
-			context.commit('deleteSpace', {
-				space,
-			})
-		},
 	},
-	getters: {
-		sortedSpaces(state) {
-			const sortedSpaces = {}
-			Object.keys(state.spaces).sort().forEach((value, index) => {
-				sortedSpaces[value] = state.spaces[value]
-			})
-			return sortedSpaces
-		},
-	},
+	getters,
 })

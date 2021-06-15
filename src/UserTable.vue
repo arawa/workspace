@@ -89,18 +89,26 @@ export default {
 			const group = this.$route.params.group
 			if (this.$route.params.group !== undefined) {
 				// We are showing a group's users, so we have to filter the users
-				result = Object.entries(space.admins)
-					.map(user => user[1])
+				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
-					.sort((a, b) => a.name.localeCompare(b.name))
-				result = [...result, ...Object.entries(space.users)
-					.map(user => user[1])
-					.filter((user) => user.groups.includes(group))
-					.sort((a, b) => a.name.localeCompare(b.name))]
+					.sort((a, b) => {
+						// display admins first
+						if (a.role !== b.role) {
+							return a.role === 'admin' ? -1 : 1
+						} else {
+							return a.name.localeCompare(b.name)
+						}
+					})
 			} else {
 				// We are showing all users of a workspace
-				result = Object.entries(space.admins).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))
-				result = [...result, ...Object.entries(space.users).map(u => u[1]).sort((a, b) => a.name.localeCompare(b.name))]
+				result = Object.values(space.users).sort((a, b) => {
+					// display admins first
+					if (a.role !== b.role) {
+						return a.role === 'admin' ? -1 : 1
+					} else {
+						return a.name.localeCompare(b.name)
+					}
+				})
 			}
 			return result
 		},
@@ -109,14 +117,14 @@ export default {
 		// Remove a user's access to a workspace
 		deleteUser(user) {
 			this.$store.dispatch('removeUserFromSpace', {
-				spaceName: this.$route.params.space,
+				name: this.$route.params.space,
 				user,
 			})
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
 			this.$store.dispatch('toggleUserRole', {
-				spaceName: this.$route.params.space,
+				name: this.$route.params.space,
 				user,
 			})
 		},

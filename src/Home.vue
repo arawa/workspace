@@ -25,16 +25,16 @@
 				:to="{path: `/workspace/${name}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter">
-					{{ userCount(space) }}
+					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
 					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
 						:key="group[0]"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group}`}"
+						:to="{path: `/group/${name}/${group[0]}`}"
 						:title="group[0]">
 						<CounterBubble slot="counter">
-							{{ groupUserCount(space, group[0]) }}
+							{{ $store.getters.groupUserCount( name, group[0]) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
@@ -82,7 +82,6 @@ export default {
 						isOpen: false,
 						name: folder.mount_point,
 						quota: this.convertQuotaForFrontend(folder.quota),
-						admins: folder.admins,
 						users: folder.users,
 					})
 				})
@@ -121,32 +120,12 @@ export default {
 						isOpen: false,
 						name,
 						quota: undefined,
-						admins: [],
 						users: [],
 					})
 					this.$router.push({
 						path: `/workspace/${name}`,
 					})
 				})
-		},
-		// Gets the number of member in a group
-		groupUserCount(space, groupName) {
-			let count = 0
-			// We count all users in the space who have the 'groupName' listed in their
-			// 'groups' property
-			const users = [...Object.values(space.users), ...Object.values(space.admins)]
-			users.forEach($user => {
-				if ($user.groups.includes(groupName)) {
-					count += 1
-				}
-			})
-			return count
-		},
-		// Returns the number of users in the space
-		userCount(space) {
-			let count = space.admins.length === 0 ? 0 : Object.keys(space.admins).length
-			count += space.users.length === 0 ? 0 : Object.keys(space.users).length
-			return count
 		},
 	},
 }
