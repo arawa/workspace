@@ -243,28 +243,6 @@ class GroupfolderService {
 
     /**
      * @NoAdminRequired
-     * @param $id that is groupfolder's id
-     * @return object that is the response from httpClient
-     */
-    public function enableAdvancedPermissions($id, $gid) {
-
-        $this->logger->debug('calling groupfolder "enable advanced permissions" API');
-        $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => self::HEADERS
-            ]
-        );
-
-        return $response;
-    }
-
-    /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $newSpaceName
      * @return object that is the response from httpClient
