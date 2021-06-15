@@ -321,7 +321,7 @@ class WorkspaceController extends Controller {
     public function rename($folderId, $newSpaceName) {
 
         // Todo : create the groupfolderService with this method.
-        $responseCurrentSpaceName = $this->groupfolder->get($folderId);
+        $responseCurrentSpaceName = $this->groupfolderService->get($folderId);
      
         $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
 
@@ -334,7 +334,7 @@ class WorkspaceController extends Controller {
 
         $currentMountPointSpaceName = $currentSpaceName['ocs']['data']['mount_point'];
      
-        $responseGroupfolder = $this->groupfolder->rename($folderId, $newSpaceName);
+        $responseGroupfolder = $this->groupfolderService->rename($folderId, $newSpaceName);
 
         $responseRename = json_decode($responseGroupfolder->getBody(), true);
 
@@ -361,13 +361,13 @@ class WorkspaceController extends Controller {
                 $newGroupU->addUser($IUsersU);
             }
 
-            $respAttachGroupGE = $this->groupfolder->attachGroup($folderId, $newGroupGE->getGID());
+            $respAttachGroupGE = $this->groupfolderService->attachGroup($folderId, $newGroupGE->getGID());
             
             if ($respAttachGroupGE->getStatusCode() === 200) {
                 $response['groups'][] = $newGroupGE->getGID();
             }
 
-            $respAttachGroupU = $this->groupfolder->attachGroup($folderId, $newGroupU->getGID());
+            $respAttachGroupU = $this->groupfolderService->attachGroup($folderId, $newGroupU->getGID());
 
             if ($respAttachGroupU->getStatusCode() === 200) {
                 $response['groups'][] = $newGroupU->getGID();
