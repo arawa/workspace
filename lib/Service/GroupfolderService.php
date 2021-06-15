@@ -49,7 +49,6 @@ class GroupfolderService {
         $this->login = $this->IStore->getLoginCredentials();
         $this->logger = $logger;
     }
-
   
     /**
      * @return object that is the response from httpClient
@@ -68,6 +67,7 @@ class GroupfolderService {
 
         return $response;
     }
+
 
     /**
      * @param $name the space name to create.
@@ -186,6 +186,33 @@ class GroupfolderService {
         return $response;
     }
 
+     /**
+     * @param $id is the groupfolder's id.
+     * @param $gid
+     * @return object that is the response from httpClient
+     * TODO: Test it if it needs.
+     */
+    public function enableAdvancedPermissions($id, $gid) {
+
+        $this->logger->debug('calling groupfolder "enable advanced permissions" API');
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups/' . $gid ,
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'permissions' => self::ALL_PERMISSIONS
+                ],
+                'headers' => self::HEADERS
+            ]
+        );
+
+        return $response;
+    }
+
+  
     /**
      * @param int $folderId
      * @param string $gid
@@ -214,10 +241,9 @@ class GroupfolderService {
         return $response;
     }
 
-
     /**
-     * @param $id is the groupfolder's id.
-     * @param $gid
+     * @NoAdminRequired
+     * @param $id that is groupfolder's id
      * @return object that is the response from httpClient
      */
     public function enableAdvancedPermissions($id, $gid) {
@@ -230,14 +256,63 @@ class GroupfolderService {
                     $this->login->getUID(),
                     $this->login->getPassword()
                 ],
-                'body' => [
-                    'permissions' => self::ALL_PERMISSIONS
-                ],
                 'headers' => self::HEADERS
             ]
         );
 
         return $response;
     }
+
+    /**
+     * @NoAdminRequired
+     * @param int $folderId
+     * @param string $newSpaceName
+     * @return object that is the response from httpClient
+     */
+    public function rename($folderId, $newSpaceName) {
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/mountpoint',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'mountpoint' => $newSpaceName
+                ],
+                'headers' => self::HEADERS
+            ]);
+        
+        return $response;
+    }
+
+    /**
+     * @NoAdminRequired
+     * @param int $folderId
+     * @param string $gid
+     * @return object that is the response from httpClient
+     */
+    public function attachGroup($folderId, $gid) {
+        $response = $this->httpClient->post(
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId . '/groups',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'body' => [
+                    'group' => $gid
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'OCS-APIRequest' => 'true',
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+
+        return $response;
+    }
+
 }
 

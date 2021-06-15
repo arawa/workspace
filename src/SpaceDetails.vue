@@ -47,11 +47,11 @@
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionButton
+					<ActionInput
 						icon="icon-rename"
-						@click="renameSpace">
+						@submit="renameSpace">
 						{{ t('workspace', 'Rename space') }}
-					</ActionButton>
+					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
 						:close-after-click="true"
@@ -80,6 +80,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
+// import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',
@@ -163,8 +164,38 @@ export default {
 					// TODO Inform user
 				})
 		},
-		renameSpace() {
+		renameSpace(e) {
 			// TODO
+			const oldSpaceName = this.$route.params.space
+
+			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
+			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
+			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
+				{
+					newSpaceName: e.target[1].value
+				})
+				.then(resp => {
+					const data = resp.data
+
+					if (data.statuscode === 204) {
+						const space = { ...this.$store.state.spaces[oldSpaceName] }
+						space.name = data.space
+						this.$store.dispatch('updateSpace', {
+							space
+						})
+						this.$store.dispatch('removeSpace', {
+							space: this.$store.state.spaces[oldSpaceName]
+						})
+						this.$router.push({
+							path: `/workspace/${space.name}`,
+						})
+					}
+
+					if (data.statuscode === 401) {
+						// TODO: May be to print an error message temporary
+						console.error(data.message)
+					}
+				})
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {

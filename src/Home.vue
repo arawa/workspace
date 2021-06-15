@@ -109,7 +109,6 @@ export default {
 				// TODO inform user?
 				return
 			}
-
 			axios.post(generateUrl('/apps/workspace/spaces'),
 				{
 					spaceName: name,

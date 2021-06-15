@@ -34,6 +34,7 @@ Class UserService {
 	 * @return array
 	 *
 	 */
+
 	public function formatUser($user, $space, $role) {
 	
 		if (is_null($user)) {

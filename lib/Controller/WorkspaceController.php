@@ -63,7 +63,8 @@ class WorkspaceController extends Controller {
     {
         parent::__construct($AppName, $request);
 
-        $this->groupManager = $groupManager;
+        $this->groupfolderService = $groupfolderService;
+      	$this->groupManager = $groupManager;
         $this->logger = $logger;
         $this->IStore = $IStore;
 
@@ -134,7 +135,6 @@ class WorkspaceController extends Controller {
      * may use.
      *
      * @NoAdminRequired
-     * 
      */
     public function getUserWorkspaces() {
         
@@ -180,8 +180,8 @@ class WorkspaceController extends Controller {
 		
 	},$spaces);
 
-	// TODO We still need to get the workspace color here
-	
+      	// TODO We still need to get the workspace color here
+
         return new JSONResponse($spacesWithUsers);
     }
 
@@ -307,6 +307,79 @@ class WorkspaceController extends Controller {
         ]);
     }
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * 
+     * TODO: Manage errors & may be refactor
+     * groupfolder->rename & groupfolder->attachGroup.
+     * 
+     * @param int $folderId
+     * @param string $newSpaceName
+     * @return JSONResponse
+     */
+    public function rename($folderId, $newSpaceName) {
+
+        // Todo : create the groupfolderService with this method.
+        $responseCurrentSpaceName = $this->groupfolder->get($folderId);
+     
+        $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
+
+        if ( ! $this->userService->isSpaceManagerOfSpace($currentSpaceName['ocs']['data']['mount_point']) ) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_UNAUTHORIZED,
+                'message' => 'You are not authorized to rename the ' . $currentSpaceName['ocs']['data']['mount_point'] . ' space.'
+            ]);
+        }
+
+        $currentMountPointSpaceName = $currentSpaceName['ocs']['data']['mount_point'];
+     
+        $responseGroupfolder = $this->groupfolder->rename($folderId, $newSpaceName);
+
+        $responseRename = json_decode($responseGroupfolder->getBody(), true);
+
+        if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
+            $response = [
+                "statuscode" => Http::STATUS_NO_CONTENT,
+                "space" => $newSpaceName
+            ];
+            
+            $groupGE = $this->groupManager->get('GE-' . $currentMountPointSpaceName);
+            $groupU = $this->groupManager->get('U-' . $currentMountPointSpaceName);
+
+            $IUsersGE = $groupGE->getUsers();
+            $IUsersU = $groupU->getUsers();
+            
+            $newGroupGE = $this->groupManager->createGroup('GE-' . $newSpaceName);
+            $newGroupU = $this->groupManager->createGroup('U-' . $newSpaceName);
+
+            foreach ($IUsersGE as $IUserGE) {
+                $newGroupGE->addUser($IUserGE);
+            }
+
+            foreach ($IUsersU as $IUserU) {
+                $newGroupU->addUser($IUsersU);
+            }
+
+            $respAttachGroupGE = $this->groupfolder->attachGroup($folderId, $newGroupGE->getGID());
+            
+            if ($respAttachGroupGE->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupGE->getGID();
+            }
+
+            $respAttachGroupU = $this->groupfolder->attachGroup($folderId, $newGroupU->getGID());
+
+            if ($respAttachGroupU->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupU->getGID();
+            }
+        
+            $groupGE->delete();
+            $groupU->delete();
+        }
+
+        return new JSONResponse($response);
+    }
+  
 	/**
 	*
 	* Removes a user from a workspace
@@ -358,6 +431,7 @@ class WorkspaceController extends Controller {
     return new JSONResponse();
 	}
 
+   
     /**
      *
      * TODO This is a single API call. It should probably be moved to the frontend
