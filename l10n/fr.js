@@ -1,12 +1,12 @@
 OC.L10N.register(
 	'workspace',
 	{
-		'Add users': 'Ajouter des utilisateurs',
+		'Add users': 'Ajouter un utilisateur',
 		'All spaces': 'Tous les Espaces Projet',
 		'Administrators': 'Gestionnaires généraux',
 		'Create group': 'Créer un groupe',
 		'Delete space': "Supprimer l'Espace Projet",
-		'Delete user': "Supprimer de l'Espace",
+		'Delete user': "Retirer de l'Espace",
 		'Email': 'Email',
 		'Groups': 'Groupes',
 		'Make administrator': "Assigner en tant que G.E.",
@@ -19,8 +19,8 @@ OC.L10N.register(
 		'Role': 'Rôle',
 		'S.A.': 'G.E.',
 		'Set quota': 'Définir un quota',
-		'Space administrators': "Gestionnaires d'espace",
+		'Space administrators': "Gestionnaires d'Espace",
 		'Users': 'Utilisateurs',
-		'Workspace name': "Nom de l'espace",
+		'Workspace name': "Nom de l'Espace",
 	},
 "nplurals=2; plural=(n > 1)");
