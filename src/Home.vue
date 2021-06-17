@@ -24,7 +24,7 @@
 				:title="name"
 				:to="{path: `/workspace/${name}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
-				<CounterBubble slot="counter">
+				<CounterBubble slot="counter" class="user-counter">
 					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
@@ -33,7 +33,7 @@
 						icon="icon-group"
 						:to="{path: `/group/${name}/${group[0]}`}"
 						:title="group[0]">
-						<CounterBubble slot="counter">
+						<CounterBubble slot="counter" class="user-counter">
 							{{ $store.getters.groupUserCount( name, group[0]) }}
 						</CounterBubble>
 					</AppNavigationItem>
@@ -143,15 +143,15 @@ export default {
 	display: block;
 }
 
-.app-navigation-entry {
-	padding-right: 5px;
-}
-
 .space-selected {
 	background-color: #EAF5FC;
 }
 
 tr:hover {
 	background-color: #f5f5f5;
+}
+
+.user-counter {
+	margin-right: 5px;
 }
 </style>
