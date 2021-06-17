@@ -12,6 +12,7 @@
 			v-model="selectedUsers"
 			class="select-users-input"
 			label="name"
+			track-by="uid"
 			:loading="isLookingUpUsers"
 			:multiple="true"
 			:options="selectableUsers"
@@ -121,8 +122,8 @@ export default {
 			})
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(user) {
-			this.allSelectedUsers = [...new Set(this.allSelectedUsers.concat(user))]
+		addUsersToBatch(users) {
+			this.allSelectedUsers = users
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -139,10 +140,17 @@ export default {
 			}))
 				.then((resp) => {
 					const space = this.$store.state.spaces[this.$route.params.space]
-					// Show only those users who are not already member of the space
-					this.selectableUsers = resp.data.filter(user => {
-						return (!(user.name in space.users))
-					}, space)
+					this.selectableUsers = resp.data
+						// Filters users that are already member of the space
+						.filter(user => {
+							return (!(user.name in space.users))
+						}, space)
+						// Filters user that are already selected
+						.filter(newUser => {
+							return this.allSelectedUsers.every(user => {
+								return newUser.uid !== user.uid
+							})
+						})
 					this.isLookingUpUsers = false
 				})
 				.catch((e) => {
