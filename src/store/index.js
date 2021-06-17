@@ -39,11 +39,17 @@ export default new Vuex.Store({
 			// eslint-disable-next-line no-console
 			console.log('User ' + user.name + ' removed from space ' + name)
 		},
+		// Change a user's role from admin to user (or the opposite way)
 		toggleUserRole(context, { name, user }) {
 			if (user.role === 'admin') {
 				user.role = 'user'
+				// TODO use global constant
+				user.groups.splice(user.groups.indexOf('GE-' + name), 1)
+				user.groups.push('U-' + name)
 			} else {
 				user.role = 'admin'
+				user.groups.splice(user.groups.indexOf('U-' + name), 1)
+				user.groups.push('GE-' + name)
 			}
 			context.commit('updateUser', { name, user })
 			axios.patch(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
@@ -56,8 +62,12 @@ export default new Vuex.Store({
 						// TODO Inform user
 						if (user.role === 'admin') {
 							user.role = 'user'
+							user.groups.splice(user.groups.indexOf('GE-' + name), 1)
+							user.groups.push('U-' + name)
 						} else {
 							user.role = 'admin'
+							user.groups.splice(user.groups.indexOf('U-' + name), 1)
+							user.groups.push('GE-' + name)
 						}
 						context.commit('updateUser', { name, user })
 					}
