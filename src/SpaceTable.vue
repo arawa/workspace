@@ -9,7 +9,7 @@
 <template>
 	<div>
 		<div class="header" />
-		<table>
+		<table v-if="Object.keys($store.getters.sortedSpaces).length">
 			<thead>
 				<tr>
 					<th />
@@ -37,16 +37,24 @@
 				</td>
 			</tr>
 		</table>
+		<EmptyContent v-else>
+			No spaces
+			<template #desc>
+				You have not yet created any workspace
+			</template>
+		</EmptyContent>
 	</div>
 </template>
 
 <script>
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 export default {
 	name: 'SpaceTable',
 	components: {
 		Avatar,
+		EmptyContent,
 	},
 	methods: {
 		// Returns the list of administrators of a space
