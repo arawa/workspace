@@ -8,7 +8,7 @@
 
 <template>
 	<div>
-		<table>
+		<table v-if="users.length">
 			<thead>
 				<tr>
 					<th colspan="2">
@@ -61,13 +61,20 @@
 				</tr>
 			</tbody>
 		</table>
+		<EmptyContent v-else>
+			No users
+			<template #desc>
+				There are no users in this space/group yet
+			</template>
+		</EmptyContent>
 	</div>
 </template>
 
 <script>
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Avatar from '@nextcloud/vue/dist/Components/Avatar'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 export default {
 	name: 'UserTable',
@@ -75,6 +82,7 @@ export default {
 		Avatar,
 		Actions,
 		ActionButton,
+		EmptyContent,
 	},
 	data() {
 		return {
