@@ -134,6 +134,7 @@ export default {
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
+
 			// Don't accept empty names
 			const group = e.target[1].value
 			if (!group) {
@@ -141,7 +142,7 @@ export default {
 			}
 
 			// Creates group in frontend
-			this.$store.addGroupToSpace(this.$route.params.space, group)
+			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
 
 			// Creates group in backend
 			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
@@ -160,7 +161,7 @@ export default {
 						})
 				})
 				.catch((e) => {
-					this.$store.removeGroupFromSpace(this.$route.params.space, group)
+					this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
 					// TODO Inform user
 				})
 		},
