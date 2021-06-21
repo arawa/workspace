@@ -21,6 +21,10 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCA\Workspace\Service\GroupfolderService;
 use OCP\IUserManager;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
+use OCP\AppFramework\Http\DataResponse;
+use OCA\Workspace\Service\SpaceService;
 
 class WorkspaceController extends Controller {
     
@@ -48,6 +52,12 @@ class WorkspaceController extends Controller {
     /** @var GroupfolderService */
     private $groupfolderService;
 
+    /** @var SpaceService */
+    private $spaceService;
+
+    /** @var SpaceMapper */
+    private $spaceMapper;
+
     public function __construct(
         $AppName,
         IClientService $clientService,
@@ -58,7 +68,9 @@ class WorkspaceController extends Controller {
         UserService $userService,
         IStore $IStore,
         GroupfolderService $groupfolderService,
-        IUserManager $userManager
+        IUserManager $userManager,
+        SpaceMapper $mapper,
+        SpaceService $spaceService
     )
     {
         parent::__construct($AppName, $request);
@@ -77,6 +89,68 @@ class WorkspaceController extends Controller {
         $this->httpClient = $clientService->newClient();
 
         $this->groupfolderService = $groupfolderService;
+
+        $this->spaceMapper = $mapper;
+
+        $this->spaceService = $spaceService;
+    }
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * TODO: To move or delete.
+     */
+    public function createFromDB(string $spaceName) {
+        // var_dump($spaceName);
+        $dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
+
+        $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
+        
+        if ( $responseCreateGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
+            throw new CreateGroupFolderException();  
+        }
+
+        // TODO: Create groupfolder before
+        $space = new Space();
+        $space->setSpaceName($spaceName);
+        $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
+
+        return new DataResponse($this->spaceMapper->insert($space));
+    }
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * TODO: To move or delete.
+     */
+    public function deleteFromDB($spaceId) {
+        // var_dump('coucou');
+        // var_dump((int)$spaceId);
+        // var_dump($this->spaceMapper);
+        $space = $this->spaceMapper->find((int)$spaceId);
+        var_dump($space);
+        // $this->spaceMapper->deleteSpace((int)$spaceId);
+        // return 'hello';
+        return new JSONResponse(['msg' => 'cocon']);
+    }
+
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * TODO: To move or delete.
+     */
+    public function findFromDB(int $id): DataResponse {
+        return new DataResponse($this->spaceMapper->find($id));
+    }
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * TODO: To move or delete.
+     */
+    public function findAllFromDB() {
+        return new DataResponse($this->spaceService->findAll());
     }
 
 	/**

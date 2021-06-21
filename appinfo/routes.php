@@ -36,6 +36,26 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'workspace#createFromDB',
+			'url' => '/spacesFromDb',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'workspace#deleteFromDB',
+			'url' => '/spacesDestroy/{spaceId}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'workspace#findFromDB',
+			'url' => '/spacesFind/{spaceId}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'workspace#findAllFromDB',
+			'url' => '/spacesFindAll',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'workspace#removeUserFromWorkspace',
 			'url' => '/api/space/{spaceName}/user/{userId}',
 			'verb' => 'DELETE'
