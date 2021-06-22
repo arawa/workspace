@@ -209,7 +209,7 @@ export default {
 
 .user-entry {
 	justify-content: space-between;
-	margin-left: 5px;
+	padding-left: 5px;
 }
 
 .user-entry,
