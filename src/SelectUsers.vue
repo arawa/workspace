@@ -130,16 +130,20 @@ export default {
 					if (resp.status !== '204') {
 						this.$store.commit('addSpace', spaceBackup)
 						this.$notify({
-							title: 'Error',
-							text: 'An error occured while trying to add user ' + user.name + ' to workspaces.<br>The error is: ' + resp.statusText,
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to add user ') + user.name
+								+ t('workspace', ' to workspaces.') + '<br>'
+								+ t('workspace', 'The error is: ') + resp.statusText,
 							type: 'error',
 						})
 					}
 				}).catch((e) => {
 					this.$store.commit('addSpace', spaceBackup)
 					this.$notify({
-						title: 'Network error',
-						text: 'A network error occured while trying to add user ' + user.name + ' to workspaces.<br>The error is: ' + e,
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to add user ') + user.name
+							+ t('workspace', ' to workspaces.') + '<br>'
+							+ t('workspace', 'The error is: ') + e,
 						type: 'error',
 					})
 				})
@@ -182,16 +186,16 @@ i						// Filters user that are already selected
 						})
 					} else {
 						this.$notify({
-							title: 'Error',
-							text: 'An error occured while trying to lookup users.<br>The error is: ' + resp.statusText,
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
 							type: 'error',
 						})
 					}
 				})
 				.catch((e) => {
 					this.$notify({
-						title: 'Network error',
-						text: 'A network error occured while trying to lookup users.<br>The error is: ' + e,
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e,
 						type: 'error',
 					})
 				})

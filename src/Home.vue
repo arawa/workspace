@@ -78,8 +78,8 @@ export default {
 			.then(resp => {
 				if (resp.status !== 200) {
 					this.$notify({
-						title: 'Error',
-						text: 'An error occured while trying to retrieve workspaces.<br>The error is: ' + resp.statusText,
+						title: t('workspace', 'Error'),
+						text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
 						type: 'error',
 					})
 					return
@@ -101,8 +101,8 @@ export default {
 			})
 			.catch((e) => {
 				this.$notify({
-					title: 'Network error',
-					text: 'A network error occured while trying to retrieve workspaces.<br>The error is: ' + e,
+					title: t('workspace', 'Network error'),
+					text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
 					type: 'error',
 				})
 			})
@@ -126,8 +126,8 @@ export default {
 		createSpace(name) {
 			if (name === '') {
 				this.$notify({
-					title: 'Error',
-					text: 'Please specify a name.',
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'Please specify a name.'),
 					type: 'error',
 				})
 				return

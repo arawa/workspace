@@ -204,8 +204,8 @@ export default {
 			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
 			if (!control.test(quota)) {
 				this.$notify({
-					title: 'Error',
-					text: 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota',
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota'),
 					type: 'error',
 				})
 				return
