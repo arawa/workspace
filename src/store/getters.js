@@ -9,6 +9,10 @@ export const getters = {
 			return Object.values(users).filter(user => user.groups.includes(groupName)).length
 		}
 	},
+	// Returns the quota of a space
+	quota: state => spaceName => {
+		return state.spaces[spaceName].quota
+	},
 	// Returns the number of users in a space
 	spaceUserCount: state => name => {
 		const users = state.spaces[name].users

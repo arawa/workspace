@@ -75,7 +75,38 @@ export default new Vuex.Store({
 			console.log('Role of user ' + user.name + ' changed')
 		},
 		updateSpace(context, { space }) {
-			context.commit('addSpace', space)
+			context.commit('updateSpace', space)
+		},
+		setSpaceQuota(context, { name, quota }) {
+			// Updates frontend
+			const oldQuota = context.getters.quota(name)
+			context.commit('setSpaceQuota', { name, quota })
+
+			// Transforms quota for backend
+			switch (quota.substr(-2).toLowerCase()) {
+			case 'tb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 4
+				break
+			case 'gb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 3
+				break
+			case 'mb':
+				quota = quota.substr(0, quota.length - 2) * 1024 ** 2
+				break
+			case 'kb':
+				quota = quota.substr(0, quota.length - 2) * 1024
+				break
+			}
+			quota = (quota === 'unlimited') ? -3 : quota
+
+			// Updates backend
+			const url = generateUrl(`/apps/groupfolders/folders/${name}/quota`)
+			axios.post(url, { quota })
+				.catch((e) => {
+					// Reverts change made in the frontend in case of error
+					context.commit('setSpaceQuota', { name, oldQuota })
+					// TODO Inform user
+				})
 		},
 	},
 	getters,

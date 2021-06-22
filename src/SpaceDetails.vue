@@ -200,42 +200,15 @@ export default {
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
-			// Controls quota
 			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
 			if (!control.test(quota)) {
 				return
 				// TODO inform user
 			}
-
-			// Updates frontend
-			const oldQuota = this.$store.state.spaces[this.$route.params.space].quota
-			this.$store.setSpaceQuota(this.$route.params.space, quota)
-
-			// Transforms quota for backend
-			switch (quota.substr(-2).toLowerCase()) {
-			case 'tb':
-				quota = quota.substr(0, quota.length - 2) * 1024 ** 4
-				break
-			case 'gb':
-				quota = quota.substr(0, quota.length - 2) * 1024 ** 3
-				break
-			case 'mb':
-				quota = quota.substr(0, quota.length - 2) * 1024 ** 2
-				break
-			case 'kb':
-				quota = quota.substr(0, quota.length - 2) * 1024
-				break
-			}
-			quota = (quota === 'unlimited') ? -3 : quota
-
-			// Updates backend
-			const url = generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/quota`)
-			axios.post(url, { quota })
-				.catch((e) => {
-					// Reverts change made in the frontend in case of error
-					this.$store.setSpaceQuota(this.$route.params.space, oldQuota)
-					// TODO Inform user
-				})
+			this.$store.dispatch('setSpaceQuota', {
+				name: this.$route.params.space,
+				quota,
+			})
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup
