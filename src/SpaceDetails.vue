@@ -136,12 +136,17 @@ export default {
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			const group = e.target[1].value
+			let group = e.target[1].value
 			if (!group) {
 				return
 			}
 
+			// Groups must be postfixed with the ID of the space they belong
+			const space = this.$root.$data.spaces[this.$route.params.space]
+			group = group + '-' + space.id
+
 			// Creates group in frontend
+			space.groups[group] = group
 			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
 
 			// Creates group in backend
