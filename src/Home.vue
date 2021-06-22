@@ -8,6 +8,9 @@
 
 <template>
 	<Content id="content" app-name="workspace">
+		<notifications
+			position="top center"
+			width="100%" />
 		<AppNavigation>
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
@@ -73,6 +76,16 @@ export default {
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
+				if (resp.status !== 200) {
+					this.$notify({
+						title: 'Error',
+						text: 'An error occured while trying to retrieve workspaces.<br>The error is: ' + resp.statusText,
+						type: 'error',
+					})
+					return
+				}
+
+				// Initialises the store
 				Object.values(resp.data).forEach(folder => {
 					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
@@ -84,6 +97,13 @@ export default {
 						quota: this.convertQuotaForFrontend(folder.quota),
 						users: folder.users,
 					})
+				})
+			})
+			.catch((e) => {
+				this.$notify({
+					title: 'Network error',
+					text: 'A network error occured while trying to retrieve workspaces.<br>The error is: ' + e,
+					type: 'error',
 				})
 			})
 	},
@@ -105,7 +125,11 @@ export default {
 		// Creates a new space and navigates to its details page
 		createSpace(name) {
 			if (name === '') {
-				// TODO inform user?
+				this.$notify({
+					title: 'Error',
+					text: 'Please specify a name.',
+					type: 'error',
+				})
 				return
 			}
 			axios.post(generateUrl('/apps/workspace/spaces'),
