@@ -29,10 +29,10 @@
 				<td>
 					<div class="admin-avatars">
 						<Avatar v-for="user in adminUsers(space)"
-							:key="user.name"
+							:key="user.uid"
 							:style="{ marginRight: 2 + 'px' }"
 							:display-name="user.name"
-							:user="user.name" />
+							:user="user.uid" />
 					</div>
 				</td>
 			</tr>
@@ -51,7 +51,7 @@ export default {
 	methods: {
 		// Returns the list of administrators of a space
 		adminUsers(space) {
-			return Object.values(space.users).filter((u) => u.role === 'admin').map((u) => u.name)
+			return Object.values(space.users).filter((u) => u.role === 'admin')
 		},
 		openSpace(name) {
 			this.$store.state.spaces[name].isOpen = true

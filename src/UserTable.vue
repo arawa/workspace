@@ -21,10 +21,10 @@
 			</thead>
 			<tbody>
 				<tr v-for="user in users"
-					:key="user.name"
+					:key="user.uid"
 					:class="user.role==='admin' ? 'user-admin' : ''">
 					<td class="avatar">
-						<Avatar :display-name="user.name" :user="user.name" />
+						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
 					<td>
 						<div class="user-name">
