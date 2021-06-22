@@ -124,14 +124,16 @@ class WorkspaceController extends Controller {
      * TODO: To move or delete.
      */
     public function deleteFromDB($spaceId) {
-        // var_dump('coucou');
-        // var_dump((int)$spaceId);
-        // var_dump($this->spaceMapper);
-        $space = $this->spaceMapper->find((int)$spaceId);
-        var_dump($space);
-        // $this->spaceMapper->deleteSpace((int)$spaceId);
-        // return 'hello';
-        return new JSONResponse(['msg' => 'cocon']);
+        $space = $this->spaceService->find($spaceId);
+        $this->spaceService->delete($spaceId);
+        return new JSONResponse([
+            'result' => [
+                'message' => 'Space ' . $spaceId . ' is deleted.',
+                'statuscode' => 200
+            ],
+            'space' => $space
+        ]);
+
     }
 
 
@@ -140,8 +142,9 @@ class WorkspaceController extends Controller {
      * @NoCSRFRequired
      * TODO: To move or delete.
      */
-    public function findFromDB(int $id): DataResponse {
-        return new DataResponse($this->spaceMapper->find($id));
+    public function findFromDB($spaceId) {
+        $space = $this->spaceService->find($spaceId);
+        return new DataResponse($this->spaceService->find($spaceId));
     }
 
     /**

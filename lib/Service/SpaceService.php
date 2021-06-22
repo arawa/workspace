@@ -17,7 +17,11 @@ class SpaceService {
         return $this->spaceMapper->findAll();
     }
 
-    public function find(int $space_id) {
-        return $this->spaceMapper->find($space_id);
+    public function find($id) {
+        return $this->spaceMapper->find($id);
     }
+
+    public function delete(int $id) {
+        return $this->spaceMapper->deleteSpace($id);
     }
+}
