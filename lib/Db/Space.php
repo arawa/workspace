@@ -10,12 +10,20 @@ class Space extends Entity implements JsonSerializable {
 
     protected $groupfolderId;
     protected $spaceName;
+    protected $spaceId;
 
     public function __construct()
     {
         $this->addType('space_id', 'integer');
+        $this->addType('groupfolder_id', 'integer');
+        $this->addType('space_name', 'string');
     }
 
+    /**
+    * TODO: When it's wrote '$this->getId()', it prints well the
+    * id when it created (POST). But, with GETs method, it has to
+    * write $this->getSpaceId(). 
+    */
     public function jsonSerialize()
     {
         return [
@@ -25,8 +33,4 @@ class Space extends Entity implements JsonSerializable {
         ];
     }
 
-    public function finAll()
-    {
-        return "";
-    }
 }
