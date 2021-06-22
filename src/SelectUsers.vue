@@ -31,7 +31,8 @@
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
-					class="user-entry">
+					class="user-entry"
+					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
 						<Avatar :display-name="user.name" :user="user.name" />
 						<div class="user-name">
@@ -220,6 +221,10 @@ export default {
 
 .user-name {
 	margin-left: 10px;
+}
+
+.user-not-member {
+	background-color: #ffebee
 }
 
 .role-toggle {
