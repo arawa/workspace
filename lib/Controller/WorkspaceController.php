@@ -323,7 +323,8 @@ class WorkspaceController extends Controller {
      
         $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
 
-        if ( ! $this->userService->isSpaceManagerOfSpace($currentSpaceName['ocs']['data']['mount_point']) ) {
+        if (!$this->userService->isSpaceManagerOfSpace($currentSpaceName['ocs']['data']['mount_point']) &&
+            !$this->userService->isUserGeneralAdmin() ) {
             return new JSONResponse([
                 'statuscode' => Http::STATUS_UNAUTHORIZED,
                 'message' => 'You are not authorized to rename the ' . $currentSpaceName['ocs']['data']['mount_point'] . ' space.'
