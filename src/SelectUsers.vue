@@ -8,6 +8,11 @@
 
 <template>
 	<div class="select-users-wrapper">
+		<Actions class="action-close">
+			<ActionButton
+				icon="icon-close"
+				@click="$emit('close')" />
+		</Actions>
 		<Multiselect
 			v-model="selectedUsers"
 			class="select-users-input"
@@ -182,6 +187,11 @@ export default {
 </script>
 
 <style>
+.action-close {
+	align-self: self-end;
+	width: 90%;
+}
+
 .caution {
 	color: red;
 	margin: 5px;
@@ -193,7 +203,7 @@ export default {
 }
 
 .select-users-input {
-	width: 100%;
+	width: 90%;
 }
 
 .select-users-list {
@@ -204,14 +214,19 @@ export default {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #dbdbdb;
+	width: 90%;
 }
 
 .select-users-list-empty {
 	text-align: center;
 	line-height: 400px;
+	width: 90%;
 }
 
 .select-users-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	margin: 10px;
 }
 
