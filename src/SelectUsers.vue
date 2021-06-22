@@ -128,11 +128,20 @@ export default {
 					}
 				).then((resp) => {
 					if (resp.status !== '204') {
-						// TODO
+						this.$store.commit('addSpace', spaceBackup)
+						this.$notify({
+							title: 'Error',
+							text: 'An error occured while trying to add user ' + user.name + ' to workspaces.<br>The error is: ' + resp.statusText,
+							type: 'error',
+						})
 					}
 				}).catch((e) => {
-					// TODO: Inform user
 					this.$store.commit('addSpace', spaceBackup)
+					this.$notify({
+						title: 'Network error',
+						text: 'A network error occured while trying to add user ' + user.name + ' to workspaces.<br>The error is: ' + e,
+						type: 'error',
+					})
 				})
 			})
 		},
@@ -155,24 +164,36 @@ export default {
 			}))
 				.then((resp) => {
 					let users = []
-					// When adding users to a space, show only those users who are not already member of the space
-					if (this.$route.params.group === undefined) {
-						const space = this.$store.state.spaces[this.$route.params.space]
-						users = resp.data.filter(user => {
-							return (!(user.name in space.users))
-						}, space)
-					} else {
-						users = resp.data
-					}
-					// Filters user that are already selected
-					this.selectableUsers = users.filter(newUser => {
-						return this.allSelectedUsers.every(user => {
-							return newUser.uid !== user.uid
+					if (resp.status === 200) {
+						// When adding users to a space, show only those users who are not already member of the space
+						if (this.$route.params.group === undefined) {
+							const space = this.$store.state.spaces[this.$route.params.space]
+							users = resp.data.filter(user => {
+								return (!(user.name in space.users))
+							}, space)
+i						} else {
+							users = resp.data
+						}
+i						// Filters user that are already selected
+						this.selectableUsers = users.filter(newUser => {
+							return this.allSelectedUsers.every(user => {
+								return newUser.uid !== user.uid
+							})
 						})
-					})
+					} else {
+						this.$notify({
+							title: 'Error',
+							text: 'An error occured while trying to lookup users.<br>The error is: ' + resp.statusText,
+							type: 'error',
+						})
+					}
 				})
 				.catch((e) => {
-					// TODO: add some user feedback
+					this.$notify({
+						title: 'Network error',
+						text: 'A network error occured while trying to lookup users.<br>The error is: ' + e,
+						type: 'error',
+					})
 				})
 			this.isLookingUpUsers = false
 		},
