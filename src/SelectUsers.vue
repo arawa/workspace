@@ -53,6 +53,9 @@
 				</div>
 			</div>
 		</div>
+		<p class="caution">
+			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+		</p>
 		<div class="select-users-actions">
 			<button @click="addUsersToWorkspace">
 				{{ t('workspace', 'Add users') }}
@@ -179,6 +182,11 @@ export default {
 </script>
 
 <style>
+.caution {
+	color: red;
+	margin: 5px;
+}
+
 .select-users-actions {
 	display: flex;
 	flex-flow: row-reverse;
