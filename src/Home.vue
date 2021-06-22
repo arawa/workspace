@@ -118,6 +118,7 @@ export default {
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
 						groups: resp.data.groups,
 						isOpen: false,
+						id: resp.data.id_space,
 						name,
 						quota: undefined,
 						users: [],
