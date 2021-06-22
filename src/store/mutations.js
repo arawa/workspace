@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { getLocale } from '@nextcloud/l10n'
 
 export default {
 	addGroupToSpace(state, { name, group }) {
@@ -6,8 +7,20 @@ export default {
 		space.groups[group] = group
 		Vue.set(state.spaces, name, space)
 	},
+	// Adds space to the spaces list and sort them, case-insensitive,
+	// and locale-based
 	addSpace(state, space) {
-		Vue.set(state.spaces, space.name, space)
+		state.spaces[space.name] = space
+		const sortedSpaces = {}
+		Object.keys(state.spaces)
+			.sort((a, b) => a.localeCompare(b, getLocale(), {
+				sensitivity: 'base',
+				ignorePunctuation: true,
+			}))
+			.forEach((value, index) => {
+				sortedSpaces[value] = state.spaces[value]
+			})
+		state.spaces = sortedSpaces
 	},
 	addUserToWorkspace(state, { name, user }) {
 		const space = state.spaces[name]

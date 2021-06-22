@@ -18,7 +18,7 @@
 					<th>{{ t('workspace', 'Space administrators') }}</th>
 				</tr>
 			</thead>
-			<tr v-for="(space,name) in $store.getters.sortedSpaces"
+			<tr v-for="(space,name) in $store.state.spaces"
 				:key="name"
 				@click="openSpace(name)">
 				<td style="width: 50px;">

@@ -16,7 +16,7 @@
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
-			<AppNavigationItem v-for="(space, name) in $store.getters.sortedSpaces"
+			<AppNavigationItem v-for="(space, name) in $store.state.spaces"
 				:key="name"
 				:class="$route.params.space === name ? 'space-selected' : ''"
 				:allow-collapse="true"
