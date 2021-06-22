@@ -112,6 +112,15 @@ export default new Vuex.Store({
 			// Updates backend
 			const url = generateUrl(`/apps/groupfolders/folders/${name}/quota`)
 			axios.post(url, { quota })
+				.then(resp => {
+					// eslint-disable-next-line
+					console.log('this', this)
+					if (resp.status === 200) {
+						// Reverts change made in the frontend in case of error
+						this.$store.setSpaceQuota(this.$route.params.space, oldQuota)
+						// TODO inform user
+					}
+				})
 				.catch((e) => {
 					// Reverts change made in the frontend in case of error
 					context.commit('setSpaceQuota', { name, oldQuota })
