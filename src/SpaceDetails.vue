@@ -142,7 +142,7 @@ export default {
 			}
 
 			// Groups must be postfixed with the ID of the space they belong
-			const space = this.$root.$data.spaces[this.$route.params.space]
+			const space = this.$store.state.spaces[this.$route.params.space]
 			group = group + '-' + space.id
 
 			// Creates group in frontend
