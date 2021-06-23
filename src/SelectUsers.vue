@@ -108,7 +108,7 @@ export default {
 					}),
 					{
 						group,
-						user: user.name,
+						user: user.uid,
 					}
 				).then((resp) => {
 					if (resp.status !== '204') {
