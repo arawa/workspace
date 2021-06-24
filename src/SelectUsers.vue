@@ -149,7 +149,7 @@ export default {
 				spaceId: this.$route.params.space,
 			}))
 				.then((resp) => {
-					const users = []
+					let users = []
 					// When adding users to a space, show only those users who are not already member of the space
 					if (this.$route.params.group === undefined) {
 						const space = this.$store.state.spaces[this.$route.params.space]
