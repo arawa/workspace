@@ -200,6 +200,7 @@ export default {
 .caution {
 	color: red;
 	margin: 5px;
+	width: 90%;
 }
 
 .icon-member {
