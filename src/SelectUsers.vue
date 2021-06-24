@@ -39,6 +39,7 @@
 					class="user-entry"
 					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
+						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 						<Avatar :display-name="user.name" :user="user.name" />
 						<div class="user-name">
 							<span> {{ user.name }} </span>
@@ -148,18 +149,22 @@ export default {
 				spaceId: this.$route.params.space,
 			}))
 				.then((resp) => {
-					const space = this.$store.state.spaces[this.$route.params.space]
-					this.selectableUsers = resp.data
-						// Filters users that are already member of the space
-						.filter(user => {
+					const users = []
+					// When adding users to a space, show only those users who are not already member of the space
+					if (this.$route.params.group === undefined) {
+						const space = this.$store.state.spaces[this.$route.params.space]
+						users = resp.data.filter(user => {
 							return (!(user.name in space.users))
 						}, space)
-						// Filters user that are already selected
-						.filter(newUser => {
-							return this.allSelectedUsers.every(user => {
-								return newUser.uid !== user.uid
-							})
+					} else {
+						users = resp.data
+					}
+					// Filters user that are already selected
+					this.selectableUsers = users.filter(newUser => {
+						return this.allSelectedUsers.every(user => {
+							return newUser.uid !== user.uid
 						})
+					})
 					this.isLookingUpUsers = false
 				})
 				.catch((e) => {
@@ -195,6 +200,22 @@ export default {
 .caution {
 	color: red;
 	margin: 5px;
+}
+
+.icon-member {
+	position: relative;
+	left: 10px;
+	top: -10px;
+	z-index: 100;
+	width: 20px;
+	height: 20px;
+}
+
+.is-member {
+	background-image: url('../img/member.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
 }
 
 .select-users-actions {
