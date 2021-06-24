@@ -11,7 +11,7 @@
 		<div class="header">
 			<div class="space-name">
 				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker">
-					<button class="color-dot" :style="{background: $store.state.spaces[$route.params.space].color}" />
+					<button class="color-dot color-picker" :style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
 				</ColorPicker>
 				<span class="space-title">
 					{{ title }}

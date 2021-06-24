@@ -32,3 +32,9 @@ tr:hover {
         border-radius: 50%;
         display: block;
 }
+
+.color-picker {
+        background-image: url('../img/color_picker.svg');
+	background-repeat: no-repeat;
+	background-position: center center;
+}
