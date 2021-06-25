@@ -1,30 +1,31 @@
 <?php
 namespace OCA\Workspace\Controller;
 
+use OCP\ILogger;
+use OCP\IRequest;
+use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCP\IURLGenerator;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
+use OCP\Http\Client\IClient;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Db\SpaceMapper;
+use OCP\Http\Client\IClientService;
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\BadRequestException;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Service\GroupfolderService;
+use OCP\Authentication\LoginCredentials\IStore;
+use OCP\Authentication\LoginCredentials\ICredentials;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\Authentication\LoginCredentials\ICredentials;
-use OCP\Authentication\LoginCredentials\IStore;
-use OCP\Http\Client\IClient;
-use OCP\Http\Client\IClientService;
-use OCP\IGroupManager;
-use OCP\ILogger;
-use OCP\IRequest;
-use OCP\IURLGenerator;
-use OCA\Workspace\Service\GroupfolderService;
-use OCP\IUserManager;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCP\AppFramework\Http\DataResponse;
-use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 
 class WorkspaceController extends Controller {
     
@@ -98,24 +99,134 @@ class WorkspaceController extends Controller {
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
-     * TODO: To move or delete.
+     * TODO: Bug when this code is in SpaceService.php.
+     * It has to find a solution to move it.
      */
     public function createFromDB(string $spaceName) {
-        // var_dump($spaceName);
-        $dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
 
+        if( $spaceName === false ||
+            $spaceName === null ||
+            $spaceName === '' 
+        ) {
+            throw new BadRequestException('spaceName must be provided');
+        }
+
+        // #1 create groups
+        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::ESPACE_MANAGER_01 . $spaceName);
+        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::ESPACE_USERS_01 . $spaceName);
+
+        // #2 create a groupfolder
+        $dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
+        
         $responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
         
         if ( $responseCreateGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
+
+            $newSpaceManagerGroup->delete();
+            $newSpaceUsersGroup->delete();
+
             throw new CreateGroupFolderException();  
+
+        }
+        // #3 add groups to groupfolder
+        $dataResponseAssignSpaceManagerGroup = $this->groupfolderService->addGroup(
+            $responseCreateGroupFolder['ocs']['data']['id'],
+            $newSpaceManagerGroup->getGID()
+        );
+
+        $responseAssignSpaceManagerGroup = json_decode($dataResponseAssignSpaceManagerGroup->getBody(), true);
+        
+        if ( $responseAssignSpaceManagerGroup['ocs']['meta']['statuscode'] !== 100 ) {
+            
+            $newSpaceManagerGroup->delete();
+            $newSpaceUsersGroup->delete();
+
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
+
+            throw new AssignGroupToGroupFolderException($newSpaceManagerGroup->getGID());
+
         }
 
-        // TODO: Create groupfolder before
+        $dataResponseAssignSpaceUsersGroup = $this->groupfolderService->addGroup(
+            $responseCreateGroupFolder['ocs']['data']['id'],
+            $newSpaceUsersGroup->getGID()
+        );
+
+        $responseAssignSpaceUsersGroup = json_decode($dataResponseAssignSpaceUsersGroup->getBody(), true);
+
+        if ( $responseAssignSpaceUsersGroup['ocs']['meta']['statuscode'] !== 100 ) {
+
+            $newSpaceManagerGroup->delete();
+            $newSpaceUsersGroup->delete();
+
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
+
+            throw new AssignGroupToGroupFolderException($newSpaceUsersGroup->getGID());
+
+        }
+
+        // #4 enable acl
+        $dataResponseEnableACLGroupFolder = $this->groupfolderService->enableAcl($responseCreateGroupFolder['ocs']['data']['id']);
+
+        $responseEnableACLGroupFolder = json_decode($dataResponseEnableACLGroupFolder->getBody(), true);
+
+        if ( $responseEnableACLGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
+
+            $newSpaceManagerGroup->delete();
+            $newSpaceUsersGroup->delete();
+            
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
+
+            throw new AclGroupFolderException();
+
+        }
+        
+        // #5 Add one group to manage acl
+        $dataResponseManageAcl = $this->groupfolderService->manageAcl(
+            $responseCreateGroupFolder['ocs']['data']['id'],
+            $newSpaceManagerGroup->getGID()
+        );
+
+        $responseManageAcl = json_decode($dataResponseManageAcl->getBody(), true);
+
+        if ( $responseManageAcl['ocs']['meta']['statuscode'] !== 100 ) {
+
+            $newSpaceManagerGroup->delete();
+            $newSpaceUsersGroup->delete();
+            
+            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
+
+            throw new ManageAclGroupFolderException();
+
+        }
+
+        // #6 create the space
         $space = new Space();
         $space->setSpaceName($spaceName);
         $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
 
-        return new DataResponse($this->spaceMapper->insert($space));
+        $this->spaceMapper->insert($space);
+
+        return new JSONResponse ([
+            'space' => $spaceName,
+            'id_space' => $space->getId(),
+            'folder_id' => $responseCreateGroupFolder['ocs']['data']['id'],
+            'groups' => [
+                $newSpaceManagerGroup->getGID() => 31,
+                $newSpaceUsersGroup->getGID() => 31
+            ],
+            'space_advanced_permissions' => true,
+            'space_assign_groups' => [
+                $newSpaceManagerGroup->getGID(),
+                $newSpaceUsersGroup->getGID()
+            ],
+            'acl' => [
+                'state' => true,
+                'group_manage' => $newSpaceManagerGroup->getGID()
+            ],
+            'statuscode' => Http::STATUS_CREATED,
+        ]);
+
     }
 
     /**
@@ -213,47 +324,46 @@ class WorkspaceController extends Controller {
      *
      * @NoAdminRequired
      */
-    public function getUserWorkspaces() {
+    public function getUserWorkspaces() {    
+	    // Gets all groupfolders
+        $this->logger->debug('Fetching groupfolders');
+
+            $response = $this->groupfolderService->getAll();
+            $responseBody = json_decode($response->getBody(), true);
+            if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
+
+                throw new getAllGroupFoldersException();  
+
+            }
+
+        $spaces = $responseBody['ocs']['data'];
+        $this->logger->debug('groupfolders fetched');
         
-	// Gets all groupfolders
-	$this->logger->debug('Fetching groupfolders');
-
-        $response = $this->groupfolderService->getAll();
-        $responseBody = json_decode($response->getBody(), true);
-        if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
-
-            throw new getAllGroupFoldersException();  
-
+        // TODO Filter to show only workspaces, not regular groupfolders
+        
+        // We only want to return those workspaces for which the connected user is a manager
+        if (!$this->userService->isUserGeneralAdmin()) {
+            $this->logger->debug('Filtering workspaces');
+            $filteredSpaces = array_filter($spaces, function($space) {
+                return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
+            });
+                $spaces = $filteredSpaces;
         }
 
-	$spaces = $responseBody['ocs']['data'];
-	$this->logger->debug('groupfolders fetched');
-	
-	// TODO Filter to show only workspaces, not regular groupfolders
-	
-	// We only want to return those workspaces for which the connected user is a manager
-	if (!$this->userService->isUserGeneralAdmin()) {
-		$this->logger->debug('Filtering workspaces');
-		$filteredSpaces = array_filter($spaces, function($space) {
-			return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
-		});
-        	$spaces = $filteredSpaces;
-	}
-
-	// Adds workspace users
-	$this->logger->debug('Adding users information to workspaces');
-	$spacesWithUsers = array_map(function($space) {
-		$users = array();
-		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-		};
-		foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
-		};
-		$space['users'] = $users;
-		return $space;
-		
-	},$spaces);
+        // Adds workspace users
+        $this->logger->debug('Adding users information to workspaces');
+        $spacesWithUsers = array_map(function($space) {
+            $users = array();
+            foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
+                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+            };
+            foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
+                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+            };
+            $space['users'] = $users;
+            return $space;
+            
+        },$spaces);
 
       	// TODO We still need to get the workspace color here
 
@@ -467,7 +577,7 @@ class WorkspaceController extends Controller {
 	* 
 	*/
 	public function removeUserFromWorkspace(string $spaceName, string $userId) {
-    $this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceName);
+        $this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceName);
 		if (!$this->userService->isSpaceManagerOfSpace($spaceName) && !$this->userService->isUserGeneralAdmin()) {
 			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
 		}
@@ -499,12 +609,12 @@ class WorkspaceController extends Controller {
 		}
 
 		// We can now blindly remove the user from the space's admin and user groups
-    $this->logger->debug('Removing user from workspace.');
+        $this->logger->debug('Removing user from workspace.');
 		$GEgroup->removeUser($user);
 		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
 		$UserGroup->removeUser($user);
 
-    return new JSONResponse();
+        return new JSONResponse();
 	}
 
    
