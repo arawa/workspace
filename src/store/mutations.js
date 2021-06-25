@@ -13,10 +13,19 @@ export default {
 		state.spaces[space.name] = space
 		const sortedSpaces = {}
 		Object.keys(state.spaces)
-			.sort((a, b) => a.localeCompare(b, getLocale(), {
-				sensitivity: 'base',
-				ignorePunctuation: true,
-			}))
+			.sort((a, b) => {
+				// Some javascript engines don't support localCompare's locales
+				// and options arguments.
+				// This is especially the case of the mocha test framework
+				try {
+					return a.localeCompare(b, getLocale(), {
+						sensitivity: 'base',
+						ignorePunctuation: true,
+					})
+				} catch (e) {
+					return a.localeCompare(b)
+				}
+			})
 			.forEach((value, index) => {
 				sortedSpaces[value] = state.spaces[value]
 			})
