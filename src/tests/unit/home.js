@@ -26,53 +26,13 @@ const expect = require('chai').expect
 
 describe('Home component tests', () => {
 
-	// Space with users
-	const space = {
-		color: '#f5f5f5',
-		groups: [],
-		id: '42',
-		isOpen: false,
-		name: 'test-space',
-		quota: 'unlimited',
-		admins: [],
-		users: {
-			baptiste: {
-				groups: ['test', 'GE-test-space', 'U-test-space'],
-			},
-			dorianne: {
-				groups: ['GE-test-space', 'U-test-space'],
-			},
-			philippe: {
-				groups: ['test', 'GE-test-space', 'U-test-space'],
-			},
-		},
-	}
-
-	// Space without users
-	const emptySpace = {
-		color: '#f5f5f5',
-		groups: [],
-		id: '42',
-		isOpen: false,
-		name: 'test-space',
-		quota: 'unlimited',
-		admins: [],
-		users: [],
-	}
-
-	it('Count users in space', () => {
-		const count = wrappedHome.vm.userCount(space)
-		expect(count).equals(3)
+	it('ConvertQuotaForFrontend: Test regular quota', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('3221225472')
+		expect(quota).equals('3GB')
 	})
 
-	it('Count users in empty space', () => {
-		const count = wrappedHome.vm.userCount(emptySpace)
-		expect(count).equals(0)
+	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
+		expect(quota).equals('unlimited')
 	})
-
-	it('Count users in group', () => {
-		const count = wrappedHome.vm.groupUserCount(space, 'test')
-		expect(count).equals(2)
-	})
-
 })
