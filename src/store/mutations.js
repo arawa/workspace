@@ -2,13 +2,13 @@ import Vue from 'vue'
 import { getLocale } from '@nextcloud/l10n'
 
 export default {
+	// Adds a group to a space
 	addGroupToSpace(state, { name, group }) {
 		const space = state.spaces[name]
 		space.groups[group] = group
 		Vue.set(state.spaces, name, space)
 	},
-	// Adds space to the spaces list and sort them, case-insensitive,
-	// and locale-based
+	// Adds space to the spaces list and sort them, case-insensitive, and locale-based
 	addSpace(state, space) {
 		state.spaces[space.name] = space
 		const sortedSpaces = {}
