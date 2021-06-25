@@ -57,8 +57,7 @@ return [
 		],
 		[
 			'name' => 'group#create',
-			// TODO move this route to /api/group/add/{group}
-			'url' => '/group/add/{group}',
+			'url' => '/api/group/{gid}',
 			'verb' => 'POST',
 		],
 		[

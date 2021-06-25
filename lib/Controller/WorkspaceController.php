@@ -167,12 +167,20 @@ class WorkspaceController extends Controller {
 	$this->logger->debug('Adding users information to workspaces');
 	$spacesWithUsers = array_map(function($space) {
 		$users = array();
-		foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-		};
-		foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
-			$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
-		};
+		$group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+			};
+		}
+		$group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+			};
+		}
 		$space['users'] = $users;
 		return $space;
 		

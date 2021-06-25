@@ -146,24 +146,21 @@ export default {
 			group = group + '-' + space.id
 
 			// Creates group in frontend
-			space.groups[group] = group
 			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
 
 			// Creates group in backend
-			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
+			axios.post(generateUrl(`/apps/workspace/api/group/${group}`), { spaceId: space.id })
 				.then((resp) => {
-					// Give group access to space
-					axios.post(generateUrl(`/apps/groupfolders/folders/${this.$route.params.space}/groups`), { group })
-						.then((resp) => {
-							// Navigates to the group's details page
-							this.$store.state.spaces[this.$route.params.space].isOpen = true
-							this.$router.push({
-								path: `/group/${this.$route.params.space}/${group}`,
-							})
+					if (resp.status === 200) {
+						// Navigates to the group's details page
+						this.$store.state.spaces[this.$route.params.space].isOpen = true
+						this.$router.push({
+							path: `/group/${this.$route.params.space}/${group}`,
 						})
-						.catch((e) => {
-							// TODO revert frontend change, delete group in backend, inform user
-						})
+					} else {
+						this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
+						// TODO Inform user
+					}
 				})
 				.catch((e) => {
 					this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
