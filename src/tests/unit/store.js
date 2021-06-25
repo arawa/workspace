@@ -28,7 +28,7 @@ describe('Vuex store tests', () => {
 							groups: [
 								'GE-test-space',
 								'yolo-1234',
-								],
+							],
 							role: 'admin',
 						},
 					],
@@ -96,7 +96,7 @@ describe('Vuex store tests', () => {
 			},
 		})
 
-		expect(state.spaces['test-space'].users['John Doe']).not.undefined
+		return expect(state.spaces['test-space'].users['John Doe']).not.undefined
 	})
 
 	it('Count users in workspace', () => {
@@ -124,6 +124,6 @@ describe('Vuex store tests', () => {
 			},
 		})
 
-		expect(state.spaces['test-space'].users['John Doe']).undefined
+		return expect(state.spaces['test-space'].users['John Doe']).undefined
 	})
 })
