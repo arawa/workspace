@@ -146,7 +146,6 @@ export default {
 			group = group + '-' + space.id
 
 			// Creates group in frontend
-			space.groups[group] = group
 			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
 
 			// Creates group in backend
