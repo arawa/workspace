@@ -14,7 +14,7 @@ class Space extends Entity implements JsonSerializable {
 
     public function __construct()
     {
-        $this->addType('space_id', 'integer');
+        $this->addType('id', 'integer');
         $this->addType('groupfolder_id', 'integer');
         $this->addType('space_name', 'string');
     }
@@ -27,9 +27,11 @@ class Space extends Entity implements JsonSerializable {
     public function jsonSerialize()
     {
         return [
-            'space_id' =>  $this->getId(),
-            'groupfolder_id' => $this->groupfolderId,
-            'space_name' => $this->spaceName,
+            $this->getSpaceId() => [
+                'id' =>  $this->getSpaceId(),
+                'groupfolder_id' => $this->groupfolderId,
+                'space_name' => $this->spaceName,
+            ]
         ];
     }
 
