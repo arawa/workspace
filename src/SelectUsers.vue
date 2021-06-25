@@ -63,7 +63,7 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspace">
+			<button @click="addUsersToWorkspaceOrGroup">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -95,8 +95,8 @@ export default {
 		}
 	},
 	methods: {
-		// Adds users to workspace and close dialog
-		addUsersToWorkspace() {
+		// Adds users to workspace/group and close dialog
+		addUsersToWorkspaceOrGroup() {
 			// Update frontend first and keep a backup of the changes should something fail
 			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
@@ -108,9 +108,14 @@ export default {
 
 			// Update backend and revert frontend changes if something fails
 			this.allSelectedUsers.forEach((user) => {
-				// TODO Use application-wide constants
-				let group = user.role === 'admin' ? 'GE-' : 'U-'
-				group = group + this.$route.params.space
+				let group = ''
+				if (this.$route.params.group !== 'undefined') {
+					group = this.$route.params.group
+				} else {
+					// TODO Use application-wide constants
+					group = user.role === 'admin' ? 'GE-' : 'U-'
+					group = group + this.$route.params.space
+				}
 
 				// Add user to proper workspace group
 				axios.patch(
@@ -165,12 +170,11 @@ export default {
 							return newUser.uid !== user.uid
 						})
 					})
-					this.isLookingUpUsers = false
 				})
 				.catch((e) => {
 					// TODO: add some user feedback
-					this.isLookingUpUsers = false
 				})
+			this.isLookingUpUsers = false
 		},
 		removeUserFromBatch(user) {
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
