@@ -83,6 +83,12 @@ describe('Vuex store tests', () => {
 		expect(state.spaces['test-space'].quota).equal('1TB')
 	})
 
+	it('Get space quota', () => {
+		const getters = bindGetters()
+		const quota = getters.quota('test-space')
+		expect(quota).equal('unlimited')
+	})
+
 	it('Adds a user to the space', () => {
 		mutations.addUserToWorkspace(state, {
 			name: 'test-space',
