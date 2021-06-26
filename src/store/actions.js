@@ -78,7 +78,7 @@ export default {
 	removeUserFromSpace(context, { name, user }) {
 		const space = context.state.spaces[name]
 		context.commit('removeUserFromWorkspace', { name, user })
-		axios.delete(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+		axios.delete(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
 			spaceId: space.id,
 			userId: user.uid,
 		}))

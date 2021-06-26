@@ -109,7 +109,9 @@ export default {
 			// Update backend and revert frontend changes if something fails
 			this.allSelectedUsers.forEach((user) => {
 				let group = ''
-				if (this.$route.params.space !== '' && user.role !== '') {
+				if (this.$route.params.group !== undefined) {
+					group = this.$route.params.group
+				} else {
 					// TODO Use application-wide constants
 					group = user.role === 'admin' ? 'GE-' : 'U-'
 					group = group + this.$route.params.space

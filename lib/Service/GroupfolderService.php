@@ -205,7 +205,7 @@ class GroupfolderService {
 
 	// TODO Error management
 
-	return $groupfolder['ocs']['meta']['mount_point'];
+	return $groupfolder['ocs']['data']['mount_point'];
 
     }
 
