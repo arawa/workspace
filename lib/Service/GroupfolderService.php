@@ -265,7 +265,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $newSpaceName
      * @return object that is the response from httpClient
@@ -288,7 +287,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $gid
      * @return object that is the response from httpClient
