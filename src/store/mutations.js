@@ -4,8 +4,6 @@ import { getLocale } from '@nextcloud/l10n'
 export default {
 	// Adds a group to a space
 	addGroupToSpace(state, { name, group }) {
-		// eslint-disable-next-line
-		console.log('addGroupToSpace')
 		const space = state.spaces[name]
 		space.groups[group] = group
 		Vue.set(state.spaces, name, space)
