@@ -41,6 +41,7 @@
 						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
+							:close-after-click="true"
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</ActionInput>
