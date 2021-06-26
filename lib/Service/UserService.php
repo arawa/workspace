@@ -78,8 +78,7 @@ Class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	*/
 	public function isSpaceManager() {
-		// TODO This must use the application constants
-		$workspaceAdminGroups = $this->groupManager->search('GE-');
+		$workspaceAdminGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01);
 		foreach($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -93,8 +92,7 @@ Class UserService {
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/
 	public function isSpaceManagerOfSpace($name) {
-		// TODO This must use the application constants
-		$workspaceAdminGroup = $this->groupManager->search('GE-' . $name);
+		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $name);
 
 		if (count($workspaceAdminGroup) == 0) {
 			// TODO Log error
