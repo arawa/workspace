@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getters } from './getters'
 import mutations from './mutations'
+import router from '../router'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -14,6 +15,36 @@ export default new Vuex.Store({
 	},
 	mutations,
 	actions: {
+		// Creates a group and navigates to its details page
+		createGroup(context, { name, group }) {
+			// Groups must be postfixed with the ID of the space they belong
+			const space = context.state.spaces[name]
+			group = group + '-' + space.id
+
+			// Creates group in frontend
+			context.commit('addGroupToSpace', { name, group })
+
+			// Creates group in backend
+			axios.post(generateUrl(`/apps/workspace/api/group/${group}`), { spaceId: space.id })
+				.then((resp) => {
+					if (resp.status === 200) {
+						// eslint-disable-next-line
+						console.log('group created, navigating', this._vm)
+						// Navigates to the group's details page
+						context.state.spaces[name].isOpen = true
+						router.push({
+							path: `/group/${name}/${group}`,
+						})
+					} else {
+						context.commit('removeGroupFromSpace', { name, group })
+						// TODO Inform user
+					}
+				})
+				.catch((e) => {
+					context.commit('removeGroupFromSpace', { name, group })
+					// TODO Inform user
+				})
+		},
 		removeSpace(context, { space }) {
 			context.commit('deleteSpace', {
 				space,

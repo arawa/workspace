@@ -129,42 +129,18 @@ export default {
 					})
 			}
 		},
-		// Creates a group and navigates to its details page
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			let group = e.target[1].value
+			const group = e.target[1].value
 			if (!group) {
 				return
 			}
 
-			// Groups must be postfixed with the ID of the space they belong
-			const space = this.$store.state.spaces[this.$route.params.space]
-			group = group + '-' + space.id
-
-			// Creates group in frontend
-			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
-
-			// Creates group in backend
-			axios.post(generateUrl(`/apps/workspace/api/group/${group}`), { spaceId: space.id })
-				.then((resp) => {
-					if (resp.status === 200) {
-						// Navigates to the group's details page
-						this.$store.state.spaces[this.$route.params.space].isOpen = true
-						this.$router.push({
-							path: `/group/${this.$route.params.space}/${group}`,
-						})
-					} else {
-						this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
-						// TODO Inform user
-					}
-				})
-				.catch((e) => {
-					this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
-					// TODO Inform user
-				})
+			// Creates group
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
 		},
 		renameSpace(e) {
 			// TODO
