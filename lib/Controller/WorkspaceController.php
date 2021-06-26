@@ -513,8 +513,8 @@ class WorkspaceController extends Controller {
     public function create($spaceName) {
 
         // create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup('GE-' . $spaceName);
-        $newSpaceUsersGroup = $this->groupManager->createGroup('U-' . $spaceName);
+        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::ESPACE_MANAGER_01 . $spaceName);
+        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::ESPACE_USERS_01 . $spaceName);
 
         // TODO: add admin group to the app’s « limit to groups » field
 
@@ -735,14 +735,14 @@ class WorkspaceController extends Controller {
                 "space" => $newSpaceName
             ];
             
-            $groupGE = $this->groupManager->get('GE-' . $currentMountPointSpaceName);
-            $groupU = $this->groupManager->get('U-' . $currentMountPointSpaceName);
+            $groupGE = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $currentMountPointSpaceName);
+            $groupU = $this->groupManager->get(Application::ESPACE_USERS_01 . $currentMountPointSpaceName);
 
             $IUsersGE = $groupGE->getUsers();
             $IUsersU = $groupU->getUsers();
             
-            $newGroupGE = $this->groupManager->createGroup('GE-' . $newSpaceName);
-            $newGroupU = $this->groupManager->createGroup('U-' . $newSpaceName);
+            $newGroupGE = $this->groupManager->createGroup(Application::ESPACE_MANAGER_01 . $newSpaceName);
+            $newGroupU = $this->groupManager->createGroup(Application::ESPACE_USERS_01 . $newSpaceName);
 
             foreach ($IUsersGE as $IUserGE) {
                 $newGroupGE->addUser($IUserGE);
