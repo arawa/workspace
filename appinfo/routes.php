@@ -71,6 +71,11 @@ return [
 			'verb' => 'POST',
 		],
 		[
+			'name' => 'group#delete',
+			'url' => '/api/group/{gid}',
+			'verb' => 'DELETE',
+		],
+		[
 			'name' => 'group#addUser',
 			// TODO move this route to /api/group/addUser/{space}
 			'url' => '/group/addUser/{space}',

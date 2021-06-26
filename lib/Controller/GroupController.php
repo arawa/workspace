@@ -72,6 +72,33 @@ class GroupController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
+	 * Deletes a group
+	 * Cannot delete GE- and U- groups (This is on-purpose)
+	 *
+	 * @var string $gid
+	 * @var string $spaceId
+	 *
+	 * @return @JSONResponse
+	 */
+	public function delete($gid, $spaceId) {
+		if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()) {
+			return new JSONResponse(['You are not a manager of this space'], Http::STATUS_FORBIDDEN);
+		}
+
+		if (substr($gid, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
+		}
+
+		// Delete group
+		$NCGroup = $this->groupManager->get($gid);
+		$NCGroup->delete();
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
 	 * Adds a user to a group
 	 *
 	 * @var string $group
@@ -79,9 +106,9 @@ class GroupController extends Controller {
 	 *
 	 * @return @JSONResponse
 	 */
-	public function addUser($space, $group, $user) {
+	public function addUser($spaceId, $group, $user) {
 
-		if (!$this->userService->isSpaceManagerOfSpace($space) && !$this->userService->isUserGeneralAdmin()) {
+		if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()) {
 			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
 		}
 

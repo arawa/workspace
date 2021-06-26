@@ -21,6 +21,8 @@ export default {
 					router.push({
 						path: `/group/${name}/${group}`,
 					})
+					// eslint-disable-next-line no-console
+					console.log('Group ' + group + ' created')
 				} else {
 					context.commit('removeGroupFromSpace', { name, group })
 					this._vm.$notify({
@@ -39,15 +41,45 @@ export default {
 				})
 			})
 	},
+	// Deletes a group
+	// TODO: Should navigate if we are viewing the group being delete
+	deleteGroup(context, { name, group }) {
+		const space = context.state.spaces[name]
+
+		// Deletes group from frontend
+		context.commit('removeGroupFromSpace', { name, group })
+
+		// Naviagte back to home
+		router.push({
+			path: '/',
+		})
+
+		// Deletes group from backend
+		axios.delete(generateUrl(`/apps/workspace/api/group/${group}`), { data: { spaceId: space.id } })
+			.then((resp) => {
+				if (resp.status === 200) {
+					// eslint-disable-next-line no-console
+					console.log('Group ' + group + ' deleted')
+				} else {
+					context.commit('addGroupToSpace', { name, group })
+					// TODO Inform user
+				}
+			})
+			.catch((e) => {
+				context.commit('addGroupToSpace', { name, group })
+				// TODO Inform user
+			})
+	},
 	removeSpace(context, { space }) {
 		context.commit('deleteSpace', {
 			space,
 		})
 	},
 	removeUserFromSpace(context, { name, user }) {
+		const space = context.state.spaces[name]
 		context.commit('removeUserFromWorkspace', { name, user })
 		axios.delete(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
-			name,
+			spaceId: space.id,
 			userId: user.uid,
 		}))
 			.then((resp) => {
@@ -74,6 +106,7 @@ export default {
 	},
 	// Change a user's role from admin to user (or the opposite way)
 	toggleUserRole(context, { name, user }) {
+		const space = context.state.spaces[name]
 		if (user.role === 'admin') {
 			user.role = 'user'
 			// TODO use global constant
@@ -86,7 +119,7 @@ export default {
 		}
 		context.commit('updateUser', { name, user })
 		axios.patch(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
-			name,
+			spaceId: space.id,
 			userId: user.uid,
 		}))
 			.then((resp) => {

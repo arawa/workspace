@@ -83,7 +83,7 @@ export default {
 	},
 	methods: {
 		deleteGroup() {
-			// TODO
+			this.$store.dispatch('deleteGroup', { name: this.$route.params.space, group: this.$route.params.group })
 		},
 		onNewGroup(e) {
 			// Hides ActionInput

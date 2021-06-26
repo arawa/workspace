@@ -2,10 +2,14 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\GroupfolderService;
 use OCP\IGroupManager;
 use OCP\IUserSession;
 
 Class UserService {
+
+	/** @var $groupfolderService */
+	private $groupfolderService;
 
 	/** @var $groupManager */
 	private $groupManager;
@@ -14,9 +18,11 @@ Class UserService {
 	private $userSession;
 
 	public function __construct(
+		GroupfolderService $groupfolderService,
 		IGroupManager $group,
 		IUserSession $userSession) {
 
+		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $group;
 		$this->userSession = $userSession;
 
@@ -54,7 +60,7 @@ Class UserService {
 
 		// Returns a user that is valid for the frontend
 		return array(
-      'uid' => $user->getUID(),
+			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
@@ -88,10 +94,13 @@ Class UserService {
 	}
 
 	/**
-	 * @param string $name The workspace name
+	 * @param string $id The groupfolder id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/
-	public function isSpaceManagerOfSpace($name) {
+	public function isSpaceManagerOfSpace($id) {
+		// Get groupfolder name
+		$name = $this->groupfolderService->getName($id);
+
 		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $name);
 
 		if (count($workspaceAdminGroup) == 0) {
