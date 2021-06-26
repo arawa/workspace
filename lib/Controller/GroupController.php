@@ -121,8 +121,7 @@ class GroupController extends Controller {
 
 		$NCGroup->addUser($NCUser);
 
-		// TODO Use Application constant 
-		if (strpos($group, 'GE-') === 0) {
+		if (strpos($group, Application::ESPACE_MANAGER_01) === 0) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 			if (is_null($workspaceUsersGroup)) {
 				$NCGroup->removeUser($NCUser);
