@@ -175,10 +175,10 @@ export default {
 							users = resp.data.filter(user => {
 								return (!(user.name in space.users))
 							}, space)
-i						} else {
+						} else {
 							users = resp.data
 						}
-i						// Filters user that are already selected
+						// Filters user that are already selected
 						this.selectableUsers = users.filter(newUser => {
 							return this.allSelectedUsers.every(user => {
 								return newUser.uid !== user.uid
