@@ -438,44 +438,6 @@ class WorkspaceController extends Controller {
     return new JSONResponse();
 	}
 
-   
-    /**
-     *
-     * TODO This is a single API call. It should probably be moved to the frontend
-     *
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     * 
-     * @var string $folderId
-     * @var string $gid
-     */
-    public function addGroupAdvancedPermissions($folderId, $gid){
-
-        $dataResponse = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/manageACL',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                        'mappingType' => 'group',
-                        'mappingId' => $gid,
-                        'manageAcl' => true
-                ],
-                'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                ]
-            ]
-        );
-
-        $response = json_decode($dataResponse->getBody(), true);
-
-        return new JSONResponse($response);
-    }
-
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
