@@ -1,4 +1,14 @@
 <?php
+/**
+ *
+ * @author Cyrille Bollu <cyrille@bollu.be>
+ *
+ * WorkspaceAccessControlMiddleware: All controller methods may only
+ * be called by application or space managers
+ *
+ * TODO: Add licence
+ *
+ */
 
 namespace OCA\Workspace\Middleware;
 

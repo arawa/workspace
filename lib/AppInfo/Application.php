@@ -9,8 +9,11 @@
 namespace OCA\Workspace\AppInfo;
 
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
+use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class Application extends App {
@@ -34,6 +37,15 @@ class Application extends App {
                     );
                 });
 
+                $container->registerService('IsSpaceAdminMiddleware', function($c){
+                    return new IsSpaceAdminMiddleware(
+                        $c->query(IControllerMethodReflector::class),
+                        $c->query(IRequest::class),
+                        $c->query(UserService::class)
+                    );
+                });
+
                 $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
+                $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
         }
 }

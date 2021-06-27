@@ -1,4 +1,13 @@
 <?php
+/**
+ *
+ * @author Cyrille Bollu <cyrille@bollu.be>
+ * @author Baptiste Fotia <baptiste.fotia@arawa.fr>
+ *
+ * TODO: Add licence
+ *
+ */
+
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
@@ -38,6 +47,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @SpaceAdminRequired
 	 *
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
@@ -71,6 +81,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @SpaceAdminRequired
 	 *
 	 * Deletes a group
 	 * Cannot delete GE- and U- groups (This is on-purpose)
@@ -81,10 +92,6 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function delete($gid, $spaceId) {
-		if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()) {
-			return new JSONResponse(['You are not a manager of this space'], Http::STATUS_FORBIDDEN);
-		}
-
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
 		}
@@ -98,6 +105,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @SpaceAdminRequired
 	 *
 	 * Adds a user to a group
 	 *
@@ -107,10 +115,6 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function addUser($spaceId, $group, $user) {
-
-		if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()) {
-			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
-		}
 
 		$NCGroup = $this->groupManager->get($group);
 		$NCUser = $this->userManager->get($user);
