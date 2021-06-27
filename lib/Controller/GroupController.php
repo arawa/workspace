@@ -98,7 +98,47 @@ class GroupController extends Controller {
 
 		// Delete group
 		$NCGroup = $this->groupManager->get($gid);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
 		$NCGroup->delete();
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * Renames a group
+	 * Cannot rename GE- and U- groups (This is on-purpose)
+	 *
+	 * @var string $oldGroup The group to be renamed
+	 * @var string $newGroup The group's new name
+	 * @var string $spaceId
+	 *
+	 * @return @JSONResponse
+	 */
+	public function rename($newGroup, $oldGroup, $spaceId) {
+		if (substr($oldGroup, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(
+				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
+				Http::STATUS_FORBIDDEN
+			);
+		}
+		if (substr($newGroup, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(
+				['Workspace groups must ends with the ID of the space they belong to'],
+				Http::STATUS_FORBIDDEN
+			);
+		}
+
+		// Rename group
+		$NCGroup = $this->groupManager->get($oldGroup);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $oldGroup + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
+		$NCGroup->setDisplayName($newGroup);
 
 		return new JSONResponse();
 	}
