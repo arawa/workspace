@@ -77,8 +77,7 @@ return [
 		],
 		[
 			'name' => 'group#addUser',
-			// TODO move this route to /api/group/addUser/{space}
-			'url' => '/group/addUser/{space}',
+			'url' => '/api/group/addUser/{spaceId}',
 			'verb' => 'PATCH',
 		],
 		[

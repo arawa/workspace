@@ -118,8 +118,9 @@ export default {
 				}
 				// Add user to proper workspace group
 				axios.patch(
-					generateUrl('/apps/workspace/group/addUser/{space}', {
-						space: this.$route.params.space,
+					generateUrl('/apps/workspace/api/group/addUser/{spaceId}', {
+						spaceId: space.id,
+
 					}),
 					{
 						group,
