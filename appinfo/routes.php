@@ -20,17 +20,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace_group_manager#addUserGroupUser',
-			'url' => '/add/user/{uid}/toWspUserGroup/{gid}',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'workspace#createSpace',
-			// TODO move this route to /api/spaces
-			'url' => '/spaces',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'workspace#find',
 			'url' => '/spaces/{spaceId}',
 			'verb' => 'GET'
@@ -51,6 +40,17 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'workspace#destroy',
+			'url' => '/spaces/{spaceId}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'workspace#rename',
+			// TODO move this route to /api/spaces
+			'url' => '/spaces/{folderId}',
+			'verb' => 'PATCH'
+	    	],
+		[
 			'name' => 'workspace#removeUserFromWorkspace',
 			'url' => '/api/space/{spaceId}/user/{userId}',
 			'verb' => 'DELETE'
@@ -62,6 +62,7 @@ return [
 		],
 		[
 			'name' => 'workspace#addGroupAdvancedPermissions',
+			// TODO move this route to /api/spaces
 			'url' => '/spaces/{folderId}/group/{gid}/acl',
 			'verb' => 'POST'
 		],
@@ -76,25 +77,30 @@ return [
 			'verb' => 'DELETE',
 		],
 		[
+			'name' => 'group#rename',
+			'url' => '/api/group/{oldGroup}',
+			'verb' => 'PATCH',
+		],
+		[
 			'name' => 'group#addUser',
 			'url' => '/api/group/addUser/{spaceId}',
 			'verb' => 'PATCH',
 		],
 		[
-			'name' => 'users_manager#getUsersWorkSpace',
-			'url' => '/group/{gid}/users',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'workspace#renameSpace',
 			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
-	    ],
+	    	],
 		[
 			'name' => 'space#updateSpaceName',
 			'url' => '/workspaces/{spaceId}/spacename',
 			'verb' => 'POST'
-	    ],
+	    	],
+		[
+			'name' => 'space#updateColorCode',
+			'url' => '/workspaces/{spaceId}/color',
+			'verb' => 'POST'
+		]
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that
 		// don't have a route registered here redirect to NC's general homepage upon refresh)
@@ -105,15 +111,5 @@ return [
 			'requirements' => array('path' => '.*'),
 			'defaults' => array('path' => 'dummy'),
 		],
-		[
-			'name' => 'workspace#destroy',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'DELETE'
-		],
-		[
-			'name' => 'space#updateColorCode',
-			'url' => '/workspaces/{spaceId}/color',
-			'verb' => 'POST'
-		]
 	]
 ];
