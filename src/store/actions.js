@@ -118,12 +118,15 @@ export default {
 			user.groups.push('GE-' + name)
 		}
 		context.commit('updateUser', { name, user })
-		axios.patch(generateUrl('/apps/workspace/api/space/{name}/user/{userId}', {
+		axios.patch(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
 			spaceId: space.id,
 			userId: user.uid,
 		}))
 			.then((resp) => {
-				if (resp.status !== 200) {
+				if (resp.status === 200) {
+					// eslint-disable-next-line no-console
+					console.log('Role of user ' + user.name + ' changed')
+				} else {
 					// Revert action an inform user
 					if (user.role === 'admin') {
 						user.role = 'user'
@@ -155,8 +158,6 @@ export default {
 					type: 'error',
 				})
 			})
-		// eslint-disable-next-line no-console
-		console.log('Role of user ' + user.name + ' changed')
 	},
 	updateSpace(context, { space }) {
 		context.commit('updateSpace', space)
