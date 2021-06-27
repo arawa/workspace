@@ -48,12 +48,12 @@ class IsSpaceAdminMiddleware extends Middleware{
 
 	if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
 		$spaceId = $this->request->getParam('spaceId');
-	        if ($this->userService->isSpaceManagerOfSpace($spaceId) || $this->userService->isUserGeneralAdmin()){
-        	        return;
+	        if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()){
+        		throw new AccessDeniedException();
 	        }
 	}
 
-        throw new AccessDeniedException();
+	return;
 
     }
 
