@@ -36,11 +36,17 @@
 					</Actions>
 				</div>
 				<Actions>
-					<ActionButton
+					<ActionButton v-show="!showRenameGroupInput"
 						icon="icon-rename"
-						@click="renameGroup">
+						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</ActionButton>
+					<ActionInput v-show="showRenameGroupInput"
+						ref="renameGroupInput"
+						icon="icon-group"
+						@submit="onRenameGroup">
+						{{ t('workspace', 'Group name') }}
+					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
 						@click="deleteGroup">
@@ -77,13 +83,24 @@ export default {
 	},
 	data() {
 		return {
-			showCreateGroupInput: false, // true to display ActionInput
+			showCreateGroupInput: false, // true to display 'Create Group' ActionInput
+			showRenameGroupInput: false, // true to display 'Rename Group' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
 	methods: {
 		deleteGroup() {
-			this.$store.dispatch('deleteGroup', { name: this.$route.params.space, group: this.$route.params.group })
+			// Prevents deleting GE- and U- groups
+			if (this.$route.params.group === 'GE-' + this.$route.params.space
+			|| this.$route.params.group === 'U-' + this.$route.params.space) {
+				// TODO Inform user
+				return
+			}
+
+			this.$store.dispatch('deleteGroup', {
+				name: this.$route.params.space,
+				group: this.$route.params.group,
+			})
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
@@ -92,20 +109,52 @@ export default {
 			// Don't accept empty names
 			const group = e.target[1].value
 			if (!group) {
+				// TODO Inform user
 				return
 			}
 
-			// Create group
+			// TODO Check already existing groups
+
+			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
 
 		},
-		renameGroup() {
-			// TODO
+		onRenameGroup(e) {
+			// Hides ActionInput
+			this.toggleShowRenameGroupInput()
+
+			// Don't accept empty names
+			const group = e.target[1].value
+			if (!group) {
+				// TODO Inform user
+				return
+			}
+
+			// Prevents renaming GE- and U- groups
+			if (group === 'GE-' + this.$route.params.space || group === 'U-' + this.$route.params.space) {
+				// TODO Inform user
+				return
+			}
+
+			// TODO Check already existing groups
+
+			// Renames group
+			this.$store.dispatch('renameGroup', {
+				name: this.$route.params.space,
+				oldGroup: this.$route.params.group,
+				newGroup: group,
+			})
 		},
 		toggleShowCreateGroupInput() {
 			this.showCreateGroupInput = !this.showCreateGroupInput
 			if (this.showCreateGroupInput === true) {
 				this.$refs.createGroupInput.$el.focus()
+			}
+		},
+		toggleShowRenameGroupInput() {
+			this.showRenameGroupInput = !this.showRenameGroupInput
+			if (this.showRenameGroupInput === true) {
+				this.$refs.renameGroupInput.$el.focus()
 			}
 		},
 		toggleShowSelectUsersModal() {

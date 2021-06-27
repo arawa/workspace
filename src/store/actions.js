@@ -42,7 +42,6 @@ export default {
 			})
 	},
 	// Deletes a group
-	// TODO: Should navigate if we are viewing the group being delete
 	deleteGroup(context, { name, group }) {
 		const space = context.state.spaces[name]
 
@@ -103,6 +102,39 @@ export default {
 			})
 		// eslint-disable-next-line no-console
 		console.log('User ' + user.name + ' removed from space ' + name)
+	},
+	// Renames a group and navigates to its details page
+	renameGroup(context, { name, oldGroup, newGroup }) {
+		// Groups must be postfixed with the ID of the space they belong
+		const space = context.state.spaces[name]
+		newGroup = newGroup + '-' + space.id
+
+		// Creates group in frontend
+		context.commit('removeGroupFromSpace', { name, oldGroup })
+		context.commit('addGroupToSpace', { name, newGroup })
+
+		// Creates group in backend
+		axios.patch(generateUrl(`/apps/workspace/api/group/${oldGroup}`), { spaceId: space.id, newGroup })
+			.then((resp) => {
+				if (resp.status === 200) {
+					// Navigates to the group's details page
+					context.state.spaces[name].isOpen = true
+					router.push({
+						path: `/group/${name}/${newGroup}`,
+					})
+					// eslint-disable-next-line no-console
+					console.log('Group ' + oldGroup + ' renamed to ' + newGroup)
+				} else {
+					context.commit('removeGroupFromSpace', { name, newGroup })
+					context.commit('addGroupToSpace', { name, oldGroup })
+					// TODO Inform user
+				}
+			})
+			.catch((e) => {
+				context.commit('removeGroupFromSpace', { name, newGroup })
+				context.commit('addGroupToSpace', { name, oldGroup })
+				// TODO Inform user
+			})
 	},
 	// Change a user's role from admin to user (or the opposite way)
 	toggleUserRole(context, { name, user }) {
