@@ -726,9 +726,6 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * 
-     * TODO: Manage errors & may be refactor
-     * groupfolder->rename & groupfolder->attachGroup.
-     * 
      * @param int $folderId
      * @param string $newSpaceName
      * @return JSONResponse
@@ -751,36 +748,11 @@ class WorkspaceController extends Controller {
             ];
             
             $groupGE = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $currentMountPointSpaceName);
+	    $groupGE->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
+
             $groupU = $this->groupManager->get(Application::ESPACE_USERS_01 . $currentMountPointSpaceName);
+	    $groupU->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
 
-            $IUsersGE = $groupGE->getUsers();
-            $IUsersU = $groupU->getUsers();
-            
-            $newGroupGE = $this->groupManager->createGroup(Application::ESPACE_MANAGER_01 . $newSpaceName);
-            $newGroupU = $this->groupManager->createGroup(Application::ESPACE_USERS_01 . $newSpaceName);
-
-            foreach ($IUsersGE as $IUserGE) {
-                $newGroupGE->addUser($IUserGE);
-            }
-
-            foreach ($IUsersU as $IUserU) {
-                $newGroupU->addUser($IUserU);
-            }
-
-            $respAttachGroupGE = $this->groupfolderService->attachGroup($folderId, $newGroupGE->getGID());
-            
-            if ($respAttachGroupGE->getStatusCode() === 200) {
-                $response['groups'][] = $newGroupGE->getGID();
-            }
-
-            $respAttachGroupU = $this->groupfolderService->attachGroup($folderId, $newGroupU->getGID());
-
-            if ($respAttachGroupU->getStatusCode() === 200) {
-                $response['groups'][] = $newGroupU->getGID();
-            }
-        
-            $groupGE->delete();
-            $groupU->delete();
         }
 
         return new JSONResponse($response);
