@@ -747,11 +747,11 @@ class WorkspaceController extends Controller {
                 "space" => $newSpaceName
             ];
             
-            $groupGE = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $currentMountPointSpaceName);
-	    $groupGE->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
+            $groupGE = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $currentMountPointSpaceName);
+	    $groupGE[0]->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
 
-            $groupU = $this->groupManager->get(Application::ESPACE_USERS_01 . $currentMountPointSpaceName);
-	    $groupU->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
+            $groupU = $this->groupManager->search(Application::ESPACE_USERS_01 . $currentMountPointSpaceName);
+	    $groupU[0]->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
 
         }
 
