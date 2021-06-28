@@ -60,7 +60,10 @@ describe('Vuex store tests', () => {
 			group: 'test-group',
 		})
 
-		expect(state.spaces['test-space'].groups['test-group']).equals('test-group')
+		expect(state.spaces['test-space'].groups['test-group']).eql({
+			gid: 'test-group',
+			displayName: 'test-group',
+		})
 	})
 
 	it('Removes a group to the space', () => {
