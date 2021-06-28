@@ -12,7 +12,7 @@
 			<div class="group-name">
 				<div class="icon-group" />
 				<span class="group-title">
-					{{ $route.params.group }}
+					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
 			</div>
 			<div class="group-actions">

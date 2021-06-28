@@ -35,7 +35,7 @@
 						</div>
 					</td>
 					<td> {{ t('workspace', user.role) }} </td>
-					<td> {{ user.groups.join(', ') }} </td>
+					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>

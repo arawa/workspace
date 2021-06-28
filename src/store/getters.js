@@ -1,12 +1,16 @@
 export const getters = {
+	// Returns the name of a group
+	groupName: state => (name, gid) => {
+		return state.spaces[name].groups[gid].displayName
+	},
 	// Returns the number of users in a group
-	groupUserCount: state => (spaceName, groupName) => {
+	groupUserCount: state => (spaceName, gid) => {
 		const users = state.spaces[spaceName].users
 		if (users.length === 0) {
 			return 0
 		} else {
-			// We count all users in the space who have 'groupName' listed in their 'groups' property
-			return Object.values(users).filter(user => user.groups.includes(groupName)).length
+			// Counts all users in the space who have 'gid' listed in their 'groups' property
+			return Object.values(users).filter(user => user.groups.includes(gid)).length
 		}
 	},
 	// Tests whether a user is member of workspace

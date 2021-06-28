@@ -5,7 +5,10 @@ export default {
 	// Adds a group to a space
 	addGroupToSpace(state, { name, group }) {
 		const space = state.spaces[name]
-		space.groups[group] = group
+		space.groups[group] = {
+			gid: group,
+			displayName: group,
+		}
 		Vue.set(state.spaces, name, space)
 	},
 	// Adds space to the spaces list and sort them, case-insensitive, and locale-based

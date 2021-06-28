@@ -33,13 +33,13 @@
 					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
-					<AppNavigationItem v-for="group in Object.keys($store.state.spaces[name].groups)"
-						:key="group"
+					<AppNavigationItem v-for="group in Object.values(space.groups)"
+						:key="group.gid"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group}`}"
-						:title="group">
+						:to="{path: `/group/${name}/${group.gid}`}"
+						:title="group.displayName">
 						<CounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( name, group) }}
+							{{ $store.getters.groupUserCount( name, group.gid) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
