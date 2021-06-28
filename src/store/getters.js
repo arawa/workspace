@@ -1,8 +1,4 @@
 export const getters = {
-	// Returns the groups of a space
-	groups: state => spaceName => {
-		return Object.keys(state.spaces[spaceName].groups)
-	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, groupName) => {
 		const users = state.spaces[spaceName].users
