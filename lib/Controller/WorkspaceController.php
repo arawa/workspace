@@ -457,57 +457,69 @@ class WorkspaceController extends Controller {
      * @deprecated use findAll
      */
     public function getUserWorkspaces() {    
-	    // Gets all groupfolders
+	// Gets all groupfolders
         $this->logger->debug('Fetching groupfolders');
 
-            $response = $this->groupfolderService->getAll();
-            $responseBody = json_decode($response->getBody(), true);
-            if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
+        $response = $this->groupfolderService->getAll();
+        $responseBody = json_decode($response->getBody(), true);
 
+        if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
                 throw new getAllGroupFoldersException();  
-
-            }
-
-        $spaces = $responseBody['ocs']['data'];
-        $this->logger->debug('groupfolders fetched');
-        
-        // TODO Filter to show only workspaces, not regular groupfolders
-        
-        // We only want to return those workspaces for which the connected user is a manager
-        if (!$this->userService->isUserGeneralAdmin()) {
-            $this->logger->debug('Filtering workspaces');
-            $filteredSpaces = array_filter($spaces, function($space) {
-                return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
-            });
-
-            $spaces = $filteredSpaces;
         }
-        // Adds workspace users
-        $this->logger->debug('Adding users information to workspaces');
-        $spacesWithUsers = array_map(function($space) {
-          $users = array();
-          $group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
-          // TODO Handle is_null($group) better (remove workspace from list?)
-          if (!is_null($group)) {
-            foreach($group->getUsers() as $user) {
-              $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-            };
-          }
-          $group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
-          // TODO Handle is_null($group) better (remove workspace from list?)
-          if (!is_null($group)) {
-            foreach($group->getUsers() as $user) {
-              $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
-            };
-          }
-          $space['users'] = $users;
-          return $space;
 
-        },$spaces);
-
+	$groupfolders = $responseBody['ocs']['data'];
+	$this->logger->debug('groupfolders fetched');
+	
+	// TODO Filter to show only workspaces, not regular groupfolders
       	// TODO We still need to get the workspace color here
+	
+	// We only want to return those workspaces for which the connected user is a manager
+	if (!$this->userService->isUserGeneralAdmin()) {
+		$this->logger->debug('Filtering workspaces');
+		$filteredGroupfolders = array_filter($spaces, function($groupfolder) {
+			return $this->userService->isSpaceManagerOfSpace($groupfolder['mount_point']);
+		});
+        	$groupfolders = $filteredGroupfolders;
+	}
 
-        return new JSONResponse($spacesWithUsers);
+	// Adds workspace users and groups details
+	$this->logger->debug('Adding users information to workspaces');
+	$workspaces = array_map(function($space) {
+		// Users
+		$users = array();
+		$group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+			};
+		}
+		$group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+			};
+		}
+		$space['users'] = $users;
+
+		// Groups
+		$groups = array();
+		foreach (array_keys($space['groups']) as $group) {
+			$NCGroup = $this->groupManager->get($group);
+			$groups[$group] = array(
+				'gid' => $NCGroup->getGID(),
+				'displayName' => $NCGroup->getDisplayName()
+			);
+		}
+		$space['groups'] = $groups;
+
+		return $space;
+
+	},$groupfolders);
+
+
+        return new JSONResponse($workspaces);
     }
 
     /**
