@@ -48,10 +48,15 @@
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionInput
+					<ActionButton v-show="!renameSpace"
 						icon="icon-rename"
-						@submit="renameSpace">
-						{{ t('workspace', 'Rename space') }}
+						:title="t('workspace', 'Rename space')"
+						@click="toggleRenameSpace" />
+					<ActionInput v-show="renameSpace"
+						ref="renameSpaceInput"
+						icon="icon-rename"
+						@submit="onSpaceRename">
+						{{ t('workspace', 'Space name') }}
 					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
@@ -97,7 +102,8 @@ export default {
 	},
 	data() {
 		return {
-			createGroup: false, // true to display ActionInput
+			createGroup: false, // true to display 'Create Group' ActionInput
+			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
@@ -143,12 +149,13 @@ export default {
 			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
 		},
-		renameSpace(e) {
-			// TODO
-			const oldSpaceName = this.$route.params.space
+		onSpaceRename(e) {
+			// Hides ActionInput
+			this.toggleRenameSpace()
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
+			const oldSpaceName = this.$route.params.space
 			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
 				{
 					newSpaceName: e.target[1].value,
@@ -196,6 +203,12 @@ export default {
 			this.createGroup = !this.createGroup
 			if (this.createGroup === true) {
 				this.$refs.createGroupInput.$el.focus()
+			}
+		},
+		toggleRenameSpace() {
+			this.renameSpace = !this.renameSpace
+			if (this.renameSpace === true) {
+				this.$refs.renameSpaceInput.$el.focus()
 			}
 		},
 		toggleShowSelectUsersModal() {
