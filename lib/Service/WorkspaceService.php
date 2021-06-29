@@ -30,7 +30,7 @@ class WorkspaceService {
     public function get($id){
 
         $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/workspace/spaces/db/' . $id,
+            $this->urlGenerator->getBaseUrl() . '/apps/workspace/space/db/' . $id,
             [
                 'auth' => [
                     $this->login->getUID(),
@@ -39,7 +39,22 @@ class WorkspaceService {
                 'headers' => self::HEADERS
             ]
         );
-        
+
+        return $response;
+    }
+
+    public function findAll() {
+        $response = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/apps/workspace/spaces/db',
+            [
+                'auth' => [
+                    $this->login->getUID(),
+                    $this->login->getPassword()
+                ],
+                'headers' => self::HEADERS
+            ]
+        );
+
         return $response;
     }
 }

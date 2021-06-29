@@ -38,4 +38,12 @@ class SpaceController extends Controller{
         return new DataResponse($this->spaceService->find($id));
     }
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function findAll() {
+        return new DataResponse($this->spaceService->findAll());
+    }
+
 }

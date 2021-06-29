@@ -52,7 +52,12 @@ return [
 		],
 		[
 			'name' => 'space#find',
-			'url' => '/spaces/db/{id}',
+			'url' => '/space/db/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'space#findAll',
+			'url' => '/spaces/db',
 			'verb' => 'GET'
 		],
 		[

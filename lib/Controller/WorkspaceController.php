@@ -262,18 +262,16 @@ class WorkspaceController extends Controller {
      */
     public function findFromDB($spaceId) {
         $spaceResponse = $this->workspaceService->get($spaceId);
-
         $space = json_decode($spaceResponse->getBody(), true);
 
-        $groupfolderResponse = $this->groupfolderService->get($space[$spaceId]['groupfolder_id']);
-
+        $groupfolderResponse = $this->groupfolderService->get($space['groupfolder_id']);
         $groupfolder = json_decode($groupfolderResponse->getBody(), true);
 
-        $space[$spaceId]['groupfolder_id'] = $groupfolder['ocs']['data']['id'];
-        $space[$spaceId]['groups'] = $groupfolder['ocs']['data']['groups'];
-        $space[$spaceId]['quota'] = $groupfolder['ocs']['data']['quota'];
-        $space[$spaceId]['size'] = $groupfolder['ocs']['data']['size'];
-        $space[$spaceId]['acl'] = $groupfolder['ocs']['data']['acl'];
+        $space['groupfolder_id'] = $groupfolder['ocs']['data']['id'];
+        $space['groups'] = $groupfolder['ocs']['data']['groups'];
+        $space['quota'] = $groupfolder['ocs']['data']['quota'];
+        $space['size'] = $groupfolder['ocs']['data']['size'];
+        $space['acl'] = $groupfolder['ocs']['data']['acl'];
 
         return new JSONResponse($space);
     }
@@ -284,7 +282,26 @@ class WorkspaceController extends Controller {
      * TODO: To move or delete.
      */
     public function findAllFromDB() {
-        return new DataResponse($this->spaceService->findAll());
+        $spacesResponse = $this->workspaceService->findAll();
+
+        $spaces = json_decode($spacesResponse->getBody(), true);
+
+        $groupfoldersResponse = $this->groupfolderService->getAll();
+
+        $groupfolders = json_decode($groupfoldersResponse->getBody(), true);
+
+        for($i = 0; $i < count($spaces); $i++) {
+            foreach($groupfolders['ocs']['data'] as $key_groupfolders => $value_groupfolders){
+                if($key_groupfolders === (int)$spaces[$i]['groupfolder_id']){
+                    $spaces[$i]['groupfolder_id'] = $value_groupfolders['id'];
+                    $spaces[$i]['groups'] = $value_groupfolders['groups'];
+                    $spaces[$i]['quota'] = $value_groupfolders['quota'];
+                    $spaces[$i]['size'] = $value_groupfolders['size'];
+                    $spaces[$i]['acl'] = $value_groupfolders['acl'];            
+                }
+            }
+        }
+        return new JSONResponse($spaces);
     }
 
 	/**
@@ -564,7 +581,7 @@ class WorkspaceController extends Controller {
             }
 
             foreach ($IUsersU as $IUserU) {
-                $newGroupU->addUser($IUsersU);
+                $newGroupU->addUser($IUserU);
             }
 
             $respAttachGroupGE = $this->groupfolderService->attachGroup($folderId, $newGroupGE->getGID());
