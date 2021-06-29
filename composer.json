@@ -9,9 +9,9 @@
             "name": "Cyrille Bollu"
         }
     ],
-    "require": {},
     "require-dev": {
-        "phpunit/phpunit": "^8.2"
+        "phpunit/phpunit": "^8.2",
+        "christophwurst/nextcloud": "^21.0"
     },
     "scripts": {
 	"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning"
