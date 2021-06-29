@@ -26,6 +26,7 @@ use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
+use OCA\Workspace\Service\WorkspaceService;
 
 class WorkspaceController extends Controller {
     
@@ -59,6 +60,9 @@ class WorkspaceController extends Controller {
     /** @var SpaceMapper */
     private $spaceMapper;
 
+    /** @var WorkspaceService */
+    private $workspaceService;
+
     public function __construct(
         $AppName,
         IClientService $clientService,
@@ -71,7 +75,8 @@ class WorkspaceController extends Controller {
         GroupfolderService $groupfolderService,
         IUserManager $userManager,
         SpaceMapper $mapper,
-        SpaceService $spaceService
+        SpaceService $spaceService,
+        WorkspaceService $workspaceService
     )
     {
         parent::__construct($AppName, $request);
@@ -94,6 +99,8 @@ class WorkspaceController extends Controller {
         $this->spaceMapper = $mapper;
 
         $this->spaceService = $spaceService;
+
+        $this->workspaceService = $workspaceService;
     }
 
     /**
@@ -254,8 +261,21 @@ class WorkspaceController extends Controller {
      * TODO: To move or delete.
      */
     public function findFromDB($spaceId) {
-        $space = $this->spaceService->find($spaceId);
-        return new DataResponse($this->spaceService->find($spaceId));
+        $spaceResponse = $this->workspaceService->get($spaceId);
+
+        $space = json_decode($spaceResponse->getBody(), true);
+
+        $groupfolderResponse = $this->groupfolderService->get($space[$spaceId]['groupfolder_id']);
+
+        $groupfolder = json_decode($groupfolderResponse->getBody(), true);
+
+        $space[$spaceId]['groupfolder_id'] = $groupfolder['ocs']['data']['id'];
+        $space[$spaceId]['groups'] = $groupfolder['ocs']['data']['groups'];
+        $space[$spaceId]['quota'] = $groupfolder['ocs']['data']['quota'];
+        $space[$spaceId]['size'] = $groupfolder['ocs']['data']['size'];
+        $space[$spaceId]['acl'] = $groupfolder['ocs']['data']['acl'];
+
+        return new JSONResponse($space);
     }
 
     /**
