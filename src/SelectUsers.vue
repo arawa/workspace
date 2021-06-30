@@ -97,55 +97,26 @@ export default {
 	methods: {
 		// Adds users to workspace/group and close dialog
 		addUsersToWorkspaceOrGroup() {
-			// Update frontend first and keep a backup of the changes should something fail
-			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
-			const space = this.$store.state.spaces[this.$route.params.space]
-			this.allSelectedUsers.forEach(user => {
-				space.users[user.name] = user
-			})
-			this.$store.commit('updateSpace', space)
 			this.$emit('close')
 
-			// Update backend and revert frontend changes if something fails
-			this.allSelectedUsers.forEach((user) => {
+			this.allSelectedUsers.forEach(user => {
 				let group = ''
 				if (this.$route.params.group !== undefined) {
+					// Adding a user to a workspace 'subgroup
+					// TODO Should we support assigning the user GE role at the same time?
 					group = this.$route.params.group
 				} else {
+					// Adding a user to the workspace
 					// TODO Use application-wide constants
+					// TODO This probably doesn't work when the workspace has been renamed
 					group = user.role === 'admin' ? 'GE-' : 'U-'
 					group = group + this.$route.params.space
 				}
 				// Add user to proper workspace group
-				axios.patch(
-					generateUrl('/apps/workspace/api/group/addUser/{spaceId}', {
-						spaceId: space.id,
-
-					}),
-					{
-						group,
-						user: user.uid,
-					}
-				).then((resp) => {
-					if (resp.status !== 204) {
-						this.$store.commit('addSpace', spaceBackup)
-						this.$notify({
-							title: t('workspace', 'Error'),
-							text: t('workspace', 'An error occured while trying to add user ') + user.name
-								+ t('workspace', ' to workspaces.') + '<br>'
-								+ t('workspace', 'The error is: ') + resp.statusText,
-							type: 'error',
-						})
-					}
-				}).catch((e) => {
-					this.$store.commit('addSpace', spaceBackup)
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to add user ') + user.name
-							+ t('workspace', ' to workspaces.') + '<br>'
-							+ t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+				this.$store.dispatch('addUserToGroup', {
+					name: this.$route.params.space,
+					group,
+					user,
 				})
 			})
 		},

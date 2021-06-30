@@ -3,6 +3,41 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export default {
+	// Adds a user to a group
+	addUserToGroup(context, { name, group, user }) {
+		// Update frontend
+		context.commit('addUserToGroup', { name, group, user })
+
+		// Update backend and revert frontend changes if something fails
+		const space = context.state.spaces[name]
+		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
+		axios.patch(url, {
+			group,
+			user: user.uid,
+		}).then((resp) => {
+			if (resp.status !== 204) {
+				// Restore frontend and inform user
+				context.commit('removeUserFromGroup', { name, group, user })
+				this._vm.$notify({
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'An error occured while trying to add user ') + user.name
+						+ t('workspace', ' to workspaces.') + '<br>'
+						+ t('workspace', 'The error is: ') + resp.statusText,
+					type: 'error',
+				})
+			}
+		}).catch((e) => {
+			// Restore frontend and inform user
+			context.commit('removeUserFromGroup', { name, group, user })
+			this._vm.$notify({
+				title: t('workspace', 'Network error'),
+				text: t('workspace', 'A network error occured while trying to add user ') + user.name
+					+ t('workspace', ' to workspaces.') + '<br>'
+					+ t('workspace', 'The error is: ') + e,
+				type: 'error',
+			})
+		})
+	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, group }) {
 		// Groups must be postfixed with the ID of the space they belong

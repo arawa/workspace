@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import { getLocale } from '@nextcloud/l10n'
 
+// Function to sort spaces case-insensitively, and locale-based
+// It must be called every time a space is modified to keep the
+// spaces list sorted in the left navigation panel of the app
 const sortSpaces = (state) => {
 	const sortedSpaces = {}
 	Object.keys(state.spaces)
@@ -34,11 +37,23 @@ export default {
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
-	// Adds space to the spaces list and sort them, case-insensitive, and locale-based
+	// Adds a space to the workspaces list
 	addSpace(state, space) {
 		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
+	// Adds a user to a group
+	// We must add the group to the user's groups property and
+	// add the the user to the space's users property
+	addUserToGroup(state, { name, group, user }) {
+		user.groups.push(group)
+		const space = state.spaces[name]
+		space.users[user.name] = user
+		Vue.set(state.spaces, name, space)
+		sortSpaces(state)
+	},
+	// Adds a user to a workspace
+	// TODO: We might need to update the user's groups property too here
 	addUserToWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.name] = user
@@ -51,6 +66,17 @@ export default {
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
+	// Removes a user from a group
+	// TODO: We might need to update the user's groups property too here
+	removeUserFromGroup(state, { name, group, user }) {
+		const space = state.spaces[name]
+		delete space.users[user.name]
+		delete state.spaces[space.name]
+		Vue.set(state.spaces, name, space)
+		sortSpaces(state)
+	},
+	// Removes a user from a workspace
+	// TODO: We might need to update the user's groups property too here
 	removeUserFromWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
 		delete space.users[user.name]
