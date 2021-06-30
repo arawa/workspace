@@ -46,8 +46,10 @@
 						</div>
 					</div>
 					<div class="user-entry-actions">
-						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
-						<label>{{ t('workspace', 'S.A.') }}</label>
+						<div v-if="!isGEorUGroup">
+							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+							<label>{{ t('workspace', 'S.A.') }}</label>
+						</div>
 						<Actions>
 							<ActionButton
 								icon="icon-delete"
@@ -93,6 +95,16 @@ export default {
 			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
 		}
+	},
+	computed: {
+		// Returns true if we are adding users to the GE or User group of this workspace
+		isGEorUGroup() {
+			if (this.$route.params.group === this.$store.getters.GEGroup(this.$route.params.space).gid
+			|| this.$route.params.group === this.$store.getters.UGroup(this.$route.params.space).gid) {
+				return true
+			}
+			return false
+		},
 	},
 	methods: {
 		// Adds users to workspace/group and close dialog

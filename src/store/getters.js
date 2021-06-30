@@ -1,4 +1,12 @@
 export const getters = {
+	// Returns the GE group of a workspace
+	GEGroup: state => name => {
+		const groups = Object.values(state.spaces[name].groups).filter(group => {
+			// TODO use constants
+			return group.displayName === 'GE-' + name
+		})
+		return groups[0]
+	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
 		return state.spaces[name].groups[gid].displayName
@@ -41,5 +49,13 @@ export const getters = {
 			sortedSpaces[value] = state.spaces[value]
 		})
 		return sortedSpaces
+	},
+	// Returns the U- group of a workspace
+	UGroup: state => name => {
+		const groups = Object.values(state.spaces[name].groups).filter(group => {
+			// TODO use constants
+			return group.displayName === 'U-' + name
+		})
+		return groups[0]
 	},
 }
