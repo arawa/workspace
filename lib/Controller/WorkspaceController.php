@@ -466,7 +466,6 @@ class WorkspaceController extends Controller {
         if ( $responseBody['ocs']['meta']['statuscode'] !== 100 ) {
                 throw new getAllGroupFoldersException();  
         }
-
 	$groupfolders = $responseBody['ocs']['data'];
 	$this->logger->debug('groupfolders fetched');
 	
@@ -483,17 +482,12 @@ class WorkspaceController extends Controller {
 	}
 
 	// Adds workspace users and groups details
+	// Caution: It is important to add users from the workspace's user group before adding the users
+	// from the workspace's manager group, as users may be members of both groups 
 	$this->logger->debug('Adding users information to workspaces');
 	$workspaces = array_map(function($space) {
-		// Users
+		// Adds users
 		$users = array();
-		$group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
-		// TODO Handle is_null($group) better (remove workspace from list?)
-		if (!is_null($group)) {
-			foreach($group->getUsers() as $user) {
-				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-			};
-		}
 		$group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
@@ -501,9 +495,16 @@ class WorkspaceController extends Controller {
 				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
 			};
 		}
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		$group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+			};
+		}
 		$space['users'] = $users;
 
-		// Groups
+		// Adds groups
 		$groups = array();
 		foreach (array_keys($space['groups']) as $group) {
 			$NCGroup = $this->groupManager->get($group);
