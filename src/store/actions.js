@@ -1,4 +1,13 @@
+/*
+ - @copyright 2021 Arawa <TODO>
+ -
+ - @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ -
+ - @license <TODO>
+*/
+
 import router from '../router'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -201,13 +210,12 @@ export default {
 		const space = context.state.spaces[name]
 		if (user.role === 'admin') {
 			user.role = 'user'
-			// TODO use global constant
-			user.groups.splice(user.groups.indexOf('GE-' + name), 1)
-			user.groups.push('U-' + name)
+			user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
+			user.groups.push(ESPACE_USERS_PREFIX + name)
 		} else {
 			user.role = 'admin'
-			user.groups.splice(user.groups.indexOf('U-' + name), 1)
-			user.groups.push('GE-' + name)
+			user.groups.splice(user.groups.indexOf(ESPACE_USERS_PREFIX + name), 1)
+			user.groups.push(ESPACE_MANAGERS_PREFIX + name)
 		}
 		context.commit('updateUser', { name, user })
 		axios.patch(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
@@ -222,12 +230,12 @@ export default {
 					// Revert action an inform user
 					if (user.role === 'admin') {
 						user.role = 'user'
-						user.groups.splice(user.groups.indexOf('GE-' + name), 1)
-						user.groups.push('U-' + name)
+						user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
+						user.groups.push(ESPACE_USERS_PREFIX + name)
 					} else {
 						user.role = 'admin'
-						user.groups.splice(user.groups.indexOf('U-' + name), 1)
-						user.groups.push('GE-' + name)
+						user.groups.splice(user.groups.indexOf(ESPACE_USERS_PREFIX + name), 1)
+						user.groups.push(ESPACE_MANAGERS_PREFIX + name)
 					}
 					context.commit('updateUser', { name, user })
 					this._vm.$notify({

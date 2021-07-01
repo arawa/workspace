@@ -1,9 +1,10 @@
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
+
 export const getters = {
 	// Returns the GE group of a workspace
 	GEGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			// TODO use constants
-			return group.displayName === 'GE-' + name
+			return group.displayName === ESPACE_MANAGERS_PREFIX + name
 		})
 		return groups[0]
 	},
@@ -46,8 +47,7 @@ export const getters = {
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			// TODO use constants
-			return group.displayName === 'U-' + name
+			return group.displayName === ESPACE_USERS_PREFIX + name
 		})
 		return groups[0]
 	},

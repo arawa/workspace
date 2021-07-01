@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from './constants'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
@@ -91,8 +92,8 @@ export default {
 	methods: {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
-			if (this.$route.params.group === 'GE-' + this.$route.params.space
-			|| this.$route.params.group === 'U-' + this.$route.params.space) {
+			if (this.$route.params.group === ESPACE_MANAGERS_PREFIX + this.$route.params.space
+			|| this.$route.params.group === ESPACE_USERS_PREFIX + this.$route.params.space) {
 				// TODO Inform user
 				return
 			}
@@ -131,7 +132,7 @@ export default {
 			}
 
 			// Prevents renaming GE- and U- groups
-			if (group === 'GE-' + this.$route.params.space || group === 'U-' + this.$route.params.space) {
+			if (group === ESPACE_MANAGERS_PREFIX + this.$route.params.space || group === ESPACE_USERS_PREFIX + this.$route.params.space) {
 				// TODO Inform user
 				return
 			}

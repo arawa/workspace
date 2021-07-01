@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from './constants'
 import axios from '@nextcloud/axios'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
@@ -123,7 +124,7 @@ export default {
 					// Caution, we are not giving a gid here but rather a group's displayName
 					// (the space's name, in this.$route.params.space can change).
 					// This should however be handled in the backend
-					gid = user.role === 'admin' ? 'GE-' : 'U-'
+					gid = user.role === 'admin' ? ESPACE_MANAGERS_PREFIX : ESPACE_USERS_PREFIX
 					gid = gid + this.$route.params.space
 				}
 				// Add user to proper workspace group
