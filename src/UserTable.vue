@@ -49,11 +49,17 @@
 											: t('workspace', 'Remove admin rights')
 									}}
 								</ActionButton>
-								<ActionButton
+								<ActionButton v-if="$route.params.group === undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
+								</ActionButton>
+								<ActionButton v-else
+									icon="icon-delete"
+									:close-after-click="true"
+									@click="removeFromGroup(user)">
+									{{ t('workspace', 'Remove from group') }}
 								</ActionButton>
 							</Actions>
 						</div>
@@ -122,7 +128,7 @@ export default {
 		},
 	},
 	methods: {
-		// Remove a user's access to a workspace
+		// Removes a user's access to a workspace
 		deleteUser(user) {
 			this.$store.dispatch('removeUserFromSpace', {
 				name: this.$route.params.space,
@@ -133,6 +139,14 @@ export default {
 		toggleUserRole(user) {
 			this.$store.dispatch('toggleUserRole', {
 				name: this.$route.params.space,
+				user,
+			})
+		},
+		// Removes a user from a group
+		removeFromGroup(user) {
+			this.$store.dispatch('removeUserFromGroup', {
+				name: this.$route.params.space,
+				group: this.$route.params.group,
 				user,
 			})
 		},

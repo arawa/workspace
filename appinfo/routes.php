@@ -100,7 +100,12 @@ return [
 			'name' => 'space#updateColorCode',
 			'url' => '/workspaces/{spaceId}/color',
 			'verb' => 'POST'
-		]
+		],
+
+			'name' => 'group#removeUser',
+			'url' => '/api/group/delUser/{spaceId}',
+			'verb' => 'PATCH',
+		],
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that
 		// don't have a route registered here redirect to NC's general homepage upon refresh)

@@ -92,6 +92,7 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function delete($gid, $spaceId) {
+		// TODO Use groupfolder api to retrieve workspace group. 
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
 		}
@@ -120,6 +121,7 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function rename($newGroup, $oldGroup, $spaceId) {
+		// TODO Use groupfolder api to retrieve workspace group. 
 		if (substr($oldGroup, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
 				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
@@ -177,4 +179,51 @@ class GroupController extends Controller {
 		return new JSONResponse(['message' => 'The user '. $user .' is added in the '. $group .' group'], Http::STATUS_NO_CONTENT);
 
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * Removes a user from a group, and remove it from the workspace's user group when the user is not member of any other
+	 * subgroup anymore.
+	 *
+	 * @var string $group
+	 * @var string $user
+	 *
+	 * @return @JSONResponse
+	 */
+	public function removeUser($spaceId, $group, $user) {
+
+		// Makes sure group exist
+		$NCGroup = $this->groupManager->get($group);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $group + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
+
+		// Removes user from group
+		$NCUser = $this->userManager->get($user);
+		$NCGroup->removeUser($NCUser);
+
+		// Checks that the user is not member of any other group anymore
+		$space = json_decode($this->groupfolderService->get($spaceId)->getBody(), true)['ocs']['data'];
+		$stillInGroup = false;
+		foreach(array_keys($space['groups']) as $group) {
+			$NCGroup = $this->groupManager->get($group);
+			if ($NCGroup->getDisplayName() !== Application::ESPACE_USERS_01 . $space['mount_point']) {
+				if ($this->groupManager->get($group)->inGroup($NCUser)) {
+					$stillInGroup = true;
+					break;
+				}
+			}
+		};
+
+		// Removes user from workspace's user group if the user is not member of any other group anymore
+		if (!$stillInGroup) {
+			$groupU = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['mount_point'])[0];
+			$groupU->removeUser($NCUser);
+		}
+
+		return new JSONResponse([], Http::STATUS_NO_CONTENT);
+	}
+
 }

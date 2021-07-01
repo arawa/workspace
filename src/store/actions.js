@@ -109,6 +109,28 @@ export default {
 			space,
 		})
 	},
+	// Removes a user from a group
+	removeUserFromGroup(context, { name, group, user }) {
+		// Update frontend
+		context.commit('removeUserFromGroup', { name, group, user })
+
+		// Update backend and revert frontend changes if something fails
+		const space = context.state.spaces[name]
+		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
+		axios.patch(url, {
+			group,
+			user: user.uid,
+		}).then((resp) => {
+			if (resp.status !== '204') {
+				// TODO: Inform user
+				context.commit('addUserToGroup', { name, group, user })
+			}
+		}).catch((e) => {
+			// TODO: Inform user
+			context.commit('addUserToGroup', { name, group, user })
+		})
+	},
+	// Removes a user from a space
 	removeUserFromSpace(context, { name, user }) {
 		const space = context.state.spaces[name]
 		context.commit('removeUserFromWorkspace', { name, user })

@@ -774,6 +774,7 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$spaceName = $this->groupfolderService->getName($spaceId);
+		// TODO: use search on displayName rather than get on gid
 		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
 
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
@@ -804,6 +805,7 @@ class WorkspaceController extends Controller {
 		$GEgroup->removeUser($user);
 		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
 		$UserGroup->removeUser($user);
+		// TODO Shall we remove the user from the subgroups too
 
 		return new JSONResponse();
 	}
