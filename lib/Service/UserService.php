@@ -37,7 +37,7 @@ Class UserService {
 	 * @param array $space
 	 * @param string $role
 	 *
-	 * @return array
+	 * @return array|null
 	 *
 	 */
 
@@ -50,13 +50,10 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (substr_compare($group->getGID(), $space['id'], -strlen($space['id'])) === 0
-				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['space_name']
-				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['space_name']
-			) {
+			if (in_array($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
-		};
+		}
 
 		// Returns a user that is valid for the frontend
 		return array(
