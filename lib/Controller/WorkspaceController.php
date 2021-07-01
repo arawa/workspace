@@ -476,7 +476,7 @@ class WorkspaceController extends Controller {
 	// We only want to return those workspaces for which the connected user is a manager
 	if (!$this->userService->isUserGeneralAdmin()) {
 		$this->logger->debug('Filtering workspaces');
-		$filteredGroupfolders = array_filter($spaces, function($groupfolder) {
+		$filteredGroupfolders = array_filter($groupfolders, function($groupfolder) {
 			return $this->userService->isSpaceManagerOfSpace($groupfolder['mount_point']);
 		});
         	$groupfolders = $filteredGroupfolders;
