@@ -188,6 +188,9 @@ export default {
 			this.isLookingUpUsers = false
 		},
 		removeUserFromBatch(user) {
+			this.selectedUsers = this.selectedUsers.filter((u) => {
+				return u.name !== user.name
+			})
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
 				return u.name !== user.name
 			})
