@@ -43,13 +43,6 @@ export const getters = {
 			return Object.keys(users).length
 		}
 	},
-	sortedSpaces: state => {
-		const sortedSpaces = {}
-		Object.keys(state.spaces).sort().forEach((value, index) => {
-			sortedSpaces[value] = state.spaces[value]
-		})
-		return sortedSpaces
-	},
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
