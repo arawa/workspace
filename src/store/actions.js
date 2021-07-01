@@ -15,7 +15,10 @@ export default {
 			gid,
 			user: user.uid,
 		}).then((resp) => {
-			if (resp.status !== 204) {
+			if (resp.status === 204) {
+				// eslint-disable-next-line no-console
+				console.log('User ' + user.name + ' added to group ' + gid)
+			} else {
 				// Restore frontend and inform user
 				context.commit('removeUserFromGroup', { name, group, user })
 				this._vm.$notify({
@@ -121,7 +124,10 @@ export default {
 			gid,
 			user: user.uid,
 		}).then((resp) => {
-			if (resp.status !== '204') {
+			if (resp.status === 204) {
+				// eslint-disable-next-line no-console
+				console.log('User ' + user.name + ' removed from group ' + gid)
+			} else {
 				// TODO: Inform user
 				context.commit('addUserToGroup', { name, gid, user })
 			}
