@@ -215,25 +215,6 @@ class GroupController extends Controller {
 		$NCUser = $this->userManager->get($user);
 		$NCGroup->removeUser($NCUser);
 
-		// Checks that the user is not member of any other group anymore
-		$space = json_decode($this->groupfolderService->get($spaceId)->getBody(), true)['ocs']['data'];
-		$stillInGroup = false;
-		foreach(array_keys($space['groups']) as $group) {
-			$NCGroup = $this->groupManager->get($group);
-			if ($NCGroup->getDisplayName() !== Application::ESPACE_USERS_01 . $space['mount_point']) {
-				if ($this->groupManager->get($group)->inGroup($NCUser)) {
-					$stillInGroup = true;
-					break;
-				}
-			}
-		};
-
-		// Removes user from workspace's user group if the user is not member of any other group anymore
-		if (!$stillInGroup) {
-			$groupU = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['mount_point'])[0];
-			$groupU->removeUser($NCUser);
-		}
-
 		return new JSONResponse([], Http::STATUS_NO_CONTENT);
 	}
 
