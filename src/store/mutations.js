@@ -84,6 +84,17 @@ export default {
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
+	// Renames a group
+	renameGroup(state, { name, gid, newGroupName }) {
+		const space = state.spaces[name]
+		space.groups[gid] = {
+			gid,
+			displayName: newGroupName,
+		}
+		delete state.spaces[space.name]
+		Vue.set(state.spaces, name, space)
+		sortSpaces(state)
+	},
 	setSpaceQuota(state, { name, quota }) {
 		const space = state.spaces[name]
 		space.quota = quota
