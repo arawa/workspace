@@ -252,7 +252,8 @@ export default {
 		quota = (quota === 'unlimited') ? -3 : quota
 
 		// Updates backend
-		const url = generateUrl(`/apps/groupfolders/folders/${name}/quota`)
+		const space = context.state.spaces[name]
+		const url = generateUrl(`/apps/groupfolders/folders/${space.id}/quota`)
 		axios.post(url, { quota })
 			.then(resp => {
 				if (resp.status !== 200) {
