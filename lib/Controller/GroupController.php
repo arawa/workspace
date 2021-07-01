@@ -149,7 +149,9 @@ class GroupController extends Controller {
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
-	 * Adds a user to a group
+	 * Adds a user to a group.
+	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
+	 * manager group when we are adding a workspace manager
 	 *
 	 * @var string $group
 	 * @var string $user
@@ -158,18 +160,27 @@ class GroupController extends Controller {
 	 */
 	public function addUser($spaceId, $group, $user) {
 
+		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($group);
-		$NCUser = $this->userManager->get($user);
-
 		if (is_null($NCGroup)) {
 			return new JSONResponse(['Group ' + $group + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
 		}
 
+		// Adds user to group
+		$NCUser = $this->userManager->get($user);
 		$NCGroup->addUser($NCUser);
 
+		// Adds user to workspace user group
+		$name = $this->groupfolderService->getName($spaceId);
+		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $name)[0];
+		$UGroup->addUser($NCUser);
+		
+		// Adds the user to the application manager group when we are adding a workspace manager
 		if (strpos($group, Application::ESPACE_MANAGER_01) === 0) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
-			if (is_null($workspaceUsersGroup)) {
+			if (!is_null($workspaceUsersGroup)) {
+				$workspaceUsersGroup->addUser($NCUser);
+			} else {
 				$NCGroup->removeUser($NCUser);
 				return new JSONResponse(['Generar error: Group ' + Application::GROUP_WKSUSER + ' does not exist'],
 					Http::STATUS_EXPECTATION_FAILED);
