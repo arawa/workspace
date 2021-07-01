@@ -195,8 +195,8 @@ class GroupController extends Controller {
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
-	 * Removes a user from a group, and remove it from the workspace's user group when the user is not member of any other
-	 * subgroup anymore.
+	 * Removes a user from a group
+	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 *
 	 * @var string $group
 	 * @var string $user
@@ -215,6 +215,17 @@ class GroupController extends Controller {
 		$NCUser = $this->userManager->get($user);
 		$NCGroup->removeUser($NCUser);
 
+		// Removes user from all 'subgroups' when we remove it from the workspace's user group
+		$space = $this->groupfolderService->get($spaceId);
+		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['mount_point']) {
+			foreach(array_keys($space['groups']) as $group) {
+				$NCGroup = $this->groupManager->get($group);
+				if ($NCGroup->getDisplayName() !== Application::ESPACE_MANAGER_01 . $space['mount_point']) {
+					$NCGroup->removeUser($NCUser);
+				}
+			}
+		}
+		
 		return new JSONResponse([], Http::STATUS_NO_CONTENT);
 	}
 

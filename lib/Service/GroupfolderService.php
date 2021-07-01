@@ -168,8 +168,10 @@ class GroupfolderService {
     }
 
     /**
+     * Returns a groupfolder's details
+     *
      * @param int $folderId
-     * @return object that is the response from httpClient
+     * @return object The groupfolder's details
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
@@ -182,11 +184,16 @@ class GroupfolderService {
               'headers' => self::HEADERS
         ]);
 
-        return $response;
+	$groupfolder = json_decode($response->getBody(), true);
+
+	// TODO Error management
+
+	return $groupfolder['ocs']['data'];
     }
 
     /**
      * Gets a groupfolder's name from its ID
+     *
      * @param int $folderId The id of the groupfolder
      * @return string The name of the groupfolder
      */

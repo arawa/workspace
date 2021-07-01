@@ -733,9 +733,8 @@ class WorkspaceController extends Controller {
      */
     public function rename($folderId, $newSpaceName) {
 
-        $responseCurrentSpaceName = $this->groupfolderService->get($folderId);
-        $currentSpaceName = json_decode($responseCurrentSpaceName->getBody(), true);
-        $currentMountPointSpaceName = $currentSpaceName['ocs']['data']['mount_point'];
+        $space = $this->groupfolderService->get($folderId);
+        $currentMountPointSpaceName = $space['mount_point'];
      
         $responseGroupfolder = $this->groupfolderService->rename($folderId, $newSpaceName);
 
@@ -822,8 +821,7 @@ class WorkspaceController extends Controller {
 
         $groups = [];
     
-        $responseGroupfolderGet = $this->groupfolderService->get($folderId);
-        $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
+        $space = $this->groupfolderService->get($folderId);
 
         $responseGroupfolderDelete = $this->groupfolderService->delete($folderId);
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
