@@ -413,13 +413,14 @@ class WorkspaceController extends Controller {
 		$spaceName = $this->groupfolderService->getName($spaceId);
 		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0];
 
+		// Checks if user is member of the workspace's manager group
 		if ($GEgroup->inGroup($user)) {
 			// If user is space manager we may first have to remove it from the list of users allowed to use
 			// the application
 			$groups = $this->groupManager->getUserGroups($user);
 			$found = false;
 			foreach($groups as $group) {
-				$groupName = $group->getGID();
+				$groupName = $group->getDisplayName();
 				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
 					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
 					$groupName !== Application::GROUP_WKSUSER
@@ -783,7 +784,7 @@ class WorkspaceController extends Controller {
 			$found = false;
 			$groups = $this->groupManager->getUserGroups($user);
 			foreach($groups as $group) {
-				$groupName = $group->getGID();
+				$groupName = $group->getDisplayName();
 				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
 					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
 					$groupName !== Application::GROUP_WKSUSER
