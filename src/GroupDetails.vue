@@ -141,8 +141,8 @@ export default {
 			// Renames group
 			this.$store.dispatch('renameGroup', {
 				name: this.$route.params.space,
-				oldGroup: this.$route.params.group,
-				newGroup: group,
+				gid: this.$route.params.group,
+				newGroupName: group,
 			})
 		},
 		toggleShowCreateGroupInput() {

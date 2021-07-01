@@ -112,22 +112,24 @@ export default {
 			this.$emit('close')
 
 			this.allSelectedUsers.forEach(user => {
-				let group = ''
+				let gid = ''
 				if (this.$route.params.group !== undefined) {
 					// Adding a user to a workspace 'subgroup
 					// TODO Should we support assigning the user GE role at the same time?
-					group = this.$route.params.group
+					gid = this.$route.params.group
 				} else {
 					// Adding a user to the workspace
 					// TODO Use application-wide constants
-					// TODO This probably doesn't work when the workspace has been renamed
-					group = user.role === 'admin' ? 'GE-' : 'U-'
-					group = group + this.$route.params.space
+					// Caution, we are not giving a gid here but rather a group's displayName
+					// (the space's name, in this.$route.params.space can change).
+					// This should however be handled in the backend
+					gid = user.role === 'admin' ? 'GE-' : 'U-'
+					gid = gid + this.$route.params.space
 				}
 				// Add user to proper workspace group
 				this.$store.dispatch('addUserToGroup', {
 					name: this.$route.params.space,
-					group,
+					gid,
 					user,
 				})
 			})

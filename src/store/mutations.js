@@ -45,8 +45,8 @@ export default {
 	// Adds a user to a group
 	// We must add the group to the user's groups property and
 	// add the the user to the space's users property
-	addUserToGroup(state, { name, group, user }) {
-		user.groups.push(group)
+	addUserToGroup(state, { name, gid, user }) {
+		user.groups.push(gid)
 		const space = state.spaces[name]
 		space.users[user.name] = user
 		Vue.set(state.spaces, name, space)
@@ -68,7 +68,7 @@ export default {
 	},
 	// Removes a user from a group
 	// TODO: We might need to update the user's groups property too here
-	removeUserFromGroup(state, { name, group, user }) {
+	removeUserFromGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
 		delete space.users[user.name]
 		delete state.spaces[space.name]

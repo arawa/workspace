@@ -146,7 +146,7 @@ export default {
 		removeFromGroup(user) {
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				group: this.$route.params.group,
+				gid: this.$route.params.group,
 				user,
 			})
 		},

@@ -4,15 +4,15 @@ import axios from '@nextcloud/axios'
 
 export default {
 	// Adds a user to a group
-	addUserToGroup(context, { name, group, user }) {
+	addUserToGroup(context, { name, gid, user }) {
 		// Update frontend
-		context.commit('addUserToGroup', { name, group, user })
+		context.commit('addUserToGroup', { name, gid, user })
 
 		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
 		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
-			group,
+			gid,
 			user: user.uid,
 		}).then((resp) => {
 			if (resp.status !== 204) {
@@ -110,24 +110,24 @@ export default {
 		})
 	},
 	// Removes a user from a group
-	removeUserFromGroup(context, { name, group, user }) {
+	removeUserFromGroup(context, { name, gid, user }) {
 		// Update frontend
-		context.commit('removeUserFromGroup', { name, group, user })
+		context.commit('removeUserFromGroup', { name, gid, user })
 
 		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
 		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
-			group,
+			gid,
 			user: user.uid,
 		}).then((resp) => {
 			if (resp.status !== '204') {
 				// TODO: Inform user
-				context.commit('addUserToGroup', { name, group, user })
+				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
 			// TODO: Inform user
-			context.commit('addUserToGroup', { name, group, user })
+			context.commit('addUserToGroup', { name, gid, user })
 		})
 	},
 	// Removes a user from a space
@@ -161,35 +161,32 @@ export default {
 		console.log('User ' + user.name + ' removed from space ' + name)
 	},
 	// Renames a group and navigates to its details page
-	renameGroup(context, { name, oldGroup, newGroup }) {
+	renameGroup(context, { name, gid, newGroupName }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		newGroup = newGroup + '-' + space.id
+		newGroupName = newGroupName + '-' + space.id
 
 		// Creates group in frontend
-		context.commit('removeGroupFromSpace', { name, oldGroup })
-		context.commit('addGroupToSpace', { name, newGroup })
+		context.commit('removeGroupFromSpace', { name, gid })
+		context.commit('addGroupToSpace', { name, newGroupName })
 
 		// Creates group in backend
-		axios.patch(generateUrl(`/apps/workspace/api/group/${oldGroup}`), { spaceId: space.id, newGroup })
+		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// Navigates to the group's details page
 					context.state.spaces[name].isOpen = true
-					router.push({
-						path: `/group/${name}/${newGroup}`,
-					})
 					// eslint-disable-next-line no-console
-					console.log('Group ' + oldGroup + ' renamed to ' + newGroup)
+					console.log('Group ' + gid + ' renamed to ' + newGroupName)
 				} else {
-					context.commit('removeGroupFromSpace', { name, newGroup })
-					context.commit('addGroupToSpace', { name, oldGroup })
+					context.commit('removeGroupFromSpace', { name, newGroupName })
+					context.commit('addGroupToSpace', { name, gid })
 					// TODO Inform user
 				}
 			})
 			.catch((e) => {
-				context.commit('removeGroupFromSpace', { name, newGroup })
-				context.commit('addGroupToSpace', { name, oldGroup })
+				context.commit('removeGroupFromSpace', { name, newGroupName })
+				context.commit('addGroupToSpace', { name, gid })
 				// TODO Inform user
 			})
 	},

@@ -78,7 +78,7 @@ return [
 		],
 		[
 			'name' => 'group#rename',
-			'url' => '/api/group/{oldGroup}',
+			'url' => '/api/group/{gid}',
 			'verb' => 'PATCH',
 		],
 		[

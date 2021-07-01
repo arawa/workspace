@@ -411,7 +411,7 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$spaceName = $this->groupfolderService->getName($spaceId);
-		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
+		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0];
 
 		if ($GEgroup->inGroup($user)) {
 			// If user is space manager we may first have to remove it from the list of users allowed to use
@@ -437,10 +437,10 @@ class WorkspaceController extends Controller {
 			// We can now remove the user from the space's admin group
 			$GEgroup->removeUser($user);
 			// And add it to the space's user group
-			$this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName)->addUser($user);
+			$this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0]->addUser($user);
 		} else {
-			$this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName)->removeUser($user);
-			$this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName)->addUser($user);
+			$this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0]->removeUser($user);
+			$this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0]->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
 
@@ -488,7 +488,7 @@ class WorkspaceController extends Controller {
 	$workspaces = array_map(function($space) {
 		// Adds users
 		$users = array();
-		$group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
+		$group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['mount_point'])[0];
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
@@ -496,7 +496,7 @@ class WorkspaceController extends Controller {
 			};
 		}
 		// TODO Handle is_null($group) better (remove workspace from list?)
-		$group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
+		$group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['mount_point'])[0];
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
 				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
@@ -506,9 +506,9 @@ class WorkspaceController extends Controller {
 
 		// Adds groups
 		$groups = array();
-		foreach (array_keys($space['groups']) as $group) {
-			$NCGroup = $this->groupManager->get($group);
-			$groups[$group] = array(
+		foreach (array_keys($space['groups']) as $gid) {
+			$NCGroup = $this->groupManager->get($gid);
+			$groups[$gid] = array(
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName()
 			);
@@ -774,8 +774,7 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$spaceName = $this->groupfolderService->getName($spaceId);
-		// TODO: use search on displayName rather than get on gid
-		$GEgroup = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $spaceName);
+		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0];
 
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
 		// the application
@@ -803,7 +802,7 @@ class WorkspaceController extends Controller {
 		// We can now blindly remove the user from the space's admin and user groups
 		$this->logger->debug('Removing user from workspace.');
 		$GEgroup->removeUser($user);
-		$UserGroup = $this->groupManager->get(Application::ESPACE_USERS_01 . $spaceName);
+		$UserGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0];
 		$UserGroup->removeUser($user);
 		// TODO Shall we remove the user from the subgroups too
 
@@ -827,9 +826,9 @@ class WorkspaceController extends Controller {
         $responseGroupfolderDelete = $this->groupfolderService->delete($folderId);
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
 
-        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $group ) {
-            $groups[] = $group;
-            $this->groupManager->get($group)->delete();
+        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $gid ) {
+            $groups[] = $gid;
+            $this->groupManager->get($gid)->delete();
         }
 
         if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
