@@ -46,4 +46,12 @@ class SpaceController extends Controller{
         return new DataResponse($this->spaceService->findAll());
     }
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function updateSpaceName($newSpaceName, $spaceId) {
+        return new DataResponse($this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId));
+    }
+
 }

@@ -25,44 +25,28 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#getUserWorkspaces',
-			// TODO move this route to /api/spaces
-			'url' => '/spaces',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'workspace#create',
+			'name' => 'workspace#createSpace',
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#createFromDB',
-			'url' => '/spacesFromDb',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'workspace#deleteFromDB',
-			'url' => '/spacesDestroy/{spaceId}',
-			'verb' => 'DELETE'
-		],
-		[
-			'name' => 'workspace#findFromDB',
-			'url' => '/spacesFind/{spaceId}',
+			'name' => 'workspace#find',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'space#find',
-			'url' => '/space/db/{id}',
+			'url' => '/workspaces/{id}',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'space#findAll',
-			'url' => '/spaces/db',
+			'url' => '/workspaces',
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace#findAllFromDB',
-			'url' => '/spacesFindAll',
+			'name' => 'workspace#findAll',
+			'url' => '/spaces',
 			'verb' => 'GET'
 		],
 		[
@@ -103,9 +87,14 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace#rename',
-			'url' => '/spaces/{folderId}',
+			'name' => 'workspace#renameSpace',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
+	    ],
+		[
+			'name' => 'space#updateSpaceName',
+			'url' => '/workspaces/{spaceId}/spacename',
+			'verb' => 'POST'
 	    ],
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that
@@ -118,8 +107,8 @@ return [
 			'defaults' => array('path' => 'dummy'),
 		],
 		[
-			'name' => 'workspace#delete',
-			'url' => '/spaces/{folderId}',
+			'name' => 'workspace#destroy',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'DELETE'
 		]
 	]

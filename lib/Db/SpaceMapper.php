@@ -41,7 +41,8 @@ class SpaceMapper extends QBMapper {
     }
 
     /**
-     * Worl
+     * @deprecated
+     * @see WorkspaceController->destroy().
      */
     public function deleteSpace(int $id) {
         $qb = $this->db->getQueryBuilder();
@@ -50,6 +51,19 @@ class SpaceMapper extends QBMapper {
             ->where($qb->expr()->eq('id', $qb->createNamedParameter($id))
             )
             ->execute();
+    }
+
+    public function updateSpaceName(string $newSpaceName, int $spaceId) {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb
+            ->update('work_spaces')
+            ->set('space_name', $qb->createNamedParameter($newSpaceName))
+            ->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
+
+        $qb->execute();
+
+        return $this->find($spaceId);
     }
 
 }

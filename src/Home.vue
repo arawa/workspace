@@ -73,16 +73,17 @@ export default {
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
-				Object.values(resp.data).forEach(folder => {
+				Object.values(resp.data).forEach(space => {
 					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
 						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: folder.groups,
-						id: folder.id,
+						groups: space.groups,
+						id: space.id,
+						groupfolderId: space.groupfolder_id,
 						isOpen: false,
-						name: folder.mount_point,
-						quota: this.convertQuotaForFrontend(folder.quota),
-						users: folder.users,
+						name: space.space_name,
+						quota: this.convertQuotaForFrontend(space.quota),
+						users: space.users,
 					})
 				})
 			})

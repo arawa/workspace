@@ -44,6 +44,10 @@ class SpaceService {
         return $this->spaceMapper->find($id);
     }
 
+    /**
+     * @deprecated
+     * @see WorkspaceController->destroy().
+     */
     public function delete(int $id) {
         return $this->spaceMapper->deleteSpace($id);
     }
@@ -55,5 +59,12 @@ class SpaceService {
      */
     public function create(string $spaceName) {
 
+    }
+
+    /**
+     * 
+     */
+    public function updateSpaceName(string $newSpaceName, int $spaceId) {
+        return $this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
     }
 }

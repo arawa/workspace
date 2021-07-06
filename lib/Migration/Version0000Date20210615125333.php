@@ -65,8 +65,8 @@ class Version0000Date20210615125333 extends SimpleMigrationStep {
 			'groupfolder_id',
 		]);
 
-		$table->addForeignKeyConstraint($schema->getTable('group_folders'), ['space_name'], ['mount_point'], [], 'fk_gi_sn_work_spaces');
-		$table->addForeignKeyConstraint($schema->getTable('group_folders'), ['groupfolder_id'], ['folder_id'], [], 'fk_gi_sn_work_spaces');
+		$table->addForeignKeyConstraint($schema->getTable('group_folders'), ['space_name'], ['mount_point'], ['onDelete' => 'CASCADE', 'onUpdate' => 'CASCADE'], 'fk_gi_sn_work_spaces');
+		$table->addForeignKeyConstraint($schema->getTable('group_folders'), ['groupfolder_id'], ['folder_id'], ['onDelete' => 'CASCADE', 'onUpdate' => 'CASCADE'], 'fk_gi_sn_work_spaces');
 		// $table->addForeignKeyConstraint($schema->getTable('group_folders'), ['groupfolder_id', 'space_name'], ['folder_id', 'mount_point'], [], 'fk_groupfolder_id_work_spaces');
 
 		return $schema;

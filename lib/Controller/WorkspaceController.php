@@ -16,11 +16,9 @@ use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCA\Workspace\Service\GroupfolderService;
 use OCP\Authentication\LoginCredentials\IStore;
-use OCP\Authentication\LoginCredentials\ICredentials;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
@@ -106,10 +104,10 @@ class WorkspaceController extends Controller {
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
-     * TODO: Bug when this code is in SpaceService.php.
+     * @todo Bug when this code is in SpaceService.php.
      * It has to find a solution to move it.
      */
-    public function createFromDB(string $spaceName) {
+    public function createSpace(string $spaceName) {
 
         if( $spaceName === false ||
             $spaceName === null ||
@@ -215,7 +213,7 @@ class WorkspaceController extends Controller {
         $this->spaceMapper->insert($space);
 
         return new JSONResponse ([
-            'space' => $spaceName,
+            'space_name' => $spaceName,
             'id_space' => $space->getId(),
             'folder_id' => $responseCreateGroupFolder['ocs']['data']['id'],
             'groups' => [
@@ -239,17 +237,61 @@ class WorkspaceController extends Controller {
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
-     * TODO: To move or delete.
      */
-    public function deleteFromDB($spaceId) {
-        $space = $this->spaceService->find($spaceId);
-        $this->spaceService->delete($spaceId);
+    public function destroy($spaceId) {
+        
+        $spaceResponse = $this->workspaceService->get($spaceId);
+
+        $space = json_decode($spaceResponse->getBody(), true);
+
+        $cloneSpace = $space;
+
+        $responseGroupfolderGet = $this->groupfolderService->get($space['groupfolder_id']);
+
+        $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
+        
+        if (
+            !$this->userService->isSpaceManagerOfSpace($groupfolder['ocs']['data']['mount_point']) &&
+            !$this->userService->isUserGeneralAdmin()
+            )
+        {
+            return new JSONResponse(
+                [
+                    'data' => [],
+                    'http' => [
+                        'message' => 'You are not a manager for this space.',
+                        'statuscode' => Http::STATUS_FORBIDDEN
+                    ]
+                ]
+            );
+        }
+        
+        $responseGroupfolderDelete = $this->groupfolderService->delete($space['groupfolder_id']);
+    
+        $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
+
+        if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
+            return;
+        }
+
+        $groups = [];
+        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $group ) {
+            $groups[] = $group;
+            $this->groupManager->get($group)->delete();
+        }
+
         return new JSONResponse([
-            'result' => [
-                'message' => 'Space ' . $spaceId . ' is deleted.',
-                'statuscode' => 200
+            'http' => [
+                'statuscode' => 200,
+                'message' => 'The space is deleted.'
             ],
-            'space' => $space
+            'data' => [
+                'space_name' => $cloneSpace['space_name'],
+                'groups' => $groups,
+                'space_id' => $cloneSpace['id'],
+                'groupfolder_id' => $cloneSpace['groupfolder_id'],
+                'state' => 'delete'
+            ]
         ]);
 
     }
@@ -260,7 +302,8 @@ class WorkspaceController extends Controller {
      * @NoCSRFRequired
      * TODO: To move or delete.
      */
-    public function findFromDB($spaceId) {
+    public function find($spaceId) {
+
         $spaceResponse = $this->workspaceService->get($spaceId);
         $space = json_decode($spaceResponse->getBody(), true);
 
@@ -277,11 +320,15 @@ class WorkspaceController extends Controller {
     }
 
     /**
+     * Returns a list of all the workspaces that the connected user
+     * may use.
+     * 
      * @NoAdminRequired
      * @NoCSRFRequired
      * TODO: To move or delete.
      */
-    public function findAllFromDB() {
+    public function findAll() {
+
         $spacesResponse = $this->workspaceService->findAll();
 
         $spaces = json_decode($spacesResponse->getBody(), true);
@@ -301,7 +348,34 @@ class WorkspaceController extends Controller {
                 }
             }
         }
-        return new JSONResponse($spaces);
+
+        // We only want to return those workspaces for which the connected user is a manager
+        if (!$this->userService->isUserGeneralAdmin()) {
+            $this->logger->debug('Filtering workspaces');
+            $filteredSpaces = array_filter($spaces, function($space) {
+                return $this->userService->isSpaceManagerOfSpace($space['space_name']);
+            });
+            
+            $spaces = $filteredSpaces;
+        }
+
+        // Adds workspace users
+        $this->logger->debug('Adding users information to workspaces');
+        $spacesWithUsers = array_map(function($space) {
+            $users = array();
+            foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['space_name'])->getUsers() as $user) {
+                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+            };
+            foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['space_name'])->getUsers() as $user) {
+                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+            };
+            $space['users'] = $users;
+            return $space;
+            
+        },$spaces);
+
+
+        return new JSONResponse($spacesWithUsers);
     }
 
 	/**
@@ -360,6 +434,8 @@ class WorkspaceController extends Controller {
      * may use.
      *
      * @NoAdminRequired
+     * @NoCSRFRequired
+     * @deprecated use findAll
      */
     public function getUserWorkspaces() {    
 	    // Gets all groupfolders
@@ -384,7 +460,8 @@ class WorkspaceController extends Controller {
             $filteredSpaces = array_filter($spaces, function($space) {
                 return $this->userService->isSpaceManagerOfSpace($space['mount_point']);
             });
-                $spaces = $filteredSpaces;
+
+            $spaces = $filteredSpaces;
         }
 
         // Adds workspace users
@@ -416,6 +493,7 @@ class WorkspaceController extends Controller {
      * @var string $spaceName
      * @return JSONResponse with informations from new workspace - { 'msg': Sting, 'statuscode': Int, 'data': Object }
      * @example { 'msg': 'Worspace created', 'statuscode': 201, 'data': Object }
+     * @deprecated use createSpace
      */
     public function create($spaceName) {
 
@@ -510,7 +588,7 @@ class WorkspaceController extends Controller {
         }
 
         return new JSONResponse([
-            'space' => $spaceName,
+            'space_name' => $spaceName,
             'id_space' => $responseCreateGroupFolder['ocs']['data']['id'],
             'groups' => [
                 $newSpaceManagerGroup->getGID() => 31,
@@ -530,6 +608,84 @@ class WorkspaceController extends Controller {
     }
 
     /**
+     * 
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * @param int $spaceId
+     * @param string $newSpaceName
+     * @return JSONResponse
+     * 
+     * @todo Check if the space name and the group name exist or not.
+     * TODO: Manage errors & may be refactor
+     * groupfolder->rename & groupfolder->attachGroup.
+     */
+    public function renameSpace($spaceId, $newSpaceName) {
+
+        $responseSpace = $this->workspaceService->get($spaceId);
+        $currentSpace = json_decode($responseSpace->getBody(), true);
+
+        if (!$this->userService->isSpaceManagerOfSpace($currentSpace['space_name']) &&
+            !$this->userService->isUserGeneralAdmin() ) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_UNAUTHORIZED,
+                'message' => 'You are not authorized to rename the ' . $currentSpace['space_name'] . ' space.'
+            ]);
+        }
+
+
+        $responseSpace = $this->workspaceService->updateSpaceName($newSpaceName, (int)$spaceId);
+        $space = json_decode($responseSpace->getBody(), true);
+
+
+        $currentSpaceName = $currentSpace['space_name'];
+     
+        $responseGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
+
+        $responseRename = json_decode($responseGroupfolder->getBody(), true);
+
+        if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
+            $response = [
+                "statuscode" => Http::STATUS_NO_CONTENT,
+                "space" => $newSpaceName
+            ];
+            
+            $groupGE = $this->groupManager->get('GE-' . $currentSpaceName);
+            $groupU = $this->groupManager->get('U-' . $currentSpaceName);
+
+            $IUsersGE = $groupGE->getUsers();
+            $IUsersU = $groupU->getUsers();
+            
+            $newGroupGE = $this->groupManager->createGroup('GE-' . $newSpaceName);
+            $newGroupU = $this->groupManager->createGroup('U-' . $newSpaceName);
+
+            foreach ($IUsersGE as $IUserGE) {
+                $newGroupGE->addUser($IUserGE);
+            }
+
+            foreach ($IUsersU as $IUserU) {
+                $newGroupU->addUser($IUserU);
+            }
+
+            $respAttachGroupGE = $this->groupfolderService->attachGroup($space['groupfolder_id'], $newGroupGE->getGID());
+            
+            if ($respAttachGroupGE->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupGE->getGID();
+            }
+
+            $respAttachGroupU = $this->groupfolderService->attachGroup($space['groupfolder_id'], $newGroupU->getGID());
+
+            if ($respAttachGroupU->getStatusCode() === 200) {
+                $response['groups'][] = $newGroupU->getGID();
+            }
+        
+            $groupGE->delete();
+            $groupU->delete();
+        }
+
+        return new JSONResponse($response);
+    }
+
+    /**
      * @NoAdminRequired
      * @NoCSRFRequired
      * 
@@ -539,6 +695,7 @@ class WorkspaceController extends Controller {
      * @param int $folderId
      * @param string $newSpaceName
      * @return JSONResponse
+     * @deprecated use renameSpace
      */
     public function rename($folderId, $newSpaceName) {
 
@@ -696,6 +853,8 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @NoCSRFRequired
      * 
+     * @deprecated use destroy
+     * 
      * @var string $folderId
      * @return JSONResponse
      */
@@ -722,7 +881,8 @@ class WorkspaceController extends Controller {
                 ]
             );
         }
-    
+        
+        var_dump($folderId);
         $responseGroupfolderDelete = $this->groupfolderService->delete($folderId);
 
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
@@ -742,7 +902,7 @@ class WorkspaceController extends Controller {
                 'message' => 'The space is deleted.'
             ],
             'data' => [
-                'space' => $groupfolder['ocs']['data']['mount_point'],
+                'space_name' => $groupfolder['ocs']['data']['mount_point'],
                 'groups' => $groups,
                 'state' => 'delete'
             ]
