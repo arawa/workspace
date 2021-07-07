@@ -109,7 +109,6 @@ export default {
 	methods: {
 		// Deletes a space
 		deleteSpace() {
-			// TODO
 			const space = this.$route.params.space
 
 			const res = window.confirm(`Are you sure you want to delete the ${space} space ?`)
@@ -204,8 +203,12 @@ export default {
 		setSpaceQuota(quota) {
 			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
 			if (!control.test(quota)) {
+				this.$notify({
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota'),
+					type: 'error',
+				})
 				return
-				// TODO inform user
 			}
 			this.$store.dispatch('setSpaceQuota', {
 				name: this.$route.params.space,
