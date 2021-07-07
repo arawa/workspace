@@ -50,6 +50,12 @@ class Version0000Date20210615125333 extends SimpleMigrationStep {
 			'length' => 6
 		]);
 
+		$table->addColumn('color_code', 'string', [
+			'notnull' => false,
+			'length' => 128,
+			'default' => null
+		]);
+
 		$table->addColumn('space_name', 'string', [
 			'notnull' => true,
 			'length' => 128,

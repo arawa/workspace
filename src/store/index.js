@@ -118,6 +118,9 @@ export default new Vuex.Store({
 					// TODO Inform user
 				})
 		},
+		updateColor(context, { name, colorCode }) {
+			context.commit('UPDATE_COLOR', { name, colorCode })
+		},
 	},
 	getters,
 })

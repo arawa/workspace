@@ -110,6 +110,11 @@ return [
 			'name' => 'workspace#destroy',
 			'url' => '/spaces/{spaceId}',
 			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'space#updateColorCode',
+			'url' => '/workspaces/{spaceId}/color',
+			'verb' => 'POST'
 		]
 	]
 ];

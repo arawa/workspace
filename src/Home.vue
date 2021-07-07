@@ -38,7 +38,11 @@
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
-			</AppNavigationItem>
+			</AppNavigationItem>B-Boost Convention
+@BBoostCon
+Richoult
+@Richoult
+
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -74,9 +78,13 @@ export default {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
 				Object.values(resp.data).forEach(space => {
+					let codeColor = space.color_code
+					if (space.color_code === null) {
+						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+					}
 					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
-						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+						color: codeColor,
 						groups: space.groups,
 						id: space.id,
 						groupfolderId: space.groupfolder_id,

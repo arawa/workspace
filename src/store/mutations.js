@@ -56,4 +56,9 @@ export default {
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 	},
+	UPDATE_COLOR(state, { name, colorCode }) {
+		const space = state.spaces[name]
+		space.color = colorCode
+		Vue.set(state.spaces, name, space)
+	}
 }

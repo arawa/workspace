@@ -67,4 +67,8 @@ class SpaceService {
     public function updateSpaceName(string $newSpaceName, int $spaceId) {
         return $this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
     }
+
+    public function updateColorCode(string $colorCode, int $spaceId) {
+        return $this->spaceMapper->updateColorCode($colorCode, $spaceId);
+    }
 }

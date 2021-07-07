@@ -8,15 +8,24 @@ use OCP\AppFramework\Db\Entity;
 
 class Space extends Entity implements JsonSerializable {
 
+    /** @var integer */
     protected $groupfolderId;
+
+    /** @var string */
     protected $spaceName;
+
+    /** @var integer */
     protected $spaceId;
+
+    /** @var string */
+    protected $colorCode;
 
     public function __construct()
     {
         $this->addType('id', 'integer');
         $this->addType('groupfolder_id', 'integer');
         $this->addType('space_name', 'string');
+        $this->addType('color_code', 'string');
     }
 
     /**
@@ -30,6 +39,7 @@ class Space extends Entity implements JsonSerializable {
             'id' =>  $this->getSpaceId(),
             'groupfolder_id' => $this->groupfolderId,
             'space_name' => $this->spaceName,
+            'color_code' => $this->colorCode,
         ];
     }
 

@@ -66,4 +66,18 @@ class SpaceMapper extends QBMapper {
         return $this->find($spaceId);
     }
 
+    public function updateColorCode(string $colorCode, int $spaceId) {
+        // var_dump([ 'spaceId' => $spaceId, 'colorCode' => $colorCode ]);
+        $qb = $this->db->getQueryBuilder();
+
+        $qb
+            ->update('work_spaces')
+            ->set('color_code', $qb->createNamedParameter($colorCode))
+            ->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
+
+        $qb->execute();
+        
+        return $this->find($spaceId);
+    }
+
 }

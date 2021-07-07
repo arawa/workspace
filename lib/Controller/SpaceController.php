@@ -54,4 +54,12 @@ class SpaceController extends Controller{
         return new DataResponse($this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId));
     }
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function updateColorCode(string $colorCode, int $spaceId) {
+        return new DataResponse($this->spaceService->updateColorCode($colorCode, (int)$spaceId));
+    }
+
 }
