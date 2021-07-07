@@ -18,7 +18,7 @@
         <navigation>
             <name>Workspace</name>
             <route>workspace.page.index</route>
-            <icon>group.png</icon>
+            <icon>Workspace_white.svg</icon>
         </navigation>
     </navigations>
     <repair-steps>
