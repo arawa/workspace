@@ -32,7 +32,7 @@ class PageController extends Controller {
 	 * Application's main page
 	 *
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
+	 * @NOCSRFRequired
 	 */
 	public function index() {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js

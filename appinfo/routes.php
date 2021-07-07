@@ -20,11 +20,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace_group_manager#addUserGroupUser',
-			'url' => '/add/user/{uid}/toWspUserGroup/{gid}',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'workspace#getUserWorkspaces',
 			// TODO move this route to /api/spaces
 			'url' => '/spaces',
@@ -51,11 +46,6 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace_group_manager#removeUserFromGroup', 
-			'url' => '/remove/user/{uid}/groups',
-			'verb' => 'DELETE'
-		],
-		[
 			'name' => 'group#create',
 			'url' => '/api/group/{gid}',
 			'verb' => 'POST',
@@ -65,11 +55,6 @@ return [
 			// TODO move this route to /api/group/addUser/{space}
 			'url' => '/group/addUser/{space}',
 			'verb' => 'PATCH',
-		],
-		[
-			'name' => 'users_manager#getUsersWorkSpace',
-			'url' => '/group/{gid}/users',
-			'verb' => 'GET'
 		],
 		[
 			'name' => 'workspace#rename',
