@@ -88,10 +88,10 @@ export default {
 
 				// Initialises the store
 				Object.values(resp.data).forEach(space => {
-                    let codeColor = space.color_code
-                    if (space.color_code === null) {
-                        codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-                    }
+					let codeColor = space.color_code
+					if (space.color_code === null) {
+						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+					}
 					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
 						color: codeColor,
