@@ -8,6 +8,11 @@
 
 <template>
 	<div class="select-users-wrapper">
+		<Actions class="action-close">
+			<ActionButton
+				icon="icon-close"
+				@click="$emit('close')" />
+		</Actions>
 		<Multiselect
 			v-model="selectedUsers"
 			class="select-users-input"
@@ -31,8 +36,10 @@
 			<div v-else>
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
-					class="user-entry">
+					class="user-entry"
+					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
+						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 						<Avatar :display-name="user.name" :user="user.name" />
 						<div class="user-name">
 							<span> {{ user.name }} </span>
@@ -52,8 +59,11 @@
 				</div>
 			</div>
 		</div>
+		<p class="caution">
+			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspace">
+			<button @click="addUsersToWorkspaceOrGroup">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -85,8 +95,8 @@ export default {
 		}
 	},
 	methods: {
-		// Adds users to workspace and close dialog
-		addUsersToWorkspace() {
+		// Adds users to workspace/group and close dialog
+		addUsersToWorkspaceOrGroup() {
 			// Update frontend first and keep a backup of the changes should something fail
 			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
 			const space = this.$store.state.spaces[this.$route.params.space]
@@ -98,9 +108,14 @@ export default {
 
 			// Update backend and revert frontend changes if something fails
 			this.allSelectedUsers.forEach((user) => {
-				// TODO Use application-wide constants
-				let group = user.role === 'admin' ? 'GE-' : 'U-'
-				group = group + this.$route.params.space
+				let group = ''
+				if (this.$route.params.group !== 'undefined') {
+					group = this.$route.params.group
+				} else {
+					// TODO Use application-wide constants
+					group = user.role === 'admin' ? 'GE-' : 'U-'
+					group = group + this.$route.params.space
+				}
 
 				// Add user to proper workspace group
 				axios.patch(
@@ -113,11 +128,24 @@ export default {
 					}
 				).then((resp) => {
 					if (resp.status !== '204') {
-						// TODO
+						this.$store.commit('addSpace', spaceBackup)
+						this.$notify({
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to add user ') + user.name
+								+ t('workspace', ' to workspaces.') + '<br>'
+								+ t('workspace', 'The error is: ') + resp.statusText,
+							type: 'error',
+						})
 					}
 				}).catch((e) => {
-					// TODO: Inform user
 					this.$store.commit('addSpace', spaceBackup)
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to add user ') + user.name
+							+ t('workspace', ' to workspaces.') + '<br>'
+							+ t('workspace', 'The error is: ') + e,
+						type: 'error',
+					})
 				})
 			})
 		},
@@ -139,24 +167,39 @@ export default {
 				spaceId: this.$route.params.space,
 			}))
 				.then((resp) => {
-					const space = this.$store.state.spaces[this.$route.params.space]
-					this.selectableUsers = resp.data
-						// Filters users that are already member of the space
-						.filter(user => {
-							return (!(user.name in space.users))
-						}, space)
+					let users = []
+					if (resp.status === 200) {
+						// When adding users to a space, show only those users who are not already member of the space
+						if (this.$route.params.group === undefined) {
+							const space = this.$store.state.spaces[this.$route.params.space]
+							users = resp.data.filter(user => {
+								return (!(user.name in space.users))
+							}, space)
+						} else {
+							users = resp.data
+						}
 						// Filters user that are already selected
-						.filter(newUser => {
+						this.selectableUsers = users.filter(newUser => {
 							return this.allSelectedUsers.every(user => {
 								return newUser.uid !== user.uid
 							})
 						})
-					this.isLookingUpUsers = false
+					} else {
+						this.$notify({
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+							type: 'error',
+						})
+					}
 				})
 				.catch((e) => {
-					// TODO: add some user feedback
-					this.isLookingUpUsers = false
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e,
+						type: 'error',
+					})
 				})
+			this.isLookingUpUsers = false
 		},
 		removeUserFromBatch(user) {
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
@@ -178,13 +221,40 @@ export default {
 </script>
 
 <style>
+.action-close {
+	align-self: self-end;
+	width: 90%;
+}
+
+.caution {
+	color: red;
+	margin: 5px;
+	width: 90%;
+}
+
+.icon-member {
+	position: relative;
+	left: 10px;
+	top: -10px;
+	z-index: 100;
+	width: 20px;
+	height: 20px;
+}
+
+.is-member {
+	background-image: url('../img/member.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+}
+
 .select-users-actions {
 	display: flex;
 	flex-flow: row-reverse;
 }
 
 .select-users-input {
-	width: 100%;
+	width: 90%;
 }
 
 .select-users-list {
@@ -195,20 +265,25 @@ export default {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #dbdbdb;
+	width: 90%;
 }
 
 .select-users-list-empty {
 	text-align: center;
 	line-height: 400px;
+	width: 90%;
 }
 
 .select-users-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	margin: 10px;
 }
 
 .user-entry {
 	justify-content: space-between;
-	margin-left: 5px;
+	padding-left: 5px;
 }
 
 .user-entry,
@@ -220,6 +295,10 @@ export default {
 
 .user-name {
 	margin-left: 10px;
+}
+
+.user-not-member {
+	background-color: #ffebee
 }
 
 .role-toggle {

@@ -9,6 +9,15 @@ export const getters = {
 			return Object.values(users).filter(user => user.groups.includes(groupName)).length
 		}
 	},
+	// Tests whether a user is member of workspace
+	isMember: state => (name, user) => {
+		const users = state.spaces[name].users
+		if (users.length === 0) {
+			return false
+		} else {
+			return (user.uid in users)
+		}
+	},
 	// Returns the quota of a space
 	quota: state => spaceName => {
 		return state.spaces[spaceName].quota

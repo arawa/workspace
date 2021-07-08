@@ -463,20 +463,27 @@ class WorkspaceController extends Controller {
 
             $spaces = $filteredSpaces;
         }
-
         // Adds workspace users
         $this->logger->debug('Adding users information to workspaces');
         $spacesWithUsers = array_map(function($space) {
-            $users = array();
-            foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point'])->getUsers() as $user) {
-                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+          $users = array();
+          $group = $this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['mount_point']);
+          // TODO Handle is_null($group) better (remove workspace from list?)
+          if (!is_null($group)) {
+            foreach($group->getUsers() as $user) {
+              $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
             };
-            foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point'])->getUsers() as $user) {
-                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+          }
+          $group = $this->groupManager->get(Application::ESPACE_USERS_01 . $space['mount_point']);
+          // TODO Handle is_null($group) better (remove workspace from list?)
+          if (!is_null($group)) {
+            foreach($group->getUsers() as $user) {
+              $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
             };
-            $space['users'] = $users;
-            return $space;
-            
+          }
+          $space['users'] = $users;
+          return $space;
+
         },$spaces);
 
       	// TODO We still need to get the workspace color here
@@ -810,44 +817,6 @@ class WorkspaceController extends Controller {
 
         return new JSONResponse();
 	}
-
-   
-    /**
-     *
-     * TODO This is a single API call. It should probably be moved to the frontend
-     *
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     * 
-     * @var string $folderId
-     * @var string $gid
-     */
-    public function addGroupAdvancedPermissions($folderId, $gid){
-
-        $dataResponse = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/'. $folderId .'/manageACL',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                        'mappingType' => 'group',
-                        'mappingId' => $gid,
-                        'manageAcl' => true
-                ],
-                'headers' => [
-                        'Content-Type' => 'application/x-www-form-urlencoded',
-                        'OCS-APIRequest' => 'true',
-                        'Accept' => 'application/json',
-                ]
-            ]
-        );
-
-        $response = json_decode($dataResponse->getBody(), true);
-
-        return new JSONResponse($response);
-    }
 
     /**
      * @NoAdminRequired

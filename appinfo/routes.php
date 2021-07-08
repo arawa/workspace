@@ -26,6 +26,7 @@ return [
 		],
 		[
 			'name' => 'workspace#createSpace',
+			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
@@ -65,14 +66,8 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace_group_manager#removeUserFromGroup', 
-			'url' => '/remove/user/{uid}/groups',
-			'verb' => 'DELETE'
-		],
-		[
 			'name' => 'group#create',
-			// TODO move this route to /api/group/add/{group}
-			'url' => '/group/add/{group}',
+			'url' => '/api/group/{gid}',
 			'verb' => 'POST',
 		],
 		[

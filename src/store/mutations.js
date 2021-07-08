@@ -2,21 +2,30 @@ import Vue from 'vue'
 import { getLocale } from '@nextcloud/l10n'
 
 export default {
+	// Adds a group to a space
 	addGroupToSpace(state, { name, group }) {
 		const space = state.spaces[name]
 		space.groups[group] = group
 		Vue.set(state.spaces, name, space)
 	},
-	// Adds space to the spaces list and sort them, case-insensitive,
-	// and locale-based
+	// Adds space to the spaces list and sort them, case-insensitive, and locale-based
 	addSpace(state, space) {
 		state.spaces[space.name] = space
 		const sortedSpaces = {}
 		Object.keys(state.spaces)
-			.sort((a, b) => a.localeCompare(b, getLocale(), {
-				sensitivity: 'base',
-				ignorePunctuation: true,
-			}))
+			.sort((a, b) => {
+				// Some javascript engines don't support localCompare's locales
+				// and options arguments.
+				// This is especially the case of the mocha test framework
+				try {
+					return a.localeCompare(b, getLocale(), {
+						sensitivity: 'base',
+						ignorePunctuation: true,
+					})
+				} catch (e) {
+					return a.localeCompare(b)
+				}
+			})
 			.forEach((value, index) => {
 				sortedSpaces[value] = state.spaces[value]
 			})

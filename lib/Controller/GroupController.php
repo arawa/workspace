@@ -2,6 +2,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -10,6 +11,9 @@ use OCP\IGroupManager;
 use OCP\IUserManager;
 
 class GroupController extends Controller {
+
+	/** @var GroupfolderService */
+	private $groupfolderService;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -21,11 +25,12 @@ class GroupController extends Controller {
 	private $UserService;
 
 	public function __construct(
+		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		IUserManager $userManager,
 		UserService $userService
 	){
-		
+		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
@@ -35,19 +40,32 @@ class GroupController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * Creates a group
+	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
-	 * @var string $group
+	 * @var string $gid
+	 * @var string $spaceId
 	 *
 	 * @return @JSONResponse
 	 */
-	public function create($group) {
-		// NB: This function could be abused by space managers to create arbitrary group. But, do we really care?
-		if (!is_null($this->groupManager->get($group))) {
-			return new JSONResponse(['Group ' + $group + ' already exists'], Http::STATUS_FORBIDDEN);
+	public function create($gid, $spaceId) {
+		if (!is_null($this->groupManager->get($gid))) {
+			return new JSONResponse(['Group ' + $gid + ' already exists'], Http::STATUS_FORBIDDEN);
 		}
-		if (is_null($this->groupManager->createGroup($group))) {
-			return new JSONResponse(['Could not create group ' + $group], Http::STATUS_FORBIDDEN);
+
+		// Creates group
+		$NCGroup = $this->groupManager->createGroup($gid);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
 		}
+
+		// Grants group access to groupfolder
+		$json = $this->groupfolderService->addGroup($spaceId, $gid);
+		$resp = json_decode($json->getBody(), true);
+		if ($resp['ocs']['meta']['statuscode'] !== 100) {
+			$NCGroup->delete();
+			return new JSONResponse(['Could not assign group to groupfolder. Group has not been created.'], Http::STATUS_FORBIDDEN);
+		}
+
 		return new JSONResponse();
 	}
 

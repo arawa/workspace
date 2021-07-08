@@ -28,7 +28,7 @@ describe('Vuex store tests', () => {
 							groups: [
 								'GE-test-space',
 								'yolo-1234',
-								],
+							],
 							role: 'admin',
 						},
 					],
@@ -49,7 +49,9 @@ describe('Vuex store tests', () => {
 			users: [],
 		})
 
-		expect(state.spaces['test-space-2']).not.undefined
+		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
+		/* eslint-disable-next-line no-unused-expressions */
+		expect(state.spaces['test-space']).to.not.be.undefined
 	})
 
 	it('Adds a group to the space', () => {
@@ -67,9 +69,10 @@ describe('Vuex store tests', () => {
 			group: 'test-group',
 		})
 
-		expect(state.spaces['test-space'].groups['test-group']).undefined
+		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
+		/* eslint-disable-next-line no-unused-expressions */
+		expect(state.spaces['test-space'].groups['test-group']).to.be.undefined
 	})
-
 
 	it('Sets space quota', () => {
 		mutations.setSpaceQuota(state, {
@@ -78,6 +81,12 @@ describe('Vuex store tests', () => {
 		})
 
 		expect(state.spaces['test-space'].quota).equal('1TB')
+	})
+
+	it('Get space quota', () => {
+		const getters = bindGetters()
+		const quota = getters.quota('test-space')
+		expect(quota).equal('unlimited')
 	})
 
 	it('Adds a user to the space', () => {
@@ -93,7 +102,7 @@ describe('Vuex store tests', () => {
 			},
 		})
 
-		expect(state.spaces['test-space'].users['John Doe']).not.undefined
+		return expect(state.spaces['test-space'].users['John Doe']).not.undefined
 	})
 
 	it('Count users in workspace', () => {
@@ -121,6 +130,6 @@ describe('Vuex store tests', () => {
 			},
 		})
 
-		expect(state.spaces['test-space'].users['John Doe']).undefined
+		return expect(state.spaces['test-space'].users['John Doe']).undefined
 	})
 })

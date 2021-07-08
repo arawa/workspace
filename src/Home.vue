@@ -8,6 +8,9 @@
 
 <template>
 	<Content id="content" app-name="workspace">
+		<notifications
+			position="top center"
+			width="100%" />
 		<AppNavigation>
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
@@ -28,13 +31,13 @@
 					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
-					<AppNavigationItem v-for="group in Object.entries($store.state.spaces[name].groups)"
-						:key="group[0]"
+					<AppNavigationItem v-for="group in Object.keys($store.state.spaces[name].groups)"
+						:key="group"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group[0]}`}"
-						:title="group[0]">
+						:to="{path: `/group/${name}/${group}`}"
+						:title="group">
 						<CounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( name, group[0]) }}
+							{{ $store.getters.groupUserCount( name, group) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
@@ -74,11 +77,21 @@ export default {
 	created() {
 		axios.get(generateUrl('/apps/workspace/spaces'))
 			.then(resp => {
+				if (resp.status !== 200) {
+					this.$notify({
+						title: t('workspace', 'Error'),
+						text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+						type: 'error',
+					})
+					return
+				}
+
+				// Initialises the store
 				Object.values(resp.data).forEach(space => {
-					let codeColor = space.color_code
-					if (space.color_code === null) {
-						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-					}
+                    let codeColor = space.color_code
+                    if (space.color_code === null) {
+                        codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+                    }
 					this.$store.commit('addSpace', {
 						// TODO color should be returned by backend
 						color: codeColor,
@@ -90,6 +103,13 @@ export default {
 						quota: this.convertQuotaForFrontend(space.quota),
 						users: space.users,
 					})
+				})
+			})
+			.catch((e) => {
+				this.$notify({
+					title: t('workspace', 'Network error'),
+					text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+					type: 'error',
 				})
 			})
 	},
@@ -111,7 +131,11 @@ export default {
 		// Creates a new space and navigates to its details page
 		createSpace(name) {
 			if (name === '') {
-				// TODO inform user?
+				this.$notify({
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'Please specify a name.'),
+					type: 'error',
+				})
 				return
 			}
 			axios.post(generateUrl('/apps/workspace/spaces'),
