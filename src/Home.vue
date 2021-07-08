@@ -38,10 +38,7 @@
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
-			</AppNavigationItem>B-Boost Convention
-@BBoostCon
-Richoult
-@Richoult
+			</AppNavigationItem>
 
 		</AppNavigation>
 		<AppContent>
