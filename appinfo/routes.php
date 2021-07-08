@@ -20,15 +20,35 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace#getUserWorkspaces',
+			'name' => 'workspace_group_manager#addUserGroupUser',
+			'url' => '/add/user/{uid}/toWspUserGroup/{gid}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'workspace#createSpace',
 			// TODO move this route to /api/spaces
 			'url' => '/spaces',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'workspace#find',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace#create',
+			'name' => 'space#find',
+			'url' => '/workspaces/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'space#findAll',
+			'url' => '/workspaces',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'workspace#findAll',
 			'url' => '/spaces',
-			'verb' => 'POST'
+			'verb' => 'GET'
 		],
 		[
 			'name' => 'workspace#removeUserFromWorkspace',
@@ -57,9 +77,19 @@ return [
 			'verb' => 'PATCH',
 		],
 		[
-			'name' => 'workspace#rename',
-			'url' => '/spaces/{folderId}',
+			'name' => 'users_manager#getUsersWorkSpace',
+			'url' => '/group/{gid}/users',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'workspace#renameSpace',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
+	    ],
+		[
+			'name' => 'space#updateSpaceName',
+			'url' => '/workspaces/{spaceId}/spacename',
+			'verb' => 'POST'
 	    ],
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that
@@ -72,9 +102,14 @@ return [
 			'defaults' => array('path' => 'dummy'),
 		],
 		[
-			'name' => 'workspace#delete',
-			'url' => '/spaces/{folderId}',
+			'name' => 'workspace#destroy',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'space#updateColorCode',
+			'url' => '/workspaces/{spaceId}/color',
+			'verb' => 'POST'
 		]
 	]
 ];

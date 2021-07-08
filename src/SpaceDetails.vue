@@ -10,7 +10,7 @@
 	<div>
 		<div class="header">
 			<div class="space-name">
-				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker">
+				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
 					<button class="color-dot color-picker" :style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
 				</ColorPicker>
 				<span class="space-title">
@@ -224,6 +224,22 @@ export default {
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
+		updateColor(e) {
+			const spacename = this.$route.params.space
+			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
+				{
+					colorCode: e
+				})
+				.then(resp => {
+					this.$store.dispatch('updateColor', {
+						name: spacename,
+						colorCode: e,
+					})
+				})
+				.catch(err => {
+					console.error('Impossible to change the color.', err)
+				})
+		}
 	},
 }
 </script>

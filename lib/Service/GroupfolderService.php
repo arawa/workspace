@@ -2,13 +2,13 @@
 
 namespace OCA\Workspace\Service;
 
+use OCP\ILogger;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
-use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\Authentication\LoginCredentials\IStore;
-use OCP\ILogger;
+use OCP\Authentication\LoginCredentials\ICredentials;
 
 class GroupfolderService {
 
