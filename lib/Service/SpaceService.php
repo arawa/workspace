@@ -71,4 +71,14 @@ class SpaceService {
     public function updateColorCode(string $colorCode, int $spaceId) {
         return $this->spaceMapper->updateColorCode($colorCode, $spaceId);
     }
+
+    public function checkSpaceNameExist(string $spacename) {
+        $checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
+
+        if (array_key_exists('space_name', $checkSpacename)) {
+            return true;
+        }
+       
+        return false;
+    }
 }

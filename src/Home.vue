@@ -144,18 +144,30 @@ export default {
 				}
 			)
 				.then(resp => {
-					this.$store.commit('addSpace', {
-						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: resp.data.groups,
-						isOpen: false,
-						id: resp.data.id_space,
-						name,
-						quota: undefined,
-						users: [],
-					})
-					this.$router.push({
-						path: `/workspace/${name}`,
-					})
+					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
+						this.$notify({
+							title: t('workspace', 'Error - Creating space'),
+							text: t('workspace', 'This space already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.'),
+							type: 'error'
+						})
+					} else {
+						this.$store.commit('addSpace', {
+							color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+							groups: resp.data.groups,
+							isOpen: false,
+							id: resp.data.id_space,
+							name,
+							quota: undefined,
+							users: [],
+						})
+						this.$router.push({
+							path: `/workspace/${name}`,
+						})
+					}
+				})
+				.catch(err => {
+					console.error('Here')
+					console.error(err)
 				})
 		},
 	},

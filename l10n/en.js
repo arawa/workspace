@@ -22,5 +22,7 @@ OC.L10N.register(
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',
 		'Workspace name': 'Workspace name',
+		'Error - Creating space': 'Error - Creating space',
+		'This space already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.': 'This space already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.',
 	},
 "nplurals=2; plural=(n > 1)");
