@@ -10,7 +10,9 @@
 	<Content id="content" app-name="workspace">
 		<notifications
 			position="top center"
-			width="100%" />
+			width="50%"
+			class="notifications"
+			closeOnClick="true" />
 		<AppNavigation>
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
@@ -196,5 +198,9 @@ tr:hover {
 
 .user-counter {
 	margin-right: 5px;
+}
+
+.notifications {
+	margin-top: 70px;
 }
 </style>
