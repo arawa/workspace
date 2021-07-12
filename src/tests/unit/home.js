@@ -1,4 +1,3 @@
-import OC from './OC'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import Home from '../../../src/Home.vue'
@@ -6,8 +5,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import store from '../../../src/store/index.js'
-
-global.OC = OC
 
 Vue.prototype.t = t
 Vue.prototype.n = n

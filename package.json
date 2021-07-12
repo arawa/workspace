@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
     "dev": "NODE_ENV=development webpack --progress --config webpack.dev.config.js",
-    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.config.js \"src/tests/**/*.js\"",
+    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.config.js --require \"src/tests/OC.js\" \"src/tests/**/*.js\"",
     "lint": "eslint --ext .js,.vue src"
   },
   "repository": {

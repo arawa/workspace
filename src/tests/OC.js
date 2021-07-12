@@ -20,7 +20,7 @@
  *
  */
 
-export default {
+global.OC = {
 	L10N: {
 		translate() {
 			return ''

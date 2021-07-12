@@ -1,6 +1,6 @@
 import { curry, mapObjIndexed } from 'ramda'
 import { getters } from '../../store/getters'
-import mutations from '../..//store/mutations'
+import mutations from '../../store/mutations'
 
 const bindGetterToState = curry((getters, state, num, key) => getters[key](state, getters))
 const expect = require('chai').expect
