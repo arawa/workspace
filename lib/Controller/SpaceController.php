@@ -48,6 +48,7 @@ class SpaceController extends Controller{
 
     /**
      * @NoAdminRequired
+     * @SpaceAdminRequired
      * @NoCSRFRequired
      */
     public function updateSpaceName($newSpaceName, $spaceId) {
@@ -56,6 +57,7 @@ class SpaceController extends Controller{
 
     /**
      * @NoAdminRequired
+     * @SpaceAdminRequired
      * @NoCSRFRequired
      */
     public function updateColorCode(string $colorCode, int $spaceId) {
