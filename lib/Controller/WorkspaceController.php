@@ -254,7 +254,7 @@ class WorkspaceController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
+     * @SpaceAdminRequired
      */
     public function destroy($spaceId) {
         
@@ -264,26 +264,8 @@ class WorkspaceController extends Controller {
 
         $cloneSpace = $space;
 
-        $responseGroupfolderGet = $this->groupfolderService->get($space['groupfolder_id']);
+        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
 
-        $groupfolder = json_decode($responseGroupfolderGet->getBody(), true);
-        
-        if (
-            !$this->userService->isSpaceManagerOfSpace($groupfolder['ocs']['data']['mount_point']) &&
-            !$this->userService->isUserGeneralAdmin()
-            )
-        {
-            return new JSONResponse(
-                [
-                    'data' => [],
-                    'http' => [
-                        'message' => 'You are not a manager for this space.',
-                        'statuscode' => Http::STATUS_FORBIDDEN
-                    ]
-                ]
-            );
-        }
-        
         $responseGroupfolderDelete = $this->groupfolderService->delete($space['groupfolder_id']);
     
         $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
