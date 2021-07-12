@@ -94,7 +94,6 @@ export default {
 						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
 					}
 					this.$store.commit('addSpace', {
-						// TODO color should be returned by backend
 						color: codeColor,
 						groups: space.groups,
 						id: space.id,
