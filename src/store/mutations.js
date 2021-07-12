@@ -120,5 +120,5 @@ export default {
 		const space = state.spaces[name]
 		space.color = colorCode
 		Vue.set(state.spaces, name, space)
-	}
+	},
 }

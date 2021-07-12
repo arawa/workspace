@@ -29,7 +29,7 @@ export default {
 				console.log('User ' + user.name + ' added to group ' + gid)
 			} else {
 				// Restore frontend and inform user
-				context.commit('removeUserFromGroup', { name, group, user })
+				context.commit('removeUserFromGroup', { name, gid, user })
 				this._vm.$notify({
 					title: t('workspace', 'Error'),
 					text: t('workspace', 'An error occured while trying to add user ') + user.name
@@ -40,7 +40,7 @@ export default {
 			}
 		}).catch((e) => {
 			// Restore frontend and inform user
-			context.commit('removeUserFromGroup', { name, group, user })
+			context.commit('removeUserFromGroup', { name, gid, user })
 			this._vm.$notify({
 				title: t('workspace', 'Network error'),
 				text: t('workspace', 'A network error occured while trying to add user ') + user.name
@@ -310,4 +310,5 @@ export default {
 	},
 	updateColor(context, { name, colorCode }) {
 		context.commit('UPDATE_COLOR', { name, colorCode })
+	},
 }

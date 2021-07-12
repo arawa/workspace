@@ -44,7 +44,6 @@
 					</AppNavigationItem>
 				</div>
 			</AppNavigationItem>
-
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -140,11 +139,7 @@ export default {
 				})
 				return
 			}
-			axios.post(generateUrl('/apps/workspace/spaces'),
-				{
-					spaceName: name,
-				}
-			)
+			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
 				.then(resp => {
 					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
 						this.$notify({
@@ -167,9 +162,12 @@ export default {
 						})
 					}
 				})
-				.catch(err => {
-					console.error('Here')
-					console.error(err)
+				.catch((e) => {
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to create the workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+						type: 'error',
+					})
 				})
 		},
 	},

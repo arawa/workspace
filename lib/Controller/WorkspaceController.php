@@ -377,23 +377,45 @@ class WorkspaceController extends Controller {
             $spaces = $filteredSpaces;
         }
 
-        // Adds workspace users
-        $this->logger->debug('Adding users information to workspaces');
-        $spacesWithUsers = array_map(function($space) {
-            $users = array();
-            foreach($this->groupManager->get(Application::ESPACE_MANAGER_01 . $space['space_name'])->getUsers() as $user) {
-                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-            };
-            foreach($this->groupManager->get(Application::ESPACE_USERS_01 . $space['space_name'])->getUsers() as $user) {
-                $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
-            };
-            $space['users'] = $users;
-            return $space;
-            
-        },$spaces);
+	// Adds workspace users and groups details
+	// Caution: It is important to add users from the workspace's user group before adding the users
+	// from the workspace's manager group, as users may be members of both groups 
+	$this->logger->debug('Adding users information to workspaces');
+	$workspaces = array_map(function($space) {
+		// Adds users
+		$users = array();
+		$group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['mount_point'])[0];
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+			};
+		}
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		$group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['mount_point'])[0];
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+			};
+		}
+		$space['users'] = $users;
 
+		// Adds groups
+		$groups = array();
+		foreach (array_keys($space['groups']) as $gid) {
+			$NCGroup = $this->groupManager->get($gid);
+			$groups[$gid] = array(
+				'gid' => $NCGroup->getGID(),
+				'displayName' => $NCGroup->getDisplayName()
+			);
+		}
+		$space['groups'] = $groups;
 
-        return new JSONResponse($spacesWithUsers);
+		return $space;
+
+	},$spaces);
+
+        return new JSONResponse($workspaces);
     }
 
 	/**

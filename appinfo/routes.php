@@ -20,6 +20,12 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'workspace#createSpace',
+			// TODO move this route to /api/spaces
+			'url' => '/spaces',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#find',
 			'url' => '/spaces/{spaceId}',
 			'verb' => 'GET'
@@ -87,11 +93,6 @@ return [
 			'verb' => 'PATCH',
 		],
 		[
-			'name' => 'workspace#renameSpace',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'PATCH'
-	    	],
-		[
 			'name' => 'space#updateSpaceName',
 			'url' => '/workspaces/{spaceId}/spacename',
 			'verb' => 'POST'
@@ -101,6 +102,7 @@ return [
 			'url' => '/workspaces/{spaceId}/color',
 			'verb' => 'POST'
 		],
+		[
 
 			'name' => 'group#removeUser',
 			'url' => '/api/group/delUser/{spaceId}',
@@ -115,6 +117,6 @@ return [
 			'verb' => 'GET',
 			'requirements' => array('path' => '.*'),
 			'defaults' => array('path' => 'dummy'),
-		],
+		]
 	]
 ];

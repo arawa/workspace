@@ -218,7 +218,7 @@ export default {
 			const spacename = this.$route.params.space
 			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
 				{
-					colorCode: e
+					colorCode: e,
 				})
 				.then(resp => {
 					this.$store.dispatch('updateColor', {
@@ -227,9 +227,13 @@ export default {
 					})
 				})
 				.catch(err => {
-					console.error('Impossible to change the color.', err)
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err,
+						type: 'error',
+					})
 				})
-		}
+		},
 	},
 }
 </script>
