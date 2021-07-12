@@ -109,14 +109,11 @@ export default {
 			// Update backend and revert frontend changes if something fails
 			this.allSelectedUsers.forEach((user) => {
 				let group = ''
-				if (this.$route.params.group !== 'undefined') {
-					group = this.$route.params.group
-				} else {
+				if (this.$route.params.space !== '' && user.role !== '') {
 					// TODO Use application-wide constants
 					group = user.role === 'admin' ? 'GE-' : 'U-'
 					group = group + this.$route.params.space
 				}
-
 				// Add user to proper workspace group
 				axios.patch(
 					generateUrl('/apps/workspace/group/addUser/{space}', {
@@ -127,7 +124,7 @@ export default {
 						user: user.uid,
 					}
 				).then((resp) => {
-					if (resp.status !== '204') {
+					if (resp.status !== 204) {
 						this.$store.commit('addSpace', spaceBackup)
 						this.$notify({
 							title: t('workspace', 'Error'),
