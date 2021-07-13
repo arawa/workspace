@@ -104,7 +104,7 @@ class GroupController extends Controller {
 			}
 
 		}
+		return new JSONResponse(['message' => 'The user '. $user .' is added in the '. $group .' group'], Http::STATUS_NO_CONTENT);
 
-		return new JSONResponse([], Http::STATUS_NO_CONTENT);
 	}
 }
