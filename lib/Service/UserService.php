@@ -45,8 +45,8 @@ Class UserService {
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
 			if (substr_compare($group->getGID(), $space['id'], -strlen($space['id'])) === 0
-				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['mount_point']
-				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['mount_point']
+				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['space_name']
+				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['space_name']
 			) {
 				array_push($groups, $group->getGID());
 			}
