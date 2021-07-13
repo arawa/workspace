@@ -149,7 +149,7 @@ export default {
 					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
 						this.$notify({
 							title: t('workspace', 'Error - Creating space'),
-							text: t('workspace', 'This space already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.'),
+							text: t('workspace', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.'),
 							type: 'error'
 						})
 					} else {

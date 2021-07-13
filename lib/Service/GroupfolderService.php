@@ -292,5 +292,28 @@ class GroupfolderService {
         return $response;
     }
 
+    /**
+     * @param string $spacename
+     * @return bool true if exist, otherwise false.
+     */
+    public function checkGroupfolderNameExist($spacename) {
+
+        $responseGroupfolders = $this->getAll();
+
+        $groupfolders = json_decode($responseGroupfolders->getBody(), true);
+
+        $mountpoints = array_values(
+            array_map(
+                function ($groupfolder){
+                    return strtoupper($groupfolder['mount_point']);
+                },
+                $groupfolders['ocs']['data']
+            )
+        );
+
+        return in_array(strtoupper($spacename), $mountpoints);
+
+    }
+
 }
 
