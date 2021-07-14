@@ -22,5 +22,7 @@ OC.L10N.register(
 		'Space administrators': "Gestionnaires d'Espace",
 		'Users': 'Utilisateurs',
 		'Workspace name': "Nom de l'Espace",
+		'Error - Creating space': 'Erreur - Création d\'un espace projet',
+		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'Cet espace projet ou le dossier du groupe (groupfolder) existe déjà. Saisissez un autre espace, s\'il vous plaît.\nPar exemple, si l\'espace "toto" existe, vous ne pouvez pas créer l\'espace "tOTo".\nAssurez-vous que le groupfolder n\'existe pas.'
 	},
 "nplurals=2; plural=(n > 1)");

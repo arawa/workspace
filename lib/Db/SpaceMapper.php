@@ -67,7 +67,6 @@ class SpaceMapper extends QBMapper {
     }
 
     public function updateColorCode(string $colorCode, int $spaceId) {
-        // var_dump([ 'spaceId' => $spaceId, 'colorCode' => $colorCode ]);
         $qb = $this->db->getQueryBuilder();
 
         $qb
@@ -78,6 +77,24 @@ class SpaceMapper extends QBMapper {
         $qb->execute();
         
         return $this->find($spaceId);
+    }
+
+    public function checkSpaceNameExist(string $spacename) {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb
+            ->select('space_name')
+            ->from($this->getTableName())
+            ->where(
+                'UPPER(space_name) like UPPER(\'%'. $spacename . '%\')'
+            );
+
+        $cursor = $qb->execute();
+
+        $row = $cursor->fetch();
+        $cursor->closeCursor();
+
+        return $row;
     }
 
 }

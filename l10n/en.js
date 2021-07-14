@@ -22,5 +22,7 @@ OC.L10N.register(
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',
 		'Workspace name': 'Workspace name',
+		'Error - Creating space': 'Error - Creating space',
+		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.',
 	},
 "nplurals=2; plural=(n > 1)");

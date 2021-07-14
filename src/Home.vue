@@ -10,7 +10,9 @@
 	<Content id="content" app-name="workspace">
 		<notifications
 			position="top center"
-			width="100%" />
+			width="50%"
+			class="notifications"
+			closeOnClick="true" />
 		<AppNavigation>
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
@@ -144,18 +146,30 @@ export default {
 				}
 			)
 				.then(resp => {
-					this.$store.commit('addSpace', {
-						color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
-						groups: resp.data.groups,
-						isOpen: false,
-						id: resp.data.id_space,
-						name,
-						quota: undefined,
-						users: [],
-					})
-					this.$router.push({
-						path: `/workspace/${name}`,
-					})
+					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
+						this.$notify({
+							title: t('workspace', 'Error - Creating space'),
+							text: t('workspace', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.'),
+							type: 'error'
+						})
+					} else {
+						this.$store.commit('addSpace', {
+							color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+							groups: resp.data.groups,
+							isOpen: false,
+							id: resp.data.id_space,
+							name,
+							quota: undefined,
+							users: [],
+						})
+						this.$router.push({
+							path: `/workspace/${name}`,
+						})
+					}
+				})
+				.catch(err => {
+					console.error('Here')
+					console.error(err)
 				})
 		},
 	},
@@ -184,5 +198,9 @@ tr:hover {
 
 .user-counter {
 	margin-right: 5px;
+}
+
+.notifications {
+	margin-top: 70px;
 }
 </style>
