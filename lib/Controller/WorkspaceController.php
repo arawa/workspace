@@ -128,7 +128,7 @@ class WorkspaceController extends Controller {
             ]);
         }
 
-	// TODO: This function shall be reserved for GG
+	    // TODO: This function shall be reserved for GG
 	
         if( $spaceName === false ||
             $spaceName === null ||
@@ -361,43 +361,43 @@ class WorkspaceController extends Controller {
             $spaces = $filteredSpaces;
         }
 
-	// Adds workspace users and groups details
-	// Caution: It is important to add users from the workspace's user group before adding the users
-	// from the workspace's manager group, as users may be members of both groups 
-	$this->logger->debug('Adding users information to workspaces');
-	$workspaces = array_map(function($space) {
-		// Adds users
-		$users = array();
-		$group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
-		// TODO Handle is_null($group) better (remove workspace from list?)
-		if (!is_null($group)) {
-			foreach($group->getUsers() as $user) {
-				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
-			};
-		}
-		// TODO Handle is_null($group) better (remove workspace from list?)
-		$group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
-		if (!is_null($group)) {
-			foreach($group->getUsers() as $user) {
-				$users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
-			};
-		}
-		$space['users'] = $users;
+        // Adds workspace users and groups details
+        // Caution: It is important to add users from the workspace's user group before adding the users
+        // from the workspace's manager group, as users may be members of both groups 
+        $this->logger->debug('Adding users information to workspaces');
+        $workspaces = array_map(function($space) {
+            // Adds users
+            $users = array();
+            $group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
+            // TODO Handle is_null($group) better (remove workspace from list?)
+            if (!is_null($group)) {
+                foreach($group->getUsers() as $user) {
+                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+                };
+            }
+            // TODO Handle is_null($group) better (remove workspace from list?)
+            $group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
+            if (!is_null($group)) {
+                foreach($group->getUsers() as $user) {
+                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+                };
+            }
+            $space['users'] = $users;
 
-		// Adds groups
-		$groups = array();
-		foreach (array_keys($space['groups']) as $gid) {
-			$NCGroup = $this->groupManager->get($gid);
-			$groups[$gid] = array(
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
-			);
-		}
-		$space['groups'] = $groups;
+            // Adds groups
+            $groups = array();
+            foreach (array_keys($space['groups']) as $gid) {
+                $NCGroup = $this->groupManager->get($gid);
+                $groups[$gid] = array(
+                    'gid' => $NCGroup->getGID(),
+                    'displayName' => $NCGroup->getDisplayName()
+                );
+            }
+            $space['groups'] = $groups;
 
-		return $space;
+            return $space;
 
-	},$spaces);
+        },$spaces);
 
         return new JSONResponse($workspaces);
     }
@@ -465,7 +465,7 @@ class WorkspaceController extends Controller {
      */
     public function create($spaceName) {
 
-	// TODO: Make sure only application managers can call this method
+	    // TODO: Make sure only application managers can call this method
 	    //
         // create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::ESPACE_MANAGER_01 . $spaceName);
@@ -629,13 +629,19 @@ class WorkspaceController extends Controller {
             $respAttachGroupGE = $this->groupfolderService->attachGroup($space['groupfolder_id'], $newGroupGE->getGID());
             
             if ($respAttachGroupGE->getStatusCode() === 200) {
-                $response['groups'][] = $newGroupGE->getGID();
+                $response['groups'][$newGroupGE->getGID()] = [
+                    "displayName" => $newGroupGE->getDisplayName(),
+                    "gid" => $newGroupGE->getGID()
+                ];
             }
 
             $respAttachGroupU = $this->groupfolderService->attachGroup($space['groupfolder_id'], $newGroupU->getGID());
 
             if ($respAttachGroupU->getStatusCode() === 200) {
-                $response['groups'][] = $newGroupU->getGID();
+                $response['groups'][$newGroupU->getGID()] = [
+                    "displayName" => $newGroupU->getDisplayName(),
+                    "gid" => $newGroupU->getGID()
+                ];
             }
         
             $groupGE->delete();
