@@ -41,16 +41,22 @@
 						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
+							:close-after-click="true"
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</ActionInput>
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionInput
+					<ActionButton v-show="!renameSpace"
 						icon="icon-rename"
-						@submit="renameSpace">
-						{{ t('workspace', 'Rename space') }}
+						:title="t('workspace', 'Rename space')"
+						@click="toggleRenameSpace" />
+					<ActionInput v-show="renameSpace"
+						ref="renameSpaceInput"
+						icon="icon-rename"
+						@submit="onSpaceRename">
+						{{ t('workspace', 'Space name') }}
 					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
@@ -96,7 +102,8 @@ export default {
 	},
 	data() {
 		return {
-			createGroup: false, // true to display ActionInput
+			createGroup: false, // true to display 'Create Group' ActionInput
+			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
@@ -129,49 +136,26 @@ export default {
 					})
 			}
 		},
-		// Creates a group and navigates to its details page
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			let group = e.target[1].value
+			const group = e.target[1].value
 			if (!group) {
 				return
 			}
 
-			// Groups must be postfixed with the ID of the space they belong
-			const space = this.$store.state.spaces[this.$route.params.space]
-			group = group + '-' + space.id
-
-			// Creates group in frontend
-			this.$store.commit('addGroupToSpace', { name: this.$route.params.space, group })
-
-			// Creates group in backend
-			axios.post(generateUrl(`/apps/workspace/api/group/${group}`), { spaceId: space.id })
-				.then((resp) => {
-					if (resp.status === 200) {
-						// Navigates to the group's details page
-						this.$store.state.spaces[this.$route.params.space].isOpen = true
-						this.$router.push({
-							path: `/group/${this.$route.params.space}/${group}`,
-						})
-					} else {
-						this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
-						// TODO Inform user
-					}
-				})
-				.catch((e) => {
-					this.$store.commit('removeGroupFromSpace', { name: this.$route.params.space, group })
-					// TODO Inform user
-				})
+			// Creates group
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
 		},
-		renameSpace(e) {
-			// TODO
-			const oldSpaceName = this.$route.params.space
+		onSpaceRename(e) {
+			// Hides ActionInput
+			this.toggleRenameSpace()
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
+			const oldSpaceName = this.$route.params.space
 			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
 				{
 					newSpaceName: e.target[1].value,
@@ -221,6 +205,12 @@ export default {
 				this.$refs.createGroupInput.$el.focus()
 			}
 		},
+		toggleRenameSpace() {
+			this.renameSpace = !this.renameSpace
+			if (this.renameSpace === true) {
+				this.$refs.renameSpaceInput.$el.focus()
+			}
+		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
@@ -228,7 +218,7 @@ export default {
 			const spacename = this.$route.params.space
 			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
 				{
-					colorCode: e
+					colorCode: e,
 				})
 				.then(resp => {
 					this.$store.dispatch('updateColor', {
@@ -237,9 +227,13 @@ export default {
 					})
 				})
 				.catch(err => {
-					console.error('Impossible to change the color.', err)
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err,
+						type: 'error',
+					})
 				})
-		}
+		},
 	},
 }
 </script>

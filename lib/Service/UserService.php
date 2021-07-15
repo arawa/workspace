@@ -2,10 +2,14 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\GroupfolderService;
 use OCP\IGroupManager;
 use OCP\IUserSession;
 
 Class UserService {
+
+	/** @var $groupfolderService */
+	private $groupfolderService;
 
 	/** @var $groupManager */
 	private $groupManager;
@@ -14,9 +18,11 @@ Class UserService {
 	private $userSession;
 
 	public function __construct(
+		GroupfolderService $groupfolderService,
 		IGroupManager $group,
 		IUserSession $userSession) {
 
+		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $group;
 		$this->userSession = $userSession;
 
@@ -31,7 +37,7 @@ Class UserService {
 	 * @param array $space
 	 * @param string $role
 	 *
-	 * @return array
+	 * @return array|null
 	 *
 	 */
 
@@ -44,17 +50,14 @@ Class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (substr_compare($group->getGID(), $space['id'], -strlen($space['id'])) === 0
-				|| $group->getGID() === Application::ESPACE_MANAGER_01 . $space['space_name']
-				|| $group->getGID() === Application::ESPACE_USERS_01 . $space['space_name']
-			) {
+			if (in_array($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
-		};
+		}
 
 		// Returns a user that is valid for the frontend
 		return array(
-      'uid' => $user->getUID(),
+			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
@@ -78,8 +81,7 @@ Class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	*/
 	public function isSpaceManager() {
-		// TODO This must use the application constants
-		$workspaceAdminGroups = $this->groupManager->search('GE-');
+		$workspaceAdminGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01);
 		foreach($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -89,12 +91,14 @@ Class UserService {
 	}
 
 	/**
-	 * @param string $name The workspace name
+	 * @param string $id The groupfolder id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/
-	public function isSpaceManagerOfSpace($name) {
-		// TODO This must use the application constants
-		$workspaceAdminGroup = $this->groupManager->search('GE-' . $name);
+	public function isSpaceManagerOfSpace($id) {
+		// Get groupfolder name
+		$name = $this->groupfolderService->getName($id);
+
+		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $name);
 
 		if (count($workspaceAdminGroup) == 0) {
 			// TODO Log error

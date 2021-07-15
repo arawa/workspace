@@ -168,9 +168,10 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
+     * Returns a groupfolder's details
+     *
      * @param int $folderId
-     * @return object that is the response from httpClient
+     * @return object The groupfolder's details
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
@@ -183,7 +184,36 @@ class GroupfolderService {
               'headers' => self::HEADERS
         ]);
 
-        return $response;
+	$groupfolder = json_decode($response->getBody(), true);
+
+	// TODO Error management
+
+	return $groupfolder['ocs']['data'];
+    }
+
+    /**
+     * Gets a groupfolder's name from its ID
+     *
+     * @param int $folderId The id of the groupfolder
+     * @return string The name of the groupfolder
+     */
+    public function getName($folderId) {
+        $response = $this->httpClient->get(
+            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $folderId,
+            [
+              'auth' => [
+                  $this->login->getUID(),
+                  $this->login->getPassword()
+              ],
+              'headers' => self::HEADERS
+        ]);
+
+	$groupfolder = json_decode($response->getBody(), true);
+
+	// TODO Error management
+
+	return $groupfolder['ocs']['data']['mount_point'];
+
     }
 
      /**
@@ -242,7 +272,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $newSpaceName
      * @return object that is the response from httpClient
@@ -265,7 +294,6 @@ class GroupfolderService {
     }
 
     /**
-     * @NoAdminRequired
      * @param int $folderId
      * @param string $gid
      * @return object that is the response from httpClient

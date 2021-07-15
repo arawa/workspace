@@ -46,8 +46,10 @@
 						</div>
 					</div>
 					<div class="user-entry-actions">
-						<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
-						<label>{{ t('workspace', 'S.A.') }}</label>
+						<div v-if="!isGEorUGroup">
+							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+							<label>{{ t('workspace', 'S.A.') }}</label>
+						</div>
 						<Actions>
 							<ActionButton
 								icon="icon-delete"
@@ -71,6 +73,7 @@
 </template>
 
 <script>
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from './constants'
 import axios from '@nextcloud/axios'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
@@ -94,55 +97,41 @@ export default {
 			selectableUsers: [], // Users matching a search term
 		}
 	},
+	computed: {
+		// Returns true if we are adding users to the GE or User group of this workspace
+		isGEorUGroup() {
+			if (this.$route.params.group === this.$store.getters.GEGroup(this.$route.params.space).gid
+			|| this.$route.params.group === this.$store.getters.UGroup(this.$route.params.space).gid) {
+				return true
+			}
+			return false
+		},
+	},
 	methods: {
 		// Adds users to workspace/group and close dialog
 		addUsersToWorkspaceOrGroup() {
-			// Update frontend first and keep a backup of the changes should something fail
-			const spaceBackup = this.$store.state.spaces[this.$route.params.space]
-			const space = this.$store.state.spaces[this.$route.params.space]
-			this.allSelectedUsers.forEach(user => {
-				space.users[user.name] = user
-			})
-			this.$store.commit('updateSpace', space)
 			this.$emit('close')
 
-			// Update backend and revert frontend changes if something fails
-			this.allSelectedUsers.forEach((user) => {
-				let group = ''
-				if (this.$route.params.space !== '' && user.role !== '') {
+			this.allSelectedUsers.forEach(user => {
+				let gid = ''
+				if (this.$route.params.group !== undefined) {
+					// Adding a user to a workspace 'subgroup
+					// TODO Should we support assigning the user GE role at the same time?
+					gid = this.$route.params.group
+				} else {
+					// Adding a user to the workspace
 					// TODO Use application-wide constants
-					group = user.role === 'admin' ? 'GE-' : 'U-'
-					group = group + this.$route.params.space
+					// Caution, we are not giving a gid here but rather a group's displayName
+					// (the space's name, in this.$route.params.space can change).
+					// This should however be handled in the backend
+					gid = user.role === 'admin' ? ESPACE_MANAGERS_PREFIX : ESPACE_USERS_PREFIX
+					gid = gid + this.$route.params.space
 				}
 				// Add user to proper workspace group
-				axios.patch(
-					generateUrl('/apps/workspace/group/addUser/{space}', {
-						space: this.$route.params.space,
-					}),
-					{
-						group,
-						user: user.uid,
-					}
-				).then((resp) => {
-					if (resp.status !== 204) {
-						this.$store.commit('addSpace', spaceBackup)
-						this.$notify({
-							title: t('workspace', 'Error'),
-							text: t('workspace', 'An error occured while trying to add user ') + user.name
-								+ t('workspace', ' to workspaces.') + '<br>'
-								+ t('workspace', 'The error is: ') + resp.statusText,
-							type: 'error',
-						})
-					}
-				}).catch((e) => {
-					this.$store.commit('addSpace', spaceBackup)
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to add user ') + user.name
-							+ t('workspace', ' to workspaces.') + '<br>'
-							+ t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+				this.$store.dispatch('addUserToGroup', {
+					name: this.$route.params.space,
+					gid,
+					user,
 				})
 			})
 		},
@@ -199,6 +188,9 @@ export default {
 			this.isLookingUpUsers = false
 		},
 		removeUserFromBatch(user) {
+			this.selectedUsers = this.selectedUsers.filter((u) => {
+				return u.name !== user.name
+			})
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
 				return u.name !== user.name
 			})

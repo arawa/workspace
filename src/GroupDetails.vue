@@ -12,7 +12,7 @@
 			<div class="group-name">
 				<div class="icon-group" />
 				<span class="group-title">
-					{{ $route.params.group }}
+					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
 			</div>
 			<div class="group-actions">
@@ -30,17 +30,23 @@
 						<ActionInput v-show="showCreateGroupInput"
 							ref="createGroupInput"
 							icon="icon-group"
-							@submit="createGroup">
+							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</ActionInput>
 					</Actions>
 				</div>
 				<Actions>
-					<ActionButton
+					<ActionButton v-show="!showRenameGroupInput"
 						icon="icon-rename"
-						@click="renameGroup">
+						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</ActionButton>
+					<ActionInput v-show="showRenameGroupInput"
+						ref="renameGroupInput"
+						icon="icon-group"
+						@submit="onRenameGroup">
+						{{ t('workspace', 'Group name') }}
+					</ActionInput>
 					<ActionButton
 						icon="icon-delete"
 						@click="deleteGroup">
@@ -58,15 +64,13 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from './constants'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
-import Vue from 'vue'
 
 export default {
 	name: 'GroupDetails',
@@ -80,63 +84,78 @@ export default {
 	},
 	data() {
 		return {
-			showCreateGroupInput: false, // true to display ActionInput
+			showCreateGroupInput: false, // true to display 'Create Group' ActionInput
+			showRenameGroupInput: false, // true to display 'Rename Group' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
 	methods: {
 		deleteGroup() {
-			// TODO
-		},
-		// Creates a group
-		createGroup(e) {
-			// Hides ActionInput
-			this.toggleShowCreateGroupInput()
-			// Don't accept empty names
-			let group = e.target[1].value
-			if (!group) {
+			// Prevents deleting GE- and U- groups
+			if (this.$route.params.group === ESPACE_MANAGERS_PREFIX + this.$route.params.space
+			|| this.$route.params.group === ESPACE_USERS_PREFIX + this.$route.params.space) {
+				// TODO Inform user
 				return
 			}
 
-			// Groups must be postfixed with the ID of the space they relate to
-			const space = this.$root.$data.spaces[this.$route.params.space]
-			group = group + '-' + space.id
+			this.$store.dispatch('deleteGroup', {
+				name: this.$route.params.space,
+				group: this.$route.params.group,
+			})
+		},
+		onNewGroup(e) {
+			// Hides ActionInput
+			this.toggleShowCreateGroupInput()
 
-			// Creates group in frontend
-			const oldGroups = space.groups
-			space.groups[group] = group
-			Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
+			// Don't accept empty names
+			const group = e.target[1].value
+			if (!group) {
+				// TODO Inform user
+				return
+			}
 
-			// Creates group in backend
-			axios.post(generateUrl(`/apps/workspace/group/add/${group}`))
-				.then((resp) => {
-					// Give group access to space
-					axios.post(generateUrl(`/apps/groupfolders/folders/${space.id}/groups`), { group })
-						.then((resp) => {
-							// Navigates to the group's details page
-							this.$root.$data.spaces[this.$route.params.space].isOpen = true
-							this.$router.push({
-								path: `/group/${space.name}/${group}`,
-							})
-						})
-						.catch((e) => {
-							// TODO revert frontend change, delete group in backend, inform user
-						})
-				})
-				.catch((e) => {
-					space.groups = oldGroups
-					Vue.set(this.$root.$data.spaces, this.$route.params.space, space)
-					// TODO Inform user
-				})
+			// TODO Check already existing groups
+
+			// Creates group
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
 
 		},
-		renameGroup() {
-			// TODO
+		onRenameGroup(e) {
+			// Hides ActionInput
+			this.toggleShowRenameGroupInput()
+
+			// Don't accept empty names
+			const group = e.target[1].value
+			if (!group) {
+				// TODO Inform user
+				return
+			}
+
+			// Prevents renaming GE- and U- groups
+			if (group === ESPACE_MANAGERS_PREFIX + this.$route.params.space || group === ESPACE_USERS_PREFIX + this.$route.params.space) {
+				// TODO Inform user
+				return
+			}
+
+			// TODO Check already existing groups
+
+			// Renames group
+			this.$store.dispatch('renameGroup', {
+				name: this.$route.params.space,
+				gid: this.$route.params.group,
+				newGroupName: group,
+			})
 		},
 		toggleShowCreateGroupInput() {
 			this.showCreateGroupInput = !this.showCreateGroupInput
 			if (this.showCreateGroupInput === true) {
 				this.$refs.createGroupInput.$el.focus()
+			}
+		},
+		toggleShowRenameGroupInput() {
+			this.showRenameGroupInput = !this.showRenameGroupInput
+			if (this.showRenameGroupInput === true) {
+				this.$refs.renameGroupInput.$el.focus()
 			}
 		},
 		toggleShowSelectUsersModal() {

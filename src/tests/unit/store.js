@@ -1,6 +1,6 @@
 import { curry, mapObjIndexed } from 'ramda'
-import { getters } from '../../../src/store/getters'
-import mutations from '../../../src/store/mutations'
+import { getters } from '../../store/getters'
+import mutations from '../../store/mutations'
 
 const bindGetterToState = curry((getters, state, num, key) => getters[key](state, getters))
 const expect = require('chai').expect
@@ -60,7 +60,10 @@ describe('Vuex store tests', () => {
 			group: 'test-group',
 		})
 
-		expect(state.spaces['test-space'].groups['test-group']).equals('test-group')
+		expect(state.spaces['test-space'].groups['test-group']).eql({
+			gid: 'test-group',
+			displayName: 'test-group',
+		})
 	})
 
 	it('Removes a group to the space', () => {

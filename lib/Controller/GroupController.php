@@ -1,4 +1,13 @@
 <?php
+/**
+ *
+ * @author Cyrille Bollu <cyrille@bollu.be>
+ * @author Baptiste Fotia <baptiste.fotia@arawa.fr>
+ *
+ * TODO: Add licence
+ *
+ */
+
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
@@ -38,6 +47,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @SpaceAdminRequired
 	 *
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
@@ -71,33 +81,111 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @SpaceAdminRequired
 	 *
-	 * Adds a user to a group
+	 * Deletes a group
+	 * Cannot delete GE- and U- groups (This is on-purpose)
 	 *
-	 * @var string $group
+	 * @var string $gid
+	 * @var string $spaceId
+	 *
+	 * @return @JSONResponse
+	 */
+	public function delete($gid, $spaceId) {
+		// TODO Use groupfolder api to retrieve workspace group. 
+		if (substr($gid, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
+		}
+
+		// Delete group
+		$NCGroup = $this->groupManager->get($gid);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
+		$NCGroup->delete();
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * Renames a group
+	 * Cannot rename GE- and U- groups (This is on-purpose)
+	 *
+	 * @var string $gid ID of the group to be renamed
+	 * @var string $newGroupName The group's new name
+	 * @var string $spaceId
+	 *
+	 * @return @JSONResponse
+	 */
+	public function rename($newGroupName, $gid, $spaceId) {
+		// TODO Use groupfolder api to retrieve workspace group. 
+		if (substr($gid, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(
+				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
+				Http::STATUS_FORBIDDEN
+			);
+		}
+		if (substr($newGroupName, -strlen($spaceId)) != $spaceId) {
+			return new JSONResponse(
+				['Workspace groups must ends with the ID of the space they belong to'],
+				Http::STATUS_FORBIDDEN
+			);
+		}
+
+		// Rename group
+		$NCGroup = $this->groupManager->get($gid);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
+		$NCGroup->setDisplayName($newGroupName);
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * Adds a user to a group.
+	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
+	 * manager group when we are adding a workspace manager
+	 *
+	 * @var string $gid
 	 * @var string $user
 	 *
 	 * @return @JSONResponse
 	 */
-	public function addUser($space, $group, $user) {
+	public function addUser($spaceId, $gid, $user) {
 
-		if (!$this->userService->isSpaceManagerOfSpace($space) && !$this->userService->isUserGeneralAdmin()) {
-			return new JSONResponse(['You are not a manager for this space'], Http::STATUS_FORBIDDEN);
-		}
-
-		$NCGroup = $this->groupManager->get($group);
-		$NCUser = $this->userManager->get($user);
-
+		// Makes sure group exist
+		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Group ' + $group + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+			// In some cases, frontend might give a group's displayName rather than its gid
+			$NCGroup = $this->groupManager->search($gid);
+			if (empty($NCGroup)) {
+				return new JSONResponse(['Group ' + $group + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+			}
+			$NCGroup = $NCGroup[0];
 		}
 
+		// Adds user to group
+		$NCUser = $this->userManager->get($user);
 		$NCGroup->addUser($NCUser);
 
-		// TODO Use Application constant 
-		if (strpos($group, 'GE-') === 0) {
+		// Adds user to workspace user group
+		$name = $this->groupfolderService->getName($spaceId);
+		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $name)[0];
+		$UGroup->addUser($NCUser);
+		
+		// Adds the user to the application manager group when we are adding a workspace manager
+		if (strpos($group, Application::ESPACE_MANAGER_01) === 0) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
-			if (is_null($workspaceUsersGroup)) {
+			if (!is_null($workspaceUsersGroup)) {
+				$workspaceUsersGroup->addUser($NCUser);
+			} else {
 				$NCGroup->removeUser($NCUser);
 				return new JSONResponse(['Generar error: Group ' + Application::GROUP_WKSUSER + ' does not exist'],
 					Http::STATUS_EXPECTATION_FAILED);
@@ -107,4 +195,43 @@ class GroupController extends Controller {
 		return new JSONResponse(['message' => 'The user '. $user .' is added in the '. $group .' group'], Http::STATUS_NO_CONTENT);
 
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * Removes a user from a group
+	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
+	 *
+	 * @var string $gid
+	 * @var string $user
+	 *
+	 * @return @JSONResponse
+	 */
+	public function removeUser($spaceId, $gid, $user) {
+
+		// Makes sure group exist
+		$NCGroup = $this->groupManager->get($gid);
+		if (is_null($NCGroup)) {
+			return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+		}
+
+		// Removes user from group
+		$NCUser = $this->userManager->get($user);
+		$NCGroup->removeUser($NCUser);
+
+		// Removes user from all 'subgroups' when we remove it from the workspace's user group
+		$space = $this->groupfolderService->get($spaceId);
+		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['mount_point']) {
+			foreach(array_keys($space['groups']) as $gid) {
+				$NCGroup = $this->groupManager->get($gid);
+				if ($NCGroup->getDisplayName() !== Application::ESPACE_MANAGER_01 . $space['mount_point']) {
+					$NCGroup->removeUser($NCUser);
+				}
+			}
+		}
+		
+		return new JSONResponse([], Http::STATUS_NO_CONTENT);
+	}
+
 }

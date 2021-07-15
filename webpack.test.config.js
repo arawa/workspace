@@ -1,8 +1,8 @@
 const path = require('path')
-const { merge } = require('webpack-merge');
+const { merge } = require('webpack-merge')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 const nodeExternals = require('webpack-node-externals')
-require('jsdom-global')()
+require('jsdom-global')('', {url: 'http://localhost'})
 
 const appName = process.env.npm_package_name
 
@@ -17,7 +17,7 @@ const config = merge(webpackConfig, {
 		publicPath: '/js/',
 		filename: `${appName}-[name].js`,
 		chunkFilename: `${appName}-[name].js`,
-	}
+	},
 })
 
 module.exports = config

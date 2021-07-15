@@ -23,6 +23,7 @@ use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\GroupfolderService;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\IGroup;
@@ -32,6 +33,9 @@ use OCP\IUserSession;
 
 class UserServiceTest extends TestCase {
 	
+	/** @var GroupfolderService */
+	private $groupfolderService;
+
 	/** @var IUser */
 	private $user;
 
@@ -43,6 +47,7 @@ class UserServiceTest extends TestCase {
 
 	public function setUp(): void {
 
+		$this->groupfolderService = $this->createMock(GroupfolderService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 
 		// Sets up the user'session
@@ -96,6 +101,7 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
+			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession);
 
@@ -119,6 +125,7 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
+			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession);
 
@@ -148,6 +155,7 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
+			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession);
 
@@ -177,6 +185,7 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
+			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession);
 
@@ -184,6 +193,68 @@ class UserServiceTest extends TestCase {
 		$result = $userService->isSpaceManager();
 
 		$this->assertEquals(true, $result);
+	}
+
+	/**
+	 * This test makes sure that the isSpaceManagerOfSpace() method return true when user 
+	 * is manager of a space
+	 */
+	public function testIsNotSpaceManagerOfSpace() {
+
+		$this->groupfolderService->expects($this->once())
+		     	->method('getName')
+			->willReturn('Test');
+		// Let's say user is manager of the space
+		$group = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
+		$this->groupManager->expects($this->once())
+		     	->method('search')
+			->willReturn([$group]);
+		$this->groupManager->expects($this->once())
+		     	->method('isInGroup')
+	     		->with($this->user->getUID(), $group->getGID())
+			->willReturn(true);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupfolderService,
+			$this->groupManager,
+			$this->userSession);
+
+		// Runs the method to be tested
+		$result = $userService->isSpaceManagerOfSpace(1);
+
+		$this->assertEquals(true, $result);
+	}
+
+	/**
+	 * This test makes sure that the isSpaceManagerOfSpace() method return false when user 
+	 * is not manager of a space
+	 */
+	public function testIsSpaceManagerOfSpace() {
+
+		$this->groupfolderService->expects($this->once())
+		     	->method('getName')
+			->willReturn('Test');
+		// Let's say user is not manager of the space
+		$group = $this->createTestGroup('GE-Test', 'GE-Test', []);
+		$this->groupManager->expects($this->once())
+		     	->method('search')
+			->willReturn([$group]);
+		$this->groupManager->expects($this->once())
+		     	->method('isInGroup')
+	     		->with($this->user->getUID(), $group->getGID())
+			->willReturn(false);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupfolderService,
+			$this->groupManager,
+			$this->userSession);
+
+		// Runs the method to be tested
+		$result = $userService->isSpaceManagerOfSpace(1);
+
+		$this->assertEquals(false, $result);
 	}
 }
 

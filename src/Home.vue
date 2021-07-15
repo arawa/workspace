@@ -33,18 +33,17 @@
 					{{ $store.getters.spaceUserCount(name) }}
 				</CounterBubble>
 				<div>
-					<AppNavigationItem v-for="group in Object.keys($store.state.spaces[name].groups)"
-						:key="group"
+					<AppNavigationItem v-for="group in Object.values(space.groups)"
+						:key="group.gid"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group}`}"
-						:title="group">
+						:to="{path: `/group/${name}/${group.gid}`}"
+						:title="group.displayName">
 						<CounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( name, group) }}
+							{{ $store.getters.groupUserCount( name, group.gid) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
 			</AppNavigationItem>
-
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -95,7 +94,6 @@ export default {
 						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
 					}
 					this.$store.commit('addSpace', {
-						// TODO color should be returned by backend
 						color: codeColor,
 						groups: space.groups,
 						id: space.id,
@@ -140,11 +138,7 @@ export default {
 				})
 				return
 			}
-			axios.post(generateUrl('/apps/workspace/spaces'),
-				{
-					spaceName: name,
-				}
-			)
+			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
 				.then(resp => {
 					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
 						this.$notify({
@@ -167,9 +161,12 @@ export default {
 						})
 					}
 				})
-				.catch(err => {
-					console.error('Here')
-					console.error(err)
+				.catch((e) => {
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to create the workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+						type: 'error',
+					})
 				})
 		},
 	},
@@ -186,6 +183,10 @@ export default {
 
 .app-navigation {
 	display: block;
+}
+
+.app-navigation-entry {
+	padding-right: 0px;
 }
 
 .space-selected {
