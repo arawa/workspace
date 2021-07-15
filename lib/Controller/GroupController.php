@@ -222,10 +222,10 @@ class GroupController extends Controller {
 
 		// Removes user from all 'subgroups' when we remove it from the workspace's user group
 		$space = $this->groupfolderService->get($spaceId);
-		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['mount_point']) {
+		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['space_name']) {
 			foreach(array_keys($space['groups']) as $gid) {
 				$NCGroup = $this->groupManager->get($gid);
-				if ($NCGroup->getDisplayName() !== Application::ESPACE_MANAGER_01 . $space['mount_point']) {
+				if ($NCGroup->getDisplayName() !== Application::ESPACE_MANAGER_01 . $space['space_name']) {
 					$NCGroup->removeUser($NCUser);
 				}
 			}
