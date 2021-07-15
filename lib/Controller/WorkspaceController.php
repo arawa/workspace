@@ -456,7 +456,7 @@ class WorkspaceController extends Controller {
 
     /**
      * 
-     * @NoAdminRequired
+     * @SpaceAdminRequired
      * 
      * @var string $spaceName
      * @return JSONResponse with informations from new workspace - { 'msg': Sting, 'statuscode': Int, 'data': Object }
