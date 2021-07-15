@@ -162,10 +162,10 @@ export default {
 				})
 				.then(resp => {
 					const data = resp.data
-
 					if (data.statuscode === 204) {
 						const space = { ...this.$store.state.spaces[oldSpaceName] }
 						space.name = data.space
+						space.groups = data.groups
 						this.$store.dispatch('updateSpace', {
 							space,
 						})

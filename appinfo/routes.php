@@ -51,9 +51,9 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
-			'name' => 'workspace#rename',
+			'name' => 'workspace#renameSpace',
 			// TODO move this route to /api/spaces
-			'url' => '/spaces/{folderId}',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
 	    	],
 		[
