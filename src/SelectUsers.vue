@@ -255,6 +255,7 @@ export default {
 	border-width: 1px;
 	border-color: #dbdbdb;
 	width: 90%;
+	overflow: scroll;
 }
 
 .select-users-list-empty {
