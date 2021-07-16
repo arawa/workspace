@@ -8,6 +8,7 @@
 
 namespace OCA\Workspace\AppInfo;
 
+use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Service\UserService;
@@ -39,6 +40,14 @@ class Application extends App {
 
                 $container->registerService('IsSpaceAdminMiddleware', function($c){
                     return new IsSpaceAdminMiddleware(
+                        $c->query(IControllerMethodReflector::class),
+                        $c->query(IRequest::class),
+                        $c->query(UserService::class)
+                    );
+                });
+
+                $container->registerService('IsGeneralManagerMiddleware', function($c){
+                    return new IsGeneralManagerMiddleware(
                         $c->query(IControllerMethodReflector::class),
                         $c->query(IRequest::class),
                         $c->query(UserService::class)
