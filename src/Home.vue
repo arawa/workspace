@@ -21,25 +21,25 @@
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}" />
-			<AppNavigationItem v-for="(space, name) in $store.state.spaces"
-				:key="name"
-				:class="$route.params.space === name ? 'space-selected' : ''"
+			<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
+				:key="space.id"
+				:class="$route.params.space === spaceName ? 'space-selected' : ''"
 				:allow-collapse="true"
 				:open="space.isOpen"
-				:title="name"
-				:to="{path: `/workspace/${name}`}">
+				:title="spaceName"
+				:to="{path: `/workspace/${spaceName}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter" class="user-counter">
-					{{ $store.getters.spaceUserCount(name) }}
+					{{ $store.getters.spaceUserCount(spaceName) }}
 				</CounterBubble>
 				<div>
-					<AppNavigationItem v-for="group in Object.values(space.groups)"
+					<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 						:key="group.gid"
 						icon="icon-group"
-						:to="{path: `/group/${name}/${group.gid}`}"
+						:to="{path: `/group/${spaceName}/${group.gid}`}"
 						:title="group.displayName">
 						<CounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( name, group.gid) }}
+							{{ $store.getters.groupUserCount( spaceName, group.gid) }}
 						</CounterBubble>
 					</AppNavigationItem>
 				</div>
@@ -63,6 +63,7 @@ import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
+import { getLocale } from '@nextcloud/l10n'
 
 export default {
 	name: 'Home',
@@ -168,6 +169,43 @@ export default {
 						type: 'error',
 					})
 				})
+		},
+		// Sorts groups alphabeticaly
+		sortedGroups(groups, space) {
+			groups.sort((a, b) => {
+				// Makes sure the GE- group is first in the list
+				// These tests must happen before the tests for the U- group
+				const GEGroup = this.$store.getters.GEGroup(space)
+				if (a === GEGroup) {
+					return -1
+				}
+				if (b === GEGroup) {
+					return 1
+				}
+				// Makes sure the U- group is second in the list
+				// These tests must be done after the tests for the GE- group
+				const UGroup = this.$store.getters.UGroup(space)
+				if (a === UGroup) {
+					return -1
+				}
+				if (b === UGroup) {
+					return 1
+				}
+				// Normal locale based sort
+				// Some javascript engines don't support localCompare's locales
+				// and options arguments.
+				// This is especially the case of the mocha test framework
+				try {
+					return a.displayName.localeCompare(b.displayName, getLocale(), {
+						sensitivity: 'base',
+						ignorePunctuation: true,
+					})
+				} catch (e) {
+					return a.displayName.localeCompare(b.displayName)
+				}
+			})
+
+			return groups
 		},
 	},
 }
