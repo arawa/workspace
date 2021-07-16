@@ -79,8 +79,7 @@ class GroupController extends Controller {
 		}
 
 		// Grants group access to groupfolder
-		$json = $this->workspaceService->get($spaceId);
-		$space = json_decode($json->getBody(), true);
+		$space = $this->workspaceService->get($spaceId);
 		$json = $this->groupfolderService->addGroup($space['groupfolder_id'], $gid);
 		$resp = json_decode($json->getBody(), true);
 		if ($resp['ocs']['meta']['statuscode'] !== 100) {

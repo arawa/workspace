@@ -96,8 +96,7 @@ Class UserService {
 	*/
 	public function isSpaceManagerOfSpace($id) {
 		// Get space details
-		$response = $this->workspaceService->get($id);
-		$space = json_decode($response->getBody(), true);
+		$space = $this->workspaceService->get($id);
 
 		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
 

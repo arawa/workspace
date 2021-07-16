@@ -261,9 +261,7 @@ class WorkspaceController extends Controller {
      */
     public function destroy($spaceId) {
         
-        $spaceResponse = $this->workspaceService->get($spaceId);
-
-        $space = json_decode($spaceResponse->getBody(), true);
+        $space = $this->workspaceService->get($spaceId);
 
         $cloneSpace = $space;
 
@@ -307,8 +305,7 @@ class WorkspaceController extends Controller {
      */
     public function find($spaceId) {
 
-        $spaceResponse = $this->workspaceService->get($spaceId);
-        $space = json_decode($spaceResponse->getBody(), true);
+        $space = $this->workspaceService->get($spaceId);
 
         $groupfolderResponse = $this->groupfolderService->get($space['groupfolder_id']);
         $groupfolder = json_decode($groupfolderResponse->getBody(), true);
@@ -591,8 +588,7 @@ class WorkspaceController extends Controller {
      */
     public function renameSpace($spaceId, $newSpaceName) {
 
-        $responseSpace = $this->workspaceService->get($spaceId);
-        $currentSpace = json_decode($responseSpace->getBody(), true);
+        $currentSpace = $this->workspaceService->get($spaceId);
 
         $responseSpace = $this->workspaceService->updateSpaceName($newSpaceName, (int)$spaceId);
         $space = json_decode($responseSpace->getBody(), true);
