@@ -165,7 +165,7 @@ export default {
 }
 
 .user-admin {
-	background-color: #F7FBFE;
+	background-color: var(--color-primary-element);
 }
 
 .user-name {
