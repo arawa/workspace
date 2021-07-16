@@ -12,7 +12,7 @@
 			position="top center"
 			width="50%"
 			class="notifications"
-			closeOnClick="true" />
+			close-on-click="true" />
 		<AppNavigation>
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
@@ -145,7 +145,7 @@ export default {
 						this.$notify({
 							title: t('workspace', 'Error - Creating space'),
 							text: t('workspace', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.'),
-							type: 'error'
+							type: 'error',
 						})
 					} else {
 						this.$store.commit('addSpace', {

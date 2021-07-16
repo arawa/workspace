@@ -33,7 +33,7 @@ tr:hover {
         display: block;
 }
 
-.color-picker {
+.color-picker:hover {
         background-image: url('../img/color_picker.svg');
 	background-repeat: no-repeat;
 	background-position: center center;
