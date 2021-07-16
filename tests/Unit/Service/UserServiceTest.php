@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\GroupfolderService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\IGroup;
@@ -45,10 +46,14 @@ class UserServiceTest extends TestCase {
 	/** @var UserSession */
 	private $userSession;
 
+	/** @var WorkspaceService */
+	private $workspaceService;
+
 	public function setUp(): void {
 
 		$this->groupfolderService = $this->createMock(GroupfolderService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->workspaceService = $this->createMock(WorkspaceService::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -103,7 +108,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -127,7 +133,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -157,7 +164,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -187,7 +195,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -218,7 +227,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
@@ -249,7 +259,8 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupfolderService,
 			$this->groupManager,
-			$this->userSession);
+			$this->userSession,
+			$this->workspaceService);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
