@@ -111,7 +111,7 @@ class WorkspaceController extends Controller {
     }
 
     /**
-     * @NoAdminRequired
+     * @GeneralManagerRequired
      * @NoCSRFRequired
      * @todo Bug when this code is in SpaceService.php.
      * It has to find a solution to move it.
