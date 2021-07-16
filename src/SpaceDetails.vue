@@ -269,16 +269,4 @@ export default {
 	flex-flow: row-reverse;
 }
 
-.user-admin {
-	background-color: #F7FBFE;
-}
-
-.user-email {
-	color: gray;
-	padding-left: 10px;
-}
-
-.user-name {
-	font-size: large;
-}
 </style>
