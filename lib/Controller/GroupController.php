@@ -37,18 +37,22 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	/** @var WorkspaceService */
+	private $workspaceService;
+
 	public function __construct(
 		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		IUserManager $userManager,
-		WorkspaceService $workspaceService,
-		UserService $userService
+		UserService $userService,
+		WorkspaceService $workspaceService
 	){
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->workspaceService = $workspaceService;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->workspaceService = $workspaceService;
 	}
 
 	/**
@@ -75,7 +79,9 @@ class GroupController extends Controller {
 		}
 
 		// Grants group access to groupfolder
-		$json = $this->groupfolderService->addGroup($spaceId, $gid);
+		$json = $this->workspaceService->get($spaceId);
+		$space = json_decode($json->getBody(), true);
+		$json = $this->groupfolderService->addGroup($space['groupfolder_id'], $gid);
 		$resp = json_decode($json->getBody(), true);
 		if ($resp['ocs']['meta']['statuscode'] !== 100) {
 			$NCGroup->delete();
