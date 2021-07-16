@@ -246,6 +246,10 @@ export default {
 	display: flex;
 }
 
+.color-picker {
+	margin: 0px;
+}
+
 .quota-select {
 	margin-left: 20px !important;
 	min-width: 100px;
