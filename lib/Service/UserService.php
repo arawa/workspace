@@ -3,6 +3,7 @@ namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\GroupfolderService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroupManager;
 use OCP\IUserSession;
 
@@ -17,14 +18,19 @@ Class UserService {
 	/** @var IUserSession */
 	private $userSession;
 
+	/** @var WorkspaceService */
+	private $workspaceService;
+
 	public function __construct(
 		GroupfolderService $groupfolderService,
 		IGroupManager $group,
-		IUserSession $userSession) {
+		IUserSession $userSession,
+		WorkspaceService $workspaceService) {
 
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $group;
 		$this->userSession = $userSession;
+		$this->workspaceService = $workspaceService;
 
 	}
 
@@ -34,14 +40,14 @@ Class UserService {
 	 * needed for the frontend
 	 *
 	 * @param IUser $user
-	 * @param array $space
+	 * @param int $spaceId
 	 * @param string $role
 	 *
 	 * @return array|null
 	 *
 	 */
 
-	public function formatUser($user, $space, $role) {
+	public function formatUser($user, $spaceId, $role) {
 	
 		if (is_null($user)) {
 			return;
@@ -49,8 +55,11 @@ Class UserService {
 
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
+		$response = $this->workspaceService->get($spaceId);
+		$space = json_decode($response->getBody(), true);
+		$groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($space['groups']))) {
+			if (in_array($group->getGID(), array_keys($groupfolder['groups']))) {
 				array_push($groups, $group->getGID());
 			}
 		}

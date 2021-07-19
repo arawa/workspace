@@ -150,7 +150,7 @@ export default {
 			this.isLookingUpUsers = true
 			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
 				term,
-				spaceId: this.$route.params.space,
+				spaceId: this.$store.state.spaces[this.$route.params.space].id,
 			}))
 				.then((resp) => {
 					let users = []

@@ -12,6 +12,7 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\GroupfolderService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -28,19 +29,24 @@ class GroupController extends Controller {
 	private $groupManager;
 
 	/** @var IUserManager */
-	private $UserManager;
+	private $userManager;
+
+	/** @var $WorkspaceService */
+	private $workspaceService;
 
 	/** @var UserService */
-	private $UserService;
+	private $userService;
 
 	public function __construct(
 		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		IUserManager $userManager,
+		WorkspaceService $workspaceService,
 		UserService $userService
 	){
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
+		$this->workspaceService = $workspaceService;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
 	}
@@ -176,8 +182,9 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 
 		// Adds user to workspace user group
-		$name = $this->groupfolderService->getName($spaceId);
-		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $name)[0];
+		$response = $this->workspaceService->get($spaceId);
+		$space = json_decode($response->getBody(), true);
+		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
 		$UGroup->addUser($NCUser);
 		
 		// Adds the user to the application manager group when we are adding a workspace manager

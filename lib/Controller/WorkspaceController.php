@@ -372,14 +372,14 @@ class WorkspaceController extends Controller {
             // TODO Handle is_null($group) better (remove workspace from list?)
             if (!is_null($group)) {
                 foreach($group->getUsers() as $user) {
-                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'user');
                 };
             }
             // TODO Handle is_null($group) better (remove workspace from list?)
             $group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
             if (!is_null($group)) {
                 foreach($group->getUsers() as $user) {
-                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space['id'], 'admin');
                 };
             }
             $space['users'] = $users;

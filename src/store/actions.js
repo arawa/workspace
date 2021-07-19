@@ -25,6 +25,12 @@ export default {
 			user: user.uid,
 		}).then((resp) => {
 			if (resp.status === 204) {
+				// Everything went well, we can thus also add this user to the UGroup in the frontend
+				context.commit('addUserToGroup', {
+					name,
+					gid: context.getters.UGroup.gid,
+					user,
+				})
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' added to group ' + gid)
 			} else {
