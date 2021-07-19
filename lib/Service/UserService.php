@@ -40,7 +40,7 @@ Class UserService {
 	 * needed for the frontend
 	 *
 	 * @param IUser $user
-	 * @param in $spaceId
+	 * @param int $spaceId
 	 * @param string $role
 	 *
 	 * @return array|null
