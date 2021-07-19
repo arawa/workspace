@@ -382,7 +382,7 @@ class WorkspaceController extends Controller {
                     $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
                 };
             }
-            $space['users'] = $users;
+            $space['users'] = (object) $users;
 
             // Adds groups
             $groups = array();
