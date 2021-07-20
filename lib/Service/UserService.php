@@ -40,14 +40,14 @@ Class UserService {
 	 * needed for the frontend
 	 *
 	 * @param IUser $user
-	 * @param int $spaceId
+	 * @param array $space
 	 * @param string $role
 	 *
 	 * @return array|null
 	 *
 	 */
 
-	public function formatUser($user, $spaceId, $role) {
+	public function formatUser($user, $space, $role) {
 	
 		if (is_null($user)) {
 			return;
@@ -55,11 +55,8 @@ Class UserService {
 
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
-		$response = $this->workspaceService->get($spaceId);
-		$space = json_decode($response->getBody(), true);
-		$groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($groupfolder['groups']))) {
+			if (in_array($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
 		}
