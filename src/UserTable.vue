@@ -39,7 +39,7 @@
 					<td>
 						<div class="user-actions">
 							<Actions>
-								<ActionButton
+								<ActionButton v-if="$route.params.group === undefined"
 									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
@@ -55,7 +55,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</ActionButton>
-								<ActionButton v-else
+								<ActionButton v-if="$route.params.group !== undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
