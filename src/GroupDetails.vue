@@ -181,6 +181,10 @@ export default {
 	flex-flow: row-reverse;
 }
 
+.group-name {
+	margin-left: 40px;
+}
+
 .group-title {
 	font-weight: bold;
 	font-size: xxx-large;

@@ -260,6 +260,10 @@ export default {
 	margin-right: 8px;
 }
 
+.space-name {
+	margin-left: 40px;
+}
+
 .space-title {
 	font-weight: bold;
 	font-size: xxx-large;
