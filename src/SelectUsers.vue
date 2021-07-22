@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</div>
-		<p v-if="$route.params.group" class="caution">
+		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
@@ -98,6 +98,12 @@ export default {
 		}
 	},
 	computed: {
+		// Returns true when at least 1 selected user is not yet member of the workspace
+		addingUsersToWorkspace() {
+			return !this.allSelectedUsers.every(user => {
+				return this.$store.getters.isMember(this.$route.params.space, user)
+			})
+		},
 		// Returns true if we are adding users to the GE or User group of this workspace
 		isGEorUGroup() {
 			if (this.$route.params.group === this.$store.getters.GEGroup(this.$route.params.space).gid
