@@ -22,9 +22,11 @@ class Application extends App {
         public const APP_ID = 'workspace';
 	public const GROUP_WKSUSER = 'GE-general';	// Group that holds all workspace users (members managed by the application)
         public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
-	// TODO Remove the '_01' suffix 
+	    // TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";
         public const ESPACE_USERS_01 = "U-";
+        public const GID_SPACE = "SPACE-";
+
 
         public function __construct(array $urlParams=[] ) {
                 parent::__construct(self::APP_ID, $urlParams);
