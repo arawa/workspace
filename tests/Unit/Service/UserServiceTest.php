@@ -23,7 +23,6 @@ use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
@@ -34,9 +33,6 @@ use OCP\IUserSession;
 
 class UserServiceTest extends TestCase {
 	
-	/** @var GroupfolderService */
-	private $groupfolderService;
-
 	/** @var IUser */
 	private $user;
 
@@ -51,7 +47,6 @@ class UserServiceTest extends TestCase {
 
 	public function setUp(): void {
 
-		$this->groupfolderService = $this->createMock(GroupfolderService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
 
@@ -106,7 +101,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -131,7 +125,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -162,7 +155,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -193,7 +185,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -210,9 +201,9 @@ class UserServiceTest extends TestCase {
 	 */
 	public function testIsNotSpaceManagerOfSpace() {
 
-		$this->groupfolderService->expects($this->once())
-		     	->method('getName')
-			->willReturn('Test');
+		$this->workspaceService->expects($this->once())
+			->method('get')
+			->willReturn(['space_name' => 'Test']);
 		// Let's say user is manager of the space
 		$group = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
@@ -225,7 +216,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -242,9 +232,9 @@ class UserServiceTest extends TestCase {
 	 */
 	public function testIsSpaceManagerOfSpace() {
 
-		$this->groupfolderService->expects($this->once())
-		     	->method('getName')
-			->willReturn('Test');
+		$this->workspaceService->expects($this->once())
+			->method('get')
+			->willReturn(['space_name' => 'Test']);
 		// Let's say user is not manager of the space
 		$group = $this->createTestGroup('GE-Test', 'GE-Test', []);
 		$this->groupManager->expects($this->once())
@@ -257,7 +247,6 @@ class UserServiceTest extends TestCase {
 
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupfolderService,
 			$this->groupManager,
 			$this->userSession,
 			$this->workspaceService);
