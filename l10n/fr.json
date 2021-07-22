@@ -2,6 +2,7 @@
 	"Add users": "Ajouter des utilisateurs",
 	"All spaces": "Tous les Espaces Projet",
 	"Administrators" : "Gestionnaires généraux",
+	"admin" : "Gestionnaire d'espace",
 	"Create group": "Créer un groupe",
 	"Delete space" : "Supprimer l'Espace Projet",
 	"Delete user" : "Supprimer de l'Espace",
@@ -17,6 +18,7 @@
 	"Set quota": "Définir un quota",
 	"Space administrators" : "Gestionnaires d'espace",
 	"Users" : "Utilisateurs",
+	"user" : "utilisateur",
 	"Workspace name" : "Nom de l'espace"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
