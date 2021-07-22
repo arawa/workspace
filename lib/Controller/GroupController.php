@@ -31,9 +31,6 @@ class GroupController extends Controller {
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var $WorkspaceService */
-	private $workspaceService;
-
 	/** @var UserService */
 	private $userService;
 
