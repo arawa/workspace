@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</div>
-		<p class="caution">
+		<p v-if="$route.params.group" class="caution">
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
