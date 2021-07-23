@@ -31,9 +31,6 @@ class GroupController extends Controller {
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var $WorkspaceService */
-	private $workspaceService;
-
 	/** @var UserService */
 	private $userService;
 
@@ -187,8 +184,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 
 		// Adds user to workspace user group
-		$response = $this->workspaceService->get($spaceId);
-		$space = json_decode($response->getBody(), true);
+		$space = $this->workspaceService->get($spaceId);
 		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
 		$UGroup->addUser($NCUser);
 		
