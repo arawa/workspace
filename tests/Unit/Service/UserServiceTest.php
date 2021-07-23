@@ -29,6 +29,7 @@ use OCP\IGroupManager;
 use OCP\IGroup;
 use OCP\IUrlGenerator;
 use OCP\IUser;
+use OCP\IUserManager;
 use OCP\IUserSession;
 
 class UserServiceTest extends TestCase {
@@ -38,6 +39,9 @@ class UserServiceTest extends TestCase {
 
 	/** @var IGroupManager */
 	private $groupManager;
+
+	/** @var UserManager */
+	private $userManager;
 
 	/** @var UserSession */
 	private $userSession;
@@ -49,6 +53,7 @@ class UserServiceTest extends TestCase {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -102,6 +107,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
@@ -126,6 +132,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
@@ -156,6 +163,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
@@ -186,6 +194,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
@@ -217,6 +226,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
@@ -248,6 +258,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 

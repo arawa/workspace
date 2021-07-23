@@ -4,12 +4,16 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 use OCP\IUserSession;
 
 Class UserService {
 
 	/** @var $IGroupManager */
 	private $groupManager;
+
+	/** @var $IUserManager */
+	private $userManager;
 
 	/** @var IUserSession */
 	private $userSession;
@@ -19,13 +23,38 @@ Class UserService {
 
 	public function __construct(
 		IGroupManager $group,
+		IUserManager $userManager,
 		IUserSession $userSession,
 		WorkspaceService $workspaceService) {
 
 		$this->groupManager = $group;
+		$this->userManager = $userManager;
 		$this->userSession = $userSession;
 		$this->workspaceService = $workspaceService;
 
+	}
+
+	/**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @param string $term
+	 * @param string $spaceId
+	 *
+	 * @return array
+	 */
+	public function autoComplete(string $term, string $spaceId) {
+		// lookup users
+		$users = $this->userManager->searchDisplayName($term);
+
+		// transform in a format suitable for the app
+		$data = [];
+		$space = $this->workspaceService->get($spaceId);
+		foreach($users as $user) {
+			$data[] = $this->formatUser($user, $space, 'user');
+		}
+
+		// return info
+		return $data;
 	}
 
 	/**
