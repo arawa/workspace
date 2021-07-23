@@ -225,7 +225,7 @@ export default {
 	position: relative;
 	left: 10px;
 	top: -10px;
-	z-index: 100;
+	z-index: 10;
 	width: 20px;
 	height: 20px;
 }
