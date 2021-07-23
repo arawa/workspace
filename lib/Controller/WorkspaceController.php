@@ -414,8 +414,8 @@ class WorkspaceController extends Controller {
 	public function changeUserRole(string $spaceId, string $userId) {
 
 		$user = $this->userManager->get($userId);
-		$spaceName = $this->groupfolderService->getName($spaceId);
-		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0];
+		$space = $this->workspaceService->get($spaceId);
+		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
 
 		// Checks if user is member of the workspace's manager group
 		if ($GEgroup->inGroup($user)) {
@@ -426,7 +426,7 @@ class WorkspaceController extends Controller {
 			foreach($groups as $group) {
 				$groupName = $group->getDisplayName();
 				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
+					$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
 					$groupName !== Application::GROUP_WKSUSER
 				) {
 					$found = true;
@@ -442,10 +442,10 @@ class WorkspaceController extends Controller {
 			// We can now remove the user from the space's admin group
 			$GEgroup->removeUser($user);
 			// And add it to the space's user group
-			$this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0]->addUser($user);
+			$this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0]->addUser($user);
 		} else {
-			$this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0]->removeUser($user);
-			$this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0]->addUser($user);
+			$this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0]->removeUser($user);
+			$this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0]->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
 
@@ -663,8 +663,8 @@ class WorkspaceController extends Controller {
 		$this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceId);
 
 		$user = $this->userManager->get($userId);
-		$spaceName = $this->groupfolderService->getName($spaceId);
-		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $spaceName)[0];
+		$space = $this->workspaceService->get($spaceId);
+		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
 
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
 		// the application
@@ -675,7 +675,7 @@ class WorkspaceController extends Controller {
 			foreach($groups as $group) {
 				$groupName = $group->getDisplayName();
 				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-					$groupName !== Application::ESPACE_MANAGER_01 . $spaceName &&
+					$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
 					$groupName !== Application::GROUP_WKSUSER
 				) {
 					$found = true;
@@ -692,7 +692,7 @@ class WorkspaceController extends Controller {
 		// We can now blindly remove the user from the space's admin and user groups
 		$this->logger->debug('Removing user from workspace.');
 		$GEgroup->removeUser($user);
-		$UserGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $spaceName)[0];
+		$UserGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
 		$UserGroup->removeUser($user);
 		// TODO Shall we remove the user from the subgroups too
 

@@ -46,7 +46,6 @@ class GroupController extends Controller {
 	){
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
-		$this->workspaceService = $workspaceService;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
 		$this->workspaceService = $workspaceService;
@@ -229,7 +228,7 @@ class GroupController extends Controller {
 		$NCGroup->removeUser($NCUser);
 
 		// Removes user from all 'subgroups' when we remove it from the workspace's user group
-		$space = $this->groupfolderService->get($spaceId);
+		$space = $this->workspaceService->get($spaceId);
 		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['space_name']) {
 			foreach(array_keys($space['groups']) as $gid) {
 				$NCGroup = $this->groupManager->get($gid);
