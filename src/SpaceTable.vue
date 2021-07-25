@@ -28,7 +28,7 @@
 				<td> {{ space.quota }} </td>
 				<td>
 					<div class="admin-avatars">
-						<Avatar v-for="user in adminUsers(space)"
+						<Avatar v-for="user in workspaceManagers(space)"
 							:key="user.uid"
 							:style="{ marginRight: 2 + 'px' }"
 							:display-name="user.name"
@@ -57,8 +57,8 @@ export default {
 		EmptyContent,
 	},
 	methods: {
-		// Returns the list of administrators of a space
-		adminUsers(space) {
+		// Returns all workspace's managers
+		workspaceManagers(space) {
 			return Object.values(space.users).filter((u) => u.role === 'admin')
 		},
 		openSpace(name) {
