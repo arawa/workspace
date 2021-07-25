@@ -43,12 +43,14 @@ export default {
 		sortSpaces(state)
 	},
 	// Adds a user to a group
-	// We must add the group to the user's groups property and
-	// add the the user to the space's users property
 	addUserToGroup(state, { name, gid, user }) {
-		user.groups.push(gid)
 		const space = state.spaces[name]
-		space.users[user.name] = user
+		if (space.users[user.name] !== undefined) {
+			space.users[user.name].groups.push(gid)
+		} else {
+			user.groups.push(gid)
+			space.users[user.name] = user
+		}
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
