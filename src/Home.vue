@@ -148,8 +148,9 @@ export default {
 							type: 'error',
 						})
 					} else {
+						const color = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
 						this.$store.commit('addSpace', {
-							color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+							color,
 							groups: resp.data.groups,
 							isOpen: false,
 							id: resp.data.id_space,
@@ -157,6 +158,7 @@ export default {
 							quota: undefined,
 							users: [],
 						})
+						this.saveColor(color, name)
 						this.$router.push({
 							path: `/workspace/${name}`,
 						})
@@ -206,6 +208,25 @@ export default {
 			})
 
 			return groups
+		},
+		saveColor(color, spacename) {
+			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
+				{
+					colorCode: color,
+				})
+				.then(resp => {
+					this.$store.dispatch('updateColor', {
+						name: spacename,
+						colorCode: color,
+					})
+				})
+				.catch(err => {
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err,
+						type: 'error',
+					})
+				})
 		},
 	},
 }
