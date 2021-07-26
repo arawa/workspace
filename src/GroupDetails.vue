@@ -19,20 +19,11 @@
 				<div>
 					<Actions default-icon="icon-add">
 						<ActionButton
-							icon="icon-user"
+							icon="icon-add"
 							:close-after-click="true"
-							:title="t('workspace', 'Add users')"
-							@click="toggleShowSelectUsersModal" />
-						<ActionButton v-show="!showCreateGroupInput"
-							icon="icon-group"
-							:title="t('workspace', 'Create group')"
-							@click="toggleShowCreateGroupInput" />
-						<ActionInput v-show="showCreateGroupInput"
-							ref="createGroupInput"
-							icon="icon-group"
-							@submit="onNewGroup">
-							{{ t('workspace', 'Group name') }}
-						</ActionInput>
+							@click="toggleShowSelectUsersModal">
+							{{ t('workspace', 'Add users') }}
+						</ActionButton>
 					</Actions>
 				</div>
 				<Actions>
@@ -84,7 +75,6 @@ export default {
 	},
 	data() {
 		return {
-			showCreateGroupInput: false, // true to display 'Create Group' ActionInput
 			showRenameGroupInput: false, // true to display 'Rename Group' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
@@ -102,23 +92,6 @@ export default {
 				name: this.$route.params.space,
 				group: this.$route.params.group,
 			})
-		},
-		onNewGroup(e) {
-			// Hides ActionInput
-			this.toggleShowCreateGroupInput()
-
-			// Don't accept empty names
-			const group = e.target[1].value
-			if (!group) {
-				// TODO Inform user
-				return
-			}
-
-			// TODO Check already existing groups
-
-			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
-
 		},
 		onRenameGroup(e) {
 			// Hides ActionInput
@@ -145,12 +118,6 @@ export default {
 				gid: this.$route.params.group,
 				newGroupName: group,
 			})
-		},
-		toggleShowCreateGroupInput() {
-			this.showCreateGroupInput = !this.showCreateGroupInput
-			if (this.showCreateGroupInput === true) {
-				this.$refs.createGroupInput.$el.focus()
-			}
 		},
 		toggleShowRenameGroupInput() {
 			this.showRenameGroupInput = !this.showRenameGroupInput
