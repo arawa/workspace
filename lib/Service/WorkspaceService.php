@@ -40,7 +40,7 @@ class WorkspaceService {
             ]
         );
 
-        return $response;
+        return json_decode($response->getBody(), true);
     }
 
     public function findAll() {

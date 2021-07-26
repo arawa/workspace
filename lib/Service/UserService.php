@@ -2,36 +2,59 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 use OCP\IUserSession;
 
 Class UserService {
 
-	/** @var $groupfolderService */
-	private $groupfolderService;
-
-	/** @var $groupManager */
+	/** @var $IGroupManager */
 	private $groupManager;
+
+	/** @var $IUserManager */
+	private $userManager;
 
 	/** @var IUserSession */
 	private $userSession;
 
-	/** @var WorkspaceService */
+	/** @var $WorkspaceService */
 	private $workspaceService;
 
 	public function __construct(
-		GroupfolderService $groupfolderService,
 		IGroupManager $group,
+		IUserManager $userManager,
 		IUserSession $userSession,
 		WorkspaceService $workspaceService) {
 
-		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $group;
+		$this->userManager = $userManager;
 		$this->userSession = $userSession;
 		$this->workspaceService = $workspaceService;
 
+	}
+
+	/**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @param string $term
+	 * @param string $spaceId
+	 *
+	 * @return array
+	 */
+	public function autoComplete(string $term, string $spaceId) {
+		// lookup users
+		$users = $this->userManager->searchDisplayName($term);
+
+		// transform in a format suitable for the app
+		$data = [];
+		$space = $this->workspaceService->get($spaceId);
+		foreach($users as $user) {
+			$data[] = $this->formatUser($user, $space, 'user');
+		}
+
+		// return info
+		return $data;
 	}
 
 	/**
@@ -97,14 +120,14 @@ Class UserService {
 	}
 
 	/**
-	 * @param string $id The groupfolder id
+	 * @param string $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/
 	public function isSpaceManagerOfSpace($id) {
-		// Get groupfolder name
-		$name = $this->groupfolderService->getName($id);
+		// Get space details
+		$space = $this->workspaceService->get($id);
 
-		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $name);
+		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
 
 		if (count($workspaceAdminGroup) == 0) {
 			// TODO Log error

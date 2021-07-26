@@ -20,7 +20,7 @@ use OCP\IURLGenerator;
 class Application extends App {
 
         public const APP_ID = 'workspace';
-	public const GROUP_WKSUSER = 'GE-general';	// Group that holds all workspace users (members managed by the application)
+	    public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
         public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
 	    // TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";

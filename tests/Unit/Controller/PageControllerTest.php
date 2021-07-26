@@ -9,7 +9,6 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
-use OCP\IUserManager;
 
 class PageControllerTest extends TestCase {
 	private $controller;
@@ -17,7 +16,6 @@ class PageControllerTest extends TestCase {
 
 	public function setUp(): void {
 		$this->controller = new PageController(
-			$this->createMock(IUserManager::class),
 			$this->createMock(UserService::class),
 		);
 	}

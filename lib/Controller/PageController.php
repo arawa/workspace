@@ -7,24 +7,18 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IUserManager;
 use OCP\Util;
 
 class PageController extends Controller {
 	/** @var string */
 	private $userId;
 
-	/** @var IUserManager */
-	private $usersManager;
-
 	/** @var UserService */
 	private $userService;
 
 	public function __construct(
-		IUserManager $usersManager,
 		UserService $userService) {
 
-		$this->userManager = $usersManager;
 		$this->userService = $userService;
 	}
 
@@ -52,17 +46,8 @@ class PageController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function autoComplete(string $term, string $spaceId) {
-		// lookup users
-		$users = $this->userManager->searchDisplayName($term);
-
-		// transform in a format suitable for the app
-		$data = [];
-		foreach($users as $user) {
-			$data[] = $this->userService->formatUser($user, $spaceId, 'user');
-		}
-
-		// return info
-		return new JSONResponse($data);
+		$users = $this->userService->autoComplete($term, $spaceId);
+		return new JSONResponse($users);
 	}
 
 }

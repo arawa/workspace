@@ -31,24 +31,24 @@ class GroupController extends Controller {
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var $WorkspaceService */
-	private $workspaceService;
-
 	/** @var UserService */
 	private $userService;
+
+	/** @var WorkspaceService */
+	private $workspaceService;
 
 	public function __construct(
 		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		IUserManager $userManager,
-		WorkspaceService $workspaceService,
-		UserService $userService
+		UserService $userService,
+		WorkspaceService $workspaceService
 	){
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
-		$this->workspaceService = $workspaceService;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->workspaceService = $workspaceService;
 	}
 
 	/**
@@ -75,7 +75,8 @@ class GroupController extends Controller {
 		}
 
 		// Grants group access to groupfolder
-		$json = $this->groupfolderService->addGroup($spaceId, $gid);
+		$space = $this->workspaceService->get($spaceId);
+		$json = $this->groupfolderService->addGroup($space['groupfolder_id'], $gid);
 		$resp = json_decode($json->getBody(), true);
 		if ($resp['ocs']['meta']['statuscode'] !== 100) {
 			$NCGroup->delete();
@@ -182,8 +183,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 
 		// Adds user to workspace user group
-		$response = $this->workspaceService->get($spaceId);
-		$space = json_decode($response->getBody(), true);
+		$space = $this->workspaceService->get($spaceId);
 		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
 		$UGroup->addUser($NCUser);
 		
@@ -228,7 +228,7 @@ class GroupController extends Controller {
 		$NCGroup->removeUser($NCUser);
 
 		// Removes user from all 'subgroups' when we remove it from the workspace's user group
-		$space = $this->groupfolderService->get($spaceId);
+		$space = $this->workspaceService->get($spaceId);
 		if ($NCGroup->getDisplayName() === Application::ESPACE_USERS_01 . $space['space_name']) {
 			foreach(array_keys($space['groups']) as $gid) {
 				$NCGroup = $this->groupManager->get($gid);
