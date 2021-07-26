@@ -109,6 +109,9 @@ export default {
 	},
 	methods: {
 		// Adds users to workspace/group and close dialog
+		// In the end, it always boils down to adding the user to a group
+		// Note that the backend takes care of adding the user to the U- group, and Workspace managers
+		// group if needed.
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close')
 
@@ -116,14 +119,15 @@ export default {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
 					// Adding a user to a workspace 'subgroup
-					// TODO Should we support assigning the user GE role at the same time?
 					gid = this.$route.params.group
 				} else {
 					// Adding a user to the workspace
-					// TODO Use application-wide constants
 					// Caution, we are not giving a gid here but rather a group's displayName
 					// (the space's name, in this.$route.params.space can change).
 					// This should however be handled in the backend
+					// IMPROVEMENT POSSIBLE: I think the backend nows store the real GID of
+					// the U- and GE- groups in some specific attribute of the space object.
+					// We might use them here.
 					gid = user.role === 'admin' ? ESPACE_MANAGERS_PREFIX : ESPACE_USERS_PREFIX
 					gid = gid + this.$route.params.space
 				}

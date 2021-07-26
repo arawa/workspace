@@ -98,6 +98,7 @@ export default {
 		}
 	},
 	computed: {
+		// Returns the list of users to show in the table
 		users() {
 			let result = []
 			const space = this.$store.state.spaces[this.$route.params.space]
