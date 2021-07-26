@@ -21,8 +21,9 @@
 						<ActionButton
 							icon="icon-add"
 							:close-after-click="true"
-							:title="t('workspace', 'Add users')"
-							@click="toggleShowSelectUsersModal" />
+							@click="toggleShowSelectUsersModal">
+							{{ t('workspace', 'Add users') }}
+						</ActionButton>
 					</Actions>
 				</div>
 				<Actions>
