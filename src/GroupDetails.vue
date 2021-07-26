@@ -181,21 +181,12 @@ export default {
 	flex-flow: row-reverse;
 }
 
+.group-name {
+	margin-left: 40px;
+}
+
 .group-title {
 	font-weight: bold;
 	font-size: xxx-large;
-}
-
-.user-admin {
-	background-color: #F7FBFE;
-}
-
-.user-name {
-	font-size: large;
-}
-
-.user-email {
-	color: gray;
-	padding-left: 10px;
 }
 </style>

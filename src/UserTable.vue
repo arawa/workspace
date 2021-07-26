@@ -11,7 +11,8 @@
 		<table v-if="users.length">
 			<thead>
 				<tr>
-					<th colspan="2">
+					<th />
+					<th style="padding-left: 15px">
 						{{ t('workspace', 'Users') }}
 					</th>
 					<th>{{ t('workspace', 'Role') }}</th>
@@ -157,6 +158,10 @@ export default {
 <style>
 .avatar {
 	width: 40px;
+}
+
+.avatar > div {
+	vertical-align: middle;
 }
 
 .user-actions {

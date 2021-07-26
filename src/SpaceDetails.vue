@@ -260,6 +260,10 @@ export default {
 	margin-right: 8px;
 }
 
+.space-name {
+	margin-left: 40px;
+}
+
 .space-title {
 	font-weight: bold;
 	font-size: xxx-large;
@@ -269,16 +273,4 @@ export default {
 	flex-flow: row-reverse;
 }
 
-.user-admin {
-	background-color: #F7FBFE;
-}
-
-.user-email {
-	color: gray;
-	padding-left: 10px;
-}
-
-.user-name {
-	font-size: large;
-}
 </style>
