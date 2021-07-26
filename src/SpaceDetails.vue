@@ -266,7 +266,8 @@ export default {
 
 .space-title {
 	font-weight: bold;
-	font-size: xxx-large;
+	font-size: 20px;
+	margin-top: 10px;
 }
 
 .user-actions {

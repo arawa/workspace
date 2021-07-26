@@ -1,5 +1,5 @@
 table {
-        width: 100%;
+	width: 100%;
 	margin-top: 15px;
 }
 th {
@@ -16,26 +16,26 @@ tr {
 	padding: 5px;
 }
 tr:hover {
-        background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 .header {
-	min-height: 80px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+	height: 0px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin: 40px;
 }
 
 .color-dot {
-        height: 35px;
-        width: 35px;
-        border-radius: 50%;
-        display: block;
+	height: 35px;
+	width: 35px;
+	border-radius: 50%;
+	display: block;
 }
 
 .color-picker:hover {
-        background-image: url('../img/color_picker.svg');
+	background-image: url('../img/color_picker.svg');
 	background-repeat: no-repeat;
 	background-position: center center;
 }
