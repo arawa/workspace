@@ -569,7 +569,7 @@ class WorkspaceController extends Controller {
      
         $responseGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
         $responseRename = json_decode($responseGroupfolder->getBody(), true);
-	// TODO Handle case when API call fails
+	// TODO Handle API call failure (revert space rename and inform user)
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
             
             $groupGE = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
