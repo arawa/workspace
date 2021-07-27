@@ -173,7 +173,7 @@ class GroupController extends Controller {
 			// In some cases, frontend might give a group's displayName rather than its gid
 			$NCGroup = $this->groupManager->search($gid);
 			if (empty($NCGroup)) {
-				return new JSONResponse(['Group ' + $group + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+				return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
 			}
 			$NCGroup = $NCGroup[0];
 		}
@@ -183,7 +183,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 		
 		// Adds the user to the application manager group when we are adding a workspace manager
-		if (strpos($group, Application::ESPACE_MANAGER_01) === 0) {
+		if (strpos($gid, Application::ESPACE_MANAGER_01) === 0) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 			if (!is_null($workspaceUsersGroup)) {
 				$workspaceUsersGroup->addUser($NCUser);
@@ -201,7 +201,7 @@ class GroupController extends Controller {
 		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
 		$UGroup->addUser($NCUser);
 
-		return new JSONResponse(['message' => 'The user '. $user .' is added in the '. $group .' group'], Http::STATUS_NO_CONTENT);
+		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);
 
 	}
 
