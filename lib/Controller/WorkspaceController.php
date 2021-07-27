@@ -353,7 +353,7 @@ class WorkspaceController extends Controller {
         if (!$this->userService->isUserGeneralAdmin()) {
             $this->logger->debug('Filtering workspaces');
             $filteredSpaces = array_filter($spaces, function($space) {
-                return $this->userService->isSpaceManagerOfSpace($space['space_name']);
+                return $this->userService->isSpaceManagerOfSpace($space['id']);
             });
             
             $spaces = $filteredSpaces;
