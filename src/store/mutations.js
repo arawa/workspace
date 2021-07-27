@@ -46,7 +46,9 @@ export default {
 	addUserToGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
 		if (space.users[user.name] !== undefined) {
-			space.users[user.name].groups.push(gid)
+			if (!space.users[user.name].groups.includes(gid)) {
+				space.users[user.name].groups.push(gid)
+			}
 		} else {
 			user.groups.push(gid)
 			space.users[user.name] = user
