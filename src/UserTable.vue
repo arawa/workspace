@@ -8,7 +8,7 @@
 
 <template>
 	<div>
-		<table v-if="users.length">
+		<table v-if="users.length" class="table-space-detail">
 			<thead>
 				<tr>
 					<th />
@@ -181,5 +181,10 @@ export default {
 .user-email {
 	color: gray;
 	padding-left: 10px;
+}
+
+.table-space-detail {
+	width: 100%;
+	margin-top: -25px;
 }
 </style>

@@ -9,7 +9,7 @@
 <template>
 	<div>
 		<div class="header" />
-		<table v-if="Object.keys($store.state.spaces).length">
+		<table class="table-spaces" v-if="Object.keys($store.state.spaces).length">
 			<thead>
 				<tr>
 					<th />
@@ -22,7 +22,7 @@
 				:key="name"
 				@click="openSpace(name)">
 				<td style="width: 50px;">
-					<span class="color-dot" :style="{background: space.color}" />
+					<span class="color-dot-home" :style="{background: space.color}" />
 				</td>
 				<td> {{ name }} </td>
 				<td> {{ space.quota }} </td>
@@ -75,5 +75,17 @@ export default {
 .admin-avatars {
 	display: flex;
 	flex-flow: row-reverse;
+}
+
+.color-dot-home {
+	height: 35px;
+	width: 35px;
+	border-radius: 50%;
+	display: block;
+}
+
+.table-spaces {
+	width: 100%;
+	margin-top: -81px;
 }
 </style>

@@ -1,9 +1,5 @@
-table {
-	width: 100%;
-	margin-top: 15px;
-}
 th {
-	font-weight: bold;
+	color: grey;
 	padding: 5px;
 	border-bottom: 1px solid lightgray;
 }
