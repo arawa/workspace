@@ -234,12 +234,16 @@ class WorkspaceController extends Controller {
             'id_space' => $space->getId(),
             'folder_id' => $responseCreateGroupFolder['ocs']['data']['id'],
             'groups' => [
-                $newSpaceManagerGroup->getDisplayName() => 31,
-                $newSpaceUsersGroup->getDisplayName() => 31
-            ],
-            'gids' => [
-                $newSpaceManagerGroup->getGID(),
-                $newSpaceUsersGroup->getGID()
+                $newSpaceManagerGroup->getDisplayName() => [
+                    'gid' => $newSpaceManagerGroup->getGID(),
+                    'displayName' => $newSpaceManagerGroup->getDisplayName(),
+                    'permissions_groupfolder' => 31
+                ],
+                $newSpaceUsersGroup->getDisplayName() => [
+                    'gid' => $newSpaceUsersGroup->getGID(),
+                    'displayName' => $newSpaceUsersGroup->getDisplayName(),
+                    'permissions_groupfolder' => 31
+                ]
             ],
             'space_advanced_permissions' => true,
             'space_assign_groups' => [
