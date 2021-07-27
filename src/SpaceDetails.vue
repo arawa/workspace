@@ -261,7 +261,8 @@ export default {
 }
 
 .space-name {
-	margin-left: 40px;
+	margin-left: 8px;
+	margin-top: -40px;
 }
 
 .space-title {

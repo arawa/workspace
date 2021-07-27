@@ -28,10 +28,12 @@ tr:hover {
 }
 
 .color-dot {
-	height: 35px;
-	width: 35px;
+	min-height: 25px !important;
+	min-width: 25px !important;
 	border-radius: 50%;
-	display: block;
+	padding: 0px;
+	margin-top: 10px !important;
+	margin-right: 14px !important;
 }
 
 .color-picker:hover {
