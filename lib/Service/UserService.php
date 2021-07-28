@@ -44,7 +44,8 @@ Class UserService {
 	 */
 	public function autoComplete(string $term, string $spaceId) {
 		// lookup users
-		$users = $this->userManager->searchDisplayName($term);
+		$term = $term === '*' ? '' : $term;
+		$users = $this->userManager->searchDisplayName($term, 50);
 
 		// transform in a format suitable for the app
 		$data = [];

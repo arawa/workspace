@@ -113,6 +113,9 @@ export default {
 			return false
 		},
 	},
+	created() {
+		this.lookupUsers('*')
+	},
 	methods: {
 		// Adds users to workspace/group and close dialog
 		// In the end, it always boils down to adding the user to a group
