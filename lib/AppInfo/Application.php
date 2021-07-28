@@ -25,6 +25,8 @@ class Application extends App {
 	    // TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";
         public const ESPACE_USERS_01 = "U-";
+        public const GID_SPACE = "SPACE-";
+
 
         public function __construct(array $urlParams=[] ) {
                 parent::__construct(self::APP_ID, $urlParams);
