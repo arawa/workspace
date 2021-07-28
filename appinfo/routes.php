@@ -67,12 +67,6 @@ return [
 			'verb' => 'PATCH'
 		],
 		[
-			'name' => 'workspace#addGroupAdvancedPermissions',
-			// TODO move this route to /api/spaces
-			'url' => '/spaces/{folderId}/group/{gid}/acl',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'group#create',
 			'url' => '/api/group/{gid}',
 			'verb' => 'POST',
