@@ -179,7 +179,7 @@ export default {
 						if (this.$route.params.group === undefined) {
 							const space = this.$store.state.spaces[this.$route.params.space]
 							users = resp.data.filter(user => {
-								return (!(user.name in space.users))
+								return (!(user.uid in space.users))
 							}, space)
 						} else {
 							users = resp.data
