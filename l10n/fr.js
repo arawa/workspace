@@ -5,6 +5,7 @@ OC.L10N.register(
 		'All spaces': 'Tous les Espaces Projet',
 		'Administrators': 'Gestionnaires généraux',
 		'admin': "Gestionnaire d'espace",
+		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': "Attention, les utilisateurs surlignés en rouge ne sont pas encore membres de l'espace. Ils seront ajoutés automatiquement",
 		'Create group': 'Créer un groupe',
 		'Delete space': "Supprimer l'Espace Projet",
 		'Delete user': "Retirer de l'Espace",
