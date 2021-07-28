@@ -262,21 +262,18 @@ class WorkspaceController extends Controller {
     public function destroy($spaceId) {
         
         $space = $this->workspaceService->get($spaceId);
-
         $cloneSpace = $space;
 
         $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
 
-        $responseGroupfolderDelete = $this->groupfolderService->delete($space['groupfolder_id']);
-    
-        $groupfolderDelete = json_decode($responseGroupfolderDelete->getBody(), true);
-
-        if ( $groupfolderDelete['ocs']['meta']['statuscode'] !== 100 ) {
-            return;
+        $resp = $this->groupfolderService->delete($space['groupfolder_id']);
+        if ( $resp !== 100 ) {
+		// TODO Should return an error
+            	return;
         }
 
         $groups = [];
-        foreach ( array_keys($groupfolder['ocs']['data']['groups']) as $group ) {
+        foreach ( array_keys($groupfolder['groups']) as $group ) {
             $groups[] = $group;
             $this->groupManager->get($group)->delete();
         }
