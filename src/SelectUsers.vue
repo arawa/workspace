@@ -114,7 +114,10 @@ export default {
 		},
 	},
 	created() {
-		this.lookupUsers('*')
+		// This test makes sure this.lookupUsers() is not called during unit tests
+		if (this.$route.params.space !== undefined) {
+			this.lookupUsers('*')
+		}
 	},
 	methods: {
 		// Adds users to workspace/group and close dialog
