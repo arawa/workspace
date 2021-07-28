@@ -26,11 +26,6 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#find',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',
 			'verb' => 'GET'
