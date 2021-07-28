@@ -148,7 +148,7 @@ class GroupfolderService {
 
     /**
      * @param int $folderId the space name to delete.
-     * @return object that is the response from httpClient
+     * @return int The result of the call to the groupfolder API
      * 
     */
     public function delete($folderId) {
@@ -164,14 +164,16 @@ class GroupfolderService {
             ]
         );
 
-        return $response;
+	$resp = json_decode($response->getBody(), true);
+
+	return $resp['ocs']['meta']['statuscode'];
     }
 
     /**
      * Returns a groupfolder's details
      *
      * @param int $folderId
-     * @return object The groupfolder's details
+     * @return array The groupfolder's details
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
