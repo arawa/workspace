@@ -563,15 +563,12 @@ class WorkspaceController extends Controller {
      */
     public function renameSpace($spaceId, $newSpaceName) {
 
-        $responseSpace = $this->workspaceService->get($spaceId);
+        $space = $this->workspaceService->get($spaceId);
 
-        $responseSpace = $this->workspaceService->updateSpaceName($newSpaceName, (int)$spaceId);
-        $space = json_decode($responseSpace->getBody(), true);
+        $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
         $responseGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
-
         $responseRename = json_decode($responseGroupfolder->getBody(), true);
-
 	// TODO Handle case when API call fails
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
             
