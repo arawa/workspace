@@ -446,7 +446,6 @@ class WorkspaceController extends Controller {
 			// And add it to the space's user group
 			$this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0]->addUser($user);
 		} else {
-			$this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0]->removeUser($user);
 			$this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0]->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
