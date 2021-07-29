@@ -26,11 +26,6 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#find',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',
 			'verb' => 'GET'
@@ -65,12 +60,6 @@ return [
 			'name' => 'workspace#changeUserRole',
 			'url' => '/api/space/{spaceId}/user/{userId}',
 			'verb' => 'PATCH'
-		],
-		[
-			'name' => 'workspace#addGroupAdvancedPermissions',
-			// TODO move this route to /api/spaces
-			'url' => '/spaces/{folderId}/group/{gid}/acl',
-			'verb' => 'POST'
 		],
 		[
 			'name' => 'group#create',

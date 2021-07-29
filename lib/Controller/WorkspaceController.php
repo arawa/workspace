@@ -296,34 +296,13 @@ class WorkspaceController extends Controller {
 
     }
 
-
-    /**
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     * TODO: To move or delete.
-     */
-    public function find($spaceId) {
-
-        $space = $this->workspaceService->get($spaceId);
-
-        $groupfolderResponse = $this->groupfolderService->get($space['groupfolder_id']);
-        $groupfolder = json_decode($groupfolderResponse->getBody(), true);
-
-        $space['groupfolder_id'] = $groupfolder['ocs']['data']['id'];
-        $space['groups'] = $groupfolder['ocs']['data']['groups'];
-        $space['quota'] = $groupfolder['ocs']['data']['quota'];
-        $space['size'] = $groupfolder['ocs']['data']['size'];
-        $space['acl'] = $groupfolder['ocs']['data']['acl'];
-
-        return new JSONResponse($space);
-    }
-
     /**
      * Returns a list of all the workspaces that the connected user
      * may use.
      * 
      * @NoAdminRequired
      * @NoCSRFRequired
+     *
      * TODO: To move or delete.
      */
     public function findAll() {
@@ -369,14 +348,14 @@ class WorkspaceController extends Controller {
             // TODO Handle is_null($group) better (remove workspace from list?)
             if (!is_null($group)) {
                 foreach($group->getUsers() as $user) {
-                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'user');
+                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'user');
                 };
             }
             // TODO Handle is_null($group) better (remove workspace from list?)
             $group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
             if (!is_null($group)) {
                 foreach($group->getUsers() as $user) {
-                    $users[$user->getDisplayName()] = $this->userService->formatUser($user, $space, 'admin');
+                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'admin');
                 };
             }
             $space['users'] = (object) $users;
