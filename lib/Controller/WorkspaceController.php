@@ -257,37 +257,53 @@ class WorkspaceController extends Controller {
     }
 
     /**
+     *
+     * Deletes the workspace, and the corresponding groupfolder and groups
+     *
      * @NoAdminRequired
      * @SpaceAdminRequired
+     *
      */
     public function destroy($spaceId) {
+	$this->logger->debug('Deleting space ' . $spaceId);
         $space = $this->workspaceService->get($spaceId);
-        $cloneSpace = $space;
 
+	$this->logger->debug('Removing correesponding groupfolder.');
 	$groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
-
         $resp = $this->groupfolderService->delete($space['groupfolder_id']);
         if ( $resp !== 100 ) {
 		// TODO Should return an error
             	return;
         }
 
+	// Delete all GE from WorkspacesManagers group if necessary
+	// TODO: Lookup would be much more consistent if we were using gid instead of displayName here
+	$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+	$GEGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
+	foreach($GEGroups as $group) {
+		foreach ($group->getUsers() as $user) {
+			$this->userService->removeGEFromWM($user, $space);
+		}
+	}
+
+	// Removes all workspaces groups
         $groups = [];
+	$this->logger->debug('Removing workspaces groups.');
         foreach ( array_keys($groupfolder['groups']) as $group ) {
             $groups[] = $group;
             $this->groupManager->get($group)->delete();
         }
-
-        return new JSONResponse([
+	
+	return new JSONResponse([
             'http' => [
                 'statuscode' => 200,
                 'message' => 'The space is deleted.'
             ],
             'data' => [
-                'space_name' => $cloneSpace['space_name'],
+                'space_name' => $space['space_name'],
                 'groups' => $groups,
-                'space_id' => $cloneSpace['id'],
-                'groupfolder_id' => $cloneSpace['groupfolder_id'],
+                'space_id' => $space['id'],
+                'groupfolder_id' => $space['groupfolder_id'],
                 'state' => 'delete'
             ]
         ]);
@@ -495,24 +511,8 @@ class WorkspaceController extends Controller {
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
 		// the application
 		if ($GEgroup->inGroup($user)) {
-			$this->logger->debug('User is admin of the workspace, figuring out if we must remove it from the general workspace admins group.');
-			$found = false;
-			$groups = $this->groupManager->getUserGroups($user);
-			foreach($groups as $group) {
-				$groupName = $group->getDisplayName();
-				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-					$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
-					$groupName !== Application::GROUP_WKSUSER
-				) {
-					$found = true;
-					break;
-				}
-			}
-			if (!$found) {
-				$this->logger->debug('User is not admin of any other workspace, removing it from the general workspace admins group.');
-				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
-				$workspaceUserGroup->removeUser($user);
-			}
+			$this->logger->debug('User is manager of the workspace, removing it from the WorkspacesManagers group if needed.');
+			$this->userService->removeGEFromWM($user, $space);
 		}
 
 		// We can now blindly remove the user from the space's admin and user groups
