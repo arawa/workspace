@@ -46,15 +46,10 @@ export default {
 	addUserToGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
 		if (space.users[user.uid] !== undefined) {
-			if (!space.users[user.name].groups.includes(gid)) {
-				space.users[user.name].groups.push(gid)
+			if (!space.users[user.uid].groups.includes(gid)) {
+				space.users[user.uid].groups.push(gid)
 			}
 		} else {
-			/* eslint no-trailing-spaces: ["error", { "ignoreComments" : true }] */
-			/* BUG from addUserToGroup :
-			These 2 actions invoke an error of TypeError type 
-			and trigger the notify plugin.
-			*/
 			user.groups.push(gid)
 			space.users[user.uid] = user
 		}
