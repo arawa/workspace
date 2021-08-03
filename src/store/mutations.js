@@ -74,7 +74,8 @@ export default {
 	// TODO: We might need to update the user's groups property too here
 	removeUserFromGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
-		space.users[user.uid].groups.splice(gid, 1)
+		const index = space.users[user.uid].groups.indexOf(gid)
+		space.users[user.uid].groups.splice(index, 1)
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
