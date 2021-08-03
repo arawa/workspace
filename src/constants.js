@@ -8,3 +8,4 @@
 
 export const ESPACE_MANAGERS_PREFIX = 'GE-'
 export const ESPACE_USERS_PREFIX = 'U-'
+export const ESPACE_GID_PREFIX = 'SPACE-'
