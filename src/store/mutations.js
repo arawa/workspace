@@ -50,6 +50,11 @@ export default {
 				space.users[user.name].groups.push(gid)
 			}
 		} else {
+			/* eslint no-trailing-spaces: ["error", { "ignoreComments" : true }] */
+			/* BUG from addUserToGroup :
+			These 2 actions invoke an error of TypeError type 
+			and trigger the notify plugin.
+			*/
 			user.groups.push(gid)
 			space.users[user.uid] = user
 		}

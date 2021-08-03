@@ -48,6 +48,12 @@ export default {
 		}).catch((e) => {
 			// Restore frontend and inform user
 			context.commit('removeUserFromGroup', { name, gid, user })
+			console.error('The error is : ' + e)
+			console.error('e.message', e.message)
+			console.error('e.name', e.name)
+			console.error('e.lineNumber', e.lineNumber)
+			console.error('e.columnNumber', e.columnNumber)
+			console.error('e.stack', e.stack)
 			this._vm.$notify({
 				title: t('workspace', 'Network error'),
 				text: t('workspace', 'A network error occured while trying to add user ') + user.name
