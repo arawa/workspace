@@ -7,7 +7,7 @@
 */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -26,6 +26,12 @@ export default {
 			user: user.uid,
 		}).then((resp) => {
 			if (resp.status === 204) {
+				// Everything went well, we can thus also add this user to the UGroup in the frontend
+				context.commit('addUserToGroup', {
+					name,
+					gid: context.getters.UGroup(name).gid,
+					user,
+				})
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' added to group ' + gid)
 			} else {
@@ -211,10 +217,8 @@ export default {
 		if (user.role === 'admin') {
 			user.role = 'user'
 			user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
-			user.groups.push(ESPACE_USERS_PREFIX + name)
 		} else {
 			user.role = 'admin'
-			user.groups.splice(user.groups.indexOf(ESPACE_USERS_PREFIX + name), 1)
 			user.groups.push(ESPACE_MANAGERS_PREFIX + name)
 		}
 		context.commit('updateUser', { name, user })
@@ -231,10 +235,8 @@ export default {
 					if (user.role === 'admin') {
 						user.role = 'user'
 						user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
-						user.groups.push(ESPACE_USERS_PREFIX + name)
 					} else {
 						user.role = 'admin'
-						user.groups.splice(user.groups.indexOf(ESPACE_USERS_PREFIX + name), 1)
 						user.groups.push(ESPACE_MANAGERS_PREFIX + name)
 					}
 					context.commit('updateUser', { name, user })
@@ -248,8 +250,10 @@ export default {
 				// Revert action an inform user
 				if (user.role === 'admin') {
 					user.role = 'user'
+					user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
 				} else {
 					user.role = 'admin'
+					user.groups.push(ESPACE_MANAGERS_PREFIX + name)
 				}
 				context.commit('updateUser', { name, user })
 				this._vm.$notify({

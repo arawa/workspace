@@ -261,12 +261,14 @@ export default {
 }
 
 .space-name {
-	margin-left: 40px;
+	margin-left: 8px;
+	margin-top: -40px;
 }
 
 .space-title {
 	font-weight: bold;
-	font-size: xxx-large;
+	font-size: 20px;
+	margin-top: 10px;
 }
 
 .user-actions {

@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</div>
-		<p class="caution">
+		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
@@ -98,6 +98,12 @@ export default {
 		}
 	},
 	computed: {
+		// Returns true when at least 1 selected user is not yet member of the workspace
+		addingUsersToWorkspace() {
+			return !this.allSelectedUsers.every(user => {
+				return this.$store.getters.isMember(this.$route.params.space, user)
+			})
+		},
 		// Returns true if we are adding users to the GE or User group of this workspace
 		isGEorUGroup() {
 			if (this.$route.params.group === this.$store.getters.GEGroup(this.$route.params.space).gid
@@ -107,11 +113,23 @@ export default {
 			return false
 		},
 	},
+	created() {
+		// This test makes sure this.lookupUsers() is not called during unit tests
+		if (this.$route.params.space !== undefined) {
+			this.lookupUsers('*')
+		}
+	},
 	methods: {
 		// Adds users to workspace/group and close dialog
 		// In the end, it always boils down to adding the user to a group
-		// Note that the backend takes care of adding the user to the U- group, and Workspace managers
+		// NOTE that the backend takes care of adding the user to the U- group, and Workspace managers
 		// group if needed.
+		// CAUTION, we are not giving a gid here but rather a group's displayName
+		// (the space's name, in this.$route.params.space can change).
+		// This should however be handled in the backend
+		// IMPROVEMENT POSSIBLE: I think the backend nows store the real GID of
+		// the U- and GE- groups in some specific attribute of the space object.
+		// We might use them here.
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close')
 
@@ -119,24 +137,28 @@ export default {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
 					// Adding a user to a workspace 'subgroup
-					gid = this.$route.params.group
+					this.$store.dispatch('addUserToGroup', {
+						name: this.$route.params.space,
+						gid: this.$route.params.group,
+						user,
+					})
+					if (user.role === 'admin') {
+						this.$store.dispatch('addUserToGroup', {
+							name: this.$route.params.space,
+							gid: ESPACE_MANAGERS_PREFIX + this.$route.params.space,
+							user,
+						})
+					}
 				} else {
 					// Adding a user to the workspace
-					// Caution, we are not giving a gid here but rather a group's displayName
-					// (the space's name, in this.$route.params.space can change).
-					// This should however be handled in the backend
-					// IMPROVEMENT POSSIBLE: I think the backend nows store the real GID of
-					// the U- and GE- groups in some specific attribute of the space object.
-					// We might use them here.
 					gid = user.role === 'admin' ? ESPACE_MANAGERS_PREFIX : ESPACE_USERS_PREFIX
 					gid = gid + this.$route.params.space
+					this.$store.dispatch('addUserToGroup', {
+						name: this.$route.params.space,
+						gid,
+						user,
+					})
 				}
-				// Add user to proper workspace group
-				this.$store.dispatch('addUserToGroup', {
-					name: this.$route.params.space,
-					gid,
-					user,
-				})
 			})
 		},
 		// Adds users to the batch when user selects users in the MultiSelect
@@ -163,7 +185,7 @@ export default {
 						if (this.$route.params.group === undefined) {
 							const space = this.$store.state.spaces[this.$route.params.space]
 							users = resp.data.filter(user => {
-								return (!(user.name in space.users))
+								return (!(user.uid in space.users))
 							}, space)
 						} else {
 							users = resp.data
@@ -229,7 +251,7 @@ export default {
 	position: relative;
 	left: 10px;
 	top: -10px;
-	z-index: 100;
+	z-index: 10;
 	width: 20px;
 	height: 20px;
 }

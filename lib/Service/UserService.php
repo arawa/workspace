@@ -4,6 +4,8 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroupManager;
+use OCP\ILogger;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 
@@ -11,6 +13,9 @@ Class UserService {
 
 	/** @var $IGroupManager */
 	private $groupManager;
+
+	/** @var $ILogger */
+	private $logger;
 
 	/** @var $IUserManager */
 	private $userManager;
@@ -23,11 +28,13 @@ Class UserService {
 
 	public function __construct(
 		IGroupManager $group,
+		ILogger $logger,
 		IUserManager $userManager,
 		IUserSession $userSession,
 		WorkspaceService $workspaceService) {
 
 		$this->groupManager = $group;
+		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userSession = $userSession;
 		$this->workspaceService = $workspaceService;
@@ -44,7 +51,8 @@ Class UserService {
 	 */
 	public function autoComplete(string $term, string $spaceId) {
 		// lookup users
-		$users = $this->userManager->searchDisplayName($term);
+		$term = $term === '*' ? '' : $term;
+		$users = $this->userManager->searchDisplayName($term, 50);
 
 		// transform in a format suitable for the app
 		$data = [];
@@ -142,6 +150,37 @@ Class UserService {
 			return true;
 		}
 		return false;
+	}
+
+	/** 
+	 *
+	 * This function removes a GE from the WorkspaceManagers group when necessary
+	 *
+	 */
+	public function removeGEFromWM(IUser $user, array $space) {
+		$found = false;
+		$groups = $this->groupManager->getUserGroups($user);
+
+		foreach($groups as $group) {
+			$groupName = $group->getDisplayName();
+			if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
+				$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
+				$groupName !== Application::GROUP_WKSUSER
+			) {
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found) {
+			$this->logger->debug('User is not manager of any other workspace, removing it from the WorkspacesManagers group.');
+			$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
+			$workspaceUserGroup->removeUser($user);
+		} else {
+			$this->logger->debug('User is still manager of other workspaces, will not remove it from the WorkspacesManagers group.');
+		}
+
+		return;
 	}
 
 }

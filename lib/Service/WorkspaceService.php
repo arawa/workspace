@@ -58,21 +58,4 @@ class WorkspaceService {
         return $response;
     }
 
-    public function updateSpaceName($newSpaceName, $spaceId) {
-        $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/apps/workspace/workspaces/' . $spaceId . '/spacename',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'newSpaceName' => $newSpaceName
-                ],
-                'headers' => self::HEADERS
-            ]
-        );
-
-        return $response;
-    }
 }

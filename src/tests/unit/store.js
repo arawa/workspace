@@ -105,7 +105,7 @@ describe('Vuex store tests', () => {
 			},
 		})
 
-		return expect(state.spaces['test-space'].users['John Doe']).not.undefined
+		return expect(state.spaces['test-space'].users['123']).not.undefined
 	})
 
 	it('Count users in workspace', () => {

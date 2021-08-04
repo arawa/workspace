@@ -43,12 +43,16 @@ export default {
 		sortSpaces(state)
 	},
 	// Adds a user to a group
-	// We must add the group to the user's groups property and
-	// add the the user to the space's users property
 	addUserToGroup(state, { name, gid, user }) {
-		user.groups.push(gid)
 		const space = state.spaces[name]
-		space.users[user.name] = user
+		if (space.users[user.uid] !== undefined) {
+			if (!space.users[user.name].groups.includes(gid)) {
+				space.users[user.name].groups.push(gid)
+			}
+		} else {
+			user.groups.push(gid)
+			space.users[user.uid] = user
+		}
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
@@ -56,7 +60,7 @@ export default {
 	// TODO: We might need to update the user's groups property too here
 	addUserToWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
-		space.users[user.name] = user
+		space.users[user.uid] = user
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
@@ -70,7 +74,7 @@ export default {
 	// TODO: We might need to update the user's groups property too here
 	removeUserFromGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
-		space.users[user.name].groups.splice(gid, 1)
+		space.users[user.uid].groups.splice(gid, 1)
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
@@ -79,7 +83,7 @@ export default {
 	// TODO: We might need to update the user's groups property too here
 	removeUserFromWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
-		delete space.users[user.name]
+		delete space.users[user.uid]
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
@@ -111,7 +115,7 @@ export default {
 	},
 	updateUser(state, { name, user }) {
 		const space = state.spaces[name]
-		space.users[user.name] = user
+		space.users[user.uid] = user
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
