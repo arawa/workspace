@@ -492,7 +492,7 @@ class WorkspaceController extends Controller {
 	* @var string $userId
 	* 
 	*/
-	public function remove(string $spaceId, string $userId) {
+	public function removeWorkspace(string $spaceId, string $userId) {
 		$this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceId);
 
 		$user = $this->userManager->get($userId);
