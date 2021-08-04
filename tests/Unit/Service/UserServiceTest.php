@@ -27,6 +27,7 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\IGroup;
+use OCP\ILogger;
 use OCP\IUrlGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -40,6 +41,9 @@ class UserServiceTest extends TestCase {
 	/** @var IGroupManager */
 	private $groupManager;
 
+	/** @var ILogger */
+	private $logger;
+
 	/** @var UserManager */
 	private $userManager;
 
@@ -52,6 +56,7 @@ class UserServiceTest extends TestCase {
 	public function setUp(): void {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 
@@ -107,6 +112,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -132,6 +138,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -163,6 +170,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -194,6 +202,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -226,6 +235,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
@@ -258,6 +268,7 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
+			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
