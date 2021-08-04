@@ -474,6 +474,13 @@ class WorkspaceController extends Controller {
         ]);
     }
 
+    /**
+     * 
+     */
+    public function HelloWorld() {
+        print("Hello World");
+    }
+
 	/**
 	*
 	* Removes a user from a workspace
@@ -485,7 +492,7 @@ class WorkspaceController extends Controller {
 	* @var string $userId
 	* 
 	*/
-	public function removeUserFromWorkspace(string $spaceId, string $userId) {
+	public function remove(string $spaceId, string $userId) {
 		$this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceId);
 
 		$user = $this->userManager->get($userId);
