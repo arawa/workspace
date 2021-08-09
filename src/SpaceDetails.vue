@@ -105,6 +105,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			space: this.$route.params.space // store the state of the space to update the collaps
 		}
 	},
 	computed: {
@@ -112,6 +113,16 @@ export default {
 		title() {
 			return this.$route.params.space + ' [ID: ' + this.$store.state.spaces[this.$route.params.space].id + ']'
 		},
+	},
+	mounted() {
+		this.$store.commit('UPDATE_COLLAPS', { name: this.$route.params.space, isOpen: true })
+	},
+	beforeUpdate() {
+		this.$store.commit('UPDATE_COLLAPS', { name: this.space, isOpen: false })
+	},
+	updated() {
+		this.space = this.$route.params.space
+		this.$store.commit('UPDATE_COLLAPS', { name: this.$route.params.space, isOpen: true })
 	},
 	methods: {
 		// Deletes a space
@@ -234,6 +245,13 @@ export default {
 					})
 				})
 		},
+		openCollaps() {
+			alert('Coucou')
+			this.$store.dispatch('collapsAll', { name: 'Anduin' })
+		},
+		message() {
+			alert('Day of Defeat Source is the best')
+		}
 	},
 }
 </script>
