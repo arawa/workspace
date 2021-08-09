@@ -27,6 +27,7 @@
 				:allow-collapse="true"
 				:open="space.isOpen"
 				:title="spaceName"
+				:loading="space.loading"
 				:to="{path: `/workspace/${spaceName}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter" class="user-counter">
@@ -103,6 +104,7 @@ export default {
 						name: space.space_name,
 						quota: this.convertQuotaForFrontend(space.quota),
 						users: space.users,
+						loading: false,
 					})
 				})
 			})
@@ -156,6 +158,7 @@ export default {
 							name,
 							quota: undefined,
 							users: [],
+							loading: false,
 						})
 						this.$router.push({
 							path: `/workspace/${name}`,

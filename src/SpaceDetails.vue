@@ -105,7 +105,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
-			space: this.$route.params.space // store the state of the space to update the collaps
+			space: this.$route.params.space // store the state of the space to change its state
 		}
 	},
 	computed: {
@@ -114,13 +114,20 @@ export default {
 			return this.$route.params.space + ' [ID: ' + this.$store.state.spaces[this.$route.params.space].id + ']'
 		},
 	},
+	beforeCreate() {
+		this.$store.commit('UPDATE_LOAD', { name: this.$route.params.space, loading: true })
+	},
 	mounted() {
+		this.$store.commit('UPDATE_LOAD', { name: this.$route.params.space, loading: false })
 		this.$store.commit('UPDATE_COLLAPS', { name: this.$route.params.space, isOpen: true })
 	},
 	beforeUpdate() {
+		this.$store.commit('UPDATE_LOAD', { name: this.space, loading: false })
+		this.$store.commit('UPDATE_LOAD', { name: this.$route.params.space, loading: true })
 		this.$store.commit('UPDATE_COLLAPS', { name: this.space, isOpen: false })
 	},
 	updated() {
+		this.$store.commit('UPDATE_LOAD', { name: this.$route.params.space, loading: false })
 		this.space = this.$route.params.space
 		this.$store.commit('UPDATE_COLLAPS', { name: this.$route.params.space, isOpen: true })
 	},

@@ -130,4 +130,9 @@ export default {
 		space.isOpen = isOpen
 		Vue.set(state.spaces, name, space)
 	},
+	UPDATE_LOAD(state, { name, loading }) {
+		const space = state.spaces[name]
+		space.loading = loading
+		Vue.set(state.spaces, name, space)
+	},
 }
