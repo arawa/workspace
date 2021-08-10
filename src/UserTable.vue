@@ -171,7 +171,7 @@ export default {
 }
 
 .user-admin {
-	background-color: var(--color-primary-element);
+	background-color: var(--color-primary-light);
 }
 
 .user-name {
