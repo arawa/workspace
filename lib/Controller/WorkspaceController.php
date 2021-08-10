@@ -447,6 +447,7 @@ class WorkspaceController extends Controller {
      * 
      * @NoAdminRequired
      * @SpaceAdminRequired
+     * @NoCSRFRequired
      * @param int $spaceId
      * @param string $newSpaceName
      * @return JSONResponse
@@ -461,9 +462,25 @@ class WorkspaceController extends Controller {
 
         $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
-        $responseGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
-        $responseRename = json_decode($responseGroupfolder->getBody(), true);
-	// TODO Handle API call failure (revert space rename and inform user)
+        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
+
+        $groupsFromGroupfolder = array_diff_key($groupfolder['groups'], [ 
+            Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId => 31,
+            Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId => 31
+        ]);
+
+        foreach(array_keys($groupsFromGroupfolder) as $groupname){
+            $group = $this->groupManager->get($groupname);
+
+            $groups[$group->getGID()] = [
+                "displayName" => $group->getDisplayName(),
+                "gid"   => $group->getGID()
+            ];
+        }
+
+        $responseRenameGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
+        $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
+	    // TODO Handle API call failure (revert space rename and inform user)
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
             
             $groupGE = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
@@ -471,22 +488,23 @@ class WorkspaceController extends Controller {
 
             $groupGE->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
             $groupU->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
+
+            $groups[$groupGE->getGID()] = [
+                "displayName" => $groupGE->getDisplayName(),
+                "gid" => $groupGE->getGID()
+            ];
+
+            $groups[$groupU->getGID()] = [
+                "displayName" => $groupU->getDisplayName(),
+                "gid" => $groupU->getGID()
+            ];
         
         }
 
         return new JSONResponse([
             "statuscode" => Http::STATUS_NO_CONTENT,
             "space" => $newSpaceName,
-            'groups' => [
-                $groupGE->getGID() => [
-                    "displayName" => $groupGE->getDisplayName(),
-                    "gid" => $groupGE->getGID()
-                ],
-                $groupU->getGID() => [
-                    "displayName" => $groupU->getDisplayName(),
-                    "gid" => $groupU->getGID()
-                ],
-            ]
+            'groups' => $groups
         ]);
     }
 
