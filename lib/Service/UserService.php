@@ -52,7 +52,14 @@ Class UserService {
 	public function autoComplete(string $term, string $spaceId) {
 		// lookup users
 		$term = $term === '*' ? '' : $term;
-		$users = $this->userManager->searchDisplayName($term, 50);
+		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
+		
+		$users = [];
+		foreach($searchingUsers as $user) {
+			if($user->isEnabled()) {
+					$users[] = $user;
+				}
+		}
 
 		// transform in a format suitable for the app
 		$data = [];
