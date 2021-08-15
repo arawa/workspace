@@ -149,7 +149,7 @@ export default {
 						})
 					} else {
 						this.$store.commit('addSpace', {
-							color: '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6),
+							color: resp.data.color,
 							groups: resp.data.groups,
 							isOpen: false,
 							id: resp.data.id_space,

@@ -226,11 +226,21 @@ class WorkspaceController extends Controller {
 
         }
 
-	// #8 Returns response 
+        // #6 create the space
+        $space = new Space();
+        $space->setSpaceName($spaceName);
+        $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
+
+        // mt_rand() (MT - Mersenne Twister) is taller efficiant than rand() function.
+        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6));
+
+        $this->spaceMapper->insert($space);
+
         return new JSONResponse ([
             'space_name' => $spaceName,
             'id_space' => $space->getId(),
             'folder_id' => $responseCreateGroupFolder['ocs']['data']['id'],
+            'color' => $space->getColorCode(),
             'groups' => [
                 $newSpaceManagerGroup->getGID() => [
                     'gid' => $newSpaceManagerGroup->getGID(),
