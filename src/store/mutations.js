@@ -125,14 +125,4 @@ export default {
 		space.color = colorCode
 		Vue.set(state.spaces, name, space)
 	},
-	UPDATE_COLLAPS(state, { name, isOpen }) {
-		const space = state.spaces[name]
-		space.isOpen = isOpen
-		Vue.set(state.spaces, name, space)
-	},
-	UPDATE_LOAD(state, { name, loading }) {
-		const space = state.spaces[name]
-		space.loading = loading
-		Vue.set(state.spaces, name, space)
-	},
 }

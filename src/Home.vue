@@ -25,7 +25,7 @@
 				:key="space.id"
 				:class="$route.params.space === spaceName ? 'space-selected' : ''"
 				:allow-collapse="true"
-				:open="space.isOpen"
+				:open="$route.params.space === spaceName"
 				:title="spaceName"
 				:loading="space.loading"
 				:to="{path: `/workspace/${spaceName}`}">
@@ -104,7 +104,6 @@ export default {
 						name: space.space_name,
 						quota: this.convertQuotaForFrontend(space.quota),
 						users: space.users,
-						loading: false,
 					})
 				})
 			})
@@ -158,7 +157,6 @@ export default {
 							name,
 							quota: undefined,
 							users: [],
-							loading: false,
 						})
 						this.$router.push({
 							path: `/workspace/${name}`,
