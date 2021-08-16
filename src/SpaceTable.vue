@@ -9,7 +9,7 @@
 <template>
 	<div>
 		<div class="header" />
-		<table class="table-spaces" v-if="Object.keys($store.state.spaces).length">
+		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
 				<tr>
 					<th />
