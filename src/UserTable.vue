@@ -23,7 +23,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="user.role==='admin' ? 'user-admin' : ''">
+					:class="user.role==='admin' ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
 						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
