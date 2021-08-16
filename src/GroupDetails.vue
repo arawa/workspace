@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from './constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
@@ -82,8 +82,9 @@ export default {
 	methods: {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
-			if (this.$route.params.group === ESPACE_MANAGERS_PREFIX + this.$route.params.space
-			|| this.$route.params.group === ESPACE_USERS_PREFIX + this.$route.params.space) {
+			const space = this.$store.state.spaces[this.$route.params.space]
+			if (this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
+			|| this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
 				// TODO Inform user
 				return
 			}
@@ -104,8 +105,11 @@ export default {
 				return
 			}
 
-			// Prevents renaming GE- and U- groups
-			if (group === ESPACE_MANAGERS_PREFIX + this.$route.params.space || group === ESPACE_USERS_PREFIX + this.$route.params.space) {
+			const space = this.$store.state.spaces[this.$route.params.space]
+
+			// Prevents renaming SPACE-GE- and SPACE-U- groups
+			if (group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
+				|| group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
 				// TODO Inform user
 				return
 			}

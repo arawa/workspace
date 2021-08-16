@@ -7,7 +7,7 @@
 */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -48,6 +48,12 @@ export default {
 		}).catch((e) => {
 			// Restore frontend and inform user
 			context.commit('removeUserFromGroup', { name, gid, user })
+			console.error('The error is : ' + e)
+			console.error('e.message', e.message)
+			console.error('e.name', e.name)
+			console.error('e.lineNumber', e.lineNumber)
+			console.error('e.columnNumber', e.columnNumber)
+			console.error('e.stack', e.stack)
 			this._vm.$notify({
 				title: t('workspace', 'Network error'),
 				text: t('workspace', 'A network error occured while trying to add user ') + user.name
@@ -216,10 +222,10 @@ export default {
 		const space = context.state.spaces[name]
 		if (user.role === 'admin') {
 			user.role = 'user'
-			user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
+			user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 		} else {
 			user.role = 'admin'
-			user.groups.push(ESPACE_MANAGERS_PREFIX + name)
+			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 		}
 		context.commit('updateUser', { name, user })
 		axios.patch(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
@@ -234,10 +240,10 @@ export default {
 					// Revert action an inform user
 					if (user.role === 'admin') {
 						user.role = 'user'
-						user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
+						user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + name), 1)
 					} else {
 						user.role = 'admin'
-						user.groups.push(ESPACE_MANAGERS_PREFIX + name)
+						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + name)
 					}
 					context.commit('updateUser', { name, user })
 					this._vm.$notify({
@@ -250,10 +256,10 @@ export default {
 				// Revert action an inform user
 				if (user.role === 'admin') {
 					user.role = 'user'
-					user.groups.splice(user.groups.indexOf(ESPACE_MANAGERS_PREFIX + name), 1)
+					user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 				} else {
 					user.role = 'admin'
-					user.groups.push(ESPACE_MANAGERS_PREFIX + name)
+					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 				}
 				context.commit('updateUser', { name, user })
 				this._vm.$notify({

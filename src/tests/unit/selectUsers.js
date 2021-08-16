@@ -26,12 +26,12 @@ describe('SelectUsers component tests', () => {
 	wrappedSelectUsers.vm.$store.commit('addSpace', {
 		color: '#3794ac',
 		groups: {
-			'GE-foobar': {
-				gid: 'GE-foobar',
+			'SPACE-GE-42': {
+				gid: 'SPACE-GE-42',
 				displayName: 'GE-foobar',
 			},
-			'U-foobar': {
-				gid: 'U-foobar',
+			'SPACE-U-42': {
+				gid: 'SPACE-U-42',
 				displayName: 'U-foobar',
 			},
 			'subgroup-42': {
@@ -82,7 +82,7 @@ describe('SelectUsers component tests', () => {
 		wrappedSelectUsers.vm.$route.params.group = undefined
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'U-foobar')
+		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-U-42')
 		expect(count).equals(1)
 	})
 
@@ -101,7 +101,7 @@ describe('SelectUsers component tests', () => {
 		wrappedSelectUsers.vm.$route.params.group = undefined
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'GE-foobar')
+		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')
 		expect(count).equals(1)
 	})
 })

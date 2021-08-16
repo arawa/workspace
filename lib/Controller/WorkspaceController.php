@@ -468,17 +468,13 @@ class WorkspaceController extends Controller {
      */
     public function renameSpace($spaceId, $newSpaceName) {
 
-        $space = $this->workspaceService->get($spaceId);
-
-        $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
+        $space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
-        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
-
+        $groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
         $groupsFromGroupfolder = array_diff_key($groupfolder['groups'], [ 
             Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId => 31,
             Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId => 31
         ]);
-
         foreach(array_keys($groupsFromGroupfolder) as $groupname){
             $group = $this->groupManager->get($groupname);
 
@@ -488,7 +484,7 @@ class WorkspaceController extends Controller {
             ];
         }
 
-        $responseRenameGroupfolder = $this->groupfolderService->rename($space['groupfolder_id'], $newSpaceName);
+        $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
         $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
 	    // TODO Handle API call failure (revert space rename and inform user)
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {

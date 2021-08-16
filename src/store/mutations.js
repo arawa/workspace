@@ -46,8 +46,8 @@ export default {
 	addUserToGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
 		if (space.users[user.uid] !== undefined) {
-			if (!space.users[user.name].groups.includes(gid)) {
-				space.users[user.name].groups.push(gid)
+			if (!space.users[user.uid].groups.includes(gid)) {
+				space.users[user.uid].groups.push(gid)
 			}
 		} else {
 			user.groups.push(gid)
@@ -74,7 +74,8 @@ export default {
 	// TODO: We might need to update the user's groups property too here
 	removeUserFromGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]
-		space.users[user.uid].groups.splice(gid, 1)
+		const index = space.users[user.uid].groups.indexOf(gid)
+		space.users[user.uid].groups.splice(index, 1)
 		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
