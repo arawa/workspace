@@ -39,7 +39,9 @@
 		</table>
 		<EmptyContent v-else>
 			<!-- source this code : https://loading.io/css/ -->
-			<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+			<div class="lds-ring">
+				<div /><div /><div /><div />
+			</div>
 			<p>No spaces</p>
 			<template #desc>
 				You have not yet created any workspace
