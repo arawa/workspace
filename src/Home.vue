@@ -20,7 +20,8 @@
 				@new-item="createSpace" />
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
-				:to="{path: '/'}" />
+				:to="{path: '/'}"
+				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
 				:key="space.id"
 				:class="$route.params.space === spaceName ? 'space-selected' : ''"
@@ -223,6 +224,10 @@ export default {
 
 .space-selected {
 	background-color: #EAF5FC;
+}
+
+.all-spaces {
+	background-color: inherit !important;
 }
 
 tr:hover {
