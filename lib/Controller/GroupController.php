@@ -189,7 +189,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 		
 		// Adds the user to the application manager group when we are adding a workspace manager
-		if (strpos($gid, Application::ESPACE_MANAGER_01) === 0) {
+		if (strpos($gid, Application::GID_SPACE . Application::ESPACE_MANAGER_01. $spaceId) === 0) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 			if (!is_null($workspaceUsersGroup)) {
 				$workspaceUsersGroup->addUser($NCUser);
@@ -204,7 +204,7 @@ class GroupController extends Controller {
 		// Adds user to workspace user group
 		// This must be the last action done, when all other previous actions have succeeded
 		$space = $this->workspaceService->get($spaceId);
-		$UGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
+		$UGroup = $this->groupManager->search(Application::GID_SPACE .Application::ESPACE_USERS_01 . $spaceId)[0];
 		$UGroup->addUser($NCUser);
 
 		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);

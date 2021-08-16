@@ -132,6 +132,7 @@ export default {
 		// We might use them here.
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close')
+			const spaceId = this.$store.state.spaces[this.$route.params.space].id
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
@@ -144,13 +145,12 @@ export default {
 					if (user.role === 'admin') {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
-							gid: ESPACE_MANAGERS_PREFIX + this.$route.params.space,
+							gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
 							user,
 						})
 					}
 				} else {
 					// Adding a user to the workspace
-					const spaceId = this.$store.state.spaces[this.$route.params.space].id
 					gid = user.role === 'admin' ? ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId : ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + spaceId
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
