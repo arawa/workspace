@@ -119,24 +119,22 @@ class WorkspaceController extends Controller {
      */
     public function createSpace(string $spaceName) {
 
-	$spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
-	$groupfolderExist = $this->groupfolderService->checkGroupfolderNameExist($spaceName);
-
-	if($spaceNameExist || $groupfolderExist) {
-	    return new JSONResponse([
-		'statuscode' => Http::STATUS_CONFLICT,
-		'message' => 'The ' . $spaceName . ' space name already exist'
-	    ]);
-	}
-
-	// TODO: This function shall be reserved for GG
-
         if( $spaceName === false ||
             $spaceName === null ||
             $spaceName === '' 
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
+
+	// Checks if a space or a groupfolder with this name already exists
+	$spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
+	$groupfolderExist = $this->groupfolderService->checkGroupfolderNameExist($spaceName);
+	if($spaceNameExist || $groupfolderExist) {
+	    return new JSONResponse([
+		'statuscode' => Http::STATUS_CONFLICT,
+		'message' => 'The ' . $spaceName . ' space name already exist'
+	    ]);
+	}
 
         // #1 create a groupfolder
         $dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
