@@ -159,14 +159,14 @@ class WorkspaceController extends Controller {
             throw new AclGroupFolderException();
 
         }
-        
+
         // #3 create the space
         $space = new Space();
         $space->setSpaceName($spaceName);
         $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
-
+        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
         $this->spaceMapper->insert($space);
-
+        
         // #4 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
@@ -224,18 +224,9 @@ class WorkspaceController extends Controller {
 
 	    throw new ManageAclGroupFolderException();
 
-        }
+	}
 
-        // #6 create the space
-        $space = new Space();
-        $space->setSpaceName($spaceName);
-        $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
-
-        // mt_rand() (MT - Mersenne Twister) is taller efficiant than rand() function.
-        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6));
-
-        $this->spaceMapper->insert($space);
-
+	// #8 Returns result
         return new JSONResponse ([
             'space_name' => $spaceName,
             'id_space' => $space->getId(),
