@@ -156,7 +156,7 @@ export default {
 							id: resp.data.id_space,
 							name,
 							quota: undefined,
-							users: [],
+							users: {},
 						})
 						this.$router.push({
 							path: `/workspace/${name}`,
