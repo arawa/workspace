@@ -7,9 +7,8 @@
   -->
 
 <template>
-	<div>
+	<div class="main-div">
 		<div class="header" />
-		<!-- source of this css class' code : https://loading.io/css/ -->
 		<div v-if="loading" class="lds-ring">
 			<div /><div /><div /><div />
 		</div>
@@ -199,6 +198,13 @@ export default {
 	100% {
 		transform: rotate(360deg);
 	}
+}
+
+.main-div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
 }
 
 </style>
