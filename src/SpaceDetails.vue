@@ -86,7 +86,6 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
-// import Vue from 'vue'
 
 export default {
 	name: 'SpaceDetails',

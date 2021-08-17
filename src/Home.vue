@@ -77,44 +77,6 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
-	created() {
-		axios.get(generateUrl('/apps/workspace/spaces'))
-			.then(resp => {
-				if (resp.status !== 200) {
-					this.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
-						type: 'error',
-					})
-					return
-				}
-
-				// Initialises the store
-				Object.values(resp.data).forEach(space => {
-					let codeColor = space.color_code
-					if (space.color_code === null) {
-						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-					}
-					this.$store.commit('addSpace', {
-						color: codeColor,
-						groups: space.groups,
-						id: space.id,
-						groupfolderId: space.groupfolder_id,
-						isOpen: false,
-						name: space.space_name,
-						quota: this.convertQuotaForFrontend(space.quota),
-						users: space.users,
-					})
-				})
-			})
-			.catch((e) => {
-				this.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
-					type: 'error',
-				})
-			})
-	},
 	methods: {
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {

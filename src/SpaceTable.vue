@@ -9,7 +9,11 @@
 <template>
 	<div>
 		<div class="header" />
-		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
+		<!-- source of this css class' code : https://loading.io/css/ -->
+		<div v-if="loading" class="lds-ring">
+			<div /><div /><div /><div />
+		</div>
+		<table v-else-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
 				<tr>
 					<th />
@@ -38,10 +42,6 @@
 			</tr>
 		</table>
 		<EmptyContent v-else>
-			<!-- source this code : https://loading.io/css/ -->
-			<div class="lds-ring">
-				<div /><div /><div /><div />
-			</div>
 			<p>No spaces</p>
 			<template #desc>
 				You have not yet created any workspace
@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
@@ -60,7 +62,69 @@ export default {
 		Avatar,
 		EmptyContent,
 	},
+	data() {
+		return {
+			loading: true, // true when we are loading the data from the server
+		}
+	},
+	created() {
+		axios.get(generateUrl('/apps/workspace/spaces'))
+			.then(resp => {
+				// Checks for application errors
+				if (resp.status !== 200) {
+					this.$notify({
+						title: t('workspace', 'Error'),
+						text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+						type: 'error',
+					})
+					this.loading = false
+					return
+				}
+
+				// Initialises the store
+				Object.values(resp.data).forEach(space => {
+					let codeColor = space.color_code
+					if (space.color_code === null) {
+						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+					}
+					this.$store.commit('addSpace', {
+						color: codeColor,
+						groups: space.groups,
+						id: space.id,
+						groupfolderId: space.groupfolder_id,
+						isOpen: false,
+						name: space.space_name,
+						quota: this.convertQuotaForFrontend(space.quota),
+						users: space.users,
+					})
+				})
+
+				// Finished loading
+				this.loading = false
+			})
+			.catch((e) => {
+				this.$notify({
+					title: t('workspace', 'Network error'),
+					text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+					type: 'error',
+				})
+				this.loading = false
+			})
+	},
 	methods: {
+		convertQuotaForFrontend(quota) {
+			if (quota === '-3') {
+				return 'unlimited'
+			} else {
+				const units = ['', 'KB', 'MB', 'GB', 'TB']
+				let i = 0
+				while (quota >= 1024) {
+					quota = quota / 1024
+					i++
+				}
+				return quota + units[i]
+			}
+		},
 		// Returns all workspace's managers
 		workspaceManagers(space) {
 			return Object.values(space.users).filter((u) => u.role === 'admin')
