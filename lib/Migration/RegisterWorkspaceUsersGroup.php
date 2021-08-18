@@ -52,5 +52,12 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 		} else {
 			$this->logger->debug('Group ' . Application::GROUP_WKSUSER . ' already exists. No need to create it.');
 		}
+
+		if(!$this->groupManager->groupExists(Application::GENERAL_MANAGER)) {
+			$this->logger->debug('Group ' . Application::GENERAL_MANAGER . ' does not exist. Let\'s create it.');
+			$this->groupManager->createGroup(Application::GENERAL_MANAGER);
+		} else {
+			$this->logger->debug('Group ' . Application::GENERAL_MANAGER . ' already exists. No need to create it.');
+		}
 	}
 }
