@@ -113,7 +113,7 @@ dist:
 source:
 	rm -rf $(source_build_directory)
 	mkdir -p $(source_build_directory)
-	tar cvzf ${source_package_name} \
+	tar cvzf ${source_package_name}.tar.gz \
 	--exclude-vcs \
 	--exclude="../$(app_name)/.git" \
 	--exclude="../$(app_name)/build" \
