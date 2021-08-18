@@ -12,7 +12,7 @@
 			<thead>
 				<tr>
 					<th />
-					<th style="padding-left: 15px">
+					<th style="padding-left: 15px; width: 30%;">
 						{{ t('workspace', 'Users') }}
 					</th>
 					<th>{{ t('workspace', 'Role') }}</th>
@@ -27,7 +27,7 @@
 					<td class="avatar">
 						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
-					<td>
+					<td style="width: 30%;">
 						<div class="user-name">
 							{{ user.name }}
 						</div>
