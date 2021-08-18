@@ -27,7 +27,6 @@
 				:allow-collapse="true"
 				:open="$route.params.space === spaceName"
 				:title="spaceName"
-				:loading="space.loading"
 				:to="{path: `/workspace/${spaceName}`}">
 				<AppNavigationIconBullet slot="icon" :color="space.color" />
 				<CounterBubble slot="counter" class="user-counter">
