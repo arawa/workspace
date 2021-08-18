@@ -158,6 +158,7 @@ export default {
 
 .group-title {
 	font-weight: bold;
-	font-size: xxx-large;
+	font-size: 20px;
+	margin-top: 8px;
 }
 </style>
