@@ -22,29 +22,31 @@
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
-			<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
-				:key="space.id"
-				:class="$route.params.space === spaceName ? 'space-selected' : ''"
-				:allow-collapse="true"
-				:open="$route.params.space === spaceName"
-				:title="spaceName"
-				:to="{path: `/workspace/${spaceName}`}">
-				<AppNavigationIconBullet slot="icon" :color="space.color" />
-				<CounterBubble slot="counter" class="user-counter">
-					{{ $store.getters.spaceUserCount(spaceName) }}
-				</CounterBubble>
-				<div>
-					<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
-						:key="group.gid"
-						icon="icon-group"
-						:to="{path: `/group/${spaceName}/${group.gid}`}"
-						:title="group.displayName">
-						<CounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( spaceName, group.gid) }}
-						</CounterBubble>
-					</AppNavigationItem>
-				</div>
-			</AppNavigationItem>
+			<template #list>
+				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
+					:key="space.id"
+					:class="$route.params.space === spaceName ? 'space-selected' : ''"
+					:allow-collapse="true"
+					:open="$route.params.space === spaceName"
+					:title="spaceName"
+					:to="{path: `/workspace/${spaceName}`}">
+					<AppNavigationIconBullet slot="icon" :color="space.color" />
+					<CounterBubble slot="counter" class="user-counter">
+						{{ $store.getters.spaceUserCount(spaceName) }}
+					</CounterBubble>
+					<div>
+						<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+							:key="group.gid"
+							icon="icon-group"
+							:to="{path: `/group/${spaceName}/${group.gid}`}"
+							:title="group.displayName">
+							<CounterBubble slot="counter" class="user-counter">
+								{{ $store.getters.groupUserCount( spaceName, group.gid) }}
+							</CounterBubble>
+						</AppNavigationItem>
+					</div>
+				</AppNavigationItem>
+			</template>
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -213,10 +215,6 @@ export default {
 </script>
 
 <style scoped>
-
-.app-navigation {
-	display: block;
-}
 
 .app-navigation-entry {
 	padding-right: 0px;
