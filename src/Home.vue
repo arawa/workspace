@@ -154,6 +154,7 @@ export default {
 							groups: resp.data.groups,
 							isOpen: false,
 							id: resp.data.id_space,
+							groupfolderId: resp.data.folder_id,
 							name,
 							quota: undefined,
 							users: [],
