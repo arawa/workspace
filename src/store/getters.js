@@ -6,7 +6,7 @@ export const getters = {
 	// displayName is not supposed to change neither
 	GEGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.displayName === ESPACE_MANAGERS_PREFIX + name
+			return group.displayName === ESPACE_MANAGERS_PREFIX + state.spaces[name].id
 		})
 		return groups[0]
 	},
@@ -74,7 +74,7 @@ export const getters = {
 	// displayName is not supposed to change neither
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.displayName === ESPACE_USERS_PREFIX + name
+			return group.displayName === ESPACE_USERS_PREFIX + state.spaces[name].id
 		})
 		return groups[0]
 	},

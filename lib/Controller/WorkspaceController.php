@@ -143,8 +143,8 @@ class WorkspaceController extends Controller {
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
-        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $spaceName);
-        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $spaceName);
+        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
         
         // #5 add U group to groupfolder
         $dataResponseAssignSpaceManagerGroup = $this->groupfolderService->addGroup(
@@ -236,36 +236,37 @@ class WorkspaceController extends Controller {
      *
      */
     public function destroy($spaceId) {
-	$this->logger->debug('Deleting space ' . $spaceId);
+        $this->logger->debug('Deleting space ' . $spaceId);
         $space = $this->workspaceService->get($spaceId);
 
-	$this->logger->debug('Removing correesponding groupfolder.');
-	$groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
+        $this->logger->debug('Removing correesponding groupfolder.');
+
+        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
         $resp = $this->groupfolderService->delete($space['groupfolder_id']);
         if ( $resp !== 100 ) {
-		// TODO Should return an error
-            	return;
+        // TODO Should return an error
+        return;
         }
 
-	// Delete all GE from WorkspacesManagers group if necessary
-	// TODO: Lookup would be much more consistent if we were using gid instead of displayName here
-	$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-	$GEGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
-	foreach($GEGroups as $group) {
-		foreach ($group->getUsers() as $user) {
-			$this->userService->removeGEFromWM($user, $space);
-		}
-	}
+        // Delete all GE from WorkspacesManagers group if necessary
+        // TODO: Lookup would be much more consistent if we were using gid instead of displayName here
+        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+        $GEGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
+        foreach($GEGroups as $group) {
+            foreach ($group->getUsers() as $user) {
+                $this->userService->removeGEFromWM($user, $space);
+            }
+        }
 
-	// Removes all workspaces groups
+	    // Removes all workspaces groups
         $groups = [];
-	$this->logger->debug('Removing workspaces groups.');
+	    $this->logger->debug('Removing workspaces groups.');
         foreach ( array_keys($groupfolder['groups']) as $group ) {
             $groups[] = $group;
             $this->groupManager->get($group)->delete();
         }
 	
-	return new JSONResponse([
+	    return new JSONResponse([
             'http' => [
                 'statuscode' => 200,
                 'message' => 'The space is deleted.'
@@ -390,47 +391,25 @@ class WorkspaceController extends Controller {
         $space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
         $groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
-        $groupsFromGroupfolder = array_diff_key($groupfolder['groups'], [ 
-            Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId => 31,
-            Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId => 31
-        ]);
-        foreach(array_keys($groupsFromGroupfolder) as $groupname){
-            $group = $this->groupManager->get($groupname);
-
-            $groups[$group->getGID()] = [
-                "displayName" => $group->getDisplayName(),
-                "gid"   => $group->getGID()
-            ];
-        }
+        $groups = $groupfolder['groups'];
 
         $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
         $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
 	    // TODO Handle API call failure (revert space rename and inform user)
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
-            
-            $groupGE = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
-            $groupU = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId);
-
-            $groupGE->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
-            $groupU->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
-
-            $groups[$groupGE->getGID()] = [
-                "displayName" => $groupGE->getDisplayName(),
-                "gid" => $groupGE->getGID()
-            ];
-
-            $groups[$groupU->getGID()] = [
-                "displayName" => $groupU->getDisplayName(),
-                "gid" => $groupU->getGID()
-            ];
-        
+            return new JSONResponse([
+                "statuscode" => Http::STATUS_NO_CONTENT,
+                "space" => $newSpaceName,
+                'groups' => $groups
+            ]);                    
+        } else {
+            return new JSONResponse(
+                [
+                    "statuscode" => Http::STATUS_INTERNAL_SERVER_ERROR,
+                    "msg" => "Rename the space is impossible."
+                ]
+            );
         }
-
-        return new JSONResponse([
-            "statuscode" => Http::STATUS_NO_CONTENT,
-            "space" => $newSpaceName,
-            'groups' => $groups
-        ]);
     }
 
 	/**
