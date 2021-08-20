@@ -309,6 +309,21 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
+         * Returns a list of users whose name matches $term
+         *
+         * @NoAdminRequired
+         *
+         * @param string $term
+         * @param string $spaceId
+         *
+         * @return JSONResponse
+         */
+        public function lookupUsers(string $term, string $spaceId) {
+                $users = $this->workspaceService->autoComplete($term, $spaceId);
+                return new JSONResponse($users);
+        }
+
+	/**
 	*
 	* Change a user's role in a workspace
 	*

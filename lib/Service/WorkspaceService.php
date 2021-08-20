@@ -9,6 +9,7 @@ use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
+use OCP\IUserManager;
 
 class WorkspaceService {
 
@@ -21,6 +22,9 @@ class WorkspaceService {
 	/** @var ILogger */
 	private $logger;
 
+	/** @var IUserManager */
+	private $userManager;
+
 	/** @var SpaceMapper  */
 	private $spaceMapper;
 
@@ -31,16 +35,51 @@ class WorkspaceService {
 		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		ILogger $logger,
-		SpaceMapper $spaceMapper
+		IUserManager $userManager,
+		SpaceMapper $spaceMapper,
+		UserService $userService
 	)
 	{
 		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->spaceMapper = $spaceMapper;
+		$this->userManager = $userManager;
+		$this->userService = $userService;
 	}
 
-    	/*
+	/**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @param string $term
+	 * @param string $spaceId
+	 *
+	 * @return array
+	 */
+	public function autoComplete(string $term, string $spaceId) {
+		// lookup users
+		$term = $term === '*' ? '' : $term;
+		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
+
+		$users = [];
+		foreach($searchingUsers as $user) {
+			if($user->isEnabled()) {
+					$users[] = $user;
+				}
+		}
+
+		// transform in a format suitable for the app
+		$data = [];
+		$space = $this->get($spaceId);
+		foreach($users as $user) {
+			$data[] = $this->userService->formatUser($user, $space, 'user');
+		}
+
+		// return info
+		return $data;
+	}
+
+	/*
 	 * Get a single workspace
 	 */
 	public function get($id){
@@ -71,7 +110,7 @@ class WorkspaceService {
 		$group = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $worksspace, 'admin');
+				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
 			};
 		}
 		$workspace['users'] = (object) $users;
@@ -85,7 +124,7 @@ class WorkspaceService {
 				'displayName' => $NCGroup->getDisplayName()
 			);
 		}
-	    	$workspace['groups'] = $groups;
+		$workspace['groups'] = $groups;
 
 		// Returns workspace
 		return $workspace;
