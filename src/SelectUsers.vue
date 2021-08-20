@@ -262,18 +262,25 @@ export default {
 	background-size: contain;
 }
 
+.multiselect__tags {
+	border-color: #dbdbdb !important;
+	margin-bottom: 5px;
+}
+
 .select-users-actions {
 	display: flex;
 	flex-flow: row-reverse;
+	margin-top: 10px;
 }
 
 .select-users-input {
-	width: 90%;
+	align-self: start;
+	width: 100%;
 }
 
 .select-users-list {
-	min-height: 400px;
-	max-height: 400px;
+	min-height: 300px;
+	max-height: 300px;
 	min-width: 500px;
 	margin-top: 5px;
 	border-style: solid;
