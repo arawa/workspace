@@ -116,27 +116,28 @@ Class UserService {
 	 * This function removes a GE from the WorkspaceManagers group when necessary
 	 *
 	 */
-	public function removeGEFromWM(IUser $user, array $space) {
+	public function removeGEFromWM(IUser $user, int $spaceId) {
 		$found = false;
 		$groups = $this->groupManager->getUserGroups($user);
 
+		// Checks if the user is member of the GE- group of another workspace
 		foreach($groups as $group) {
-			$groupName = $group->getDisplayName();
-			if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-				$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
-				$groupName !== Application::GROUP_WKSUSER
+			$gid = $group->getGID();
+			if (strpos($gid, Application::GID_SPACE . Application::ESPACE_MANAGER_01) === 0 &&
+				$gid !== Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
 			) {
 				$found = true;
 				break;
 			}
 		}
 
+		// Removing the user from the WorkspacesManagers group if needed
 		if (!$found) {
-			$this->logger->debug('User is not manager of any other workspace, removing it from the WorkspacesManagers group.');
+			$this->logger->debug('User is not manager of any other workspace, removing it from the ' . Application::GROUP_WKSUSER . ' group.');
 			$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 			$workspaceUserGroup->removeUser($user);
 		} else {
-			$this->logger->debug('User is still manager of other workspaces, will not remove it from the WorkspacesManagers group.');
+			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . Application::GROUP_WKSUSER . ' group.');
 		}
 
 		return;
