@@ -309,87 +309,30 @@ class WorkspaceController extends Controller {
 
     }
 
-    /**
-     * Returns a list of all the workspaces that the connected user
-     * may use.
-     * 
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     *
-     * TODO: To move or delete.
-     */
-    public function findAll() {
+	/**
+	 *
+	 * Returns a list of all the workspaces that the connected user may use.
+	 * 
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 */
+	public function findAll() {
 
-	$spacesResponse = $this->workspaceService->findAll();
+		$workspaces = $this->workspaceService->getAll();
 
-	$spaces = json_decode($spacesResponse->getBody(), true);
-
-	$groupfoldersResponse = $this->groupfolderService->getAll();
-
-	$groupfolders = json_decode($groupfoldersResponse->getBody(), true);
-
-	for($i = 0; $i < count($spaces); $i++) {
-	    foreach($groupfolders['ocs']['data'] as $key_groupfolders => $value_groupfolders){
-		if($key_groupfolders === (int)$spaces[$i]['groupfolder_id']){
-		    $spaces[$i]['groupfolder_id'] = $value_groupfolders['id'];
-		    $spaces[$i]['groups'] = $value_groupfolders['groups'];
-		    $spaces[$i]['quota'] = $value_groupfolders['quota'];
-		    $spaces[$i]['size'] = $value_groupfolders['size'];
-		    $spaces[$i]['acl'] = $value_groupfolders['acl'];		
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$this->logger->debug('Filtering workspaces');
+	    		$filteredWorkspaces = array_filter($workspaces, function($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace['id']);
+			});
+			$workspaces = $filteredWorkspaces;
 		}
-	    }
+
+		return new JSONResponse($workspaces);
+
 	}
-
-	// We only want to return those workspaces for which the connected user is a manager
-	if (!$this->userService->isUserGeneralAdmin()) {
-	    $this->logger->debug('Filtering workspaces');
-	    $filteredSpaces = array_filter($spaces, function($space) {
-		return $this->userService->isSpaceManagerOfSpace($space['id']);
-	    });
-	    
-	    $spaces = $filteredSpaces;
-	}
-
-        // Adds workspace users and groups details
-        // Caution: It is important to add users from the workspace's user group before adding the users
-        // from the workspace's manager group, as users may be members of both groups 
-        $this->logger->debug('Adding users information to workspaces');
-        $workspaces = array_map(function($space) {
-            // Adds users
-            $users = array();
-            $group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
-            // TODO Handle is_null($group) better (remove workspace from list?)
-            if (!is_null($group)) {
-                foreach($group->getUsers() as $user) {
-                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'user');
-                };
-            }
-            // TODO Handle is_null($group) better (remove workspace from list?)
-            $group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
-            if (!is_null($group)) {
-                foreach($group->getUsers() as $user) {
-                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'admin');
-                };
-            }
-            $space['users'] = (object) $users;
-
-            // Adds groups
-            $groups = array();
-            foreach (array_keys($space['groups']) as $gid) {
-                $NCGroup = $this->groupManager->get($gid);
-                $groups[$gid] = array(
-                    'gid' => $NCGroup->getGID(),
-                    'displayName' => $NCGroup->getDisplayName()
-                );
-            }
-            $space['groups'] = $groups;
-
-            return $space;
-
-        },$spaces);
-
-        return new JSONResponse($workspaces);
-    }
 
 	/**
 	*
