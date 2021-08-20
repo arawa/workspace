@@ -14,43 +14,29 @@ use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IGroupManager;
-use OCP\IURLGenerator;
-use OCP\AppFramework\Http;
-use OCA\Workspace\Db\Space;
-use OCP\Http\Client\IClient;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCP\Http\Client\IClientService;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
-use OCP\AppFramework\Http\JSONResponse;
 use OCA\Workspace\Service\GroupfolderService;
-use OCP\Authentication\LoginCredentials\IStore;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Service\WorkspaceService;
 
 class WorkspaceController extends Controller {
     
-    /** @var IStore */
-    private $IStore;
-
-    /** @var IClient */
-    private $httpClient;
-
     /** @var IGroupManager */
     private $groupManager;
 
     /** @var ILogger */
     private $logger;
-
-    /** @var IURLGenerator */
-    private $urlGenerator;
 
     /** @var IUserManager */
     private $userManager;
@@ -72,13 +58,10 @@ class WorkspaceController extends Controller {
 
     public function __construct(
 	$AppName,
-	IClientService $clientService,
 	IGroupManager $groupManager,
 	ILogger $logger,
 	IRequest $request,
-	IURLGenerator $urlGenerator,
 	UserService $userService,
-	IStore $IStore,
 	GroupfolderService $groupfolderService,
 	IUserManager $userManager,
 	SpaceMapper $mapper,
@@ -91,22 +74,13 @@ class WorkspaceController extends Controller {
 	$this->groupfolderService = $groupfolderService;
 	$this->groupManager = $groupManager;
 	$this->logger = $logger;
-	$this->IStore = $IStore;
 
-	$this->urlGenerator = $urlGenerator;
 	$this->userManager = $userManager;
 	$this->userService = $userService;
-
-	$this->login = $this->IStore->getLoginCredentials();
-
-	$this->httpClient = $clientService->newClient();
-
 	$this->groupfolderService = $groupfolderService;
 
 	$this->spaceMapper = $mapper;
-
 	$this->spaceService = $spaceService;
-
 	$this->workspaceService = $workspaceService;
     }
 
