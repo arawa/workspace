@@ -157,7 +157,7 @@ export default {
 							groupfolderId: resp.data.folder_id,
 							name,
 							quota: undefined,
-							users: [],
+							users: {},
 						})
 						this.$router.push({
 							path: `/workspace/${name}`,
