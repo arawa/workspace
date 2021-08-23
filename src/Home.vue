@@ -217,6 +217,10 @@ export default {
 
 <style scoped>
 
+.app-navigation {
+	display: block;
+}
+
 .app-navigation-entry {
 	padding-right: 0px;
 }
