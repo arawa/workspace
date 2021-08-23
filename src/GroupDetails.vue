@@ -27,18 +27,20 @@
 					</Actions>
 				</div>
 				<Actions>
-					<ActionButton v-show="!showRenameGroupInput"
+					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</ActionButton>
-					<ActionInput v-show="showRenameGroupInput"
+					<ActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+						v-show="showRenameGroupInput"
 						ref="renameGroupInput"
 						icon="icon-group"
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
 					</ActionInput>
-					<ActionButton
+					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						icon="icon-delete"
 						@click="deleteGroup">
 						{{ t('workspace', 'Delete group') }}
