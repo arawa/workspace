@@ -2,7 +2,6 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUser;
@@ -23,53 +22,19 @@ Class UserService {
 	/** @var IUserSession */
 	private $userSession;
 
-	/** @var $WorkspaceService */
-	private $workspaceService;
-
 	public function __construct(
 		IGroupManager $group,
 		ILogger $logger,
 		IUserManager $userManager,
-		IUserSession $userSession,
-		WorkspaceService $workspaceService) {
+		IUserSession $userSession
+	)
+	{
 
 		$this->groupManager = $group;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userSession = $userSession;
-		$this->workspaceService = $workspaceService;
 
-	}
-
-	/**
-	 * Returns a list of users whose name matches $term
-	 *
-	 * @param string $term
-	 * @param string $spaceId
-	 *
-	 * @return array
-	 */
-	public function autoComplete(string $term, string $spaceId) {
-		// lookup users
-		$term = $term === '*' ? '' : $term;
-		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
-		
-		$users = [];
-		foreach($searchingUsers as $user) {
-			if($user->isEnabled()) {
-					$users[] = $user;
-				}
-		}
-
-		// transform in a format suitable for the app
-		$data = [];
-		$space = $this->workspaceService->get($spaceId);
-		foreach($users as $user) {
-			$data[] = $this->formatUser($user, $space, 'user');
-		}
-
-		// return info
-		return $data;
 	}
 
 	/**
@@ -139,21 +104,8 @@ Class UserService {
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/
 	public function isSpaceManagerOfSpace($id) {
-		// Get space details
-		$space = $this->workspaceService->get($id);
 
-		$workspaceAdminGroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
-
-		if (count($workspaceAdminGroup) == 0) {
-			// TODO Log error
-			return false;
-		}
-
-		if (count($workspaceAdminGroup) > 1) {
-			// TODO Several group match the space name, we need to find the good one
-		}
-
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $workspaceAdminGroup[0]->getGID())) {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $id)) {
 			return true;
 		}
 		return false;
@@ -164,27 +116,28 @@ Class UserService {
 	 * This function removes a GE from the WorkspaceManagers group when necessary
 	 *
 	 */
-	public function removeGEFromWM(IUser $user, array $space) {
+	public function removeGEFromWM(IUser $user, int $spaceId) {
 		$found = false;
 		$groups = $this->groupManager->getUserGroups($user);
 
+		// Checks if the user is member of the GE- group of another workspace
 		foreach($groups as $group) {
-			$groupName = $group->getDisplayName();
-			if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-				$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
-				$groupName !== Application::GROUP_WKSUSER
+			$gid = $group->getGID();
+			if (strpos($gid, Application::GID_SPACE . Application::ESPACE_MANAGER_01) === 0 &&
+				$gid !== Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
 			) {
 				$found = true;
 				break;
 			}
 		}
 
+		// Removing the user from the WorkspacesManagers group if needed
 		if (!$found) {
-			$this->logger->debug('User is not manager of any other workspace, removing it from the WorkspacesManagers group.');
+			$this->logger->debug('User is not manager of any other workspace, removing it from the ' . Application::GROUP_WKSUSER . ' group.');
 			$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
 			$workspaceUserGroup->removeUser($user);
 		} else {
-			$this->logger->debug('User is still manager of other workspaces, will not remove it from the WorkspacesManagers group.');
+			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . Application::GROUP_WKSUSER . ' group.');
 		}
 
 		return;

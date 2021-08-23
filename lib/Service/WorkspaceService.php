@@ -2,60 +2,146 @@
 
 namespace OCA\Workspace\Service;
 
-use OCP\Authentication\LoginCredentials\IStore;
-use OCP\Http\Client\IClientService;
-use OCP\IURLGenerator;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\GroupfolderService;
+use OCA\Workspace\Service\UserService;
+use OCP\IGroupManager;
+use OCP\ILogger;
+use OCP\IUserManager;
 
 class WorkspaceService {
 
-    private const HEADERS = [
-        'Content-Type' => 'application/x-www-form-urlencoded',
-        'OCS-APIRequest' => 'true',
-        'Accept' => 'application/json',
-        'verify' => 'false',
-    ];
+	/** @var GroupfolderService */
+	private $groupfolderService;
 
-    public function __construct(
-        IURLGenerator $urlGenerator,
-        IClientService $clientService,
-        IStore $IStore
-    )
-    {
-        $this->urlGenerator = $urlGenerator;
-        $this->httpClient = $clientService->newClient();
-        $this->IStore = $IStore;
-        $this->login = $this->IStore->getLoginCredentials();
-    }
+	/** @var IGroupManager */
+	private $groupManager;
 
-    public function get($id){
+	/** @var ILogger */
+	private $logger;
 
-        $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/workspace/workspaces/' . $id,
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => self::HEADERS
-            ]
-        );
+	/** @var IUserManager */
+	private $userManager;
 
-        return json_decode($response->getBody(), true);
-    }
+	/** @var SpaceMapper  */
+	private $spaceMapper;
 
-    public function findAll() {
-        $response = $this->httpClient->get(
-            $this->urlGenerator->getBaseUrl() . '/apps/workspace/workspaces',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'headers' => self::HEADERS
-            ]
-        );
+	/** @var UserService */
+	private $userService;
 
-        return $response;
-    }
+	public function __construct(
+		GroupfolderService $groupfolderService,
+		IGroupManager $groupManager,
+		ILogger $logger,
+		IUserManager $userManager,
+		SpaceMapper $spaceMapper,
+		UserService $userService
+	)
+	{
+		$this->groupfolderService = $groupfolderService;
+		$this->groupManager = $groupManager;
+		$this->logger = $logger;
+		$this->spaceMapper = $spaceMapper;
+		$this->userManager = $userManager;
+		$this->userService = $userService;
+	}
+
+	/**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @param string $term
+	 * @param string $spaceId
+	 *
+	 * @return array
+	 */
+	public function autoComplete(string $term, string $spaceId) {
+		// lookup users
+		$term = $term === '*' ? '' : $term;
+		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
+
+		$users = [];
+		foreach($searchingUsers as $user) {
+			if($user->isEnabled()) {
+					$users[] = $user;
+				}
+		}
+
+		// transform in a format suitable for the app
+		$data = [];
+		$space = $this->get($spaceId);
+		foreach($users as $user) {
+			$data[] = $this->userService->formatUser($user, $space, 'user');
+		}
+
+		// return info
+		return $data;
+	}
+
+	/*
+	 * Get a single workspace
+	 */
+	public function get($id){
+
+		// Gets space info
+		$workspace = $this->spaceMapper->find($id)->jsonSerialize();
+
+		// Adds groupfolder's info
+		$groupfolder = $this->groupfolderService->get($workspace['groupfolder_id']);
+		$workspace['groups'] = $groupfolder['groups'];
+		$workspace['quota'] = $groupfolder['quota'];
+		$workspace['size'] = $groupfolder['size'];
+		$workspace['acl'] = $groupfolder['acl'];
+
+		// Adds users' info 
+		// Caution: It is important to add users from the workspace's user group before adding the users
+		// from the workspace's manager group, as users may be members of both groups
+		$this->logger->debug('Adding users information to workspace');
+		$users = array();
+		$group = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $workspace['id']);
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'user');
+			};
+		}
+		// TODO Handle is_null($group) better (remove workspace from list?)
+		$group = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
+		if (!is_null($group)) {
+			foreach($group->getUsers() as $user) {
+				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+			};
+		}
+		$workspace['users'] = (object) $users;
+	
+		// Adds groups' info
+		$groups = array();
+		foreach (array_keys($workspace['groups']) as $gid) {
+			$NCGroup = $this->groupManager->get($gid);
+			$groups[$gid] = array(
+				'gid' => $NCGroup->getGID(),
+				'displayName' => $NCGroup->getDisplayName()
+			);
+		}
+		$workspace['groups'] = $groups;
+
+		// Returns workspace
+		return $workspace;
+	}
+
+	/*
+	 * Gets all workspaces
+	 */
+	public function getAll() {
+
+		$spaces = $this->spaceMapper->findAll();
+		$workspaces = array();
+		foreach ($spaces as $space) {
+			$workspaces[] = $this->get($space->getSpaceId());
+		}
+
+		return $workspaces;
+	}
 
 }

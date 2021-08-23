@@ -219,14 +219,8 @@ class UserServiceTest extends TestCase {
 	 */
 	public function testIsNotSpaceManagerOfSpace() {
 
-		$this->workspaceService->expects($this->once())
-			->method('get')
-			->willReturn(['space_name' => 'Test']);
 		// Let's say user is manager of the space
-		$group = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-		     	->method('search')
-			->willReturn([$group]);
+		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
 		     	->method('isInGroup')
 	     		->with($this->user->getUID(), $group->getGID())
@@ -252,14 +246,8 @@ class UserServiceTest extends TestCase {
 	 */
 	public function testIsSpaceManagerOfSpace() {
 
-		$this->workspaceService->expects($this->once())
-			->method('get')
-			->willReturn(['space_name' => 'Test']);
 		// Let's say user is not manager of the space
-		$group = $this->createTestGroup('GE-Test', 'GE-Test', []);
-		$this->groupManager->expects($this->once())
-		     	->method('search')
-			->willReturn([$group]);
+		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', []);
 		$this->groupManager->expects($this->once())
 		     	->method('isInGroup')
 	     		->with($this->user->getUID(), $group->getGID())

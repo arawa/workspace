@@ -14,43 +14,29 @@ use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IGroupManager;
-use OCP\IURLGenerator;
-use OCP\AppFramework\Http;
-use OCA\Workspace\Db\Space;
-use OCP\Http\Client\IClient;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCP\Http\Client\IClientService;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
-use OCP\AppFramework\Http\JSONResponse;
 use OCA\Workspace\Service\GroupfolderService;
-use OCP\Authentication\LoginCredentials\IStore;
 use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\GetAllGroupFoldersException;
 use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Service\WorkspaceService;
 
 class WorkspaceController extends Controller {
     
-    /** @var IStore */
-    private $IStore;
-
-    /** @var IClient */
-    private $httpClient;
-
     /** @var IGroupManager */
     private $groupManager;
 
     /** @var ILogger */
     private $logger;
-
-    /** @var IURLGenerator */
-    private $urlGenerator;
 
     /** @var IUserManager */
     private $userManager;
@@ -72,13 +58,10 @@ class WorkspaceController extends Controller {
 
     public function __construct(
 	$AppName,
-	IClientService $clientService,
 	IGroupManager $groupManager,
 	ILogger $logger,
 	IRequest $request,
-	IURLGenerator $urlGenerator,
 	UserService $userService,
-	IStore $IStore,
 	GroupfolderService $groupfolderService,
 	IUserManager $userManager,
 	SpaceMapper $mapper,
@@ -91,22 +74,13 @@ class WorkspaceController extends Controller {
 	$this->groupfolderService = $groupfolderService;
 	$this->groupManager = $groupManager;
 	$this->logger = $logger;
-	$this->IStore = $IStore;
 
-	$this->urlGenerator = $urlGenerator;
 	$this->userManager = $userManager;
 	$this->userService = $userService;
-
-	$this->login = $this->IStore->getLoginCredentials();
-
-	$this->httpClient = $clientService->newClient();
-
 	$this->groupfolderService = $groupfolderService;
 
 	$this->spaceMapper = $mapper;
-
 	$this->spaceService = $spaceService;
-
 	$this->workspaceService = $workspaceService;
     }
 
@@ -307,87 +281,45 @@ class WorkspaceController extends Controller {
 
     }
 
-    /**
-     * Returns a list of all the workspaces that the connected user
-     * may use.
-     * 
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     *
-     * TODO: To move or delete.
-     */
-    public function findAll() {
+	/**
+	 *
+	 * Returns a list of all the workspaces that the connected user may use.
+	 * 
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 */
+	public function findAll() {
 
-	$spacesResponse = $this->workspaceService->findAll();
+		$workspaces = $this->workspaceService->getAll();
 
-	$spaces = json_decode($spacesResponse->getBody(), true);
-
-	$groupfoldersResponse = $this->groupfolderService->getAll();
-
-	$groupfolders = json_decode($groupfoldersResponse->getBody(), true);
-
-	for($i = 0; $i < count($spaces); $i++) {
-	    foreach($groupfolders['ocs']['data'] as $key_groupfolders => $value_groupfolders){
-		if($key_groupfolders === (int)$spaces[$i]['groupfolder_id']){
-		    $spaces[$i]['groupfolder_id'] = $value_groupfolders['id'];
-		    $spaces[$i]['groups'] = $value_groupfolders['groups'];
-		    $spaces[$i]['quota'] = $value_groupfolders['quota'];
-		    $spaces[$i]['size'] = $value_groupfolders['size'];
-		    $spaces[$i]['acl'] = $value_groupfolders['acl'];		
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$this->logger->debug('Filtering workspaces');
+	    		$filteredWorkspaces = array_filter($workspaces, function($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace['id']);
+			});
+			$workspaces = $filteredWorkspaces;
 		}
-	    }
+
+		return new JSONResponse($workspaces);
+
 	}
 
-	// We only want to return those workspaces for which the connected user is a manager
-	if (!$this->userService->isUserGeneralAdmin()) {
-	    $this->logger->debug('Filtering workspaces');
-	    $filteredSpaces = array_filter($spaces, function($space) {
-		return $this->userService->isSpaceManagerOfSpace($space['id']);
-	    });
-	    
-	    $spaces = $filteredSpaces;
-	}
-
-        // Adds workspace users and groups details
-        // Caution: It is important to add users from the workspace's user group before adding the users
-        // from the workspace's manager group, as users may be members of both groups 
-        $this->logger->debug('Adding users information to workspaces');
-        $workspaces = array_map(function($space) {
-            // Adds users
-            $users = array();
-            $group = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
-            // TODO Handle is_null($group) better (remove workspace from list?)
-            if (!is_null($group)) {
-                foreach($group->getUsers() as $user) {
-                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'user');
-                };
-            }
-            // TODO Handle is_null($group) better (remove workspace from list?)
-            $group = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
-            if (!is_null($group)) {
-                foreach($group->getUsers() as $user) {
-                    $users[$user->getUID()] = $this->userService->formatUser($user, $space, 'admin');
-                };
-            }
-            $space['users'] = (object) $users;
-
-            // Adds groups
-            $groups = array();
-            foreach (array_keys($space['groups']) as $gid) {
-                $NCGroup = $this->groupManager->get($gid);
-                $groups[$gid] = array(
-                    'gid' => $NCGroup->getGID(),
-                    'displayName' => $NCGroup->getDisplayName()
-                );
-            }
-            $space['groups'] = $groups;
-
-            return $space;
-
-        },$spaces);
-
-        return new JSONResponse($workspaces);
-    }
+	/**
+         * Returns a list of users whose name matches $term
+         *
+         * @NoAdminRequired
+         *
+         * @param string $term
+         * @param string $spaceId
+         *
+         * @return JSONResponse
+         */
+        public function lookupUsers(string $term, string $spaceId) {
+                $users = $this->workspaceService->autoComplete($term, $spaceId);
+                return new JSONResponse($users);
+        }
 
 	/**
 	*

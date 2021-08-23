@@ -15,7 +15,7 @@ return [
 			'verb' => 'GET',
 		],
 		[
-			'name' => 'page#autoComplete',
+			'name' => 'workspace#lookupUsers',
 			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'GET'
 		],
