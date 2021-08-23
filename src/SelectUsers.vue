@@ -46,7 +46,7 @@
 						</div>
 					</div>
 					<div class="user-entry-actions">
-						<div v-if="!isGEorUGroup">
+						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
 							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
@@ -103,14 +103,6 @@ export default {
 			return !this.allSelectedUsers.every(user => {
 				return this.$store.getters.isMember(this.$route.params.space, user)
 			})
-		},
-		// Returns true if we are adding users to the GE or User group of this workspace
-		isGEorUGroup() {
-			if (this.$route.params.group === this.$store.getters.GEGroup(this.$route.params.space).gid
-			|| this.$route.params.group === this.$store.getters.UGroup(this.$route.params.space).gid) {
-				return true
-			}
-			return false
 		},
 	},
 	created() {

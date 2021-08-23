@@ -208,12 +208,10 @@ class WorkspaceController extends Controller {
                 $newSpaceManagerGroup->getGID() => [
                     'gid' => $newSpaceManagerGroup->getGID(),
                     'displayName' => $newSpaceManagerGroup->getDisplayName(),
-                    'permissions_groupfolder' => 31
                 ],
                 $newSpaceUsersGroup->getGID() => [
                     'gid' => $newSpaceUsersGroup->getGID(),
                     'displayName' => $newSpaceUsersGroup->getDisplayName(),
-                    'permissions_groupfolder' => 31
                 ]
             ],
             'space_advanced_permissions' => true,
