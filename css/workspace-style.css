@@ -37,3 +37,9 @@ tr {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+
+.titles-for-space {
+	font-weight: bold;
+	font-size: 20px;
+	margin-top: 10px;
+}

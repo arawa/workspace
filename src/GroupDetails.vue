@@ -11,7 +11,7 @@
 		<div class="header">
 			<div class="group-name">
 				<div class="icon-group" />
-				<span class="group-title">
+				<span class="titles-for-space">
 					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
 			</div>
@@ -156,9 +156,4 @@ export default {
 	margin-left: 40px;
 }
 
-.group-title {
-	font-weight: bold;
-	font-size: 20px;
-	margin-top: 8px;
-}
 </style>

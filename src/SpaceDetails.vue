@@ -13,7 +13,7 @@
 				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
 					<button class="color-dot color-picker" :style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
 				</ColorPicker>
-				<span class="space-title">
+				<span class="titles-for-space">
 					{{ title }}
 				</span>
 				<Multiselect
@@ -263,12 +263,6 @@ export default {
 .space-name {
 	margin-left: 8px;
 	margin-top: -40px;
-}
-
-.space-title {
-	font-weight: bold;
-	font-size: 20px;
-	margin-top: 10px;
 }
 
 .user-actions {
