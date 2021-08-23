@@ -1,4 +1,4 @@
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 
 export const getters = {
 	// Returns the GE group of a workspace
@@ -34,6 +34,21 @@ export const getters = {
 	},
 	// Tests whether a user is member of workspace
 	isMember: state => (name, user) => {
+		const users = state.spaces[name].users
+		if (users.length === 0) {
+			return false
+		} else {
+			return (user.uid in users)
+		}
+	},
+	isNewMember: state => (name, group, user) => {
+		const REGEXP = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + '|^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
+		if (group === undefined) {
+			return true
+		}
+		if (REGEXP.test(group)) {
+			return true
+		}
 		const users = state.spaces[name].users
 		if (users.length === 0) {
 			return false
