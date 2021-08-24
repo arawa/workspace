@@ -13,7 +13,11 @@
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
-		<AppNavigation>
+		<AppNavigation v-if="$root.$data.isUserGeneralAdmin === 'true'">
+			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-add"
+				:title="t('workspace', 'New space')"
+				@new-item="createSpace" />
 			<AppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
@@ -83,6 +87,13 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+	},
+	beforeCreate() {
+		if (this.$root.$data.canAccessApp === 'false') {
+			this.$router.push({
+				path: '/unauthorized'
+			})
+		}
 	},
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
