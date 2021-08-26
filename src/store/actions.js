@@ -7,7 +7,7 @@
 */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -136,17 +136,22 @@ export default {
 	},
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
-		// Update frontend
-		context.commit('removeUserFromGroup', { name, gid, user })
-
-		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
+		const regex = new RegExp(`^${ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX}|^${ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX}`)
+		const backupGroups = space.users[user.uid].groups
+		// Update frontend
+		if (regex.test(gid)) {
+			context.commit('removeUserFromWorkspace', { name, user })
+		} else {
+			context.commit('removeUserFromGroup', { name, gid, user })
+		}
+		// Update backend and revert frontend changes if something fails
 		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
 			gid,
 			user: user.uid,
 		}).then((resp) => {
-			if (resp.status === 204) {
+			if (resp.data.statuscode === 204) {
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
@@ -155,7 +160,13 @@ export default {
 			}
 		}).catch((e) => {
 			// TODO: Inform user
-			context.commit('addUserToGroup', { name, gid, user })
+			if (regex.test(gid)) {
+				backupGroups.forEach(group =>
+					context.commit('addUserToGroup', { name, group, user })
+				)
+			} else {
+				context.commit('addUserToGroup', { name, gid, user })
+			}
 		})
 	},
 	// Removes a user from a space
