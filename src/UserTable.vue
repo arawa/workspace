@@ -69,9 +69,9 @@
 			</tbody>
 		</table>
 		<EmptyContent v-else>
-			No users
+			{{ t('workspace', 'No users') }}
 			<template #desc>
-				There are no users in this space/group yet
+				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
 		</EmptyContent>
 	</div>
