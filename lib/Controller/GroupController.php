@@ -214,7 +214,6 @@ class GroupController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @NoCSRFRequired
 	 * 
 	 * Removes a user from a group
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
@@ -235,20 +234,16 @@ class GroupController extends Controller {
 			$this->logger->error('Group ' . $gid . ' does not exist');
 			return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
 		}
-		$groups = [];
 
-		// Removes user from group
+		// Removes user from group(s)
 		$NCUser = $this->userManager->get($user);
-		// Special cases when we are removing user from a U- or GE group
-		// TODO: Update the front-end to suit the number of the groups deleted.
-		if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
-		|| $gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId) {
-			// Removes user from all 'subgroups' when we remove it from the workspace's user group
+		$groups = [];
+		if ($gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId) {
+			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
 			$space = $this->workspaceService->get($spaceId);
 			$users = (array)$space['users'];
-			$groupsFromUser = $users[$NCUser->getUID()]['groups'];
-			foreach($groupsFromUser as $groupId) {
+			foreach($users[$NCUser->getUID()]['groups'] as $groupId) {
 				$NCGroup = $this->groupManager->get($groupId);
 				$NCGroup->removeUser($NCUser);
 				$groups[] = $NCGroup->getGID();
@@ -258,15 +253,18 @@ class GroupController extends Controller {
 					$this->userService->removeGEFromWM($NCUser, $spaceId);
 				}
 			}
-			return new JSONResponse([
-				'statuscode' => Http::STATUS_NO_CONTENT,
-				'user' => $NCUser->getUID(),
-				'groups' => $groups
-			]);	
+		} else {
+			// Removing user from a regular subgroup or a GE- group
+			$groups[] = $gid;
+			$NCGroup->removeUser($NCUser);
+			$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
+			if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId) {
+				// Removing user from a GE- group
+				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
+				$this->userService->removeGEFromWM($NCUser, $spaceId);
+			}
 		}
-		// delete subgroup only
-		$groups[] = $NCGroup->getGID();
-		$NCGroup->removeUser($NCUser);
+
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
 			'user' => $NCUser->getUID(),

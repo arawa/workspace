@@ -129,6 +129,7 @@ export default {
 				// TODO Inform user
 			})
 	},
+	// Deletes a space
 	removeSpace(context, { space }) {
 		context.commit('deleteSpace', {
 			space,
@@ -137,10 +138,9 @@ export default {
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
 		const space = context.state.spaces[name]
-		const regex = new RegExp(`^${ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX}|^${ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX}`)
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
-		if (regex.test(gid)) {
+		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 			context.commit('removeUserFromWorkspace', { name, user })
 		} else {
 			context.commit('removeUserFromGroup', { name, gid, user })
@@ -155,12 +155,20 @@ export default {
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
-				// TODO: Inform user
+				this._vm.$notify({
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'An error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
+					type: 'error',
+				})
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			// TODO: Inform user
-			if (regex.test(gid)) {
+			this._vm.$notify({
+				title: t('workspace', 'Network error'),
+				text: t('workspace', 'A network error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + e,
+				type: 'error',
+			})
+			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user })
 				)
