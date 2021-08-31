@@ -177,36 +177,6 @@ export default {
 			}
 		})
 	},
-	// Removes a user from a space
-	removeUserFromSpace(context, { name, user }) {
-		const space = context.state.spaces[name]
-		context.commit('removeUserFromWorkspace', { name, user })
-		axios.delete(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
-			spaceId: space.id,
-			userId: user.uid,
-		}))
-			.then((resp) => {
-				if (resp.status !== 200) {
-					// Revert action an inform user
-					context.commit('addUserToWorkspace', user)
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to add user ') + user.name + t('workspace', ' to workspace.<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
-				}
-			}).catch((e) => {
-				// Revert action an inform user
-				context.commit('addUserToWorkspace', user)
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A networks error occured while trying to add user ') + user.name + t('workspace', ' to workspace.<br>The error is: ') + e,
-					type: 'error',
-				})
-			})
-		// eslint-disable-next-line no-console
-		console.log('User ' + user.name + ' removed from space ' + name)
-	},
 	// Renames a group and navigates to its details page
 	renameGroup(context, { name, gid, newGroupName }) {
 		const space = context.state.spaces[name]
