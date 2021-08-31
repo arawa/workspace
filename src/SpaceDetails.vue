@@ -17,7 +17,7 @@
 					{{ title }}
 				</span>
 				<Multiselect
-					class="quota-select"
+					:class="isESR ? 'quota-select-esr' : 'quota-select'"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
@@ -104,6 +104,13 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			isESR: false,
+		}
+	},
+	created() {
+		const version = navigator.userAgent.split('Firefox/')[1]
+		if (parseInt(version) < 91) {
+			this.isESR = true
 		}
 	},
 	computed: {
@@ -253,6 +260,12 @@ export default {
 	margin-left: 20px !important;
 	min-width: 100px;
 	max-width: 100px;
+}
+
+.quota-select-esr {
+	margin-left: 20px !important;
+	min-width: 100px;
+	max-width: 100% !important;
 }
 
 .space-color-picker {
