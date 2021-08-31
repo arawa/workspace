@@ -7,7 +7,7 @@
 */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -129,6 +129,7 @@ export default {
 				// TODO Inform user
 			})
 	},
+	// Deletes a space
 	removeSpace(context, { space }) {
 		context.commit('deleteSpace', {
 			space,
@@ -136,26 +137,44 @@ export default {
 	},
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
-		// Update frontend
-		context.commit('removeUserFromGroup', { name, gid, user })
-
-		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
+		const backupGroups = space.users[user.uid].groups
+		// Update frontend
+		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+			context.commit('removeUserFromWorkspace', { name, user })
+		} else {
+			context.commit('removeUserFromGroup', { name, gid, user })
+		}
+		// Update backend and revert frontend changes if something fails
 		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
 			gid,
 			user: user.uid,
 		}).then((resp) => {
-			if (resp.status === 204) {
+			if (resp.data.statuscode === 204) {
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
-				// TODO: Inform user
+				this._vm.$notify({
+					title: t('workspace', 'Error'),
+					text: t('workspace', 'An error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
+					type: 'error',
+				})
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			// TODO: Inform user
-			context.commit('addUserToGroup', { name, gid, user })
+			this._vm.$notify({
+				title: t('workspace', 'Network error'),
+				text: t('workspace', 'A network error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + e,
+				type: 'error',
+			})
+			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+				backupGroups.forEach(group =>
+					context.commit('addUserToGroup', { name, group, user })
+				)
+			} else {
+				context.commit('addUserToGroup', { name, gid, user })
+			}
 		})
 	},
 	// Removes a user from a space
