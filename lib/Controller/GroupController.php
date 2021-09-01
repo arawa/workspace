@@ -203,7 +203,6 @@ class GroupController extends Controller {
 
 		// Adds user to workspace user group
 		// This must be the last action done, when all other previous actions have succeeded
-		$space = $this->workspaceService->get($spaceId);
 		$UGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId);
 		$UGroup->addUser($NCUser);
 
