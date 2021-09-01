@@ -51,7 +51,9 @@ class GroupfolderService {
     }
   
     /**
-     * @return object that is the response from httpClient
+     *
+     * @return array of groupfolders
+     *
      */
     public function getAll() {
             $response = $this->httpClient->get(
@@ -65,7 +67,10 @@ class GroupfolderService {
             ]
         );
 
-        return $response;
+        $response = json_decode($response->getBody(), true);
+
+	return $response['ocs']['data'];
+
     }
 
 
@@ -296,21 +301,23 @@ class GroupfolderService {
     }
 
     /**
+     *
+     * Checks if a groupfolder of name $spacename exists
+     *
      * @param string $spacename
-     * @return bool true if exist, otherwise false.
+     * @return bool true if such a groupfolder exists, false otherwise.
+     *
      */
     public function checkGroupfolderNameExist($spacename) {
 
-        $responseGroupfolders = $this->getAll();
-
-        $groupfolders = json_decode($responseGroupfolders->getBody(), true);
+        $groupfolders = $this->getAll();
 
         $mountpoints = array_values(
             array_map(
                 function ($groupfolder){
                     return strtoupper($groupfolder['mount_point']);
                 },
-                $groupfolders['ocs']['data']
+                $groupfolders
             )
         );
 
