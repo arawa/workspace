@@ -113,10 +113,11 @@ class WorkspaceService {
 		$workspaces = array();
 		$groupfolders = $this->groupfolderService->getAll();
 		foreach ($spaces as $space) {
-			$this->addGroupfolderInfo($space, $groupfolders[$space['groupfolder_id']]);
-			$this->addUsersInfo($space);
-			$this->addGroupsInfo($space);
-			$workspaces[] = $space;
+			$workspace = $space->jsonSerialize();
+			$this->addGroupfolderInfo($workspace, $groupfolders[$workspace['groupfolder_id']]);
+			$this->addUsersInfo($workspace);
+			$this->addGroupsInfo($workspace);
+			$workspaces[] = $workspace;
 		}
 		
 		return $workspaces;
@@ -130,7 +131,7 @@ class WorkspaceService {
 	 * @param array $groupfolder The groupfolder to retrieve info from
 	 *
 	 */
-	private function addUsersInfo(&$workspace, $groupfolder) {
+	private function addGroupfolderInfo(&$workspace, $groupfolder) {
 
 		$workspace['groups'] = $groupfolder['groups'];
 		$workspace['quota'] = $groupfolder['quota'];
@@ -178,7 +179,7 @@ class WorkspaceService {
 	 * @param array The workspace to which we want to add groups info
 	 *
 	 */
-	private function addGroupInfo(&$workspace) {
+	private function addGroupsInfo(&$workspace) {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
