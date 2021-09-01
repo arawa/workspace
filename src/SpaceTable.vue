@@ -63,52 +63,57 @@ export default {
 	},
 	data() {
 		return {
-			loading: true, // true when we are loading the data from the server
+			loading: false, // true when we are loading the data from the server
 		}
 	},
 	created() {
-		axios.get(generateUrl('/apps/workspace/spaces'))
-			.then(resp => {
-				// Checks for application errors
-				if (resp.status !== 200) {
+		// eslint-disable-next-line
+		console.log(this.$store.state)
+		if (Object.entries(this.$store.state.spaces).length === 0) {
+			this.loading = true
+			axios.get(generateUrl('/apps/workspace/spaces'))
+				.then(resp => {
+					// Checks for application errors
+					if (resp.status !== 200) {
+						this.$notify({
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+							type: 'error',
+						})
+						this.loading = false
+						return
+					}
+
+					// Initialises the store
+					Object.values(resp.data).forEach(space => {
+						let codeColor = space.color_code
+						if (space.color_code === null) {
+							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+						}
+						this.$store.commit('addSpace', {
+							color: codeColor,
+							groups: space.groups,
+							id: space.id,
+							groupfolderId: space.groupfolder_id,
+							isOpen: false,
+							name: space.space_name,
+							quota: this.convertQuotaForFrontend(space.quota),
+							users: space.users,
+						})
+					})
+
+					// Finished loading
+					this.loading = false
+				})
+				.catch((e) => {
 					this.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
 						type: 'error',
 					})
 					this.loading = false
-					return
-				}
-
-				// Initialises the store
-				Object.values(resp.data).forEach(space => {
-					let codeColor = space.color_code
-					if (space.color_code === null) {
-						codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-					}
-					this.$store.commit('addSpace', {
-						color: codeColor,
-						groups: space.groups,
-						id: space.id,
-						groupfolderId: space.groupfolder_id,
-						isOpen: false,
-						name: space.space_name,
-						quota: this.convertQuotaForFrontend(space.quota),
-						users: space.users,
-					})
 				})
-
-				// Finished loading
-				this.loading = false
-			})
-			.catch((e) => {
-				this.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
-					type: 'error',
-				})
-				this.loading = false
-			})
+		}
 	},
 	methods: {
 		convertQuotaForFrontend(quota) {
