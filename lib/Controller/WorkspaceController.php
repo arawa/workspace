@@ -143,8 +143,8 @@ class WorkspaceController extends Controller {
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
-        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $spaceName);
-        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $spaceName);
+        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
         
         // #5 add U group to groupfolder
         $dataResponseAssignSpaceManagerGroup = $this->groupfolderService->addGroup(
@@ -236,26 +236,24 @@ class WorkspaceController extends Controller {
      *
      */
     public function destroy($spaceId) {
-	$this->logger->debug('Deleting space ' . $spaceId);
+        $this->logger->debug('Deleting space ' . $spaceId);
         $space = $this->workspaceService->get($spaceId);
 
-	$this->logger->debug('Removing correesponding groupfolder.');
-	$groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
+        $this->logger->debug('Removing correesponding groupfolder.');
+
+        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
         $resp = $this->groupfolderService->delete($space['groupfolder_id']);
         if ( $resp !== 100 ) {
-		// TODO Should return an error
-            	return;
+	        // TODO Should return an error
+        	return;
         }
 
-	// Delete all GE from WorkspacesManagers group if necessary
-	// TODO: Lookup would be much more consistent if we were using gid instead of displayName here
-	$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-	$GEGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name']);
-	foreach($GEGroups as $group) {
-		foreach ($group->getUsers() as $user) {
-			$this->userService->removeGEFromWM($user, $space);
-		}
-	}
+        // Delete all GE from WorkspacesManagers group if necessary
+        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
+        foreach ($GEGroup->getUsers() as $user) {
+		$this->userService->removeGEFromWM($user, $space);
+        }
 
 	// Removes all workspaces groups
         $groups = [];
@@ -286,7 +284,6 @@ class WorkspaceController extends Controller {
 	 * Returns a list of all the workspaces that the connected user may use.
 	 * 
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 */
 	public function findAll() {
@@ -336,36 +333,16 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$space = $this->workspaceService->get($spaceId);
-		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
+		$GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
 
-		// Checks if user is member of the workspace's manager group
 		if ($GEgroup->inGroup($user)) {
-			// If user is space manager we may first have to remove it from the list of users allowed to use
-			// the application
-			$groups = $this->groupManager->getUserGroups($user);
-			$found = false;
-			foreach($groups as $group) {
-				$groupName = $group->getDisplayName();
-				if (strpos($groupName, Application::ESPACE_MANAGER_01) === 0 &&
-					$groupName !== Application::ESPACE_MANAGER_01 . $space['space_name'] &&
-					$groupName !== Application::GROUP_WKSUSER
-				) {
-					$found = true;
-					break;
-				}
-			}
-			// User has not been found in any other workspace manager groups, we must thus remove its
-			// access to the application
-			if (!$found) {
-				$workspaceUserGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
-				$workspaceUserGroup->removeUser($user);
-			}
-			// We can now remove the user from the space's admin group
+			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
-			// And add it to the space's user group
-			$this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0]->addUser($user);
+        		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . Application::GROUP_WKSUSER . ' group if needed.');
+			$this->userService->removeGEFromWM($user, $space);
 		} else {
-			$this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0]->addUser($user);
+			// Changing a user's role from user to admin
+			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
 
@@ -390,47 +367,25 @@ class WorkspaceController extends Controller {
         $space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
         $groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
-        $groupsFromGroupfolder = array_diff_key($groupfolder['groups'], [ 
-            Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId => 31,
-            Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId => 31
-        ]);
-        foreach(array_keys($groupsFromGroupfolder) as $groupname){
-            $group = $this->groupManager->get($groupname);
-
-            $groups[$group->getGID()] = [
-                "displayName" => $group->getDisplayName(),
-                "gid"   => $group->getGID()
-            ];
-        }
+        $groups = $groupfolder['groups'];
 
         $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
         $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
 	    // TODO Handle API call failure (revert space rename and inform user)
         if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
-            
-            $groupGE = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
-            $groupU = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId);
-
-            $groupGE->setDisplayName(Application::ESPACE_MANAGER_01 . $newSpaceName);
-            $groupU->setDisplayName(Application::ESPACE_USERS_01 . $newSpaceName);
-
-            $groups[$groupGE->getGID()] = [
-                "displayName" => $groupGE->getDisplayName(),
-                "gid" => $groupGE->getGID()
-            ];
-
-            $groups[$groupU->getGID()] = [
-                "displayName" => $groupU->getDisplayName(),
-                "gid" => $groupU->getGID()
-            ];
-        
+            return new JSONResponse([
+                "statuscode" => Http::STATUS_NO_CONTENT,
+                "space" => $newSpaceName,
+                'groups' => $groups
+            ]);                    
+        } else {
+            return new JSONResponse(
+                [
+                    "statuscode" => Http::STATUS_INTERNAL_SERVER_ERROR,
+                    "msg" => "Rename the space is impossible."
+                ]
+            );
         }
-
-        return new JSONResponse([
-            "statuscode" => Http::STATUS_NO_CONTENT,
-            "space" => $newSpaceName,
-            'groups' => $groups
-        ]);
     }
 
 	/**
@@ -449,7 +404,7 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$space = $this->workspaceService->get($spaceId);
-		$GEgroup = $this->groupManager->search(Application::ESPACE_MANAGER_01 . $space['space_name'])[0];
+		$GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
 
 		// If user is a general manager we may first have to remove it from the list of users allowed to use
 		// the application
@@ -461,7 +416,7 @@ class WorkspaceController extends Controller {
 		// We can now blindly remove the user from the space's admin and user groups
 		$this->logger->debug('Removing user from workspace.');
 		$GEgroup->removeUser($user);
-		$UserGroup = $this->groupManager->search(Application::ESPACE_USERS_01 . $space['space_name'])[0];
+		$UserGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId);
 		$UserGroup->removeUser($user);
 
 		// Removes user from all 'subgroups' when we remove it from the workspace's user group

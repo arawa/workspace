@@ -2,11 +2,9 @@ import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '
 
 export const getters = {
 	// Returns the GE group of a workspace
-	// POSSIBLE IMPROVEMENT: This would better be done with GID rather than displayName but
-	// displayName is not supposed to change neither
 	GEGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.displayName === ESPACE_MANAGERS_PREFIX + name
+			return group.gid === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + state.spaces[name].id
 		})
 		return groups[0]
 	},
@@ -70,11 +68,9 @@ export const getters = {
 		}
 	},
 	// Returns the U- group of a workspace
-	// POSSIBLE IMPROVEMENT: This would better be done with GID rather than displayName but
-	// displayName is not supposed to change neither
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.displayName === ESPACE_USERS_PREFIX + name
+			return group.gid === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + state.spaces[name].id
 		})
 		return groups[0]
 	},
