@@ -9,6 +9,7 @@ Vue.config.devtools = true // Debug mode
 
 export default new Vuex.Store({
 	state: {
+		loading: true,
 		spaces: {},
 	},
 	mutations,

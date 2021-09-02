@@ -50,7 +50,10 @@
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<router-view />
+				<div v-if="$store.state.loading" class="lds-ring">
+					<div /><div /><div /><div />
+				</div>
+				<router-view v-else />
 			</AppContentDetails>
 		</AppContent>
 	</Content>
@@ -78,6 +81,53 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+	},
+	created() {
+		if (Object.entries(this.$store.state.spaces).length === 0) {
+			this.$store.state.loading = true
+			axios.get(generateUrl('/apps/workspace/spaces'))
+				.then(resp => {
+					// Checks for application errors
+					if (resp.status !== 200) {
+						this.$notify({
+							title: t('workspace', 'Error'),
+							text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+							type: 'error',
+						})
+						this.$store.state.loading = false
+						return
+					}
+
+					// Initialises the store
+					Object.values(resp.data).forEach(space => {
+						let codeColor = space.color_code
+						if (space.color_code === null) {
+							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+						}
+						this.$store.commit('addSpace', {
+							color: codeColor,
+							groups: space.groups,
+							id: space.id,
+							groupfolderId: space.groupfolder_id,
+							isOpen: false,
+							name: space.space_name,
+							quota: this.convertQuotaForFrontend(space.quota),
+							users: space.users,
+						})
+					})
+
+					// Finished loading
+					this.$store.state.loading = false
+				})
+				.catch((e) => {
+					this.$notify({
+						title: t('workspace', 'Network error'),
+						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+						type: 'error',
+					})
+					this.$store.state.loading = false
+				})
+		}
 	},
 	methods: {
 		// Shows a space quota in a user-friendly way
@@ -179,6 +229,13 @@ export default {
 
 <style scoped>
 
+.app-content-details {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
 .app-navigation {
 	flex-direction: column-reverse;
 }
@@ -206,4 +263,50 @@ tr:hover {
 .notifications {
 	margin-top: 70px;
 }
+
+/*
+	Code for the loading.
+	Source code: https://loading.io/css/
+*/
+.lds-ring {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+}
+
+.lds-ring div {
+	box-sizing: border-box;
+	display: block;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	margin: 8px;
+	border: 8px solid var(--color-primary-element);
+	border-radius: 50%;
+	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: var(--color-primary-element) transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 </style>
