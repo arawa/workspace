@@ -53,7 +53,9 @@
 				<div v-if="$store.state.loading" class="lds-ring">
 					<div /><div /><div /><div />
 				</div>
-				<router-view v-else />
+				<div v-else class="workspace-content">
+					<router-view />
+				</div>
 			</AppContentDetails>
 		</AppContent>
 	</Content>
@@ -262,6 +264,11 @@ tr:hover {
 
 .notifications {
 	margin-top: 70px;
+}
+
+.workspace-content {
+	height: 100%;
+	width: 100%;
 }
 
 /*
