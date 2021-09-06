@@ -273,19 +273,18 @@ export default {
 .select-users-list {
 	min-height: 300px;
 	max-height: 300px;
-	min-width: 500px;
 	margin-top: 5px;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #dbdbdb;
-	width: 90%;
+	width: 100%;
 	overflow: scroll;
 }
 
 .select-users-list-empty {
 	text-align: center;
 	line-height: 400px;
-	width: 90%;
+	width: 100%;
 }
 
 .select-users-wrapper {
@@ -293,6 +292,8 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;
+	min-width: 600px;
+	max-width: 600px;
 }
 
 .user-entry {
@@ -309,6 +310,7 @@ export default {
 
 .user-name {
 	margin-left: 10px;
+	max-width: 440px;
 }
 
 .user-not-member {
