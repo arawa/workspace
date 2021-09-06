@@ -23,7 +23,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="user.role==='admin' ? 'user-admin list-users' : 'list-users'">
+					:class="$store.getters.isGE(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
 						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
@@ -35,17 +35,17 @@
 							{{ user.email }}
 						</div>
 					</td>
-					<td> {{ t('workspace', user.role) }} </td>
+					<td> {{ t('workspace', $store.getters.isGE(user, $route.params.space) ? 'admin' : 'user') }} </td>
 					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>
 								<ActionButton v-if="$route.params.group === undefined"
-									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
+									:icon="!$store.getters.isGE(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{
-										user.role === 'user' ?
+										!$store.getters.isGE(user, $route.params.space) ?
 											t('workspace', 'Make administrator')
 											: t('workspace', 'Remove admin rights')
 									}}
