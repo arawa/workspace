@@ -107,26 +107,21 @@ export default {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
-					.sort((a, b) => {
-						// display admins first
-						if (a.role !== b.role) {
-							return a.role === 'admin' ? -1 : 1
-						} else {
-							return a.name.localeCompare(b.name)
-						}
-					})
 			} else {
 				// We are showing all users of a workspace
-				result = Object.values(space.users).sort((a, b) => {
-					// display admins first
-					if (a.role !== b.role) {
-						return a.role === 'admin' ? -1 : 1
-					} else {
-						return a.name.localeCompare(b.name)
-					}
-				})
+				result = Object.values(space.users)
 			}
-			return result
+
+			return result.sort((a, b) => {
+				const roleUserA = this.$store.getters.isGE(a, this.$route.params.space) ? 'admin' : 'user'
+				const roleUserB = this.$store.getters.isGE(b, this.$route.params.space) ? 'admin' : 'user'
+				if (roleUserA !== roleUserB) {
+					// display admins first
+					return roleUserA === 'admin' ? -1 : 1
+				} else {
+					return a.name.localeCompare(b.name)
+				}
+			})
 		},
 	},
 	methods: {
