@@ -239,11 +239,9 @@ export default {
 	// Change a user's role from admin to user (or the opposite way)
 	toggleUserRole(context, { name, user }) {
 		const space = context.state.spaces[name]
-		if (user.role === 'admin') {
-			user.role = 'user'
+		if (context.getters.isGE(user, name)) {
 			user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 		} else {
-			user.role = 'admin'
 			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 		}
 		context.commit('updateUser', { name, user })
@@ -257,11 +255,9 @@ export default {
 					console.log('Role of user ' + user.name + ' changed')
 				} else {
 					// Revert action an inform user
-					if (user.role === 'admin') {
-						user.role = 'user'
+					if (context.getters.isGE(user, name)) {
 						user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 					} else {
-						user.role = 'admin'
 						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 					}
 					context.commit('updateUser', { name, user })
@@ -273,11 +269,9 @@ export default {
 				}
 			}).catch((e) => {
 				// Revert action an inform user
-				if (user.role === 'admin') {
-					user.role = 'user'
+				if (context.getters.isGE(user, name)) {
 					user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 				} else {
-					user.role = 'admin'
 					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 				}
 				context.commit('updateUser', { name, user })
