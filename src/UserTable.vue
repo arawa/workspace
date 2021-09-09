@@ -112,14 +112,14 @@ export default {
 				result = Object.values(space.users)
 			}
 
-			return result.sort((a, b) => {
-				const roleUserA = this.$store.getters.isGeneralManager(a, this.$route.params.space) ? 'admin' : 'user'
-				const roleUserB = this.$store.getters.isGeneralManager(b, this.$route.params.space) ? 'admin' : 'user'
-				if (roleUserA !== roleUserB) {
+			return result.sort((firstUser, secondUser) => {
+				const roleFirstUser = this.$store.getters.isGeneralManager(firstUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleSecondUser = this.$store.getters.isGeneralManager(secondUser, this.$route.params.space) ? 'admin' : 'user'
+				if (roleFirstUser !== roleSecondUser) {
 					// display admins first
-					return roleUserA === 'admin' ? -1 : 1
+					return roleFirstUser === 'admin' ? -1 : 1
 				} else {
-					return a.name.localeCompare(b.name)
+					return firstUser.name.localeCompare(secondUser.name)
 				}
 			})
 		},
