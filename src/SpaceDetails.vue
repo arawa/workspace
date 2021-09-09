@@ -107,17 +107,17 @@ export default {
 			isESR: false,
 		}
 	},
-	created() {
-		const version = navigator.userAgent.split('Firefox/')[1]
-		if (parseInt(version) < 91) {
-			this.isESR = true
-		}
-	},
 	computed: {
 		// The title to display at the top of the page
 		title() {
 			return this.$route.params.space + ' [ID: ' + this.$store.state.spaces[this.$route.params.space].id + ']'
 		},
+	},
+	created() {
+		const version = navigator.userAgent.split('Firefox/')[1]
+		if (parseInt(version) < 91) {
+			this.isESR = true
+		}
 	},
 	methods: {
 		// Deletes a space

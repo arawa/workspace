@@ -82,6 +82,7 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants'
 
 export default {
 	name: 'UserTable',
@@ -130,10 +131,12 @@ export default {
 		},
 	},
 	methods: {
-		// Removes a user's access to a workspace
+		// Removes a user from a workspace
 		deleteUser(user) {
-			this.$store.dispatch('removeUserFromSpace', {
+			const space = this.$store.state.spaces[this.$route.params.space]
+			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
+				gid: ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id,
 				user,
 			})
 		},

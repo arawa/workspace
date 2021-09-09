@@ -388,42 +388,4 @@ class WorkspaceController extends Controller {
         }
     }
 
-	/**
-	*
-	* Removes a user from a workspace
-	*
-	* @NoAdminRequired
-	* @SpaceAdminRequired
-	*
-	* @var string $spaceId
-	* @var string $userId
-	* 
-	*/
-	public function removeUserFromWorkspace(string $spaceId, string $userId) {
-		$this->logger->debug('Removing user ' . $userId . ' from workspace ' . $spaceId);
-
-		$user = $this->userManager->get($userId);
-		$space = $this->workspaceService->get($spaceId);
-		$GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
-
-		// If user is a general manager we may first have to remove it from the list of users allowed to use
-		// the application
-		if ($GEgroup->inGroup($user)) {
-			$this->logger->debug('User is manager of the workspace, removing it from the WorkspacesManagers group if needed.');
-			$this->userService->removeGEFromWM($user, $space);
-		}
-
-		// We can now blindly remove the user from the space's admin and user groups
-		$this->logger->debug('Removing user from workspace.');
-		$GEgroup->removeUser($user);
-		$UserGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId);
-		$UserGroup->removeUser($user);
-
-		// Removes user from all 'subgroups' when we remove it from the workspace's user group
-		foreach(array_keys($space['groups']) as $gid) {
-			$NCGroup = $this->groupManager->get($gid)->removeUser($user);
-		}
-
-		return new JSONResponse();
-	}
 }

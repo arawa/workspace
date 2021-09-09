@@ -52,11 +52,6 @@ return [
 			'verb' => 'PATCH'
 	    	],
 		[
-			'name' => 'workspace#removeUserFromWorkspace',
-			'url' => '/api/space/{spaceId}/user/{userId}',
-			'verb' => 'DELETE'
-		],
-		[
 			'name' => 'workspace#changeUserRole',
 			'url' => '/api/space/{spaceId}/user/{userId}',
 			'verb' => 'PATCH'
