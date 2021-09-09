@@ -80,7 +80,7 @@ class WorkspaceService {
 	}
 
 	/*
-	 * Get a single workspace
+	 * Gets a single workspace
 	 */
 	public function get($id){
 
@@ -89,12 +89,66 @@ class WorkspaceService {
 
 		// Adds groupfolder's info
 		$groupfolder = $this->groupfolderService->get($workspace['groupfolder_id']);
+		$this->addGroupfolderInfo($space, $groupfolder);
+
+		// Adds users' info 
+		$this->addUsersInfo($workspace);
+	
+		// Adds groups' info
+		$this->addGroupsInfo($workspace);
+
+		// Returns workspace
+		return $workspace;
+	}
+
+	/*
+	 * Gets all workspaces
+	 */
+	public function getAll() {
+
+		// Gets all spaces
+		$spaces = $this->spaceMapper->findAll();
+
+		// Supplement them with additional info
+		$workspaces = array();
+		$groupfolders = $this->groupfolderService->getAll();
+		foreach ($spaces as $space) {
+			$workspace = $space->jsonSerialize();
+			$this->addGroupfolderInfo($workspace, $groupfolders[$workspace['groupfolder_id']]);
+			$this->addUsersInfo($workspace);
+			$this->addGroupsInfo($workspace);
+			$workspaces[] = $workspace;
+		}
+		
+		return $workspaces;
+	}
+
+	/**
+	 *
+	 * Adds groupfolder information to a workspace
+	 *
+	 * @param array $workspace The workspace to which we want to add groupfolder info
+	 * @param array $groupfolder The groupfolder to retrieve info from
+	 *
+	 */
+	private function addGroupfolderInfo(&$workspace, $groupfolder) {
+
 		$workspace['groups'] = $groupfolder['groups'];
 		$workspace['quota'] = $groupfolder['quota'];
 		$workspace['size'] = $groupfolder['size'];
 		$workspace['acl'] = $groupfolder['acl'];
 
-		// Adds users' info 
+		return;
+	}
+
+	/**
+	 *
+	 * Adds users information to a workspace
+	 *
+	 * @param array The workspace to which we want to add users info
+	 *
+	 */
+	private function addUsersInfo(&$workspace) {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -114,8 +168,18 @@ class WorkspaceService {
 			};
 		}
 		$workspace['users'] = (object) $users;
-	
-		// Adds groups' info
+
+		return;
+	}
+
+	/**
+	 *
+	 * Adds groups information to a workspace
+	 *
+	 * @param array The workspace to which we want to add groups info
+	 *
+	 */
+	private function addGroupsInfo(&$workspace) {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
@@ -126,22 +190,6 @@ class WorkspaceService {
 		}
 		$workspace['groups'] = $groups;
 
-		// Returns workspace
-		return $workspace;
+		return;
 	}
-
-	/*
-	 * Gets all workspaces
-	 */
-	public function getAll() {
-
-		$spaces = $this->spaceMapper->findAll();
-		$workspaces = array();
-		foreach ($spaces as $space) {
-			$workspaces[] = $this->get($space->getSpaceId());
-		}
-
-		return $workspaces;
-	}
-
 }
