@@ -72,7 +72,7 @@ export default {
 		},
 		// Returns all workspace's managers
 		workspaceManagers(space) {
-			return Object.values(space.users).filter((u) => this.$store.getters.isGeneralManager(u, this.$store.getters.space))
+			return Object.values(space.users).filter((u) => this.$store.getters.isGeneralManager(u, space.name))
 		},
 		openSpace(name) {
 			this.$store.state.spaces[name].isOpen = true
