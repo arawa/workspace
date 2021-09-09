@@ -155,7 +155,8 @@ export default {
 }
 
 .group-name {
-	margin-left: 40px;
+	margin-left: 8px;
+	margin-top: -40px;
 }
 
 </style>
