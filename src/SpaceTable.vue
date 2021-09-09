@@ -67,8 +67,6 @@ export default {
 		}
 	},
 	created() {
-		// eslint-disable-next-line
-		console.log(this.$store.state)
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.loading = true
 			axios.get(generateUrl('/apps/workspace/spaces'))
