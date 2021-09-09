@@ -23,7 +23,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="user.role==='admin' ? 'user-admin list-users' : 'list-users'">
+					:class="$store.getters.isGeneralManager(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
 						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
@@ -35,17 +35,17 @@
 							{{ user.email }}
 						</div>
 					</td>
-					<td> {{ t('workspace', user.role) }} </td>
+					<td> {{ t('workspace', $store.getters.isGeneralManager(user, $route.params.space) ? 'admin' : 'user') }} </td>
 					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>
 								<ActionButton v-if="$route.params.group === undefined"
-									:icon="user.role === 'user' ? 'icon-user' : 'icon-close'"
+									:icon="!$store.getters.isGeneralManager(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{
-										user.role === 'user' ?
+										!$store.getters.isGeneralManager(user, $route.params.space) ?
 											t('workspace', 'Make administrator')
 											: t('workspace', 'Remove admin rights')
 									}}
@@ -108,26 +108,21 @@ export default {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
-					.sort((a, b) => {
-						// display admins first
-						if (a.role !== b.role) {
-							return a.role === 'admin' ? -1 : 1
-						} else {
-							return a.name.localeCompare(b.name)
-						}
-					})
 			} else {
 				// We are showing all users of a workspace
-				result = Object.values(space.users).sort((a, b) => {
-					// display admins first
-					if (a.role !== b.role) {
-						return a.role === 'admin' ? -1 : 1
-					} else {
-						return a.name.localeCompare(b.name)
-					}
-				})
+				result = Object.values(space.users)
 			}
-			return result
+
+			return result.sort((firstUser, secondUser) => {
+				const roleFirstUser = this.$store.getters.isGeneralManager(firstUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleSecondUser = this.$store.getters.isGeneralManager(secondUser, this.$route.params.space) ? 'admin' : 'user'
+				if (roleFirstUser !== roleSecondUser) {
+					// display admins first
+					return roleFirstUser === 'admin' ? -1 : 1
+				} else {
+					return firstUser.name.localeCompare(secondUser.name)
+				}
+			})
 		},
 	},
 	methods: {
