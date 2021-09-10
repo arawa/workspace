@@ -1,13 +1,13 @@
 <template>
 	<div class="error403">
-		<h1 class="h-400">Error 403</h1>
-		<p class="p-400">You shall not pass !</p>
-		<p class="p-400"><span>Please, return in your instance : <a :href="linkInstance">{{ linkInstance }}</a></span></p>
+		<h1 class="h-400">{{ t('workspace', 'Error 403') }}</h1>
+		<p class="p-400">{{ t('workspace', 'You aren\'t allowed to access into this application !') }}</p>
+		<p class="p-400"><span>{{ t('workspace', 'Please, return in your instance :') }} <a class="link-to-home" :href="linkInstance">{{ t('workspace', 'return to home') }}</a></span></p>
 	</div>
 </template>
 
 <script>
-import { getRootUrl } from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 export default ({
 	name: 'error403',
@@ -15,12 +15,11 @@ export default ({
 	},
 	data() {
 		return {
-			key: 'value',
-			linkInstance: 'http(s)',
+			linkInstance: '#',
 		}
 	},
 	created() {
-		const url = getRootUrl()
+		const url = generateUrl('/')
 		this.linkInstance = url
 	}
 })
@@ -46,5 +45,10 @@ export default ({
 	margin-top: 30px;
 	font-size: 20px;
 	font-style: italic;
+}
+
+.link-to-home {
+	text-decoration: underline;
+	color: var(--color-primary);
 }
 </style>
