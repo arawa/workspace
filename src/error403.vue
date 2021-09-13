@@ -2,7 +2,7 @@
 	<div class="error403">
 		<h1 class="h-400">{{ t('workspace', 'Error 403') }}</h1>
 		<p class="p-400">{{ t('workspace', 'You aren\'t allowed to access into this application !') }}</p>
-		<p class="p-400"><span>{{ t('workspace', 'Please, return in your instance :') }} <a class="link-to-home" :href="linkInstance">{{ t('workspace', 'return to home') }}</a></span></p>
+		<p class="p-400"><span><a class="link-to-home" :href="linkInstance">{{ t('workspace', 'return to home') }}</a></span></p>
 	</div>
 </template>
 
@@ -15,7 +15,7 @@ export default ({
 	},
 	data() {
 		return {
-			linkInstance: '#',
+			linkInstance: 'https',
 		}
 	},
 	created() {
