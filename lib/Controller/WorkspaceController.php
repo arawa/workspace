@@ -252,7 +252,7 @@ class WorkspaceController extends Controller {
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
         $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
         foreach ($GEGroup->getUsers() as $user) {
-		$this->userService->removeGEFromWM($user, $space);
+		$this->userService->removeGEFromWM($user, $spaceId);
         }
 
 	// Removes all workspaces groups
