@@ -339,7 +339,7 @@ class WorkspaceController extends Controller {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
         		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . Application::GROUP_WKSUSER . ' group if needed.');
-			$this->userService->removeGEFromWM($user, $space);
+			$this->userService->removeGEFromWM($user, $spaceId);
 		} else {
 			// Changing a user's role from user to admin
 			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)->addUser($user);
