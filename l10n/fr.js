@@ -36,8 +36,6 @@ OC.L10N.register(
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Creating space': 'Erreur - Création d\'un espace de travail',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
-		'Warning - Set quota': 'Attention - Définition du quota',
-		'This workspace quota is already.': 'Cet espace possède déjà ce quota.',
 		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'Cet espace projet ou le dossier du groupe (groupfolder) existe déjà. Saisissez un autre espace, s\'il vous plaît.\nPar exemple, si l\'espace "toto" existe, vous ne pouvez pas créer l\'espace "tOTo".\nAssurez-vous que le groupfolder n\'existe pas.'
 	},
 "nplurals=2; plural=(n > 1)");

@@ -192,11 +192,6 @@ export default {
 		// Sets a space's quota
 		setSpaceQuota(quota) {
 			if (quota === null) {
-				this.$notify({
-					title: t('workspace', 'Warning - Set quota'),
-					text: t('workspace', 'This workspace quota is already.'),
-					type: 'warning',
-				})
 				return
 			}
 			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
