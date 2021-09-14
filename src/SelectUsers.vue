@@ -191,7 +191,7 @@ export default {
 						this.selectableUsers = users.map(user => {
 							return {
 								...user,
-								subtitle: user.subtitle ?? ''
+								subtitle: user.subtitle ?? '',
 							}
 						})
 					} else {
