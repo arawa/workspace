@@ -63,7 +63,7 @@ class WorkspaceAccessControlMiddleware extends Middleware{
             Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
             Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 
-            return new TemplateResponse("workspace", "403", []);
+            return new TemplateResponse("workspace", "index", ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
 
         }
 
