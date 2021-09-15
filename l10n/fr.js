@@ -22,6 +22,8 @@ OC.L10N.register(
 		'Remove admin rights': "Retirer les droits de G.E.",
 		'Remove user from selection': "Retirer l'utilisateur de la sélection",
 		'Rename space': "Renommer l'espace de travail",
+		'Rename group': 'Renommer le groupe',
+		'Delete group': 'Supprimer le groupe',
 		'Role': 'Rôle',
 		'S.A.': 'G.E.',
 		'Error 403': 'Erreur 403',

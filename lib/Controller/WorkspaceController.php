@@ -252,7 +252,7 @@ class WorkspaceController extends Controller {
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
         $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
         foreach ($GEGroup->getUsers() as $user) {
-		$this->userService->removeGEFromWM($user, $space);
+		$this->userService->removeGEFromWM($user, $spaceId);
         }
 
 	// Removes all workspaces groups
@@ -340,7 +340,7 @@ class WorkspaceController extends Controller {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
         		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . Application::GROUP_WKSUSER . ' group if needed.');
-			$this->userService->removeGEFromWM($user, $space);
+			$this->userService->removeGEFromWM($user, $spaceId);
 		} else {
 			// Changing a user's role from user to admin
 			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)->addUser($user);
@@ -365,15 +365,21 @@ class WorkspaceController extends Controller {
      */
     public function renameSpace($spaceId, $newSpaceName) {
 
-        $space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
+	$space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
      
-        $groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
-        $groups = $groupfolder['groups'];
+	$groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
+	$groups = array();
+	foreach (array_keys($groupfolder['groups']) as $gid) {
+		$groups[$gid] = [
+			'gid' => $gid,
+			'displayName' => $this->groupManager->get($gid)->getDisplayName(),
+		];
+	}
 
         $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
         $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
 	    // TODO Handle API call failure (revert space rename and inform user)
-        if( $responseRename['ocs']['meta']['statuscode'] === 100 ) {
+        if ($responseRename['ocs']['meta']['statuscode'] === 100) {
             return new JSONResponse([
                 "statuscode" => Http::STATUS_NO_CONTENT,
                 "space" => $newSpaceName,

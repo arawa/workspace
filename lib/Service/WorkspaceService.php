@@ -89,7 +89,7 @@ class WorkspaceService {
 
 		// Adds groupfolder's info
 		$groupfolder = $this->groupfolderService->get($workspace['groupfolder_id']);
-		$this->addGroupfolderInfo($space, $groupfolder);
+		$this->addGroupfolderInfo($workspace, $groupfolder);
 
 		// Adds users' info 
 		$this->addUsersInfo($workspace);
