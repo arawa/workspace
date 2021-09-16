@@ -25,6 +25,7 @@
 			:tag-width="50"
 			:user-select="true"
 			@change="addUsersToBatch"
+			@close="selectableUsers=[]"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
