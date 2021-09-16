@@ -29,6 +29,7 @@
 	"Workspace name" : "Nom de l'espace de travail",
 	"Remove from group": "Retirer du groupe",
 	"No users": "Pas d'utilisateur",
+	"You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota": "Vous devez spécifier le terme \"unlimited\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple: \"5GB\") comme quota.",
 	"There are no users in this space/group yet": "Il n'y a pas encore d'utilisateur dans cet espace de travail",
 	"Start typing to lookup users": "Commencez à saisir du texte pour rechercher des utilisateurs",
 	"remove users from selection": "retirer l'utilisateur de la sélection"

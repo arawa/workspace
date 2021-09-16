@@ -37,6 +37,7 @@ OC.L10N.register(
 		'Start typing to lookup users': 'Start typing to lookup users',
 		'remove users from selection': 'remove users from selection',
 		'Error - Creating space': 'Error - Creating space',
+		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
 		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.',
 	},
 "nplurals=2; plural=(n > 1)");
