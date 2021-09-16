@@ -182,10 +182,17 @@ export default {
 							users = resp.data
 						}
 						// Filters user that are already selected
-						this.selectableUsers = users.filter(newUser => {
+						users = users.filter(newUser => {
 							return this.allSelectedUsers.every(user => {
 								return newUser.uid !== user.uid
 							})
+						})
+						// subtitle may not be null
+						this.selectableUsers = users.map(user => {
+							return {
+								...user,
+								subtitle: user.subtitle ?? '',
+							}
 						})
 					} else {
 						this.$notify({
