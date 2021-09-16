@@ -25,6 +25,7 @@
 			:tag-width="50"
 			:user-select="true"
 			@change="addUsersToBatch"
+			@close="selectableUsers=[]"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
@@ -104,12 +105,6 @@ export default {
 				return this.$store.getters.isMember(this.$route.params.space, user)
 			})
 		},
-	},
-	created() {
-		// This test makes sure this.lookupUsers() is not called during unit tests
-		if (this.$route.params.space !== undefined) {
-			this.lookupUsers('*')
-		}
 	},
 	methods: {
 		// Adds users to workspace/group and close dialog
