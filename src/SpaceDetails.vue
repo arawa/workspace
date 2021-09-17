@@ -277,7 +277,7 @@ export default {
 
 .space-name {
 	margin-left: 8px;
-	margin-top: -40px;
+	margin-top: -25px;
 }
 
 .user-actions {
