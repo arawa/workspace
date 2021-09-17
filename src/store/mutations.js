@@ -64,9 +64,18 @@ export default {
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
-	removeGroupFromSpace(state, { name, group }) {
+	// Removes a group from a space
+	removeGroupFromSpace(state, { name, gid }) {
 		const space = state.spaces[name]
-		delete space.groups[group]
+		// Deletes the group from the space's groups attribute
+		delete space.groups[gid]
+		// Removes also the group from all users' groups attribute
+		Object.keys(space.users).forEach(key => {
+			const index = space.users[key].groups.indexOf(gid)
+			space.users[key].groups.splice(index, 1)
+		})
+		// Saves the space back in the store
+		delete state.spaces[space.name]
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
 	},
