@@ -256,6 +256,12 @@ export default {
 	background-size: contain;
 }
 
+.modal-container {
+	display: flex !important;
+	min-height: 520px !important;
+	max-height: 520px !important;
+}
+
 .multiselect__tags {
 	border-color: #dbdbdb !important;
 	margin-bottom: 5px;
@@ -273,8 +279,7 @@ export default {
 }
 
 .select-users-list {
-	min-height: 300px;
-	max-height: 300px;
+	flex-grow: 1;
 	margin-top: 5px;
 	border-style: solid;
 	border-width: 1px;
@@ -291,6 +296,7 @@ export default {
 
 .select-users-wrapper {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;
