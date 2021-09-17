@@ -109,4 +109,9 @@ export default {
 	justify-content: space-between;
 }
 
+tr:hover {
+	background-color: #f5f5f5;
+	cursor: pointer;
+}
+
 </style>
