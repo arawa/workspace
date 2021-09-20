@@ -283,7 +283,7 @@ export default {
 			quota = quota.substr(0, quota.length - 2) * 1024
 			break
 		}
-		quota = (quota === 'unlimited') ? -3 : quota
+		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota
 
 		// Updates backend
 		const space = context.state.spaces[name]

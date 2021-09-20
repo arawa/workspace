@@ -135,7 +135,7 @@ export default {
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
-				return 'unlimited'
+				return t('workspace', 'unlimited')
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
 				let i = 0
