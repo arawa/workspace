@@ -48,7 +48,15 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+							<input v-if="$store.getters.isGeneralManager(user, $route.params.space)"
+								type="checkbox"
+								class="role-toggle"
+								@change="toggleUserRole(user)"
+								checked>
+							<input v-else
+								type="checkbox"
+								class="role-toggle"
+								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
