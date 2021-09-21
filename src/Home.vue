@@ -99,12 +99,15 @@ export default {
 						this.$store.state.loading = false
 						return
 					}
-
 					// Initialises the store
 					Object.values(resp.data).forEach(space => {
 						let codeColor = space.color_code
 						if (space.color_code === null) {
 							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+						}
+						let quota = this.convertQuotaForFrontend(space.quota)
+						if (quota === 'unlimited') {
+							quota = t('workspace', 'unlimited')
 						}
 						this.$store.commit('addSpace', {
 							color: codeColor,
@@ -113,7 +116,7 @@ export default {
 							groupfolderId: space.groupfolder_id,
 							isOpen: false,
 							name: space.space_name,
-							quota: this.convertQuotaForFrontend(space.quota),
+							quota,
 							users: space.users,
 						})
 					})
@@ -135,7 +138,7 @@ export default {
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
-				return t('workspace', 'unlimited')
+				return 'unlimited'
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
 				let i = 0

@@ -40,7 +40,7 @@
 		<EmptyContent v-else>
 			<p>{{ t('workspace', 'No spaces') }}</p>
 			<template #desc>
-				{{ t('workspace', 'You have not yet created any workspace')}}
+				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
 		</EmptyContent>
 	</div>
