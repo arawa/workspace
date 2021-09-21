@@ -254,10 +254,6 @@ export default {
 	background-color: inherit !important;
 }
 
-tr:hover {
-	background-color: #f5f5f5;
-}
-
 .user-counter {
 	margin-right: 5px;
 }
