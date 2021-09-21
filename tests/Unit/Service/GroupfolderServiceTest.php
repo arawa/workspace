@@ -3,15 +3,14 @@
 namespace OCA\Workspace\Tests\Unit\Service;
 
 use OCP\ILogger;
-use OCP\IUserSession;
 use OCP\IURLGenerator;
 use OCP\Http\Client\IClient;
+use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\TestCase;
 use OCP\Http\Client\IClientService;
 use OCA\Workspace\Service\GroupfolderService;
 use OCP\Authentication\LoginCredentials\IStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
-use OCP\Http\Client\IResponse;
 
 class GroupfolderServiceTest extends TestCase {
 
@@ -38,25 +37,61 @@ class GroupfolderServiceTest extends TestCase {
 
     /** @var IResponse */
     private $IResponse;
-    
+
+    /** @var ICredentials */
+    private $login;
+
+    private const HEADERS = [
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'OCS-APIRequest' => 'true',
+        'Accept' => 'application/json',
+        'verify' => 'false',
+    ];
+
     public function setUp(): void {
 
         $this->IStore = $this->createMock(IStore::class);
         $this->urlGenerator = $this->createMock(IURLGenerator::class);
         $this->logger = $this->createMock(ILogger::class);
         $this->IStore = $this->createMock(IStore::class);
-        $this->ICredentials = $this->createMock(ICredentials::class);
         $this->clientService = $this->createMock(IClientService::class);
         $this->httpClient = $this->createMock(IClient::class);
-        $this->userSession = $this->createMock(IUserSession::class);
         $this->IResponse = $this->createMock(IResponse::class);
+        $this->login = $this->createMock(ICredentials::class);
+
+        $this->foldername = 'foobar';
 
         $this->clientService->expects($this->any())
             ->method('newClient')
-            ->willReturn($this->httpClient);        
+            ->willReturn($this->httpClient);
+        
+        $this->login->expects($this->any())
+            ->method('getUID')
+            ->willReturn(null);
+
+        $this->login->expects($this->any())
+            ->method('getPassword')
+            ->willReturn(null);
+
+        $this->urlGenerator->expects($this->any())
+            ->method('getBaseUrl')
+            ->willReturn('http://www.cloud.me');
+
 
         $this->httpClient->expects($this->any())
             ->method('post')
+            ->with($this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
+                [
+                    'auth' => [
+                        $this->login->getUID(),
+                        $this->login->getPassword()
+                    ],
+                    'body' => [
+                        'mountpoint' => $this->foldername
+                    ],
+                    'headers' => self::HEADERS
+                ]
+            )
             ->willReturn($this->IResponse);
 
         $this->IResponse->expects($this->any())
@@ -69,7 +104,6 @@ class GroupfolderServiceTest extends TestCase {
                 }
             }');
 
-        $this->foldername = 'foobar';
     }
 
     public function testCreateGroupfolder(): void {
@@ -80,7 +114,6 @@ class GroupfolderServiceTest extends TestCase {
             $this->IStore,
             $this->logger
         );
-
                
         $result = $this->groupfolderService->create($this->foldername);
 
