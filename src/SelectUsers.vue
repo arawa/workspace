@@ -48,15 +48,17 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
+							<!-- https://vuejs.org/v2/guide/forms.html#Checkbox-1 -->
 							<input v-if="$store.getters.isGeneralManager(user, $route.params.space)"
 								type="checkbox"
 								class="role-toggle"
-								@change="toggleUserRole(user)"
+								@change="toggleUserRole(user, $event)"
 								checked>
 							<input v-else
 								type="checkbox"
 								class="role-toggle"
-								@change="toggleUserRole(user)">
+								id="isNotChecked"
+								@change="toggleUserRole(user, $event)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
@@ -74,7 +76,7 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspaceOrGroup">
+			<button @click="addUsersToWorkspaceOrGroup($event)">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -104,6 +106,7 @@ export default {
 			isLookingUpUsers: false, // True when we are looking up users
 			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
+			checkedbox: undefined,
 		}
 	},
 	computed: {
@@ -125,12 +128,21 @@ export default {
 		// IMPROVEMENT POSSIBLE: I think the backend nows store the real GID of
 		// the U- and GE- groups in some specific attribute of the space object.
 		// We might use them here.
-		addUsersToWorkspaceOrGroup() {
+		addUsersToWorkspaceOrGroup(event) {
 			this.$emit('close')
 			const spaceId = this.$store.state.spaces[this.$route.params.space].id
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
+					if (this.$store.getters.isMember(this.$route.params.space, user)) {
+						if (user.role === 'user') {
+							this.$store.dispatch('removeUserFromGroup', {
+								name: this.$route.params.space,
+								gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+								user,
+							})
+						}
+					}
 					// Adding a user to a workspace 'subgroup
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
@@ -222,7 +234,15 @@ export default {
 				return u.name !== user.name
 			})
 		},
-		toggleUserRole(user) {
+		removeUserFromSpaceManagerGroup(user) {
+			const spaceId = this.$store.state.spaces[this.$route.params.space].id
+			this.$store.dispatch('removeUserFromGroup', {
+				name: this.$route.params.space,
+				gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+				user,
+			})
+		},
+		toggleUserRole(user, event) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
 					u.role = u.role === 'user' ? 'admin' : 'user'
