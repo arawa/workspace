@@ -48,18 +48,11 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<!-- https://vuejs.org/v2/guide/forms.html#Checkbox-1 -->
-							<input v-if="$store.getters.isGeneralManager(user, $route.params.space)"
+							<input
 								type="checkbox"
 								class="role-toggle"
-								@change="toggleUserRole(user, $event)"
-								checked>
-							<input v-else
-								type="checkbox"
-								class="role-toggle"
-								id="isNotChecked"
-								@change="toggleUserRole(user, $event)">
-							<label>{{ t('workspace', 'S.A.') }}</label>
+								@change="toggleUserRole(user)"
+								:checked="user.role === 'admin'">
 						</div>
 						<Actions>
 							<ActionButton
@@ -76,7 +69,7 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspaceOrGroup($event)">
+			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -128,7 +121,7 @@ export default {
 		// IMPROVEMENT POSSIBLE: I think the backend nows store the real GID of
 		// the U- and GE- groups in some specific attribute of the space object.
 		// We might use them here.
-		addUsersToWorkspaceOrGroup(event) {
+		addUsersToWorkspaceOrGroup() {
 			this.$emit('close')
 			const spaceId = this.$store.state.spaces[this.$route.params.space].id
 			this.allSelectedUsers.forEach(user => {
@@ -234,15 +227,7 @@ export default {
 				return u.name !== user.name
 			})
 		},
-		removeUserFromSpaceManagerGroup(user) {
-			const spaceId = this.$store.state.spaces[this.$route.params.space].id
-			this.$store.dispatch('removeUserFromGroup', {
-				name: this.$route.params.space,
-				gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
-				user,
-			})
-		},
-		toggleUserRole(user, event) {
+		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
 					u.role = u.role === 'user' ? 'admin' : 'user'
