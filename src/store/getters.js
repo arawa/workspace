@@ -23,7 +23,7 @@ export const getters = {
 		}
 	},
 	// Tests wheter a user if General manager of a space
-	isGeneralManager: state => (user, spaceName) => {
+	isSpaceAdmin: state => (user, spaceName) => {
 		return user.groups.includes(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + state.spaces[spaceName].id)
 	},
 	// Tests wheter a group is the GE or U group of a space

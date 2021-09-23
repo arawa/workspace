@@ -217,7 +217,7 @@ export default {
 	// Change a user's role from admin to user (or the opposite way)
 	toggleUserRole(context, { name, user }) {
 		const space = context.state.spaces[name]
-		if (context.getters.isGeneralManager(user, name)) {
+		if (context.getters.isSpaceAdmin(user, name)) {
 			user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 		} else {
 			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
@@ -233,7 +233,7 @@ export default {
 					console.log('Role of user ' + user.name + ' changed')
 				} else {
 					// Revert action an inform user
-					if (context.getters.isGeneralManager(user, name)) {
+					if (context.getters.isSpaceAdmin(user, name)) {
 						user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 					} else {
 						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
@@ -247,7 +247,7 @@ export default {
 				}
 			}).catch((e) => {
 				// Revert action an inform user
-				if (context.getters.isGeneralManager(user, name)) {
+				if (context.getters.isSpaceAdmin(user, name)) {
 					user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
 				} else {
 					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
