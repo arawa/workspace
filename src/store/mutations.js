@@ -13,8 +13,8 @@ const sortSpaces = (state) => {
 			// This is especially the case of the mocha test framework
 			try {
 				return a.localeCompare(b, getLocale(), {
+					numeric: true,
 					sensitivity: 'base',
-					ignorePunctuation: true,
 				})
 			} catch (e) {
 				return a.localeCompare(b)
