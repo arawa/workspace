@@ -26,7 +26,9 @@
 			:user-select="true"
 			@change="addUsersToBatch"
 			@close="selectableUsers=[]"
-			@search-change="lookupUsers" />
+			@search-change="lookupUsers">
+			<span slot="noOptions"></span>
+		</Multiselect>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -328,4 +330,5 @@ export default {
 .role-toggle {
 	cursor: pointer !important;
 }
+
 </style>
