@@ -51,8 +51,8 @@
 							<input
 								type="checkbox"
 								class="role-toggle"
-								@change="toggleUserRole(user)"
-								:checked="user.role === 'admin'">
+								:checked="user.role === 'admin'"
+								@change="toggleUserRole(user)">
 						</div>
 						<Actions>
 							<ActionButton
