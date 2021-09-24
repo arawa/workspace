@@ -14,17 +14,16 @@
 				@click="$emit('close')" />
 		</Actions>
 		<Multiselect
-			v-model="selectedUsers"
 			class="select-users-input"
 			label="name"
 			track-by="uid"
 			:loading="isLookingUpUsers"
-			:multiple="true"
+			:multiple="false"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:tag-width="50"
 			:user-select="true"
-			@change="addUsersToBatch"
+			@change="addUserToBatch"
 			@close="selectableUsers=[]"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
@@ -94,7 +93,6 @@ export default {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
 			isLookingUpUsers: false, // True when we are looking up users
-			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
 		}
 	},
@@ -147,9 +145,9 @@ export default {
 				}
 			})
 		},
-		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(users) {
-			this.allSelectedUsers = users
+		// Adds user to the batch when user selects user in the MultiSelect
+		addUserToBatch(user) {
+			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -206,14 +204,13 @@ export default {
 				})
 			this.isLookingUpUsers = false
 		},
+		// Removes a user from the batch
 		removeUserFromBatch(user) {
-			this.selectedUsers = this.selectedUsers.filter((u) => {
-				return u.name !== user.name
-			})
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
 				return u.name !== user.name
 			})
 		},
+		// Changes the role of a user
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
