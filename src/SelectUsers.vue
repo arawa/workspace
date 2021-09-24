@@ -40,7 +40,7 @@
 					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
 						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-						<Avatar :display-name="user.name" :user="user.name" />
+						<Avatar :display-name="user.name" :user="user.uid" />
 						<div class="user-name">
 							<span> {{ user.name }} </span>
 						</div>
