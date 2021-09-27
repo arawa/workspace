@@ -175,7 +175,7 @@ export default {
 							id: resp.data.id_space,
 							groupfolderId: resp.data.folder_id,
 							name,
-							quota: undefined,
+							quota: t('workspace', 'unlimited'),
 							users: {},
 						})
 						this.$router.push({
