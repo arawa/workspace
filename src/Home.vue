@@ -13,7 +13,7 @@
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
-		<AppNavigation v-if="$root.$data.isUserGeneralAdmin === 'true'">
+		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
@@ -22,10 +22,6 @@
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
-			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-add"
-				:title="t('workspace', 'New space')"
-				@new-item="createSpace" />
 			<template #list>
 				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
