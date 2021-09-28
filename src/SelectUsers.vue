@@ -174,7 +174,9 @@ export default {
 								return (!(user.uid in space.users))
 							}, space)
 						} else {
-							users = resp.data
+							users = resp.data.filter(user => {
+								return (!(user.groups.includes(this.$route.params.group)))
+							})
 						}
 						// Filters user that are already selected
 						users = users.filter(newUser => {
