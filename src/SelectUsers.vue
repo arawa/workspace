@@ -53,6 +53,7 @@
 								class="role-toggle"
 								:checked="user.role === 'admin'"
 								@change="toggleUserRole(user)">
+							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
 							<ActionButton
@@ -99,7 +100,6 @@ export default {
 			isLookingUpUsers: false, // True when we are looking up users
 			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
-			checkedbox: undefined,
 		}
 	},
 	computed: {
