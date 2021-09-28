@@ -22,7 +22,7 @@
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
 					:value="$store.state.spaces[$route.params.space].quota"
-					:options="['1GB', '5GB', '10GB', 'unlimited']"
+					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
 					@change="setSpaceQuota"
 					@tag="setSpaceQuota" />
 			</div>
@@ -191,7 +191,10 @@ export default {
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
-			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
+			if (quota === null) {
+				return
+			}
+			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
 				this.$notify({
 					title: t('workspace', 'Error'),
@@ -274,7 +277,7 @@ export default {
 
 .space-name {
 	margin-left: 8px;
-	margin-top: -40px;
+	margin-top: -25px;
 }
 
 .user-actions {

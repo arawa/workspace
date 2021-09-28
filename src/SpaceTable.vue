@@ -38,9 +38,9 @@
 			</tr>
 		</table>
 		<EmptyContent v-else>
-			<p>No spaces</p>
+			<p>{{ t('workspace', 'No spaces') }}</p>
 			<template #desc>
-				You have not yet created any workspace
+				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
 		</EmptyContent>
 	</div>
@@ -59,7 +59,7 @@ export default {
 	methods: {
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
-				return 'unlimited'
+				return t('workspace', 'unlimited')
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
 				let i = 0

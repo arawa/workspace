@@ -14,17 +14,17 @@
 				@click="$emit('close')" />
 		</Actions>
 		<Multiselect
-			v-model="selectedUsers"
 			class="select-users-input"
 			label="name"
 			track-by="uid"
 			:loading="isLookingUpUsers"
-			:multiple="true"
+			:multiple="false"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:tag-width="50"
 			:user-select="true"
-			@change="addUsersToBatch"
+			@change="addUserToBatch"
+			@close="selectableUsers=[]"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
@@ -93,7 +93,6 @@ export default {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
 			isLookingUpUsers: false, // True when we are looking up users
-			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
 		}
 	},
@@ -104,12 +103,6 @@ export default {
 				return this.$store.getters.isMember(this.$route.params.space, user)
 			})
 		},
-	},
-	created() {
-		// This test makes sure this.lookupUsers() is not called during unit tests
-		if (this.$route.params.space !== undefined) {
-			this.lookupUsers('*')
-		}
 	},
 	methods: {
 		// Adds users to workspace/group and close dialog
@@ -152,9 +145,9 @@ export default {
 				}
 			})
 		},
-		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(users) {
-			this.allSelectedUsers = users
+		// Adds user to the batch when user selects user in the MultiSelect
+		addUserToBatch(user) {
+			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -179,13 +172,22 @@ export default {
 								return (!(user.uid in space.users))
 							}, space)
 						} else {
-							users = resp.data
+							users = resp.data.filter(user => {
+								return (!(user.groups.includes(this.$route.params.group)))
+							})
 						}
 						// Filters user that are already selected
-						this.selectableUsers = users.filter(newUser => {
+						users = users.filter(newUser => {
 							return this.allSelectedUsers.every(user => {
 								return newUser.uid !== user.uid
 							})
+						})
+						// subtitle may not be null
+						this.selectableUsers = users.map(user => {
+							return {
+								...user,
+								subtitle: user.subtitle ?? '',
+							}
 						})
 					} else {
 						this.$notify({
@@ -204,14 +206,13 @@ export default {
 				})
 			this.isLookingUpUsers = false
 		},
+		// Removes a user from the batch
 		removeUserFromBatch(user) {
-			this.selectedUsers = this.selectedUsers.filter((u) => {
-				return u.name !== user.name
-			})
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
 				return u.name !== user.name
 			})
 		},
+		// Changes the role of a user
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
@@ -254,6 +255,12 @@ export default {
 	background-size: contain;
 }
 
+.modal-container {
+	display: flex !important;
+	min-height: 520px !important;
+	max-height: 520px !important;
+}
+
 .multiselect__tags {
 	border-color: #dbdbdb !important;
 	margin-bottom: 5px;
@@ -271,8 +278,7 @@ export default {
 }
 
 .select-users-list {
-	min-height: 300px;
-	max-height: 300px;
+	flex-grow: 1;
 	margin-top: 5px;
 	border-style: solid;
 	border-width: 1px;
@@ -289,6 +295,7 @@ export default {
 
 .select-users-wrapper {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;

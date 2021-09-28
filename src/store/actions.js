@@ -121,12 +121,20 @@ export default {
 					console.log('Group ' + group + ' deleted')
 				} else {
 					context.commit('addGroupToSpace', { name, group })
-					// TODO Inform user
+					this._vm.$notify({
+						title: t('workspace', 'Error'),
+						text: t('workspace', 'An error occured while trying to delete group ') + group + t('workspace', '<br>The error is: ') + resp.statusText,
+						type: 'error',
+					})
 				}
 			})
 			.catch((e) => {
 				context.commit('addGroupToSpace', { name, group })
-				// TODO Inform user
+				this._vm.$notify({
+					title: t('workspace', 'Network error'),
+					text: t('workspace', 'A network error occured while trying to delete group ') + group + t('workspace', '<br>The error is: ') + e,
+					type: 'error',
+				})
 			})
 	},
 	// Deletes a space
@@ -275,7 +283,7 @@ export default {
 			quota = quota.substr(0, quota.length - 2) * 1024
 			break
 		}
-		quota = (quota === 'unlimited') ? -3 : quota
+		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota
 
 		// Updates backend
 		const space = context.state.spaces[name]
