@@ -274,7 +274,9 @@ export default {
 
 .select-users-input {
 	align-self: start;
-	width: 100%;
+	width: 70%;
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 .select-users-list {
@@ -282,8 +284,8 @@ export default {
 	margin-top: 5px;
 	border-style: solid;
 	border-width: 1px;
-	border-color: #dbdbdb;
-	width: 100%;
+	border-color: transparent;
+	width: 72%;
 	overflow: scroll;
 }
 
