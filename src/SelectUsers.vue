@@ -38,7 +38,7 @@
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
-					:class="$store.getters.isNewMember($route.params.space, $route.params.group, user) ? 'user-not-member' : ''">
+					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
 						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 						<Avatar :display-name="user.name" :user="user.name" />
