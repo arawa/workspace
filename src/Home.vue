@@ -87,7 +87,7 @@ export default {
 	beforeCreate() {
 		if (this.$root.$data.canAccessApp === 'false') {
 			this.$router.push({
-				path: '/unauthorized'
+				path: '/unauthorized',
 			})
 		}
 	},
