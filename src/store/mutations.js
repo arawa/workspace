@@ -28,11 +28,11 @@ const sortSpaces = (state) => {
 
 export default {
 	// Adds a group to a space
-	addGroupToSpace(state, { name, group }) {
+	addGroupToSpace(state, { name, gid }) {
 		const space = state.spaces[name]
-		space.groups[group] = {
-			gid: group,
-			displayName: group,
+		space.groups[gid] = {
+			gid,
+			displayName: gid,
 		}
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
