@@ -43,21 +43,6 @@ export const getters = {
 			return (user.uid in users)
 		}
 	},
-	isNewMember: state => (name, group, user) => {
-		const REGEXP = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + '|^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
-		if (group === undefined) {
-			return true
-		}
-		if (REGEXP.test(group)) {
-			return true
-		}
-		const users = state.spaces[name].users
-		if (users.length === 0) {
-			return false
-		} else {
-			return (user.uid in users)
-		}
-	},
 	// Returns the quota of a space
 	quota: state => spaceName => {
 		return state.spaces[spaceName].quota
