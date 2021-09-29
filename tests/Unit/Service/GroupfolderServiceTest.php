@@ -99,7 +99,14 @@ class GroupfolderServiceTest extends TestCase {
             ->willReturn('{
                 "ocs": {
                     "meta": {
-                        "statuscode": 100
+                        "status": "ok",
+                        "statuscode": 100,
+                        "message": "OK",
+                        "totalitems": "",
+                        "itemsperpage": ""
+                    },
+                    "data": {
+                        "id": 42
                     }
                 }
             }');
@@ -120,5 +127,6 @@ class GroupfolderServiceTest extends TestCase {
         $response = json_decode($result->getBody(), true);
 
         $this->assertEquals(100, $response['ocs']['meta']['statuscode']);
+        $this->assertIsInt($response['ocs']['data']['id']);
     }
 }
