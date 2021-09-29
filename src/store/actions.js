@@ -64,49 +64,49 @@ export default {
 		})
 	},
 	// Creates a group and navigates to its details page
-	createGroup(context, { name, group }) {
+	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		group = group + '-' + space.id
+		gid = gid + '-' + space.id
 
 		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, group })
+		context.commit('addGroupToSpace', { name, gid })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${group}`), { spaceId: space.id })
+		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// Navigates to the group's details page
 					context.state.spaces[name].isOpen = true
 					router.push({
-						path: `/group/${name}/${group}`,
+						path: `/group/${name}/${gid}`,
 					})
 					// eslint-disable-next-line no-console
-					console.log('Group ' + group + ' created')
+					console.log('Group ' + gid + ' created')
 				} else {
-					context.commit('removeGroupFromSpace', { name, group })
+					context.commit('removeGroupFromSpace', { name, gid })
 					this._vm.$notify({
 						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to create group ') + group + t('workspace', '<br>The error is: ') + resp.statusText,
+						text: t('workspace', 'An error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
 						type: 'error',
 					})
 				}
 			})
 			.catch((e) => {
-				context.commit('removeGroupFromSpace', { name, group })
+				context.commit('removeGroupFromSpace', { name, gid })
 				this._vm.$notify({
 					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to create group ') + group + t('workspace', '<br>The error is: ') + e,
+					text: t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e,
 					type: 'error',
 				})
 			})
 	},
 	// Deletes a group
-	deleteGroup(context, { name, group }) {
+	deleteGroup(context, { name, gid }) {
 		const space = context.state.spaces[name]
 
 		// Deletes group from frontend
-		context.commit('removeGroupFromSpace', { name, group })
+		context.commit('removeGroupFromSpace', { name, gid })
 
 		// Naviagte back to home
 		router.push({
@@ -114,25 +114,25 @@ export default {
 		})
 
 		// Deletes group from backend
-		axios.delete(generateUrl(`/apps/workspace/api/group/${group}`), { data: { spaceId: space.id } })
+		axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// eslint-disable-next-line no-console
-					console.log('Group ' + group + ' deleted')
+					console.log('Group ' + gid + ' deleted')
 				} else {
-					context.commit('addGroupToSpace', { name, group })
+					context.commit('addGroupToSpace', { name, gid })
 					this._vm.$notify({
 						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to delete group ') + group + t('workspace', '<br>The error is: ') + resp.statusText,
+						text: t('workspace', 'An error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
 						type: 'error',
 					})
 				}
 			})
 			.catch((e) => {
-				context.commit('addGroupToSpace', { name, group })
+				context.commit('addGroupToSpace', { name, gid })
 				this._vm.$notify({
 					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to delete group ') + group + t('workspace', '<br>The error is: ') + e,
+					text: t('workspace', 'A network error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + e,
 					type: 'error',
 				})
 			})
