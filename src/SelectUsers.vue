@@ -47,7 +47,11 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+							<input
+								type="checkbox"
+								class="role-toggle"
+								:checked="user.role === 'admin'"
+								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
@@ -65,7 +69,7 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspaceOrGroup">
+			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -121,6 +125,15 @@ export default {
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
+					if (this.$store.getters.isMember(this.$route.params.space, user)) {
+						if (user.role === 'user') {
+							this.$store.dispatch('removeUserFromGroup', {
+								name: this.$route.params.space,
+								gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+								user,
+							})
+						}
+					}
 					// Adding a user to a workspace 'subgroup
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
