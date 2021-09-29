@@ -15,6 +15,7 @@ export default {
 	name: 'App',
 	created() {
 		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
+		this.$root.$data.canAccessApp = document.getElementById('canAccessApp').value
 	},
 }
 
