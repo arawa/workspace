@@ -200,6 +200,33 @@ class GroupfolderServiceTest extends TestCase {
 
     }
 
+    public function testLogin(): void {
+
+      $this->assertEquals($this->login->getUID(), null,);
+      $this->assertEquals($this->login->getPassword(), null,);
+    }
+
+    public function testHeaders(): void {
+
+		$this->assertIsArray(self::HEADERS);
+
+		$this->assertArrayHasKey('Content-Type', self::HEADERS);
+		$this->assertArrayHasKey('OCS-APIRequest', self::HEADERS);
+		$this->assertArrayHasKey('Accept', self::HEADERS);
+		$this->assertArrayHasKey('verify', self::HEADERS);
+
+		$this->assertIsString(self::HEADERS['Content-Type']);
+
+		$this->assertIsString(self::HEADERS['OCS-APIRequest']);
+		$this->assertIsNotBool(self::HEADERS['OCS-APIRequest']);
+
+		$this->assertIsString(self::HEADERS['Accept']);
+
+		$this->assertIsString(self::HEADERS['verify']);
+		$this->assertIsNotBool(self::HEADERS['verify']);
+
+    }
+
     public function testCreateGroupfolder(): void {
 
         $this->groupfolderService = new GroupfolderService(
@@ -208,7 +235,6 @@ class GroupfolderServiceTest extends TestCase {
             $this->IStore,
             $this->logger
         );
-               
         $result = $this->groupfolderService->create($this->foldername);
 
         $response = json_decode($result->getBody(), true);
