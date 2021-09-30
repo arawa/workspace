@@ -17,6 +17,8 @@ OC.L10N.register(
 		'Email': 'Emails',
 		'Groups': 'Groups',
 		'Make administrator': 'Assign as Workspace manager',
+		'Error to rename space': 'Error to rename space',
+		'The space name already exist. We cannot rename with this name.': 'The space name already exist. We cannot rename with this name.',
 		'New space': 'Create a Workspace',
 		'No users selected': 'No users selected',
 		'Quota': 'Quota',

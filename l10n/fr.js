@@ -19,6 +19,8 @@ OC.L10N.register(
 		'New space': 'Créer un espace de travail',
 		'No users selected': 'Aucun utilisateur selectionné',
 		'Quota': 'Quota',
+		'Error to rename space': 'Erreur pour renommer l\'espace de travail',
+		'The space name already exist. We cannot rename with this name.': 'Le nom de l\'espace de travail existe déjà. Vous ne pouvez pas le renommer avec ce nom.',
 		'Remove admin rights': "Retirer les droits de G.E.",
 		'Remove user from selection': "Retirer l'utilisateur de la sélection",
 		'Rename space': "Renommer l'espace de travail",

@@ -18,6 +18,8 @@
 	"Role" : "Role",
 	"Remove admin rights": "Retirer les droits de G.E.",
 	"Rename space": "Renommer l'Espace Projet",
+	"Error to rename space": "Erreur pour renommer l'espace de travail",
+	"The space name already exist. We cannot rename with this name.": "Le nom de l'espace de travail existe déjà. Vous ne pouvez pas le renommer avec ce nom.",
 	"Error 403": "Erreur 403",
 	"return to home": "retourner à l'accueil",
 	"Rename group": "Renommer le groupe",
