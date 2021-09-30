@@ -18,6 +18,8 @@ OC.L10N.register(
 		'Make administrator': "Assigner en tant que G.E.",
 		'New space': 'Créer un espace de travail',
 		'No users selected': 'Aucun utilisateur selectionné',
+		'Error': 'Erreur',
+		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
 		'Quota': 'Quota',
 		'Remove admin rights': "Retirer les droits de G.E.",
 		'Remove user from selection': "Retirer l'utilisateur de la sélection",

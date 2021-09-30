@@ -7,6 +7,8 @@ OC.L10N.register(
 		'All spaces': 'All Workspaces',
 		'Administrators': 'General manager',
 		'admin': 'Workspace manager',
+		'Error': 'Error',
+		'Please specify a name.': 'Please specify a name.',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.', 
 		'Create group': 'Create group',
 		'Delete space': 'Delete Workspace',
