@@ -97,6 +97,47 @@ class UserServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
+	/**
+	 * @todo the removeGEFromWM should return a JSONResponse to test it.
+	 */
+	public function TestRemoveGEFromWM(): void {
+
+		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$this->user]);
+		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$this->user]);
+		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$this->user]);
+
+		$groupU->addUser($this->user);
+		$groupGE->addUser($this->user);
+		$subgroupLanfeust->addUser($this->user);
+
+
+		$space = [
+			'name' => 'Lanfeust',
+			'color'	=> 'blue',
+			'isOpen' => false,
+			'groups' => [
+				$groupGE->getGID() => 31,
+				$groupU->getGID() => 31,
+				$subgroupLanfeust->getGID() => 31
+			],
+			'id' => 1,
+			'groupfolderId' => 300,
+			'quota' => 'unlimited',
+			'users' => [],
+		];
+		
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$this->userSession,
+			$this->workspaceService);
+
+		$result = $userService->removeGEFromWM($this->user, $space['id']);
+
+	}
+
 	public function testFormatUser(): void {
 
 		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$this->user]);
