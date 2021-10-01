@@ -97,6 +97,69 @@ class UserServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
+	public function testFormatUser(): void {
+
+		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$this->user]);
+		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$this->user]);
+		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$this->user]);
+
+		$space = [
+			'name' => 'Lanfeust',
+			'color'	=> 'blue',
+			'isOpen' => false,
+			'groups' => [
+				$groupGE->getGID() => 31,
+				$groupU->getGID() => 31,
+				$subgroupLanfeust->getGID() => 31
+			],
+			'id' => 1,
+			'groupfolderId' => 300,
+			'quota' => 'unlimited',
+			'users' => [],
+		];
+
+
+		$groupU->addUser($this->user);
+		$subgroupLanfeust->addUser($this->user);
+
+		$this->groupManager->expects($this->once())
+			->method('getUserGroups')
+			->willReturn([
+				$groupU,
+				$subgroupLanfeust
+			]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$this->userSession,
+			$this->workspaceService);
+		
+		$result = $userService->formatUser($this->user, $space, 'user');
+
+		// Test if it's an array
+		$this->assertIsArray($result);
+
+		// Check the keys
+		$this->assertArrayHasKey('uid', $result);
+		$this->assertArrayHasKey('name', $result);
+		$this->assertArrayHasKey('email', $result);
+		$this->assertArrayHasKey('subtitle', $result);
+		$this->assertArrayHasKey('groups', $result);
+		$this->assertArrayHasKey('role', $result);
+
+		// Check the value type of keys
+		$this->assertIsString($result['uid']);
+		$this->assertIsString($result['name']);
+		$this->assertIsString($result['email']);
+		$this->assertIsString($result['subtitle']);
+		$this->assertIsArray($result['groups']);
+		$this->assertIsString($result['role']);
+
+	}
+
 	/**
 	 * This test makes sure that the isUserGeneralAdmin() method return true
 	 * when user is a general manager
