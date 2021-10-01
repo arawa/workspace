@@ -120,6 +120,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -146,6 +147,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(false, $result);
 	}
 
@@ -178,6 +180,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -210,6 +213,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -237,6 +241,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -264,6 +269,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
 
+		$this->assertIsBool($result);
 		$this->assertEquals(false, $result);
 	}
 }
