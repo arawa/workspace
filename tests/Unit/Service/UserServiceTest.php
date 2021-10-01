@@ -97,8 +97,37 @@ class UserServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
+	public function testCanAccessApp(): void {
+
+		// Let's say user is in a space manager group
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($this->user->getUID(), 'SPACE-GE-1')
+			->willReturn(true);
+
+	   $groups = $this->createTestGroup('SPACE-GE-1', 'SPACE-GE-1', [$this->user]);
+
+	   $this->groupManager->expects($this->once())
+			->method('search')
+		   	->with(Application::ESPACE_MANAGER_01)
+		   	->willReturn([$groups]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$this->userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+
+		$this->assertIsBool($result);
+		$this->assertEquals(true, $result);
+	}
+	
 	/**
-	 * @todo the removeGEFromWM should return a JSONResponse to test it.
+	 * @todo the removeGEFromWM should return a JSONResponse to test it
 	 */
 	public function TestRemoveGEFromWM(): void {
 
