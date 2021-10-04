@@ -59,8 +59,6 @@ class GroupfolderServiceTest extends TestCase {
         $this->IStore = $this->createMock(IStore::class);
         $this->clientService = $this->createMock(IClientService::class);
         $this->httpClient = $this->createMock(IClient::class);
-        $this->IResponse = $this->createMock(IResponse::class);
-        $this->IResponseGetAll = $this->createMock(IResponse::class);
         $this->login = $this->createMock(ICredentials::class);
 
         $this->foldername = 'foobar';
@@ -80,123 +78,6 @@ class GroupfolderServiceTest extends TestCase {
         $this->urlGenerator->expects($this->any())
             ->method('getBaseUrl')
             ->willReturn('http://www.cloud.me');
-
-
-        $this->httpClient->expects($this->any())
-            ->method('post')
-            ->with($this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
-                [
-                    'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'body' => [
-                        'mountpoint' => $this->foldername
-                    ],
-                    'headers' => self::HEADERS
-                ]
-            )
-            ->willReturn($this->IResponse);
-
-        $this->IResponse->expects($this->any())
-            ->method('getBody')
-            ->willReturn('{
-                "ocs": {
-                    "meta": {
-                        "status": "ok",
-                        "statuscode": 100,
-                        "message": "OK",
-                        "totalitems": "",
-                        "itemsperpage": ""
-                    },
-                    "data": {
-                        "id": 42
-                    }
-                }
-            }');
-
-		$this->httpClient->expects($this->any())
-			->method('get')
-			->with($this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
-				[
-					'auth' => [
-                        $this->login->getUID(),
-                        $this->login->getPassword()
-                    ],
-                    'headers' => self::HEADERS				
-				])
-			->willReturn($this->IResponseGetAll);
-
-		$this->IResponseGetAll->expects($this->any())
-			->method('getBody')
-			->willReturn('{
-				"ocs": {
-				  "meta": {
-					"status": "ok",
-					"statuscode": 100,
-					"message": "OK",
-					"totalitems": "",
-					"itemsperpage": ""
-				  },
-				  "data": {
-					"500": {
-					  "id": 500,
-					  "mount_point": "Test",
-					  "groups": [],
-					  "quota": "-3",
-					  "size": 0,
-					  "acl": false,
-					  "manage": []
-					},
-					"501": {
-					  "id": 501,
-					  "mount_point": "Lanfeust",
-					  "groups": {
-						"SPACE-GE-175": 31,
-						"SPACE-U-175": 31
-					  },
-					  "quota": "-3",
-					  "size": 0,
-					  "acl": true,
-					  "manage": [
-						{
-						  "type": "group",
-						  "id": "SPACE-GE-175",
-						  "displayname": "GE-175"
-						}
-					  ]
-					},
-					"502": {
-					  "id": 502,
-					  "mount_point": "Brocéliande",
-					  "groups": {
-						"SPACE-GE-176": 31,
-						"SPACE-U-176": 31
-					  },
-					  "quota": "-3",
-					  "size": 0,
-					  "acl": true,
-					  "manage": [
-						{
-						  "type": "group",
-						  "id": "SPACE-GE-176",
-						  "displayname": "GE-176"
-						}
-					  ]
-					},
-					"503": {
-					  "id": 503,
-					  "mount_point": "Windows",
-					  "groups": [],
-					  "quota": "-3",
-					  "size": 0,
-					  "acl": false,
-					  "manage": []
-					}
-				  }
-				}
-			  }'
-			);
 
     }
 
@@ -229,30 +110,157 @@ class GroupfolderServiceTest extends TestCase {
 
     public function testCreateGroupfolder(): void {
 
-        $this->groupfolderService = new GroupfolderService(
+        $apiResponse = $this->createMock(IResponse::class);
+
+		$apiResponse->expects($this->any())
+            ->method('getBody')
+            ->willReturn('{
+                "ocs": {
+                    "meta": {
+                        "status": "ok",
+                        "statuscode": 100,
+                        "message": "OK",
+                        "totalitems": "",
+                        "itemsperpage": ""
+                    },
+                    "data": {
+                        "id": 42
+                    }
+                }
+            }');
+
+		$this->httpClient->expects($this->any())
+            ->method('post')
+            ->with($this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
+                [
+                    'auth' => [
+                        $this->login->getUID(),
+                        $this->login->getPassword()
+                    ],
+                    'body' => [
+                        'mountpoint' => $this->foldername
+                    ],
+                    'headers' => self::HEADERS
+                ]
+            )
+            ->willReturn($apiResponse);
+
+        $groupfolderService = new GroupfolderService(
             $this->urlGenerator,
             $this->clientService,
             $this->IStore,
             $this->logger
         );
-        $result = $this->groupfolderService->create($this->foldername);
+        $result = $groupfolderService->create($this->foldername);
+
+		$this->assertInstanceOf(IResponse::class, $result);
 
         $response = json_decode($result->getBody(), true);
 
-        $this->assertEquals(100, $response['ocs']['meta']['statuscode']);
+		$this->assertIsArray($response);
+		$this->assertArrayHasKey('ocs', $response);
+		$this->assertArrayHasKey('meta', $response['ocs']);
+		$this->assertArrayHasKey('statuscode', $response['ocs']['meta']);
         $this->assertIsInt($response['ocs']['data']['id']);
+        $this->assertEquals(100, $response['ocs']['meta']['statuscode']);
     }
 
     public function testGetAllGroupfolder(): void {
 
-        $this->groupfolderService = new GroupfolderService(
+		$apiResponse = $this->createMock(IResponse::class);
+
+		$apiResponse->expects($this->any())
+			->method('getBody')
+			->willReturn('
+			{
+				"ocs": {
+					"meta": {
+						"status": "ok",
+						"statuscode": 100,
+						"message": "OK",
+						"totalitems": "",
+						"itemsperpage": ""
+					},
+					"data": {
+						"500": {
+						"id": 500,
+						"mount_point": "Test",
+						"groups": [],
+						"quota": "-3",
+						"size": 0,
+						"acl": false,
+						"manage": []
+						},
+						"501": {
+						"id": 501,
+						"mount_point": "Lanfeust",
+						"groups": {
+							"SPACE-GE-175": 31,
+							"SPACE-U-175": 31
+						},
+						"quota": "-3",
+						"size": 0,
+						"acl": true,
+						"manage": [
+							{
+							"type": "group",
+							"id": "SPACE-GE-175",
+							"displayname": "GE-175"
+							}
+						]
+						},
+						"502": {
+						"id": 502,
+						"mount_point": "Brocéliande",
+						"groups": {
+							"SPACE-GE-176": 31,
+							"SPACE-U-176": 31
+						},
+						"quota": "-3",
+						"size": 0,
+						"acl": true,
+						"manage": [
+							{
+							"type": "group",
+							"id": "SPACE-GE-176",
+							"displayname": "GE-176"
+							}
+						]
+						},
+						"503": {
+						"id": 503,
+						"mount_point": "Windows",
+						"groups": [],
+						"quota": "-3",
+						"size": 0,
+						"acl": false,
+						"manage": []
+						}
+					}
+				}
+			}'
+		);
+
+		$this->httpClient->expects($this->any())
+			->method('get')
+			->with($this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders',
+				[
+					'auth' => [
+						$this->login->getUID(),
+						$this->login->getPassword()
+					],
+					'headers' => self::HEADERS				
+				])
+			->willReturn($apiResponse);
+
+        $groupfolderService = new GroupfolderService(
             $this->urlGenerator,
             $this->clientService,
             $this->IStore,
             $this->logger
         );
 
-        $response = $this->groupfolderService->getAll();
+        $response = $groupfolderService->getAll();
 
 		$this->assertIsArray($response);
     }
