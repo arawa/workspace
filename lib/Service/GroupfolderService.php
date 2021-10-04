@@ -69,7 +69,7 @@ class GroupfolderService {
 
         $response = json_decode($response->getBody(), true);
 
-	return $response['ocs']['data'];
+		return $response['ocs']['data'];
 
     }
 
