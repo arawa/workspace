@@ -72,7 +72,14 @@ class WorkspaceService {
 		$data = [];
 		$space = $this->get($spaceId);
 		foreach($users as $user) {
-			$data[] = $this->userService->formatUser($user, $space, 'user');
+			$role = 'user';
+			if ($this->groupManager->isInGroup(
+					$user->getUID(),
+					Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)
+				) {
+				$role = 'admin';
+			}
+			$data[] = $this->userService->formatUser($user, $space, $role);
 		}
 
 		// return info

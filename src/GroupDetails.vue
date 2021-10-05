@@ -93,7 +93,7 @@ export default {
 
 			this.$store.dispatch('deleteGroup', {
 				name: this.$route.params.space,
-				group: this.$route.params.group,
+				gid: this.$route.params.group,
 			})
 		},
 		onRenameGroup(e) {

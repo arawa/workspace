@@ -22,7 +22,7 @@
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
 					:value="$store.state.spaces[$route.params.space].quota"
-					:options="['1GB', '5GB', '10GB', 'unlimited']"
+					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
 					@change="setSpaceQuota"
 					@tag="setSpaceQuota" />
 			</div>
@@ -147,13 +147,13 @@ export default {
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			const group = e.target[1].value
-			if (!group) {
+			const gid = e.target[1].value
+			if (!gid) {
 				return
 			}
 
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, group })
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
 		},
 		onSpaceRename(e) {
 			// Hides ActionInput
@@ -194,7 +194,7 @@ export default {
 			if (quota === null) {
 				return
 			}
-			const control = /^(unlimited|\d+(tb|gb|mb|kb)?)$/i
+			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
 				this.$notify({
 					title: t('workspace', 'Error'),
@@ -277,7 +277,7 @@ export default {
 
 .space-name {
 	margin-left: 8px;
-	margin-top: -40px;
+	margin-top: -25px;
 }
 
 .user-actions {
