@@ -13,15 +13,15 @@
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
-		<AppNavigation>
-			<AppNavigationItem
-				:title="t('workspace', 'All spaces')"
-				:to="{path: '/'}"
-				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
+		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
+			<AppNavigationItem
+				:title="t('workspace', 'All spaces')"
+				:to="{path: '/'}"
+				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
 				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
@@ -84,6 +84,13 @@ export default {
 		AppNavigationNewItem,
 		Content,
 	},
+	beforeCreate() {
+		if (this.$root.$data.canAccessApp === 'false') {
+			this.$router.push({
+				path: '/unauthorized',
+			})
+		}
+	},
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
@@ -99,12 +106,15 @@ export default {
 						this.$store.state.loading = false
 						return
 					}
-
 					// Initialises the store
 					Object.values(resp.data).forEach(space => {
 						let codeColor = space.color_code
 						if (space.color_code === null) {
 							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+						}
+						let quota = this.convertQuotaForFrontend(space.quota)
+						if (quota === 'unlimited') {
+							quota = t('workspace', 'unlimited')
 						}
 						this.$store.commit('addSpace', {
 							color: codeColor,
@@ -113,7 +123,7 @@ export default {
 							groupfolderId: space.groupfolder_id,
 							isOpen: false,
 							name: space.space_name,
-							quota: this.convertQuotaForFrontend(space.quota),
+							quota,
 							users: space.users,
 						})
 					})
@@ -179,7 +189,7 @@ export default {
 							id: resp.data.id_space,
 							groupfolderId: resp.data.folder_id,
 							name,
-							quota: undefined,
+							quota: t('workspace', 'unlimited'),
 							users: {},
 						})
 						this.$router.push({
@@ -259,10 +269,6 @@ export default {
 
 .all-spaces {
 	background-color: inherit !important;
-}
-
-tr:hover {
-	background-color: #f5f5f5;
 }
 
 .user-counter {

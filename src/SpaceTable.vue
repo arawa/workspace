@@ -38,9 +38,9 @@
 			</tr>
 		</table>
 		<EmptyContent v-else>
-			<p>No spaces</p>
+			<p>{{ t('workspace', 'No spaces') }}</p>
 			<template #desc>
-				You have not yet created any workspace
+				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
 		</EmptyContent>
 	</div>
@@ -59,7 +59,7 @@ export default {
 	methods: {
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
-				return 'unlimited'
+				return t('workspace', 'unlimited')
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
 				let i = 0
@@ -72,7 +72,7 @@ export default {
 		},
 		// Returns all workspace's managers
 		workspaceManagers(space) {
-			return Object.values(space.users).filter((u) => this.$store.getters.isGeneralManager(u, space.name))
+			return Object.values(space.users).filter((u) => this.$store.getters.isSpaceAdmin(u, space.name))
 		},
 		openSpace(name) {
 			this.$store.state.spaces[name].isOpen = true

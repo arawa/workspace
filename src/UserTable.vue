@@ -23,7 +23,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="$store.getters.isGeneralManager(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
+					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
 						<Avatar :display-name="user.name" :user="user.uid" />
 					</td>
@@ -35,17 +35,17 @@
 							{{ user.email }}
 						</div>
 					</td>
-					<td> {{ t('workspace', $store.getters.isGeneralManager(user, $route.params.space) ? 'admin' : 'user') }} </td>
+					<td> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
 					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
 							<Actions>
 								<ActionButton v-if="$route.params.group === undefined"
-									:icon="!$store.getters.isGeneralManager(user, $route.params.space) ? 'icon-user' : 'icon-close'"
+									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{
-										!$store.getters.isGeneralManager(user, $route.params.space) ?
+										!$store.getters.isSpaceAdmin(user, $route.params.space) ?
 											t('workspace', 'Make administrator')
 											: t('workspace', 'Remove admin rights')
 									}}
@@ -114,8 +114,8 @@ export default {
 			}
 
 			return result.sort((firstUser, secondUser) => {
-				const roleFirstUser = this.$store.getters.isGeneralManager(firstUser, this.$route.params.space) ? 'admin' : 'user'
-				const roleSecondUser = this.$store.getters.isGeneralManager(secondUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'admin' : 'user'
 				if (roleFirstUser !== roleSecondUser) {
 					// display admins first
 					return roleFirstUser === 'admin' ? -1 : 1

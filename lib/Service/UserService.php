@@ -100,6 +100,17 @@ Class UserService {
 	}
 
 	/**
+	 * @return boolean true if user is space manager or general manager, false otherwise
+	 * @todo Can we move this function in the lib/AppInfo/Application.php ?
+	 */
+	public function canAccessApp() {
+		if ($this->isSpaceManager() || $this->isUserGeneralAdmin()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * @param string $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	*/

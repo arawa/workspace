@@ -292,6 +292,7 @@ class WorkspaceController extends Controller {
 	 * Returns a list of all the workspaces that the connected user may use.
 	 * 
 	 * @NoAdminRequired
+     * @NoCSRFRequired
 	 *
 	 */
 	public function findAll() {

@@ -14,17 +14,16 @@
 				@click="$emit('close')" />
 		</Actions>
 		<Multiselect
-			v-model="selectedUsers"
 			class="select-users-input"
 			label="name"
 			track-by="uid"
 			:loading="isLookingUpUsers"
-			:multiple="true"
+			:multiple="false"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:tag-width="50"
 			:user-select="true"
-			@change="addUsersToBatch"
+			@change="addUserToBatch"
 			@close="selectableUsers=[]"
 			@search-change="lookupUsers" />
 		<div class="select-users-list">
@@ -38,7 +37,7 @@
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
-					:class="$store.getters.isNewMember($route.params.space, $route.params.group, user) ? '' : 'user-not-member'">
+					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
 					<div>
 						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 						<Avatar :display-name="user.name" :user="user.name" />
@@ -48,7 +47,11 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input type="checkbox" class="role-toggle" @change="toggleUserRole(user)">
+							<input
+								type="checkbox"
+								class="role-toggle"
+								:checked="user.role === 'admin'"
+								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
@@ -66,7 +69,7 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspaceOrGroup">
+			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -94,7 +97,6 @@ export default {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
 			isLookingUpUsers: false, // True when we are looking up users
-			selectedUsers: [], // Users selected in a search
 			selectableUsers: [], // Users matching a search term
 		}
 	},
@@ -123,6 +125,15 @@ export default {
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
+					if (this.$store.getters.isMember(this.$route.params.space, user)) {
+						if (user.role === 'user') {
+							this.$store.dispatch('removeUserFromGroup', {
+								name: this.$route.params.space,
+								gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+								user,
+							})
+						}
+					}
 					// Adding a user to a workspace 'subgroup
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
@@ -147,9 +158,9 @@ export default {
 				}
 			})
 		},
-		// Adds users to the batch when user selects users in the MultiSelect
-		addUsersToBatch(users) {
-			this.allSelectedUsers = users
+		// Adds user to the batch when user selects user in the MultiSelect
+		addUserToBatch(user) {
+			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
 		lookupUsers(term) {
@@ -174,7 +185,9 @@ export default {
 								return (!(user.uid in space.users))
 							}, space)
 						} else {
-							users = resp.data
+							users = resp.data.filter(user => {
+								return (!(user.groups.includes(this.$route.params.group)))
+							})
 						}
 						// Filters user that are already selected
 						users = users.filter(newUser => {
@@ -206,14 +219,13 @@ export default {
 				})
 			this.isLookingUpUsers = false
 		},
+		// Removes a user from the batch
 		removeUserFromBatch(user) {
-			this.selectedUsers = this.selectedUsers.filter((u) => {
-				return u.name !== user.name
-			})
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
 				return u.name !== user.name
 			})
 		},
+		// Changes the role of a user
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
