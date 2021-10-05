@@ -17,6 +17,8 @@
 	"Quota" : "Quota",
 	"Role" : "Role",
 	"Remove admin rights": "Retirer les droits de G.E.",
+	"Error": "Erreur",
+	"Please specify a name.": "S'il vous plaît, spécifier un nom",
 	"Rename space": "Renommer l'Espace Projet",
 	"Error 403": "Erreur 403",
 	"return to home": "retourner à l'accueil",
