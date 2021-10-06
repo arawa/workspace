@@ -57,7 +57,7 @@ describe('Vuex store tests', () => {
 	it('Adds a group to the space', () => {
 		mutations.addGroupToSpace(state, {
 			name: 'test-space',
-			group: 'test-group',
+			gid: 'test-group',
 		})
 
 		expect(state.spaces['test-space'].groups['test-group']).eql({

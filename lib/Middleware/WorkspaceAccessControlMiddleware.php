@@ -12,13 +12,13 @@
 
 namespace OCA\Workspace\Middleware;
 
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\RedirectResponse;
-use OCP\AppFramework\Middleware;
+use OCP\Util;
 use OCP\IURLGenerator;
+use OCP\AppFramework\Middleware;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http\TemplateResponse;
+use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 
 class WorkspaceAccessControlMiddleware extends Middleware{
 
@@ -33,7 +33,7 @@ class WorkspaceAccessControlMiddleware extends Middleware{
 
     public function __construct(
         IURLGenerator $urlGenerator,
-	UserService $userService
+	    UserService $userService
     )
     {
         $this->urlGenerator = $urlGenerator;
@@ -58,21 +58,12 @@ class WorkspaceAccessControlMiddleware extends Middleware{
 
     // TODO: Find a solution to use this method.
     public function afterException($controller, $methodName, \Exception $exception){
-        if($exception instanceof AccessDeniedException){
-            // errorAccess template doesn't exist.
-            $route = 'workspace.page.errorAccess';          
-            $url = $this->urlGenerator->linkToRouteAbsolute($route, [ ]);
-            
-            /** 
-             * TODO: Find a solution to use RedirectResponse class
-             * return new RedirectResponse($url);
-             * 
-             * For example : return new TemplateResponse('workspace', 'errorAccess');
-             */
-            return new JSONResponse([
-                'status' => 'forbidden',
-                'msg' => 'You cannot to access this application.'
-            ]);
+        if($exception instanceof AccessDeniedException){            
+
+            Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
+            Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
+
+            return new TemplateResponse("workspace", "index", ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
 
         }
 

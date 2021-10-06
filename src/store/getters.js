@@ -23,7 +23,7 @@ export const getters = {
 		}
 	},
 	// Tests wheter a user if General manager of a space
-	isGeneralManager: state => (user, spaceName) => {
+	isSpaceAdmin: state => (user, spaceName) => {
 		return user.groups.includes(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + state.spaces[spaceName].id)
 	},
 	// Tests wheter a group is the GE or U group of a space
@@ -36,21 +36,6 @@ export const getters = {
 	},
 	// Tests whether a user is member of workspace
 	isMember: state => (name, user) => {
-		const users = state.spaces[name].users
-		if (users.length === 0) {
-			return false
-		} else {
-			return (user.uid in users)
-		}
-	},
-	isNewMember: state => (name, group, user) => {
-		const REGEXP = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + '|^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
-		if (group === undefined) {
-			return true
-		}
-		if (REGEXP.test(group)) {
-			return true
-		}
 		const users = state.spaces[name].users
 		if (users.length === 0) {
 			return false
