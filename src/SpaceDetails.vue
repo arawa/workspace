@@ -159,6 +159,18 @@ export default {
 			// Hides ActionInput
 			this.toggleRenameSpace()
 
+			if (e.target[1].value === false
+				 || e.target[1].value === null
+				 || e.target[1].value === ''
+			) {
+				this.$notify({
+					title: t('workspace', 'Error to rename space'),
+					text: t('workspace', 'The name space must be defined.'),
+					type: 'error',
+					duration: 6000
+				})
+				return
+			}
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space

@@ -15,6 +15,7 @@
 	"Make administrator" : "Assigner en tant que G.E.",
 	"New space" : "Créer un espace de travail",
 	"Quota" : "Quota",
+	"The name space must be defined.": "Le nom de l'espace de travail doit être défini.",
 	"Role" : "Role",
 	"Remove admin rights": "Retirer les droits de G.E.",
 	"Rename space": "Renommer l'Espace Projet",

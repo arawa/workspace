@@ -22,6 +22,7 @@ OC.L10N.register(
 		'New space': 'Create a Workspace',
 		'No users selected': 'No users selected',
 		'Quota': 'Quota',
+		'The name space must be defined.': 'The name space must be defined.',
 		'Remove admin rights': 'Remove workspace manager rights',
 		'Remove user from selection': 'Remove user from selection',
 		'Rename space': 'Rename Workspace',
