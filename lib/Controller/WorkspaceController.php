@@ -373,16 +373,34 @@ class WorkspaceController extends Controller {
      */
     public function renameSpace($spaceId, $newSpaceName) {
 
-	$space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
-     
-	$groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
-	$groups = array();
-	foreach (array_keys($groupfolder['groups']) as $gid) {
-		$groups[$gid] = [
-			'gid' => $gid,
-			'displayName' => $this->groupManager->get($gid)->getDisplayName(),
-		];
-	}
+		if( $newSpaceName === false ||
+			$newSpaceName === null ||
+			$newSpaceName === '' 
+		) {
+			throw new BadRequestException('newSpaceName must be provided');
+		}
+
+		// Checks if a space or a groupfolder with this name already exists
+		$spaceNameExist = $this->spaceService->checkSpaceNameExist($newSpaceName);
+		$groupfolderExist = $this->groupfolderService->checkGroupfolderNameExist($newSpaceName);
+		if($spaceNameExist || $groupfolderExist) {
+			return new JSONResponse([
+				'statuscode' => Http::STATUS_CONFLICT,
+				'message' => 'The space name already exist. We cannot rename with this name.'
+			]);
+		}
+
+
+		$space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
+		
+		$groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
+		$groups = array();
+		foreach (array_keys($groupfolder['groups']) as $gid) {
+			$groups[$gid] = [
+				'gid' => $gid,
+				'displayName' => $this->groupManager->get($gid)->getDisplayName(),
+			];
+		}
 
         $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
         $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
