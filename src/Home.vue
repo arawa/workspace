@@ -166,12 +166,30 @@ export default {
 				})
 				return
 			}
+			const pattern = '[~<>{}|;.:,!?\'@#$%\\\\^=/&*]'
+			const regex = new RegExp(pattern)
+			if (regex.test(name)) {
+				this.$notify({
+					title: t('workspace', 'Error - Creating space'),
+					text: t('workspace', 'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \\ ^ = / & *'),
+					duration: 6000,
+					type: 'error',
+				})
+				return
+			}
 			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
 				.then(resp => {
-					if (resp.data.statuscode !== 200 && resp.data.statuscode !== 201) {
+					if (resp.data.statuscode === 409) {
 						this.$notify({
 							title: t('workspace', 'Error - Creating space'),
 							text: t('workspace', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.'),
+							type: 'error',
+						})
+					} else if (resp.data.statuscode === 400) {
+						this.$notify({
+							title: t('workspace', 'Error - Creating space'),
+							text: t('workspace', resp.data.message),
+							duration: 6000,
 							type: 'error',
 						})
 					} else {
