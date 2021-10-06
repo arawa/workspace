@@ -167,7 +167,7 @@ export default {
 					title: t('workspace', 'Error to rename space'),
 					text: t('workspace', 'The name space must be defined.'),
 					type: 'error',
-					duration: 6000
+					duration: 6000,
 				})
 				return
 			}
@@ -186,7 +186,7 @@ export default {
 							title: t('workspace', 'Error to rename space'),
 							text: t('workspace', data.message),
 							type: 'error',
-							duration: 6000
+							duration: 6000,
 						})
 					}
 
