@@ -156,6 +156,17 @@ export default {
 				})
 				return
 			}
+			const pattern = '[~<>{}|;.:,!?\'@#$%\\\\^=/&*]'
+			const regex = new RegExp(pattern)
+			if (regex.test(name)) {
+				this.$notify({
+					title: t('workspace', 'Error - Creating space'),
+					text: t('workspace', 'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \\ ^ = / & *'),
+					duration: 6000,
+					type: 'error',
+				})
+				return
+			}
 			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
 				.then(resp => {
 					if (resp.data.statuscode === 409) {
