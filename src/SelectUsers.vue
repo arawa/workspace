@@ -25,7 +25,9 @@
 			:user-select="true"
 			@change="addUserToBatch"
 			@close="selectableUsers=[]"
-			@search-change="lookupUsers" />
+			@search-change="lookupUsers">
+			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
+		</Multiselect>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">

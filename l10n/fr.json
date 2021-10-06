@@ -16,6 +16,7 @@
 	"New space" : "Créer un espace de travail",
 	"Quota" : "Quota",
 	"Role" : "Role",
+	"No username matches your current entry.": "Aucun nom d'utilisateur ne correspond à votre saisie actuelle",
 	"Remove admin rights": "Retirer les droits de G.E.",
 	"Error": "Erreur",
 	"Please specify a name.": "S'il vous plaît, spécifier un nom",
