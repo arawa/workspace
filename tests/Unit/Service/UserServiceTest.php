@@ -97,19 +97,100 @@ class UserServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
-	public function testCanAccessApp(): void {
+	public function testGeneralAdminCanAccessApp(): void {
+		$userSession = $this->createMock(IUserSession::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
 
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), 'SPACE-GE-1')
+			->with($user->getUID(), 'GeneralManager')
 			->willReturn(true);
 
-	   $groups = $this->createTestGroup('SPACE-GE-1', 'SPACE-GE-1', [$this->user]);
+	   $generalManagerGroup = $this->createTestGroup('GeneralManager', 'GeneralManager', [$user]);
 
 	   $this->groupManager->expects($this->once())
 			->method('search')
-		   	->with(Application::ESPACE_MANAGER_01)
+		   	->with('GE-')
+		   	->willReturn([$generalManagerGroup]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+
+		$this->assertIsBool($result);
+		$this->assertEquals(true, $result);
+	}
+
+	public function testRegularUsersCannotAccessApp(): void {
+		$userSession = $this->createMock(IUserSession::class);
+		$groupManager = $this->createMock(IGroupManager::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
+
+		// Let's say user is in a space manager group
+		$groupManager->expects($this->any())
+			->method('isInGroup')
+			->with($user->getUID(), 'GeneralManager')
+			->willReturn(false);
+
+	   $GeneralManagerGroup = $this->createTestGroup('GeneralManager', 'GeneralManager', [$user]);
+
+	   $groupManager->expects($this->once())
+			->method('search')
+		   	->with('GE-')
+		   	->willReturn([$GeneralManagerGroup]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$groupManager,
+			$this->logger,
+			$this->userManager,
+			$userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+
+		$this->assertIsBool($result);
+		$this->assertEquals(false, $result);
+	}
+
+	public function testSpaceManagerCanAccessApp(): void {
+
+		$userSession = $this->createMock(IUserSession::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
+
+		// Let's say user is in a space manager group
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($user->getUID(), 'SPACE-GE-1')
+			->willReturn(true);
+
+	   $groups = $this->createTestGroup('SPACE-GE-1', 'SPACE-GE-1', [$user]);
+
+	   $this->groupManager->expects($this->once())
+			->method('search')
+		   	->with('GE-')
 		   	->willReturn([$groups]);
 
 		// Instantiates our service
@@ -117,11 +198,11 @@ class UserServiceTest extends TestCase {
 			$this->groupManager,
 			$this->logger,
 			$this->userManager,
-			$this->userSession,
+			$userSession,
 			$this->workspaceService);
 
 		$result = $userService->canAccessApp();
-
+		
 		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
