@@ -32,11 +32,13 @@
 						<ActionButton
 							icon="icon-user"
 							:close-after-click="true"
+							class="no-bold"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
 						<ActionButton v-show="!createGroup"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
+							class="no-bold"
 							@click="toggleCreateGroup" />
 						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
@@ -51,6 +53,7 @@
 					<ActionButton v-show="!renameSpace"
 						icon="icon-rename"
 						:title="t('workspace', 'Rename space')"
+						class="no-bold"
 						@click="toggleRenameSpace" />
 					<ActionInput v-show="renameSpace"
 						ref="renameSpaceInput"
@@ -278,6 +281,10 @@ export default {
 .space-name {
 	margin-left: 8px;
 	margin-top: -25px;
+}
+
+.no-bold button p strong{
+	font-weight: normal !important;
 }
 
 .user-actions {
