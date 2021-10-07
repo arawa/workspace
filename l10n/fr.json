@@ -17,6 +17,7 @@
 	"Quota" : "Quota",
 	"The name space must be defined.": "Le nom de l'espace de travail doit être défini.",
 	"Role" : "Role",
+	"No username matches your current entry.": "Aucun nom d'utilisateur ne correspond à votre saisie actuelle",
 	"Remove admin rights": "Retirer les droits de G.E.",
 	"Error": "Erreur",
 	"Please specify a name.": "S'il vous plaît, spécifier un nom",

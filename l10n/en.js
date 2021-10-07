@@ -28,6 +28,7 @@ OC.L10N.register(
 		'Remove admin rights': 'Remove workspace manager rights',
 		'Remove user from selection': 'Remove user from selection',
 		'Rename space': 'Rename Workspace',
+		'No username matches your current entry.': 'No username matches your current entry.',
 		'Rename group': 'Rename group',
 		'Delete group': 'Delete group',
 		'Role': 'Role',

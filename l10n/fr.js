@@ -19,6 +19,7 @@ OC.L10N.register(
 		'New space': 'Créer un espace de travail',
 		'No users selected': 'Aucun utilisateur selectionné',
 		'Error': 'Erreur',
+		'No username matches your current entry.': 'Aucun nom d\'utilisateur ne correspond à votre saisie actuelle',
 		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
 		'Quota': 'Quota',
 		'The name space must be defined.': 'Le nom de l\'espace de travail doit être défini.',
