@@ -166,12 +166,13 @@ export default {
 				})
 				return
 			}
-			const pattern = '[~<>{}|;.:,!?\'@#$%\\\\^=/&*]'
+			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*]'
 			const regex = new RegExp(pattern)
 			if (regex.test(name)) {
+				console.debug(name)
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
-					text: t('workspace', 'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \\ ^ = / & *'),
+					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
 					duration: 6000,
 					type: 'error',
 				})
