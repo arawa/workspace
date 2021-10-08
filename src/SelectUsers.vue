@@ -39,9 +39,9 @@
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
-					:class="$store.getters.isMember($route.params.space, user) ? '' : 'user-not-member'">
+					:class="$store.getters.isMember($route.params.space, user, $route.params.group) ? '' : 'user-not-member'">
 					<div>
-						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
+						<div class="icon-member" :class="$store.getters.addIconMember($route.params.space, user) ? 'is-member' : ''" />
 						<Avatar :display-name="user.name" :user="user.uid" />
 						<div class="user-name">
 							<span> {{ user.name }} </span>
@@ -106,7 +106,7 @@ export default {
 		// Returns true when at least 1 selected user is not yet member of the workspace
 		addingUsersToWorkspace() {
 			return !this.allSelectedUsers.every(user => {
-				return this.$store.getters.isMember(this.$route.params.space, user)
+				return this.$store.getters.isMember(this.$route.params.space, user, this.$route.params.group)
 			})
 		},
 	},
@@ -127,7 +127,7 @@ export default {
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
-					if (this.$store.getters.isMember(this.$route.params.space, user)) {
+					if (this.$store.getters.isMember(this.$route.params.space, user, this.$route.params.group)) {
 						if (user.role === 'user') {
 							this.$store.dispatch('removeUserFromGroup', {
 								name: this.$route.params.space,
