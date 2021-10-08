@@ -101,10 +101,10 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$%\\\^=\/&*]/', preg_quote($spaceName))) {
+        if (preg_match('/[~<>{}|;.:,!?\'@#$+_()-%\\\^=\/&*]/', $spaceName)) {
                 return new JSONResponse([
                     'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \ ^ = / & *',
+                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + _ ( ) - % \ ^ = / & * ]',
                 ]);
         }
 

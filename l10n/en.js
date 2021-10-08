@@ -42,7 +42,7 @@ OC.L10N.register(
 		'No users': 'No users',
 		'Group name': 'Group name',
 		'Space name': 'Space name',
-		'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \\ ^ = / & *': 'Your Workspace name must not contain the following characters: ~ < > { } | ; . : , ! ? \' @ # $ % \\ ^ = / & *',
+		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + _ ( ) - % \\\\ ^ = / & * ]': 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + _ ( ) - % \\ ^ = / & * ]',
 		'There are no users in this space/group yet': 'There are no users in this space/group yet',
 		'Start typing to lookup users': 'Start typing to lookup users',
 		'remove users from selection': 'remove users from selection',
