@@ -34,19 +34,8 @@ export const getters = {
 		}
 		return false
 	},
-	isMember: state => (name, user, group) => {
-		if (group === undefined) {
-			return true
-		}
-		const users = state.spaces[name].users
-		if (users.length === 0) {
-			return false
-		} else {
-			return (user.uid in users)
-		}
-	},
 	// Tests whether a user is member of workspace
-	addIconMember: state => (name, user) => {
+	isMember: state => (name, user) => {
 		const users = state.spaces[name].users
 		if (users.length === 0) {
 			return false
