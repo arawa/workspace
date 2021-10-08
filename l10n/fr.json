@@ -37,7 +37,7 @@
 	"Workspace name" : "Nom de l'espace de travail",
 	"Remove from group": "Retirer du groupe",
 	"No users": "Pas d'utilisateur",
-	"Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? ' @ # $ + _ ( ) - % \\\\ ^ = / & * ]": "Le nom de votre Espace de travail ne doit pas contenir les caractères suivants : [ ~ < > { } | ; . : , ! ? ' @ # $ + _ ( ) - % \\\\ ^ = / & * ]",
+	"Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? ' @ # $ + ( ) % \\\\ ^ = / & * ]": "Le nom de votre Espace de travail ne doit pas contenir les caractères suivants : [ ~ < > { } | ; . : , ! ? ' @ # $ + ( ) % \\\\ ^ = / & * ]",
 	"No spaces": "Aucun espace de travail",
 	"You have not yet created any workspace": "Vous n'avez pas encore créé d'espace de travail",
 	"unlimited": "unlimited",
