@@ -223,11 +223,6 @@ class UserServiceTest extends TestCase {
 		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$user]);
 		$WORKSPACES_MANAGER_GROUP = $this->createTestGroup($this::GROUP_WKSUSER, $this::GROUP_WKSUSER, [$user]);
 		
-		$groupU->addUser($user);
-		$groupGE->addUser($user);
-		$subgroupLanfeust->addUser($user);
-		$WORKSPACES_MANAGER_GROUP->addUser($user);
-
 		$groupManager->expects($this->any())
 			->method('get')
 			->with($this::GROUP_WKSUSER)
@@ -288,10 +283,6 @@ class UserServiceTest extends TestCase {
 			'quota' => 'unlimited',
 			'users' => [],
 		];
-
-
-		$groupU->addUser($this->user);
-		$subgroupLanfeust->addUser($this->user);
 
 		$this->groupManager->expects($this->once())
 			->method('getUserGroups')
