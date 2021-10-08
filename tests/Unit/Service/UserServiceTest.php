@@ -53,6 +53,8 @@ class UserServiceTest extends TestCase {
 	/** @var WorkspaceService */
 	private $workspaceService;
 
+	private const GROUP_WKSUSER = 'WorkspacesManagers';
+
 	public function setUp(): void {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -210,16 +212,34 @@ class UserServiceTest extends TestCase {
 	/**
 	 * @todo the removeGEFromWM should return a JSONResponse to test it
 	 */
-	public function TestRemoveGEFromWM(): void {
+	public function testRemoveGEFromWM(): void {
 
-		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$this->user]);
-		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$this->user]);
-		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$this->user]);
+		$groupManager = $this->createMock(IGroupManager::class);
 
-		$groupU->addUser($this->user);
-		$groupGE->addUser($this->user);
-		$subgroupLanfeust->addUser($this->user);
+		$user = $this->createTestUser('Foo Bar', 'Foo Bar', 'foo@acme.org');
 
+		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$user]);
+		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$user]);
+		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$user]);
+		$WORKSPACES_MANAGER_GROUP = $this->createTestGroup($this::GROUP_WKSUSER, $this::GROUP_WKSUSER, [$user]);
+		
+		$groupU->addUser($user);
+		$groupGE->addUser($user);
+		$subgroupLanfeust->addUser($user);
+		$WORKSPACES_MANAGER_GROUP->addUser($user);
+
+		$groupManager->expects($this->any())
+			->method('get')
+			->with($this::GROUP_WKSUSER)
+			->willReturn($WORKSPACES_MANAGER_GROUP);
+		$WORKSPACES_MANAGER_GROUP->expects($this->any())
+			->method('removeUser')
+			->with($user);
+
+		$groupManager->expects($this->once())
+			->method('getUserGroups')
+			->with($user)
+			->willReturn([$groupGE, $groupU, $subgroupLanfeust, $WORKSPACES_MANAGER_GROUP]);
 
 		$space = [
 			'name' => 'Lanfeust',
@@ -238,13 +258,13 @@ class UserServiceTest extends TestCase {
 		
 		// Instantiates our service
 		$userService = new UserService(
-			$this->groupManager,
+			$groupManager,
 			$this->logger,
 			$this->userManager,
 			$this->userSession,
 			$this->workspaceService);
 
-		$result = $userService->removeGEFromWM($this->user, $space['id']);
+		$userService->removeGEFromWM($user, $space['id']);
 
 	}
 
