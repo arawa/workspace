@@ -32,6 +32,7 @@ OC.L10N.register(
 		'Rename group': 'Rename group',
 		'Delete group': 'Delete group',
 		'Role': 'Role',
+		'Add users': 'Add users',
 		'S.A.': 'W.M.',
 		'Set quota': 'Set quota',
 		'Space administrators': 'Workspace manager',

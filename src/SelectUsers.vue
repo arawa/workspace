@@ -8,11 +8,14 @@
 
 <template>
 	<div class="select-users-wrapper">
-		<Actions class="action-close">
-			<ActionButton
-				icon="icon-close"
-				@click="$emit('close')" />
-		</Actions>
+		<div class="header-modal">
+			<h1 class="title-add-users-modal">{{ t('workspace', 'Add users') }}</h1>
+			<Actions class="action-close">
+				<ActionButton
+					icon="icon-close"
+					@click="$emit('close')" />
+			</Actions>
+		</div>
 		<Multiselect
 			class="select-users-input"
 			label="name"
@@ -243,11 +246,6 @@ export default {
 </script>
 
 <style>
-.action-close {
-	align-self: self-end;
-	width: 90%;
-}
-
 .caution {
 	color: red;
 	margin: 5px;
@@ -287,11 +285,27 @@ export default {
 	margin-top: 10px;
 }
 
+.header-modal {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.title-add-users-modal {
+	position: relative;
+	left: 20px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
 .select-users-input {
 	align-self: start;
 	width: 80%;
 	margin-left: auto !important;
 	margin-right: auto !important;
+	margin-top: 14px !important;
 }
 
 .select-users-list {
@@ -306,7 +320,7 @@ export default {
 
 .select-users-list-empty {
 	text-align: center;
-	line-height: 400px;
+	line-height: 300px;
 	width: 100%;
 }
 
