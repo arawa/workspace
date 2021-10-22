@@ -97,5 +97,5 @@ composer run test
 or
 
 ```bash
-sud -u nginx /usr/local/bin/composer run test
+sudo -u nginx /usr/local/bin/composer run test
 ```
