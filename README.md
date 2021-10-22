@@ -32,7 +32,7 @@ make
 
 🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
 
-After this, you can available the Groupfolders app.
+After this, you can enable the Groupfolders app.
 
 
 # 📦 Building the app
