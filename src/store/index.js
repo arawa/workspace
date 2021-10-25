@@ -7,7 +7,7 @@ import mutations from './mutations'
 Vue.use(Vuex)
 Vue.config.devtools = true // Debug mode
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
 	state: {
 		loading: true,
 		spaces: {},
@@ -16,3 +16,5 @@ export default new Vuex.Store({
 	actions,
 	getters,
 })
+
+export default store
