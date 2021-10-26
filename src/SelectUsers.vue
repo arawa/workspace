@@ -9,7 +9,9 @@
 <template>
 	<div class="select-users-wrapper">
 		<div class="header-modal">
-			<h1 class="title-add-users-modal">{{ t('workspace', 'Add users') }}</h1>
+			<h1 class="title-add-users-modal">
+				{{ t('workspace', 'Add users') }}
+			</h1>
 			<Actions class="action-close">
 				<ActionButton
 					icon="icon-close"

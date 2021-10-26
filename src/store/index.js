@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 import actions from './actions'
 import { getters } from './getters'
 import mutations from './mutations'
@@ -7,7 +7,7 @@ import mutations from './mutations'
 Vue.use(Vuex)
 Vue.config.devtools = true // Debug mode
 
-export default new Vuex.Store({
+const store = new Store({
 	state: {
 		loading: true,
 		spaces: {},
@@ -16,3 +16,5 @@ export default new Vuex.Store({
 	actions,
 	getters,
 })
+
+export default store
