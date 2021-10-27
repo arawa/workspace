@@ -121,6 +121,25 @@ source:
 	--exclude="../$(app_name)/node_modules" \
 	--exclude="../$(app_name)/*.log" \
 	--exclude="../$(app_name)/js/*.log" \
+	--exclude="../$(app_name)/README.md" \
+	--exclude="../$(app_name)/.vscode" \
+	--exclude="../$(app_name)/.github" \
+	--exclude="../$(app_name)/webpack.*.js" \
+	--exclude="../$(app_name)/tests" \
+	--exclude="../$(app_name)/src/tests" \
+	--exclude="../$(app_name)/phpunit.xml" \
+	--exclude="../$(app_name)/phpunit.integration.xml" \
+	--exclude="../$(app_name)/dependabot.yml" \
+	--exclude="../$(app_name)/notes" \
+	--exclude="../$(app_name)/babel.config.js" \
+	--exclude="../$(app_name)/composer.json" \
+	--exclude="../$(app_name)/composer.lock" \
+	--exclude="../$(app_name)/stylelint.config.js" \
+	--exclude="../$(app_name)/Makefile" \
+	--exclude="../$(app_name)/vendor" \
+	--exclude="../$(app_name)/COPYING" \
+	--exclude="../$(app_name)/package.json" \
+	--exclude="../$(app_name)/package-lock.json" \
 	../$(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
