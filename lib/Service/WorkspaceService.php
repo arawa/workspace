@@ -115,19 +115,13 @@ class WorkspaceService {
 
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
-
-		// Supplement them with additional info
-		$workspaces = array();
-		$groupfolders = $this->groupfolderService->getAll();
-		foreach ($spaces as $space) {
-			$workspace = $space->jsonSerialize();
-			$this->addGroupfolderInfo($workspace, $groupfolders[$workspace['groupfolder_id']]);
-			$this->addUsersInfo($workspace);
-			$this->addGroupsInfo($workspace);
-			$workspaces[] = $workspace;
+		$newSpaces = [];
+		foreach($spaces as $space) {
+			$newSpace = $space->jsonSerialize();
+			$this->addUsersInfo($newSpace);
+			$newSpaces[] = $newSpace;
 		}
-		
-		return $workspaces;
+		return $newSpaces;
 	}
 
 	/**
@@ -184,9 +178,10 @@ class WorkspaceService {
 	 * Adds groups information to a workspace
 	 *
 	 * @param array The workspace to which we want to add groups info
+	 * @return object|array assoc $workspace
 	 *
 	 */
-	private function addGroupsInfo(&$workspace) {
+	public function addGroupsInfo($workspace) {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
@@ -197,6 +192,6 @@ class WorkspaceService {
 		}
 		$workspace['groups'] = $groups;
 
-		return;
+		return $workspace;
 	}
 }

@@ -15,6 +15,11 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'workspace#addGroupsInfo',
+			'url' => '/api/workspace/formatGroups',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#lookupUsers',
 			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'GET'

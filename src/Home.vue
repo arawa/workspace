@@ -72,6 +72,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
+import { get } from './lib/groupfolders'
 
 export default {
 	name: 'Home',
@@ -106,30 +107,47 @@ export default {
 						this.$store.state.loading = false
 						return
 					}
-					// Initialises the store
-					Object.values(resp.data).forEach(space => {
-						let codeColor = space.color_code
-						if (space.color_code === null) {
-							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-						}
-						let quota = this.convertQuotaForFrontend(space.quota)
-						if (quota === 'unlimited') {
-							quota = t('workspace', 'unlimited')
-						}
-						this.$store.commit('addSpace', {
-							color: codeColor,
-							groups: space.groups,
-							id: space.id,
-							groupfolderId: space.groupfolder_id,
-							isOpen: false,
-							name: space.space_name,
-							quota,
-							users: space.users,
-						})
-					})
-
-					// Finished loading
-					this.$store.state.loading = false
+					const spaces = resp.data
+					Object.values(spaces.forEach(space => {
+						const newSpace = get(space.groupfolder_id)
+							.then((resp) => {
+								space.acl = resp.acl
+								space.groups = resp.groups
+								space.quota = resp.quota
+								space.size = resp.size
+								return space
+							})
+							.catch((e) => {
+								console.error('Impossible to format the spaces', e)
+							})
+						// Initialises the store
+						newSpace
+							.then(space => {
+								let codeColor = space.color_code
+								if (space.color_code === null) {
+									codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+								}
+								let quota = this.convertQuotaForFrontend(space.quota)
+								if (quota === 'unlimited') {
+									quota = t('workspace', 'unlimited')
+								}
+								this.$store.commit('addSpace', {
+									color: codeColor,
+									groups: space.groups,
+									id: space.id,
+									groupfolderId: space.groupfolder_id,
+									isOpen: false,
+									name: space.space_name,
+									quota,
+									users: space.users,
+								})
+							})
+							.catch(e => {
+								console.error('Error to format the final spaces', e)
+							})
+						// Finished loading
+						this.$store.state.loading = false
+					}))
 				})
 				.catch((e) => {
 					this.$notify({

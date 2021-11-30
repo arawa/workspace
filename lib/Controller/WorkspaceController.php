@@ -312,6 +312,18 @@ class WorkspaceController extends Controller {
 
 	}
 
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     * @param string|object $workspace
+     */
+    public function addGroupsInfo($workspace) {
+        if (gettype($workspace) === "string") {
+            $workspace = json_decode($workspace, true);
+        }
+        return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
+    }
+    
 	/**
          * Returns a list of users whose name matches $term
          *

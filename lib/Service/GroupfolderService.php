@@ -53,7 +53,7 @@ class GroupfolderService {
     /**
      *
      * @return array of groupfolders
-     *
+     * @todo delete this method
      */
     public function getAll() {
             $response = $this->httpClient->get(
