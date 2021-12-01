@@ -72,7 +72,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get } from './lib/groupfolders'
+import { get, formatGroups } from './services/groupfoldersService'
 
 export default {
 	name: 'Home',
@@ -108,6 +108,7 @@ export default {
 						return
 					}
 					const spaces = resp.data
+					// loop to build the json final
 					Object.values(spaces.forEach(space => {
 						const newSpace = get(space.groupfolder_id)
 							.then((resp) => {
@@ -120,9 +121,23 @@ export default {
 							.catch((e) => {
 								console.error('Impossible to format the spaces', e)
 							})
+						const spaceWithGroups = newSpace
+							.then((space) => {
+								space = formatGroups(space)
+									.then((resp) => {
+										return resp.data
+									})
+									.catch((error) => {
+										console.error('Impossible to generate a space with groups format', error)
+									})
+								return space
+							})
+							.catch((error) => {
+								console.error('Impossible to resolve newSpace const', error)
+							})
 						// Initialises the store
-						newSpace
-							.then(space => {
+						spaceWithGroups
+							.then((space) => {
 								let codeColor = space.color_code
 								if (space.color_code === null) {
 									codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
@@ -142,12 +157,9 @@ export default {
 									users: space.users,
 								})
 							})
-							.catch(e => {
-								console.error('Error to format the final spaces', e)
-							})
-						// Finished loading
-						this.$store.state.loading = false
 					}))
+					// Finished loading
+					this.$store.state.loading = false
 				})
 				.catch((e) => {
 					this.$notify({
@@ -187,7 +199,6 @@ export default {
 			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*]'
 			const regex = new RegExp(pattern)
 			if (regex.test(name)) {
-				console.debug(name)
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
 					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),

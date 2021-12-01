@@ -314,13 +314,10 @@ class WorkspaceController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      * @param string|object $workspace
+     * @return JSONResponse
      */
     public function addGroupsInfo($workspace) {
-        if (gettype($workspace) === "string") {
-            $workspace = json_decode($workspace, true);
-        }
         return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
     }
     
