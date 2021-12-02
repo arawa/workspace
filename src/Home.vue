@@ -98,6 +98,7 @@ export default {
 			axios.get(generateUrl('/apps/workspace/spaces'))
 				.then(resp => {
 					// Checks for application errors
+					console.debug('resp of get spaces', resp)
 					if (resp.status !== 200) {
 						this.$notify({
 							title: t('workspace', 'Error'),
@@ -107,62 +108,13 @@ export default {
 						this.$store.state.loading = false
 						return
 					}
-					const spaces = resp.data
-					// loop to build the json final
-					Object.values(spaces.forEach(space => {
-						const newSpace = get(space.groupfolder_id)
-							.then((resp) => {
-								space.acl = resp.acl
-								space.groups = resp.groups
-								space.quota = resp.quota
-								space.size = resp.size
-								return space
-							})
-							.catch((e) => {
-								console.error('Impossible to format the spaces', e)
-							})
-						const spaceWithGroups = newSpace
-							.then((space) => {
-								space = formatGroups(space)
-									.then((resp) => {
-										return resp.data
-									})
-									.catch((error) => {
-										console.error('Impossible to generate a space with groups format', error)
-									})
-								return space
-							})
-							.catch((error) => {
-								console.error('Impossible to resolve newSpace const', error)
-							})
-						// Initialises the store
-						spaceWithGroups
-							.then((space) => {
-								let codeColor = space.color_code
-								if (space.color_code === null) {
-									codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-								}
-								let quota = this.convertQuotaForFrontend(space.quota)
-								if (quota === 'unlimited') {
-									quota = t('workspace', 'unlimited')
-								}
-								this.$store.commit('addSpace', {
-									color: codeColor,
-									groups: space.groups,
-									id: space.id,
-									groupfolderId: space.groupfolder_id,
-									isOpen: false,
-									name: space.space_name,
-									quota,
-									users: space.users,
-								})
-							})
-					}))
+					this.generateDataCreated(resp.data)
 					// Finished loading
-					// To move
+					// To move | TODO async/await
 					this.$store.state.loading = false
 				})
 				.catch((e) => {
+					console.debug('error of get spaces', e)
 					this.$notify({
 						title: t('workspace', 'Network error'),
 						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
@@ -173,6 +125,58 @@ export default {
 		}
 	},
 	methods: {
+		async generateDataCreated(data) {
+			// loop to build the json final
+			Object.values(data.forEach(space => {
+				const newSpace = await get(space.groupfolder_id)
+					.then((resp) => {
+						space.acl = resp.acl
+						space.groups = resp.groups
+						space.quota = resp.quota
+						space.size = resp.size
+						return space
+					})
+					.catch((e) => {
+						console.error('Impossible to format the spaces', e)
+					})
+				const spaceWithGroups = await newSpace
+					.then((space) => {
+						space = formatGroups(space)
+							.then((resp) => {
+								return resp.data
+							})
+							.catch((error) => {
+								console.error('Impossible to generate a space with groups format', error)
+							})
+						return space
+					})
+					.catch((error) => {
+						console.error('Impossible to resolve newSpace const', error)
+					})
+				// Initialises the store
+				await spaceWithGroups
+					.then((space) => {
+						let codeColor = space.color_code
+						if (space.color_code === null) {
+							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+						}
+						let quota = this.convertQuotaForFrontend(space.quota)
+						if (quota === 'unlimited') {
+							quota = t('workspace', 'unlimited')
+						}
+						this.$store.commit('addSpace', {
+							color: codeColor,
+							groups: space.groups,
+							id: space.id,
+							groupfolderId: space.groupfolder_id,
+							isOpen: false,
+							name: space.space_name,
+							quota,
+							users: space.users,
+						})
+					})
+			}))
+		},
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
