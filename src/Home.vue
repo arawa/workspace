@@ -159,6 +159,7 @@ export default {
 							})
 					}))
 					// Finished loading
+					// To move
 					this.$store.state.loading = false
 				})
 				.catch((e) => {
