@@ -98,7 +98,6 @@ export default {
 			axios.get(generateUrl('/apps/workspace/spaces'))
 				.then(resp => {
 					// Checks for application errors
-					console.debug('resp of get spaces', resp)
 					if (resp.status !== 200) {
 						this.$notify({
 							title: t('workspace', 'Error'),
@@ -109,12 +108,18 @@ export default {
 						return
 					}
 					this.generateDataCreated(resp.data)
-					// Finished loading
-					// To move | TODO async/await
-					this.$store.state.loading = false
+						// resp return [ undefined, undefined, undefined, undefined]
+						// it is serious ?
+						.then(resp => {
+							// Finished loading
+							// When all promises is finished
+							this.$store.state.loading = false
+						})
+						.catch(error => {
+							console.error('The generateDataCreated method has a problem in promises', error)
+						})
 				})
 				.catch((e) => {
-					console.debug('error of get spaces', e)
 					this.$notify({
 						title: t('workspace', 'Network error'),
 						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
@@ -125,10 +130,13 @@ export default {
 		}
 	},
 	methods: {
-		async generateDataCreated(data) {
+		// Method to generate the data when this component is created.
+		// It is necessary to await promises and catch the response to
+		// stop the loading.
+		generateDataCreated(data) {
 			// loop to build the json final
-			Object.values(data.forEach(space => {
-				const newSpace = await get(space.groupfolder_id)
+			const result = Promise.all(data.map(async space => {
+				await get(space.groupfolder_id)
 					.then((resp) => {
 						space.acl = resp.acl
 						space.groups = resp.groups
@@ -139,43 +147,34 @@ export default {
 					.catch((e) => {
 						console.error('Impossible to format the spaces', e)
 					})
-				const spaceWithGroups = await newSpace
-					.then((space) => {
-						space = formatGroups(space)
-							.then((resp) => {
-								return resp.data
-							})
-							.catch((error) => {
-								console.error('Impossible to generate a space with groups format', error)
-							})
-						return space
+				const spaceWithGroups = await formatGroups(space)
+					.then((resp) => {
+						return resp.data
 					})
 					.catch((error) => {
-						console.error('Impossible to resolve newSpace const', error)
+						console.error('Impossible to generate a space with groups format', error)
 					})
 				// Initialises the store
-				await spaceWithGroups
-					.then((space) => {
-						let codeColor = space.color_code
-						if (space.color_code === null) {
-							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-						}
-						let quota = this.convertQuotaForFrontend(space.quota)
-						if (quota === 'unlimited') {
-							quota = t('workspace', 'unlimited')
-						}
-						this.$store.commit('addSpace', {
-							color: codeColor,
-							groups: space.groups,
-							id: space.id,
-							groupfolderId: space.groupfolder_id,
-							isOpen: false,
-							name: space.space_name,
-							quota,
-							users: space.users,
-						})
-					})
+				let codeColor = spaceWithGroups.color_code
+				if (spaceWithGroups.color_code === null) {
+					codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+				}
+				let quota = this.convertQuotaForFrontend(spaceWithGroups.quota)
+				if (quota === 'unlimited') {
+					quota = t('workspace', 'unlimited')
+				}
+				this.$store.commit('addSpace', {
+					color: codeColor,
+					groups: spaceWithGroups.groups,
+					id: spaceWithGroups.id,
+					groupfolderId: spaceWithGroups.groupfolder_id,
+					isOpen: false,
+					name: spaceWithGroups.space_name,
+					quota,
+					users: spaceWithGroups.users,
+				})
 			}))
+			return result
 		},
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
