@@ -54,11 +54,17 @@ class SpaceService {
 
     /**
      * @param $spaceName
-     * @return array
+     * @return object
      * @throws BadRequestException
+     * @todo to debug this part
      */
-    public function create(string $spaceName) {
-
+    public function create(string $spaceName, int $folderId) {
+        $space = new Space();
+        $space->setSpaceName($spaceName);
+        $space->setGroupfolderId($folderId);
+        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+        $this->spaceMapper->insert($space);
+        return $space;
     }
 
     /**

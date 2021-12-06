@@ -54,6 +54,7 @@ class GroupfolderService {
      *
      * @return array of groupfolders
      * @todo delete this method
+     * @todo delete this method
      */
     public function getAll() {
             $response = $this->httpClient->get(
@@ -77,6 +78,7 @@ class GroupfolderService {
     /**
      * @param $name the space name to create.
      * @return object that is the response from httpClient
+     * @todo delete this method
      */
     public function create($name) {
 	      $this->logger->debug('calling groupfolder "create groupfolder" API');
@@ -101,6 +103,7 @@ class GroupfolderService {
      * @param $id is the groupfolder's id.
      * @param $gid
      * @return object that is the response from httpClient
+     * @todo delete this method
      */
     public function addGroup($id, $gid) {
 
@@ -130,6 +133,7 @@ class GroupfolderService {
     /**
      * @param $id is the groupfolder's id.
      * @return object that is the response from httpClient
+     * @todo delete this method
      */
     public function enableAcl($id) {
 
@@ -154,6 +158,7 @@ class GroupfolderService {
     /**
      * @param int $folderId the space name to delete.
      * @return int The result of the call to the groupfolder API
+     * @todo delete this method
      * 
     */
     public function delete($folderId) {
@@ -179,6 +184,7 @@ class GroupfolderService {
      *
      * @param int $folderId
      * @return array The groupfolder's details
+     * @todo delete this method
      */
     public function get($folderId) {
         $response = $this->httpClient->get(
@@ -203,6 +209,7 @@ class GroupfolderService {
      *
      * @param int $folderId The id of the groupfolder
      * @return string The name of the groupfolder
+     * @todo delete this method
      */
     public function getName($folderId) {
         $response = $this->httpClient->get(
@@ -229,6 +236,7 @@ class GroupfolderService {
      * @param boolean $manageAcl
      * 
      * @return object that is the response from httpClient
+     * @todo delete this method
      */
     public function manageAcl($folderId, $gid, $manageAcl=true) {
 	      $this->logger->debug('calling groupfolder "manage ACL" API');

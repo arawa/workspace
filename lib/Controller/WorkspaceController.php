@@ -30,6 +30,7 @@ use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
 use OCA\Workspace\Controller\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Service\WorkspaceService;
+use phpDocumentor\Reflection\Types\Integer;
 
 class WorkspaceController extends Controller {
     
@@ -89,10 +90,8 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
-     * @todo Bug when this code is in SpaceService.php.
-     * It has to find a solution to move it.
      */
-    public function createSpace(string $spaceName) {
+    public function createSpace(string $spaceName, int $folderId) {
 
         if ( $spaceName === false ||
             $spaceName === null ||
@@ -108,109 +107,34 @@ class WorkspaceController extends Controller {
                 ]);
         }
 
-        // Checks if a space or a groupfolder with this name already exists
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
-        $groupfolderExist = $this->groupfolderService->checkGroupfolderNameExist($spaceName);
-        if($spaceNameExist || $groupfolderExist) {
+        if($spaceNameExist) {
             return new JSONResponse([
 				'statuscode' => Http::STATUS_CONFLICT,
 				'message' => 'The ' . $spaceName . ' space name already exist'
             ]);
         }
 
-		// #1 create a groupfolder
-		$dataResponseCreateGroupFolder = $this->groupfolderService->create($spaceName);
-		$responseCreateGroupFolder = json_decode($dataResponseCreateGroupFolder->getBody(), true);
-        if ( $responseCreateGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
-
-            throw new CreateGroupFolderException();  
-
-        }
-        
-        // #2 enable acl
-        $dataResponseEnableACLGroupFolder = $this->groupfolderService->enableAcl($responseCreateGroupFolder['ocs']['data']['id']);
-
-        $responseEnableACLGroupFolder = json_decode($dataResponseEnableACLGroupFolder->getBody(), true);
-
-        if ( $responseEnableACLGroupFolder['ocs']['meta']['statuscode'] !== 100 ) {
-            
-            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
-
-            throw new AclGroupFolderException();
-
-        }
-
-        // #3 create the space
+        // #1 create the space
         $space = new Space();
         $space->setSpaceName($spaceName);
-        $space->setGroupfolderId($responseCreateGroupFolder['ocs']['data']['id']);
+        $space->setGroupfolderId($folderId);
         $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
         $this->spaceMapper->insert($space);
-        
-        // #4 create groups
+
+        // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
+
         
-        // #5 add U group to groupfolder
-        $dataResponseAssignSpaceManagerGroup = $this->groupfolderService->addGroup(
-            $responseCreateGroupFolder['ocs']['data']['id'],
-            $newSpaceManagerGroup->getGID()
-        );
-
-        $responseAssignSpaceManagerGroup = json_decode($dataResponseAssignSpaceManagerGroup->getBody(), true);
-        
-        if ( $responseAssignSpaceManagerGroup['ocs']['meta']['statuscode'] !== 100 ) {
-            
-            $newSpaceManagerGroup->delete();
-            $newSpaceUsersGroup->delete();
-
-            $this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
-
-            throw new AssignGroupToGroupFolderException($newSpaceManagerGroup->getGID());
-
-        }
-
-        // #6 add GE group to groupfolder
-		$dataResponseAssignSpaceUsersGroup = $this->groupfolderService->addGroup(
-			$responseCreateGroupFolder['ocs']['data']['id'],
-			$newSpaceUsersGroup->getGID()
-		);
-
-		$responseAssignSpaceUsersGroup = json_decode($dataResponseAssignSpaceUsersGroup->getBody(), true);
-
-		if ( $responseAssignSpaceUsersGroup['ocs']['meta']['statuscode'] !== 100 ) {
-
-			$newSpaceManagerGroup->delete();
-			$newSpaceUsersGroup->delete();
-
-			$this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
-
-			throw new AssignGroupToGroupFolderException($newSpaceUsersGroup->getGID());
-
-		}
-
-		// #7 Add one group to manage acl
-		$dataResponseManageAcl = $this->groupfolderService->manageAcl(
-			$responseCreateGroupFolder['ocs']['data']['id'],
-			$newSpaceManagerGroup->getGID()
-		);
-		$responseManageAcl = json_decode($dataResponseManageAcl->getBody(), true);
-		if ( $responseManageAcl['ocs']['meta']['statuscode'] !== 100 ) {
-
-			$this->groupfolderService->delete($responseCreateGroupFolder['ocs']['data']['id']);
-
-			throw new ManageAclGroupFolderException();
-
-		}
-
-		// #8 Returns result
+		// #3 Returns result
         return new JSONResponse ([
-            'space_name' => $spaceName,
+            'space_name' => $space->getSpaceName(),
             'id_space' => $space->getId(),
-            'folder_id' => $responseCreateGroupFolder['ocs']['data']['id'],
+            'folder_id' => $space->getGroupfolderId(),
             'color' => $space->getColorCode(),
             'groups' => [
                 $newSpaceManagerGroup->getGID() => [
@@ -221,15 +145,6 @@ class WorkspaceController extends Controller {
                     'gid' => $newSpaceUsersGroup->getGID(),
                     'displayName' => $newSpaceUsersGroup->getDisplayName(),
                 ]
-            ],
-            'space_advanced_permissions' => true,
-            'space_assign_groups' => [
-                $newSpaceManagerGroup->getDisplayName(),
-                $newSpaceUsersGroup->getDisplayName()
-            ],
-            'acl' => [
-                'state' => true,
-                'group_manage' => $newSpaceManagerGroup->getDisplayName()
             ],
             'statuscode' => Http::STATUS_CREATED,
         ]);

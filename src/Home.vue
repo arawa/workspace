@@ -72,7 +72,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups } from './services/groupfoldersService'
+import { get, formatGroups, create } from './services/groupfoldersService'
 
 export default {
 	name: 'Home',
@@ -211,7 +211,7 @@ export default {
 				})
 				return
 			}
-			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
+			create(name)
 				.then(resp => {
 					if (resp.data.statuscode === 409) {
 						this.$notify({
