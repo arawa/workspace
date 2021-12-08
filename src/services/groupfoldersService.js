@@ -215,3 +215,28 @@ export async function create(spaceName) {
 
 	return data
 }
+
+// Param object/json workspace
+export function destroy(workspace) {
+	// It's a post because it's not possible to send data with the DELETE verb.
+	const result = axios.post(generateUrl('/apps/workspace/api/delete/spaces'),
+		{
+			workspace
+		})
+		.then(resp => {
+			if (resp.status === 200) {
+				// delete groupfolders
+				axios.delete(generateUrl(`/index.php/apps/groupfolders/folders/${workspace.groupfolderId}`))
+					.then(resp => {
+						if (!resp.data.ocs.meta.status === 'ok') {
+							console.error('Error to delete this groupfolder', workspace)
+						}
+					})
+					.catch(error => {
+						console.error('Error to delete a groupfolder. May be a problem network ?', error)
+					})
+			}
+			return resp.data
+		})
+	return result
+}

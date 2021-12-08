@@ -89,6 +89,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
+import { destroy } from './services/groupfoldersService'
 
 export default {
 	name: 'SpaceDetails',
@@ -127,17 +128,15 @@ export default {
 		deleteSpace() {
 			const space = this.$route.params.space
 
-			const res = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
+			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
 
-			if (res) {
-				axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+			if (isDeleted) {
+				destroy(this.$store.state.spaces[space])
 					.then(resp => {
-						if (resp.data.http.statuscode === 200) {
-
+						if (resp.http.statuscode === 200) {
 							this.$store.dispatch('removeSpace', {
 								space: this.$store.state.spaces[space],
 							})
-
 							this.$router.push({
 								path: '/',
 							})

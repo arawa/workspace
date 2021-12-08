@@ -133,6 +133,7 @@ export default {
 		// Method to generate the data when this component is created.
 		// It is necessary to await promises and catch the response to
 		// stop the loading.
+		// data object/json from space
 		generateDataCreated(data) {
 			// loop to build the json final
 			const result = Promise.all(data.map(async space => {

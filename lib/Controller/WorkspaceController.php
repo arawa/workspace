@@ -156,46 +156,35 @@ class WorkspaceController extends Controller {
      *
      * @NoAdminRequired
      * @SpaceAdminRequired
+     * @param object $workspace
      *
      */
-    public function destroy($spaceId) {
-        $this->logger->debug('Deleting space ' . $spaceId);
-        $space = $this->workspaceService->get($spaceId);
+    public function destroy($workspace) {
 
-        $this->logger->debug('Removing correesponding groupfolder.');
-
-        $groupfolder = $this->groupfolderService->get($space['groupfolder_id']);
-        $resp = $this->groupfolderService->delete($space['groupfolder_id']);
-        if ( $resp !== 100 ) {
-	        // TODO Should return an error
-        	return;
-        }
-
-        // Delete all GE from WorkspacesManagers group if necessary
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
+        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
         foreach ($GEGroup->getUsers() as $user) {
-		$this->userService->removeGEFromWM($user, $spaceId);
+		$this->userService->removeGEFromWM($user, $workspace['id']);
         }
 
-	// Removes all workspaces groups
+	    // Removes all workspaces groups
         $groups = [];
-	$this->logger->debug('Removing workspaces groups.');
-        foreach ( array_keys($groupfolder['groups']) as $group ) {
+    	$this->logger->debug('Removing workspaces groups.');
+        foreach ( array_keys($workspace['groups']) as $group ) {
             $groups[] = $group;
             $this->groupManager->get($group)->delete();
         }
 	
-	return new JSONResponse([
+	    return new JSONResponse([
             'http' => [
                 'statuscode' => 200,
                 'message' => 'The space is deleted.'
             ],
             'data' => [
-                'space_name' => $space['space_name'],
+                'space_name' => $workspace['name'],
                 'groups' => $groups,
-                'space_id' => $space['id'],
-                'groupfolder_id' => $space['groupfolder_id'],
+                'space_id' => $workspace['id'],
+                'groupfolder_id' => $workspace['groupfolderId'],
                 'state' => 'delete'
             ]
         ]);

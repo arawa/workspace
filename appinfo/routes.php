@@ -45,10 +45,12 @@ return [
 			'url' => '/spaces',
 			'verb' => 'GET'
 		],
+		// Change the verb DELETE by POST, because I don't send an object as params in the URL.
+		// So, I must define the verb as POST and insert data.
 		[
 			'name' => 'workspace#destroy',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'DELETE'
+			'url' => '/api/delete/spaces',
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'workspace#renameSpace',
