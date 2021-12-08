@@ -117,6 +117,7 @@ export default {
 						})
 						.catch(error => {
 							console.error('The generateDataCreated method has a problem in promises', error)
+							this.$store.state.loading = false
 						})
 				})
 				.catch((e) => {
