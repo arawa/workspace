@@ -157,6 +157,7 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @param object $workspace
+     * @todo to delete
      *
      */
     public function destroy($workspace) {
@@ -276,15 +277,18 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @NoCSRFRequired
-     * @param int $spaceId
+     * @param object|string $workspace
      * @param string $newSpaceName
      * @return JSONResponse
      * 
      * @todo Check if the space name and the group name exist or not.
-     * TODO: Manage errors & may be refactor
-     * groupfolder->rename & groupfolder->attachGroup.
+     * @todo Manage errors
      */
-    public function renameSpace($spaceId, $newSpaceName) {
+    public function renameSpace($workspace, $newSpaceName) {
+        
+        if (gettype($workspace) === 'object') {
+            $workspace = json_decode($workspace, true);
+        }
 
 		if( $newSpaceName === false ||
 			$newSpaceName === null ||
@@ -293,45 +297,12 @@ class WorkspaceController extends Controller {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
 
-		// Checks if a space or a groupfolder with this name already exists
-		$spaceNameExist = $this->spaceService->checkSpaceNameExist($newSpaceName);
-		$groupfolderExist = $this->groupfolderService->checkGroupfolderNameExist($newSpaceName);
-		if($spaceNameExist || $groupfolderExist) {
-			return new JSONResponse([
-				'statuscode' => Http::STATUS_CONFLICT,
-				'message' => 'The space name already exist. We cannot rename with this name.'
-			]);
-		}
+        $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 
-
-		$space = $this->spaceService->updateSpaceName($newSpaceName, (int)$spaceId);
-		
-		$groupfolder = $this->groupfolderService->get($space->getGroupfolderId());
-		$groups = array();
-		foreach (array_keys($groupfolder['groups']) as $gid) {
-			$groups[$gid] = [
-				'gid' => $gid,
-				'displayName' => $this->groupManager->get($gid)->getDisplayName(),
-			];
-		}
-
-        $responseRenameGroupfolder = $this->groupfolderService->rename($space->getGroupfolderId(), $newSpaceName);
-        $responseRename = json_decode($responseRenameGroupfolder->getBody(), true);
 	    // TODO Handle API call failure (revert space rename and inform user)
-        if ($responseRename['ocs']['meta']['statuscode'] === 100) {
-            return new JSONResponse([
-                "statuscode" => Http::STATUS_NO_CONTENT,
-                "space" => $newSpaceName,
-                'groups' => $groups
-            ]);                    
-        } else {
-            return new JSONResponse(
-                [
-                    "statuscode" => Http::STATUS_INTERNAL_SERVER_ERROR,
-                    "msg" => "Rename the space is impossible."
-                ]
-            );
-        }
+        return new JSONResponse([
+            'statuscode' => Http::STATUS_NO_CONTENT,
+            'space' => $spaceRenamed,
+        ]);
     }
-
 }

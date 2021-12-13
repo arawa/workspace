@@ -89,7 +89,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
-import { destroy } from './services/groupfoldersService'
+import { destroy, rename } from './services/groupfoldersService'
 
 export default {
 	name: 'SpaceDetails',
@@ -171,18 +171,13 @@ export default {
 					type: 'error',
 					duration: 6000,
 				})
-				return
 			}
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
-				{
-					newSpaceName: e.target[1].value,
-				})
+			rename(this.$store.state.spaces[oldSpaceName], e.target[1].value)
 				.then(resp => {
 					const data = resp.data
-
 					if (data.statuscode === 409) {
 						this.$notify({
 							title: t('workspace', 'Error to rename space'),
@@ -191,7 +186,6 @@ export default {
 							duration: 6000,
 						})
 					}
-
 					if (data.statuscode === 204) {
 						const space = { ...this.$store.state.spaces[oldSpaceName] }
 						space.name = data.space
@@ -206,7 +200,6 @@ export default {
 							path: `/workspace/${space.name}`,
 						})
 					}
-
 					if (data.statuscode === 401) {
 						// TODO: May be to print an error message temporary
 						console.error(data.message)

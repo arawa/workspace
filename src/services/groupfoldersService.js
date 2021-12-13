@@ -240,3 +240,60 @@ export function destroy(workspace) {
 		})
 	return result
 }
+
+export function rename(workspace, newSpaceName) {
+	// Response format to return
+	const respFormat = {
+		data: {}
+	}
+	respFormat.data.statuscode = 500
+	respFormat.data.message = 'Rename the space is impossible.'
+
+	if (!checkGroupfolderNameExist(workspace.name)) {
+		respFormat.data.statuscode = 409
+		respFormat.data.message = 'The space name already exist. We cannot rename with this name.'
+		console.error('The groupfolder name already exist. Please, choose another name to rename your space.')
+		return respFormat
+	}
+	// Update space side
+	const workspaceUpdated = axios.patch(generateUrl('/apps/workspace/api/space/rename'),
+		{
+			workspace,
+			newSpaceName,
+		})
+		.then(resp => {
+			// If space is updated...
+			if (resp.data.statuscode === 204) {
+				const space = resp.data.space
+				// ... the groupfolder is updating
+				const groupfolderUpdated = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
+					{
+						mountpoint: space.space_name
+					})
+					.then(resp => {
+						return resp
+					})
+					.catch(error => {
+						console.error('Error to call Groupfolder\'s API', error)
+					})
+				return groupfolderUpdated
+			}
+		})
+		.catch(error => {
+			console.error('Problem to rename the space', error)
+		})
+	const respFormatFinal = workspaceUpdated
+		.then(resultat => {
+			if (resultat.data.ocs.data.success) {
+				respFormat.data.statuscode = 204
+				respFormat.data.space = newSpaceName
+				respFormat.data.groups = workspace.groups
+				respFormat.data.message = 'Space and Groupfolder are updated both side.'
+				return respFormat
+			}
+		})
+		.catch(error => {
+			console.error('Problem to format the object when renamed the space name', error)
+		})
+	return respFormatFinal
+}

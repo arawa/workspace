@@ -55,7 +55,7 @@ return [
 		[
 			'name' => 'workspace#renameSpace',
 			// TODO move this route to /api/spaces
-			'url' => '/spaces/{spaceId}',
+			'url' => '/api/space/rename',
 			'verb' => 'PATCH'
 	    	],
 		[

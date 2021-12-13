@@ -263,6 +263,7 @@ class GroupfolderService {
      * @param int $folderId
      * @param string $newSpaceName
      * @return object that is the response from httpClient
+     * @todo to delete after refactoring
      */
     public function rename($folderId, $newSpaceName) {
         $response = $this->httpClient->post(
