@@ -3,7 +3,7 @@ import { generateUrl } from '@nextcloud/router'
 import { createSpace, isSpaceManagers, isSpaceUsers } from './spaceService'
 
 export function getAll() {
-	const data = axios.get(generateUrl('/index.php/apps/groupfolders/folders'))
+	const data = axios.get(generateUrl('/apps/groupfolders/folders'))
 		.then(resp => {
 			if (resp.data.ocs.meta.status === 'ok') {
 				return resp.data.ocs.data
@@ -16,7 +16,7 @@ export function getAll() {
 }
 
 export function get(groupfolderId) {
-	const data = axios.get(generateUrl(`/index.php/apps/groupfolders/folders/${groupfolderId}`))
+	const data = axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
 		.then(resp => {
 			if (resp.data.ocs.meta.status === 'ok') {
 				const workspace = resp.data.ocs.data
@@ -72,7 +72,7 @@ function checkGroupfolderNameExist(spaceName) {
 // Param : int folderId from a groupfolder
 // return object
 function enableAcl(folderId) {
-	const result = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${folderId}/acl`),
+	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
 			acl: 1
 		})
@@ -91,7 +91,7 @@ function enableAcl(folderId) {
 // Param string gid
 // return object
 export function addGroup(folderId, gid) {
-	const result = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${folderId}/groups`),
+	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
 			group: gid
 		})
@@ -108,7 +108,7 @@ export function addGroup(folderId, gid) {
 // Param string gid
 // manageAcl boolean (default: true)
 function manageACL(folderId, gid, manageAcl = true) {
-	const result = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${folderId}/manageACL`),
+	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
 			mappingId: gid,
@@ -137,7 +137,7 @@ export async function create(spaceName) {
 	}
 
 	// Create groupfolder
-	const groupfolderId = await axios.post(generateUrl('/index.php/apps/groupfolders/folders'),
+	const groupfolderId = await axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
 			mountpoint: spaceName
 		})
@@ -237,7 +237,7 @@ export function destroy(workspace) {
 		.then(resp => {
 			if (resp.status === 200) {
 				// delete groupfolders
-				axios.delete(generateUrl(`/index.php/apps/groupfolders/folders/${workspace.groupfolderId}`))
+				axios.delete(generateUrl(`/apps/groupfolders/folders/${workspace.groupfolderId}`))
 					.then(resp => {
 						if (!resp.data.ocs.meta.status === 'ok') {
 							console.error('Error to delete this groupfolder', workspace)
@@ -277,7 +277,7 @@ export function rename(workspace, newSpaceName) {
 			if (resp.data.statuscode === 204) {
 				const space = resp.data.space
 				// ... the groupfolder is updating
-				const groupfolderUpdated = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
+				const groupfolderUpdated = axios.post(generateUrl(`/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
 					{
 						mountpoint: space.space_name
 					})
