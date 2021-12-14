@@ -182,8 +182,6 @@ export default {
 			this.isLookingUpUsers = true
 			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
 				{
-					term,
-					spaceId,
 					space,
 				})
 				.then((resp) => {
