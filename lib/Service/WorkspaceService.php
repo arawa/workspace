@@ -117,7 +117,7 @@ class WorkspaceService {
 		$newSpaces = [];
 		foreach($spaces as $space) {
 			$newSpace = $space->jsonSerialize();
-			$this->addUsersInfo($newSpace);
+			// $this->addUsersInfo($newSpace);
 			$newSpaces[] = $newSpace;
 		}
 		return $newSpaces;
@@ -148,7 +148,7 @@ class WorkspaceService {
 	 * @param array The workspace to which we want to add users info
 	 *
 	 */
-	private function addUsersInfo(&$workspace) {
+	public function addUsersInfo($workspace) {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -169,7 +169,7 @@ class WorkspaceService {
 		}
 		$workspace['users'] = (object) $users;
 
-		return;
+		return $workspace;
 	}
 
 	/**

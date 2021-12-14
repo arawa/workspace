@@ -40,6 +40,17 @@ export function formatGroups(space) {
 	return data
 }
 
+export function formatUsers(space) {
+	const data = axios.post(generateUrl('/apps/workspace/api/workspace/formatUsers'), { workspace: space })
+		.then(resp => {
+			return resp
+		})
+		.catch(error => {
+			console.error('Error POST to format space\'s users', error)
+		})
+	return data
+}
+
 // param: string
 // return: true if such a groupfolder exists, false otherwise.
 function checkGroupfolderNameExist(spaceName) {

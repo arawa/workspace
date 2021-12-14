@@ -72,7 +72,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups, create } from './services/groupfoldersService'
+import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
 
 export default {
 	name: 'Home',
@@ -149,7 +149,14 @@ export default {
 					.catch((e) => {
 						console.error('Impossible to format the spaces', e)
 					})
-				const spaceWithGroups = await formatGroups(space)
+				const spaceWithUsers = await formatUsers(space)
+					.then((resp) => {
+						return resp.data
+					})
+					.catch((error) => {
+						console.error('Impossible to generate a space with users format', error)
+					})
+				const spaceWithUsersAndGroups = await formatGroups(spaceWithUsers)
 					.then((resp) => {
 						return resp.data
 					})
@@ -157,23 +164,23 @@ export default {
 						console.error('Impossible to generate a space with groups format', error)
 					})
 				// Initialises the store
-				let codeColor = spaceWithGroups.color_code
-				if (spaceWithGroups.color_code === null) {
+				let codeColor = spaceWithUsersAndGroups.color_code
+				if (spaceWithUsersAndGroups.color_code === null) {
 					codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
 				}
-				let quota = this.convertQuotaForFrontend(spaceWithGroups.quota)
+				let quota = this.convertQuotaForFrontend(spaceWithUsersAndGroups.quota)
 				if (quota === 'unlimited') {
 					quota = t('workspace', 'unlimited')
 				}
 				this.$store.commit('addSpace', {
 					color: codeColor,
-					groups: spaceWithGroups.groups,
-					id: spaceWithGroups.id,
-					groupfolderId: spaceWithGroups.groupfolder_id,
+					groups: spaceWithUsersAndGroups.groups,
+					id: spaceWithUsersAndGroups.id,
+					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
 					isOpen: false,
-					name: spaceWithGroups.space_name,
+					name: spaceWithUsersAndGroups.space_name,
 					quota,
-					users: spaceWithGroups.users,
+					users: spaceWithUsersAndGroups.users,
 				})
 			}))
 			return result

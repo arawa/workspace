@@ -20,6 +20,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'workspace#addUsersInfo',
+			'url' => '/api/workspace/formatUsers',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#lookupUsers',
 			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'POST'

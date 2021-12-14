@@ -225,6 +225,15 @@ class WorkspaceController extends Controller {
     public function addGroupsInfo($workspace) {
         return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
     }
+
+    /**
+     * @NoAdminRequired
+     * @param string|object $workspace
+     * @return JSONResponse
+     */
+    public function addUsersInfo($workspace) {
+        return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
+    }
     
 	/**
          * Returns a list of users whose name matches $term
