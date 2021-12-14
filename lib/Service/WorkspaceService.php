@@ -52,11 +52,11 @@ class WorkspaceService {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
-	 * @param string $spaceId
+	 * @param array|object $space
 	 *
 	 * @return array
 	 */
-	public function autoComplete(string $term, string $spaceId) {
+	public function autoComplete(string $term, array $space) {
 		// lookup users
 		$term = $term === '*' ? '' : $term;
 		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
@@ -70,12 +70,11 @@ class WorkspaceService {
 
 		// transform in a format suitable for the app
 		$data = [];
-		$space = $this->get($spaceId);
 		foreach($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
 					$user->getUID(),
-					Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)
+					Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id'])
 				) {
 				$role = 'admin';
 			}

@@ -176,12 +176,16 @@ export default {
 				return
 			}
 
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
-				term,
-				spaceId: this.$store.state.spaces[this.$route.params.space].id,
-			}))
+			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
+				{
+					term,
+					spaceId,
+					space,
+				})
 				.then((resp) => {
 					let users = []
 					if (resp.status === 200) {
@@ -223,6 +227,7 @@ export default {
 						text: t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e,
 						type: 'error',
 					})
+					console.error('Problem to search users', e)
 				})
 			this.isLookingUpUsers = false
 		},

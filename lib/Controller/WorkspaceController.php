@@ -230,14 +230,17 @@ class WorkspaceController extends Controller {
          * Returns a list of users whose name matches $term
          *
          * @NoAdminRequired
-         *
          * @param string $term
          * @param string $spaceId
+         * @param string|object $space
          *
          * @return JSONResponse
          */
-        public function lookupUsers(string $term, string $spaceId) {
-                $users = $this->workspaceService->autoComplete($term, $spaceId);
+        public function lookupUsers(string $term, string $spaceId, $space) {
+                if (gettype($space) === 'string') {
+                    $space = json_decode($space, true);
+                }
+                $users = $this->workspaceService->autoComplete($term, $space);
                 return new JSONResponse($users);
         }
 

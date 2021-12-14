@@ -22,7 +22,7 @@ return [
 		[
 			'name' => 'workspace#lookupUsers',
 			'url' => '/api/autoComplete/{term}/{spaceId}',
-			'verb' => 'GET'
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'workspace#createSpace',
