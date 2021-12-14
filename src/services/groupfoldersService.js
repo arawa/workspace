@@ -90,7 +90,7 @@ function enableAcl(folderId) {
 // Param int folderId
 // Param string gid
 // return object
-function addGroup(folderId, gid) {
+export function addGroup(folderId, gid) {
 	const result = axios.post(generateUrl(`/index.php/apps/groupfolders/folders/${folderId}/groups`),
 		{
 			group: gid

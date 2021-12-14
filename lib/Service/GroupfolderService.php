@@ -107,27 +107,26 @@ class GroupfolderService {
      */
     public function addGroup($id, $gid) {
 
-	      $this->logger->debug('calling groupfolder "assign group to groupfolder" API');
-        $response = $this->httpClient->post(
-            $this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups',
-            [
-                'auth' => [
-                    $this->login->getUID(),
-                    $this->login->getPassword()
-                ],
-                'body' => [
-                    'group' => $gid
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'OCS-APIRequest' => 'true',
-                    'Accept' => 'application/json',
-                ]
-            ]
+		$this->logger->debug('calling groupfolder "assign group to groupfolder" API');
+		$response = $this->httpClient->post(
+			$this->urlGenerator->getBaseUrl() . '/index.php/apps/groupfolders/folders/' . $id . '/groups',
+			[
+				'auth' => [
+					$this->login->getUID(),
+					$this->login->getPassword()
+				],
+				'body' => [
+					'group' => $gid
+				],
+				'headers' => [
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'OCS-APIRequest' => 'true',
+					'Accept' => 'application/json',
+				]
+			]
         );
 
         return $response;
-
     }
 
     /**

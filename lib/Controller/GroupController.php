@@ -80,16 +80,12 @@ class GroupController extends Controller {
 			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
 		}
 
-		// Grants group access to groupfolder
-		$space = $this->workspaceService->get($spaceId);
-		$json = $this->groupfolderService->addGroup($space['groupfolder_id'], $gid);
-		$resp = json_decode($json->getBody(), true);
-		if ($resp['ocs']['meta']['statuscode'] !== 100) {
-			$NCGroup->delete();
-			return new JSONResponse(['Could not assign group to groupfolder. Group has not been created.'], Http::STATUS_FORBIDDEN);
-		}
-
-		return new JSONResponse();
+		return new JSONResponse([
+			'group' => [
+				'gid' => $NCGroup->getGID(),
+				'displayGroup' => $NCGroup->getDisplayName()
+			]
+		]);
 	}
 
 	/**
@@ -117,7 +113,12 @@ class GroupController extends Controller {
 		}
 		$NCGroup->delete();
 
-		return new JSONResponse();
+		return new JSONResponse([
+			'gid' => $gid,
+			'state' => 'deleted',
+			'spaceId' => $spaceId,
+			'status' => Http::STATUS_OK
+		]);
 	}
 
 	/**
