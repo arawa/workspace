@@ -203,13 +203,12 @@ class WorkspaceController extends Controller {
 	public function findAll() {
 
 		$workspaces = $this->workspaceService->getAll();
-
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
-	    		$filteredWorkspaces = array_filter($workspaces, function($workspace) {
+	    		$filteredWorkspaces = array_values(array_filter($workspaces, function($workspace) {
 				return $this->userService->isSpaceManagerOfSpace($workspace['id']);
-			});
+			}));
 			$workspaces = $filteredWorkspaces;
 		}
 

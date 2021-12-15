@@ -121,6 +121,7 @@ export default {
 						})
 				})
 				.catch((e) => {
+					console.error('Problem to load spaces only', e)
 					this.$notify({
 						title: t('workspace', 'Network error'),
 						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
@@ -136,6 +137,10 @@ export default {
 		// stop the loading.
 		// data object/json from space
 		generateDataCreated(data) {
+			// It possible which the data is not an array but an object. Because, the `/apps/workspace/spaces` route return an object if there is one element.
+			if (!Array.isArray(data)) {
+				data = [data]
+			}
 			// loop to build the json final
 			const result = Promise.all(data.map(async space => {
 				await get(space.groupfolder_id)
