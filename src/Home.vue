@@ -137,7 +137,8 @@ export default {
 		// stop the loading.
 		// data object/json from space
 		generateDataCreated(data) {
-			// It possible which the data is not an array but an object. Because, the `/apps/workspace/spaces` route return an object if there is one element.
+			// It possible which the data is not an array but an object.
+			// Because, the `/apps/workspace/spaces` route return an object if there is one element.
 			if (!Array.isArray(data)) {
 				data = [data]
 			}
@@ -176,6 +177,11 @@ export default {
 				let quota = this.convertQuotaForFrontend(spaceWithUsersAndGroups.quota)
 				if (quota === 'unlimited') {
 					quota = t('workspace', 'unlimited')
+				}
+				// Convert an array empty to object
+				if (Array.isArray(spaceWithUsersAndGroups.users)
+				&& spaceWithUsersAndGroups.users.length === 0) {
+					spaceWithUsersAndGroups.users = { }
 				}
 				this.$store.commit('addSpace', {
 					color: codeColor,
