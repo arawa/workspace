@@ -164,7 +164,9 @@ export default {
 	},
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
-		const space = context.state.spaces[name]
+		// It's a deep copy to copy the object and not the reference.
+		// src: https://www.samanthaming.com/tidbits/70-3-ways-to-clone-objects/#shallow-clone-vs-deep-clone
+		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
 		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
@@ -175,6 +177,7 @@ export default {
 		// Update backend and revert frontend changes if something fails
 		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
+			space,
 			gid,
 			user: user.uid,
 		}).then((resp) => {

@@ -87,6 +87,7 @@ class WorkspaceService {
 
 	/*
 	 * Gets a single workspace
+	 * @todo To delete
 	 */
 	public function get($id){
 

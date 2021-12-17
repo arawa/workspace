@@ -213,6 +213,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 * @SpaceAdminRequired
 	 * 
 	 * Removes a user from a group
@@ -224,7 +225,11 @@ class GroupController extends Controller {
 	 *
 	 * @return @JSONResponse
 	 */
-	public function removeUser($spaceId, $gid, $user) {
+	public function removeUser($space, $gid, $user) {
+
+		if (gettype($space) === 'string') {
+			$space = json_decode($space, true);
+		}
 
 		$this->logger->debug('Removing user ' . $user . ' from group ' . $gid);
 
@@ -238,19 +243,18 @@ class GroupController extends Controller {
 		// Removes user from group(s)
 		$NCUser = $this->userManager->get($user);
 		$groups = [];
-		if ($gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId) {
+		if ($gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $space['id']) {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
-			$space = $this->workspaceService->get($spaceId);
 			$users = (array)$space['users'];
 			foreach($users[$NCUser->getUID()]['groups'] as $groupId) {
 				$NCGroup = $this->groupManager->get($groupId);
 				$NCGroup->removeUser($NCUser);
 				$groups[] = $NCGroup->getGID();
 				$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-				if ($groupId === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId) {
+				if ($groupId === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']) {
 					$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-					$this->userService->removeGEFromWM($NCUser, $spaceId);
+					$this->userService->removeGEFromWM($NCUser, $space['id']);
 				}
 			}
 		} else {
@@ -258,10 +262,10 @@ class GroupController extends Controller {
 			$groups[] = $gid;
 			$NCGroup->removeUser($NCUser);
 			$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-			if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId) {
+			if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']) {
 				// Removing user from a GE- group
 				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-				$this->userService->removeGEFromWM($NCUser, $spaceId);
+				$this->userService->removeGEFromWM($NCUser, $space['id']);
 			}
 		}
 
