@@ -83,7 +83,7 @@ class GroupController extends Controller {
 		return new JSONResponse([
 			'group' => [
 				'gid' => $NCGroup->getGID(),
-				'displayGroup' => $NCGroup->getDisplayName()
+				'displayName' => $NCGroup->getDisplayName()
 			]
 		]);
 	}

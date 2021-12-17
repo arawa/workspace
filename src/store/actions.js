@@ -80,7 +80,7 @@ export default {
 					// add this group in groupfolders
 					addGroup(space.groupfolderId, resp.data.group.gid)
 						.then(res => {
-							if (res.status !== 200) {
+							if (!res.success) {
 								axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
 									.then(resp => {
 										// eslint-disable-next-line no-console
