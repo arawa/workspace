@@ -5,7 +5,6 @@ use OCA\Workspace\AppInfo\Application;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUser;
-use OCP\IUserManager;
 use OCP\IUserSession;
 
 Class UserService {
@@ -16,8 +15,6 @@ Class UserService {
 	/** @var $ILogger */
 	private $logger;
 
-	/** @var $IUserManager */
-	private $userManager;
 
 	/** @var IUserSession */
 	private $userSession;
@@ -25,16 +22,12 @@ Class UserService {
 	public function __construct(
 		IGroupManager $group,
 		ILogger $logger,
-		IUserManager $userManager,
 		IUserSession $userSession
 	)
 	{
-
 		$this->groupManager = $group;
 		$this->logger = $logger;
-		$this->userManager = $userManager;
 		$this->userSession = $userSession;
-
 	}
 
 	/**
