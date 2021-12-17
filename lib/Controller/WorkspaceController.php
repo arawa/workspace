@@ -261,7 +261,6 @@ class WorkspaceController extends Controller {
      * @param string $newSpaceName
      * @return JSONResponse
      * 
-     * @todo Check if the space name and the group name exist or not.
      * @todo Manage errors
      */
     public function renameSpace($workspace, $newSpaceName) {
