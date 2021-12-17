@@ -244,11 +244,14 @@ export default {
 		} else {
 			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 		}
+		const spaceId = space.id
+		const userId = user.uid
 		context.commit('updateUser', { name, user })
-		axios.patch(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
-			spaceId: space.id,
-			userId: user.uid,
-		}))
+		axios.patch(generateUrl(`/apps/workspace/api/space/${spaceId}/user/${userId}`),
+			{
+				space,
+				userId,
+			})
 			.then((resp) => {
 				if (resp.status === 200) {
 					// eslint-disable-next-line no-console

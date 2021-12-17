@@ -259,24 +259,27 @@ class WorkspaceController extends Controller {
 	* @NoAdminRequired
 	* @SpaceAdminRequired
 	*
-	* @var string $spaceId
-	* @var string $userId
+	* @param object|string $space
+	* @param string $userId
 	* 
 	*/
-	public function changeUserRole(string $spaceId, string $userId) {
+	public function changeUserRole($space, string $userId) {
+
+        if (gettype($space) === 'string') {
+			$space = json_decode($space, true);
+		}
 
 		$user = $this->userManager->get($userId);
-		$space = $this->workspaceService->get($spaceId);
-		$GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId);
+        $GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']);
 
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
         		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . Application::GROUP_WKSUSER . ' group if needed.');
-			$this->userService->removeGEFromWM($user, $spaceId);
+			$this->userService->removeGEFromWM($user, $space['id']);
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)->addUser($user);
+			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id'])->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
 
