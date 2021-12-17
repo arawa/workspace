@@ -220,10 +220,11 @@ class GroupController extends Controller {
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 * and from the WorkspacesManagers group when the user is being removed from the GE- group
 	 *
+	 * @param object|string $space
 	 * @var string $gid
 	 * @var string $user
 	 *
-	 * @return @JSONResponse
+	 * @return JSONResponse
 	 */
 	public function removeUser($space, $gid, $user) {
 
