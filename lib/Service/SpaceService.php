@@ -5,35 +5,18 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\DB\Space;
 use OCA\Workspace\DB\SpaceMapper;
 use OCP\IGroupManager;
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
-use OCP\AppFramework\Http;
-use OCA\Workspace\Service\GroupfolderService;
-use OCP\AppFramework\Http\JSONResponse;
-
 
 class SpaceService {
     /** @var SpaceMapper */
     private $spaceMapper;
 
-    /** @var IGroupManager */
-    private $groupManager;
-
-    /** @var GroupfolderService */
-    private $groupfolderService;
-
     public function __construct(
         SpaceMapper $spaceMapper,
-        IGroupManager $groupManager,
-        GroupfolderService $groupfolderService
+        IGroupManager $groupManager
     ) {
         $this->spaceMapper = $spaceMapper;
         $this->groupManager = $groupManager;
-        $this->groupfolderService = $groupfolderService;
     }
 
     public function findAll() {

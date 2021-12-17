@@ -23,14 +23,7 @@ use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\GroupfolderService;
-use OCA\Workspace\Controller\Exceptions\AclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\CreateGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\ManageAclGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\AssignGroupToGroupFolderException;
-use OCA\Workspace\Controller\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Service\WorkspaceService;
-use phpDocumentor\Reflection\Types\Integer;
 
 class WorkspaceController extends Controller {
     
@@ -45,9 +38,6 @@ class WorkspaceController extends Controller {
 
     /** @var UserService */
     private $userService;
-
-    /** @var GroupfolderService */
-    private $groupfolderService;
 
     /** @var SpaceService */
     private $spaceService;
@@ -64,7 +54,6 @@ class WorkspaceController extends Controller {
 	ILogger $logger,
 	IRequest $request,
 	UserService $userService,
-	GroupfolderService $groupfolderService,
 	IUserManager $userManager,
 	SpaceMapper $mapper,
 	SpaceService $spaceService,
@@ -73,13 +62,11 @@ class WorkspaceController extends Controller {
     {
 	parent::__construct($AppName, $request);
 
-	$this->groupfolderService = $groupfolderService;
 	$this->groupManager = $groupManager;
 	$this->logger = $logger;
 
 	$this->userManager = $userManager;
 	$this->userService = $userService;
-	$this->groupfolderService = $groupfolderService;
 
 	$this->spaceMapper = $mapper;
 	$this->spaceService = $spaceService;
@@ -169,48 +156,6 @@ class WorkspaceController extends Controller {
             ],
             'statuscode' => Http::STATUS_CREATED,
         ]);
-    }
-
-    /**
-     *
-     * Deletes the workspace, and the corresponding groupfolder and groups
-     *
-     * @NoAdminRequired
-     * @SpaceAdminRequired
-     * @param object $workspace
-     * @todo to delete
-     *
-     */
-    public function destroy($workspace) {
-
-        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
-        foreach ($GEGroup->getUsers() as $user) {
-		$this->userService->removeGEFromWM($user, $workspace['id']);
-        }
-
-	    // Removes all workspaces groups
-        $groups = [];
-    	$this->logger->debug('Removing workspaces groups.');
-        foreach ( array_keys($workspace['groups']) as $group ) {
-            $groups[] = $group;
-            $this->groupManager->get($group)->delete();
-        }
-	
-	    return new JSONResponse([
-            'http' => [
-                'statuscode' => 200,
-                'message' => 'The space is deleted.'
-            ],
-            'data' => [
-                'space_name' => $workspace['name'],
-                'groups' => $groups,
-                'space_id' => $workspace['id'],
-                'groupfolder_id' => $workspace['groupfolderId'],
-                'state' => 'delete'
-            ]
-        ]);
-
     }
 
 	/**

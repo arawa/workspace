@@ -11,8 +11,6 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Service\GroupfolderService;
-use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -22,9 +20,6 @@ use OCP\ILogger;
 use OCP\IUserManager;
 
 class GroupController extends Controller {
-
-	/** @var GroupfolderService */
-	private $groupfolderService;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -38,23 +33,16 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
-	/** @var WorkspaceService */
-	private $workspaceService;
-
 	public function __construct(
-		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService,
-		WorkspaceService $workspaceService
+		UserService $userService
 	){
-		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
-		$this->workspaceService = $workspaceService;
 	}
 
 	/**

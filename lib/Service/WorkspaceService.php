@@ -3,18 +3,13 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
 
 class WorkspaceService {
-
-	/** @var GroupfolderService */
-	private $groupfolderService;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -32,7 +27,6 @@ class WorkspaceService {
 	private $userService;
 
 	public function __construct(
-		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
@@ -40,7 +34,6 @@ class WorkspaceService {
 		UserService $userService
 	)
 	{
-		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->spaceMapper = $spaceMapper;
@@ -86,29 +79,6 @@ class WorkspaceService {
 	}
 
 	/*
-	 * Gets a single workspace
-	 * @todo To delete
-	 */
-	public function get($id){
-
-		// Gets space info
-		$workspace = $this->spaceMapper->find($id)->jsonSerialize();
-
-		// Adds groupfolder's info
-		$groupfolder = $this->groupfolderService->get($workspace['groupfolder_id']);
-		$this->addGroupfolderInfo($workspace, $groupfolder);
-
-		// Adds users' info 
-		$this->addUsersInfo($workspace);
-	
-		// Adds groups' info
-		$this->addGroupsInfo($workspace);
-
-		// Returns workspace
-		return $workspace;
-	}
-
-	/*
 	 * Gets all workspaces
 	 */
 	public function getAll() {
@@ -118,28 +88,9 @@ class WorkspaceService {
 		$newSpaces = [];
 		foreach($spaces as $space) {
 			$newSpace = $space->jsonSerialize();
-			// $this->addUsersInfo($newSpace);
 			$newSpaces[] = $newSpace;
 		}
 		return $newSpaces;
-	}
-
-	/**
-	 *
-	 * Adds groupfolder information to a workspace
-	 *
-	 * @param array $workspace The workspace to which we want to add groupfolder info
-	 * @param array $groupfolder The groupfolder to retrieve info from
-	 *
-	 */
-	private function addGroupfolderInfo(&$workspace, $groupfolder) {
-
-		$workspace['groups'] = $groupfolder['groups'];
-		$workspace['quota'] = $groupfolder['quota'];
-		$workspace['size'] = $groupfolder['size'];
-		$workspace['acl'] = $groupfolder['acl'];
-
-		return;
 	}
 
 	/**
