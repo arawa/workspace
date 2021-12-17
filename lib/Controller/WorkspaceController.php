@@ -122,13 +122,34 @@ class WorkspaceController extends Controller {
         $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
         $this->spaceMapper->insert($space);
 
+        if (is_null($space)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a space.',
+            ]);
+        }
+        
         // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
+
+        if (is_null($newSpaceManagerGroup)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a Space Manager group.',
+            ]);
+        }
+        
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
+
+        if (is_null($newSpaceUsersGroup)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a Space Users group.',
+            ]);
+        }
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
-
         
 		// #3 Returns result
         return new JSONResponse ([
