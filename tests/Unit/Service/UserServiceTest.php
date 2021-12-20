@@ -19,18 +19,14 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
-use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\IGroup;
 use OCP\ILogger;
-use OCP\IUrlGenerator;
 use OCP\IUser;
-use OCP\IUserManager;
 use OCP\IUserSession;
 
 class UserServiceTest extends TestCase {
@@ -44,21 +40,14 @@ class UserServiceTest extends TestCase {
 	/** @var ILogger */
 	private $logger;
 
-	/** @var UserManager */
-	private $userManager;
-
 	/** @var UserSession */
 	private $userSession;
-
-	/** @var WorkspaceService */
-	private $workspaceService;
 
 	public function setUp(): void {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(ILogger::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
-		$this->userManager = $this->createMock(IUserManager::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -105,17 +94,20 @@ class UserServiceTest extends TestCase {
 
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
-	       		->method('isInGroup')
+			->method('isInGroup')
 			->with($this->user->getUID(), Application::GENERAL_MANAGER)
 			->willReturn(true);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+		
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -131,17 +123,20 @@ class UserServiceTest extends TestCase {
 
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
-	       		->method('isInGroup')
+			->method('isInGroup')
 			->with($this->user->getUID(), Application::GENERAL_MANAGER)
 			->willReturn(false);
+
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -171,9 +166,12 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
+
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -199,13 +197,16 @@ class UserServiceTest extends TestCase {
 			->with('GE-')
 			->willReturn([$groups]);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -226,13 +227,16 @@ class UserServiceTest extends TestCase {
 	     		->with($this->user->getUID(), $group->getGID())
 			->willReturn(true);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
@@ -252,14 +256,17 @@ class UserServiceTest extends TestCase {
 		     	->method('isInGroup')
 	     		->with($this->user->getUID(), $group->getGID())
 			->willReturn(false);
+		
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
