@@ -158,6 +158,47 @@ class WorkspaceController extends Controller {
         ]);
     }
 
+  /**
+     *
+     * Deletes the workspace, and the corresponding groupfolder and groups
+     *
+     * @NoAdminRequired
+     * @SpaceAdminRequired
+     * @param object $workspace
+     * 
+     */
+    public function destroy($workspace) {
+
+        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
+        foreach ($GEGroup->getUsers() as $user) {
+		$this->userService->removeGEFromWM($user, $workspace['id']);
+        }
+
+	    // Removes all workspaces groups
+        $groups = [];
+    	$this->logger->debug('Removing workspaces groups.');
+        foreach ( array_keys($workspace['groups']) as $group ) {
+            $groups[] = $group;
+            $this->groupManager->get($group)->delete();
+        }
+
+	    return new JSONResponse([
+            'http' => [
+                'statuscode' => 200,
+                'message' => 'The space is deleted.'
+            ],
+            'data' => [
+                'space_name' => $workspace['name'],
+                'groups' => $groups,
+                'space_id' => $workspace['id'],
+                'groupfolder_id' => $workspace['groupfolderId'],
+                'state' => 'delete'
+            ]
+        ]);
+
+    }
+
 	/**
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
