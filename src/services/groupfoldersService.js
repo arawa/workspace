@@ -200,7 +200,7 @@ export async function create(spaceName) {
 	// Create the space
 	const resultCreateSpace = await createSpace(groupfolder.mount_point, groupfolder.id)
 	if (typeof (resultCreateSpace) !== 'object') {
-		console.error('Error when creating a space, it\'s not a object type.')
+		console.error('Error when creating a space, it\'s not an object type.')
 		data.data.statuscode = 500
 		return data
 	}
