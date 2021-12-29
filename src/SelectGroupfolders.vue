@@ -40,24 +40,23 @@ export default {
 	},
 	data() {
 		return {
-			groupfolders: [],
 		}
 	},
 	created() {
-		console.debug('Hey !')
-		console.debug('Before this.groupfolders', this.groupfolders)
 		this.getGroupfolders()
 			.then(resultat => {
-				console.debug('resultat', resultat)
-				// TODO: update from store
-				this.groupfolders = resultat
+				resultat.forEach(groupfolder => {
+					this.$store.dispatch('updateGroupfolders', {
+						groupfolder,
+					})
+				})
 			})
 			.catch(error => {
 				console.error('Error to get groupfolders to convert in space', error)
 			})
-		console.debug('After this.groupfolders', this.groupfolders)
 	},
 	methods: {
+		// get groupfolders whithout spaces.
 		async getGroupfolders() {
 			const groupfolders = await getAll()
 				.then(resp => {
@@ -82,15 +81,15 @@ export default {
 			const groupfoldersKey = Object.keys(groupfolders)
 
 			// Get the difference between spaces and groupfolders to get groupfoders which aren't spaces
-			const groupfoldersKeysNotSpace = groupfoldersKey.filter(groupfolderKey => !groupfoldersIdFromSpaces.includes(groupfolderKey))
+			const groupfoldersKeysWhithoutSpace = groupfoldersKey.filter(groupfolderKey => !groupfoldersIdFromSpaces.includes(groupfolderKey))
 
 			// Build a Groupfolders' array
-			const groupfoldersNotSpace = []
-			for (const key of groupfoldersKeysNotSpace) {
-				groupfoldersNotSpace.push(groupfolders[key])
+			const groupfoldersWhithoutSpace = []
+			for (const key of groupfoldersKeysWhithoutSpace) {
+				groupfoldersWhithoutSpace.push(groupfolders[key])
 			}
 
-			return groupfoldersNotSpace
+			return groupfoldersWhithoutSpace
 		},
 	},
 }
