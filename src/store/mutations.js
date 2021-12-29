@@ -158,4 +158,7 @@ export default {
 		space.color = colorCode
 		Vue.set(state.spaces, name, space)
 	},
+	UPDATE_GROUPFOLDERS(state, { groupfolder }) {
+		state.groupfolders.push(groupfolder)
+	},
 }
