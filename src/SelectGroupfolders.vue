@@ -40,6 +40,8 @@
 					<span>{{ groupfolder.mount_point }}</span>
 				</div>
 				<input
+					:id="groupfolder.name"
+					v-model="allSelectedGroupfoldersId"
 					type="checkbox"
 					:value="groupfolder.id"
 					class="convert-space">
@@ -57,7 +59,8 @@
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import { getAll } from './services/groupfoldersService'
+import { getAll, enableAcl, addGroup, manageACL } from './services/groupfoldersService'
+import { createSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 
 export default {
 	name: 'SelectGroupfolders',
@@ -67,7 +70,7 @@ export default {
 	},
 	data() {
 		return {
-			allSelectedGroupfolers: [],
+			allSelectedGroupfoldersId: [],
 		}
 	},
 	created() {
@@ -120,10 +123,72 @@ export default {
 			return groupfoldersWhithoutSpace
 		},
 		addGroupfolderToBatch(groupfolder) {
-			this.allSelectedGroupfolers.push(groupfolder)
+			this.allSelectedGroupfoldersId.push(groupfolder)
 		},
-		convertGroupfoldersToSpace() {
+		async convertGroupfoldersToSpace() {
+			const groupfoldersBackup = this.$store.state.groupfolders
 			this.$emit('close')
+
+			const groupfoldersBatch = { }
+			this.allSelectedGroupfoldersId.forEach(id => {
+				groupfoldersBatch[id] = groupfoldersBackup[id]
+			})
+
+			// convert here now
+			for (const id in groupfoldersBatch) {
+
+				// Enable acl
+				const aclIsEnabled = await enableAcl(id)
+				if (!aclIsEnabled.success) {
+					console.error('Problem to enable ACL to convert a groupfolder in space.')
+					console.error('This current groupfolder', groupfoldersBatch[id])
+				}
+
+				// Create a space
+				const space = await createSpace(groupfoldersBatch[id].mount_point, id)
+
+				// Add groups to groupfolder
+				const GROUPS = Object.keys(space.groups)
+				const spaceManagerGID = GROUPS.find(isSpaceManagers)
+				const spaceUserGID = GROUPS.find(isSpaceUsers)
+
+				const isAddGroupForSpaceManager = await addGroup(space.folder_id, spaceManagerGID)
+				if (!isAddGroupForSpaceManager.success) {
+					console.error('Error to add Space Manager group in the groupfolder when to convert in space')
+				}
+
+				const isAddGroupForSpaceUser = await addGroup(space.folder_id, spaceUserGID)
+				if (!isAddGroupForSpaceUser.success) {
+					console.error('Error to add Space Users group in the groupfolder when to convert in space')
+				}
+
+				// Add Space Manager group in manage ACL
+				const resultManageACL = await manageACL(space.folder_id, spaceManagerGID)
+				if (!resultManageACL.success) {
+					console.error('Error to add the Space Manager group in manage ACL when to convert in space')
+					console.error('GroupFolder API to manage ACL a groupfolder doesn\'t respond')
+				}
+
+				// Define the quota
+				let quota = ''
+				if (groupfoldersBatch[id].quota === '-3') {
+					quota = t('workspace', 'unlimited')
+				} else {
+					quota = groupfoldersBatch[id].quota
+				}
+
+				this.$store.commit('addSpace', {
+					color: space.color,
+					groups: space.groups,
+					isOpen: false,
+					id: space.id_space,
+					groupfolderId: space.folder_id,
+					name: space.space_name,
+					quota,
+					users: {},
+				})
+
+			}
 		},
 	},
 }

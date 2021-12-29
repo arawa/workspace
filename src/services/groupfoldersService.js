@@ -94,7 +94,7 @@ function checkGroupfolderNameExist(spaceName) {
 
 // Param : int folderId from a groupfolder
 // return object
-function enableAcl(folderId) {
+export function enableAcl(folderId) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
 			acl: 1
@@ -130,7 +130,7 @@ export function addGroup(folderId, gid) {
 // Param int folderId
 // Param string gid
 // manageAcl boolean (default: true)
-function manageACL(folderId, gid, manageAcl = true) {
+export function manageACL(folderId, gid, manageAcl = true) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
@@ -243,8 +243,8 @@ export async function create(spaceName) {
 	data.data.assign_permission = {
 		status: 'enabled',
 		groups: [
-			spaceManagerGID
-		]
+			spaceManagerGID,
+		],
 	}
 
 	return data

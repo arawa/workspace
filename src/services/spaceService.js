@@ -32,7 +32,7 @@ export function createSpace(spaceName, folderId) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
 			spaceName,
-			folderId
+			folderId,
 		})
 		.then(resp => {
 			return resp.data
