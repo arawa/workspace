@@ -26,20 +26,48 @@
 			<h1 class="title-select-groupfolders">
 				{{ t('workspace', 'Select groupfolders to convert in workspace') }}
 			</h1>
+			<Actions class="action-close">
+				<ActionButton
+					icon="icon-close"
+					@click="$emit('close')" />
+			</Actions>
+		</div>
+		<div class="select-groupfolders-list">
+			<div v-for="(groupfolder) in $store.state.groupfolders"
+				:key="groupfolder.mount_point"
+				class="groupfolder-entry">
+				<div class="groupfolder-name">
+					<span>{{ groupfolder.mount_point }}</span>
+				</div>
+				<input
+					type="checkbox"
+					:value="groupfolder.id"
+					class="convert-space">
+			</div>
+		</div>
+		<div class="select-groupfolders-actions">
+			<button @click="convertGroupfoldersToSpace()">
+				{{ t('workspace', 'Convert in spaces') }}
+			</button>
 		</div>
 	</div>
 </template>
 
 <script>
 
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import { getAll } from './services/groupfoldersService'
 
 export default {
 	name: 'SelectGroupfolders',
 	components: {
+		Actions,
+		ActionButton,
 	},
 	data() {
 		return {
+			allSelectedGroupfolers: [],
 		}
 	},
 	created() {
@@ -91,6 +119,12 @@ export default {
 
 			return groupfoldersWhithoutSpace
 		},
+		addGroupfolderToBatch(groupfolder) {
+			this.allSelectedGroupfolers.push(groupfolder)
+		},
+		convertGroupfoldersToSpace() {
+			this.$emit('close')
+		},
 	},
 }
 
@@ -114,11 +148,57 @@ export default {
 	max-width: 600px;
 }
 
+.header-select-groupfolders {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+}
+
 .title-select-groupfolders {
 	position: relative;
 	left: 20px;
 	font-weight: bold;
 	font-size: 18px;
+}
+
+.select-groupfolders-list {
+	flex-grow: 1;
+	margin-top: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: transparent;
+	width: 82%;
+	overflow: scroll;
+}
+
+.groupfolder-entry {
+	justify-content: space-between;
+	padding-left: 1px;
+	font-size: 20px;
+}
+
+.groupfolder-entry,
+.groupfolder-entry div {
+	align-items: center;
+	display: flex;
+	flex-flow: row;
+}
+
+.groupfolder-name {
+	margin-left: 10px;
+	max-width: 440px;
+}
+
+.convert-space {
+	cursor: pointer !important;
+}
+
+.select-groupfolders-actions {
+	display: flex;
+	flex-flow: row-reverse;
+	margin-top: 10px;
 }
 
 </style>

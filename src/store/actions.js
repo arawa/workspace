@@ -361,6 +361,9 @@ export default {
 	updateColor(context, { name, colorCode }) {
 		context.commit('UPDATE_COLOR', { name, colorCode })
 	},
+	emptyGroupfolders(context) {
+		context.commit('EMPTY_GROUPFOLDERS')
+	},
 	updateGroupfolders(context, { groupfolder }) {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
 	},
