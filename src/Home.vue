@@ -342,6 +342,7 @@ export default {
 			return groups
 		},
 		toggleShowSelectGroupfoldersModal() {
+			this.$store.dispatch('emptyGroupfolders')
 			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
 		},
 	},

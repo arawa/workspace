@@ -34,7 +34,7 @@ const store = new Store({
 	state: {
 		loading: true,
 		spaces: {},
-		groupfolders: [],
+		groupfolders: {},
 	},
 	mutations,
 	actions,
