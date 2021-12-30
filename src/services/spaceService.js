@@ -45,10 +45,28 @@ export function createSpace(spaceName, folderId) {
 	return result
 }
 
+// Param: string spaceName
+// Param: object groupfolder
+// return object
+export function convertGroupfolderToSpace(spaceName, groupfolder) {
+	const result = axios.post(generateUrl('/apps/workspace/spaces/convert'),
+		{
+			spaceName,
+			groupfolder,
+		})
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			console.error('createSpace error', error)
+		})
+	return result
+}
+
 /**
-	* @param {string} group it's the groupname to test
-	* @return {string}
-	*/
+* @param {string} group it's the groupname to test
+* @return {string}
+*/
 export function isSpaceManagers(group) {
 	const SPACE_MANAGER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX)
 	return SPACE_MANAGER_REGEX.test(group)

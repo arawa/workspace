@@ -173,6 +173,111 @@ class WorkspaceController extends Controller {
         ]);
     }
 
+    /**
+     * @NoAdminRequired
+     * @GeneralManagerRequired
+     * @NoCSRFRequired
+     */
+    public function convertGroupfolderToSpace(string $spaceName, $groupfolder) {
+
+        if ( $spaceName === false ||
+            $spaceName === null ||
+            $spaceName === '' 
+        ) {
+            throw new BadRequestException('spaceName must be provided');
+        }
+
+        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*]/', $spaceName)) {
+                return new JSONResponse([
+                    'statuscode' => Http::STATUS_BAD_REQUEST,
+                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+                ]);
+        }
+
+        if (gettype($groupfolder) === 'string') {
+			$groupfolder = json_decode($groupfolder, true);
+		}
+
+        $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
+        if($spaceNameExist) {
+            return new JSONResponse([
+				'statuscode' => Http::STATUS_CONFLICT,
+				'message' => 'The ' . $spaceName . ' space name already exist'
+            ]);
+        }
+
+        // #1 create the space
+        $space = new Space();
+        $space->setSpaceName($spaceName);
+        $space->setGroupfolderId($groupfolder['id']);
+        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+        $this->spaceMapper->insert($space);
+
+        if (is_null($space)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a space.',
+            ]);
+        }
+        
+        // #2 create groups
+        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
+
+        if (is_null($newSpaceManagerGroup)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a Space Manager group.',
+            ]);
+        }
+        
+        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
+
+        if (is_null($newSpaceUsersGroup)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Error to create a Space Users group.',
+            ]);
+        }
+
+        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
+        
+        $groupsName = array_keys($groupfolder['groups']);
+
+        $groupsOfGroupfolder = [];
+        foreach($groupsName as $groupName) {
+            $group = $this->groupManager->get($groupName);
+            $groupsOfGroupfolder[$group->getGID()] = [
+                    'gid' => $group->getGID(),
+                    'displayName' => $group->getDisplayName(),
+                ];
+        }
+        
+        $groups = array_merge(
+            $groupsOfGroupfolder,
+            [
+                $newSpaceManagerGroup->getGID() => [
+                    'gid' => $newSpaceManagerGroup->getGID(),
+                    'displayName' => $newSpaceManagerGroup->getDisplayName(),
+                ],
+                $newSpaceUsersGroup->getGID() => [
+                    'gid' => $newSpaceUsersGroup->getGID(),
+                    'displayName' => $newSpaceUsersGroup->getDisplayName(),
+                ]
+            ]
+        );
+
+		// #3 Returns result
+        return new JSONResponse ([
+            'space_name' => $space->getSpaceName(),
+            'id_space' => $space->getId(),
+            'folder_id' => $space->getGroupfolderId(),
+            'color' => $space->getColorCode(),
+            'groups' => $groups,
+            'statuscode' => Http::STATUS_CREATED,
+        ]);
+    }
+
   /**
      *
      * Deletes the workspace, and the corresponding groupfolder and groups
