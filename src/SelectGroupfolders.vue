@@ -43,7 +43,7 @@
 					:id="groupfolder.name"
 					v-model="allSelectedGroupfoldersId"
 					type="checkbox"
-					:value="groupfolder.id"
+					:value="groupfolder.mount_point"
 					class="convert-space">
 			</div>
 		</div>
@@ -122,30 +122,26 @@ export default {
 
 			return groupfoldersWhithoutSpace
 		},
-		addGroupfolderToBatch(groupfolder) {
-			this.allSelectedGroupfoldersId.push(groupfolder)
-		},
 		async convertGroupfoldersToSpace() {
 			const groupfoldersBackup = this.$store.state.groupfolders
 			this.$emit('close')
 
 			const groupfoldersBatch = { }
-			this.allSelectedGroupfoldersId.forEach(id => {
-				groupfoldersBatch[id] = groupfoldersBackup[id]
+			this.allSelectedGroupfoldersId.forEach(mountPoint => {
+				groupfoldersBatch[mountPoint] = groupfoldersBackup[mountPoint]
 			})
 
 			// convert here now
-			for (const id in groupfoldersBatch) {
-
+			for (const mountPoint in groupfoldersBatch) {
 				// Enable acl
-				const aclIsEnabled = await enableAcl(id)
+				const aclIsEnabled = await enableAcl(mountPoint)
 				if (!aclIsEnabled.success) {
 					console.error('Problem to enable ACL to convert a groupfolder in space.')
-					console.error('This current groupfolder', groupfoldersBatch[id])
+					console.error('This current groupfolder', groupfoldersBatch[mountPoint])
 				}
 
 				// Create a space
-				const space = await createSpace(groupfoldersBatch[id].mount_point, id)
+				const space = await createSpace(mountPoint, groupfoldersBatch[mountPoint].id)
 
 				// Add groups to groupfolder
 				const GROUPS = Object.keys(space.groups)
@@ -171,10 +167,10 @@ export default {
 
 				// Define the quota
 				let quota = ''
-				if (groupfoldersBatch[id].quota === '-3') {
+				if (groupfoldersBatch[mountPoint].quota === '-3') {
 					quota = t('workspace', 'unlimited')
 				} else {
-					quota = groupfoldersBatch[id].quota
+					quota = groupfoldersBatch[mountPoint].quota
 				}
 
 				this.$store.commit('addSpace', {

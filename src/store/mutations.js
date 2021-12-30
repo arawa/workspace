@@ -49,6 +49,35 @@ const sortSpaces = (state) => {
 	state.spaces = sortedSpaces
 }
 
+// Function to sort groupfolders case-insensitively, and locale-based
+// It must be called every time a space is modified to keep the
+// groupfolders list sorted in the left navigation panel of the app
+const sortGroupfolders = (state) => {
+	const sortedGroupfolders = {}
+	const groupfolers = []
+	for (const mountPoint in state.groupfolders) {
+		groupfolers.push(state.groupfolders[mountPoint])
+	}
+	groupfolers
+		.sort((groupfolderCurrent, groupfolderNext) => {
+			// Some javascript engines don't support localCompare's locales
+			// and options arguments.
+			// This is especially the case of the mocha test framework
+			try {
+				return groupfolderCurrent.mount_point.localeCompare(groupfolderNext.mount_point, getLocale(), {
+					numeric: true,
+					sensitivity: 'base',
+				})
+			} catch (e) {
+				return groupfolderCurrent.mount_point.localeCompare(groupfolderNext.mount_point)
+			}
+		})
+		.forEach(groupfolder => {
+			sortedGroupfolders[groupfolder.mount_point] = state.groupfolders[groupfolder.mount_point]
+		})
+	state.groupfolders = sortedGroupfolders
+}
+
 export default {
 	// Adds a group to a space
 	addGroupToSpace(state, { name, gid }) {
@@ -162,6 +191,7 @@ export default {
 		state.groupfolders = {}
 	},
 	UPDATE_GROUPFOLDERS(state, { groupfolder }) {
-		Vue.set(state.groupfolders, groupfolder.id, groupfolder)
+		Vue.set(state.groupfolders, groupfolder.mount_point, groupfolder)
+		sortGroupfolders(state)
 	},
 }
