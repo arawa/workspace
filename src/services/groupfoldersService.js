@@ -162,7 +162,7 @@ export async function create(spaceName) {
 	// Create groupfolder
 	const groupfolderId = await axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
-			mountpoint: spaceName
+			mountpoint: spaceName,
 		})
 		.then(resp => {
 			return resp.data.ocs

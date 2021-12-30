@@ -60,7 +60,7 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import { getAll, enableAcl, addGroup, manageACL } from './services/groupfoldersService'
-import { createSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
+import { convertGroupfolderToSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 
 export default {
 	name: 'SelectGroupfolders',
@@ -134,14 +134,14 @@ export default {
 			// convert here now
 			for (const mountPoint in groupfoldersBatch) {
 				// Enable acl
-				const aclIsEnabled = await enableAcl(mountPoint)
+				const aclIsEnabled = await enableAcl(groupfoldersBatch[mountPoint].id)
 				if (!aclIsEnabled.success) {
 					console.error('Problem to enable ACL to convert a groupfolder in space.')
 					console.error('This current groupfolder', groupfoldersBatch[mountPoint])
 				}
 
-				// Create a space
-				const space = await createSpace(mountPoint, groupfoldersBatch[mountPoint].id)
+				// Convert in a space
+				const space = await convertGroupfolderToSpace(mountPoint, groupfoldersBatch[mountPoint])
 
 				// Add groups to groupfolder
 				const GROUPS = Object.keys(space.groups)

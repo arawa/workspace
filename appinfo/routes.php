@@ -60,6 +60,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'workspace#convertGroupfolderToSpace',
+			'url' => '/spaces/convert',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',
 			'verb' => 'GET'
