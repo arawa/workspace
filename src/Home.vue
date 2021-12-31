@@ -30,7 +30,7 @@
 			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-settings-dark"
 				:close-after-click="true"
-				:title="t('workspace', 'Settings import / convert')"
+				:title="t('workspace', 'Import / Convert')"
 				@click="toggleShowSelectGroupfoldersModal" />
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
