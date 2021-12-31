@@ -245,8 +245,18 @@ class WorkspaceController extends Controller {
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
+        $users = [];
+        // To cheat the fomatUser method.
+        $groupfolder['groups'][$newSpaceUsersGroup->getGID()] = 31;
         foreach($groupsName as $groupName) {
             $group = $this->groupManager->get($groupName);
+
+            $users = $group->getUsers();
+            foreach($users as $user) {
+                $newSpaceUsersGroup->addUser($user);
+                $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
+            }
+
             $groupsOfGroupfolder[$group->getGID()] = [
                     'gid' => $group->getGID(),
                     'displayName' => $group->getDisplayName(),
@@ -274,6 +284,7 @@ class WorkspaceController extends Controller {
             'folder_id' => $space->getGroupfolderId(),
             'color' => $space->getColorCode(),
             'groups' => $groups,
+            'users' => $users,
             'statuscode' => Http::STATUS_CREATED,
         ]);
     }
