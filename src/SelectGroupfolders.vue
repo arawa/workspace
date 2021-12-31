@@ -181,7 +181,7 @@ export default {
 					groupfolderId: space.folder_id,
 					name: space.space_name,
 					quota,
-					users: {},
+					users: space.users,
 				})
 
 			}
