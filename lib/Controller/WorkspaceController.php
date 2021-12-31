@@ -245,7 +245,7 @@ class WorkspaceController extends Controller {
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
-        $users = [];
+        $users = (object)[];
         // To cheat the fomatUser method.
         $groupfolder['groups'][$newSpaceUsersGroup->getGID()] = 31;
         foreach($groupsName as $groupName) {
