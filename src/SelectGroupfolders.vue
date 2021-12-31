@@ -23,9 +23,11 @@
 <template>
 	<div class="content-select-groupfolders">
 		<div class="header-select-groupfolders">
-			<h1 class="title-select-groupfolders">
-				{{ t('workspace', 'Select groupfolders to convert in workspace') }}
-			</h1>
+			<div class="header-select-groupfolders-title">
+				<h1 class="title-select-groupfolders">
+					{{ t('workspace', 'Select groupfolders to convert in workspace') }}
+				</h1>
+			</div>
 			<Actions class="action-close">
 				<ActionButton
 					icon="icon-close"
@@ -215,6 +217,10 @@ export default {
 	align-items: center;
 	width: 100%;
 	justify-content: space-between;
+}
+
+.header-select-groupfolders-title {
+	width: 90%;
 }
 
 .title-select-groupfolders {
