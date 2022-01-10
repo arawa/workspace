@@ -88,6 +88,7 @@ function checkGroupfolderNameExist(spaceName) {
 		})
 		.catch(error => {
 			console.error('Cannot get all Groupfolders', error)
+			return false
 		})
 	return groupfolders
 }
