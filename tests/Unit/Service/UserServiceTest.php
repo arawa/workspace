@@ -53,6 +53,8 @@ class UserServiceTest extends TestCase {
 	/** @var WorkspaceService */
 	private $workspaceService;
 
+	private const GROUP_WKSUSER = 'WorkspacesManagers';
+
 	public function setUp(): void {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -97,6 +99,229 @@ class UserServiceTest extends TestCase {
 		return $mockGroup;
 	}
 
+	public function testGeneralAdminCanAccessApp(): void {
+		$userSession = $this->createMock(IUserSession::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
+
+		// Let's say user is in a space manager group
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($user->getUID(), 'GeneralManager')
+			->willReturn(true);
+
+	   $generalManagerGroup = $this->createTestGroup('GeneralManager', 'GeneralManager', [$user]);
+
+	   $this->groupManager->expects($this->once())
+			->method('search')
+		   	->with('GE-')
+		   	->willReturn([$generalManagerGroup]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+
+		$this->assertIsBool($result);
+		$this->assertEquals(true, $result);
+	}
+
+	public function testRegularUsersCannotAccessApp(): void {
+		$userSession = $this->createMock(IUserSession::class);
+		$groupManager = $this->createMock(IGroupManager::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
+
+		// Let's say user is in a space manager group
+		$groupManager->expects($this->any())
+			->method('isInGroup')
+			->with($user->getUID(), 'GeneralManager')
+			->willReturn(false);
+
+	   $GeneralManagerGroup = $this->createTestGroup('GeneralManager', 'GeneralManager', [$user]);
+
+	   $groupManager->expects($this->once())
+			->method('search')
+		   	->with('GE-')
+		   	->willReturn([$GeneralManagerGroup]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$groupManager,
+			$this->logger,
+			$this->userManager,
+			$userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+
+		$this->assertIsBool($result);
+		$this->assertEquals(false, $result);
+	}
+
+	public function testSpaceManagerCanAccessApp(): void {
+
+		$userSession = $this->createMock(IUserSession::class);
+
+		$user = $this->createTestUser('Bar Foo', 'Bar Foo', 'bar@acme.org');
+		
+		$userSession->expects($this->any())
+			->method('getUser')
+			->willReturn($user);
+
+		// Let's say user is in a space manager group
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($user->getUID(), 'SPACE-GE-1')
+			->willReturn(true);
+
+	   $groups = $this->createTestGroup('SPACE-GE-1', 'SPACE-GE-1', [$user]);
+
+	   $this->groupManager->expects($this->once())
+			->method('search')
+		   	->with('GE-')
+		   	->willReturn([$groups]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$userSession,
+			$this->workspaceService);
+
+		$result = $userService->canAccessApp();
+		
+		$this->assertIsBool($result);
+		$this->assertEquals(true, $result);
+	}
+	
+	/**
+	 * @todo the removeGEFromWM should return a JSONResponse to test it
+	 */
+	public function testRemoveGEFromWM(): void {
+
+		$groupManager = $this->createMock(IGroupManager::class);
+
+		$user = $this->createTestUser('Foo Bar', 'Foo Bar', 'foo@acme.org');
+
+		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$user]);
+		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$user]);
+		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$user]);
+		$WORKSPACES_MANAGER_GROUP = $this->createTestGroup($this::GROUP_WKSUSER, $this::GROUP_WKSUSER, [$user]);
+		
+		$groupManager->expects($this->any())
+			->method('get')
+			->with($this::GROUP_WKSUSER)
+			->willReturn($WORKSPACES_MANAGER_GROUP);
+		$WORKSPACES_MANAGER_GROUP->expects($this->any())
+			->method('removeUser')
+			->with($user);
+
+		$groupManager->expects($this->once())
+			->method('getUserGroups')
+			->with($user)
+			->willReturn([$groupGE, $groupU, $subgroupLanfeust, $WORKSPACES_MANAGER_GROUP]);
+
+		$space = [
+			'name' => 'Lanfeust',
+			'color'	=> 'blue',
+			'isOpen' => false,
+			'groups' => [
+				$groupGE->getGID() => 31,
+				$groupU->getGID() => 31,
+				$subgroupLanfeust->getGID() => 31
+			],
+			'id' => 1,
+			'groupfolderId' => 300,
+			'quota' => 'unlimited',
+			'users' => [],
+		];
+		
+		// Instantiates our service
+		$userService = new UserService(
+			$groupManager,
+			$this->logger,
+			$this->userManager,
+			$this->userSession,
+			$this->workspaceService);
+
+		$userService->removeGEFromWM($user, $space['id']);
+
+	}
+
+	public function testFormatUser(): void {
+
+		$groupU =  $this->createTestGroup('SPACE-U-1', 'U-1', [$this->user]);
+		$groupGE =  $this->createTestGroup('SPACE-GE-1', 'GE-1', [$this->user]);
+		$subgroupLanfeust =  $this->createTestGroup('Pouvoirs-1', 'Pouvoirs-1', [$this->user]);
+
+		$space = [
+			'name' => 'Lanfeust',
+			'color'	=> 'blue',
+			'isOpen' => false,
+			'groups' => [
+				$groupGE->getGID() => 31,
+				$groupU->getGID() => 31,
+				$subgroupLanfeust->getGID() => 31
+			],
+			'id' => 1,
+			'groupfolderId' => 300,
+			'quota' => 'unlimited',
+			'users' => [],
+		];
+
+		$this->groupManager->expects($this->once())
+			->method('getUserGroups')
+			->willReturn([
+				$groupU,
+				$subgroupLanfeust
+			]);
+
+		// Instantiates our service
+		$userService = new UserService(
+			$this->groupManager,
+			$this->logger,
+			$this->userManager,
+			$this->userSession,
+			$this->workspaceService);
+		
+		$result = $userService->formatUser($this->user, $space, 'user');
+
+		// Test if it's an array
+		$this->assertIsArray($result);
+
+		// Check the keys
+		$this->assertArrayHasKey('uid', $result);
+		$this->assertArrayHasKey('name', $result);
+		$this->assertArrayHasKey('email', $result);
+		$this->assertArrayHasKey('subtitle', $result);
+		$this->assertArrayHasKey('groups', $result);
+		$this->assertArrayHasKey('role', $result);
+
+		// Check the value type of keys
+		$this->assertIsString($result['uid']);
+		$this->assertIsString($result['name']);
+		$this->assertIsString($result['email']);
+		$this->assertIsString($result['subtitle']);
+		$this->assertIsArray($result['groups']);
+		$this->assertIsString($result['role']);
+
+	}
+
 	/**
 	 * This test makes sure that the isUserGeneralAdmin() method return true
 	 * when user is a general manager
@@ -120,6 +345,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -146,6 +372,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(false, $result);
 	}
 
@@ -178,6 +405,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -210,6 +438,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -237,6 +466,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
 
+		$this->assertIsBool($result);
 		$this->assertEquals(true, $result);
 	}
 
@@ -264,6 +494,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
 
+		$this->assertIsBool($result);
 		$this->assertEquals(false, $result);
 	}
 }
