@@ -78,8 +78,8 @@ return [
 		// So, I must define the verb as POST and insert data.
 		[
 			'name' => 'workspace#destroy',
-			'url' => '/api/delete/spaces',
-			'verb' => 'POST'
+			'url' => '/api/delete/space',
+			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'workspace#renameSpace',

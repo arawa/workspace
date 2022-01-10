@@ -253,10 +253,13 @@ export async function create(spaceName) {
 
 // Param object/json workspace
 export function destroy(workspace) {
-	// It's a post because it's not possible to send data with the DELETE verb.
-	const result = axios.post(generateUrl('/apps/workspace/api/delete/spaces'),
+	// It's possible to send data with the DELETE verb adding `data` key word as
+	// second argument in the `delete` method.
+	const result = axios.delete(generateUrl('/apps/workspace/api/delete/space'),
 		{
-			workspace,
+			data: {
+				workspace,
+			},
 		})
 		.then(resp => {
 			if (resp.status === 200) {
