@@ -89,7 +89,7 @@ export default {
 		context.commit('addGroupToSpace', { name, gid })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
+		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`))
 			.then((resp) => {
 				if (resp.status === 200) {
 					// add this group in groupfolders

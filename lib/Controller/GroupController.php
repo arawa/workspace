@@ -72,7 +72,7 @@ class GroupController extends Controller {
 	 *
 	 * @return @JSONResponse
 	 */
-	public function create($gid, $spaceId) {
+	public function create($gid) {
 		if (!is_null($this->groupManager->get($gid))) {
 			return new JSONResponse(['Group ' + $gid + ' already exists'], Http::STATUS_FORBIDDEN);
 		}
