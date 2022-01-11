@@ -98,7 +98,7 @@ function checkGroupfolderNameExist(spaceName) {
 function enableAcl(folderId) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
-			acl: 1
+			acl: 1,
 		})
 		.then(resp => {
 			if (resp.status === 200 && resp.data.ocs.meta.status === 'ok') {
@@ -117,7 +117,7 @@ function enableAcl(folderId) {
 export function addGroup(folderId, gid) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
-			group: gid
+			group: gid,
 		})
 		.then(resp => {
 			return resp.data.ocs.data
@@ -136,7 +136,7 @@ function manageACL(folderId, gid, manageAcl = true) {
 		{
 			mappingType: 'group',
 			mappingId: gid,
-			manageAcl
+			manageAcl,
 		})
 		.then(resp => {
 			return resp.data.ocs.data
@@ -163,7 +163,7 @@ export async function create(spaceName) {
 	// Create groupfolder
 	const groupfolderId = await axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
-			mountpoint: spaceName
+			mountpoint: spaceName,
 		})
 		.then(resp => {
 			return resp.data.ocs
@@ -244,8 +244,8 @@ export async function create(spaceName) {
 	data.data.assign_permission = {
 		status: 'enabled',
 		groups: [
-			spaceManagerGID
-		]
+			spaceManagerGID,
+		],
 	}
 
 	return data
@@ -282,7 +282,7 @@ export function destroy(workspace) {
 export function rename(workspace, newSpaceName) {
 	// Response format to return
 	const respFormat = {
-		data: {}
+		data: {},
 	}
 	respFormat.data.statuscode = 500
 	respFormat.data.message = 'Rename the space is impossible.'
@@ -306,7 +306,7 @@ export function rename(workspace, newSpaceName) {
 				// ... the groupfolder is updating
 				const groupfolderUpdated = axios.post(generateUrl(`/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
 					{
-						mountpoint: space.space_name
+						mountpoint: space.space_name,
 					})
 					.then(resp => {
 						return resp
