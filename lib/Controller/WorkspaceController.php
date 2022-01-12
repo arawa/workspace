@@ -193,11 +193,9 @@ class WorkspaceController extends Controller {
                     'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
                 ]);
         }
-
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
-
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
         if($spaceNameExist) {
             return new JSONResponse([
@@ -245,24 +243,22 @@ class WorkspaceController extends Controller {
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
-        $users = (object)[];
+        $users = [];
         // To cheat the fomatUser method.
         $groupfolder['groups'][$newSpaceUsersGroup->getGID()] = 31;
         foreach($groupsName as $groupName) {
             $group = $this->groupManager->get($groupName);
 
-            $users = $group->getUsers();
-            foreach($users as $user) {
+            $usersOfAGroup = $group->getUsers();
+            foreach($usersOfAGroup as $user) {                
                 $newSpaceUsersGroup->addUser($user);
                 $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
             }
-
             $groupsOfGroupfolder[$group->getGID()] = [
                     'gid' => $group->getGID(),
                     'displayName' => $group->getDisplayName(),
                 ];
         }
-        
         $groups = array_merge(
             $groupsOfGroupfolder,
             [
@@ -284,7 +280,7 @@ class WorkspaceController extends Controller {
             'folder_id' => $space->getGroupfolderId(),
             'color' => $space->getColorCode(),
             'groups' => $groups,
-            'users' => $users,
+            'users' => (object)$users,
             'statuscode' => Http::STATUS_CREATED,
         ]);
     }
