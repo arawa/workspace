@@ -2,7 +2,7 @@
 
 Workspace app is the best tool to manage your projects and share between teams !
 
-This app is a plugin for Groupfolders app.
+This app is a Nextcloud extension to the Groupfolders app.
 
 # Prerequisites
 
