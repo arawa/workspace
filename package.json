@@ -43,7 +43,7 @@
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "css-loader": "^4.3.0",
-    "eslint-webpack-plugin": "^2.5.3",
+    "eslint-webpack-plugin": "^2.6.0",
     "jsdom": "^16.6.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^8.4.0",
