@@ -1,10 +1,24 @@
 <!--
-  - @copyright 2021 Arawa <TODO>
-  -
-  - @author 2021 Cyrille Bollu <cyrille@bollu.be>
-  -
-  - @license <TODO>
-  -->
+  @copyright Copyright (c) 2017 Arawa
+
+  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+
+  @license GNU AGPL version 3 or any later version
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 
 <template>
 	<Content id="content" app-name="workspace">
@@ -72,6 +86,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
+import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
 
 export default {
 	name: 'Home',
@@ -106,32 +121,21 @@ export default {
 						this.$store.state.loading = false
 						return
 					}
-					// Initialises the store
-					Object.values(resp.data).forEach(space => {
-						let codeColor = space.color_code
-						if (space.color_code === null) {
-							codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-						}
-						let quota = this.convertQuotaForFrontend(space.quota)
-						if (quota === 'unlimited') {
-							quota = t('workspace', 'unlimited')
-						}
-						this.$store.commit('addSpace', {
-							color: codeColor,
-							groups: space.groups,
-							id: space.id,
-							groupfolderId: space.groupfolder_id,
-							isOpen: false,
-							name: space.space_name,
-							quota,
-							users: space.users,
+					this.generateDataCreated(resp.data)
+						// resp return [ undefined, undefined, undefined, undefined]
+						// it is serious ?
+						.then(resp => {
+							// Finished loading
+							// When all promises is finished
+							this.$store.state.loading = false
 						})
-					})
-
-					// Finished loading
-					this.$store.state.loading = false
+						.catch(error => {
+							console.error('The generateDataCreated method has a problem in promises', error)
+							this.$store.state.loading = false
+						})
 				})
 				.catch((e) => {
+					console.error('Problem to load spaces only', e)
 					this.$notify({
 						title: t('workspace', 'Network error'),
 						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
@@ -142,6 +146,70 @@ export default {
 		}
 	},
 	methods: {
+		// Method to generate the data when this component is created.
+		// It is necessary to await promises and catch the response to
+		// stop the loading.
+		// data object/json from space
+		generateDataCreated(data) {
+			// It possible which the data is not an array but an object.
+			// Because, the `/apps/workspace/spaces` route return an object if there is one element.
+			if (!Array.isArray(data)) {
+				data = [data]
+			}
+			// loop to build the json final
+			const result = Promise.all(data.map(async space => {
+				await get(space.groupfolder_id)
+					.then((resp) => {
+						space.acl = resp.acl
+						space.groups = resp.groups
+						space.quota = resp.quota
+						space.size = resp.size
+						return space
+					})
+					.catch((e) => {
+						console.error('Impossible to format the spaces', e)
+					})
+				const spaceWithUsers = await formatUsers(space)
+					.then((resp) => {
+						return resp.data
+					})
+					.catch((error) => {
+						console.error('Impossible to generate a space with users format', error)
+					})
+				const spaceWithUsersAndGroups = await formatGroups(spaceWithUsers)
+					.then((resp) => {
+						return resp.data
+					})
+					.catch((error) => {
+						console.error('Impossible to generate a space with groups format', error)
+					})
+				// Initialises the store
+				let codeColor = spaceWithUsersAndGroups.color_code
+				if (spaceWithUsersAndGroups.color_code === null) {
+					codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
+				}
+				let quota = this.convertQuotaForFrontend(spaceWithUsersAndGroups.quota)
+				if (quota === 'unlimited') {
+					quota = t('workspace', 'unlimited')
+				}
+				// Convert an array empty to object
+				if (Array.isArray(spaceWithUsersAndGroups.users)
+				&& spaceWithUsersAndGroups.users.length === 0) {
+					spaceWithUsersAndGroups.users = { }
+				}
+				this.$store.commit('addSpace', {
+					color: codeColor,
+					groups: spaceWithUsersAndGroups.groups,
+					id: spaceWithUsersAndGroups.id,
+					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
+					isOpen: false,
+					name: spaceWithUsersAndGroups.space_name,
+					quota,
+					users: spaceWithUsersAndGroups.users,
+				})
+			}))
+			return result
+		},
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
 			if (quota === '-3') {
@@ -169,7 +237,6 @@ export default {
 			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*]'
 			const regex = new RegExp(pattern)
 			if (regex.test(name)) {
-				console.debug(name)
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
 					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
@@ -178,7 +245,7 @@ export default {
 				})
 				return
 			}
-			axios.post(generateUrl('/apps/workspace/spaces'), { spaceName: name })
+			create(name)
 				.then(resp => {
 					if (resp.data.statuscode === 409) {
 						this.$notify({

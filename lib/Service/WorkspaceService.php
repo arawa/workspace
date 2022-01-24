@@ -1,20 +1,38 @@
 <?php
 
+/**
+ * @copyright Copyright (c) 2017 Arawa
+ *
+ * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\GroupfolderService;
 use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
 
 class WorkspaceService {
-
-	/** @var GroupfolderService */
-	private $groupfolderService;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -32,7 +50,6 @@ class WorkspaceService {
 	private $userService;
 
 	public function __construct(
-		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
@@ -40,7 +57,6 @@ class WorkspaceService {
 		UserService $userService
 	)
 	{
-		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->spaceMapper = $spaceMapper;
@@ -52,11 +68,11 @@ class WorkspaceService {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
-	 * @param string $spaceId
+	 * @param array|object $space
 	 *
 	 * @return array
 	 */
-	public function autoComplete(string $term, string $spaceId) {
+	public function autoComplete(string $term, array $space) {
 		// lookup users
 		$term = $term === '*' ? '' : $term;
 		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
@@ -70,12 +86,11 @@ class WorkspaceService {
 
 		// transform in a format suitable for the app
 		$data = [];
-		$space = $this->get($spaceId);
 		foreach($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
 					$user->getUID(),
-					Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId)
+					Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id'])
 				) {
 				$role = 'admin';
 			}
@@ -87,65 +102,18 @@ class WorkspaceService {
 	}
 
 	/*
-	 * Gets a single workspace
-	 */
-	public function get($id){
-
-		// Gets space info
-		$workspace = $this->spaceMapper->find($id)->jsonSerialize();
-
-		// Adds groupfolder's info
-		$groupfolder = $this->groupfolderService->get($workspace['groupfolder_id']);
-		$this->addGroupfolderInfo($workspace, $groupfolder);
-
-		// Adds users' info 
-		$this->addUsersInfo($workspace);
-	
-		// Adds groups' info
-		$this->addGroupsInfo($workspace);
-
-		// Returns workspace
-		return $workspace;
-	}
-
-	/*
 	 * Gets all workspaces
 	 */
 	public function getAll() {
 
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
-
-		// Supplement them with additional info
-		$workspaces = array();
-		$groupfolders = $this->groupfolderService->getAll();
-		foreach ($spaces as $space) {
-			$workspace = $space->jsonSerialize();
-			$this->addGroupfolderInfo($workspace, $groupfolders[$workspace['groupfolder_id']]);
-			$this->addUsersInfo($workspace);
-			$this->addGroupsInfo($workspace);
-			$workspaces[] = $workspace;
+		$newSpaces = [];
+		foreach($spaces as $space) {
+			$newSpace = $space->jsonSerialize();
+			$newSpaces[] = $newSpace;
 		}
-		
-		return $workspaces;
-	}
-
-	/**
-	 *
-	 * Adds groupfolder information to a workspace
-	 *
-	 * @param array $workspace The workspace to which we want to add groupfolder info
-	 * @param array $groupfolder The groupfolder to retrieve info from
-	 *
-	 */
-	private function addGroupfolderInfo(&$workspace, $groupfolder) {
-
-		$workspace['groups'] = $groupfolder['groups'];
-		$workspace['quota'] = $groupfolder['quota'];
-		$workspace['size'] = $groupfolder['size'];
-		$workspace['acl'] = $groupfolder['acl'];
-
-		return;
+		return $newSpaces;
 	}
 
 	/**
@@ -155,7 +123,7 @@ class WorkspaceService {
 	 * @param array The workspace to which we want to add users info
 	 *
 	 */
-	private function addUsersInfo(&$workspace) {
+	public function addUsersInfo($workspace) {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -176,7 +144,7 @@ class WorkspaceService {
 		}
 		$workspace['users'] = (object) $users;
 
-		return;
+		return $workspace;
 	}
 
 	/**
@@ -184,9 +152,10 @@ class WorkspaceService {
 	 * Adds groups information to a workspace
 	 *
 	 * @param array The workspace to which we want to add groups info
+	 * @return object|array assoc $workspace
 	 *
 	 */
-	private function addGroupsInfo(&$workspace) {
+	public function addGroupsInfo($workspace) {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
@@ -197,6 +166,6 @@ class WorkspaceService {
 		}
 		$workspace['groups'] = $groups;
 
-		return;
+		return $workspace;
 	}
 }

@@ -22,6 +22,7 @@ OC.L10N.register(
 		'Add users': 'Ajouter des utilisateurs',
 		'No username matches your current entry.': 'Aucun nom d\'utilisateur ne correspond à votre saisie actuelle',
 		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
+		'There is a problem to add group to groupfolder. The group is deleted.': 'Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.',
 		'Quota': 'Quota',
 		'The name space must be defined.': 'Le nom de l\'espace de travail doit être défini.',
 		'Error to rename space': 'Erreur pour renommer l\'espace de travail',

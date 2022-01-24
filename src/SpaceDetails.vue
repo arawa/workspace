@@ -1,10 +1,24 @@
 <!--
-  - @copyright 2021 Arawa <TODO>
-  -
-  - @author 2021 Cyrille Bollu <cyrille@bollu.be>
-  -
-  - @license <TODO>
-  -->
+  @copyright Copyright (c) 2017 Arawa
+
+  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+
+  @license GNU AGPL version 3 or any later version
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 
 <template>
 	<div>
@@ -89,6 +103,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
 import UserTable from './UserTable'
+import { destroy, rename } from './services/groupfoldersService'
 
 export default {
 	name: 'SpaceDetails',
@@ -127,17 +142,15 @@ export default {
 		deleteSpace() {
 			const space = this.$route.params.space
 
-			const res = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
+			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
 
-			if (res) {
-				axios.delete(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[space].id}`))
+			if (isDeleted) {
+				destroy(this.$store.state.spaces[space])
 					.then(resp => {
-						if (resp.data.http.statuscode === 200) {
-
+						if (resp.http.statuscode === 200) {
 							this.$store.dispatch('removeSpace', {
 								space: this.$store.state.spaces[space],
 							})
-
 							this.$router.push({
 								path: '/',
 							})
@@ -172,18 +185,13 @@ export default {
 					type: 'error',
 					duration: 6000,
 				})
-				return
 			}
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			axios.patch(generateUrl(`/apps/workspace/spaces/${this.$store.state.spaces[oldSpaceName].id}`),
-				{
-					newSpaceName: e.target[1].value,
-				})
+			rename(this.$store.state.spaces[oldSpaceName], e.target[1].value)
 				.then(resp => {
 					const data = resp.data
-
 					if (data.statuscode === 409) {
 						this.$notify({
 							title: t('workspace', 'Error to rename space'),
@@ -192,7 +200,6 @@ export default {
 							duration: 6000,
 						})
 					}
-
 					if (data.statuscode === 204) {
 						const space = { ...this.$store.state.spaces[oldSpaceName] }
 						space.name = data.space
@@ -207,7 +214,6 @@ export default {
 							path: `/workspace/${space.name}`,
 						})
 					}
-
 					if (data.statuscode === 401) {
 						// TODO: May be to print an error message temporary
 						console.error(data.message)

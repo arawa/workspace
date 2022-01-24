@@ -1,36 +1,38 @@
 <?php
 
 /**
- * @author Cyrille Bollu <cyrille@bollu.be>
+ * @copyright Copyright (c) 2017 Arawa
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
-use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\IGroup;
 use OCP\ILogger;
-use OCP\IUrlGenerator;
 use OCP\IUser;
-use OCP\IUserManager;
 use OCP\IUserSession;
 
 class UserServiceTest extends TestCase {
@@ -44,21 +46,14 @@ class UserServiceTest extends TestCase {
 	/** @var ILogger */
 	private $logger;
 
-	/** @var UserManager */
-	private $userManager;
-
 	/** @var UserSession */
 	private $userSession;
-
-	/** @var WorkspaceService */
-	private $workspaceService;
 
 	public function setUp(): void {
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(ILogger::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
-		$this->userManager = $this->createMock(IUserManager::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -105,17 +100,20 @@ class UserServiceTest extends TestCase {
 
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
-	       		->method('isInGroup')
+			->method('isInGroup')
 			->with($this->user->getUID(), Application::GENERAL_MANAGER)
 			->willReturn(true);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+		
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -131,17 +129,20 @@ class UserServiceTest extends TestCase {
 
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
-	       		->method('isInGroup')
+			->method('isInGroup')
 			->with($this->user->getUID(), Application::GENERAL_MANAGER)
 			->willReturn(false);
+
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -171,9 +172,12 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
+
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -199,13 +203,16 @@ class UserServiceTest extends TestCase {
 			->with('GE-')
 			->willReturn([$groups]);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -226,13 +233,16 @@ class UserServiceTest extends TestCase {
 	     		->with($this->user->getUID(), $group->getGID())
 			->willReturn(true);
 
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
+
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
@@ -252,14 +262,17 @@ class UserServiceTest extends TestCase {
 		     	->method('isInGroup')
 	     		->with($this->user->getUID(), $group->getGID())
 			->willReturn(false);
+		
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user);
 
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
 			$this->logger,
-			$this->userManager,
-			$this->userSession,
-			$this->workspaceService);
+			$this->userSession);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);

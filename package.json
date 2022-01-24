@@ -15,8 +15,18 @@
     "url": "git+https://github.com/arawa/workspace.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "Arawa <https://www.arawa.fr/>",
+  "contributors": [
+    {
+      "name": "Baptiste Fotia",
+      "email": "baptiste.fotia@arawa.fr"
+    },
+    {
+      "name": "Cyrille Bollu",
+      "email": "cyrille@bollu.be"
+    }
+  ],
+  "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/arawa/workspace/issues"
   },

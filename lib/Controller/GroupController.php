@@ -1,18 +1,31 @@
 <?php
+
 /**
+ * @copyright Copyright (c) 2017 Arawa
  *
- * @author Cyrille Bollu <cyrille@bollu.be>
- * @author Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * TODO: Add licence
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Service\GroupfolderService;
-use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -22,9 +35,6 @@ use OCP\ILogger;
 use OCP\IUserManager;
 
 class GroupController extends Controller {
-
-	/** @var GroupfolderService */
-	private $groupfolderService;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -38,23 +48,16 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
-	/** @var WorkspaceService */
-	private $workspaceService;
-
 	public function __construct(
-		GroupfolderService $groupfolderService,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService,
-		WorkspaceService $workspaceService
+		UserService $userService
 	){
-		$this->groupfolderService = $groupfolderService;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
-		$this->workspaceService = $workspaceService;
 	}
 
 	/**
@@ -69,7 +72,7 @@ class GroupController extends Controller {
 	 *
 	 * @return @JSONResponse
 	 */
-	public function create($gid, $spaceId) {
+	public function create($gid) {
 		if (!is_null($this->groupManager->get($gid))) {
 			return new JSONResponse(['Group ' + $gid + ' already exists'], Http::STATUS_FORBIDDEN);
 		}
@@ -80,16 +83,12 @@ class GroupController extends Controller {
 			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
 		}
 
-		// Grants group access to groupfolder
-		$space = $this->workspaceService->get($spaceId);
-		$json = $this->groupfolderService->addGroup($space['groupfolder_id'], $gid);
-		$resp = json_decode($json->getBody(), true);
-		if ($resp['ocs']['meta']['statuscode'] !== 100) {
-			$NCGroup->delete();
-			return new JSONResponse(['Could not assign group to groupfolder. Group has not been created.'], Http::STATUS_FORBIDDEN);
-		}
-
-		return new JSONResponse();
+		return new JSONResponse([
+			'group' => [
+				'gid' => $NCGroup->getGID(),
+				'displayName' => $NCGroup->getDisplayName()
+			]
+		]);
 	}
 
 	/**
@@ -117,7 +116,12 @@ class GroupController extends Controller {
 		}
 		$NCGroup->delete();
 
-		return new JSONResponse();
+		return new JSONResponse([
+			'gid' => $gid,
+			'state' => 'deleted',
+			'spaceId' => $spaceId,
+			'status' => Http::STATUS_OK
+		]);
 	}
 
 	/**
@@ -212,18 +216,24 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 * @SpaceAdminRequired
 	 * 
 	 * Removes a user from a group
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 * and from the WorkspacesManagers group when the user is being removed from the GE- group
 	 *
+	 * @param object|string $space
 	 * @var string $gid
 	 * @var string $user
 	 *
-	 * @return @JSONResponse
+	 * @return JSONResponse
 	 */
-	public function removeUser($spaceId, $gid, $user) {
+	public function removeUser($space, $gid, $user) {
+
+		if (gettype($space) === 'string') {
+			$space = json_decode($space, true);
+		}
 
 		$this->logger->debug('Removing user ' . $user . ' from group ' . $gid);
 
@@ -237,19 +247,18 @@ class GroupController extends Controller {
 		// Removes user from group(s)
 		$NCUser = $this->userManager->get($user);
 		$groups = [];
-		if ($gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId) {
+		if ($gid === Application::GID_SPACE . Application::ESPACE_USERS_01 . $space['id']) {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
-			$space = $this->workspaceService->get($spaceId);
 			$users = (array)$space['users'];
 			foreach($users[$NCUser->getUID()]['groups'] as $groupId) {
 				$NCGroup = $this->groupManager->get($groupId);
 				$NCGroup->removeUser($NCUser);
 				$groups[] = $NCGroup->getGID();
 				$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-				if ($groupId === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId) {
+				if ($groupId === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']) {
 					$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-					$this->userService->removeGEFromWM($NCUser, $spaceId);
+					$this->userService->removeGEFromWM($NCUser, $space['id']);
 				}
 			}
 		} else {
@@ -257,10 +266,10 @@ class GroupController extends Controller {
 			$groups[] = $gid;
 			$NCGroup->removeUser($NCUser);
 			$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-			if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId) {
+			if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']) {
 				// Removing user from a GE- group
 				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-				$this->userService->removeGEFromWM($NCUser, $spaceId);
+				$this->userService->removeGEFromWM($NCUser, $space['id']);
 			}
 		}
 

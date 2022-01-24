@@ -1,10 +1,24 @@
 <!--
-  - @copyright 2021 Arawa <TODO>
-  -
-  - @author 2021 Cyrille Bollu <cyrille@bollu.be>
-  -
-  - @license <TODO>
-  -->
+  @copyright Copyright (c) 2017 Arawa
+
+  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+
+  @license GNU AGPL version 3 or any later version
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 
 <template>
 	<div class="select-users-wrapper">
@@ -176,12 +190,14 @@ export default {
 				return
 			}
 
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.get(generateUrl('/apps/workspace/api/autoComplete/{term}/{spaceId}', {
-				term,
-				spaceId: this.$store.state.spaces[this.$route.params.space].id,
-			}))
+			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
+				{
+					space,
+				})
 				.then((resp) => {
 					let users = []
 					if (resp.status === 200) {
@@ -223,6 +239,7 @@ export default {
 						text: t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e,
 						type: 'error',
 					})
+					console.error('Problem to search users', e)
 				})
 			this.isLookingUpUsers = false
 		},

@@ -1,15 +1,31 @@
-/*
- - @copyright 2021 Arawa <TODO>
- -
- - @author 2021 Cyrille Bollu <cyrille@bollu.be>
- -
- - @license <TODO>
-*/
+/**
+ * @copyright Copyright (c) 2017 Arawa
+ *
+ * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 import router from '../router'
 import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { addGroup } from '../services/groupfoldersService'
 
 export default {
 	// Adds a user to a group
@@ -73,16 +89,42 @@ export default {
 		context.commit('addGroupToSpace', { name, gid })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
+		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`))
 			.then((resp) => {
 				if (resp.status === 200) {
-					// Navigates to the group's details page
-					context.state.spaces[name].isOpen = true
-					router.push({
-						path: `/group/${name}/${gid}`,
-					})
-					// eslint-disable-next-line no-console
-					console.log('Group ' + gid + ' created')
+					// add this group in groupfolders
+					addGroup(space.groupfolderId, resp.data.group.gid)
+						.then(res => {
+							if (res.success === false) {
+								axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
+									.then(resp => {
+										// eslint-disable-next-line no-console
+										console.log(`The ${gid} group is deleted`, resp)
+										context.commit('removeGroupFromSpace', { name, gid })
+										this._vm.$notify({
+											title: t('workspace', 'Error'),
+											text: t('workspace', 'There is a problem to add group to groupfolder. The group is deleted.'),
+											type: 'error',
+										})
+									})
+									.catch(error => {
+										console.error(`Problem to delete the ${gid} group`, error)
+									})
+								return false
+							}
+							// Navigates to the group's details page
+							context.state.spaces[name].isOpen = true
+							router.push({
+								path: `/group/${name}/${gid}`,
+							})
+							// eslint-disable-next-line no-console
+							console.log('Group ' + gid + ' created')
+
+							return res
+						})
+						.catch(error => {
+							console.error('Problem to add addGroup', error)
+						})
 				} else {
 					context.commit('removeGroupFromSpace', { name, gid })
 					this._vm.$notify({
@@ -145,7 +187,9 @@ export default {
 	},
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
-		const space = context.state.spaces[name]
+		// It's a deep copy to copy the object and not the reference.
+		// src: https://www.samanthaming.com/tidbits/70-3-ways-to-clone-objects/#shallow-clone-vs-deep-clone
+		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
 		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
@@ -156,6 +200,7 @@ export default {
 		// Update backend and revert frontend changes if something fails
 		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
 		axios.patch(url, {
+			space,
 			gid,
 			user: user.uid,
 		}).then((resp) => {
@@ -222,11 +267,14 @@ export default {
 		} else {
 			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 		}
+		const spaceId = space.id
+		const userId = user.uid
 		context.commit('updateUser', { name, user })
-		axios.patch(generateUrl('/apps/workspace/api/space/{spaceId}/user/{userId}', {
-			spaceId: space.id,
-			userId: user.uid,
-		}))
+		axios.patch(generateUrl(`/apps/workspace/api/space/${spaceId}/user/${userId}`),
+			{
+				space,
+				userId,
+			})
 			.then((resp) => {
 				if (resp.status === 200) {
 					// eslint-disable-next-line no-console
