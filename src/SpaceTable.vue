@@ -32,7 +32,8 @@
 					<th>{{ t('workspace', 'Space administrators') }}</th>
 				</tr>
 			</thead>
-			<tr v-for="(space,name) in $store.state.spaces"
+			<tr
+				v-for="(space,name) in $store.state.spaces"
 				:key="name"
 				@click="openSpace(name)">
 				<td style="width: 50px;">
@@ -42,7 +43,8 @@
 				<td> {{ space.quota }} </td>
 				<td>
 					<div class="admin-avatars">
-						<Avatar v-for="user in workspaceManagers(space)"
+						<Avatar
+							v-for="user in workspaceManagers(space)"
 							:key="user.uid"
 							:style="{ marginRight: 2 + 'px' }"
 							:display-name="user.name"

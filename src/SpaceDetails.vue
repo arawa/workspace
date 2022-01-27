@@ -49,12 +49,14 @@
 							class="no-bold"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionButton v-show="!createGroup"
+						<ActionButton
+							v-show="!createGroup"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
-						<ActionInput v-show="createGroup"
+						<ActionInput
+							v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
 							:close-after-click="true"
@@ -64,12 +66,14 @@
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionButton v-show="!renameSpace"
+					<ActionButton
+						v-show="!renameSpace"
 						icon="icon-rename"
 						:title="t('workspace', 'Rename space')"
 						class="no-bold"
 						@click="toggleRenameSpace" />
-					<ActionInput v-show="renameSpace"
+					<ActionInput
+						v-show="renameSpace"
 						ref="renameSpaceInput"
 						icon="icon-rename"
 						@submit="onSpaceRename">
@@ -85,7 +89,8 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<Modal v-if="showSelectUsersModal"
+		<Modal
+			v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</Modal>
