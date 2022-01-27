@@ -49,7 +49,7 @@
     "mocha": "^9.2.0",
     "mochapack": "^2.1.2",
     "prettier": "^2.5.1",
-    "stylelint": "^13.12.0",
+    "stylelint": "^14.3.0",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.21.0",
     "url-loader": "^4.1.1",
