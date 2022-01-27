@@ -41,20 +41,23 @@
 					</Actions>
 				</div>
 				<Actions>
-					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<ActionButton
+						v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</ActionButton>
-					<ActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<ActionInput
+						v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						v-show="showRenameGroupInput"
 						ref="renameGroupInput"
 						icon="icon-group"
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
 					</ActionInput>
-					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<ActionButton
+						v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						icon="icon-delete"
 						@click="deleteGroup">
 						{{ t('workspace', 'Delete group') }}
@@ -63,7 +66,8 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.group" />
-		<Modal v-if="showSelectUsersModal"
+		<Modal
+			v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
 		</Modal>

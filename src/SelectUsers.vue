@@ -48,14 +48,16 @@
 			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
 		</Multiselect>
 		<div class="select-users-list">
-			<div v-if="allSelectedUsers.length === 0"
+			<div
+				v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
 				<span>
 					{{ t('workspace', 'No users selected') }}
 				</span>
 			</div>
 			<div v-else>
-				<div v-for="user in allSelectedUsers"
+				<div
+					v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
 					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'">
