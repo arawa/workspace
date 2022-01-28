@@ -67,7 +67,7 @@
     "@babel/eslint-parser": "^7.16.5",
     "@nextcloud/axios": "^1.9.0",
     "@nextcloud/l10n": "^1.4.1",
-    "@nextcloud/router": "^1.2.0",
+    "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^4.3.0",
     "eslint": "^7.23.0",
     "eslint-config-standard": "^16.0.2",
