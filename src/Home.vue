@@ -29,12 +29,11 @@
 			close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
 			<ActionButton
-        v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-settings-dark"
 				:close-after-click="true"
 				:title="t('workspace', 'Import / Convert')"
 				@click="toggleShowSelectGroupfoldersModal" />
-			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 			<AppNavigationNewItem
 				v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
