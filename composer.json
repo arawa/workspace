@@ -12,8 +12,8 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "^8.2",
-        "christophwurst/nextcloud": "^21.0"
+        "phpunit/phpunit": "^9.5",
+        "christophwurst/nextcloud": "^22.1"
     },
     "scripts": {
 	"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning"

@@ -89,34 +89,42 @@ export default {
 		context.commit('addGroupToSpace', { name, gid })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
+		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`))
 			.then((resp) => {
 				if (resp.status === 200) {
 					// add this group in groupfolders
 					addGroup(space.groupfolderId, resp.data.group.gid)
 						.then(res => {
-							if (!res.success) {
+							if (res.success === false) {
 								axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
 									.then(resp => {
 										// eslint-disable-next-line no-console
 										console.log(`The ${gid} group is deleted`, resp)
+										context.commit('removeGroupFromSpace', { name, gid })
+										this._vm.$notify({
+											title: t('workspace', 'Error'),
+											text: t('workspace', 'There is a problem to add group to groupfolder. The group is deleted.'),
+											type: 'error',
+										})
 									})
 									.catch(error => {
 										console.error(`Problem to delete the ${gid} group`, error)
 									})
+								return false
 							}
+							// Navigates to the group's details page
+							context.state.spaces[name].isOpen = true
+							router.push({
+								path: `/group/${name}/${gid}`,
+							})
+							// eslint-disable-next-line no-console
+							console.log('Group ' + gid + ' created')
+
 							return res
 						})
 						.catch(error => {
 							console.error('Problem to add addGroup', error)
 						})
-					// Navigates to the group's details page
-					context.state.spaces[name].isOpen = true
-					router.push({
-						path: `/group/${name}/${gid}`,
-					})
-					// eslint-disable-next-line no-console
-					console.log('Group ' + gid + ' created')
 				} else {
 					context.commit('removeGroupFromSpace', { name, gid })
 					this._vm.$notify({

@@ -88,6 +88,7 @@ function checkGroupfolderNameExist(spaceName) {
 		})
 		.catch(error => {
 			console.error('Cannot get all Groupfolders', error)
+			return false
 		})
 	return groupfolders
 }
@@ -97,7 +98,7 @@ function checkGroupfolderNameExist(spaceName) {
 export function enableAcl(folderId) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
-			acl: 1
+			acl: 1,
 		})
 		.then(resp => {
 			if (resp.status === 200 && resp.data.ocs.meta.status === 'ok') {
@@ -116,7 +117,7 @@ export function enableAcl(folderId) {
 export function addGroup(folderId, gid) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
-			group: gid
+			group: gid,
 		})
 		.then(resp => {
 			return resp.data.ocs.data
@@ -135,7 +136,7 @@ export function manageACL(folderId, gid, manageAcl = true) {
 		{
 			mappingType: 'group',
 			mappingId: gid,
-			manageAcl
+			manageAcl,
 		})
 		.then(resp => {
 			return resp.data.ocs.data
@@ -252,10 +253,13 @@ export async function create(spaceName) {
 
 // Param object/json workspace
 export function destroy(workspace) {
-	// It's a post because it's not possible to send data with the DELETE verb.
-	const result = axios.post(generateUrl('/apps/workspace/api/delete/spaces'),
+	// It's possible to send data with the DELETE verb adding `data` key word as
+	// second argument in the `delete` method.
+	const result = axios.delete(generateUrl('/apps/workspace/api/delete/space'),
 		{
-			workspace,
+			data: {
+				workspace,
+			},
 		})
 		.then(resp => {
 			if (resp.status === 200) {
@@ -278,7 +282,7 @@ export function destroy(workspace) {
 export function rename(workspace, newSpaceName) {
 	// Response format to return
 	const respFormat = {
-		data: {}
+		data: {},
 	}
 	respFormat.data.statuscode = 500
 	respFormat.data.message = 'Rename the space is impossible.'
@@ -302,7 +306,7 @@ export function rename(workspace, newSpaceName) {
 				// ... the groupfolder is updating
 				const groupfolderUpdated = axios.post(generateUrl(`/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
 					{
-						mountpoint: space.space_name
+						mountpoint: space.space_name,
 					})
 					.then(resp => {
 						return resp

@@ -28,12 +28,15 @@
 			class="notifications"
 			close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<ActionButton
+        v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-settings-dark"
 				:close-after-click="true"
 				:title="t('workspace', 'Import / Convert')"
 				@click="toggleShowSelectGroupfoldersModal" />
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<AppNavigationNewItem
+				v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
@@ -42,7 +45,8 @@
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
-				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
+				<AppNavigationItem
+					v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
 					:class="$route.params.space === spaceName ? 'space-selected' : ''"
 					:allow-collapse="true"
@@ -54,7 +58,8 @@
 						{{ $store.getters.spaceUserCount(spaceName) }}
 					</CounterBubble>
 					<div>
-						<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+						<AppNavigationItem
+							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
 							icon="icon-group"
 							:to="{path: `/group/${spaceName}/${group.gid}`}"

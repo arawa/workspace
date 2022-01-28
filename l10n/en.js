@@ -30,6 +30,7 @@ OC.L10N.register(
 		'The name space must be defined.': 'The name space must be defined.',
 		'Remove admin rights': 'Remove workspace manager rights',
 		'Remove user from selection': 'Remove user from selection',
+		'There is a problem to add group to groupfolder. The group is deleted.': 'There is a problem to add group to groupfolder. The group is deleted.',
 		'Rename space': 'Rename Workspace',
 		'No username matches your current entry.': 'No username matches your current entry.',
 		'Rename group': 'Rename group',

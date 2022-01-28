@@ -1,32 +1,77 @@
 # Workspace
-Place this app in **nextcloud/apps/**
 
-## Building the app
+Workspace app is the best tool to manage your projects and share between teams !
 
-The app can be built by using the provided Makefile by running:
+This app is a Nextcloud extension to the Groupfolders app.
 
-    make
+# Prerequisites
 
-This requires the following things to be present:
-* make
-* which
-* tar: for building the archive
-* curl: used if phpunit and composer are not installed to fetch them from the web
-* npm: for building and testing everything JS, only required if a package.json is placed inside the **js/** folder
+- npm v7.24.1
+- composer v2.0.13
+- make v3.82
+- git v1.8
+- Nextcloud v21 minimum
+- Groupfolders (https://github.com/arawa/groupfolders from the `allow-admin-delegation-stable21` branch).
 
-The make command will install or update Composer dependencies if a composer.json is present and also **npm run build** if a package.json is present in the **js/** folder. The npm **build** script should use local paths for build systems and package managers, so people that simply want to build the app won't need to install npm libraries globally, e.g.:
 
-**package.json**:
-```json
-"scripts": {
-    "test": "node node_modules/gulp-cli/bin/gulp.js karma",
-    "prebuild": "npm install && node_modules/bower/bin/bower install && node_modules/bower/bin/bower update",
-    "build": "node node_modules/gulp-cli/bin/gulp.js"
-}
+# 📦 Build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
+
+You must clone this app from apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
+
+```bash
+git clone https://github.com/arawa/groupfolders.git
+cd groupfolders
+git checkout allow-admin-delegation-stable21
 ```
 
+Then, you can build.
 
-## Publish to App Store
+```bash
+make
+```
+
+🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
+
+After this, you can enable the Groupfolders app.
+
+
+# 📦 Building the app
+
+First, you must clone from your apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`).
+
+```bash
+git clone https://github.com/arawa/workspace.git
+```
+
+Then, you can build app :
+
+```bash
+cd workspace
+make
+```
+
+🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
+
+If it's okay, we can use or dev the Workspace app !
+
+
+# 🔧 Configure Groupfolders for Workspace
+
+To use Wokspace app, you need to add the `GeneralManager` and `WorkspacesManagers` groups from `Groupfolder admin delegation` page.
+
+This page is in `Settings` > `Groupfolders` from admin section.
+
+
+# 📦 Creating of an artifact
+
+```bash
+make source
+```
+
+An artifact will be created in the `build/artifacts/source` from the project.
+
+
+# 🌍 Publish to App Store
 
 First get an account for the [App Store](http://apps.nextcloud.com/) then run:
 
@@ -34,19 +79,23 @@ First get an account for the [App Store](http://apps.nextcloud.com/) then run:
 
 The archive is located in build/artifacts/appstore and can then be uploaded to the App Store.
 
-## Running tests
-You can use the provided Makefile to run all tests by using:
 
-    make test
+# 📋 Running tests
 
-This will run the PHP unit and integration tests and if a package.json is present in the **js/** folder will execute **npm run test**
+## Front-end
 
-Of course you can also install [PHPUnit](http://phpunit.de/getting-started.html) and use the configurations directly:
+```bash
+npm run test
+```
 
-    phpunit -c phpunit.xml
+## Back-end
 
-or:
+```bash
+composer run test
+```
 
-    phpunit -c phpunit.integration.xml
+or
 
-for integration tests
+```bash
+sudo -u nginx /usr/local/bin/composer run test
+```

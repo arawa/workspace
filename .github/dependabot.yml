@@ -12,7 +12,7 @@ updates:
     labels:
       - "npm"
       - "dependencies"
-    open-pull-requests-limimt: 10
+    open-pull-requests-limit: 10
     pull-request-branch-name:
       separator: "/"
 
@@ -27,6 +27,6 @@ updates:
     labels:
       - "composer"
       - "dependencies"
-    open-pull-requests-limimt: 10
+    open-pull-requests-limit: 10
     pull-request-branch-name:
       separator: "/"
