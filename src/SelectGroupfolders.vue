@@ -35,7 +35,8 @@
 			</Actions>
 		</div>
 		<div class="select-groupfolders-list">
-			<div v-for="(groupfolder) in $store.state.groupfolders"
+			<div
+				v-for="(groupfolder) in $store.state.groupfolders"
 				:key="groupfolder.mount_point"
 				class="groupfolder-entry">
 				<div class="groupfolder-name">

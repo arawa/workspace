@@ -75,7 +75,8 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
-		<Modal v-if="showSelectGroupfoldersModal"
+		<Modal
+			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
 		</Modal>
