@@ -24,5 +24,11 @@
 module.exports = {
 	extends: [
 		'@nextcloud',
-	]
+		'plugin:vue/recommended',
+	],
+	rules: {
+		// TODO: Search how to config it
+		// https://eslint.vuejs.org/rules/first-attribute-linebreak.html
+		'vue/first-attribute-linebreak': 'off',
+	},
 }
