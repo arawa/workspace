@@ -5,45 +5,34 @@ name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
-      - stable*
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: node
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 15.x]
+        npm-version: '^7'
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@v1.1
-        id: versions
-        with:
-          fallbackNode: '^12'
-          fallbackNpm: '^6'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        fallbackNpm: ${{ matrix.npm-version }}
 
-      - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ steps.versions.outputs.nodeVersion }}
+    - name: Install all dependencies
+      run: npm ci -f
 
-      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
+    - name: Build the project
+      run: npm run build --if-present
 
-      - name: Install dependencies & build
-        run: |
-          npm ci
-          npm run build --if-present
-      - name: Check webpack build changes
-        run: |
-          bash -c "[[ ! \"`git status --porcelain `\" ]] || exit 1"
-      - name: Show changes on failure
-        if: failure()
-        run: |
-          git status
-          git --no-pager diff
+    - name: Run all tests
+      run: npm test
