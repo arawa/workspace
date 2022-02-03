@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.12",
-    "@babel/eslint-parser": "^7.16.5",
+    "@babel/eslint-parser": "^7.17.0",
     "@nextcloud/axios": "^1.9.0",
     "@nextcloud/l10n": "^1.4.1",
     "@nextcloud/router": "^1.2.0",
