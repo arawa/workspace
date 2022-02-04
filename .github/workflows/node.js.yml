@@ -25,7 +25,7 @@ jobs:
         id: versions
         with:
           fallbackNpm: '^7'
-          fallbackNode: '^14'
+          fallbackNode: '^15'
 
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}"
         run: npm i -g npm@${{ steps.versions.outputs.npmVersion }}
