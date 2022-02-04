@@ -12,16 +12,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '14', '15', '16' ]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up npm 7
+        run: npm i -g npm@^7
+
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
-          fallbackNode: '^14'
-          fallbackNpm: '^7'
+          node-version: ${{ matrix.node }}
 
       - name: Install all dependencies
         run: npm ci -f
