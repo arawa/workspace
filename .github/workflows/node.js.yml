@@ -20,8 +20,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Read package.json for npm engine version only
+        uses: skjnldsv/read-package-engines-version-actions@v1.1
+        id: versions
+        with:
+          fallbackNpm: '^7'
+
       - name: Set up npm 7
-        run: npm i -g npm@^7
+        run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
       - name: Use Node.js 14
         uses: actions/setup-node@v2
