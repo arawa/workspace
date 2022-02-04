@@ -29,10 +29,13 @@ jobs:
       - name: Set up npm 7
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
-      - name: Use Node.js 14
+      - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+
+      - name: Debug npm
+        run: npm --version
 
       - name: Install all dependencies
         run: npm ci -f
