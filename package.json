@@ -31,6 +31,10 @@
     "url": "https://github.com/arawa/workspace/issues"
   },
   "homepage": "https://github.com/arawa/workspace#readme",
+  "engines": {
+    "npm": "^7.0.0",
+    "node": "^14.0.0"
+  },
   "devDependencies": {
     "@nextcloud/babel-config": "^1.0.0",
     "@nextcloud/browserslist-config": "^2.2.0",
