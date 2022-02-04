@@ -38,11 +38,10 @@ jobs:
       - name: Debug npm
         run: npm --version
 
-      - name: Install all dependencies
-        run: npm ci -f
-
-      - name: Build the project
-        run: npm run build --if-present
+      - name: Install all dependencies & build
+        run: |
+          npm ci -f
+          npm run build --if-present
 
       - name: Run all tests
         run: npm test
