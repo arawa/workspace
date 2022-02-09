@@ -63,7 +63,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.16.12",
+    "@babel/core": "^7.17.2",
     "@babel/eslint-parser": "^7.16.5",
     "@nextcloud/axios": "^1.9.0",
     "@nextcloud/l10n": "^1.4.1",
