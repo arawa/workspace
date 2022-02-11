@@ -27,13 +27,11 @@
 				{{ t('workspace', 'Add users') }}
 			</h1>
 			<Actions class="action-close">
-				<ActionButton
-					icon="icon-close"
+				<ActionButton icon="icon-close"
 					@click="$emit('close')" />
 			</Actions>
 		</div>
-		<Multiselect
-			class="select-users-input"
+		<Multiselect class="select-users-input"
 			label="name"
 			track-by="uid"
 			:loading="isLookingUpUsers"
@@ -48,16 +46,14 @@
 			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
 		</Multiselect>
 		<div class="select-users-list">
-			<div
-				v-if="allSelectedUsers.length === 0"
+			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
 				<span>
 					{{ t('workspace', 'No users selected') }}
 				</span>
 			</div>
 			<div v-else>
-				<div
-					v-for="user in allSelectedUsers"
+				<div v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
 					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'">
@@ -70,16 +66,14 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input
-								type="checkbox"
+							<input type="checkbox"
 								class="role-toggle"
 								:checked="user.role === 'admin'"
 								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
 						<Actions>
-							<ActionButton
-								icon="icon-delete"
+							<ActionButton icon="icon-delete"
 								@click="removeUserFromBatch(user)">
 								{{ t('workspace', 'remove users from selection') }}
 							</ActionButton>

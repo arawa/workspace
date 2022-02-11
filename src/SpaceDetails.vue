@@ -30,8 +30,7 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<Multiselect
-					:class="isESR ? 'quota-select-esr' : 'quota-select'"
+				<Multiselect :class="isESR ? 'quota-select-esr' : 'quota-select'"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
@@ -43,20 +42,17 @@
 			<div class="space-actions">
 				<div>
 					<Actions default-icon="icon-add">
-						<ActionButton
-							icon="icon-user"
+						<ActionButton icon="icon-user"
 							:close-after-click="true"
 							class="no-bold"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionButton
-							v-show="!createGroup"
+						<ActionButton v-show="!createGroup"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
-						<ActionInput
-							v-show="createGroup"
+						<ActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
 							:close-after-click="true"
@@ -66,21 +62,18 @@
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionButton
-						v-show="!renameSpace"
+					<ActionButton v-show="!renameSpace"
 						icon="icon-rename"
 						:title="t('workspace', 'Rename space')"
 						class="no-bold"
 						@click="toggleRenameSpace" />
-					<ActionInput
-						v-show="renameSpace"
+					<ActionInput v-show="renameSpace"
 						ref="renameSpaceInput"
 						icon="icon-rename"
 						@submit="onSpaceRename">
 						{{ t('workspace', 'Space name') }}
 					</ActionInput>
-					<ActionButton
-						icon="icon-delete"
+					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="deleteSpace">
 						{{ t('workspace', 'Delete space') }}
@@ -89,8 +82,7 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<Modal
-			v-if="showSelectUsersModal"
+		<Modal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</Modal>
