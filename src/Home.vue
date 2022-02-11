@@ -358,7 +358,7 @@ export default {
 }
 
 .app-navigation {
-	flex-direction: column-reverse;
+	display: block;
 }
 
 .app-navigation-entry {

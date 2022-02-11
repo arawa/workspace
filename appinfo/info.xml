@@ -5,7 +5,7 @@
     <name>Workspace</name>
     <summary>It&#39;s an interface to manage groupfolders with a group manage.</summary>
     <description><![CDATA[It&#39;s a layer additional of groupfolders app to manage them and manage group by simple users]]></description>
-    <version>1.1.0</version>
+    <version>1.1.3</version>
     <licence>agpl</licence>
     <author mail="baptiste.fotia@arawa.fr" >Baptiste Fotia</author>
     <namespace>Workspace</namespace>
