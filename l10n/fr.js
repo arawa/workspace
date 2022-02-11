@@ -49,6 +49,8 @@ OC.L10N.register(
 		'remove users from selection': 'retirer l\'utilisateur de la sélection',
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Creating space': 'Erreur - Création d\'un espace de travail',
+		'Error - This workspace name already exists': 'Erreur - Ce nom d\'espace de travail existe déjà',
+		'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)': 'Veuillez saisir un nouveau nom d\'espace de travail. Attention, les noms d\'espaces de travail ne sont pas sensibles à la casse (france et FRANCE sont considérés comme un même nom d\'espace de travail)',
 		'No spaces': 'Aucun espace de travail',
 		'You have not yet created any workspace': 'Vous n\'avez pas encore créé d\'espace de travail',
 		'unlimited': 'illimité',
