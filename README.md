@@ -8,7 +8,7 @@ Workspace allows managers to :
   - configure advanced permissions on workspace folders
 - all through a simple unified interface
 
-This app is a Nextcloud extension to the Groupfolders app.
+This app is a Nextcloud extension of the Groupfolders app.
 
 ## Prerequisites
 
