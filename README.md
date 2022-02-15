@@ -1,22 +1,64 @@
 # Workspace
 
-Workspace app is the best tool to manage your projects and share between teams !
+Workspace allows managers to : 
+- create shared workspaces
+- delegate management of each workspace to users (workspace managers)  in order for them to
+  - choose members
+  - create groups 
+  - configure advanced permissions on workspace folders
+- all through a simple unified interface
 
 This app is a Nextcloud extension to the Groupfolders app.
 
-# Prerequisites
+## Prerequisites
 
 - npm v7.24.1
 - composer v2.0.13
 - make v3.82
 - git v1.8
-- Nextcloud v21 minimum
-- Groupfolders (https://github.com/arawa/groupfolders from the `allow-admin-delegation-stable21` branch).
+- PHP 7.4 max (PHP 8 ongoing)
+- Nextcloud 23 minimum (Nextcloud 21 and 22 with our forked Groupfolders app, https://github.com/arawa/groupfolders, from the allow-admin-delegation-stable21 branch).
 
+## 📦 Building the app
 
-# 📦 Build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
+First, clone from your apps directory (example: `/var/www/html/nextcloud/apps/`).
 
-You must clone this app from apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
+```bash
+git clone https://github.com/arawa/workspace.git
+```
+
+Then, you can build app :
+
+```bash
+cd workspace
+make
+```
+
+🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
+
+If it's okay, we can use or dev the Workspace app !
+
+## 📦 Create an artifact
+
+```bash
+make source
+```
+
+An artifact will be created in the `build/artifacts/source` from the project.
+
+## Limit the Workspace app to specific groups
+
+Limit the workspace app to groups : GeneralManager, WorkspaceManagers
+
+## 🔧 Configure Groupfolders for Workspace
+
+To use Wokspace app, you need to add the `GeneralManager` group in the `Group folders` field of the `Administration privileges` page.
+
+`Settings` > `Admin privileges` from admin section.
+
+## 📦 For Nextcloud 21 and 22, build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
+
+Clone this app from apps directory (example: `/var/www/html/nextcloud/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
 
 ```bash
 git clone https://github.com/arawa/groupfolders.git
@@ -34,61 +76,15 @@ make
 
 After this, you can enable the Groupfolders app.
 
+## 📋 Running tests
 
-# 📦 Building the app
-
-First, you must clone from your apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`).
-
-```bash
-git clone https://github.com/arawa/workspace.git
-```
-
-Then, you can build app :
-
-```bash
-cd workspace
-make
-```
-
-🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
-
-If it's okay, we can use or dev the Workspace app !
-
-
-# 🔧 Configure Groupfolders for Workspace
-
-To use Wokspace app, you need to add the `GeneralManager` and `WorkspacesManagers` groups from `Groupfolder admin delegation` page.
-
-This page is in `Settings` > `Groupfolders` from admin section.
-
-
-# 📦 Creating of an artifact
-
-```bash
-make source
-```
-
-An artifact will be created in the `build/artifacts/source` from the project.
-
-
-# 🌍 Publish to App Store
-
-First get an account for the [App Store](http://apps.nextcloud.com/) then run:
-
-    make && make appstore
-
-The archive is located in build/artifacts/appstore and can then be uploaded to the App Store.
-
-
-# 📋 Running tests
-
-## Front-end
+### Front-end
 
 ```bash
 npm run test
 ```
 
-## Back-end
+### Back-end
 
 ```bash
 composer run test
