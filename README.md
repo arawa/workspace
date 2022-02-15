@@ -6,7 +6,7 @@ Workspace allows managers to :
   - choose members
   - create groups 
   - configure advanced permissions on workspace folders
-- all through a simple unified interface
+- all through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
 This app is a Nextcloud extension of the Groupfolders app.
 
@@ -48,7 +48,7 @@ An artifact will be created in the `build/artifacts/source` from the project.
 
 ## Limit the Workspace app to specific groups
 
-Limit the workspace app to groups : GeneralManager, WorkspaceManagers
+In your "application management" administrator interface, remember to limit the application to the following groups: GeneralManager, WorkspaceManagers
 
 ## 🔧 Configure Groupfolders for Workspace
 
