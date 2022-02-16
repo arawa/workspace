@@ -2,7 +2,7 @@
 Create shared workspaces and delegate management of their members and groups.
 
 <p align="center">
-<img width="150" src="https://github.com/ThibautPlg/workspace/blob/main/img/workspace_logo.png?raw=true" alt="Workspace Logo">
+<img width="150" src="https://github.com/arawa/workspace/blob/main/img/workspace_logo.png?raw=true" alt="Workspace Logo">
 </p>
 
 Workspace allows managers to :
