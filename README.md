@@ -15,9 +15,9 @@ Workspace allows managers to :
 
 This app is a Nextcloud extension of the Groupfolders app.
 
-## Usage
+## Installation
 ### Requirements
-- PHP < 7.4 (PHP 8 ongoing)
+- PHP <= 7.4 (PHP 8 ongoing)
 - Nextcloud 23+
   - Nextcloud 21 and 22 require our forked Groupfolders app available on https://github.com/arawa/groupfolders, from the `allow-admin-delegation-stable21` branch.
 
