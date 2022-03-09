@@ -87,10 +87,12 @@ class SpaceService {
     public function checkSpaceNameExist(string $spacename) {
         $checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
 
-        if (array_key_exists('space_name', $checkSpacename)) {
-            return true;
+        if (!is_bool($checkSpacename)) {
+            if (array_key_exists('space_name', $checkSpacename)) {
+                return true;
+            }
         }
-       
+        
         return false;
     }
 }
