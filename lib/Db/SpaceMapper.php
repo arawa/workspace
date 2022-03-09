@@ -73,7 +73,7 @@ class SpaceMapper extends QBMapper {
         $qb->delete('work_spaces')
             ->where($qb->expr()->eq('id', $qb->createNamedParameter($id))
             )
-            ->execute();
+            ->executeQuery();
     }
 
     public function updateSpaceName(string $newSpaceName, int $spaceId) {
@@ -84,7 +84,7 @@ class SpaceMapper extends QBMapper {
             ->set('space_name', $qb->createNamedParameter($newSpaceName))
             ->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
 
-        $qb->execute();
+        $qb->executeQuery();
 
         return $this->find($spaceId);
     }
@@ -99,7 +99,7 @@ class SpaceMapper extends QBMapper {
         // var_dump('coco');
         // die();
 
-        $qb->execute();
+        $qb->executeQuery();
         
         return $this->find($spaceId);
     }
@@ -114,7 +114,7 @@ class SpaceMapper extends QBMapper {
                 'UPPER(space_name) like UPPER("'. $spacename . '")'
             );
 
-        $cursor = $qb->execute();
+        $cursor = $qb->executeQuery();
 
         $row = $cursor->fetch();
         $cursor->closeCursor();
