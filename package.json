@@ -9,7 +9,7 @@
     "dev": "webpack --node-env development --progress",
     "watch": "webpack --node-env development --progress --watch",
     "serve": "webpack --node-env development serve --progress",
-    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.config.js --require \"src/tests/OC.js\" \"src/tests/**/*.js\"",
+    "test": "jest",
     "lint": "eslint --ext .js,.vue src",
     "stylelint": "stylelint css/*.css css/*.scss src/**/*.vue",
     "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.vue --fix"
@@ -51,7 +51,10 @@
       "One solutions is downgraded theses packages :",
       "- @nextcloud/eslint-config@6.1.2",
       "- @nextcloud/webpack-vue-config@3.1.10",
-      "Note: Look at this issue for webpack-vue-config package: https://github.com/nextcloud/nextcloud-vue/issues/2478"
+      "Note: Look at this issue for webpack-vue-config package: https://github.com/nextcloud/nextcloud-vue/issues/2478",
+      "",
+      "Add this line '/node_modules/(?!(splitpanes)).+\\.js$'",
+      "To ignore the error related to splitpanes.css"
     ]
   },
   "devDependencies": {
@@ -59,13 +62,20 @@
     "@nextcloud/browserslist-config": "^2.2.0",
     "@nextcloud/eslint-config": "^7.0.2",
     "@nextcloud/stylelint-config": "^2.1.2",
-    "@nextcloud/webpack-vue-config": "^4.3.2",
+    "@nextcloud/webpack-vue-config": "^5.0.0",
+    "@vue/compiler-dom": "^3.2.31",
     "@vue/test-utils": "^1.3.0",
-    "chai": "^4.3.6",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^27.5.1",
+    "core-js": "^3.21.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "jest-serializer-vue": "^2.0.2",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",
-    "mochapack": "^2.1.4",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
+    "vue-jest": "^3.0.7",
+    "vue-template-compiler": "^2.6.14",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
@@ -81,5 +91,33 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(splitpanes)).+\\.js$"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/tests/jest.setup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      ".*\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/splitpanes"
+    ]
   }
 }
