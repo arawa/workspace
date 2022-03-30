@@ -30,5 +30,6 @@ module.exports = {
 		// TODO: Search how to config it
 		// https://eslint.vuejs.org/rules/first-attribute-linebreak.html
 		'vue/first-attribute-linebreak': 'off',
+		'vue/multi-word-component-names': 'off',
 	},
 }
