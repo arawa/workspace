@@ -117,7 +117,7 @@ function checkGroupfolderNameExist(spaceName) {
  * @param {number} folderId from a groupfolder
  * @return {object}
  */
-function enableAcl(folderId) {
+export function enableAcl(folderId) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
 			acl: 1,
@@ -158,7 +158,7 @@ export function addGroup(folderId, gid) {
  * @param {boolean} manageAcl (default: true)
  * @return {object} it's an object to check if it's a success or not
  */
-function manageACL(folderId, gid, manageAcl = true) {
+export function manageACL(folderId, gid, manageAcl = true) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
