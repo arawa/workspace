@@ -45,9 +45,11 @@ export function createSpace(spaceName, folderId) {
 	return result
 }
 
-// Param: string spaceName
-// Param: object groupfolder
-// return object
+/**
+* @param {string} spaceName
+* @param {object} groupfolder
+* @return {object}
+*/
 export function convertGroupfolderToSpace(spaceName, groupfolder) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces/convert'),
 		{
