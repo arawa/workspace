@@ -70,6 +70,7 @@
     "core-js": "^3.21.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
+    "jest-mock-axios": "^4.5.0",
     "jest-serializer-vue": "^2.0.2",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",

@@ -27,6 +27,11 @@
 			class="notifications"
 			close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
+			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-settings-dark"
+				:close-after-click="true"
+				:title="t('workspace', 'Import / Convert')"
+				@click="toggleShowSelectGroupfoldersModal" />
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
@@ -70,6 +75,11 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
+		<Modal
+			v-if="showSelectGroupfoldersModal"
+			@close="toggleShowSelectGroupfoldersModal">
+			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
+		</Modal>
 	</Content>
 </template>
 
@@ -81,10 +91,13 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
+import SelectGroupfolders from './SelectGroupfolders'
 
 export default {
 	name: 'Home',
@@ -94,8 +107,16 @@ export default {
 		AppNavigation,
 		AppNavigationIconBullet,
 		AppNavigationItem,
+		ActionButton,
 		AppNavigationNewItem,
 		Content,
+		Modal,
+		SelectGroupfolders,
+	},
+	data() {
+		return {
+			showSelectGroupfoldersModal: false,
+		}
 	},
 	beforeCreate() {
 		if (this.$root.$data.canAccessApp === 'false') {
@@ -318,6 +339,10 @@ export default {
 			})
 
 			return groups
+		},
+		toggleShowSelectGroupfoldersModal() {
+			this.$store.dispatch('emptyGroupfolders')
+			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
 		},
 	},
 }
