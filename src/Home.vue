@@ -224,6 +224,9 @@ export default {
 					quota = quota / 1024
 					i++
 				}
+				if (Number.isInteger(quota) === false) {
+					quota = quota * 1.024
+				}
 				return quota + units[i]
 			}
 		},
