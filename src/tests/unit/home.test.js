@@ -52,7 +52,7 @@ describe('Home component tests', () => {
 	})
 
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
+		const quota = wrappedHome.vm.convertQuotaForFrontend(-3)
 		expect(quota).toEqual('unlimited')
 	})
 })
