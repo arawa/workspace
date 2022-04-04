@@ -240,7 +240,7 @@ export default {
 		},
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
-			if (quota === '-3') {
+			if (quota === -3) {
 				return 'unlimited'
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
