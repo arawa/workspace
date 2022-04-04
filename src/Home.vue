@@ -22,25 +22,31 @@
 
 <template>
 	<Content id="content" app-name="workspace">
-		<notifications position="top center"
+		<notifications
+			position="top center"
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
-		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+		<AppNavigation
+			v-if="$root.$data.canAccessApp === 'true'">
+			<ActionButton
+				v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-settings-dark"
 				:close-after-click="true"
 				:title="t('workspace', 'Import / Convert')"
 				@click="toggleShowSelectGroupfoldersModal" />
-			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<AppNavigationNewItem
+				v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
-			<AppNavigationItem :title="t('workspace', 'All spaces')"
+			<AppNavigationItem
+				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
-				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
+				<AppNavigationItem
+					v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
 					:class="$route.params.space === spaceName ? 'space-selected' : ''"
 					:allow-collapse="true"
@@ -52,7 +58,8 @@
 						{{ $store.getters.spaceUserCount(spaceName) }}
 					</CounterBubble>
 					<div>
-						<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+						<AppNavigationItem
+							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
 							icon="icon-group"
 							:to="{path: `/group/${spaceName}/${group.gid}`}"
@@ -67,7 +74,9 @@
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<div v-if="$store.state.loading" class="lds-ring">
+				<div
+					v-if="$store.state.loading"
+					class="lds-ring">
 					<div /><div /><div /><div />
 				</div>
 				<div v-else class="workspace-content">
@@ -239,6 +248,9 @@ export default {
 				while (quota >= 1024) {
 					quota = quota / 1024
 					i++
+				}
+				if (Number.isInteger(quota) === false) {
+					quota = quota * 1.024
 				}
 				return quota + units[i]
 			}
