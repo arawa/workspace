@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     assignees:
-      - "StCyr"
+      - "zak39"
     commit-message:
       prefix: "npm"
     labels:
