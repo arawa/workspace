@@ -197,7 +197,6 @@ export async function create(spaceName) {
 		data.data.statuscode = 500
 		return data
 	}
-
 	// Create the space
 	const resultCreateSpace = await createSpace(groupfolder.mount_point, groupfolder.id)
 	if (typeof (resultCreateSpace) !== 'object') {

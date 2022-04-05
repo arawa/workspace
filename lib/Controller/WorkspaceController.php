@@ -94,7 +94,6 @@ class WorkspaceController extends Controller {
      * @NoCSRFRequired
      */
     public function createSpace(string $spaceName, int $folderId) {
-
         if ( $spaceName === false ||
             $spaceName === null ||
             $spaceName === '' 
@@ -110,6 +109,7 @@ class WorkspaceController extends Controller {
         }
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
+
         if($spaceNameExist) {
             return new JSONResponse([
 				'statuscode' => Http::STATUS_CONFLICT,
