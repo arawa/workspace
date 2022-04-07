@@ -284,8 +284,8 @@ export default {
 						})
 					} else if (resp.data.statuscode === 400) {
 						this.$notify({
-							title: t('workspace', 'Error - This workspace name already exists'),
-							text: t('workspace', 'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)'),
+							title: t('workspace', 'Error - Creating space'),
+							text: t('workspace', 'The groupfolder with this name : {spaceName} already exist', { spaceName: resp.data.spacename }),
 							duration: 6000,
 							type: 'error',
 						})
