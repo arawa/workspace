@@ -275,7 +275,7 @@ export default {
 					} else if (resp.data.statuscode === 400) {
 						this.$notify({
 							title: t('workspace', 'Error - Creating space'),
-							text: t('workspace', resp.data.message),
+							text: t('workspace', 'The groupfolder with this name : {spaceName} already exist', { spaceName: resp.data.spacename }),
 							duration: 6000,
 							type: 'error',
 						})

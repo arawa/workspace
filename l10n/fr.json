@@ -23,6 +23,7 @@
 	"No username matches your current entry.": "Aucun nom d'utilisateur ne correspond à votre saisie actuelle",
 	"Remove admin rights": "Retirer les droits de G.E.",
 	"There is a problem to add group to groupfolder. The group is deleted.": "Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.",
+	"The groupfolder with this name : {spaceName} already exist": "Le groupefolder avec ce nom : {spaceName} existe déjà",
 	"Error": "Erreur",
 	"Please specify a name.": "S'il vous plaît, spécifier un nom",
 	"Rename space": "Renommer l'Espace Projet",

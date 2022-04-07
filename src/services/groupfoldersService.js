@@ -184,8 +184,9 @@ export async function create(spaceName) {
 	const groupfolderIsExist = await checkGroupfolderNameExist(spaceName)
 	// Todo: Should I return a boolean value ?
 	if (groupfolderIsExist) {
-		console.error(`The groupfolder with this name : "${spaceName}" already exist`)
+		data.data.message = `The groupfolder with this name : "${spaceName}" already exist`
 		data.data.statuscode = 400
+		data.data.spacename = spaceName
 		return data
 	}
 
