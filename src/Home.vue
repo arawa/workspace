@@ -263,7 +263,7 @@ export default {
 				})
 				return
 			}
-			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*]'
+			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
 			const regex = new RegExp(pattern)
 			if (regex.test(name)) {
 				this.$notify({

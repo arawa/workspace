@@ -96,8 +96,6 @@ class SpaceMapper extends QBMapper {
             ->update('work_spaces')
             ->set('color_code', $qb->createNamedParameter($colorCode))
             ->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
-        // var_dump('coco');
-        // die();
 
         $qb->execute();
         
