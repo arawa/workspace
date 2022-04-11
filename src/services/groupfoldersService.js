@@ -355,12 +355,27 @@ export function rename(workspace, newSpaceName) {
 					})
 				return groupfolderUpdated
 			}
+
+			if (resp.data.statuscode === 400) {
+				respFormat.data.statuscode = 400
+				respFormat.data.space = null
+				respFormat.data.groups = null
+				respFormat.data.message = resp.data.message
+				return respFormat
+			}
 		})
 		.catch(error => {
 			console.error('Problem to rename the space', error)
 		})
 	const respFormatFinal = workspaceUpdated
 		.then(resultat => {
+
+			if (!Object.prototype.hasOwnProperty.call(resultat.data, 'ocs')) {
+				if (resultat.data.statuscode === 400) {
+					return resultat
+				}
+			}
+
 			if (resultat.data.ocs.data.success) {
 				respFormat.data.statuscode = 204
 				respFormat.data.space = newSpaceName
