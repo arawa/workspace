@@ -52,7 +52,22 @@ describe('Home component tests', () => {
 	})
 
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
+		const quota = wrappedHome.vm.convertQuotaForFrontend(-3)
 		expect(quota).toEqual('unlimited')
+	})
+
+	it('Convert 10000MB to 10GB', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('10737418240')
+		expect(quota).toEqual('10GB')
+	})
+
+	it('Convert 23GB to 23GB', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('24696061952')
+		expect(quota).toEqual('23GB')
+	})
+
+	it('Return string type', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('10737418240')
+		expect(typeof (quota)).toBe('string')
 	})
 })
