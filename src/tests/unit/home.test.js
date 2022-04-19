@@ -28,6 +28,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import store from '../../store/index.js'
+import axios from '@nextcloud/axios'
+import { createSpace } from '../../services/spaceService'
+
+jest.mock('axios')
 
 Vue.prototype.t = t
 Vue.prototype.n = n
@@ -54,5 +58,48 @@ describe('Home component tests', () => {
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
 		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
 		expect(quota).toEqual('unlimited')
+	})
+})
+
+describe('Creating spaces with different entries', () => {
+
+	beforeEach(() => {
+		axios.mockClear()
+	})
+
+	it('Home.methods.createSpace has been called', () => {
+		const mockCreateSpace = jest.spyOn(Home.methods, 'createSpace')
+
+		mockCreateSpace('44_Sri_Lanka')
+
+		expect(mockCreateSpace).toHaveBeenCalled()
+	})
+
+	it('Create "Sri_Lanka"', async () => {
+		axios.post.mockResolvedValue({
+			data: {
+				space_name: 'Sri_Lanka',
+				id_space: 421,
+				folder_id: 809,
+				color: '#b7752e',
+				groups: {},
+				statuscode: 201,
+				acl: {
+					state: true,
+				},
+				space_advanced_permissions: true,
+				assign_permission: {
+					status: 'enabled',
+					groups: [
+						'SPACE-GE-421',
+					],
+				},
+			},
+		})
+
+		const result = await createSpace('Sri_Lanka', 809)
+
+		expect(result).not.toBe(undefined)
+		expect(result.statuscode).toEqual(201)
 	})
 })
