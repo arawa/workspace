@@ -4,7 +4,7 @@
  * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,13 +21,13 @@
  *
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import Home from '../../../src/Home.vue'
+import { createLocalVue, mount } from '@vue/test-utils'
+import Home from '../../Home.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import store from '../../../src/store/index.js'
+import store from '../../store/index.js'
 
 Vue.prototype.t = t
 Vue.prototype.n = n
@@ -36,23 +36,23 @@ const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(Vuex)
 localVue.use(VueRouter)
-const wrappedHome = shallowMount(Home, {
+const wrappedHome = mount(Home, {
 	store,
 	localVue,
 	router,
 })
 
-const expect = require('chai').expect
+// const expect = require('chai').expect
 
 describe('Home component tests', () => {
 
 	it('ConvertQuotaForFrontend: Test regular quota', () => {
 		const quota = wrappedHome.vm.convertQuotaForFrontend('3221225472')
-		expect(quota).equals('3GB')
+		expect(quota).toEqual('3GB')
 	})
 
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
 		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
-		expect(quota).equals('unlimited')
+		expect(quota).toEqual('unlimited')
 	})
 })

@@ -4,7 +4,7 @@
  * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,9 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { createSpace, isSpaceManagers, isSpaceUsers } from './spaceService'
 
+/**
+ * @return {object}
+ */
 export function getAll() {
 	const data = axios.get(generateUrl('/apps/groupfolders/folders'))
 		.then(resp => {
@@ -38,6 +41,11 @@ export function getAll() {
 	return data
 }
 
+/**
+ *
+ * @param {number} groupfolderId it's the id of a groupfolder
+ * @return {object}
+ */
 export function get(groupfolderId) {
 	const data = axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
 		.then(resp => {
@@ -52,6 +60,11 @@ export function get(groupfolderId) {
 	return data
 }
 
+/**
+ *
+ * @param {object} space it's an object relative to space
+ * @return {object}
+ */
 export function formatGroups(space) {
 	const data = axios.post(generateUrl('/apps/workspace/api/workspace/formatGroups'), { workspace: space })
 		.then(resp => {
@@ -63,6 +76,11 @@ export function formatGroups(space) {
 	return data
 }
 
+/**
+ *
+ * @param {object} space it's an object relative to space
+ * @return {object}
+ */
 export function formatUsers(space) {
 	const data = axios.post(generateUrl('/apps/workspace/api/workspace/formatUsers'), { workspace: space })
 		.then(resp => {
@@ -74,8 +92,10 @@ export function formatUsers(space) {
 	return data
 }
 
-// param: string
-// return: true if such a groupfolder exists, false otherwise.
+/**
+ * @param {string} spaceName it's the name of space to check
+ * @return {boolean} true if such a groupfolder exists, false otherwise
+ */
 function checkGroupfolderNameExist(spaceName) {
 	const groupfolders = getAll()
 		.then(groupfolders => {
@@ -93,9 +113,11 @@ function checkGroupfolderNameExist(spaceName) {
 	return groupfolders
 }
 
-// Param : int folderId from a groupfolder
-// return object
-function enableAcl(folderId) {
+/**
+ * @param {number} folderId from a groupfolder
+ * @return {object}
+ */
+export function enableAcl(folderId) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
 			acl: 1,
@@ -111,9 +133,11 @@ function enableAcl(folderId) {
 	return result
 }
 
-// Param int folderId
-// Param string gid
-// return object
+/**
+ * @param {number} folderId of an groupfolder
+ * @param {string} gid it's an id (string format) of a group
+ * @return {object}
+ */
 export function addGroup(folderId, gid) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
@@ -128,10 +152,13 @@ export function addGroup(folderId, gid) {
 	return result
 }
 
-// Param int folderId
-// Param string gid
-// manageAcl boolean (default: true)
-function manageACL(folderId, gid, manageAcl = true) {
+/**
+ * @param {number} folderId it's an id of a groupfolder
+ * @param {string} gid it's an id (string format) of a group
+ * @param {boolean} manageAcl (default: true)
+ * @return {object} it's an object to check if it's a success or not
+ */
+export function manageACL(folderId, gid, manageAcl = true) {
 	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
@@ -147,8 +174,10 @@ function manageACL(folderId, gid, manageAcl = true) {
 	return result
 }
 
-// Param string spaceName
-// Return object data
+/**
+ * @param {string} spaceName it's the name space to create
+ * @return {object} data
+ */
 export async function create(spaceName) {
 	const data = { }
 	data.data = { }
@@ -251,7 +280,10 @@ export async function create(spaceName) {
 	return data
 }
 
-// Param object/json workspace
+/**
+ * @param {object} workspace it's an object relative to workspace
+ * @return {object}
+ */
 export function destroy(workspace) {
 	// It's possible to send data with the DELETE verb adding `data` key word as
 	// second argument in the `delete` method.
@@ -279,6 +311,12 @@ export function destroy(workspace) {
 	return result
 }
 
+/**
+ *
+ * @param {object} workspace it's the object relative to workspace
+ * @param {string} newSpaceName it's the new name for the workspace
+ * @return {object}
+ */
 export function rename(workspace, newSpaceName) {
 	// Response format to return
 	const respFormat = {

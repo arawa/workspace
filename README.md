@@ -1,22 +1,75 @@
 # Workspace
+Create shared workspaces and delegate management of their members and groups.
 
-Workspace app is the best tool to manage your projects and share between teams !
+<p align="center">
+<img width="150" src="https://github.com/arawa/workspace/blob/main/img/workspace_logo.png?raw=true" alt="Workspace Logo">
+</p>
 
-This app is a Nextcloud extension to the Groupfolders app.
+Workspace allows managers to :
+- Create shared workspaces
+- Delegate management of each workspace to users (workspace managers) in order for them to
+  - choose members
+  - create groups
+  - configure advanced permissions on workspace folders
+- All through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
-# Prerequisites
+This app is a Nextcloud extension of the Groupfolders app.
 
+## Installation
+### Requirements
+- PHP <= 7.4 (PHP 8 ongoing)
+- Nextcloud 23+
+  - Nextcloud 21 and 22 require our forked Groupfolders app available on https://github.com/arawa/groupfolders, from the `allow-admin-delegation-stable21` branch.
+
+### Limit the Workspace app to specific groups
+
+In your "application management" administrator interface, limit the application to the following groups: `GeneralManager` and `WorkspaceManagers`
+
+### 🔧 Configure Groupfolders for Workspace
+
+To use the Wokspace app, you need to add the `GeneralManager` group in the `Group folders` field of the `Administration privileges` page.
+
+`Settings` > `Admin privileges` from admin section.
+
+## Development and Build
+### Requirements
 - npm v7.24.1
 - composer v2.0.13
 - make v3.82
 - git v1.8
-- Nextcloud v21 minimum
-- Groupfolders (https://github.com/arawa/groupfolders from the `allow-admin-delegation-stable21` branch).
+
+### 📦 Building the app
+
+First, clone into your apps directory (example: `/var/www/html/nextcloud/apps/`).
+
+```bash
+git clone https://github.com/arawa/workspace.git
+```
+
+Then, you can build app :
+
+```bash
+cd workspace
+make
+```
+
+🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
+
+If it's okay, we can use or dev the Workspace app !
+
+### 📦 Create an artifact
+
+```bash
+make source
+```
+
+An artifact will be created in the `build/artifacts/source` from the project.
 
 
-# 📦 Build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
 
-You must clone this app from apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
+### 📦 For Nextcloud 21 and 22, build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
+
+Clone this app into your apps directory (example: `/var/www/html/nextcloud/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
 
 ```bash
 git clone https://github.com/arawa/groupfolders.git
@@ -34,61 +87,15 @@ make
 
 After this, you can enable the Groupfolders app.
 
+### 📋 Running tests
 
-# 📦 Building the app
-
-First, you must clone from your apps directory (example: `/var/www/html/nextcloud/nextcloud21/apps/`).
-
-```bash
-git clone https://github.com/arawa/workspace.git
-```
-
-Then, you can build app :
-
-```bash
-cd workspace
-make
-```
-
-🚨 **Caution** : You must install `npm` and `composer` before use `make` command line.
-
-If it's okay, we can use or dev the Workspace app !
-
-
-# 🔧 Configure Groupfolders for Workspace
-
-To use Wokspace app, you need to add the `GeneralManager` and `WorkspacesManagers` groups from `Groupfolder admin delegation` page.
-
-This page is in `Settings` > `Groupfolders` from admin section.
-
-
-# 📦 Creating of an artifact
-
-```bash
-make source
-```
-
-An artifact will be created in the `build/artifacts/source` from the project.
-
-
-# 🌍 Publish to App Store
-
-First get an account for the [App Store](http://apps.nextcloud.com/) then run:
-
-    make && make appstore
-
-The archive is located in build/artifacts/appstore and can then be uploaded to the App Store.
-
-
-# 📋 Running tests
-
-## Front-end
+#### Front-end
 
 ```bash
 npm run test
 ```
 
-## Back-end
+#### Back-end
 
 ```bash
 composer run test

@@ -4,7 +4,7 @@
  * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,9 +25,11 @@ import axios from '@nextcloud/axios'
 import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 
-// Param: string spaceName
-// Param: int folderId
-// return object
+/**
+	* @param {string} spaceName it's a name for the space to create
+	* @param {number} folderId it's the id of groupfolder
+	* @return {object}
+	*/
 export function createSpace(spaceName, folderId) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
@@ -43,15 +45,39 @@ export function createSpace(spaceName, folderId) {
 	return result
 }
 
-// Param string group
-// return string
+/**
+* @param {string} spaceName
+* @param {object} groupfolder
+* @return {object}
+*/
+export function convertGroupfolderToSpace(spaceName, groupfolder) {
+	const result = axios.post(generateUrl('/apps/workspace/spaces/convert'),
+		{
+			spaceName,
+			groupfolder,
+		})
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			console.error('createSpace error', error)
+		})
+	return result
+}
+
+/**
+* @param {string} group it's the groupname to test
+* @return {string}
+*/
 export function isSpaceManagers(group) {
 	const SPACE_MANAGER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX)
 	return SPACE_MANAGER_REGEX.test(group)
 }
 
-// Param string group
-// return string
+/**
+	* @param {string} group it's the groupname to test
+	* @return {string}
+	*/
 export function isSpaceUsers(group) {
 	const SPACE_USER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
 	return SPACE_USER_REGEX.test(group)

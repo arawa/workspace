@@ -22,24 +22,25 @@
 
 <template>
 	<Content id="content" app-name="workspace">
-		<notifications
-			position="top center"
+		<notifications position="top center"
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<AppNavigationNewItem
-				v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-settings-dark"
+				:close-after-click="true"
+				:title="t('workspace', 'Import / Convert')"
+				@click="toggleShowSelectGroupfoldersModal" />
+			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
-			<AppNavigationItem
-				:title="t('workspace', 'All spaces')"
+			<AppNavigationItem :title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
-				<AppNavigationItem
-					v-for="(space, spaceName) in $store.state.spaces"
+				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
 					:class="$route.params.space === spaceName ? 'space-selected' : ''"
 					:allow-collapse="true"
@@ -51,8 +52,7 @@
 						{{ $store.getters.spaceUserCount(spaceName) }}
 					</CounterBubble>
 					<div>
-						<AppNavigationItem
-							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+						<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
 							icon="icon-group"
 							:to="{path: `/group/${spaceName}/${group.gid}`}"
@@ -75,6 +75,11 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
+		<Modal
+			v-if="showSelectGroupfoldersModal"
+			@close="toggleShowSelectGroupfoldersModal">
+			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
+		</Modal>
 	</Content>
 </template>
 
@@ -86,10 +91,13 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
+import SelectGroupfolders from './SelectGroupfolders'
 
 export default {
 	name: 'Home',
@@ -99,8 +107,16 @@ export default {
 		AppNavigation,
 		AppNavigationIconBullet,
 		AppNavigationItem,
+		ActionButton,
 		AppNavigationNewItem,
 		Content,
+		Modal,
+		SelectGroupfolders,
+	},
+	data() {
+		return {
+			showSelectGroupfoldersModal: false,
+		}
 	},
 	beforeCreate() {
 		if (this.$root.$data.canAccessApp === 'false') {
@@ -323,6 +339,10 @@ export default {
 			})
 
 			return groups
+		},
+		toggleShowSelectGroupfoldersModal() {
+			this.$store.dispatch('emptyGroupfolders')
+			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
 		},
 	},
 }

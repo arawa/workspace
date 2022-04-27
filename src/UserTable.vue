@@ -35,8 +35,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="user in users"
+				<tr v-for="user in users"
 					:key="user.uid"
 					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
@@ -55,8 +54,7 @@
 					<td>
 						<div class="user-actions">
 							<Actions>
-								<ActionButton
-									v-if="$route.params.group === undefined"
+								<ActionButton v-if="$route.params.group === undefined"
 									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
@@ -66,15 +64,13 @@
 											: t('workspace', 'Remove admin rights')
 									}}
 								</ActionButton>
-								<ActionButton
-									v-if="$route.params.group === undefined"
+								<ActionButton v-if="$route.params.group === undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</ActionButton>
-								<ActionButton
-									v-if="$route.params.group !== undefined"
+								<ActionButton v-if="$route.params.group !== undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">

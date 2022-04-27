@@ -4,7 +4,7 @@
  * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ import { getters } from '../../store/getters'
 import mutations from '../../store/mutations'
 
 const bindGetterToState = curry((getters, state, num, key) => getters[key](state, getters))
-const expect = require('chai').expect
+// const expect = require('chai').expect
 
 describe('Vuex store tests', () => {
 	let state
@@ -74,7 +74,7 @@ describe('Vuex store tests', () => {
 
 		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
 		/* eslint-disable-next-line no-unused-expressions */
-		expect(state.spaces['test-space']).to.not.be.undefined
+		expect(state.spaces['test-space']).not.toBe(undefined)
 	})
 
 	it('Adds a group to the space', () => {
@@ -83,7 +83,7 @@ describe('Vuex store tests', () => {
 			gid: 'test-group',
 		})
 
-		expect(state.spaces['test-space'].groups['test-group']).eql({
+		expect(state.spaces['test-space'].groups['test-group']).toEqual({
 			gid: 'test-group',
 			displayName: 'test-group',
 		})
@@ -97,7 +97,7 @@ describe('Vuex store tests', () => {
 
 		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
 		/* eslint-disable-next-line no-unused-expressions */
-		expect(state.spaces['test-space'].groups['test-group']).to.be.undefined
+		expect(state.spaces['test-space'].groups['test-group']).toBe(undefined)
 	})
 
 	it('Sets space quota', () => {
@@ -106,13 +106,13 @@ describe('Vuex store tests', () => {
 			quota: '1TB',
 		})
 
-		expect(state.spaces['test-space'].quota).equal('1TB')
+		expect(state.spaces['test-space'].quota).toEqual('1TB')
 	})
 
 	it('Get space quota', () => {
 		const getters = bindGetters()
 		const quota = getters.quota('test-space')
-		expect(quota).equal('unlimited')
+		expect(quota).toEqual('unlimited')
 	})
 
 	it('Adds a user to the space', () => {
@@ -134,13 +134,13 @@ describe('Vuex store tests', () => {
 	it('Count users in workspace', () => {
 		const getters = bindGetters()
 		const count = getters.spaceUserCount('test-space')
-		expect(count).equal(1)
+		expect(count).toEqual(1)
 	})
 
 	it('Count users in group', () => {
 		const getters = bindGetters()
 		const count = getters.groupUserCount('test-space', 'GE-test-space')
-		expect(count).equal(1)
+		expect(count).toEqual(1)
 	})
 
 	it('Removes a user from the space', () => {
