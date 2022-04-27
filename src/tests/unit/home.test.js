@@ -70,6 +70,16 @@ describe('Home component tests', () => {
 		expect(quota).toEqual('23GB')
 	})
 
+	it('Convert -3 (int) to unlimited', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend(-3)
+		expect(quota).toEqual('unlimited')
+	})
+
+	it('Convert -3 (string) to unlimited', () => {
+		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
+		expect(quota).toEqual('unlimited')
+	})
+
 	it('Return string type', () => {
 		const quota = wrappedHome.vm.convertQuotaForFrontend('10737418240')
 		expect(typeof (quota)).toBe('string')
