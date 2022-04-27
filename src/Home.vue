@@ -27,16 +27,8 @@
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
-		<AppNavigation
-			v-if="$root.$data.canAccessApp === 'true'">
-			<ActionButton
-				v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-settings-dark"
-				:close-after-click="true"
-				:title="t('workspace', 'Import / Convert')"
-				@click="toggleShowSelectGroupfoldersModal" />
-			<AppNavigationNewItem
-				v-if="$root.$data.isUserGeneralAdmin === 'true'"
+		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
+			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
@@ -71,6 +63,12 @@
 					</div>
 				</AppNavigationItem>
 			</template>
+			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-settings-dark"
+				class="btn-convert"
+				:close-after-click="true"
+				:title="t('workspace', 'Import / Convert')"
+				@click="toggleShowSelectGroupfoldersModal" />
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -369,10 +367,6 @@ export default {
 	height: 100%;
 }
 
-.app-navigation {
-	flex-direction: column-reverse;
-}
-
 .app-navigation-entry {
 	padding-right: 0px;
 }
@@ -396,6 +390,12 @@ export default {
 .workspace-content {
 	height: 100%;
 	width: 100%;
+}
+
+.btn-convert {
+	position: absolute;
+	bottom: 0px;
+	z-index: 1;
 }
 
 /*
