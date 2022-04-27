@@ -52,6 +52,8 @@ OC.L10N.register(
 		'Start typing to lookup users': 'Start typing to lookup users',
 		'remove users from selection': 'remove users from selection',
 		'Error - Creating space': 'Error - Creating space',
+		'Error - This workspace name already exists': 'Error - This workspace name already exists',
+		'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)': 'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)',
 		'No spaces': 'No spaces',
 		'You have not yet created any workspace': 'You have not yet created any workspace',
 		'unlimited': 'unlimited',
