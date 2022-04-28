@@ -33,6 +33,7 @@
 		</div>
 		<Multiselect class="select-users-input"
 			label="name"
+			:custom-label="displayForSearching"
 			track-by="uid"
 			:loading="isLookingUpUsers"
 			:multiple="false"
@@ -174,6 +175,9 @@ export default {
 					})
 				}
 			})
+		},
+		displayForSearching({ name, email, uid }) {
+			return `${name} - ${email} - ${uid}`
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {

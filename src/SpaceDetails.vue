@@ -215,6 +215,14 @@ export default {
 						// TODO: May be to print an error message temporary
 						console.error(data.message)
 					}
+					if (data.statuscode === 400) {
+						this.$notify({
+							title: t('workspace', 'Error to rename space'),
+							text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
+							type: 'error',
+							duration: 6000,
+						})
+					}
 				})
 		},
 		// Sets a space's quota

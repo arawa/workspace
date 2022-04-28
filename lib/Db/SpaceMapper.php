@@ -109,7 +109,7 @@ class SpaceMapper extends QBMapper {
             ->select('space_name')
             ->from($this->getTableName())
             ->where(
-                'UPPER(space_name) like UPPER(\'%'. $spacename . '%\')'
+                'UPPER(space_name) like UPPER("'. $spacename . '")'
             );
 
         $cursor = $qb->execute();
