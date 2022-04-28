@@ -22,25 +22,23 @@
 
 <template>
 	<Content id="content" app-name="workspace">
-		<notifications position="top center"
+		<notifications
+			position="top center"
 			width="50%"
 			class="notifications"
 			close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-settings-dark"
-				:close-after-click="true"
-				:title="t('workspace', 'Import / Convert')"
-				@click="toggleShowSelectGroupfoldersModal" />
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
-			<AppNavigationItem :title="t('workspace', 'All spaces')"
+			<AppNavigationItem
+				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
-				<AppNavigationItem v-for="(space, spaceName) in $store.state.spaces"
+				<AppNavigationItem
+					v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
 					:class="$route.params.space === spaceName ? 'space-selected' : ''"
 					:allow-collapse="true"
@@ -52,7 +50,8 @@
 						{{ $store.getters.spaceUserCount(spaceName) }}
 					</CounterBubble>
 					<div>
-						<AppNavigationItem v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+						<AppNavigationItem
+							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
 							icon="icon-group"
 							:to="{path: `/group/${spaceName}/${group.gid}`}"
@@ -64,10 +63,18 @@
 					</div>
 				</AppNavigationItem>
 			</template>
+			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-settings-dark"
+				class="btn-convert"
+				:close-after-click="true"
+				:title="t('workspace', 'Import / Convert')"
+				@click="toggleShowSelectGroupfoldersModal" />
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
-				<div v-if="$store.state.loading" class="lds-ring">
+				<div
+					v-if="$store.state.loading"
+					class="lds-ring">
 					<div /><div /><div /><div />
 				</div>
 				<div v-else class="workspace-content">
@@ -231,7 +238,7 @@ export default {
 		},
 		// Shows a space quota in a user-friendly way
 		convertQuotaForFrontend(quota) {
-			if (quota === '-3') {
+			if (quota === -3 || quota === '-3') {
 				return 'unlimited'
 			} else {
 				const units = ['', 'KB', 'MB', 'GB', 'TB']
@@ -239,6 +246,9 @@ export default {
 				while (quota >= 1024) {
 					quota = quota / 1024
 					i++
+				}
+				if (Number.isInteger(quota) === false) {
+					quota = quota * 1.024
 				}
 				return quota + units[i]
 			}
@@ -253,7 +263,7 @@ export default {
 				})
 				return
 			}
-			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*]'
+			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
 			const regex = new RegExp(pattern)
 			if (regex.test(name)) {
 				this.$notify({
@@ -274,8 +284,8 @@ export default {
 						})
 					} else if (resp.data.statuscode === 400) {
 						this.$notify({
-							title: t('workspace', 'Error - This workspace name already exists'),
-							text: t('workspace', 'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)'),
+							title: t('workspace', 'Error - Creating space'),
+							text: t('workspace', 'The groupfolder with this name : {spaceName} already exist', { spaceName: resp.data.spacename }),
 							duration: 6000,
 							type: 'error',
 						})
@@ -357,10 +367,6 @@ export default {
 	height: 100%;
 }
 
-.app-navigation {
-	flex-direction: column-reverse;
-}
-
 .app-navigation-entry {
 	padding-right: 0px;
 }
@@ -384,6 +390,12 @@ export default {
 .workspace-content {
 	height: 100%;
 	width: 100%;
+}
+
+.btn-convert {
+	position: absolute;
+	bottom: 0px;
+	z-index: 1;
 }
 
 /*

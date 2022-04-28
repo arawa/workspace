@@ -38,6 +38,7 @@ OC.L10N.register(
 		'Role': 'Role',
 		'Add users': 'Add users',
 		'S.A.': 'W.M.',
+		'The groupfolder with this name : {spaceName} already exist': 'The groupfolder with this name : {spaceName} already exist',
 		'Set quota': 'Set quota',
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',

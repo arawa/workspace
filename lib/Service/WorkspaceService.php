@@ -65,6 +65,45 @@ class WorkspaceService {
 	}
 
 	/**
+	 * @param string $term
+	 * @return OCP\IUser[]
+	 */
+	private function searchUsersByMailing($term) {
+		return $this->userManager->getByEmail($term);
+	}
+
+	/**
+	 * @param string $term
+	 * @return OCP\IUser[]
+	 */
+	private function searchUsersByDisplayName($term) {
+		$users = [];
+
+		$term = $term === '*' ? '' : $term;
+		$users = $this->userManager->searchDisplayName($term, 50);
+
+		return $users;
+
+	}
+
+	/**
+	 * @param string $term
+	 * @return OCP\IUser[]
+	 */
+	private function searchUsers($term) {
+		$users = [];
+		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
+
+		if (preg_match($REGEX_FULL_MAIL, $term) === 1 ) {
+			$users = $this->searchUsersByMailing($term);
+		} else {
+			$users = $this->searchUsersByDisplayName($term);
+		}
+
+		return $users;
+	}
+
+	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
@@ -74,8 +113,7 @@ class WorkspaceService {
 	 */
 	public function autoComplete(string $term, array $space) {
 		// lookup users
-		$term = $term === '*' ? '' : $term;
-		$searchingUsers = $this->userManager->searchDisplayName($term, 50);
+		$searchingUsers = $this->searchUsers($term);
 
 		$users = [];
 		foreach($searchingUsers as $user) {

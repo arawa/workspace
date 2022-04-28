@@ -184,8 +184,9 @@ export async function create(spaceName) {
 	const groupfolderIsExist = await checkGroupfolderNameExist(spaceName)
 	// Todo: Should I return a boolean value ?
 	if (groupfolderIsExist) {
-		console.error(`The groupfolder with this name : "${spaceName}" already exist`)
+		data.data.message = `The groupfolder with this name : "${spaceName}" already exist`
 		data.data.statuscode = 400
+		data.data.spacename = spaceName
 		return data
 	}
 
@@ -226,7 +227,6 @@ export async function create(spaceName) {
 		data.data.statuscode = 500
 		return data
 	}
-
 	// Create the space
 	const resultCreateSpace = await createSpace(groupfolder.mount_point, groupfolder.id)
 	if (typeof (resultCreateSpace) !== 'object') {
@@ -354,12 +354,27 @@ export function rename(workspace, newSpaceName) {
 					})
 				return groupfolderUpdated
 			}
+
+			if (resp.data.statuscode === 400) {
+				respFormat.data.statuscode = 400
+				respFormat.data.space = null
+				respFormat.data.groups = null
+				respFormat.data.message = resp.data.message
+				return respFormat
+			}
 		})
 		.catch(error => {
 			console.error('Problem to rename the space', error)
 		})
 	const respFormatFinal = workspaceUpdated
 		.then(resultat => {
+
+			if (!Object.prototype.hasOwnProperty.call(resultat.data, 'ocs')) {
+				if (resultat.data.statuscode === 400) {
+					return resultat
+				}
+			}
+
 			if (resultat.data.ocs.data.success) {
 				respFormat.data.statuscode = 204
 				respFormat.data.space = newSpaceName

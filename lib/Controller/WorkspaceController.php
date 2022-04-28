@@ -94,7 +94,6 @@ class WorkspaceController extends Controller {
      * @NoCSRFRequired
      */
     public function createSpace(string $spaceName, int $folderId) {
-
         if ( $spaceName === false ||
             $spaceName === null ||
             $spaceName === '' 
@@ -102,7 +101,7 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*]/', $spaceName)) {
+        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
                 return new JSONResponse([
                     'statuscode' => Http::STATUS_BAD_REQUEST,
                     'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
@@ -110,6 +109,7 @@ class WorkspaceController extends Controller {
         }
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
+
         if($spaceNameExist) {
             return new JSONResponse([
 				'statuscode' => Http::STATUS_CONFLICT,
@@ -187,7 +187,7 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*]/', $spaceName)) {
+        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
                 return new JSONResponse([
                     'statuscode' => Http::STATUS_BAD_REQUEST,
                     'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
@@ -435,6 +435,13 @@ class WorkspaceController extends Controller {
         
         if (gettype($workspace) === 'object') {
             $workspace = json_decode($workspace, true);
+        }
+
+        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $newSpaceName)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+            ]);
         }
 
 		if( $newSpaceName === false ||

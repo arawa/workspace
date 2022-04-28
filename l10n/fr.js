@@ -50,6 +50,7 @@ OC.L10N.register(
 		'There are no users in this space/group yet': 'Il n\'y a pas encore d\'utilisateur dans cet espace de travail',
 		'Start typing to lookup users': 'Commencez à saisir du texte pour rechercher des utilisateurs',
 		'remove users from selection': 'retirer l\'utilisateur de la sélection',
+		'The groupfolder with this name : {spaceName} already exist': 'Le groupefolder avec ce nom : {spaceName} existe déjà',
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Creating space': 'Erreur - Création d\'un espace de travail',
 		'Error - This workspace name already exists': 'Erreur - Ce nom d\'espace de travail existe déjà',

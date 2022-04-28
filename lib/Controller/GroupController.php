@@ -68,7 +68,7 @@ class GroupController extends Controller {
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
 	 * @var string $gid
-	 * @var string $spaceId
+	 * @var string $spaceId for Middleware
 	 *
 	 * @return @JSONResponse
 	 */
