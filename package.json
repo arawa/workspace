@@ -5,10 +5,14 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production webpack --progress --config webpack.config.js",
-    "dev": "NODE_ENV=development webpack --progress --config webpack.dev.config.js",
-    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.config.js --require \"src/tests/OC.js\" \"src/tests/**/*.js\"",
-    "lint": "eslint --ext .js,.vue src"
+    "build": "webpack --node-env production --progress",
+    "dev": "webpack --node-env development --progress",
+    "watch": "webpack --node-env development --progress --watch",
+    "serve": "webpack --node-env development serve --progress",
+    "test": "jest",
+    "lint": "eslint --ext .js,.vue src",
+    "stylelint": "stylelint css/*.css css/*.scss src/**/*.vue",
+    "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.vue --fix"
   },
   "repository": {
     "type": "git",
@@ -31,52 +35,55 @@
     "url": "https://github.com/arawa/workspace/issues"
   },
   "homepage": "https://github.com/arawa/workspace#readme",
+  "engines": {
+    "npm": "^7.0.0",
+    "node": "^14.0.0"
+  },
+  "browserslist": [
+    "extends @nextcloud/browserslist-config"
+  ],
+  "Comments": {
+    "devDependencies": [
+      "The @nextcloud/eslint-config's version 7.0.2 triggers a problem when we run `npm install`.",
+      "We must define the `--force` flag to install these devDependencies.",
+      "But, when we run `npm test`, we have an error on the conflicts on the eslint package as peerDependency.",
+      "I created an issue on this : https://github.com/nextcloud/eslint-config/issues/294.",
+      "One solutions is downgraded theses packages :",
+      "- @nextcloud/eslint-config@6.1.2",
+      "- @nextcloud/webpack-vue-config@3.1.10",
+      "Note: Look at this issue for webpack-vue-config package: https://github.com/nextcloud/nextcloud-vue/issues/2478",
+      "",
+      "Add this line '/node_modules/(?!(splitpanes)).+\\.js$'",
+      "To ignore the error related to splitpanes.css"
+    ]
+  },
   "devDependencies": {
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-env": "^7.16.11",
+    "@nextcloud/babel-config": "^1.0.0",
     "@nextcloud/browserslist-config": "^2.2.0",
-    "@nextcloud/eslint-config": "^4.0.0",
-    "@nextcloud/eslint-plugin": "^2.0.0",
-    "@nextcloud/webpack-vue-config": "^3.0.0",
+    "@nextcloud/eslint-config": "^7.0.2",
+    "@nextcloud/stylelint-config": "^2.1.2",
+    "@nextcloud/webpack-vue-config": "^5.0.0",
+    "@vue/compiler-dom": "^3.2.31",
     "@vue/test-utils": "^1.3.0",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.3",
-    "chai": "^4.3.4",
-    "css-loader": "^5.2.7",
-    "eslint-webpack-plugin": "^2.6.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^27.5.1",
+    "core-js": "^3.21.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "jest-serializer-vue": "^2.0.2",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",
-    "mocha": "^9.2.0",
-    "mochapack": "^2.1.2",
-    "postcss-html": "^1.3.0",
-    "prettier": "^2.5.1",
-    "stylelint": "^14.3.0",
-    "stylelint-config-recommended-scss": "^4.2.0",
-    "stylelint-config-recommended-vue": "^1.1.0",
-    "stylelint-scss": "^3.21.0",
-    "url-loader": "^4.1.1",
-    "vue-loader": "^15.9.6",
-    "vue-template-compiler": "^2.6.12",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^4.9.2",
-    "webpack-merge": "^5.7.3",
+    "prettier": "^2.6.0",
+    "vue-jest": "^3.0.7",
+    "vue-template-compiler": "^2.6.14",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.16.12",
-    "@babel/eslint-parser": "^7.16.5",
     "@nextcloud/axios": "^1.9.0",
     "@nextcloud/l10n": "^1.4.1",
     "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^4.3.0",
-    "eslint": "^7.23.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-vue": "^7.8.0",
     "ramda": "^0.28.0",
-    "stylelint-webpack-plugin": "^2.1.1",
     "vue": "^2.6.12",
     "vue-notification": "^1.3.20",
     "vue-router": "^3.5.3",
@@ -84,5 +91,33 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(splitpanes)).+\\.js$"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/tests/jest.setup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      ".*\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/splitpanes"
+    ]
   }
 }

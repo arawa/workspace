@@ -3,7 +3,7 @@
  * @copyright 2021 Arawa <TODO>
  *
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
- * @license <TODO>
+ * @license GNU AGPL version 3 or any later version
  */
 
 namespace OCA\Workspace\AppInfo;

@@ -4,7 +4,7 @@
  * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
  * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,13 +21,13 @@
  *
  */
 
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import SelectUsers from '../../../src/SelectUsers.vue'
+import SelectUsers from '../../SelectUsers.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import store from '../../../src/store/index.js'
+import store from '../../store/index.js'
 
 Vue.prototype.t = t
 Vue.prototype.n = n
@@ -36,13 +36,13 @@ const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(Vuex)
 localVue.use(VueRouter)
-const wrappedSelectUsers = shallowMount(SelectUsers, {
+const wrappedSelectUsers = mount(SelectUsers, {
 	store,
 	localVue,
 	router,
 })
 
-const expect = require('chai').expect
+// const expect = require('chai').expect
 
 describe('SelectUsers component tests', () => {
 
@@ -87,7 +87,7 @@ describe('SelectUsers component tests', () => {
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'subgroup-42')
-		expect(count).equals(1)
+		expect(count).toEqual(1)
 	})
 
 	it('addUsersToWorkspaceOrGroup test: Adding a user to a workspace', () => {
@@ -106,25 +106,28 @@ describe('SelectUsers component tests', () => {
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-U-42')
-		expect(count).equals(1)
+		expect(count).toEqual(1)
 	})
 
-	it('addUsersToWorkspaceOrGroup test: Adding a user to a workspace with admin role', () => {
-		wrappedSelectUsers.vm.allSelectedUsers = [
-			{
-				uid: 'admin',
-				name: 'admin',
-				email: 'admin@acme.org',
-				subtitle: 'admin@acme.org',
-				groups: [],
-				role: 'admin',
-			},
-		]
+	it(
+		'addUsersToWorkspaceOrGroup test: Adding a user to a workspace with admin role',
+		() => {
+			wrappedSelectUsers.vm.allSelectedUsers = [
+				{
+					uid: 'admin',
+					name: 'admin',
+					email: 'admin@acme.org',
+					subtitle: 'admin@acme.org',
+					groups: [],
+					role: 'admin',
+				},
+			]
 
-		wrappedSelectUsers.vm.$route.params.group = undefined
+			wrappedSelectUsers.vm.$route.params.group = undefined
 
-		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')
-		expect(count).equals(1)
-	})
+			wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
+			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')
+			expect(count).toEqual(1)
+		}
+	)
 })
