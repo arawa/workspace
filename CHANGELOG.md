@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.6] - 2022-05-04
 
-### Added
+### Added
 
 - Searching users by email, name or uid ( [#468](https://github.com/arawa/workspace/pull/468) )
 
