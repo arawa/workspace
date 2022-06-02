@@ -5,14 +5,14 @@
     <name>Workspace</name>
     <summary>It&#39;s an interface to manage groupfolders with a group manage.</summary>
     <description><![CDATA[It&#39;s a layer additional of groupfolders app to manage them and manage group by simple users]]></description>
-    <version>1.2.6</version>
+    <version>1.2.0</version>
     <licence>agpl</licence>
     <author mail="baptiste.fotia@arawa.fr" >Baptiste Fotia</author>
     <namespace>Workspace</namespace>
     <category>files</category>
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="20" max-version="22"/>
+        <nextcloud min-version="20" max-version="23"/>
     </dependencies>
     <navigations>
         <navigation>
