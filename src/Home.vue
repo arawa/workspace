@@ -62,13 +62,24 @@
 						</AppNavigationItem>
 					</div>
 				</AppNavigationItem>
+				<div id="app-settings">
+					<div id="app-settings-header">
+						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
+							icon="icon-settings-dark"
+							class="settings-button"
+							data-apps-slide-toggle="#app-settings-content">
+							{{ t('workspace', 'Settings') }}
+						</button>
+					</div>
+					<div id="app-settings-content">
+						<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+							class="btn-convert"
+							:close-after-click="true"
+							:title="t('workspace', 'Import / Convert')"
+							@click="toggleShowSelectGroupfoldersModal" />
+					</div>
+				</div>
 			</template>
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-settings-dark"
-				class="btn-convert"
-				:close-after-click="true"
-				:title="t('workspace', 'Import / Convert')"
-				@click="toggleShowSelectGroupfoldersModal" />
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -392,11 +403,11 @@ export default {
 	width: 100%;
 }
 
-.btn-convert {
+/* .btn-convert {
 	position: absolute;
 	bottom: 0px;
 	z-index: 1;
-}
+} */
 
 /*
 	Code for the loading.
