@@ -64,7 +64,8 @@ class WorkspaceController extends Controller {
     private $workspaceService;
 
     private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
-    private const REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+    private const REGEX_NO_SPACE_END = '/[a-zA-Z0-9]\s+$/';
+    private const REGEX_NO_SPACE_START = '/^\s+[a-zA-Z0-9]/';
 
     public function __construct(
 	$AppName,
@@ -104,10 +105,11 @@ class WorkspaceController extends Controller {
             ];
         }
 
-        if (!preg_match($this::REGEX_NO_SPACE_TO_END, $spaceName)) {
+        if  (preg_match($this::REGEX_NO_SPACE_END, $spaceName)
+            || preg_match($this::REGEX_NO_SPACE_START, $spaceName)) {
             return [
                 'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not a blank white into the end its name',
+                'message' => 'Your Workspace name must not a blank white into the end or begin its name',
             ];
         }
 
@@ -212,23 +214,10 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
+        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
 
-        $REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
-        $REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
-
-
-        if (preg_match($REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
-        }
-
-        if (!preg_match($REGEX_NO_SPACE_TO_END, $spaceName)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not a blank white into the end its name',
-            ]);
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
     
         if (gettype($groupfolder) === 'string') {

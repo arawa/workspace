@@ -264,10 +264,12 @@ export default {
 				return
 			}
 			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
-			const PATTERN_NO_SPACE_TO_END = '[a-zA-Z0-9] $'
+			const PATTERN_NO_SPACE_TO_END = '[a-zA-Z0-9]\\s+$'
+			const PATTERN_NO_SPACE_TO_START = '^\\s+[a-zA-Z0-9]'
 
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 			const REGEX_NO_SPACE_TO_END = new RegExp(PATTERN_NO_SPACE_TO_END)
+			const REGEX_NO_SPACE_TO_START = new RegExp(PATTERN_NO_SPACE_TO_START)
 
 			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
 				this.$notify({
@@ -278,10 +280,11 @@ export default {
 				})
 				return
 			}
-			if (REGEX_NO_SPACE_TO_END.test(name)) {
+			if (REGEX_NO_SPACE_TO_END.test(name)
+				|| REGEX_NO_SPACE_TO_START.test(name)) {
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
-					text: t('workspace', 'Your Workspace name must not a blank white into the end its name'),
+					text: t('workspace', 'Your Workspace name must not a blank white into the end or begin its name'),
 					duration: 6000,
 					type: 'error',
 				})
