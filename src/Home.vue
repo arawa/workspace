@@ -265,6 +265,7 @@ export default {
 			}
 			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
 			const PATTERN_NO_SPACE_TO_END = '[a-zA-Z0-9] $'
+
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 			const REGEX_NO_SPACE_TO_END = new RegExp(PATTERN_NO_SPACE_TO_END)
 

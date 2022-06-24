@@ -63,6 +63,9 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceService */
     private $workspaceService;
 
+    private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
+    private const REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+
     public function __construct(
 	$AppName,
 	IGroupManager $groupManager,
@@ -89,6 +92,29 @@ class WorkspaceController extends Controller {
     }
 
     /**
+     * Check if the space name contains specials characters or a blank into the end its name.
+     * @param string $spaceName
+     * @return object if there is an error
+     */
+    private function checkTheSpaceName(string $spaceName) {
+        if (preg_match($this::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
+            return [
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+            ];
+        }
+
+        if (!preg_match($this::REGEX_NO_SPACE_TO_END, $spaceName)) {
+            return [
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Your Workspace name must not a blank white into the end its name',
+            ];
+        }
+
+        return [];
+    }
+
+    /**
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
@@ -101,22 +127,10 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        $REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
-        $REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
 
-
-        if (preg_match($REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
-        }
-
-        if (!preg_match($REGEX_NO_SPACE_TO_END, $spaceName)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not a blank white into the end its name',
-            ]);
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
@@ -461,22 +475,10 @@ class WorkspaceController extends Controller {
             $workspace = json_decode($workspace, true);
         }
 
-        $REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
-        $REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+        $errorInSpaceName = $this->checkTheSpaceName($newSpaceName);
 
-
-        if (preg_match($REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $newSpaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
-        }
-
-        if (!preg_match($REGEX_NO_SPACE_TO_END, $newSpaceName)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not a blank white into the end its name',
-            ]);
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
 
 		if( $newSpaceName === false ||
