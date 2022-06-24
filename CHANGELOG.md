@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.6] - 2022-05-04
+## [1.2.1] - 2022-06-24
+
+### Fixed
+
+- Prevent the blank into the start or end when creating space ( [#517](https://github.com/arawa/workspace/pull/517) )
+
+## [1.2.0] - 2022-05-04
 
 ### Added
 
@@ -35,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.6...main
-[1.2.6]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.6
+[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.1...main
+[1.2.1]: https://github.com/arawa/workspace/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/arawa/workspace/compare/v1.0.1...v1.1.0
 [1.0.0]: https://github.com/arawa/workspace/releases/tag/v1.0.0
