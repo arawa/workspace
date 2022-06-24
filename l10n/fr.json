@@ -15,6 +15,7 @@
 	"Make administrator" : "Assigner en tant que G.E.",
 	"New space" : "Créer un espace de travail",
 	"Quota" : "Quota",
+	"Your Workspace name must not a blank white into the end its name": "Le nom de votre Espace de travail ne doit pas contenir d'espace à la fin",
 	"The name space must be defined.": "Le nom de l'espace de travail doit être défini.",
 	"Role" : "Role",
 	"Import / Convert": "Importer / Convertir",

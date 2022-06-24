@@ -8,6 +8,7 @@ OC.L10N.register(
 		'Administrators': 'General manager',
 		'admin': 'Workspace manager',
 		'Error': 'Error',
+		'Your Workspace name must not a blank white into the end its name': 'Your Workspace name must not a blank white into the end its name',
 		'Please specify a name.': 'Please specify a name.',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.', 
 		'Create group': 'Create group',

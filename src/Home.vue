@@ -263,9 +263,12 @@ export default {
 				})
 				return
 			}
-			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
-			const regex = new RegExp(pattern)
-			if (regex.test(name)) {
+			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
+			const PATTERN_NO_SPACE_TO_END = '[a-zA-Z0-9] $'
+			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
+			const REGEX_NO_SPACE_TO_END = new RegExp(PATTERN_NO_SPACE_TO_END)
+
+			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
 					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
@@ -274,6 +277,16 @@ export default {
 				})
 				return
 			}
+			if (REGEX_NO_SPACE_TO_END.test(name)) {
+				this.$notify({
+					title: t('workspace', 'Error - Creating space'),
+					text: t('workspace', 'Your Workspace name must not a blank white into the end its name'),
+					duration: 6000,
+					type: 'error',
+				})
+				return
+			}
+
 			create(name)
 				.then(resp => {
 					if (resp.data.statuscode === 409) {

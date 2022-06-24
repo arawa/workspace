@@ -13,6 +13,7 @@ OC.L10N.register(
 		'Create group': 'Créer un groupe',
 		'Delete space': "Supprimer l'espace de travail",
 		'Delete user': "Retirer de l'espace de travail",
+		'Your Workspace name must not a blank white into the end its name': 'Le nom de votre Espace de travail ne doit pas contenir d\'espace à la fin',
 		'Email': 'Email',
 		'Groups': 'Groupes',
 		'Make administrator': "Assigner en tant que G.E.",
