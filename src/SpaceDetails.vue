@@ -218,7 +218,7 @@ export default {
 					if (data.statuscode === 400) {
 						this.$notify({
 							title: t('workspace', 'Error to rename space'),
-							text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
+							text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]<br/><br/>And your Workspace name must not a blank white into the end its name'),
 							type: 'error',
 							duration: 6000,
 						})

@@ -198,12 +198,25 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
+
+        $REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
+        $REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+
+
+        if (preg_match($REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
                 return new JSONResponse([
                     'statuscode' => Http::STATUS_BAD_REQUEST,
                     'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
                 ]);
         }
+
+        if (!preg_match($REGEX_NO_SPACE_TO_END, $spaceName)) {
+            return new JSONResponse([
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Your Workspace name must not a blank white into the end its name',
+            ]);
+        }
+    
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
@@ -448,10 +461,21 @@ class WorkspaceController extends Controller {
             $workspace = json_decode($workspace, true);
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $newSpaceName)) {
+        $REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
+        $REGEX_NO_SPACE_TO_END = '/[a-zA-Z0-9]$/';
+
+
+        if (preg_match($REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $newSpaceName)) {
+                return new JSONResponse([
+                    'statuscode' => Http::STATUS_BAD_REQUEST,
+                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+                ]);
+        }
+
+        if (!preg_match($REGEX_NO_SPACE_TO_END, $newSpaceName)) {
             return new JSONResponse([
                 'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+                'message' => 'Your Workspace name must not a blank white into the end its name',
             ]);
         }
 

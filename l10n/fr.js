@@ -34,6 +34,7 @@ OC.L10N.register(
 		'Remove admin rights': "Retirer les droits de G.E.",
 		'Remove user from selection': "Retirer l'utilisateur de la sélection",
 		'Rename space': "Renommer l'espace de travail",
+		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]<br/><br/>And your Workspace name must not a blank white into the end its name': 'Le nom de votre Espace de travail ne doit pas contenir les caractères suivants : [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\ ^ = / & * ]<br/><br/>Et le nom de votre Espace de travail ne doit pas contenir d\'espace à la fin',
 		'Rename group': 'Renommer le groupe',
 		'Delete group': 'Supprimer le groupe',
 		'Role': 'Rôle',
