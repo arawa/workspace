@@ -105,6 +105,7 @@ import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
 import SelectGroupfolders from './SelectGroupfolders'
+import { deleteBlankSpacename } from './services/spaceService'
 
 export default {
 	name: 'Home',
@@ -263,28 +264,15 @@ export default {
 				})
 				return
 			}
+			name = deleteBlankSpacename(name)
 			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
-			const PATTERN_NO_SPACE_TO_END = '[a-zA-Z0-9]\\s+$'
-			const PATTERN_NO_SPACE_TO_START = '^\\s+[a-zA-Z0-9]'
 
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
-			const REGEX_NO_SPACE_TO_END = new RegExp(PATTERN_NO_SPACE_TO_END)
-			const REGEX_NO_SPACE_TO_START = new RegExp(PATTERN_NO_SPACE_TO_START)
 
 			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
 					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
-					duration: 6000,
-					type: 'error',
-				})
-				return
-			}
-			if (REGEX_NO_SPACE_TO_END.test(name)
-				|| REGEX_NO_SPACE_TO_START.test(name)) {
-				this.$notify({
-					title: t('workspace', 'Error - Creating space'),
-					text: t('workspace', 'Your Workspace name must not a blank white into the end or begin its name'),
 					duration: 6000,
 					type: 'error',
 				})

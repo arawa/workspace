@@ -23,7 +23,7 @@
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { createSpace, isSpaceManagers, isSpaceUsers } from './spaceService'
+import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './spaceService'
 
 /**
  * @return {object}
@@ -331,6 +331,7 @@ export function rename(workspace, newSpaceName) {
 		console.error('The groupfolder name already exist. Please, choose another name to rename your space.')
 		return respFormat
 	}
+	newSpaceName = deleteBlankSpacename(newSpaceName)
 	// Update space side
 	const workspaceUpdated = axios.patch(generateUrl('/apps/workspace/api/space/rename'),
 		{
