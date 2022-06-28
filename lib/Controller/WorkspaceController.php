@@ -64,8 +64,6 @@ class WorkspaceController extends Controller {
     private $workspaceService;
 
     private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
-    private const REGEX_NO_SPACE_END = '/[a-zA-Z0-9]\s+$/';
-    private const REGEX_NO_SPACE_START = '/^\s+[a-zA-Z0-9]/';
 
     public function __construct(
 	$AppName,
@@ -105,15 +103,15 @@ class WorkspaceController extends Controller {
             ];
         }
 
-        if  (preg_match($this::REGEX_NO_SPACE_END, $spaceName)
-            || preg_match($this::REGEX_NO_SPACE_START, $spaceName)) {
-            return [
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not a blank white into the end or begin its name',
-            ];
-        }
-
         return [];
+    }
+
+    /**
+     * @param string $spaceName it's the space name
+     * @return string whithout the blank to start and end of the space name
+     */
+    private function deleteBlankSpaceName(string $spaceName) {
+        return trim($spaceName);
     }
 
     /**
@@ -143,6 +141,8 @@ class WorkspaceController extends Controller {
 				'message' => 'The ' . $spaceName . ' space name already exist'
             ]);
         }
+
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
 
         // #1 create the space
         $space = new Space();
@@ -220,6 +220,8 @@ class WorkspaceController extends Controller {
             return new JSONResponse($errorInSpaceName);
         }
     
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
+
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
@@ -476,6 +478,8 @@ class WorkspaceController extends Controller {
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
+
+        $spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
         $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 
