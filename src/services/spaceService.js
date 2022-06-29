@@ -46,6 +46,14 @@ export function createSpace(spaceName, folderId) {
 }
 
 /**
+	* @param {string} spacename it's the name of the space which will create
+	* @return {string}
+	*/
+export function deleteBlankSpacename(spacename) {
+	return spacename.trim()
+}
+
+/**
 * @param {string} spaceName
 * @param {object} groupfolder
 * @return {object}

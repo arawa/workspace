@@ -63,6 +63,8 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceService */
     private $workspaceService;
 
+    private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
+
     public function __construct(
 	$AppName,
 	IGroupManager $groupManager,
@@ -89,6 +91,30 @@ class WorkspaceController extends Controller {
     }
 
     /**
+     * Check if the space name contains specials characters or a blank into the end its name.
+     * @param string $spaceName
+     * @return object if there is an error
+     */
+    private function checkTheSpaceName(string $spaceName) {
+        if (preg_match($this::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
+            return [
+                'statuscode' => Http::STATUS_BAD_REQUEST,
+                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * @param string $spaceName it's the space name
+     * @return string whithout the blank to start and end of the space name
+     */
+    private function deleteBlankSpaceName(string $spaceName) {
+        return trim($spaceName);
+    }
+
+    /**
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
@@ -101,11 +127,10 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
+        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
+
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
@@ -116,6 +141,8 @@ class WorkspaceController extends Controller {
 				'message' => 'The ' . $spaceName . ' space name already exist'
             ]);
         }
+
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
 
         // #1 create the space
         $space = new Space();
@@ -187,12 +214,14 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
+        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
+
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
+    
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
+
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
@@ -437,11 +466,10 @@ class WorkspaceController extends Controller {
             $workspace = json_decode($workspace, true);
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $newSpaceName)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-            ]);
+        $errorInSpaceName = $this->checkTheSpaceName($newSpaceName);
+
+        if (!empty($errorInSpaceName)) {
+            return new JSONResponse($errorInSpaceName);
         }
 
 		if( $newSpaceName === false ||
@@ -450,6 +478,8 @@ class WorkspaceController extends Controller {
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
+
+        $spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
         $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 

@@ -105,6 +105,7 @@ import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
 import SelectGroupfolders from './SelectGroupfolders'
+import { deleteBlankSpacename } from './services/spaceService'
 
 export default {
 	name: 'Home',
@@ -263,9 +264,12 @@ export default {
 				})
 				return
 			}
-			const pattern = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
-			const regex = new RegExp(pattern)
-			if (regex.test(name)) {
+			name = deleteBlankSpacename(name)
+			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
+
+			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
+
+			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
 				this.$notify({
 					title: t('workspace', 'Error - Creating space'),
 					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
@@ -274,6 +278,7 @@ export default {
 				})
 				return
 			}
+
 			create(name)
 				.then(resp => {
 					if (resp.data.statuscode === 409) {
