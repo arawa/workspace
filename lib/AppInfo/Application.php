@@ -58,5 +58,12 @@ class Application extends App {
 
                 $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
                 $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
+
+                $server = $container->getServer();
+                $eventDispatcher = $server->getEventDispatcher();
+                
+                $eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', function () {
+                    \OCP\Util::addScript('workspace', 'tab-main');
+                });
         }
 }
