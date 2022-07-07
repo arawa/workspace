@@ -22,5 +22,11 @@
  */
 
 const webpackConfig = require('@nextcloud/webpack-vue-config')
+const path = require('path')
+
+webpackConfig.entry = {
+	main: path.resolve(path.join('src', 'main.js')),
+	sidebar: path.resolve(path.join('src', 'sidebar.js')),
+}
 
 module.exports = webpackConfig

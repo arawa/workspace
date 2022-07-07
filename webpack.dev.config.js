@@ -23,7 +23,12 @@
 
 const { merge } = require('webpack-merge')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
+const path = require('path')
 
 module.exports = merge(webpackConfig, {
-	devtool: 'source-map'
+	devtool: 'source-map',
+	entry: {
+		main: path.resolve(path.join('src', 'main.js')),
+		sidebar: path.resolve(path.join('src', 'sidebar.js')),
+	},
 })

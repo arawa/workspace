@@ -8,21 +8,24 @@
 
 namespace OCA\Workspace\AppInfo;
 
+use OCA\Workspace\Listener\LoadSidebarScripts;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCA\Files\Event\LoadSidebar;
 
 class Application extends App {
 
         public const APP_ID = 'workspace';
-	public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
+	    public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
         public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
-	// TODO Remove the '_01' suffix 
+	    // TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";
         public const ESPACE_USERS_01 = "U-";
         public const GID_SPACE = "SPACE-";
@@ -65,5 +68,9 @@ class Application extends App {
                 $eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', function () {
                     \OCP\Util::addScript('workspace', 'tab-main');
                 });
+        }
+
+        public function register(IRegistrationContext $context): void {
+            $context->registerEventListener(LoadSidebar::class,LoadSidebarScripts::class);
         }
 }
