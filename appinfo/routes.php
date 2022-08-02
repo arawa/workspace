@@ -96,6 +96,11 @@ return [
 			'verb' => 'PATCH'
 		],
 		[
+			'name' => 'group#getAll',
+			'url' => '/api/group',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'group#create',
 			'url' => '/api/group/{gid}',
 			'verb' => 'POST',

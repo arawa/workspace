@@ -26,10 +26,12 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\GroupService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
@@ -48,16 +50,29 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	/** @var GroupService */
+	private $groupService;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService
+		UserService $userService,
+		GroupService $groupService
 	){
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->groupService = $groupService;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function getAll() {
+		return new JSONResponse($this->groupService->getAll());
 	}
 
 	/**
