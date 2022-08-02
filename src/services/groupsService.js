@@ -1,8 +1,7 @@
 /**
  * @copyright Copyright (c) 2017 Arawa
  *
- * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * @author 2022 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license AGPL-3.0-or-later
  *
@@ -21,25 +20,19 @@
  *
  */
 
-import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
-import actions from './actions'
-import { getters } from './getters'
-import mutations from './mutations'
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
-Vue.use(Vuex)
-Vue.config.devtools = true // Debug mode
-
-const store = new Store({
-	state: {
-		loading: true,
-		spaces: {},
-		groupfolders: {},
-		groups: {},
-	},
-	mutations,
-	actions,
-	getters,
-})
-
-export default store
+/**
+ * @return {object}
+ */
+export function getAll() {
+	const data = axios.get(generateUrl('/apps/workspace/api/group'))
+		.then(resp => {
+			return resp.data
+		})
+		.catch(e => {
+			console.error('Error to get all groups', e)
+		})
+	return data
+}

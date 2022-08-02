@@ -194,4 +194,10 @@ export default {
 		Vue.set(state.groupfolders, groupfolder.mount_point, groupfolder)
 		sortGroupfolders(state)
 	},
+	EMPTY_GROUPS(state) {
+		state.groups = {}
+	},
+	UPDATE_GROUPS(state, { group }) {
+		Vue.set(state.groups, group.gid, group)
+	},
 }

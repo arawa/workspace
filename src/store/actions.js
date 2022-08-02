@@ -367,4 +367,10 @@ export default {
 	updateGroupfolders(context, { groupfolder }) {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
 	},
+	emptyGroups(context) {
+		context.commit('EMPTY_GROUPS')
+	},
+	updateGroups(context, { group }) {
+		context.commit('UPDATE_GROUPS', { group })
+	},
 }

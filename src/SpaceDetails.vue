@@ -59,6 +59,11 @@
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</ActionInput>
+						<ActionButton icon="icon-group"
+							:close-after-click="true"
+							class="no-bold"
+							:title="t('workspace', 'Import groups')"
+							@click="toggleShowSelectGroupsModal" />
 					</Actions>
 				</div>
 				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
@@ -86,6 +91,12 @@
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</Modal>
+		<div>
+			<Modal v-if="showSelectGroupsModal"
+				@close="toggleShowSelectGroupsModal">
+				<SelectGroups @close="toggleShowSelectGroupsModal" />
+			</Modal>
+		</div>
 	</div>
 </template>
 
@@ -99,6 +110,7 @@ import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import SelectUsers from './SelectUsers'
+import SelectGroups from './SelectGroups.vue'
 import UserTable from './UserTable'
 import { destroy, rename } from './services/groupfoldersService'
 
@@ -112,6 +124,7 @@ export default {
 		Modal,
 		Multiselect,
 		SelectUsers,
+		SelectGroups,
 		UserTable,
 	},
 	data() {
@@ -119,6 +132,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			showSelectGroupsModal: false, // true to display group selection Modal windows
 			isESR: false,
 		}
 	},
@@ -258,6 +272,10 @@ export default {
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
+		},
+		toggleShowSelectGroupsModal() {
+			this.$store.dispatch('emptyGroups')
+			this.showSelectGroupsModal = !this.showSelectGroupsModal
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
