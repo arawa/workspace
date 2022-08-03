@@ -72,7 +72,7 @@ class GroupController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function getAll() {
-		return new JSONResponse($this->groupService->getAll());
+		return new JSONResponse($this->groupService->getAllFiltered());
 	}
 
 	/**

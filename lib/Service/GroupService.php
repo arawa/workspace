@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\AppInfo\Application;
 use OCP\IGroupManager;
 
 class GroupService {
@@ -66,7 +67,26 @@ class GroupService {
     }
 
     /**
-     * @return array return a groups associative array
+     * @return array return a group associative array without the GE-, U-,
+     * GeneralManager and WorkspacesManagers groups.
+     */
+    public function getAllFiltered() {
+        $groups = $this->getAll();
+
+        $groupsFiltered = array_values(array_filter($groups, function($group) {
+            return $group['gid'] !== Application::GENERAL_MANAGER &&
+            $group['gid'] !== Application::GROUP_WKSUSER &&
+            $group['gid'] !== 'admin' &&
+            preg_match('/^' . Application::GID_SPACE . Application::ESPACE_MANAGER_01 .'[0-9]/', $group['gid']) === 0 &&
+            preg_match('/^'. Application::GID_SPACE . Application::ESPACE_USERS_01 .'[0-9]/', $group['gid']) === 0;
+        }));
+
+        return $groupsFiltered;
+
+    }
+
+    /**
+     * @return array return a group associative array
      */
     public function getAll() {
         $groups = [];
