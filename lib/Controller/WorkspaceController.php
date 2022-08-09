@@ -281,7 +281,7 @@ class WorkspaceController extends Controller {
             $usersOfAGroup = $group->getUsers();
             foreach($usersOfAGroup as $user) {                
                 $newSpaceUsersGroup->addUser($user);
-                $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
+                $users[$user->getUID()] = $this->userService->formatUserForSpace($user, $groupfolder, 'user');
             }
             $groupsOfGroupfolder[$group->getGID()] = [
                     'gid' => $group->getGID(),

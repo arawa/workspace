@@ -55,6 +55,37 @@ Class UserService {
 	}
 
 	/**
+	 * @param IUser $user
+	 * @return array
+	 */
+	public function formatUser($user) {
+		return [
+			'uid'		=> $user->getUID(),
+			'name'		=> $user->getDisplayName(),
+			'email'		=> $user->getEmailAddress(),
+			'subtitle'	=> $user->getEmailAddress(),
+			'groups'	=> [],
+			'role'		=> null,
+		];
+	}
+
+	/**
+     * @param IUser[] $IUsers
+	 * @return array $users
+     */
+    public function formatUsersForGroups($IUsers, $gid) {
+
+        $users = array_map(function($IUser) use ($gid) {
+            $user = $this->formatUser($IUser);
+			$user['role'] = 'user';
+			$user['groups'][] = $gid;
+			return $user;
+        }, $IUsers);
+
+        return $users;
+    }
+
+	/**
 	 *
 	 * Given a IUser, returns an array containing all the user information
 	 * needed for the frontend
@@ -67,7 +98,7 @@ Class UserService {
 	 *
 	 */
 
-	public function formatUser($user, $space, $role) {
+	public function formatUserForSpace($user, $space, $role) {
 	
 		if (is_null($user)) {
 			return;
@@ -81,15 +112,11 @@ Class UserService {
 			}
 		}
 
+		$users = $this->formatUser($user);
+		$users['groups'] = $groups;
+		$users['role'] = $role;
 		// Returns a user that is valid for the frontend
-		return array(
-			'uid' => $user->getUID(),
-			'name' => $user->getDisplayName(),
-			'email' => $user->getEmailAddress(),
-			'subtitle' => $user->getEmailAddress(),
-			'groups' => $groups,
-			'role' => $role
-		);
+		return $users;
 
 	}
 

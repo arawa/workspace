@@ -179,6 +179,9 @@ export default {
 				})
 			})
 	},
+	ADD_GROUP_TO_SPACE(context, { name, gid }) {
+		context.commit('addGroupToSpace', { name, gid })
+	},
 	// Deletes a space
 	removeSpace(context, { space }) {
 		context.commit('deleteSpace', {

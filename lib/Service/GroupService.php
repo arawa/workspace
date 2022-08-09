@@ -24,17 +24,24 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\AppInfo\Application;
+use OCP\IUserManager;
 use OCP\IGroupManager;
-
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\UserService;
+use OCP\IUser;
 class GroupService {
 
     /** @var IGroupManager */
     private $groupManager;
-    
-    public function __construct(IGroupManager $groupManager)
+
+    /** @var UserService */
+    private $userService;
+
+    public function __construct(IGroupManager $groupManager,
+    UserService $userService)
     {
         $this->groupManager = $groupManager;
+        $this->userService = $userService;
     }
 
     /** 
@@ -92,10 +99,11 @@ class GroupService {
         $groups = [];
         foreach($this->groupManager->search('') as $group) {
             $groups[] = [
-                'gid' => $group->getGID(),
-                'display_name' => $group->getDisplayName(),
-                'is_locked' => $this->checkLocked($group->getBackendNames()),
-                'backend' => $this->getTypeBackend($group->getBackendNames())
+                'gid'           => $group->getGID(),
+                'displayName'   => $group->getDisplayName(),
+                'is_locked'     => $this->checkLocked($group->getBackendNames()),
+                'backend'       => $this->getTypeBackend($group->getBackendNames()),
+                'users'         => $this->userService->formatUsersForGroups($group->getUsers(), $group->getGID()),
             ];
         }
 

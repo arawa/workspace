@@ -36,16 +36,16 @@
 		<div class="select-groups-list">
 			<div
 				v-for="(group) in $store.state.groups"
-				:key="group.display_name"
+				:key="group.displayName"
 				class="group-entry">
 				<div class="group-select-name">
-					<span>{{ group.display_name }}</span>
+					<span>{{ group.displayName }}</span>
 				</div>
 				<input
-					:id="group.display_name"
+					:id="group.displayName"
 					v-model="allSelectedGroupsId"
 					type="checkbox"
-					:value="group.display_name"
+					:value="group.displayName"
 					class="convert-space">
 			</div>
 		</div>
@@ -62,6 +62,8 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import {getAll} from './services/groupsService'
+import { addGroup } from './services/groupfoldersService'
+import { ESPACE_GID_PREFIX, ESPACE_USERS_PREFIX } from './constants'
 
 export default {
 	name: 'SelectGroups',
@@ -97,6 +99,38 @@ export default {
 					return error
 				})
 			return groups
+		},
+		importGroupsToWorkspace() {
+			const groupsBackup = this.$store.state.groups
+			this.$emit('close')
+			// space.groupfolderId
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const groups = {}
+			this.allSelectedGroupsId.forEach(gid => {
+				groups[gid] = groupsBackup[gid]
+			})
+			for (const gid in groups) {
+				// add group backend side
+				addGroup(space.groupfolderId, groups[gid].gid)
+					.then(res => {
+						if (res.success) {
+							// Add users from groups to U-X
+							for (const uid in groups[gid].users) {
+								const user = groups[gid].users[uid]
+								this.$store.dispatch('addUserToGroup', {
+									name: space.name,
+									gid: ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id,
+									user,
+								})
+							}
+							// add group frontend side
+							this.$store.dispatch('ADD_GROUP_TO_SPACE', {
+								name: space.name,
+								gid: groups[gid].gid,
+							})
+						}
+					})
+			}
 		},
 	},
 }

@@ -132,7 +132,7 @@ class WorkspaceService {
 				) {
 				$role = 'admin';
 			}
-			$data[] = $this->userService->formatUser($user, $space, $role);
+			$data[] = $this->userService->formatUserForSpace($user, $space, $role);
 		}
 
 		// return info
@@ -170,14 +170,14 @@ class WorkspaceService {
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'user');
+				$users[$user->getUID()] = $this->userService->formatUserForSpace($user, $workspace, 'user');
 			};
 		}
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		$group = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				$users[$user->getUID()] = $this->userService->formatUserForSpace($user, $workspace, 'admin');
 			};
 		}
 		$workspace['users'] = (object) $users;
