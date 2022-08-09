@@ -49,7 +49,7 @@ class GroupService {
      * @return String||null return the Group's backend (example : database or ldap) 
      * or null if it's not exist.
      */
-    private function getTypeBackend($backends) {
+    public function getTypeBackend($backends) {
         $backend = array_filter($backends, function($backend) {
             if (strtolower($backend) === "database" || strtolower($backend) === "ldap") {
                 return $backend;
@@ -63,7 +63,7 @@ class GroupService {
      * @param String[] $backends
      * @return boolean return false if the backend is database or true if it's other.
      */
-    private function checkLocked($backends) {
+    public function checkLocked($backends) {
         $backend = $this->getTypeBackend($backends);
 
         if (strtolower($backend) !== 'database') {

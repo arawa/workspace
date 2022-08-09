@@ -25,12 +25,13 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\UserService;
-use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\GroupService;
 
 class WorkspaceService {
 
@@ -49,12 +50,16 @@ class WorkspaceService {
 	/** @var UserService */
 	private $userService;
 
+	/** @var GroupService */
+	private $groupService;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
 		SpaceMapper $spaceMapper,
-		UserService $userService
+		UserService $userService,
+		GroupService $groupService
 	)
 	{
 		$this->groupManager = $groupManager;
@@ -62,6 +67,7 @@ class WorkspaceService {
 		$this->spaceMapper = $spaceMapper;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->groupService = $groupService;
 	}
 
 	/**
@@ -196,10 +202,12 @@ class WorkspaceService {
 	public function addGroupsInfo($workspace) {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
-			$NCGroup = $this->groupManager->get($gid);
+			$group = $this->groupManager->get($gid);
 			$groups[$gid] = array(
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
+				'gid' 			=> $group->getGID(),
+				'displayName' 	=> $group->getDisplayName(),
+				'is_locked'		=> $this->groupService->checkLocked($group->getBackendNames()),
+				'backend'		=> $this->groupService->getTypeBackend($group->getBackendNames())
 			);
 		}
 		$workspace['groups'] = $groups;
