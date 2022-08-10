@@ -127,6 +127,8 @@ export default {
 							this.$store.dispatch('ADD_GROUP_TO_SPACE', {
 								name: space.name,
 								gid: groups[gid].gid,
+								backend: groups[gid].backend,
+								isLocked: groups[gid].is_locked,
 							})
 						}
 					})

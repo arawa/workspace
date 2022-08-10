@@ -178,7 +178,6 @@ export default {
 			if (!gid) {
 				return
 			}
-
 			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
 		},

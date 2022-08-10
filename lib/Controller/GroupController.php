@@ -93,15 +93,17 @@ class GroupController extends Controller {
 		}
 
 		// Creates group
-		$NCGroup = $this->groupManager->createGroup($gid);
-		if (is_null($NCGroup)) {
+		$group = $this->groupManager->createGroup($gid);
+		if (is_null($group)) {
 			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
 		}
 
 		return new JSONResponse([
 			'group' => [
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
+				'gid'			=> $group->getGID(),
+				'displayName'	=> $group->getDisplayName(),
+				'backend'		=> $this->groupService->getTypeBackend($group->getBackendNames()),
+				'is_locked'		=> $this->groupService->checkLocked($group->getBackendNames()),
 			]
 		]);
 	}

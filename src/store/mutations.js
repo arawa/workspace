@@ -80,11 +80,13 @@ const sortGroupfolders = (state) => {
 
 export default {
 	// Adds a group to a space
-	addGroupToSpace(state, { name, gid }) {
+	addGroupToSpace(state, { name, gid, backend, isLocked }) {
 		const space = state.spaces[name]
 		space.groups[gid] = {
 			gid,
 			displayName: gid,
+			backend,
+			is_locked: isLocked,
 		}
 		Vue.set(state.spaces, name, space)
 		sortSpaces(state)
