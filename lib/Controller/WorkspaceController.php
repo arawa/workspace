@@ -345,8 +345,10 @@ class WorkspaceController extends Controller {
         $groups = [];
     	$this->logger->debug('Removing workspaces groups.');
         foreach ( array_keys($workspace['groups']) as $group ) {
-            $groups[] = $group;
-            $this->groupManager->get($group)->delete();
+            if (!$workspace['groups'][$group]['is_locked']) {
+                $groups[] = $group;
+                $this->groupManager->get($group)->delete();
+            }
         }
 
 	    return new JSONResponse([
