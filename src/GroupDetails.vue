@@ -39,7 +39,7 @@
 						</ActionButton>
 					</Actions>
 				</div>
-				<Actions>
+				<Actions v-if="!$store.getters.groupIsLocked($route.params.space, $route.params.group)">
 					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
