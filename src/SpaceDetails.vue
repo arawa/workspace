@@ -174,12 +174,15 @@ export default {
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			const gid = e.target[1].value
-			if (!gid) {
+			const displayName = e.target[1].value
+			if (!displayName) {
 				return
 			}
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
+			this.$store.dispatch('createGroup', {
+				name: this.$route.params.space,
+				displayName,
+			})
 		},
 		onSpaceRename(e) {
 			// Hides ActionInput

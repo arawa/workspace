@@ -77,7 +77,17 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @todo delete
+	 */
+	public function get($gid) {
+		return new JSONResponse($this->groupService->get($gid));
+	}
+
+	/**
+	 * @NoAdminRequired
 	 * @SpaceAdminRequired
+	 * @NoCSRFRequired
 	 *
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
@@ -96,6 +106,10 @@ class GroupController extends Controller {
 		$group = $this->groupManager->createGroup($gid);
 		if (is_null($group)) {
 			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
+		}
+
+		if (strpos($gid, Application::GID_SUBGROUP) !== false) {
+			$group->setDisplayName($this->groupService->filterGIDToDisplayName($gid));
 		}
 
 		return new JSONResponse([

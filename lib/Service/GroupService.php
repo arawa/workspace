@@ -93,6 +93,14 @@ class GroupService {
     }
 
     /**
+     * @param $gid It's the GID for subgroup only
+     * @return string
+     */
+    public function filterGIDToDisplayName($gid) {
+        return str_replace(Application::GID_SPACE . Application::GID_SUBGROUP, "", $gid);
+    }
+
+    /**
      * @return array return a group associative array
      */
     public function getAll() {
@@ -108,6 +116,21 @@ class GroupService {
         }
 
         return $groups;
+    }
+
+    /**
+     * @param $gid string
+     * @return array
+     * @todo delete
+     */
+    public function get($gid) {
+        $group = $this->groupManager->get($gid);
+        return [
+            'gid'           => $group->getGID(),
+            'displayName'   => $group->getDisplayName(),
+            'is_locked'     => $this->checkLocked($group->getBackendNames()),
+            'backend'       => $this->getTypeBackend($group->getBackendNames()),
+        ];
     }
 
 }

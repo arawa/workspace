@@ -22,7 +22,7 @@
  */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_SUBGROUP_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { addGroup } from '../services/groupfoldersService'
@@ -80,10 +80,11 @@ export default {
 		})
 	},
 	// Creates a group and navigates to its details page
-	createGroup(context, { name, gid }) {
+	createGroup(context, { name, displayName }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		gid = gid + '-' + space.id
+		const gid = ESPACE_GID_PREFIX + ESPACE_SUBGROUP_PREFIX + displayName + '-' + space.id
+		displayName = displayName + '-' + space.id
 
 		// Creates group in backend
 		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
@@ -113,6 +114,7 @@ export default {
 							context.commit('addGroupToSpace', {
 								name,
 								gid,
+								displayName,
 								backend: resp.data.group.backend,
 								isLocked: resp.data.group.is_locked,
 							})

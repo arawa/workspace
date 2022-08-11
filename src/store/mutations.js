@@ -80,11 +80,11 @@ const sortGroupfolders = (state) => {
 
 export default {
 	// Adds a group to a space
-	addGroupToSpace(state, { name, gid, backend, isLocked }) {
+	addGroupToSpace(state, { name, gid, displayName, backend, isLocked }) {
 		const space = state.spaces[name]
 		space.groups[gid] = {
 			gid,
-			displayName: gid,
+			displayName,
 			backend,
 			is_locked: isLocked,
 		}
