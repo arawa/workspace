@@ -84,8 +84,9 @@ class GroupService {
             return $group['gid'] !== Application::GENERAL_MANAGER &&
             $group['gid'] !== Application::GROUP_WKSUSER &&
             $group['gid'] !== 'admin' &&
-            preg_match('/^' . Application::GID_SPACE . Application::ESPACE_MANAGER_01 .'[0-9]/', $group['gid']) === 0 &&
-            preg_match('/^'. Application::GID_SPACE . Application::ESPACE_USERS_01 .'[0-9]/', $group['gid']) === 0;
+            preg_match('/^' . Application::GID_SPACE . Application::ESPACE_MANAGER_01 . '[0-9]/', $group['gid']) === 0 &&
+            preg_match('/^' . Application::GID_SPACE . Application::ESPACE_USERS_01 . '[0-9]/', $group['gid']) === 0 &&
+            preg_match('/^' . Application::GID_SPACE . Application::GID_SUBGROUP . '/', $group['gid']) === 0;
         }));
 
         return $groupsFiltered;
