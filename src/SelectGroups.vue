@@ -183,6 +183,7 @@ export default {
 	border-color: transparent;
 	width: 82%;
 	overflow: scroll;
+	padding-right: 15px;
 }
 
 .group-entry {
