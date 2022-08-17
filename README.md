@@ -29,7 +29,7 @@ In your "application management" administrator interface, limit the application 
 
 ### 🔧 Configure Groupfolders for Workspace
 
-To use the Wokspace app, you need to add the `GeneralManager` group in the `Group folders` field of the `Administration privileges` page.
+To use the Wokspace app, you need to add the `GeneralManager` and `WorkspacesManagers` groups in the `Group folders` field of the `Administration privileges` page.
 
 In `Settings` > `Group folders` > `Group folder admin delegation` section, add the groups `GeneralManager` and `WorkspacesManagers`.
 
