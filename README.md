@@ -2,7 +2,7 @@
 Create shared workspaces and delegate management of their members and groups.
 
 <p align="center">
-<img width="150" src="https://github.com/arawa/workspace/blob/main/img/workspace_logo.png?raw=true" alt="Workspace Logo">
+<img width="100%" src="./screenshots/workspace-home-small.png" alt="Workspace Home">
 </p>
 
 Workspace allows managers to :
@@ -15,21 +15,26 @@ Workspace allows managers to :
 
 This app is a Nextcloud extension of the Groupfolders app.
 
+For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
+
 ## Installation
 ### Requirements
-- PHP <= 7.4 (PHP 8 ongoing)
-- Nextcloud 23+
-  - Nextcloud 21 and 22 require our forked Groupfolders app available on https://github.com/arawa/groupfolders, from the `allow-admin-delegation-stable21` branch.
+- PHP 7.4 to 8.1
+- Nextcloud 21 to 24
+- Our forked Groupfolders app, available on https://github.com/arawa/groupfolders, release [v9.1.0](https://github.com/arawa/groupfolders/releases/download/v9.1.0/groupfolders-9.1.0.tar.gz)
 
 ### Limit the Workspace app to specific groups
 
-In your "application management" administrator interface, limit the application to the following groups: `GeneralManager` and `WorkspaceManagers`
+In your "application management" administrator interface, limit the application to the following groups: `GeneralManager` and `WorkspacesManagers`.
 
 ### 🔧 Configure Groupfolders for Workspace
 
-To use the Wokspace app, you need to add the `GeneralManager` group in the `Group folders` field of the `Administration privileges` page.
+In `Settings` > `Group folders` > `Group folder admin delegation` section, add the groups `GeneralManager` and `WorkspacesManagers`.
 
-`Settings` > `Admin privileges` from admin section.
+### Define which users will be General Managers
+
+Add the users in charge of creating Workspaces to the GeneralManager group
+
 
 ## Development and Build
 ### Requirements
@@ -67,7 +72,7 @@ An artifact will be created in the `build/artifacts/source` from the project.
 
 
 
-### 📦 For Nextcloud 21 and 22, build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
+### 📦 For Nextcloud 21 and 24, build [Arawa\Groupfolders](https://github.com/arawa/groupfolders)
 
 Clone this app into your apps directory (example: `/var/www/html/nextcloud/apps/`) and switch of the branch to be in `allow-admin-delegation-stable21`.
 

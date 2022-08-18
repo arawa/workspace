@@ -142,6 +142,7 @@ source:
 	--exclude="../$(app_name)/COPYING" \
 	--exclude="../$(app_name)/package.json" \
 	--exclude="../$(app_name)/package-lock.json" \
+	--exclude="../$(app_name)/screenshots" \
 	../$(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
