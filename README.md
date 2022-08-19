@@ -7,7 +7,7 @@ Create shared workspaces and delegate management of their members and groups.
 
 Workspace allows managers to :
 - Create shared workspaces
-- Delegate management of each workspace to users (workspace managers) in order for them to
+- Delegate management of each workspace to users (workspace managers) in order for them to :
   - choose members
   - create groups
   - configure advanced permissions on workspace folders
@@ -21,7 +21,7 @@ For more information, please visit [our website](https://www.arawa.fr/solutions/
 ### Requirements
 - PHP 7.4 to 8.1
 - Nextcloud 21 to 24
-- Our forked Groupfolders app, available on https://github.com/arawa/groupfolders, release [v9.1.0](https://github.com/arawa/groupfolders/releases/download/v9.1.0/groupfolders-9.1.0.tar.gz)
+- Our forked Groupfolders app, available on https://github.com/arawa/groupfolders, release [v9.1.0](https://github.com/arawa/groupfolders/releases/download/v9.1.0/groupfolders-9.1.0.tar.gz) (we are working with Nextcloud to make Workspace compatible with the standard Groupfolders application ; this version will be available soon)
 
 ### Limit the Workspace app to specific groups
 
@@ -33,7 +33,7 @@ In `Settings` > `Group folders` > `Group folder admin delegation` section, add t
 
 ### Define which users will be General Managers
 
-Add the users in charge of creating Workspaces to the GeneralManager group
+Add the users in charge of creating Workspaces to the GeneralManager group.
 
 
 ## Development and Build
