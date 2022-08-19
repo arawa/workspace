@@ -86,4 +86,10 @@ export const getters = {
 		})
 		return groups[0]
 	},
+	groupIsLocked: state => (name, gid) => {
+		if (gid === undefined || gid === null) {
+			return false
+		}
+		return state.spaces[name].groups[gid].is_locked
+	},
 }

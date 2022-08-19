@@ -81,11 +81,15 @@ describe('Vuex store tests', () => {
 		mutations.addGroupToSpace(state, {
 			name: 'test-space',
 			gid: 'test-group',
+			backend: 'database',
+			displayName: 'test-group',
+			is_locked: false,
 		})
 
 		expect(state.spaces['test-space'].groups['test-group']).toEqual({
 			gid: 'test-group',
 			displayName: 'test-group',
+			backend: 'database',
 		})
 	})
 

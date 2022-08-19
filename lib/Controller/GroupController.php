@@ -26,10 +26,12 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\GroupService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
@@ -48,21 +50,44 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	/** @var GroupService */
+	private $groupService;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService
+		UserService $userService,
+		GroupService $groupService
 	){
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->groupService = $groupService;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function getAll() {
+		return new JSONResponse($this->groupService->getAllFiltered());
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @todo delete
+	 */
+	public function get($gid) {
+		return new JSONResponse($this->groupService->get($gid));
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
+	 * @NoCSRFRequired
 	 *
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
@@ -78,15 +103,21 @@ class GroupController extends Controller {
 		}
 
 		// Creates group
-		$NCGroup = $this->groupManager->createGroup($gid);
-		if (is_null($NCGroup)) {
+		$group = $this->groupManager->createGroup($gid);
+		if (is_null($group)) {
 			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
+		}
+
+		if (strpos($gid, Application::GID_SUBGROUP) !== false) {
+			$group->setDisplayName($this->groupService->filterGIDToDisplayName($gid));
 		}
 
 		return new JSONResponse([
 			'group' => [
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
+				'gid'			=> $group->getGID(),
+				'displayName'	=> $group->getDisplayName(),
+				'backend'		=> $this->groupService->getTypeBackend($group->getBackendNames()),
+				'is_locked'		=> $this->groupService->checkLocked($group->getBackendNames()),
 			]
 		]);
 	}

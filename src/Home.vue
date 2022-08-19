@@ -53,7 +53,7 @@
 						<AppNavigationItem
 							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
-							icon="icon-group"
+							:icon="group.is_locked? 'icon-password' : 'icon-group'"
 							:to="{path: `/group/${spaceName}/${group.gid}`}"
 							:title="group.displayName">
 							<CounterBubble slot="counter" class="user-counter">

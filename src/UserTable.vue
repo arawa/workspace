@@ -53,7 +53,7 @@
 					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
-							<Actions>
+							<Actions v-if="!$store.getters.groupIsLocked($route.params.space, $route.params.group)">
 								<ActionButton v-if="$route.params.group === undefined"
 									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"

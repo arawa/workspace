@@ -22,7 +22,7 @@
  */
 
 import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_SUBGROUP_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { addGroup } from '../services/groupfoldersService'
@@ -80,13 +80,11 @@ export default {
 		})
 	},
 	// Creates a group and navigates to its details page
-	createGroup(context, { name, gid }) {
+	createGroup(context, { name, displayName }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		gid = gid + '-' + space.id
-
-		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, gid })
+		const gid = ESPACE_GID_PREFIX + ESPACE_SUBGROUP_PREFIX + displayName + '-' + space.id
+		displayName = displayName + '-' + space.id
 
 		// Creates group in backend
 		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
@@ -112,6 +110,14 @@ export default {
 									})
 								return false
 							}
+							// Creates group in frontend
+							context.commit('addGroupToSpace', {
+								name,
+								gid,
+								displayName,
+								backend: resp.data.group.backend,
+								isLocked: resp.data.group.is_locked,
+							})
 							// Navigates to the group's details page
 							context.state.spaces[name].isOpen = true
 							router.push({
@@ -146,7 +152,7 @@ export default {
 	// Deletes a group
 	deleteGroup(context, { name, gid }) {
 		const space = context.state.spaces[name]
-
+		const groupBackup = space.groups[gid]
 		// Deletes group from frontend
 		context.commit('removeGroupFromSpace', { name, gid })
 
@@ -162,7 +168,12 @@ export default {
 					// eslint-disable-next-line no-console
 					console.log('Group ' + gid + ' deleted')
 				} else {
-					context.commit('addGroupToSpace', { name, gid })
+					context.commit('addGroupToSpace', {
+						name,
+						gid,
+						backend: groupBackup.backend,
+						isLocked: groupBackup.isLocked
+					})
 					this._vm.$notify({
 						title: t('workspace', 'Error'),
 						text: t('workspace', 'An error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
@@ -171,13 +182,21 @@ export default {
 				}
 			})
 			.catch((e) => {
-				context.commit('addGroupToSpace', { name, gid })
+				context.commit('addGroupToSpace', {
+					name,
+					gid,
+					backend: groupBackup.backend,
+					isLocked: groupBackup.isLocked
+				})
 				this._vm.$notify({
 					title: t('workspace', 'Network error'),
 					text: t('workspace', 'A network error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + e,
 					type: 'error',
 				})
 			})
+	},
+	ADD_GROUP_TO_SPACE(context, { name, gid, backend, isLocked }) {
+		context.commit('addGroupToSpace', { name, gid, backend, isLocked })
 	},
 	// Deletes a space
 	removeSpace(context, { space }) {
@@ -366,5 +385,11 @@ export default {
 	},
 	updateGroupfolders(context, { groupfolder }) {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
+	},
+	emptyGroups(context) {
+		context.commit('EMPTY_GROUPS')
+	},
+	updateGroups(context, { group }) {
+		context.commit('UPDATE_GROUPS', { group })
 	},
 }

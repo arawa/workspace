@@ -36,6 +36,7 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
+use OCA\Workspace\Service\GroupService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\WorkspaceService;
@@ -63,31 +64,36 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceService */
     private $workspaceService;
 
+    /** @var GroupService */
+    private $groupService;
+
     private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
 
     public function __construct(
-	$AppName,
-	IGroupManager $groupManager,
-	ILogger $logger,
-	IRequest $request,
-	UserService $userService,
-	IUserManager $userManager,
-	SpaceMapper $mapper,
-	SpaceService $spaceService,
-	WorkspaceService $workspaceService
+        $AppName,
+        IGroupManager $groupManager,
+        ILogger $logger,
+        IRequest $request,
+        UserService $userService,
+        IUserManager $userManager,
+        SpaceMapper $mapper,
+        SpaceService $spaceService,
+        WorkspaceService $workspaceService,
+        GroupService $groupService,
     )
     {
-	parent::__construct($AppName, $request);
+        parent::__construct($AppName, $request);
 
-	$this->groupManager = $groupManager;
-	$this->logger = $logger;
+        $this->groupManager = $groupManager;
+        $this->logger = $logger;
 
-	$this->userManager = $userManager;
-	$this->userService = $userService;
+        $this->userManager = $userManager;
+        $this->userService = $userService;
 
-	$this->spaceMapper = $mapper;
-	$this->spaceService = $spaceService;
-	$this->workspaceService = $workspaceService;
+        $this->spaceMapper = $mapper;
+        $this->spaceService = $spaceService;
+        $this->workspaceService = $workspaceService;
+        $this->groupService = $groupService;
     }
 
     /**
@@ -188,12 +194,16 @@ class WorkspaceController extends Controller {
             'color' => $space->getColorCode(),
             'groups' => [
                 $newSpaceManagerGroup->getGID() => [
-                    'gid' => $newSpaceManagerGroup->getGID(),
-                    'displayName' => $newSpaceManagerGroup->getDisplayName(),
+                    'gid'           => $newSpaceManagerGroup->getGID(),
+                    'displayName'   => $newSpaceManagerGroup->getDisplayName(),
+                    'is_locked'     => $this->groupService->checkLocked($newSpaceManagerGroup->getBackendNames()),
+                    'backend'		=> $this->groupService->getTypeBackend($newSpaceManagerGroup->getBackendNames())
                 ],
                 $newSpaceUsersGroup->getGID() => [
-                    'gid' => $newSpaceUsersGroup->getGID(),
-                    'displayName' => $newSpaceUsersGroup->getDisplayName(),
+                    'gid'           => $newSpaceUsersGroup->getGID(),
+                    'displayName'   => $newSpaceUsersGroup->getDisplayName(),
+                    'is_locked'     => $this->groupService->checkLocked($newSpaceUsersGroup->getBackendNames()),
+                    'backend'		=> $this->groupService->getTypeBackend($newSpaceUsersGroup->getBackendNames())
                 ]
             ],
             'statuscode' => Http::STATUS_CREATED,
@@ -281,7 +291,7 @@ class WorkspaceController extends Controller {
             $usersOfAGroup = $group->getUsers();
             foreach($usersOfAGroup as $user) {                
                 $newSpaceUsersGroup->addUser($user);
-                $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
+                $users[$user->getUID()] = $this->userService->formatUserForSpace($user, $groupfolder, 'user');
             }
             $groupsOfGroupfolder[$group->getGID()] = [
                     'gid' => $group->getGID(),
@@ -335,8 +345,10 @@ class WorkspaceController extends Controller {
         $groups = [];
     	$this->logger->debug('Removing workspaces groups.');
         foreach ( array_keys($workspace['groups']) as $group ) {
-            $groups[] = $group;
-            $this->groupManager->get($group)->delete();
+            if (!$workspace['groups'][$group]['is_locked']) {
+                $groups[] = $group;
+                $this->groupManager->get($group)->delete();
+            }
         }
 
 	    return new JSONResponse([
