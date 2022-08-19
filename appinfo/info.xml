@@ -40,7 +40,7 @@
     <documentation>
         <admin>https://github.com/arawa/workspace/blob/main/README.md#installation</admin>
         <developer>https://github.com/arawa/workspace/blob/main/README.md#development-and-build</developer>
-        <user>https://cloud.arawa.fr/apps/files/?dir=/Arawa_offre/workspace/formation&openfile=1759344&scrollto=Documentation%20Workspace%20GG%20et%20GE%20-%20V1.pdf</user>
+        <user>https://github.com/arawa/workspace/blob/main/docs/Documentation%20utilisateur%20de%20Workspace.pdf</user>
     </documentation>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-home-small.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-details.png</screenshot>
