@@ -4,7 +4,6 @@
     <id>workspace</id>
     <name>Workspace</name>
     <summary>It&#39;s an interface to manage groupfolders with a group manage.</summary>
-    <description><![CDATA[It&#39;s a layer additional of groupfolders app to manage them and manage group by simple users]]></description>
     <version>1.2.2</version>
     <licence>agpl</licence>
     <repository type="git">https://github.com/arawa/workspace</repository>
