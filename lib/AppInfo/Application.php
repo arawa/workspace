@@ -8,21 +8,25 @@
 
 namespace OCA\Workspace\AppInfo;
 
-use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
-use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
-use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\App;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\AppFramework\App;
+use OCP\IServerContainer;
+use OCP\Notification\IManager;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Notification\Notifier;
+use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
+use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
+use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCP\AppFramework\Bootstrap\IBootContext;
 
 class Application extends App {
 
         public const APP_ID = 'workspace';
-	public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
+	    public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
         public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
-	// TODO Remove the '_01' suffix 
+	    // TODO Remove the '_01' suffix 
         public const ESPACE_MANAGER_01 = "GE-";
         public const ESPACE_USERS_01 = "U-";
         public const GID_SPACE = "SPACE-";
@@ -58,5 +62,16 @@ class Application extends App {
 
                 $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
                 $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
+        }
+
+        public function voot(IBootContext $context): void {
+            $server = $context->getServerContainer();
+
+            $this->registerNotifier($server);
+        }
+
+        protected function registerNotifier(IServerContainer $server): void {
+            $manager = \OC::$server->get(IManager::class);
+            $manager->registerNotifierService(Notifier::class);    
         }
 }

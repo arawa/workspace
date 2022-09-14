@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Notification\Notifier;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -33,6 +34,7 @@ use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
+use OCP\Notification\IManager;
 
 class GroupController extends Controller {
 
@@ -177,6 +179,19 @@ class GroupController extends Controller {
 	 */
 	public function addUser($spaceId, $gid, $user) {
 
+		$manager = \OC::$server->get(IManager::class);
+		$notification = $manager->createNotification();
+
+		$acceptAction = $notification->createAction();
+		$acceptAction->setLabel('accept')
+					 ->setLink('workspace', 'POST');
+
+
+		$declineAction = $notification->createAction();
+		$declineAction->setLabel('decline')
+					->setLink('workspace', 'DELETE');
+				
+		
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
@@ -192,6 +207,16 @@ class GroupController extends Controller {
 		$NCUser = $this->userManager->get($user);
 		$NCGroup->addUser($NCUser);
 		
+		$notification->setApp('workspace')
+			->setUser($NCUser->getUID())
+			->setDateTime(new \DateTime())
+			->setObject('add', '1337')
+			->setSubject('add_user_group', [ 'groupname' => $NCGroup->getGID() ])
+			->addAction($acceptAction)
+			->addAction($declineAction);
+
+		$manager->notify($notification);
+
 		// Adds the user to the application manager group when we are adding a workspace manager
 		if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01. $spaceId) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
