@@ -64,7 +64,7 @@ class Application extends App {
                 $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
         }
 
-        public function voot(IBootContext $context): void {
+        public function boot(IBootContext $context): void {
             $server = $context->getServerContainer();
 
             $this->registerNotifier($server);
