@@ -33,6 +33,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\ILogger;
+use OCP\IServerContainer;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
 
@@ -50,16 +51,21 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	/** @var IServerContainer */
+	private $serverContainer;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService
+		UserService $userService,
+		IServerContainer $serverContainer,
 	){
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->serverContainer = $serverContainer;
 	}
 
 	/**
@@ -179,7 +185,7 @@ class GroupController extends Controller {
 	 */
 	public function addUser($spaceId, $gid, $user) {
 
-		$manager = \OC::$server->get(IManager::class);
+		$manager = $this->serverContainer->get(IManager::class);
 		$notification = $manager->createNotification();
 
 		$acceptAction = $notification->createAction();
@@ -211,7 +217,7 @@ class GroupController extends Controller {
 			->setUser($NCUser->getUID())
 			->setDateTime(new \DateTime())
 			->setObject('add', '1337')
-			->setSubject('add_user_group', [ 'groupname' => $NCGroup->getGID() ])
+			->setSubject('add_user_in_group', [ 'groupname' => $NCGroup->getGID() ])
 			->addAction($acceptAction)
 			->addAction($declineAction);
 

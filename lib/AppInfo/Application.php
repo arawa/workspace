@@ -71,7 +71,7 @@ class Application extends App {
         }
 
         protected function registerNotifier(IServerContainer $server): void {
-            $manager = \OC::$server->get(IManager::class);
+            $manager = $server->get(IManager::class);
             $manager->registerNotifierService(Notifier::class);    
         }
 }

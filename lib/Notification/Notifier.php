@@ -46,61 +46,55 @@ class Notifier implements INotifier {
         // Read the language from the notification
         $l = $this->factory->get('workspace', $languageCode);
 
-        switch ($notification->getSubject()) {
-            // Deal with know subjects
-            case 'add_user_in_group':
-                try {
-                    $this->shareManager->getShareById($notification->getObjectId(), $notification->getUser());
+        var_dump($notification->getSubject());
+        // try {
+        //     // $this->shareManager->getShareById($notification->getObjectId(), $notification->getUser());
+        //     $debug = "coucou";
 
-                } catch (Exception $e) {
-                    // Throw Exception exception when the notification has already been solved and can be removed
-                    throw new Exception();
-                }
+        // } catch (Exception $e) {
+        //     // Throw Exception exception when the notification has already been solved and can be removed
+        //     throw new Exception();
+        // }
 
-                $notification->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/share.svg')))
-                    ->setLink($this->url->linkToRouteAbsolute('files_sharing.RemoteShare.overview', ['id' => $notification->getObjectId()]));
+        $notification->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/share.svg')))
+            ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index', ['id' => $notification->getObjectId()]));
 
-                /**
-                 * Set rich subject, see https://github.com/nextcloud/server/issues/1706 for mor information
-                 * and https://github.com/nextcloud/server/blob/master/lib/public/RichObjectStrings/Definitions.php
-                 * for a list of defined objects and their parameters.
-                 */
-                $parameters = $notification->getSubjectParameters();
-                $notification->setRichSubject($l->t('You added in the workspace "{workspace}"'), [
-                    'workspace' => [
-                        'type'  => 'adding-workspace',
-                        'id'    => $notification->getObjectId(),
-                        'name'  => $parameters['name'],
-                    ]
-                ]);
+        /**
+         * Set rich subject, see https://github.com/nextcloud/server/issues/1706 for mor information
+         * and https://github.com/nextcloud/server/blob/master/lib/public/RichObjectStrings/Definitions.php
+         * for a list of defined objects and their parameters.
+         */
+        $parameters = $notification->getSubjectParameters();
+        $notification->setRichSubject($l->t('You added in the workspace "{workspace}"'), [
+            'workspace' => [
+                'type'  => 'adding-workspace',
+                'id'    => $notification->getObjectId(),
+                'groupname'  => $parameters['groupname'],
+            ]
+        ]);
 
-                // Deal with the actions for a know subject
-                foreach ($notification->getActions() as $action) {
-                    switch ($action->getLabel()) {
-                        case 'accept':
-                            $action->setParsedLabel($l->t('Accept'))
-                                ->setLink($this->url->linkToRouteAbsolute('files_sharing.RemoteShare.accept', ['id' => $notification->getObjectId()]), 'POST');
-                            
-                            break;
+        // Deal with the actions for a know subject
+        foreach ($notification->getActions() as $action) {
+            switch ($action->getLabel()) {
+                case 'accept':
+                    $action->setParsedLabel($l->t('Accept'))
+                        ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index', ['id' => $notification->getObjectId()]), 'POST');
+                    
+                    break;
 
-                        case 'decline':
-                            $action->setParsedLabel($l->t('Decline'))
-                                ->setLink($this->url->linkToRouteAbsolute('files_sharing.RemoteShare.decline', ['id' => $notification->getObjectId()]), 'DELETE');
-                            
-                            break;
-                    }
+                case 'decline':
+                    $action->setParsedLabel($l->t('Decline'))
+                        ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index', ['id' => $notification->getObjectId()]), 'DELETE');
+                    
+                    break;
+            }
 
-                    $notification->addParsedAction($action);
-                }
-
-                // Set the plain text subject automatically
-                $this->setParsedSubjectFromRichSubject($notification);
-                return $notification;
-
-            default:
-                // Unknow subject => Unknown notification
-                throw new \InvalidArgumentException();
+            $notification->addParsedAction($action);
         }
+
+        // Set the plain text subject automatically
+        $this->setParsedSubjectFromRichSubject($notification);
+        return $notification;
     }
 
     /**
