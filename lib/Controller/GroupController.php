@@ -54,18 +54,23 @@ class GroupController extends Controller {
 	/** @var IServerContainer */
 	private $serverContainer;
 
+	/** @var IManager */
+	private $managerNotification;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
 		UserService $userService,
 		IServerContainer $serverContainer,
+		IManager $managerNotification,
 	){
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
 		$this->serverContainer = $serverContainer;
+		$this->managerNotification = $managerNotification;
 	}
 
 	/**
@@ -185,18 +190,8 @@ class GroupController extends Controller {
 	 */
 	public function addUser($spaceId, $gid, $user) {
 
-		$manager = $this->serverContainer->get(IManager::class);
-		$notification = $manager->createNotification();
-
-		$acceptAction = $notification->createAction();
-		$acceptAction->setLabel('accept')
-					 ->setLink('workspace', 'POST');
-
-
-		$declineAction = $notification->createAction();
-		$declineAction->setLabel('decline')
-					->setLink('workspace', 'DELETE');
-				
+		// $manager = $this->serverContainer->get(IManager::class);
+		$notification = $this->managerNotification->createNotification();
 		
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
@@ -216,12 +211,10 @@ class GroupController extends Controller {
 		$notification->setApp('workspace')
 			->setUser($NCUser->getUID())
 			->setDateTime(new \DateTime())
-			->setObject('add', '1337')
-			->setSubject('add_user_in_group', [ 'groupname' => $NCGroup->getGID() ])
-			->addAction($acceptAction)
-			->addAction($declineAction);
+			->setObject('add', $NCUser->getUID())
+			->setSubject('add_user_in_group', [ 'groupname' => $NCGroup->getGID() ]);
 
-		$manager->notify($notification);
+		$this->managerNotification->notify($notification);
 
 		// Adds the user to the application manager group when we are adding a workspace manager
 		if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01. $spaceId) {
