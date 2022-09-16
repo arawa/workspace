@@ -53,11 +53,11 @@ class Notifier implements INotifier {
          * for a list of defined objects and their parameters.
          */
         $parameters = $notification->getSubjectParameters();
-        $notification->setRichSubject($l->t('You added in the workspace "{workspace}"'), [
+        $notification->setRichSubject('You added in the workspace', [
             'workspace' => [
-                'type'  => 'adding-workspace',
-                'id'    => $notification->getObjectId(),
-                'name'  => $parameters['groupname'],
+                'type'  => 'user',
+                'id'    => 'bstark',
+                'name'  => 'Ben Stark'
             ]
         ]);
 
