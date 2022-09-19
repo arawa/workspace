@@ -8,7 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Chore
 
+- bump @nextcloud/l10n from 1.4.1 to 1.6.0 ( [#494](https://github.com/arawa/workspace/pull/494))
 - npm: bump prettier from 2.6.2 to 2.7.1 ( [#513](https://github.com/arawa/workspace/pull/513) )
+
+## [1.2.2] - 2022-08-19
+
+### Chore
+
+- Update the readme ( [#535](https://github.com/arawa/workspace/pull/535) )
+- Update the info.xml and extend the app for NC24 ( [#356](https://github.com/arawa/workspace/pull/536) )
+>>>>>>> main
 
 ## [1.2.1] - 2022-06-24
 
@@ -45,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.2...main
+[1.2.2]: https://github.com/arawa/workspace/compare/v1.2.1...1.2.2
 [1.2.1]: https://github.com/arawa/workspace/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/arawa/workspace/compare/v1.0.1...v1.1.0
