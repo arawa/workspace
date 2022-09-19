@@ -46,7 +46,7 @@ OC.L10N.register(
 		'user': 'Utilisateur',
 		'Remove from group': 'Retirer du groupe',
 		'No users': 'Pas d\'utilisateur',
-		'You added in the workspace': 'Vous êtes ajouté dans le workspace',
+		'{uid} added in the workspace, in the group {groupname}': '{uid} est ajouté dans le workspace, dans le groupe {groupname}',
 		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]': 'Le nom de votre Espace de travail ne doit pas contenir les caractères suivants : [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\ ^ = / & * ]',
 		'There are no users in this space/group yet': 'Il n\'y a pas encore d\'utilisateur dans cet espace de travail',
 		'Start typing to lookup users': 'Commencez à saisir du texte pour rechercher des utilisateurs',

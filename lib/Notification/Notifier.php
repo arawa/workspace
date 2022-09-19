@@ -45,6 +45,7 @@ class Notifier implements INotifier {
         }
         $l = $this->factory->get('workspace', $languageCode);
 
+        $parameters = $notification->getSubjectParameters();
         $notification->setIcon($this->url->getAbsoluteURL($this->url->imagePath('workspace', 'Workspace.svg')));
         //     ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index'));
 
@@ -60,8 +61,12 @@ class Notifier implements INotifier {
          * and https://github.com/nextcloud/server/blob/master/lib/public/RichObjectStrings/Definitions.php
          * for a list of defined objects and their parameters.
          */
-        // $parameters = $notification->getSubjectParameters();
-        $notification->setRichSubject($l->t('You added in the workspace'), [
+        $parameters = $notification->getSubjectParameters();
+        $subject = $l->t('{uid} added in the workspace, in the group {groupname}');
+        $subject = str_replace(['{uid}', '{groupname}'], [$parameters['uid'], $parameters['groupname']], $subject);
+
+        $notification->setParsedSubject($subject);
+        $notification->setRichSubject($l->t($subject), [
             'workspace' => [
                 'type'  => 'highlight',
                 'id'    => 'bstark',
@@ -69,7 +74,6 @@ class Notifier implements INotifier {
             ]
         ]);
 
-        $notification->setParsedSubject($l->t('You added in the workspace'));
 
         return $notification;
     }

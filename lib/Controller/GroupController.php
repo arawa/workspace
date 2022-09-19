@@ -212,7 +212,7 @@ class GroupController extends Controller {
 			->setUser($NCUser->getUID())
 			->setDateTime(new \DateTime())
 			->setObject('add', $NCUser->getUID())
-			->setSubject('add_user_in_group', [ 'groupname' => $NCGroup->getGID() ]);
+			->setSubject('add_user_in_group', [ 'groupname' => $NCGroup->getGID(), 'uid' => $user ]);
 
 		$this->managerNotification->notify($notification);
 

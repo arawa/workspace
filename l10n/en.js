@@ -57,7 +57,7 @@ OC.L10N.register(
 		'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)': 'Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)',
 		'No spaces': 'No spaces',
 		'You have not yet created any workspace': 'You have not yet created any workspace',
-		'You added in the workspace': 'You added in the workspace',
+		'{uid} added in the workspace, in the group {groupname}': '{uid} added in the workspace, in the group {groupname}',
 		'unlimited': 'unlimited',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
 		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.',
