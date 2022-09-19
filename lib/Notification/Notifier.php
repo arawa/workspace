@@ -4,6 +4,7 @@ namespace OCA\Workspace\Notification;
 
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
+use OCP\Notification\IAction;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
@@ -44,22 +45,31 @@ class Notifier implements INotifier {
         }
         $l = $this->factory->get('workspace', $languageCode);
 
-        $notification->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/share.svg')))
-            ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index', ['id' => $notification->getObjectId()]));
+        $notification->setIcon($this->url->getAbsoluteURL($this->url->imagePath('workspace', 'Workspace.svg')));
+        //     ->setLink($this->url->linkToRouteAbsolute('workspace.Page.index'));
+
+        // $action = $notification->createAction();
+        // $action->setLabel('View workspace')
+        //     ->setParsedLabel('View workspace')
+        //     ->setLink($notification->getLink(), IAction::TYPE_WEB)
+        //     ->setPrimary(false);
+        // $notification->addParsedAction($action);
 
         /**
          * Set rich subject, see https://github.com/nextcloud/server/issues/1706 for mor information
          * and https://github.com/nextcloud/server/blob/master/lib/public/RichObjectStrings/Definitions.php
          * for a list of defined objects and their parameters.
          */
-        $parameters = $notification->getSubjectParameters();
-        $notification->setRichSubject('You added in the workspace', [
+        // $parameters = $notification->getSubjectParameters();
+        $notification->setRichSubject($l->t('You added in the workspace'), [
             'workspace' => [
-                'type'  => 'user',
+                'type'  => 'highlight',
                 'id'    => 'bstark',
                 'name'  => 'Ben Stark'
             ]
         ]);
+
+        $notification->setParsedSubject($l->t('You added in the workspace'));
 
         return $notification;
     }
