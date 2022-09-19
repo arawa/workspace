@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Chore 
+### Chore
 
 - bump @nextcloud/l10n from 1.4.1 to 1.6.0 ( [#494](https://github.com/arawa/workspace/pull/494))
+- npm: bump prettier from 2.6.2 to 2.7.1 ( [#513](https://github.com/arawa/workspace/pull/513) )
 
 ## [1.2.2] - 2022-08-19
 
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update the readme ( [#535](https://github.com/arawa/workspace/pull/535) )
 - Update the info.xml and extend the app for NC24 ( [#356](https://github.com/arawa/workspace/pull/536) )
+>>>>>>> main
 
 ## [1.2.1] - 2022-06-24
 
