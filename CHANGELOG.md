@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump vue and vue-template-compiler ( [#524](https://github.com/arawa/workspace/pull/524) )
 - bump jest-environment-jsdom from 28.1.0 to 29.0.3 ( [#562](https://github.com/arawa/workspace/pull/562) )
 - bump jest from 28.1.0 to 29.0.3 ( [#563](https://github.com/arawa/workspace/pull/563) )
+- bump babel-jest from 28.1.0 to 29.0.3 ( [#564](https://github.com/arawa/workspace/pull/564) )
 
 ## [1.2.2] - 2022-08-19
 
