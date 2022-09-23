@@ -2,19 +2,29 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>workspace</id>
+
     <name>Workspace</name>
-    <summary>It&#39;s an interface to manage groupfolders with a group manage.</summary>
+
     <version>1.2.2</version>
+
     <licence>agpl</licence>
+
     <repository type="git">https://github.com/arawa/workspace</repository>
+
     <author mail="baptiste.fotia@arawa.fr" >Baptiste Fotia</author>
     <author mail="cyrille@bollu.be" >Cyrille Bollu</author>
+
     <namespace>Workspace</namespace>
+
     <category>files</category>
+
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
         <nextcloud min-version="20" max-version="24"/>
     </dependencies>
+
+    <summary>Create Groupfolders with delegated management</summary>
+
     <description><![CDATA[Workspace allows managers to :
 - Create shared workspaces
 - Delegate management of each workspace to users (workspace managers) in order for them to:
@@ -33,15 +43,18 @@ This version will be available soon.
 
 For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation).
     ]]></description>
+
     <documentation>
         <admin>https://github.com/arawa/workspace/blob/main/README.md#installation</admin>
         <developer>https://github.com/arawa/workspace/blob/main/README.md#development-and-build</developer>
         <user>https://github.com/arawa/workspace/blob/main/docs/Documentation%20utilisateur%20de%20Workspace.pdf</user>
     </documentation>
+
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-details.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-home.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-add-users.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-subgroups.png</screenshot>
+
     <navigations>
         <navigation>
             <name>Workspace</name>
@@ -49,9 +62,12 @@ For more details, please go to the [admin documentation](https://github.com/araw
             <icon>Workspace_white.svg</icon>
         </navigation>
     </navigations>
+
     <repair-steps>
 	    <install>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
 	    </install>
     </repair-steps>
+
+
 </info>
