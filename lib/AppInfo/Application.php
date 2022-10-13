@@ -23,8 +23,8 @@ class Application extends App {
 	public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
         public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
 	// TODO Remove the '_01' suffix 
-        public const ESPACE_MANAGER_01 = "GE-";
-        public const ESPACE_USERS_01 = "U-";
+        public const SPACE_MANAGER = "GE-";
+        public const SPACE_USERS = "U-";
         public const GID_SPACE = "SPACE-";
 
 

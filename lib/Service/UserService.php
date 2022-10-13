@@ -107,7 +107,7 @@ Class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	*/
 	public function isSpaceManager() {
-		$workspaceAdminGroups = $this->groupManager->search(Application::ESPACE_MANAGER_01);
+		$workspaceAdminGroups = $this->groupManager->search(Application::SPACE_MANAGER);
 		foreach($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -133,7 +133,7 @@ Class UserService {
 	*/
 	public function isSpaceManagerOfSpace($id) {
 
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $id)) {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), Application::GID_SPACE . Application::SPACE_MANAGER . $id)) {
 			return true;
 		}
 		return false;
@@ -151,8 +151,8 @@ Class UserService {
 		// Checks if the user is member of the GE- group of another workspace
 		foreach($groups as $group) {
 			$gid = $group->getGID();
-			if (strpos($gid, Application::GID_SPACE . Application::ESPACE_MANAGER_01) === 0 &&
-				$gid !== Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
+			if (strpos($gid, Application::GID_SPACE . Application::SPACE_MANAGER) === 0 &&
+				$gid !== Application::GID_SPACE . Application::SPACE_MANAGER . $spaceId
 			) {
 				$found = true;
 				break;

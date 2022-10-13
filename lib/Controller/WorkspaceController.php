@@ -159,7 +159,7 @@ class WorkspaceController extends Controller {
         }
         
         // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
+        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_MANAGER . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
             return new JSONResponse([
@@ -168,7 +168,7 @@ class WorkspaceController extends Controller {
             ]);
         }
         
-        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
+        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_USERS . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
             return new JSONResponse([
@@ -177,8 +177,8 @@ class WorkspaceController extends Controller {
             ]);
         }
 
-        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
+        $newSpaceManagerGroup->setDisplayName(Application::SPACE_MANAGER . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(Application::SPACE_USERS . $space->getId());
         
 		// #3 Returns result
         return new JSONResponse ([
@@ -248,7 +248,7 @@ class WorkspaceController extends Controller {
         }
         
         // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
+        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_MANAGER . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
             return new JSONResponse([
@@ -257,7 +257,7 @@ class WorkspaceController extends Controller {
             ]);
         }
         
-        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
+        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_USERS . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
             return new JSONResponse([
@@ -266,8 +266,8 @@ class WorkspaceController extends Controller {
             ]);
         }
 
-        $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
+        $newSpaceManagerGroup->setDisplayName(Application::SPACE_MANAGER . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(Application::SPACE_USERS . $space->getId());
         
         $groupsName = array_keys($groupfolder['groups']);
 
@@ -326,7 +326,7 @@ class WorkspaceController extends Controller {
     public function destroy($workspace) {
 
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $workspace['id']);
+        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $workspace['id']);
         foreach ($GEGroup->getUsers() as $user) {
 		$this->userService->removeGEFromWM($user, $workspace['id']);
         }
@@ -433,7 +433,7 @@ class WorkspaceController extends Controller {
 		}
 
 		$user = $this->userManager->get($userId);
-        $GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id']);
+        $GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $space['id']);
 
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
@@ -442,7 +442,7 @@ class WorkspaceController extends Controller {
 			$this->userService->removeGEFromWM($user, $space['id']);
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space['id'])->addUser($user);
+			$this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $space['id'])->addUser($user);
 			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
 		}
 
