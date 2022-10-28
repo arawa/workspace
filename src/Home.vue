@@ -63,12 +63,12 @@
 					</div>
 				</AppNavigationItem>
 			</template>
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<!-- <ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-settings-dark"
 				class="btn-convert"
 				:close-after-click="true"
 				:title="t('workspace', 'Import / Convert')"
-				@click="toggleShowSelectGroupfoldersModal" />
+				@click="toggleShowSelectGroupfoldersModal" /> -->
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -82,11 +82,11 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
-		<Modal
+		<!-- <Modal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</Modal>
+		</Modal> -->
 	</Content>
 </template>
 
@@ -98,13 +98,10 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
-import SelectGroupfolders from './SelectGroupfolders'
 import { deleteBlankSpacename } from './services/spaceService'
 
 export default {
@@ -115,11 +112,8 @@ export default {
 		AppNavigation,
 		AppNavigationIconBullet,
 		AppNavigationItem,
-		ActionButton,
 		AppNavigationNewItem,
 		Content,
-		Modal,
-		SelectGroupfolders,
 	},
 	data() {
 		return {
