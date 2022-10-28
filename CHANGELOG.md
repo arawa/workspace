@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump babel-jest from 28.1.0 to 29.0.3 ( [#564](https://github.com/arawa/workspace/pull/564) )
 - bump @nextcloud/axios from 1.10.0 to 2.0.0 ( [#565](https://github.com/arawa/workspace/pull/565) )
 
+## [1.2.3] - 2022-10-28
+
+### Changed
+
+- Comment the convert feature ( [#604](https://github.com/arawa/workspace/pull/604) )
+
 ## [1.2.2] - 2022-08-19
 
 ### Chore
@@ -63,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.2...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.3...main
+[1.2.3]: https://github.com/arawa/workspace/compare/v1.2.2...1.2.3
 [1.2.2]: https://github.com/arawa/workspace/compare/v1.2.1...1.2.2
 [1.2.1]: https://github.com/arawa/workspace/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.0
