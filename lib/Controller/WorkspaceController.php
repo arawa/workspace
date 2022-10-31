@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -41,7 +42,7 @@ use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\WorkspaceService;
 
 class WorkspaceController extends Controller {
-    
+
     /** @var IGroupManager */
     private $groupManager;
 
@@ -63,31 +64,34 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceService */
     private $workspaceService;
 
-    private const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = '/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/';
+    /** @var WorkspaceCheckService */
+    private $workspaceCheck;
 
     public function __construct(
-	$AppName,
-	IGroupManager $groupManager,
-	ILogger $logger,
-	IRequest $request,
-	UserService $userService,
-	IUserManager $userManager,
-	SpaceMapper $mapper,
-	SpaceService $spaceService,
-	WorkspaceService $workspaceService
+		$AppName,
+		IGroupManager $groupManager,
+		ILogger $logger,
+		IRequest $request,
+		UserService $userService,
+		IUserManager $userManager,
+		SpaceMapper $mapper,
+		SpaceService $spaceService,
+		WorkspaceService $workspaceService,
+		WorkspaceCheckService $workspaceCheck
     )
     {
 	parent::__construct($AppName, $request);
 
-	$this->groupManager = $groupManager;
-	$this->logger = $logger;
+		$this->groupManager = $groupManager;
+		$this->logger = $logger;
 
-	$this->userManager = $userManager;
-	$this->userService = $userService;
+		$this->userManager = $userManager;
+		$this->userService = $userService;
 
-	$this->spaceMapper = $mapper;
-	$this->spaceService = $spaceService;
-	$this->workspaceService = $workspaceService;
+		$this->spaceMapper = $mapper;
+		$this->spaceService = $spaceService;
+		$this->workspaceService = $workspaceService;
+		$this->workspaceCheck = $workspaceCheck;
     }
 
     /**
@@ -96,7 +100,7 @@ class WorkspaceController extends Controller {
      * @return object if there is an error
      */
     private function checkTheSpaceName(string $spaceName) {
-        if (preg_match($this::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
+        if (preg_match(Application::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
             return [
                 'statuscode' => Http::STATUS_BAD_REQUEST,
                 'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
@@ -119,19 +123,15 @@ class WorkspaceController extends Controller {
      * @GeneralManagerRequired
      * @NoCSRFRequired
      */
-    public function createSpace(string $spaceName, int $folderId) {
+    public function createWorkspace(string $spaceName, int $folderId) {
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
-
-        if (!empty($errorInSpaceName)) {
-            return new JSONResponse($errorInSpaceName);
-        }
+        $this->workspaceCheck->checkTheSpaceName($spaceName);
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
 
@@ -157,7 +157,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a space.',
             ]);
         }
-        
+
         // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
@@ -167,7 +167,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a Space Manager group.',
             ]);
         }
-        
+
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
@@ -179,7 +179,7 @@ class WorkspaceController extends Controller {
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
-        
+
 		// #3 Returns result
         return new JSONResponse ([
             'space_name' => $space->getSpaceName(),
@@ -209,7 +209,7 @@ class WorkspaceController extends Controller {
 
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
@@ -219,7 +219,7 @@ class WorkspaceController extends Controller {
         if (!empty($errorInSpaceName)) {
             return new JSONResponse($errorInSpaceName);
         }
-    
+
         $spaceName = $this->deleteBlankSpaceName($spaceName);
 
         if (gettype($groupfolder) === 'string') {
@@ -246,7 +246,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a space.',
             ]);
         }
-        
+
         // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
@@ -256,7 +256,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a Space Manager group.',
             ]);
         }
-        
+
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
@@ -268,7 +268,7 @@ class WorkspaceController extends Controller {
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
-        
+
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
@@ -279,7 +279,7 @@ class WorkspaceController extends Controller {
             $group = $this->groupManager->get($groupName);
 
             $usersOfAGroup = $group->getUsers();
-            foreach($usersOfAGroup as $user) {                
+            foreach($usersOfAGroup as $user) {
                 $newSpaceUsersGroup->addUser($user);
                 $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
             }
@@ -321,7 +321,7 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @param object $workspace
-     * 
+     *
      */
     public function destroy($workspace) {
 
@@ -358,7 +358,7 @@ class WorkspaceController extends Controller {
 	/**
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
-	 * 
+	 *
 	 * @NoAdminRequired
      * @NoCSRFRequired
 	 *
@@ -396,7 +396,7 @@ class WorkspaceController extends Controller {
     public function addUsersInfo($workspace) {
         return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
     }
-    
+
 	/**
      * Returns a list of users whose name matches $term
      *
@@ -424,7 +424,7 @@ class WorkspaceController extends Controller {
 	*
 	* @param object|string $space
 	* @param string $userId
-	* 
+	*
 	*/
 	public function changeUserRole($space, string $userId) {
 
@@ -450,18 +450,18 @@ class WorkspaceController extends Controller {
 	}
 
     /**
-     * 
+     *
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @NoCSRFRequired
      * @param object|string $workspace
      * @param string $newSpaceName
      * @return JSONResponse
-     * 
+     *
      * @todo Manage errors
      */
     public function renameSpace($workspace, $newSpaceName) {
-        
+
         if (gettype($workspace) === 'object') {
             $workspace = json_decode($workspace, true);
         }
@@ -474,7 +474,7 @@ class WorkspaceController extends Controller {
 
 		if( $newSpaceName === false ||
 			$newSpaceName === null ||
-			$newSpaceName === '' 
+			$newSpaceName === ''
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
