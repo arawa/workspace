@@ -37,7 +37,7 @@ This app is a Nextcloud extension of the Groupfolders app.
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
-**Caution**, to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.1.0](https://github.com/arawa/groupfolders/releases/download/v9.1.0/groupfolders-9.1.0.tar.gz).
+**Caution**, to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.1.1](https://github.com/arawa/groupfolders/releases/download/v9.1.1/groupfolders-9.1.1.tar.gz).
 We are working with Nextcloud to make Workspace compatible with the standard Groupfolders application.
 This version will be available soon.
 
