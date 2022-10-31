@@ -103,6 +103,9 @@ import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
 import { deleteBlankSpacename } from './services/spaceService'
+import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
+import NotificationError from './services/Notifications/NotificationError.js'
+import BadCreateError from './Errors/BadCreateError.js'
 
 export default {
 	name: 'Home',
@@ -118,6 +121,7 @@ export default {
 	data() {
 		return {
 			showSelectGroupfoldersModal: false,
+			// notificationError: NotificationError,
 		}
 	},
 	beforeCreate() {
@@ -259,35 +263,37 @@ export default {
 				return
 			}
 			name = deleteBlankSpacename(name)
-			const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
 
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 
 			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				this.$notify({
-					title: t('workspace', 'Error - Creating space'),
-					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
-					duration: 6000,
-					type: 'error',
-				})
-				return
+				const toastCharacterNotAuthoized = new NotificationError(
+					'Error - Creating space',
+					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
+					6000)
+				toastCharacterNotAuthoized.setInstanceVue(this)
+				toastCharacterNotAuthoized.push()
+				throw new BadCreateError('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
 			}
 
 			create(name)
 				.then(resp => {
 					if (resp.data.statuscode === 409) {
-						this.$notify({
-							title: t('workspace', 'Error - Creating space'),
-							text: t('workspace', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.'),
-							type: 'error',
-						})
+						const toastSpaceOrGroupfoldersExisting = new NotificationError(
+							'Error - Creating space',
+							'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.',
+						)
+						toastSpaceOrGroupfoldersExisting.setInstanceVue(this)
+						toastSpaceOrGroupfoldersExisting.push()
 					} else if (resp.data.statuscode === 400) {
-						this.$notify({
-							title: t('workspace', 'Error - Creating space'),
-							text: t('workspace', 'The groupfolder with this name : {spaceName} already exist', { spaceName: resp.data.spacename }),
-							duration: 6000,
-							type: 'error',
-						})
+						const toastGroupfolderExisting = new NotificationError(
+							'Error - Creating space',
+							'The groupfolder with this name : {spaceName} already exist',
+							6000,
+							{ spaceName: resp.data.spacename },
+						)
+						toastGroupfolderExisting.setInstanceVue(this)
+						toastGroupfolderExisting.push()
 					} else {
 						this.$store.commit('addSpace', {
 							color: resp.data.color,
@@ -305,11 +311,18 @@ export default {
 					}
 				})
 				.catch((e) => {
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to create the workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+					const toastErrorNetworking = new NotificationError(
+						'Network error',
+						'A network error occured while trying to create the workspaces.',
+					)
+					toastErrorNetworking.setInstanceVue(this)
+					toastErrorNetworking.push()
+					throw new BadCreateError('Network error - the error is: ' + e)
+					// this.$notify({
+					// 	title: t('workspace', 'Network error'),
+					// 	text: t('workspace', 'A network error occured while trying to create the workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
+					// 	type: 'error',
+					// })
 				})
 		},
 		// Sorts groups alphabeticaly
