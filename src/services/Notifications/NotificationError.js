@@ -31,6 +31,16 @@ export default class NotificationError {
 		this.instanceVue = instanceVue
 	}
 
+	/**
+	 *
+	 * @param {object} config {
+	 * title: string,
+	 * text: string,
+	 * duration: integer
+	 * }
+	 * @description in the config param, Only the title and text keys are required.
+	 * @link please, read the official doc : https://www.npmjs.com/package/vue-notification#props
+	 */
 	push(config) {
 		this.instanceVue.$notify({
 			...configDefault,
