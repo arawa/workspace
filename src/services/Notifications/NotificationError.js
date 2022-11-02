@@ -20,27 +20,23 @@
  *
  */
 
-import { translate } from '@nextcloud/l10n'
-
-let Vue = null
+const configDefault = {
+	type: 'error',
+	duration: 3000,
+}
 
 export default class NotificationError {
 
-	constructor(title, text, duration = 3000, mapKey = {}) {
-		this.config = {
-			title: translate('workspace', title),
-			text: translate('workspace', text, mapKey),
-			duration,
-			type: 'error',
-		}
+	constructor(instanceVue) {
+		this.instanceVue = instanceVue
+
 	}
 
-	setInstanceVue(instance) {
-		Vue = instance
-	}
-
-	push() {
-		Vue.$notify(this.config)
+	push(config) {
+		this.instanceVue.$notify({
+			...configDefault,
+			...config,
+		})
 	}
 
 }
