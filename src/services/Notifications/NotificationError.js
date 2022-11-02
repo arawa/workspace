@@ -29,7 +29,6 @@ export default class NotificationError {
 
 	constructor(instanceVue) {
 		this.instanceVue = instanceVue
-
 	}
 
 	push(config) {
