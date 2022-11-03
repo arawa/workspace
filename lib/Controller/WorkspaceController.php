@@ -94,17 +94,6 @@ class WorkspaceController extends Controller {
 		$this->workspaceCheck = $workspaceCheck;
     }
 
-    private function checkTheSpaceName(string $spaceName) {
-        if (preg_match(Application::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
-            return [
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-            ];
-        }
-
-        return [];
-    }
-
     /**
      * @param string $spaceName it's the space name
      * @return string whithout the blank to start and end of the space name
@@ -209,11 +198,7 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        $errorInSpaceName = $this->checkTheSpaceName($spaceName);
-
-        if (!empty($errorInSpaceName)) {
-            return new JSONResponse($errorInSpaceName);
-        }
+        $this->workspaceCheck->containSpecialChar($spaceName);
 
         $spaceName = $this->deleteBlankSpaceName($spaceName);
 
@@ -461,11 +446,7 @@ class WorkspaceController extends Controller {
             $workspace = json_decode($workspace, true);
         }
 
-        $errorInSpaceName = $this->checkTheSpaceName($newSpaceName);
-
-        if (!empty($errorInSpaceName)) {
-            return new JSONResponse($errorInSpaceName);
-        }
+        $this->workspaceCheck->containSpecialChar($newSpaceName);
 
 		if( $newSpaceName === false ||
 			$newSpaceName === null ||
