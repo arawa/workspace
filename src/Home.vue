@@ -255,7 +255,8 @@ export default {
 		// Creates a new space and navigates to its details page
 		createSpace(name) {
 			if (name === '') {
-				this.$notify({
+				const toastSpacenameEmpty = new NotificationError(this)
+				toastSpacenameEmpty.push({
 					title: t('workspace', 'Error'),
 					text: t('workspace', 'Please specify a name.'),
 					type: 'error',
