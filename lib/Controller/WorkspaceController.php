@@ -107,6 +107,7 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
+	 * @throws BadRequestException
      */
     public function createWorkspace(string $spaceName, int $folderId) {
         if ( $spaceName === false ||
@@ -121,7 +122,6 @@ class WorkspaceController extends Controller {
 
         $spaceName = $this->deleteBlankSpaceName($spaceName);
 
-        // #1 create the space
         $space = new Space();
         $space->setSpaceName($spaceName);
         $space->setGroupfolderId($folderId);
@@ -129,35 +129,24 @@ class WorkspaceController extends Controller {
         $this->spaceMapper->insert($space);
 
         if (is_null($space)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a space.',
-            ]);
+			throw new BadRequestException('Error to create a space.');
         }
 
-        // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a Space Manager group.',
-            ]);
+			throw new BadRequestException('Error to create a Space Manager group.');
         }
 
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a Space Users group.',
-            ]);
+			throw new BadRequestException('Error to create a Space Users group.');
         }
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
 
-		// #3 Returns result
         return new JSONResponse ([
             'space_name' => $space->getSpaceName(),
             'id_space' => $space->getId(),
