@@ -34,7 +34,13 @@ class WorkspaceCheckService {
 	}
 
 
-	public function checkTheSpaceName(string $spacename) {
+	    /**
+     * Check if the space name contains specials characters or a blank into the end its name.
+     * @param string $spaceName
+     * @return
+	 * @throws BadRequestException
+     */
+	public function containSpecialChar(string $spacename) {
 		if (preg_match(Application::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spacename)) {
             throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
         }

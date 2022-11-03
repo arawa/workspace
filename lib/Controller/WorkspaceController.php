@@ -94,11 +94,6 @@ class WorkspaceController extends Controller {
 		$this->workspaceCheck = $workspaceCheck;
     }
 
-    /**
-     * Check if the space name contains specials characters or a blank into the end its name.
-     * @param string $spaceName
-     * @return object if there is an error
-     */
     private function checkTheSpaceName(string $spaceName) {
         if (preg_match(Application::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spaceName)) {
             return [
@@ -131,7 +126,7 @@ class WorkspaceController extends Controller {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        $this->workspaceCheck->checkTheSpaceName($spaceName);
+        $this->workspaceCheck->containSpecialChar($spaceName);
 
         $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
 
