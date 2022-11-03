@@ -26,17 +26,22 @@ namespace OCA\Workspace\Service\Workspace;
 
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\WorkspaceNameExistException;
 
 class WorkspaceCheckService {
 
-	public function __construct()
+	private SpaceService $spaceService;
+
+	public function __construct(SpaceService $spaceService)
 	{
+		$this->spaceService = $spaceService;
 	}
 
 
-	    /**
+	/**
      * Check if the space name contains specials characters or a blank into the end its name.
-     * @param string $spaceName
+     * @param string $spacename
      * @return
 	 * @throws BadRequestException
      */
@@ -46,5 +51,20 @@ class WorkspaceCheckService {
         }
 
         return;
+	}
+
+
+	/**
+	 * Check if the space name exist in groupfolders or workspace
+	 * @param string $spacename
+	 * @return
+	 * @throws WorkspaceNameExistException
+	 */
+	public function isExist(string $spacename) {
+        if($this->spaceService->checkSpaceNameExist($spacename)) {
+			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist');
+        }
+
+		return;
 	}
 }

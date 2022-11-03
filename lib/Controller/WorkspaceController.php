@@ -117,15 +117,7 @@ class WorkspaceController extends Controller {
         }
 
         $this->workspaceCheck->containSpecialChar($spaceName);
-
-        $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
-
-        if($spaceNameExist) {
-            return new JSONResponse([
-				'statuscode' => Http::STATUS_CONFLICT,
-				'message' => 'The ' . $spaceName . ' space name already exist'
-            ]);
-        }
+        $this->workspaceCheck->isExist($spaceName);
 
         $spaceName = $this->deleteBlankSpaceName($spaceName);
 
@@ -206,13 +198,8 @@ class WorkspaceController extends Controller {
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
-        $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
-        if($spaceNameExist) {
-            return new JSONResponse([
-				'statuscode' => Http::STATUS_CONFLICT,
-				'message' => 'The ' . $spaceName . ' space name already exist'
-            ]);
-        }
+
+        $this->workspaceCheck->isExist($spaceName);
 
         // #1 create the space
         $space = new Space();
