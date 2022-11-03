@@ -97,6 +97,7 @@ class WorkspaceController extends Controller {
     /**
      * @param string $spaceName it's the space name
      * @return string whithout the blank to start and end of the space name
+	 * @todo move this method
      */
     private function deleteBlankSpaceName(string $spaceName) {
         return trim($spaceName);
