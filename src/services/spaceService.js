@@ -24,23 +24,37 @@
 import axios from '@nextcloud/axios'
 import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
+import BadCreateError from '../Errors/BadCreateError.js'
+import NotificationError from './Notifications/NotificationError'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
 	* @param {number} folderId it's the id of groupfolder
+	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
-export function createSpace(spaceName, folderId) {
+export function createSpace(spaceName, folderId, vueInstance = undefined) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
 			spaceName,
 			folderId,
 		})
 		.then(resp => {
+			if (typeof (resp.data) !== 'object') {
+				throw new Error('Error when creating a space, it\'s not an object type.')
+			}
+
 			return resp.data
 		})
 		.catch(error => {
-			console.error('createSpace error', error)
+			if (typeof (vueInstance) !== 'undefined') {
+				const toastErrorToCreateWorkspace = new NotificationError(vueInstance)
+				toastErrorToCreateWorkspace.push({
+					title: t('workspace', 'Error to create a workspace'),
+					text: t('workspace', error.message),
+				})
+			}
+			throw new BadCreateError(error.message)
 		})
 	return result
 }

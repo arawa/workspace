@@ -25,7 +25,7 @@ import router from '../router'
 import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { addGroup } from '../services/groupfoldersService'
+import { addGroupToGroupfolder } from '../services/groupfoldersService'
 
 export default {
 	// Adds a user to a group
@@ -93,7 +93,7 @@ export default {
 			.then((resp) => {
 				if (resp.status === 200) {
 					// add this group in groupfolders
-					addGroup(space.groupfolderId, resp.data.group.gid)
+					addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
 						.then(res => {
 							if (res.success === false) {
 								axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })

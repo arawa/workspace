@@ -23,7 +23,11 @@
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './spaceService'
+import { deleteBlankSpacename } from './spaceService'
+import BadGetError from '../Errors/BadGetError.js'
+import BadACLError from '../Errors/BadACLError.js'
+import NotificationError from './Notifications/NotificationError.js'
+import BadCreateError from '../Errors/BadCreateError.js'
 
 /**
  * @return {object}
@@ -35,8 +39,8 @@ export function getAll() {
 				return resp.data.ocs.data
 			}
 		})
-		.catch(e => {
-			console.error('Error to get all spaces', e)
+		.catch(error => {
+			throw new BadGetError('Error to get all spaces', error.reason)
 		})
 	return data
 }
@@ -44,20 +48,27 @@ export function getAll() {
 /**
  *
  * @param {number} groupfolderId it's the id of a groupfolder
+ * @param {object} vueInstance it's an instance of vue
  * @return {object}
  */
-export function get(groupfolderId) {
-	const data = axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
+export function get(groupfolderId, vueInstance = undefined) {
+	return axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
 		.then(resp => {
 			if (resp.data.ocs.meta.status === 'ok') {
 				const workspace = resp.data.ocs.data
 				return workspace
+			} else {
+				throw new Error('Impossible to get the groupfolder. May be an error network ?')
 			}
 		})
-		.catch(e => {
-			console.error('Error to get one space', e)
+		.catch((error) => {
+			const toastErrorToGetGroupfolder = new NotificationError(vueInstance)
+			toastErrorToGetGroupfolder.push({
+				title: t('workspace', 'Error to get the groupfolder'),
+				text: t('workspace', error.message),
+			})
+			throw new Error(error.message)
 		})
-	return data
 }
 
 /**
@@ -94,23 +105,33 @@ export function formatUsers(space) {
 
 /**
  * @param {string} spaceName it's the name of space to check
- * @return {boolean} true if such a groupfolder exists, false otherwise
+ * @param {object} vueInstance it's the instance of vue
  */
-function checkGroupfolderNameExist(spaceName) {
-	const groupfolders = getAll()
+export function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
+	return getAll()
 		.then(groupfolders => {
 			for (const folderId in groupfolders) {
 				if (spaceName.toLowerCase() === groupfolders[folderId].mount_point.toLowerCase()) {
-					return true
+					throw new Error('The groupfolder with this name : ' + spaceName + ' already exist')
 				}
 			}
-			return false
 		})
-		.catch(error => {
-			console.error('Cannot get all Groupfolders', error)
-			return false
+		.catch((error) => {
+			if (typeof (vueInstance) !== 'undefined') {
+				const toastSpaceOrGroupfoldersExisting = new NotificationError(vueInstance)
+				toastSpaceOrGroupfoldersExisting.push({
+					title: t('workspace', 'Error - Creating space'),
+					text: t(
+						'workspace',
+						'This space or groupfolder already exist. Please, input another space.'
+						+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
+						+ '\nMake sure you the groupfolder doesn\'t exist.',
+					),
+					duration: 6000,
+				})
+			}
+			throw new BadCreateError(error)
 		})
-	return groupfolders
 }
 
 /**
@@ -126,9 +147,13 @@ export function enableAcl(folderId) {
 			if (resp.status === 200 && resp.data.ocs.meta.status === 'ok') {
 				return resp.data.ocs.data
 			}
+
+			if (resp.status === 500) {
+				throw new Error('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?')
+			}
 		})
 		.catch(error => {
-			console.error('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?', error)
+			throw new BadACLError(error.message)
 		})
 	return result
 }
@@ -136,10 +161,11 @@ export function enableAcl(folderId) {
 /**
  * @param {number} folderId of an groupfolder
  * @param {string} gid it's an id (string format) of a group
+ * @param {object} vueInstance it's an instance of vue
  * @return {object}
  */
-export function addGroup(folderId, gid) {
-	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
+export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
+	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
 			group: gid,
 		})
@@ -147,137 +173,83 @@ export function addGroup(folderId, gid) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
+			if (typeof typeof (vueInstance) !== 'undefined') {
+				const toastErrorToAddGroupToGroupfolder = new NotificationError(vueInstance)
+				toastErrorToAddGroupToGroupfolder.push({
+					title: t('workspace', 'Error groups'),
+					text: t('workspace', 'Impossible to attach the {error} group to groupfolder. May be a problem with the connection ?', { error }),
+				})
+			}
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
+			throw new Error('Error to add Space Manager group in the groupfolder')
 		})
-	return result
 }
 
 /**
  * @param {number} folderId it's an id of a groupfolder
  * @param {string} gid it's an id (string format) of a group
- * @param {boolean} manageAcl (default: true)
+ * @param {object} vueInstance it's an instance of vue
  * @return {object} it's an object to check if it's a success or not
  */
-export function manageACL(folderId, gid, manageAcl = true) {
-	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
+export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
+	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
 			mappingId: gid,
-			manageAcl,
+			manageAcl: true,
 		})
 		.then(resp => {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
+			if (typeof (vueInstance) !== 'undefined') {
+				const toastErrorToAddGroupToManageACLForGroupfolder = new NotificationError(vueInstance)
+				toastErrorToAddGroupToManageACLForGroupfolder.push({
+					title: t('workspace', 'Error to add group as manager acl'),
+					text: t('workspace', 'Impossible to add the Space Manager group in Manage ACL groupfolder'),
+				})
+			}
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
+			throw new Error('Error to add the Space Manager group in manage ACL groupfolder')
 		})
-	return result
 }
 
 /**
  * @param {string} spaceName it's the name space to create
+ * @param {object} vueInstance it's the instance of vue
  * @return {object} data
  */
-export async function create(spaceName) {
-	const data = { }
-	data.data = { }
-	const groupfolderIsExist = await checkGroupfolderNameExist(spaceName)
-	// Todo: Should I return a boolean value ?
-	if (groupfolderIsExist) {
-		data.data.message = `The groupfolder with this name : "${spaceName}" already exist`
-		data.data.statuscode = 400
-		data.data.spacename = spaceName
-		return data
-	}
-
-	// Create groupfolder
-	const groupfolderId = await axios.post(generateUrl('/apps/groupfolders/folders'),
+export function create(spaceName, vueInstance = undefined) {
+	return axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
 			mountpoint: spaceName,
 		})
 		.then(resp => {
+			if (resp.data.ocs.meta.statuscode !== 100) {
+				throw new Error('Impossible to create a groupfolder. May be an error network ?')
+			}
 			return resp.data.ocs
 		})
 		.catch(error => {
-			console.error('Impossible to create a groupfolder. May be an error network ?', error)
-			data.data.statuscode = 400
-			return data
+			if (error instanceof Error) {
+				if (typeof (vueInstance) !== 'undefined') {
+					const toastErrorCreateGroupfolder = new NotificationError(vueInstance)
+					toastErrorCreateGroupfolder.push({
+						title: t('workspace', 'Error to create'),
+						text: t('workspace', error.message),
+					})
+				}
+				throw new Error(error.message)
+			}
+			if (typeof (vueInstance) !== 'undefined') {
+				const toastErrorNetworking = new NotificationError(vueInstance)
+				toastErrorNetworking.push({
+					title: t('workspace', 'Network error'),
+					text: t('workspace', 'A network error occured while trying to create the workspaces.'),
+				})
+			}
+			throw new BadCreateError('Network error - the error is: ' + error)
 		})
-	if (groupfolderId.meta.statuscode !== 100) {
-		console.error('Error when creating on groupfolder')
-		data.data.statuscode = 500
-		return data
-	}
-
-	// Get groupfolder created
-	const groupfolder = await get(groupfolderId.data.id)
-		.then(resp => {
-			return resp
-		})
-		.catch(error => {
-			console.error('Impossible to get the groupfolder. May be an error network ?', error)
-			data.data.statuscode = 400
-			return data
-		})
-
-	// Enable ACL on the groupfolder created
-	const aclIsEnabled = await enableAcl(groupfolder.id)
-	if (!aclIsEnabled.success) {
-		console.error('Error to enable acl')
-		data.data.statuscode = 500
-		return data
-	}
-	// Create the space
-	const resultCreateSpace = await createSpace(groupfolder.mount_point, groupfolder.id)
-	if (typeof (resultCreateSpace) !== 'object') {
-		console.error('Error when creating a space, it\'s not an object type.')
-		data.data.statuscode = 500
-		return data
-	}
-	// resultCreateSpace fill data
-	data.data = resultCreateSpace
-
-	// acl fill data
-	data.data.acl = {}
-	data.data.acl.state = true
-
-	// Add groups to groupfolder
-	const GROUPS = Object.keys(resultCreateSpace.groups)
-	const spaceManagerGID = GROUPS.find(isSpaceManagers)
-	const spaceUserGID = GROUPS.find(isSpaceUsers)
-
-	const isAddGroupForSpaceManager = await addGroup(resultCreateSpace.folder_id, spaceManagerGID)
-	if (!isAddGroupForSpaceManager.success) {
-		console.error('Error to add Space Manager group in the groupfolder')
-		data.data.statuscode = 500
-		return data
-	}
-
-	const isAddGroupForSpaceUser = await addGroup(resultCreateSpace.folder_id, spaceUserGID)
-	if (!isAddGroupForSpaceUser.success) {
-		console.error('Error to add Space Users group in the groupfolder')
-		data.data.statuscode = 500
-		return data
-	}
-
-	// Add Space Manager group in manage ACL
-	const resultManageACL = await manageACL(resultCreateSpace.folder_id, spaceManagerGID)
-	if (!resultManageACL.success) {
-		console.error('Error to add the Space Manager group in manage ACL')
-		console.error('GroupFolder API to manage ACL a groupfolder doesn\'t respond')
-		data.data.statuscode = 500
-		return data
-	}
-	// resultManageACL fill data
-	data.data.space_advanced_permissions = true
-	data.data.assign_permission = {
-		status: 'enabled',
-		groups: [
-			spaceManagerGID,
-		],
-	}
-
-	return data
 }
 
 /**

@@ -101,8 +101,8 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups, create, formatUsers } from './services/groupfoldersService'
-import { deleteBlankSpacename } from './services/spaceService'
+import { get, formatGroups, create, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
+import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import NotificationError from './services/Notifications/NotificationError.js'
 import BadCreateError from './Errors/BadCreateError.js'
@@ -253,7 +253,7 @@ export default {
 			}
 		},
 		// Creates a new space and navigates to its details page
-		createSpace(name) {
+		async createSpace(name) {
 			if (name === '') {
 				const toastSpacenameEmpty = new NotificationError(this)
 				toastSpacenameEmpty.push({
@@ -282,50 +282,36 @@ export default {
 				)
 			}
 
-			create(name)
-				.then(resp => {
-					if (resp.data.statuscode === 409) {
-						const toastSpaceOrGroupfoldersExisting = new NotificationError(this)
-						toastSpaceOrGroupfoldersExisting.push({
-							title: t('workspace', 'Error - Creating space'),
-							text: t(
-								'workspace',
-								'This space or groupfolder already exist. Please, input another space.'
-								+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
-								+ '\nMake sure you the groupfolder doesn\'t exist.'
-							),
-						})
-					} else if (resp.data.statuscode === 400) {
-						const toastGroupfolderExisting = new NotificationError(this)
-						toastGroupfolderExisting.push({
-							title: t('workspace', 'Error - Creating space'),
-							text: t('workspace', 'The groupfolder with this name : {spaceName} already exist', { spaceName: resp.data.spacename }),
-							duration: 6000,
-						})
-					} else {
-						this.$store.commit('addSpace', {
-							color: resp.data.color,
-							groups: resp.data.groups,
-							isOpen: false,
-							id: resp.data.id_space,
-							groupfolderId: resp.data.folder_id,
-							name,
-							quota: t('workspace', 'unlimited'),
-							users: {},
-						})
-						this.$router.push({
-							path: `/workspace/${name}`,
-						})
-					}
-				})
-				.catch((e) => {
-					const toastErrorNetworking = new NotificationError(this)
-					toastErrorNetworking.push({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to create the workspaces.'),
-					})
-					throw new BadCreateError('Network error - the error is: ' + e)
-				})
+			await checkGroupfolderNameExist(name, this)
+
+			const groupfolderId = await create(name, this)
+
+			await enableAcl(groupfolderId.data.id)
+
+			const workspace = await createSpace(name, groupfolderId.data.id, this)
+
+			const GROUPS_WORKSPACE = Object.keys(workspace.groups)
+			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
+			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
+
+			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
+			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
+
+			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid, this)
+
+			this.$store.commit('addSpace', {
+				color: workspace.color,
+				groups: workspace.groups,
+				isOpen: false,
+				id: workspace.id_space,
+				groupfolderId,
+				name,
+				quota: t('workspace', 'unlimited'),
+				users: {},
+			})
+			this.$router.push({
+				path: `/workspace/${name}`,
+			})
 		},
 		// Sorts groups alphabeticaly
 		sortedGroups(groups, space) {
