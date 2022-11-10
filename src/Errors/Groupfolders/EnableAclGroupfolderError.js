@@ -20,11 +20,11 @@
  *
  */
 
-export default class BadACLError extends Error {
+ export default class EnableAclGroupfolderError extends Error {
 
 	constructor(message) {
 		super(message)
-		this.name = 'BadACLError'
+		this.name = 'EnableAclGroupfolderError'
 	}
 
 }

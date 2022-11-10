@@ -21,13 +21,17 @@
  *
  */
 
-import axios from '@nextcloud/axios'
+import { deleteBlankSpacename } from './spaceService.js'
 import { generateUrl } from '@nextcloud/router'
-import { deleteBlankSpacename } from './spaceService'
+import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
+import AddGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/AddGroupToManageACLForGroupfolderError.js'
+import axios from '@nextcloud/axios'
 import BadGetError from '../Errors/BadGetError.js'
-import BadACLError from '../Errors/BadACLError.js'
+import CheckGroupfolderNameExistError from '../Errors/Groupfolders/CheckGroupfolderNameError.js'
+import CreateGroupfolderError from '../Errors/Groupfolders/BadCreateError.js'
+import EnableAclGroupfolderError from '../Errors/Groupfolders/EnableAclGroupfolderError.js'
+import GetGroupfolderError from '../Errors/Groupfolders/GetGroupfolderError.js'
 import NotificationError from './Notifications/NotificationError.js'
-import BadCreateError from '../Errors/BadCreateError.js'
 
 /**
  * @return {object}
@@ -49,7 +53,8 @@ export function getAll() {
  *
  * @param {number} groupfolderId it's the id of a groupfolder
  * @param {object} vueInstance it's an instance of vue
- * @return {object}
+ * @return {Promise}
+ * @throws {GetGroupfolderError}
  */
 export function get(groupfolderId, vueInstance = undefined) {
 	return axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
@@ -58,7 +63,7 @@ export function get(groupfolderId, vueInstance = undefined) {
 				const workspace = resp.data.ocs.data
 				return workspace
 			} else {
-				throw new Error('Impossible to get the groupfolder. May be an error network ?')
+				throw new GetGroupfolderError('Impossible to get the groupfolder. May be an error network ?')
 			}
 		})
 		.catch((error) => {
@@ -74,7 +79,7 @@ export function get(groupfolderId, vueInstance = undefined) {
 /**
  *
  * @param {object} space it's an object relative to space
- * @return {object}
+ * @return {Promise}
  */
 export function formatGroups(space) {
 	const data = axios.post(generateUrl('/apps/workspace/api/workspace/formatGroups'), { workspace: space })
@@ -90,7 +95,7 @@ export function formatGroups(space) {
 /**
  *
  * @param {object} space it's an object relative to space
- * @return {object}
+ * @return {Promise}
  */
 export function formatUsers(space) {
 	const data = axios.post(generateUrl('/apps/workspace/api/workspace/formatUsers'), { workspace: space })
@@ -106,13 +111,15 @@ export function formatUsers(space) {
 /**
  * @param {string} spaceName it's the name of space to check
  * @param {object} vueInstance it's the instance of vue
+ * @return {Promise}
+ * @throws {CheckGroupfolderNameExistError}
  */
 export function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
 	return getAll()
 		.then(groupfolders => {
 			for (const folderId in groupfolders) {
 				if (spaceName.toLowerCase() === groupfolders[folderId].mount_point.toLowerCase()) {
-					throw new Error('The groupfolder with this name : ' + spaceName + ' already exist')
+					throw new CheckGroupfolderNameExistError('The groupfolder with this name : ' + spaceName + ' already exist')
 				}
 			}
 		})
@@ -130,16 +137,17 @@ export function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
 					duration: 6000,
 				})
 			}
-			throw new BadCreateError(error)
+			throw new CheckGroupfolderNameExistError(error)
 		})
 }
 
 /**
  * @param {number} folderId from a groupfolder
- * @return {object}
+ * @return {Promise}
+ * @throws {EnableAclGroupfolderError}
  */
 export function enableAcl(folderId) {
-	const result = axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
+	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
 		{
 			acl: 1,
 		})
@@ -153,16 +161,16 @@ export function enableAcl(folderId) {
 			}
 		})
 		.catch(error => {
-			throw new BadACLError(error.message)
+			throw new EnableAclGroupfolderError(error.message)
 		})
-	return result
 }
 
 /**
  * @param {number} folderId of an groupfolder
  * @param {string} gid it's an id (string format) of a group
  * @param {object} vueInstance it's an instance of vue
- * @return {object}
+ * @return {Promise}
+ * @throws {AddGroupToGroupfolderError}
  */
 export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
@@ -181,7 +189,7 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 				})
 			}
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
-			throw new Error('Error to add Space Manager group in the groupfolder')
+			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
 }
 
@@ -189,7 +197,8 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
  * @param {number} folderId it's an id of a groupfolder
  * @param {string} gid it's an id (string format) of a group
  * @param {object} vueInstance it's an instance of vue
- * @return {object} it's an object to check if it's a success or not
+ * @return {Promise}
+ * @throws {AddGroupToManageACLForGroupfolderError}
  */
 export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
@@ -210,14 +219,15 @@ export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
 				})
 			}
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
-			throw new Error('Error to add the Space Manager group in manage ACL groupfolder')
+			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
 		})
 }
 
 /**
  * @param {string} spaceName it's the name space to create
  * @param {object} vueInstance it's the instance of vue
- * @return {object} data
+ * @return {Promise}
+ * @throws {CreateGroupfolderError}
  */
 export function createGroupfolder(spaceName, vueInstance = undefined) {
 	return axios.post(generateUrl('/apps/groupfolders/folders'),
@@ -248,13 +258,13 @@ export function createGroupfolder(spaceName, vueInstance = undefined) {
 					text: t('workspace', 'A network error occured while trying to create the workspaces.'),
 				})
 			}
-			throw new BadCreateError('Network error - the error is: ' + error)
+			throw new CreateGroupfolderError('Network error - the error is: ' + error)
 		})
 }
 
 /**
  * @param {object} workspace it's an object relative to workspace
- * @return {object}
+ * @return {Promise}
  */
 export function destroy(workspace) {
 	// It's possible to send data with the DELETE verb adding `data` key word as
@@ -287,7 +297,7 @@ export function destroy(workspace) {
  *
  * @param {object} workspace it's the object relative to workspace
  * @param {string} newSpaceName it's the new name for the workspace
- * @return {object}
+ * @return {Promise}
  */
 export function rename(workspace, newSpaceName) {
 	// Response format to return
