@@ -219,7 +219,7 @@ export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
  * @param {object} vueInstance it's the instance of vue
  * @return {object} data
  */
-export function create(spaceName, vueInstance = undefined) {
+export function createGroupfolder(spaceName, vueInstance = undefined) {
 	return axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
 			mountpoint: spaceName,

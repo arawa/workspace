@@ -101,7 +101,7 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups, create, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
+import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
 import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import NotificationError from './services/Notifications/NotificationError.js'
@@ -284,7 +284,7 @@ export default {
 
 			await checkGroupfolderNameExist(name, this)
 
-			const groupfolderId = await create(name, this)
+			const groupfolderId = await createGroupfolder(name, this)
 
 			await enableAcl(groupfolderId.data.id)
 
