@@ -27,7 +27,7 @@ namespace OCA\Workspace;
 
 use OCP\AppFramework\Http;
 
-class BadRequestException extends StatusException {
+class BadRequestException extends \Exception {
 
     public function __construct($message)
     {
