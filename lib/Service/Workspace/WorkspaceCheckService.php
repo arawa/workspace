@@ -24,8 +24,9 @@
 
 namespace OCA\Workspace\Service\Workspace;
 
-use OCA\Workspace\BadRequestException;
+use OCP\AppFramework\Http;
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\WorkspaceNameExistException;
 
@@ -56,13 +57,12 @@ class WorkspaceCheckService {
 
 	/**
 	 * Check if the space name exist in groupfolders or workspace
-	 * @param string $spacename
 	 * @return
 	 * @throws WorkspaceNameExistException
 	 */
 	public function isExist(string $spacename) {
         if($this->spaceService->checkSpaceNameExist($spacename)) {
-			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist');
+			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist', Http::STATUS_CONFLICT);
         }
 
 		return;

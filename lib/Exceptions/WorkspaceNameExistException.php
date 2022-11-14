@@ -24,18 +24,11 @@
 
 namespace OCA\Workspace;
 
-use OCP\AppFramework\Http;
-
-class WorkspaceNameExistException extends StatusException
+class WorkspaceNameExistException extends \Exception
 {
 
-	public function __constructor($message)
+	public function __constructor($message, $code = 0)
 	{
-		parent::__constructor($message);
-	}
-
-	public function getStatus()
-	{
-		return Http::STATUS_CONFLICT;
+		parent::__constructor($message, $code);
 	}
 }
