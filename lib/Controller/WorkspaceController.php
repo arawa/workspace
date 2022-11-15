@@ -37,9 +37,11 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
+use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\CreateWorkspaceException;
 
 class WorkspaceController extends Controller {
 
@@ -108,6 +110,8 @@ class WorkspaceController extends Controller {
      * @GeneralManagerRequired
      * @NoCSRFRequired
 	 * @throws BadRequestException
+	 * @throws CreateWorkspaceException
+	 * @throws CreateGroupException
      */
     public function createWorkspace(string $spaceName, int $folderId) {
         if ( $spaceName === false ||
@@ -129,19 +133,19 @@ class WorkspaceController extends Controller {
         $this->spaceMapper->insert($space);
 
         if (is_null($space)) {
-			throw new BadRequestException('Error to create a space.');
+			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
         }
 
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
-			throw new BadRequestException('Error to create a Space Manager group.');
+			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
         }
 
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
-			throw new BadRequestException('Error to create a Space Users group.');
+			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
         }
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
