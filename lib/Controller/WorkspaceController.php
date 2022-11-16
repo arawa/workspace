@@ -109,6 +109,8 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
+	 * @param string $spaceName
+	 * @param int $folderId
 	 * @throws BadRequestException
 	 * @throws CreateWorkspaceException
 	 * @throws CreateGroupException
