@@ -22,10 +22,10 @@
  */
 
 import axios from '@nextcloud/axios'
-import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants'
+import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
-import NotificationError from './Notifications/NotificationError'
+import NotificationError from './Notifications/NotificationError.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
@@ -89,7 +89,7 @@ export function convertGroupfolderToSpace(spaceName, groupfolder) {
 
 /**
 * @param {string} group it's the groupname to test
-* @return {string}
+* @return {boolean}
 */
 export function isSpaceManagers(group) {
 	const SPACE_MANAGER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX)
@@ -98,7 +98,7 @@ export function isSpaceManagers(group) {
 
 /**
 	* @param {string} group it's the groupname to test
-	* @return {string}
+	* @return {boolean}
 	*/
 export function isSpaceUsers(group) {
 	const SPACE_USER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
