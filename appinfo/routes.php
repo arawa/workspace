@@ -54,7 +54,7 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#createSpace',
+			'name' => 'workspace#createWorkspace',
 			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'POST'

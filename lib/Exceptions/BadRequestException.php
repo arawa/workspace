@@ -1,10 +1,12 @@
+<?php
+
 /**
- * copyright Copyright (c) 2017 Arawa
+ * @copyright Copyright (c) 2017 Arawa
  *
- * author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2021 Cyrille Bollu <cyrille@bollu.be>
  *
- * license GNU AGPL version 3 or any later version
+ * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,7 +23,18 @@
  *
  */
 
-export const ESPACE_MANAGERS_PREFIX = 'GE-'
-export const ESPACE_USERS_PREFIX = 'U-'
-export const ESPACE_GID_PREFIX = 'SPACE-'
-export const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
+namespace OCA\Workspace;
+
+use OCP\AppFramework\Http;
+
+class BadRequestException extends \Exception {
+
+    public function __construct($message)
+    {
+        parent::__construct($message);
+    }
+
+    public function getStatus() {
+        return HTTP::STATUS_BAD_REQUEST;
+    }
+}

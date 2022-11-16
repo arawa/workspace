@@ -62,7 +62,7 @@
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import { getAll, enableAcl, addGroup, manageACL } from './services/groupfoldersService'
+import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
 import { convertGroupfolderToSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 
 export default {
@@ -151,19 +151,19 @@ export default {
 				const spaceManagerGID = GROUPS.find(isSpaceManagers)
 				const spaceUserGID = GROUPS.find(isSpaceUsers)
 
-				const isAddGroupForSpaceManager = await addGroup(space.folder_id, spaceManagerGID)
+				const isAddGroupForSpaceManager = await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
 				if (!isAddGroupForSpaceManager.success) {
 					console.error('Error to add Space Manager group in the groupfolder when to convert in space')
 				}
 
-				const isAddGroupForSpaceUser = await addGroup(space.folder_id, spaceUserGID)
+				const isAddGroupForSpaceUser = await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 				if (!isAddGroupForSpaceUser.success) {
 					console.error('Error to add Space Users group in the groupfolder when to convert in space')
 				}
 
 				// Add Space Manager group in manage ACL
-				const resultManageACL = await manageACL(space.folder_id, spaceManagerGID)
-				if (!resultManageACL.success) {
+				const resultAddGroupToManageACLForGroupfolder = await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
+				if (!resultAddGroupToManageACLForGroupfolder.success) {
 					console.error('Error to add the Space Manager group in manage ACL when to convert in space')
 					console.error('GroupFolder API to manage ACL a groupfolder doesn\'t respond')
 				}
