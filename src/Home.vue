@@ -101,8 +101,8 @@ import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNe
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService'
+import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import NotificationError from './services/Notifications/NotificationError.js'
 import BadCreateError from './Errors/BadCreateError.js'
@@ -278,7 +278,7 @@ export default {
 					duration: 6000,
 				})
 				throw new BadCreateError(
-					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'
+					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
 				)
 			}
 
@@ -294,8 +294,8 @@ export default {
 			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
 			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
 
-			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
-			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
+			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid, this)
+			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid, this)
 
 			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid, this)
 
