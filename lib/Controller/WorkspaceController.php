@@ -42,6 +42,7 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\CreateWorkspaceException;
+use OCA\Workspace\Service\Workspace\WorkspaceNormalizeName;
 
 class WorkspaceController extends Controller {
 
@@ -69,6 +70,9 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceCheckService */
     private $workspaceCheck;
 
+	/** @var WorkspaceNormalizeName */
+	private $workspaceNormalizeName;
+
     public function __construct(
 		$AppName,
 		IGroupManager $groupManager,
@@ -79,7 +83,8 @@ class WorkspaceController extends Controller {
 		SpaceMapper $mapper,
 		SpaceService $spaceService,
 		WorkspaceService $workspaceService,
-		WorkspaceCheckService $workspaceCheck
+		WorkspaceCheckService $workspaceCheck,
+		WorkspaceNormalizeName $workspaceNormalizeName
     )
     {
 	parent::__construct($AppName, $request);
@@ -94,15 +99,8 @@ class WorkspaceController extends Controller {
 		$this->spaceService = $spaceService;
 		$this->workspaceService = $workspaceService;
 		$this->workspaceCheck = $workspaceCheck;
-    }
 
-    /**
-     * @param string $spaceName it's the space name
-     * @return string whithout the blank to start and end of the space name
-	 * @todo move this method
-     */
-    private function deleteBlankSpaceName(string $spaceName) {
-        return trim($spaceName);
+		$this->workspaceNormalizeName = $workspaceNormalizeName;
     }
 
     /**
@@ -126,7 +124,7 @@ class WorkspaceController extends Controller {
         $this->workspaceCheck->containSpecialChar($spaceName);
         $this->workspaceCheck->isExist($spaceName);
 
-        $spaceName = $this->deleteBlankSpaceName($spaceName);
+        $spaceName = $this->workspaceNormalizeName->deleteBlankSpaceName($spaceName);
 
         $space = new Space();
         $space->setSpaceName($spaceName);
@@ -188,7 +186,7 @@ class WorkspaceController extends Controller {
 
         $this->workspaceCheck->containSpecialChar($spaceName);
 
-        $spaceName = $this->deleteBlankSpaceName($spaceName);
+        $spaceName = $this->workspaceNormalizeName->deleteBlankSpaceName($spaceName);
 
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
@@ -438,7 +436,7 @@ class WorkspaceController extends Controller {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
 
-        $spaceName = $this->deleteBlankSpaceName($newSpaceName);
+        $spaceName = $this->workspaceNormalizeName->deleteBlankSpaceName($newSpaceName);
 
         $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 
