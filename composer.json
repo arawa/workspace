@@ -13,9 +13,12 @@
     ],
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "christophwurst/nextcloud": "^24.0"
+        "christophwurst/nextcloud": "^24.0",
+        "nextcloud/coding-standard": "^1.0"
     },
     "scripts": {
-	"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning"
+		"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",
+		"cs:check": "php-cs-fixer fix --dry-run --diff",
+		"cs:fix": "php-cs-fixer fix"
     }
 }
