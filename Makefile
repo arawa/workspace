@@ -131,6 +131,8 @@ source:
 	--exclude="../$(app_name)/src/tests" \
 	--exclude="../$(app_name)/phpunit.xml" \
 	--exclude="../$(app_name)/phpunit.integration.xml" \
+	--exclude="../$(app_name)/.phpcs-fixer.dist.php" \
+	--exclude="../$(app_name)/.phpcs-fixer.dist.cache" \
 	--exclude="../$(app_name)/dependabot.yml" \
 	--exclude="../$(app_name)/notes" \
 	--exclude="../$(app_name)/babel.config.js" \
