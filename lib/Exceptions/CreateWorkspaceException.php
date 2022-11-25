@@ -24,11 +24,8 @@
 
 namespace OCA\Workspace;
 
-class CreateWorkspaceException extends \Exception
-{
-
-	public function __construct($message, $code = 0)
-	{
+class CreateWorkspaceException extends \Exception {
+	public function __construct($message, $code = 0) {
 		parent::__construct($message, $code);
 	}
 }

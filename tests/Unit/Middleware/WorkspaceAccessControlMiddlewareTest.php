@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Tests\Unit\Middleware;
 
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
@@ -34,16 +33,14 @@ use OCP\AppFramework\Controller;
 use OCP\IUrlGenerator;
 
 class WorkspaceAccessControlMiddlewareTest extends TestCase {
-	
 	/**
 	 * This test makes sure that the middleware allows general managers to use the app
 	 */
 	public function testGeneralManagerAllowed(): void {
-
 		// Setup UserService so that isUserGeneralAdmin will return true
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-	       		->method('isUserGeneralAdmin')
+				   ->method('isUserGeneralAdmin')
 			->willReturn(true);
 
 		// Instantiates our middleware
@@ -64,15 +61,14 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	 * This test makes sure that the middleware allows space managers to use the app
 	 */
 	public function testSpaceManagerAllowed() {
-
 		// Setup UserService so that isUserGeneralAdmin will return false
 		// but isSpaceManager will return true
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-	       		->method('isUserGeneralAdmin')
+				   ->method('isUserGeneralAdmin')
 			->willReturn(false);
 		$userService->expects($this->once())
-	       		->method('isSpaceManager')
+				   ->method('isSpaceManager')
 			->willReturn(true);
 
 		// Instantiates our middleware
@@ -93,15 +89,14 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	 * This test makes sure that the middleware allows regular users to use the app
 	 */
 	public function testRegularUserDenied(): void {
-
 		// Setup UserService so that both isUserGeneralAdmin() and
 		// isSpaceManager() will return false
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-	       		->method('isUserGeneralAdmin')
+				   ->method('isUserGeneralAdmin')
 			->willReturn(false);
 		$userService->expects($this->once())
-	       		->method('isSpaceManager')
+				   ->method('isSpaceManager')
 			->willReturn(false);
 
 		// Instantiates our middleware
@@ -117,4 +112,3 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 		);
 	}
 }
-

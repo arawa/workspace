@@ -37,7 +37,6 @@ use OCP\IUserSession;
 use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase {
-
 	/** @var IUser */
 	private $user;
 
@@ -51,7 +50,6 @@ class UserServiceTest extends TestCase {
 	private $userSession;
 
 	public function setUp(): void {
-
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(ILogger::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
@@ -62,7 +60,6 @@ class UserServiceTest extends TestCase {
 		$this->userSession->expects($this->any())
 			->method('getUser')
 			->willReturn($this->user);
-
 	}
 
 	private function createTestUser($id, $name, $email) {
@@ -98,7 +95,6 @@ class UserServiceTest extends TestCase {
 	 * when user is a general manager
 	 */
 	public function testIsUserGeneralAdmin(): void {
-
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
@@ -127,7 +123,6 @@ class UserServiceTest extends TestCase {
 	 * when user is not a general manager
 	 */
 	public function testIsNotUserGeneralAdmin(): void {
-
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
@@ -156,15 +151,14 @@ class UserServiceTest extends TestCase {
 	 * is a space manager
 	 */
 	public function testIsSpaceManager() {
-
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
-		     	->method('isInGroup')
-	     		->with($this->user->getUID(), 'GE-Test')
+				 ->method('isInGroup')
+				 ->with($this->user->getUID(), 'GE-Test')
 			->willReturn(true);
 		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
-	       		->method('search')
+				   ->method('search')
 			// TODO Use global constant instead of 'GE-'
 			->with('GE-')
 			->willReturn([$groups]);
@@ -191,15 +185,14 @@ class UserServiceTest extends TestCase {
 	 * is not a space manager
 	 */
 	public function testIsNotSpaceManager() {
-
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
-		     	->method('isInGroup')
-	     		->with($this->user->getUID(), 'GE-Test')
+				 ->method('isInGroup')
+				 ->with($this->user->getUID(), 'GE-Test')
 			->willReturn(true);
 		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
-	       		->method('search')
+				   ->method('search')
 			// TODO Use global constant instead of 'GE-'
 			->with('GE-')
 			->willReturn([$groups]);
@@ -226,12 +219,11 @@ class UserServiceTest extends TestCase {
 	 * is manager of a space
 	 */
 	public function testIsNotSpaceManagerOfSpace() {
-
 		// Let's say user is manager of the space
 		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
-		     	->method('isInGroup')
-	     		->with($this->user->getUID(), $group->getGID())
+				 ->method('isInGroup')
+				 ->with($this->user->getUID(), $group->getGID())
 			->willReturn(true);
 
 		$this->userSession->expects($this->once())
@@ -256,12 +248,11 @@ class UserServiceTest extends TestCase {
 	 * is not manager of a space
 	 */
 	public function testIsSpaceManagerOfSpace() {
-
 		// Let's say user is not manager of the space
 		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', []);
 		$this->groupManager->expects($this->once())
-		     	->method('isInGroup')
-	     		->with($this->user->getUID(), $group->getGID())
+				 ->method('isInGroup')
+				 ->with($this->user->getUID(), $group->getGID())
 			->willReturn(false);
 
 		$this->userSession->expects($this->once())
@@ -281,4 +272,3 @@ class UserServiceTest extends TestCase {
 		$this->assertEquals(false, $result);
 	}
 }
-

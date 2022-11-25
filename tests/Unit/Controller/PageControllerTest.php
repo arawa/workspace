@@ -30,8 +30,6 @@ use PHPUnit\Framework\TestCase;
 use OCA\Workspace\Controller\PageController;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IGroupManager;
-use OCP\IRequest;
 
 class PageControllerTest extends TestCase {
 	private $controller;
@@ -49,5 +47,4 @@ class PageControllerTest extends TestCase {
 		$this->assertEquals('index', $result->getTemplateName());
 		$this->assertTrue($result instanceof TemplateResponse);
 	}
-
 }

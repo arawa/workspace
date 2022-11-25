@@ -33,7 +33,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
-
 	/** @var IConfig */
 	private $config;
 
@@ -46,7 +45,6 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(IConfig $config,
 		IGroupManager $groupManager,
 		ILogger $logger) {
-
 		$this->config = $config;
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
