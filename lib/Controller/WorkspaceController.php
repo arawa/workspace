@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -36,12 +37,14 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
+use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\CreateWorkspaceException;
 
 class WorkspaceController extends Controller {
-    
+
     /** @var IGroupManager */
     private $groupManager;
 
@@ -63,61 +66,68 @@ class WorkspaceController extends Controller {
     /** @var WorkspaceService */
     private $workspaceService;
 
+    /** @var WorkspaceCheckService */
+    private $workspaceCheck;
+
     public function __construct(
-	$AppName,
-	IGroupManager $groupManager,
-	ILogger $logger,
-	IRequest $request,
-	UserService $userService,
-	IUserManager $userManager,
-	SpaceMapper $mapper,
-	SpaceService $spaceService,
-	WorkspaceService $workspaceService
+		$AppName,
+		IGroupManager $groupManager,
+		ILogger $logger,
+		IRequest $request,
+		UserService $userService,
+		IUserManager $userManager,
+		SpaceMapper $mapper,
+		SpaceService $spaceService,
+		WorkspaceService $workspaceService,
+		WorkspaceCheckService $workspaceCheck
     )
     {
 	parent::__construct($AppName, $request);
 
-	$this->groupManager = $groupManager;
-	$this->logger = $logger;
+		$this->groupManager = $groupManager;
+		$this->logger = $logger;
 
-	$this->userManager = $userManager;
-	$this->userService = $userService;
+		$this->userManager = $userManager;
+		$this->userService = $userService;
 
-	$this->spaceMapper = $mapper;
-	$this->spaceService = $spaceService;
-	$this->workspaceService = $workspaceService;
+		$this->spaceMapper = $mapper;
+		$this->spaceService = $spaceService;
+		$this->workspaceService = $workspaceService;
+		$this->workspaceCheck = $workspaceCheck;
+    }
+
+    /**
+     * @param string $spaceName it's the space name
+     * @return string whithout the blank to start and end of the space name
+	 * @todo move this method
+     */
+    private function deleteBlankSpaceName(string $spaceName) {
+        return trim($spaceName);
     }
 
     /**
      * @NoAdminRequired
      * @GeneralManagerRequired
      * @NoCSRFRequired
+	 * @param string $spaceName
+	 * @param int $folderId
+	 * @throws BadRequestException
+	 * @throws CreateWorkspaceException
+	 * @throws CreateGroupException
      */
-    public function createSpace(string $spaceName, int $folderId) {
+    public function createWorkspace(string $spaceName, int $folderId) {
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
-        }
+        $this->workspaceCheck->containSpecialChar($spaceName);
+        $this->workspaceCheck->isExist($spaceName);
 
-        $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
 
-        if($spaceNameExist) {
-            return new JSONResponse([
-				'statuscode' => Http::STATUS_CONFLICT,
-				'message' => 'The ' . $spaceName . ' space name already exist'
-            ]);
-        }
-
-        // #1 create the space
         $space = new Space();
         $space->setSpaceName($spaceName);
         $space->setGroupfolderId($folderId);
@@ -125,35 +135,24 @@ class WorkspaceController extends Controller {
         $this->spaceMapper->insert($space);
 
         if (is_null($space)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a space.',
-            ]);
+			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
         }
-        
-        // #2 create groups
+
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a Space Manager group.',
-            ]);
+			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
         }
-        
+
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Error to create a Space Users group.',
-            ]);
+			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
         }
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
-        
-		// #3 Returns result
+
         return new JSONResponse ([
             'space_name' => $space->getSpaceName(),
             'id_space' => $space->getId(),
@@ -182,27 +181,20 @@ class WorkspaceController extends Controller {
 
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spaceName)) {
-                return new JSONResponse([
-                    'statuscode' => Http::STATUS_BAD_REQUEST,
-                    'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-                ]);
-        }
+        $this->workspaceCheck->containSpecialChar($spaceName);
+
+        $spaceName = $this->deleteBlankSpaceName($spaceName);
+
         if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
-        $spaceNameExist = $this->spaceService->checkSpaceNameExist($spaceName);
-        if($spaceNameExist) {
-            return new JSONResponse([
-				'statuscode' => Http::STATUS_CONFLICT,
-				'message' => 'The ' . $spaceName . ' space name already exist'
-            ]);
-        }
+
+        $this->workspaceCheck->isExist($spaceName);
 
         // #1 create the space
         $space = new Space();
@@ -217,7 +209,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a space.',
             ]);
         }
-        
+
         // #2 create groups
         $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $space->getId());
 
@@ -227,7 +219,7 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a Space Manager group.',
             ]);
         }
-        
+
         $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::ESPACE_USERS_01 . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
@@ -239,7 +231,7 @@ class WorkspaceController extends Controller {
 
         $newSpaceManagerGroup->setDisplayName(Application::ESPACE_MANAGER_01 . $space->getId());
         $newSpaceUsersGroup->setDisplayName(Application::ESPACE_USERS_01 . $space->getId());
-        
+
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
@@ -250,7 +242,7 @@ class WorkspaceController extends Controller {
             $group = $this->groupManager->get($groupName);
 
             $usersOfAGroup = $group->getUsers();
-            foreach($usersOfAGroup as $user) {                
+            foreach($usersOfAGroup as $user) {
                 $newSpaceUsersGroup->addUser($user);
                 $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
             }
@@ -292,7 +284,7 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @param object $workspace
-     * 
+     *
      */
     public function destroy($workspace) {
 
@@ -329,7 +321,7 @@ class WorkspaceController extends Controller {
 	/**
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
-	 * 
+	 *
 	 * @NoAdminRequired
      * @NoCSRFRequired
 	 *
@@ -367,7 +359,7 @@ class WorkspaceController extends Controller {
     public function addUsersInfo($workspace) {
         return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
     }
-    
+
 	/**
      * Returns a list of users whose name matches $term
      *
@@ -395,7 +387,7 @@ class WorkspaceController extends Controller {
 	*
 	* @param object|string $space
 	* @param string $userId
-	* 
+	*
 	*/
 	public function changeUserRole($space, string $userId) {
 
@@ -421,35 +413,32 @@ class WorkspaceController extends Controller {
 	}
 
     /**
-     * 
+     *
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @NoCSRFRequired
      * @param object|string $workspace
      * @param string $newSpaceName
      * @return JSONResponse
-     * 
+     *
      * @todo Manage errors
      */
     public function renameSpace($workspace, $newSpaceName) {
-        
+
         if (gettype($workspace) === 'object') {
             $workspace = json_decode($workspace, true);
         }
 
-        if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $newSpaceName)) {
-            return new JSONResponse([
-                'statuscode' => Http::STATUS_BAD_REQUEST,
-                'message' => 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]',
-            ]);
-        }
+        $this->workspaceCheck->containSpecialChar($newSpaceName);
 
 		if( $newSpaceName === false ||
 			$newSpaceName === null ||
-			$newSpaceName === '' 
+			$newSpaceName === ''
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
+
+        $spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
         $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 

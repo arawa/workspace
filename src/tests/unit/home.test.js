@@ -107,17 +107,19 @@ describe('Creating spaces with different entries', () => {
 				id_space: 421,
 				folder_id: 809,
 				color: '#b7752e',
-				groups: {},
+				groups: {
+					'SPACE-GE-421': {
+						displayName: 'GE-421',
+						gid: 'SPACE-GE-421',
+					},
+					'SPACE-U-421': {
+						displayName: 'U-421',
+						gid: 'SPACE-U-421',
+					},
+				},
 				statuscode: 201,
 				acl: {
 					state: true,
-				},
-				space_advanced_permissions: true,
-				assign_permission: {
-					status: 'enabled',
-					groups: [
-						'SPACE-GE-421',
-					],
 				},
 			},
 		})

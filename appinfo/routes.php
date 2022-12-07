@@ -54,16 +54,20 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#createSpace',
+			'name' => 'workspace#createWorkspace',
 			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
-		[
-			'name' => 'workspace#convertGroupfolderToSpace',
-			'url' => '/spaces/convert',
-			'verb' => 'POST'
-		],
+		/**
+		 * @todo decomment these lines when we find the
+		 * true feature.
+		 */
+		// [
+		// 	'name' => 'workspace#convertGroupfolderToSpace',
+		// 	'url' => '/spaces/convert',
+		// 	'verb' => 'POST'
+		// ],
 		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',

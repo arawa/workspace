@@ -1,12 +1,9 @@
-<?php
-
 /**
- * @copyright Copyright (c) 2017 Arawa
+ * copyright Copyright (c) 2017 Arawa
  *
- * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * author 202é1 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
- * @license GNU AGPL version 3 or any later version
+ * license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,18 +20,11 @@
  *
  */
 
-namespace OCA\Workspace;
+ export default class EnableAclGroupfolderError extends Error {
 
-use OCP\AppFramework\Http;
+	constructor(message) {
+		super(message)
+		this.name = 'EnableAclGroupfolderError'
+	}
 
-class BadRequestException extends StatusException {
-
-    public function __construct($message)
-    {
-        parent::__construct($message);
-    }
-
-    public function getStatus() {
-        return HTTP::STATUS_BAD_REQUEST;
-    }
 }

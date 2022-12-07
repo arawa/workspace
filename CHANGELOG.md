@@ -6,7 +6,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.6] - 2022-05-04
+### Added
+
+- Add Czech localization([#541](https://github.com/arawa/workspace/pull/541) & [#542](https://github.com/arawa/workspace/pull/542) )
+
+### Chore
+
+- bump @nextcloud/l10n from 1.4.1 to 1.6.0 ( [#494](https://github.com/arawa/workspace/pull/494) )
+- bump jsdom from 19.0.0 to 20.0.0 #514 ( [#514](https://github.com/arawa/workspace/pull/514) )
+- npm: bump prettier from 2.6.2 to 2.7.1 ( [#513](https://github.com/arawa/workspace/pull/513) )
+- bump vue and vue-template-compiler ( [#524](https://github.com/arawa/workspace/pull/524) )
+- bump jest-environment-jsdom from 28.1.0 to 29.0.3 ( [#562](https://github.com/arawa/workspace/pull/562) )
+- bump jest from 28.1.0 to 29.0.3 ( [#563](https://github.com/arawa/workspace/pull/563) )
+- bump babel-jest from 28.1.0 to 29.0.3 ( [#564](https://github.com/arawa/workspace/pull/564) )
+- bump @nextcloud/axios from 1.10.0 to 2.0.0 ( [#565](https://github.com/arawa/workspace/pull/565) )
+
+### Changed
+
+- Refactoring the creation workspace part ( [#609](https://github.com/arawa/workspace/pull/609) )
+
+## [1.2.3] - 2022-10-28
+
+### Changed
+
+- Comment the convert feature ( [#604](https://github.com/arawa/workspace/pull/604) )
+
+## [1.2.2] - 2022-08-19
+
+### Chore
+
+- Update the readme ( [#535](https://github.com/arawa/workspace/pull/535) )
+- Update the info.xml and extend the app for NC24 ( [#356](https://github.com/arawa/workspace/pull/536) )
+
+## [1.2.1] - 2022-06-24
+
+### Fixed
+
+- Prevent the blank into the start or end when creating space ( [#517](https://github.com/arawa/workspace/pull/517) )
+
+## [1.2.0] - 2022-05-04
 
 ### Added
 
@@ -35,7 +73,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.6...main
-[1.2.6]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.6
+[Unreleased]: https://github.com/arawa/workspace/compare/v1.2.3...main
+[1.2.3]: https://github.com/arawa/workspace/compare/v1.2.2...1.2.3
+[1.2.2]: https://github.com/arawa/workspace/compare/v1.2.1...1.2.2
+[1.2.1]: https://github.com/arawa/workspace/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/arawa/workspace/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/arawa/workspace/compare/v1.0.1...v1.1.0
 [1.0.0]: https://github.com/arawa/workspace/releases/tag/v1.0.0
