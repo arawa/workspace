@@ -73,19 +73,12 @@
 					</div>
 					<div id="app-settings-content">
 						<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
-							class="btn-convert"
 							:close-after-click="true"
 							:title="t('workspace', 'Import / Convert')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div>
 			</template>
-			<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-settings-dark"
-				class="btn-convert"
-				:close-after-click="true"
-				:title="t('workspace', 'Import / Convert')"
-				@click="toggleShowSelectGroupfoldersModal" />
 		</AppNavigation>
 		<AppContent>
 			<AppContentDetails>
@@ -99,34 +92,38 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
-		<!-- <Modal
+		<Modal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</Modal> -->
+		</Modal>
 	</Content>
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
+import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
+import { generateUrl } from '@nextcloud/router'
+import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { getLocale } from '@nextcloud/l10n'
+import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
-import Content from '@nextcloud/vue/dist/Components/Content'
-import { generateUrl } from '@nextcloud/router'
-import { getLocale } from '@nextcloud/l10n'
-import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
-import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import NotificationError from './services/Notifications/NotificationError.js'
+import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
+import Content from '@nextcloud/vue/dist/Components/Content'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
+import NotificationError from './services/Notifications/NotificationError.js'
+import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
 	name: 'Home',
 	components: {
+		ActionButton,
 		AppContent,
 		AppContentDetails,
 		AppNavigation,
@@ -134,6 +131,8 @@ export default {
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+		Modal,
+		SelectGroupfolders,
 	},
 	data() {
 		return {
@@ -241,9 +240,9 @@ export default {
 				}
 				this.$store.commit('addSpace', {
 					color: codeColor,
+					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
 					groups: spaceWithUsersAndGroups.groups,
 					id: spaceWithUsersAndGroups.id,
-					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
 					isOpen: false,
 					name: spaceWithUsersAndGroups.space_name,
 					quota,
@@ -408,12 +407,6 @@ export default {
 	height: 100%;
 	width: 100%;
 }
-
-/* .btn-convert {
-	position: absolute;
-	bottom: 0px;
-	z-index: 1;
-} */
 
 /*
 	Code for the loading.
