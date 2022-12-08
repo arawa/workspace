@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactoring the creation workspace part ( [#609](https://github.com/arawa/workspace/pull/609) )
 
+### Style 
+
+- Change the settings button ( [#504](https://github.com/arawa/workspace/pull/504) )
+
 ## [1.2.3] - 2022-10-28
 
 ### Changed
