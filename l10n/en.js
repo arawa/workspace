@@ -6,6 +6,7 @@ OC.L10N.register(
 		'Add users': 'Add users',
 		'All spaces': 'All Workspaces',
 		'Error': 'Error',
+		'Settings': 'Settings',
 		'Please specify a name.': 'Please specify a name.',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.',
 		'Create group': 'Create group',

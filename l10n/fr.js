@@ -12,6 +12,7 @@ OC.L10N.register(
 		'Delete space': "Supprimer l'espace de travail",
 		'Delete user': "Retirer de l'espace de travail",
 		'Email': 'Email',
+		'Settings': 'Paramètres',
 		'Groups': 'Groupes',
 		'Make administrator': "Assigner en tant que G.E.",
 		'New space': 'Créer un espace de travail',
