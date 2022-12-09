@@ -25,12 +25,15 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\UserService;
-use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\ILogger;
 use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\IGroupManager;
+use OCP\Share\IManager;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\UserService;
 
 class WorkspaceService {
 
@@ -49,12 +52,18 @@ class WorkspaceService {
 	/** @var UserService */
 	private $userService;
 
+	private IUserSession $userSession;
+
+	private IManager $shareManager;
+
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
 		SpaceMapper $spaceMapper,
-		UserService $userService
+		UserService $userService,
+		IManager $shareManager,
+		IUserSession $userSession
 	)
 	{
 		$this->groupManager = $groupManager;
@@ -62,6 +71,8 @@ class WorkspaceService {
 		$this->spaceMapper = $spaceMapper;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->shareManager = $shareManager;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -104,6 +115,26 @@ class WorkspaceService {
 	}
 
 	/**
+	 * @param IUser[] $users
+	 * @return IUser[]
+	 */
+	private function getUsersFromGroupsOnly($users)
+	{
+		$usersFromGroups = [];
+		$userSession = $this->userSession->getUser();
+		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
+		foreach ($groupsOfUserSession as $group) {
+			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
+		}
+
+		$usersFromGroups = array_filter($usersFromGroups, function ($user) use ($users) {
+			return in_array($user, $users);
+		});
+
+		return $usersFromGroups;
+	}
+
+	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
@@ -122,6 +153,11 @@ class WorkspaceService {
 				}
 		}
 
+		if ($this->shareManager->shareWithGroupMembersOnly())
+		{
+			$users = $this->getUsersFromGroupsOnly($users);
+		}
+
 		// transform in a format suitable for the app
 		$data = [];
 		foreach($users as $user) {
@@ -135,7 +171,6 @@ class WorkspaceService {
 			$data[] = $this->userService->formatUser($user, $space, $role);
 		}
 
-		// return info
 		return $data;
 	}
 
