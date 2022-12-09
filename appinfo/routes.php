@@ -63,11 +63,11 @@ return [
 		 * @todo decomment these lines when we find the
 		 * true feature.
 		 */
-		// [
-		// 	'name' => 'workspace#convertGroupfolderToSpace',
-		// 	'url' => '/spaces/convert',
-		// 	'verb' => 'POST'
-		// ],
+		[
+			'name' => 'workspace#convertGroupfolderToSpace',
+			'url' => '/spaces/convert',
+			'verb' => 'POST'
+		],
 		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',
