@@ -62,7 +62,7 @@
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
+import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService'
 import { convertGroupfolderToSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
 
 export default {
@@ -93,12 +93,6 @@ export default {
 		// get groupfolders whithout spaces.
 		async getGroupfolders() {
 			const groupfolders = await getAll()
-				.then(resp => {
-					return resp
-				})
-				.catch(error => {
-					return error
-				})
 
 			// get all spaces and "convert" in the form of Array.
 			const allSpaces = []
@@ -136,12 +130,7 @@ export default {
 
 			// convert here now
 			for (const mountPoint in groupfoldersBatch) {
-				// Enable acl
-				const aclIsEnabled = await enableAcl(groupfoldersBatch[mountPoint].id)
-				if (!aclIsEnabled.success) {
-					console.error('Problem to enable ACL to convert a groupfolder in space.')
-					console.error('This current groupfolder', groupfoldersBatch[mountPoint])
-				}
+				await enableAcl(groupfoldersBatch[mountPoint].id)
 
 				// Convert in a space
 				const space = await convertGroupfolderToSpace(mountPoint, groupfoldersBatch[mountPoint])
@@ -151,22 +140,15 @@ export default {
 				const spaceManagerGID = GROUPS.find(isSpaceManagers)
 				const spaceUserGID = GROUPS.find(isSpaceUsers)
 
-				const isAddGroupForSpaceManager = await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
-				if (!isAddGroupForSpaceManager.success) {
-					console.error('Error to add Space Manager group in the groupfolder when to convert in space')
-				}
+				const GidGroupsFromACL = groupfoldersBatch[mountPoint].manage.map(group => group.id)
+				await GidGroupsFromACL.forEach(gid => {
+					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
+				})
 
-				const isAddGroupForSpaceUser = await addGroupToGroupfolder(space.folder_id, spaceUserGID)
-				if (!isAddGroupForSpaceUser.success) {
-					console.error('Error to add Space Users group in the groupfolder when to convert in space')
-				}
+				await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
+				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
-				// Add Space Manager group in manage ACL
-				const resultAddGroupToManageACLForGroupfolder = await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
-				if (!resultAddGroupToManageACLForGroupfolder.success) {
-					console.error('Error to add the Space Manager group in manage ACL when to convert in space')
-					console.error('GroupFolder API to manage ACL a groupfolder doesn\'t respond')
-				}
+				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
 
 				// Define the quota
 				let quota = ''

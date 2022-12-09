@@ -32,6 +32,7 @@ import CreateGroupfolderError from '../Errors/Groupfolders/BadCreateError.js'
 import EnableAclGroupfolderError from '../Errors/Groupfolders/EnableAclGroupfolderError.js'
 import GetGroupfolderError from '../Errors/Groupfolders/GetGroupfolderError.js'
 import NotificationError from './Notifications/NotificationError.js'
+import RemoveGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/RemoveGroupToManageACLForGroupfolderError.js'
 
 /**
  * @return {object}
@@ -220,6 +221,36 @@ export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
 			}
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
 			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
+		})
+}
+
+/**
+ * @param {number} folderId it's an id of a groupfolder
+ * @param {string} gid it's an id (string format) of a group
+ * @param {object} vueInstance it's an instance of vue
+ * @return {Promise}
+ * @throws {RemoveGroupToManageACLForGroupfolderError}
+ */
+export function removeGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
+	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
+		{
+			mappingType: 'group',
+			mappingId: gid,
+			manageAcl: false
+		})
+		.then(resp => {
+			return resp.data.ocs.data
+		})
+		.catch(error => {
+			if (typeof (vueInstance) !== 'undefined') {
+				const toastErrorToRemoveGroupToManageACLForGroupfolder = new NotificationError(vueInstance)
+				toastErrorToRemoveGroupToManageACLForGroupfolder.push({
+					title: t('workspace', 'Error to remove group as manager acl'),
+					text: t('workspace', 'Impossible to remove the group from the advanced permissions.'),
+				})
+			}
+			console.error('Impossible to remove the group from the advanced permissions.', error)
+			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
 		})
 }
 
