@@ -25,53 +25,42 @@
 
 namespace OCA\Workspace\Service;
 
-use OCP\IUser;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\UserService;
+use OCP\IGroupManager;
 use OCP\ILogger;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\IGroupManager;
 use OCP\Share\IManager;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Service\UserService;
 
 class WorkspaceService {
 
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var SpaceMapper  */
-	private $spaceMapper;
-
-	/** @var UserService */
-	private $userService;
-
-	private IUserSession $userSession;
-
+	private IGroupManager $groupManager;
+	private ILogger $logger;
 	private IManager $shareManager;
+	private IUserManager $userManager;
+	private IUserSession $userSession;
+	private SpaceMapper $spaceMapper;
+	private UserService $userService;
 
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
-		IUserManager $userManager,
-		SpaceMapper $spaceMapper,
-		UserService $userService,
 		IManager $shareManager,
-		IUserSession $userSession
+		IUserManager $userManager,
+		IUserSession $userSession,
+		SpaceMapper $spaceMapper,
+		UserService $userService
 	)
 	{
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
+		$this->shareManager = $shareManager;
 		$this->spaceMapper = $spaceMapper;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
-		$this->shareManager = $shareManager;
 		$this->userSession = $userSession;
 	}
 
