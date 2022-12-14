@@ -59,13 +59,9 @@ return [
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
-		/**
-		 * @todo decomment these lines when we find the
-		 * true feature.
-		 */
 		[
-			'name' => 'workspace#convertGroupfolderToSpace',
-			'url' => '/spaces/convert',
+			'name' => 'group#transfertUsersToUserGroup',
+			'url' => '/spaces/{spaceId}/transfert-users',
 			'verb' => 'POST'
 		],
 		[

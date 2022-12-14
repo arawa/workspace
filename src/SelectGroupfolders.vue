@@ -62,8 +62,8 @@
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService'
-import { convertGroupfolderToSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
+import { get, getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { createSpace, isSpaceManagers, isSpaceUsers, transfertUsersToUserGroup } from './services/spaceService.js'
 
 export default {
 	name: 'SelectGroupfolders',
@@ -120,27 +120,26 @@ export default {
 			return groupfoldersWhithoutSpace
 		},
 		async convertGroupfoldersToSpace() {
-			const groupfoldersBackup = this.$store.state.groupfolders
+			const groupfolders = this.$store.state.groupfolders
 			this.$emit('close')
 
-			const groupfoldersBatch = { }
+			const groupfoldersSelected = { }
 			this.allSelectedGroupfoldersId.forEach(mountPoint => {
-				groupfoldersBatch[mountPoint] = groupfoldersBackup[mountPoint]
+				groupfoldersSelected[mountPoint] = groupfolders[mountPoint]
 			})
 
 			// convert here now
-			for (const mountPoint in groupfoldersBatch) {
-				await enableAcl(groupfoldersBatch[mountPoint].id)
+			for (const mountPoint in groupfoldersSelected) {
+				await enableAcl(groupfoldersSelected[mountPoint].id)
 
-				// Convert in a space
-				const space = await convertGroupfolderToSpace(mountPoint, groupfoldersBatch[mountPoint])
+				const space = await createSpace(mountPoint, groupfoldersSelected[mountPoint].id)
 
 				// Add groups to groupfolder
 				const GROUPS = Object.keys(space.groups)
 				const spaceManagerGID = GROUPS.find(isSpaceManagers)
 				const spaceUserGID = GROUPS.find(isSpaceUsers)
 
-				const GidGroupsFromACL = groupfoldersBatch[mountPoint].manage.map(group => group.id)
+				const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
 				await GidGroupsFromACL.forEach(gid => {
 					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
 				})
@@ -148,25 +147,28 @@ export default {
 				await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
 				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
+				const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
+				const groupsTransfertToUserGroup = await transfertUsersToUserGroup(space.id_space, groupfolder)
+
 				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
 
 				// Define the quota
 				let quota = ''
-				if (groupfoldersBatch[mountPoint].quota === '-3') {
+				if (groupfoldersSelected[mountPoint].quota === '-3') {
 					quota = t('workspace', 'unlimited')
 				} else {
-					quota = groupfoldersBatch[mountPoint].quota
+					quota = groupfoldersSelected[mountPoint].quota
 				}
 
 				this.$store.commit('addSpace', {
 					color: space.color,
-					groups: space.groups,
+					groups: groupsTransfertToUserGroup.groups,
 					isOpen: false,
 					id: space.id_space,
 					groupfolderId: space.folder_id,
 					name: space.space_name,
 					quota,
-					users: space.users,
+					users: groupsTransfertToUserGroup.users,
 				})
 
 			}

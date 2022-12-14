@@ -26,10 +26,13 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
@@ -48,16 +51,24 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	private GroupsWorkspace $groupsWorkspace;
+
+	private UserFormatter $userFormatter;
+
 	public function __construct(
+		GroupsWorkspace $groupsWorkspace,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
+		UserFormatter $userFormatter,
 		UserService $userService
 	){
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->groupsWorkspace = $groupsWorkspace;
+		$this->userFormatter = $userFormatter;
 	}
 
 	/**
@@ -104,7 +115,7 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function delete($gid, $spaceId) {
-		// TODO Use groupfolder api to retrieve workspace group. 
+		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
 		}
@@ -138,7 +149,7 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function rename($newGroupName, $gid, $spaceId) {
-		// TODO Use groupfolder api to retrieve workspace group. 
+		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
 				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
@@ -191,7 +202,7 @@ class GroupController extends Controller {
 		// Adds user to group
 		$NCUser = $this->userManager->get($user);
 		$NCGroup->addUser($NCUser);
-		
+
 		// Adds the user to the application manager group when we are adding a workspace manager
 		if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01. $spaceId) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
@@ -218,7 +229,7 @@ class GroupController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 * @SpaceAdminRequired
-	 * 
+	 *
 	 * Removes a user from a group
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 * and from the WorkspacesManagers group when the user is being removed from the GE- group
@@ -278,6 +289,46 @@ class GroupController extends Controller {
 			'user' => $NCUser->getUID(),
 			'groups' => $groups
 		]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @GeneralManagerRequired
+	 * @param string|object $groupfolder
+	 *
+	 */
+	public function transfertUsersToUserGroup(string $spaceId, $groupfolder) {
+		if (gettype($groupfolder) === 'string') {
+			$groupfolder = json_decode($groupfolder, true);
+		}
+
+        $groupsName = array_keys($groupfolder['groups']);
+
+		$groups = GroupFormatter::formatGroups(
+			array_merge(
+				$this->groupsWorkspace->getGroups($spaceId),
+				array_map(function ($groupName)
+				{
+					return $this->groupManager->get($groupName);
+				}, $groupsName)
+			)
+		);
+
+		$allUsersFromGroups = [];
+
+		foreach ($groupsName as $groupName) {
+            $allUsersFromGroups[] = $this->groupManager->get($groupName)->getUsers();
+		}
+
+		$usersMerged = array_merge([], ...$allUsersFromGroups);
+
+		$this->groupsWorkspace->transfertUsersToUserGroup($usersMerged, $spaceId);
+		$users = $this->userFormatter->formatUsers($usersMerged, $groupfolder, 'user');
+
+		return new JSONResponse([
+			'groups' => $groups,
+			'users' => (object)$users
+		], Http::STATUS_OK);
 	}
 
 }

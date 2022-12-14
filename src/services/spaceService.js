@@ -68,21 +68,20 @@ export function deleteBlankSpacename(spacename) {
 }
 
 /**
-* @param {string} spaceName
+* @param {string} spaceId
 * @param {object} groupfolder
 * @return {object}
 */
-export function convertGroupfolderToSpace(spaceName, groupfolder) {
-	const result = axios.post(generateUrl('/apps/workspace/spaces/convert'),
+export function transfertUsersToUserGroup(spaceId, groupfolder) {
+	const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/transfert-users`),
 		{
-			spaceName,
 			groupfolder,
 		})
 		.then(resp => {
 			return resp.data
 		})
 		.catch(error => {
-			console.error('createSpace error', error)
+			console.error('Error to transfert users', error)
 		})
 	return result
 }
