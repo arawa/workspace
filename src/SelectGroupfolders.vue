@@ -63,7 +63,7 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import { get, getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
-import { createSpace, isSpaceManagers, isSpaceUsers, transfertUsersToUserGroup } from './services/spaceService.js'
+import { createSpace, isSpaceManagers, isSpaceUsers, transferUsersToUserGroup } from './services/spaceService.js'
 
 export default {
 	name: 'SelectGroupfolders',
@@ -148,7 +148,7 @@ export default {
 				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
 				const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
-				const groupsTransfertToUserGroup = await transfertUsersToUserGroup(space.id_space, groupfolder)
+				const groupstransferToUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
 
 				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
 
@@ -162,13 +162,13 @@ export default {
 
 				this.$store.commit('addSpace', {
 					color: space.color,
-					groups: groupsTransfertToUserGroup.groups,
+					groups: groupstransferToUserGroup.groups,
 					isOpen: false,
 					id: space.id_space,
 					groupfolderId: space.folder_id,
 					name: space.space_name,
 					quota,
-					users: groupsTransfertToUserGroup.users,
+					users: groupstransferToUserGroup.users,
 				})
 
 			}
