@@ -26,7 +26,6 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Roles;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\User\UserFormatter;
@@ -121,10 +120,6 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function delete($gid, $spaceId) {
-		// TODO Use groupfolder api to retrieve workspace group.
-		if (substr($gid, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
-		}
 
 		// Delete group
 		$NCGroup = $this->groupManager->get($gid);
