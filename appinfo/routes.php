@@ -60,8 +60,8 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'group#transfertUsersToUserGroup',
-			'url' => '/spaces/{spaceId}/transfert-users',
+			'name' => 'group#transferUsersToGroups',
+			'url' => '/spaces/{spaceId}/transfer-users',
 			'verb' => 'POST'
 		],
 		[

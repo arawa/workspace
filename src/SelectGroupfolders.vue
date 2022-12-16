@@ -139,18 +139,18 @@ export default {
 				const spaceManagerGID = GROUPS.find(isSpaceManagers)
 				const spaceUserGID = GROUPS.find(isSpaceUsers)
 
-				const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
-				await GidGroupsFromACL.forEach(gid => {
-					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
-				})
-
 				await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
 				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
 				const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
-				const groupstransferToUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
+				const groupstransferoUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
 
 				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
+
+				const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
+				await GidGroupsFromACL.forEach(gid => {
+					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
+				})
 
 				// Define the quota
 				let quota = ''
@@ -162,13 +162,13 @@ export default {
 
 				this.$store.commit('addSpace', {
 					color: space.color,
-					groups: groupstransferToUserGroup.groups,
+					groups: groupstransferoUserGroup.groups,
 					isOpen: false,
 					id: space.id_space,
 					groupfolderId: space.folder_id,
 					name: space.space_name,
 					quota,
-					users: groupstransferToUserGroup.users,
+					users: groupstransferoUserGroup.users,
 				})
 
 			}

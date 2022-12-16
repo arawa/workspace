@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Service\User;
 
+use OCA\Workspace\Roles;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCP\IUser;
 
@@ -40,17 +41,26 @@ class UserFormatter
 	/**
 	 * @param IUser[] $users
 	 */
-	public function formatUsers($users, array $groupfolder, string $role): array
+	public function formatUsers($users, array $groupfolder, string $spaceId): array
 	{
+
+		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
 
 		$usersFormatted = [];
 		foreach ($users as $user) {
+
+			if ($groupWorkspaceManager->inGroup($user)) {
+				$role = Roles::Admin;
+			} else {
+				$role = Roles::User;
+			}
+
 			$usersFormatted[$user->getUID()] = [
 				'uid' => $user->getUID(),
 				'name' => $user->getDisplayName(),
 				'email' => $user->getEmailAddress(),
 				'subtitle' => $user->getEmailAddress(),
-				'groups' => $this->groupsWorkspace->getGroupsFromUser($user, $groupfolder),
+				'groups' => $this->groupsWorkspace->getGroupsUserFromGroupfolder($user, $groupfolder, $spaceId),
 				'role' => $role
 			];
 		}

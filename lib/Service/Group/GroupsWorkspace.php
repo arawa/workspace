@@ -24,10 +24,11 @@
 
 namespace OCA\Workspace\Service\Group;
 
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\GroupException;
-use OCP\IGroupManager;
 use OCP\IUser;
+use OCP\IGroup;
+use OCP\IGroupManager;
+use OCA\Workspace\GroupException;
+use OCA\Workspace\AppInfo\Application;
 
 class GroupsWorkspace
 {
@@ -43,35 +44,52 @@ class GroupsWorkspace
 	/**
 	 * @throws GroupException
 	 */
-	public function getGroups(string $spaceId): array
+	public function getWorkspaceManagerGroup(string $spaceId): IGroup
+	{
+		$groupSpaceManager = $this->groupManager->get(
+			Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
+		);
+
+		if (is_null($groupSpaceManager))
+		{
+			throw new GroupException('Error to get the workspace manage group relative to workspace.');
+		}
+
+		return $groupSpaceManager;
+	}
+
+	/**
+	 * @throws GroupException
+	 */
+	public function getUserGroup(string $spaceId): IGroup
 	{
 		$groupUser = $this->groupManager->get(
 			Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId
 		);
 
-		$groupSpaceManager = $this->groupManager->get(
-			Application::GID_SPACE . Application::ESPACE_MANAGER_01 . $spaceId
-		);
-
-		if (is_null($groupSpaceManager) || is_null($groupUser))
+		if (is_null($groupUser))
 		{
-			throw new GroupException('Error to get groups relative to workspace.');
+			throw new GroupException('Error to get the workspace manage group relative to workspace.');
 		}
 
-		return [
-			$groupUser,
-			$groupSpaceManager
-		];
+		return $groupUser;
 	}
 
 	/**
 	 * @return String[]
 	 */
-	public function getGroupsFromUser(IUser $user, array $groupfolder)
+	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId)
 	{
+		$groupsWorkspace = [
+			$this->getWorkspaceManagerGroup($spaceId)->getGID(),
+			$this->getUserGroup($spaceId)->getGID()
+		];
 		$groups = [];
 		foreach($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($groupfolder['groups']))) {
+			if (
+				in_array($group->getGID(), array_keys($groupfolder['groups']))
+				|| in_array($group->getGID(), $groupsWorkspace)
+			) {
 				array_push($groups, $group->getGID());
 			}
 		}
@@ -82,20 +100,16 @@ class GroupsWorkspace
 	/**
 	 * @param IUser[] $users
 	 */
-	public function transfertUsersToUserGroup($users, string $spaceId): void
+	public function transferUsersToGroup($users, IGroup $group): void
 	{
-		$groupUser = $this->groupManager->get(
-			Application::GID_SPACE . Application::ESPACE_USERS_01 . $spaceId
-		);
-
-		if (is_null($groupUser))
+		if (is_null($group))
 		{
-			throw new GroupException('Error to get user group relative to workspace.');
+			throw new GroupException('Error parameter, $group is null.');
 		}
 
 		foreach($users as $user)
 		{
-			$groupUser->addUser($user);
+			$group->addUser($user);
 		}
 	}
 }

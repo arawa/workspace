@@ -26,9 +26,11 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Roles;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -55,20 +57,24 @@ class GroupController extends Controller {
 
 	private UserFormatter $userFormatter;
 
+	private UserWorkspace $userWorkspace;
+
 	public function __construct(
 		GroupsWorkspace $groupsWorkspace,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
 		UserFormatter $userFormatter,
-		UserService $userService
+		UserService $userService,
+		UserWorkspace $userWorkspace
 	){
 		$this->groupManager = $groupManager;
+		$this->groupsWorkspace = $groupsWorkspace;
 		$this->logger = $logger;
+		$this->userFormatter = $userFormatter;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
-		$this->groupsWorkspace = $groupsWorkspace;
-		$this->userFormatter = $userFormatter;
+		$this->userWorkspace = $userWorkspace;
 	}
 
 	/**
@@ -293,11 +299,12 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 * @GeneralManagerRequired
 	 * @param string|object $groupfolder
 	 *
 	 */
-	public function transfertUsersToUserGroup(string $spaceId, $groupfolder) {
+	public function transferUsersToGroups(string $spaceId, $groupfolder) {
 		if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}
@@ -306,7 +313,10 @@ class GroupController extends Controller {
 
 		$groups = GroupFormatter::formatGroups(
 			array_merge(
-				$this->groupsWorkspace->getGroups($spaceId),
+				[
+					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
+					$this->groupsWorkspace->getUserGroup($spaceId)
+				],
 				array_map(function ($groupName)
 				{
 					return $this->groupManager->get($groupName);
@@ -314,21 +324,23 @@ class GroupController extends Controller {
 			)
 		);
 
-		$allUsersFromGroups = [];
+		$groupsNameFromAdvancedPermissions = array_map(function ($object) {
+			return $object['id'];
+		}, $groupfolder['manage']);
 
-		foreach ($groupsName as $groupName) {
-            $allUsersFromGroups[] = $this->groupManager->get($groupName)->getUsers();
-		}
+		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
+		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
 
-		$usersMerged = array_merge([], ...$allUsersFromGroups);
+		$this->groupsWorkspace
+			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
+		$this->groupsWorkspace
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
 
-		$this->groupsWorkspace->transfertUsersToUserGroup($usersMerged, $spaceId);
-		$users = $this->userFormatter->formatUsers($usersMerged, $groupfolder, 'user');
+		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
 
 		return new JSONResponse([
 			'groups' => $groups,
 			'users' => (object)$users
 		], Http::STATUS_OK);
 	}
-
 }
