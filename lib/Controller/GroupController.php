@@ -28,6 +28,7 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -319,9 +320,7 @@ class GroupController extends Controller {
 			)
 		);
 
-		$groupsNameFromAdvancedPermissions = array_map(function ($object) {
-			return $object['id'];
-		}, $groupfolder['manage']);
+		$groupsNameFromAdvancedPermissions = GroupFolderManage::filterGroup($groupfolder);
 
 		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
 		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
