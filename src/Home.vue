@@ -74,7 +74,7 @@
 					<div id="app-settings-content">
 						<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							:close-after-click="true"
-							:title="t('workspace', 'Import / Convert')"
+							:title="t('workspace', 'Convert group folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div>
