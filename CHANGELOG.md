@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add Czech localization([#541](https://github.com/arawa/workspace/pull/541) & [#542](https://github.com/arawa/workspace/pull/542) )
+- Add Czech localization ([#541](https://github.com/arawa/workspace/pull/541) & [#542](https://github.com/arawa/workspace/pull/542) )
 
 ### Chore
 
@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactoring the creation workspace part ( [#609](https://github.com/arawa/workspace/pull/609) )
+- Refactorised the converting groupfolders to workspace ( [#633](https://github.com/arawa/workspace/pull/633) )
 
 ### Style 
 
