@@ -26,7 +26,7 @@
 			position="top center"
 			width="50%"
 			class="notifications"
-			close-on-click="true" />
+			:close-on-click="true" />
 		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
 			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
