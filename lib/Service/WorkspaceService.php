@@ -25,8 +25,8 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
@@ -128,7 +128,7 @@ class WorkspaceService {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
 					$user->getUID(),
-					Application::GID_SPACE . Application::SPACE_MANAGER . $space['id'])
+					GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
 				) {
 				$role = 'admin';
 			}
@@ -166,7 +166,7 @@ class WorkspaceService {
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
 		$users = array();
-		$group = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_USERS . $workspace['id']);
+		$group = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $workspace['id']);
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
@@ -174,7 +174,7 @@ class WorkspaceService {
 			};
 		}
 		// TODO Handle is_null($group) better (remove workspace from list?)
-		$group = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $workspace['id']);
+		$group = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
 		if (!is_null($group)) {
 			foreach($group->getUsers() as $user) {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');

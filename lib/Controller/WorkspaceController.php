@@ -25,23 +25,24 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\ILogger;
-use OCP\IRequest;
-use OCP\IUserManager;
-use OCP\IGroupManager;
+use OCA\Workspace\BadRequestException;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\GroupsWorkspace;
+use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\BadRequestException;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\WorkspaceService;
+use OCP\IGroupManager;
+use OCP\ILogger;
+use OCP\IRequest;
+use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
-    
+
     /** @var IGroupManager */
     private $groupManager;
 
@@ -122,7 +123,7 @@ class WorkspaceController extends Controller {
     public function createSpace(string $spaceName, int $folderId) {
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
@@ -157,9 +158,9 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a space.',
             ]);
         }
-        
+
         // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_MANAGER . $space->getId());
+        $newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
             return new JSONResponse([
@@ -167,8 +168,8 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a Space Manager group.',
             ]);
         }
-        
-        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_USERS . $space->getId());
+
+        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
             return new JSONResponse([
@@ -177,9 +178,9 @@ class WorkspaceController extends Controller {
             ]);
         }
 
-        $newSpaceManagerGroup->setDisplayName(Application::SPACE_MANAGER . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(Application::SPACE_USERS . $space->getId());
-        
+        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getId());
+
 		// #3 Returns result
         return new JSONResponse ([
             'space_name' => $space->getSpaceName(),
@@ -209,7 +210,7 @@ class WorkspaceController extends Controller {
 
         if ( $spaceName === false ||
             $spaceName === null ||
-            $spaceName === '' 
+            $spaceName === ''
         ) {
             throw new BadRequestException('spaceName must be provided');
         }
@@ -219,7 +220,7 @@ class WorkspaceController extends Controller {
         if (!empty($errorInSpaceName)) {
             return new JSONResponse($errorInSpaceName);
         }
-    
+
         $spaceName = $this->deleteBlankSpaceName($spaceName);
 
         if (gettype($groupfolder) === 'string') {
@@ -246,9 +247,9 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a space.',
             ]);
         }
-        
+
         // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_MANAGER . $space->getId());
+        $newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space->getId());
 
         if (is_null($newSpaceManagerGroup)) {
             return new JSONResponse([
@@ -256,8 +257,8 @@ class WorkspaceController extends Controller {
                 'message' => 'Error to create a Space Manager group.',
             ]);
         }
-        
-        $newSpaceUsersGroup = $this->groupManager->createGroup(Application::GID_SPACE . Application::SPACE_USERS . $space->getId());
+
+        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getId());
 
         if (is_null($newSpaceUsersGroup)) {
             return new JSONResponse([
@@ -266,9 +267,9 @@ class WorkspaceController extends Controller {
             ]);
         }
 
-        $newSpaceManagerGroup->setDisplayName(Application::SPACE_MANAGER . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(Application::SPACE_USERS . $space->getId());
-        
+        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getId());
+
         $groupsName = array_keys($groupfolder['groups']);
 
         $groupsOfGroupfolder = [];
@@ -279,7 +280,7 @@ class WorkspaceController extends Controller {
             $group = $this->groupManager->get($groupName);
 
             $usersOfAGroup = $group->getUsers();
-            foreach($usersOfAGroup as $user) {                
+            foreach($usersOfAGroup as $user) {
                 $newSpaceUsersGroup->addUser($user);
                 $users[$user->getUID()] = $this->userService->formatUser($user, $groupfolder, 'user');
             }
@@ -321,12 +322,12 @@ class WorkspaceController extends Controller {
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @param object $workspace
-     * 
+     *
      */
     public function destroy($workspace) {
 
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $workspace['id']);
+        $GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
         foreach ($GEGroup->getUsers() as $user) {
 		$this->userService->removeGEFromWM($user, $workspace['id']);
         }
@@ -358,7 +359,7 @@ class WorkspaceController extends Controller {
 	/**
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
-	 * 
+	 *
 	 * @NoAdminRequired
      * @NoCSRFRequired
 	 *
@@ -396,7 +397,7 @@ class WorkspaceController extends Controller {
     public function addUsersInfo($workspace) {
         return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
     }
-    
+
 	/**
      * Returns a list of users whose name matches $term
      *
@@ -424,7 +425,7 @@ class WorkspaceController extends Controller {
 	*
 	* @param object|string $space
 	* @param string $userId
-	* 
+	*
 	*/
 	public function changeUserRole($space, string $userId) {
 
@@ -433,35 +434,35 @@ class WorkspaceController extends Controller {
 		}
 
 		$user = $this->userManager->get($userId);
-        $GEgroup = $this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $space['id']);
+        $GEgroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']);
 
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
-        		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . Application::GROUP_WKSUSER . ' group if needed.');
+        		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
 			$this->userService->removeGEFromWM($user, $space['id']);
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(Application::GID_SPACE . Application::SPACE_MANAGER . $space['id'])->addUser($user);
-			$this->groupManager->get(Application::GROUP_WKSUSER)->addUser($user);
+			$this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])->addUser($user);
+			$this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS)->addUser($user);
 		}
 
 		return new JSONResponse();
 	}
 
     /**
-     * 
+     *
      * @NoAdminRequired
      * @SpaceAdminRequired
      * @NoCSRFRequired
      * @param object|string $workspace
      * @param string $newSpaceName
      * @return JSONResponse
-     * 
+     *
      * @todo Manage errors
      */
     public function renameSpace($workspace, $newSpaceName) {
-        
+
         if (gettype($workspace) === 'object') {
             $workspace = json_decode($workspace, true);
         }
@@ -474,7 +475,7 @@ class WorkspaceController extends Controller {
 
 		if( $newSpaceName === false ||
 			$newSpaceName === null ||
-			$newSpaceName === '' 
+			$newSpaceName === ''
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}

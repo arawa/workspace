@@ -19,44 +19,37 @@ use OCP\IURLGenerator;
 
 class Application extends App {
 
-        public const APP_ID = 'workspace';
-	public const GROUP_WKSUSER = 'WorkspacesManagers';	// Group that holds all workspace users (members managed by the application)
-        public const GENERAL_MANAGER = "GeneralManager";	// Group that holds the application administrators
-	// TODO Remove the '_01' suffix 
-        public const SPACE_MANAGER = "GE-";
-        public const SPACE_USERS = "U-";
-        public const GID_SPACE = "SPACE-";
+    public const APP_ID = 'workspace';
 
+    public function __construct(array $urlParams=[] ) {
+        parent::__construct(self::APP_ID, $urlParams);
 
-        public function __construct(array $urlParams=[] ) {
-                parent::__construct(self::APP_ID, $urlParams);
+        $container = $this->getContainer();
 
-                $container = $this->getContainer();
+        $container->registerService('WorkspaceAccessControlMiddleware', function($c){
+            return new WorkspaceAccessControlMiddleware(
+                $c->query(IURLGenerator::class),
+                $c->query(UserService::class)
+            );
+        });
 
-                $container->registerService('WorkspaceAccessControlMiddleware', function($c){
-                    return new WorkspaceAccessControlMiddleware(
-                        $c->query(IURLGenerator::class),
-                        $c->query(UserService::class)
-                    );
-                });
+        $container->registerService('IsSpaceAdminMiddleware', function($c){
+            return new IsSpaceAdminMiddleware(
+                $c->query(IControllerMethodReflector::class),
+                $c->query(IRequest::class),
+                $c->query(UserService::class)
+            );
+        });
 
-                $container->registerService('IsSpaceAdminMiddleware', function($c){
-                    return new IsSpaceAdminMiddleware(
-                        $c->query(IControllerMethodReflector::class),
-                        $c->query(IRequest::class),
-                        $c->query(UserService::class)
-                    );
-                });
+        $container->registerService('IsGeneralManagerMiddleware', function($c){
+            return new IsGeneralManagerMiddleware(
+                $c->query(IControllerMethodReflector::class),
+                $c->query(IRequest::class),
+                $c->query(UserService::class)
+            );
+        });
 
-                $container->registerService('IsGeneralManagerMiddleware', function($c){
-                    return new IsGeneralManagerMiddleware(
-                        $c->query(IControllerMethodReflector::class),
-                        $c->query(IRequest::class),
-                        $c->query(UserService::class)
-                    );
-                });
-
-                $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
-                $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
-        }
+        $container->registerMiddleware('OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware');
+        $container->registerMiddleware('OCA\Workspace\Middleware\IsSpaceAdminMiddleware');
+    }
 }
