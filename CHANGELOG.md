@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add Czech localization ([#541](https://github.com/arawa/workspace/pull/541) & [#542](https://github.com/arawa/workspace/pull/542) )
+- Add Czech localization([#541](https://github.com/arawa/workspace/pull/541) & [#542](https://github.com/arawa/workspace/pull/542) )
+- Limiting user search ( [#631](https://github.com/arawa/workspace/pull/631) )
 
 ### Chore
 
