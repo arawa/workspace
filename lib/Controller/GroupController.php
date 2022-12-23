@@ -152,12 +152,6 @@ class GroupController extends Controller {
 	 */
 	public function rename($newGroupName, $gid, $spaceId) {
 		// TODO Use groupfolder api to retrieve workspace group.
-		if (substr($gid, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(
-				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
-				Http::STATUS_FORBIDDEN
-			);
-		}
 		if (substr($newGroupName, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
 				['Workspace groups must ends with the ID of the space they belong to'],
