@@ -26,10 +26,15 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUserManager;
@@ -48,16 +53,28 @@ class GroupController extends Controller {
 	/** @var UserService */
 	private $userService;
 
+	private GroupsWorkspace $groupsWorkspace;
+
+	private UserFormatter $userFormatter;
+
+	private UserWorkspace $userWorkspace;
+
 	public function __construct(
+		GroupsWorkspace $groupsWorkspace,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService
+		UserFormatter $userFormatter,
+		UserService $userService,
+		UserWorkspace $userWorkspace
 	){
 		$this->groupManager = $groupManager;
+		$this->groupsWorkspace = $groupsWorkspace;
 		$this->logger = $logger;
+		$this->userFormatter = $userFormatter;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->userWorkspace = $userWorkspace;
 	}
 
 	/**
@@ -104,10 +121,6 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function delete($gid, $spaceId) {
-		// TODO Use groupfolder api to retrieve workspace group. 
-		if (substr($gid, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
-		}
 
 		// Delete group
 		$NCGroup = $this->groupManager->get($gid);
@@ -138,13 +151,7 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function rename($newGroupName, $gid, $spaceId) {
-		// TODO Use groupfolder api to retrieve workspace group. 
-		if (substr($gid, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(
-				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
-				Http::STATUS_FORBIDDEN
-			);
-		}
+		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($newGroupName, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
 				['Workspace groups must ends with the ID of the space they belong to'],
@@ -191,7 +198,7 @@ class GroupController extends Controller {
 		// Adds user to group
 		$NCUser = $this->userManager->get($user);
 		$NCGroup->addUser($NCUser);
-		
+
 		// Adds the user to the application manager group when we are adding a workspace manager
 		if ($gid === Application::GID_SPACE . Application::ESPACE_MANAGER_01. $spaceId) {
 			$workspaceUsersGroup = $this->groupManager->get(Application::GROUP_WKSUSER);
@@ -218,7 +225,7 @@ class GroupController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 * @SpaceAdminRequired
-	 * 
+	 *
 	 * Removes a user from a group
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 * and from the WorkspacesManagers group when the user is being removed from the GE- group
@@ -280,4 +287,48 @@ class GroupController extends Controller {
 		]);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @GeneralManagerRequired
+	 * @param string|object $groupfolder
+	 *
+	 */
+	public function transferUsersToGroups(string $spaceId, $groupfolder) {
+		if (gettype($groupfolder) === 'string') {
+			$groupfolder = json_decode($groupfolder, true);
+		}
+
+        $groupsName = array_keys($groupfolder['groups']);
+
+		$groups = GroupFormatter::formatGroups(
+			array_merge(
+				[
+					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
+					$this->groupsWorkspace->getUserGroup($spaceId)
+				],
+				array_map(function ($groupName)
+				{
+					return $this->groupManager->get($groupName);
+				}, $groupsName)
+			)
+		);
+
+		$groupsNameFromAdvancedPermissions = GroupFolderManage::filterGroup($groupfolder);
+
+		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
+		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
+
+		$this->groupsWorkspace
+			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
+		$this->groupsWorkspace
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
+
+		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
+
+		return new JSONResponse([
+			'groups' => $groups,
+			'users' => (object)$users
+		], Http::STATUS_OK);
+	}
 }

@@ -62,8 +62,8 @@
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService'
-import { convertGroupfolderToSpace, isSpaceManagers, isSpaceUsers } from './services/spaceService'
+import { get, getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { createSpace, isSpaceManagers, isSpaceUsers, transferUsersToUserGroup } from './services/spaceService.js'
 
 export default {
 	name: 'SelectGroupfolders',
@@ -93,12 +93,6 @@ export default {
 		// get groupfolders whithout spaces.
 		async getGroupfolders() {
 			const groupfolders = await getAll()
-				.then(resp => {
-					return resp
-				})
-				.catch(error => {
-					return error
-				})
 
 			// get all spaces and "convert" in the form of Array.
 			const allSpaces = []
@@ -126,65 +120,55 @@ export default {
 			return groupfoldersWhithoutSpace
 		},
 		async convertGroupfoldersToSpace() {
-			const groupfoldersBackup = this.$store.state.groupfolders
+			const groupfolders = this.$store.state.groupfolders
 			this.$emit('close')
 
-			const groupfoldersBatch = { }
+			const groupfoldersSelected = { }
 			this.allSelectedGroupfoldersId.forEach(mountPoint => {
-				groupfoldersBatch[mountPoint] = groupfoldersBackup[mountPoint]
+				groupfoldersSelected[mountPoint] = groupfolders[mountPoint]
 			})
 
 			// convert here now
-			for (const mountPoint in groupfoldersBatch) {
-				// Enable acl
-				const aclIsEnabled = await enableAcl(groupfoldersBatch[mountPoint].id)
-				if (!aclIsEnabled.success) {
-					console.error('Problem to enable ACL to convert a groupfolder in space.')
-					console.error('This current groupfolder', groupfoldersBatch[mountPoint])
-				}
+			for (const mountPoint in groupfoldersSelected) {
+				await enableAcl(groupfoldersSelected[mountPoint].id)
 
-				// Convert in a space
-				const space = await convertGroupfolderToSpace(mountPoint, groupfoldersBatch[mountPoint])
+				const space = await createSpace(mountPoint, groupfoldersSelected[mountPoint].id)
 
 				// Add groups to groupfolder
 				const GROUPS = Object.keys(space.groups)
 				const spaceManagerGID = GROUPS.find(isSpaceManagers)
 				const spaceUserGID = GROUPS.find(isSpaceUsers)
 
-				const isAddGroupForSpaceManager = await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
-				if (!isAddGroupForSpaceManager.success) {
-					console.error('Error to add Space Manager group in the groupfolder when to convert in space')
-				}
+				await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
+				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
-				const isAddGroupForSpaceUser = await addGroupToGroupfolder(space.folder_id, spaceUserGID)
-				if (!isAddGroupForSpaceUser.success) {
-					console.error('Error to add Space Users group in the groupfolder when to convert in space')
-				}
+				const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
+				const groupstransferoUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
 
-				// Add Space Manager group in manage ACL
-				const resultAddGroupToManageACLForGroupfolder = await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
-				if (!resultAddGroupToManageACLForGroupfolder.success) {
-					console.error('Error to add the Space Manager group in manage ACL when to convert in space')
-					console.error('GroupFolder API to manage ACL a groupfolder doesn\'t respond')
-				}
+				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
+
+				const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
+				await GidGroupsFromACL.forEach(gid => {
+					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
+				})
 
 				// Define the quota
 				let quota = ''
-				if (groupfoldersBatch[mountPoint].quota === '-3') {
+				if (groupfoldersSelected[mountPoint].quota === '-3') {
 					quota = t('workspace', 'unlimited')
 				} else {
-					quota = groupfoldersBatch[mountPoint].quota
+					quota = groupfoldersSelected[mountPoint].quota
 				}
 
 				this.$store.commit('addSpace', {
 					color: space.color,
-					groups: space.groups,
+					groups: groupstransferoUserGroup.groups,
 					isOpen: false,
 					id: space.id_space,
 					groupfolderId: space.folder_id,
 					name: space.space_name,
 					quota,
-					users: space.users,
+					users: groupstransferoUserGroup.users,
 				})
 
 			}

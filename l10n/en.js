@@ -23,7 +23,7 @@ OC.L10N.register(
 		'New space': 'Create a Workspace',
 		'No users selected': 'No users selected',
 		'Quota': 'Quota',
-		'Import / Convert': 'Import / Convert',
+		'Convert group folders': 'Convert group folders',
 		'Select groupfolders to convert in workspace': 'Select groupfolders to convert in workspace',
 		'Convert in spaces': 'Convert in spaces',
 		'The name space must be defined.': 'The name space must be defined.',

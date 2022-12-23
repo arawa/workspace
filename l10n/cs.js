@@ -23,7 +23,7 @@ OC.L10N.register(
 		'New space': 'Vytvořit prac. prostor',
 		'No users selected': 'Nevybráni žádní uživatelé',
 		'Quota': 'Kvóta',
-		'Import / Convert': 'Naimportovat/převést',
+		'Convert group folders': 'Naimportovat/převést',
 		'Select groupfolders to convert in workspace': 'Vyberte skupinové složky, které převést na pracovní prostor',
 		'Convert in spaces': 'Převést v prostorech',
 		'The name space must be defined.': 'Je třeba definovat jmenný prostor.',
