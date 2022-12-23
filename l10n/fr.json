@@ -16,7 +16,7 @@
 	"Quota" : "Quota",
 	"The name space must be defined.": "Le nom de l'espace de travail doit être défini.",
 	"Role" : "Role",
-	"Import / Convert": "Importer / Convertir",
+	"Convert group folders": "Convertir",
 	"Select groupfolders to convert in workspace": "Selectionner les dossiers du groupe à convertir en espace projet",
 	"Convert in spaces": "Convertir en espace projet",
 	"No username matches your current entry.": "Aucun nom d'utilisateur ne correspond à votre saisie actuelle",

@@ -18,7 +18,7 @@ OC.L10N.register(
 		'New space': 'Créer un espace de travail',
 		'No users selected': 'Aucun utilisateur selectionné',
 		'Error': 'Erreur',
-		'Import / Convert': 'Importer / Convertir',
+		'Convert group folders': 'Convertir',
 		'Select groupfolders to convert in workspace': 'Selectionner les dossiers du groupe à convertir en espace projet',
 		'Convert in spaces': 'Convertir en espace projet',
 		'Add users': 'Ajouter des utilisateurs',
