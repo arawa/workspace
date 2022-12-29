@@ -192,8 +192,6 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;
-	min-width: 600px;
-	max-width: 600px;
 }
 
 .header-select-groupfolders {
