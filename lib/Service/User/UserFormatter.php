@@ -25,15 +25,15 @@
 namespace OCA\Workspace\Service\User;
 
 use OCA\Workspace\Roles;
-use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCP\IUser;
 
 class UserFormatter
 {
 
-	private GroupsWorkspace $groupsWorkspace;
+	private GroupsWorkspaceService $groupsWorkspace;
 
-	public function __construct(GroupsWorkspace $groupsWorkspace)
+	public function __construct(GroupsWorkspaceService $groupsWorkspace)
 	{
 		$this->groupsWorkspace = $groupsWorkspace;
 	}

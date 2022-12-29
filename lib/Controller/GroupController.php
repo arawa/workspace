@@ -29,7 +29,7 @@ use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -42,7 +42,7 @@ use OCP\IUserManager;
 
 class GroupController extends Controller {
 
-	private GroupsWorkspace $groupsWorkspace;
+	private GroupsWorkspaceService $groupsWorkspace;
 	private IGroupManager $groupManager;
 	private ILogger $logger;
 	private IUserManager $userManager;
@@ -51,7 +51,7 @@ class GroupController extends Controller {
 	private UserWorkspace $userWorkspace;
 
 	public function __construct(
-		GroupsWorkspace $groupsWorkspace,
+		GroupsWorkspaceService $groupsWorkspace,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,

@@ -26,17 +26,12 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\BadRequestException;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\ManagersWorkspace;
-use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\BadRequestException;
 use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\CreateWorkspaceException;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\GroupsWorkspace;
+use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
@@ -50,13 +45,8 @@ use OCP\IRequest;
 use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
-    /** @var IGroupManager */
-    private $groupManager;
 
-    /** @var ILogger */
-    private $logger;
-
-    private IGroupManager $groupManager;
+	private IGroupManager $groupManager;
     private ILogger $logger;
     private IUserManager $userManager;
     private SpaceMapper $spaceMapper;
