@@ -27,6 +27,11 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -37,28 +42,30 @@ use OCP\IUserManager;
 
 class GroupController extends Controller {
 
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var UserService */
-	private $userService;
+	private GroupsWorkspace $groupsWorkspace;
+	private IGroupManager $groupManager;
+	private ILogger $logger;
+	private IUserManager $userManager;
+	private UserFormatter $userFormatter;
+	private UserService $userService;
+	private UserWorkspace $userWorkspace;
 
 	public function __construct(
+		GroupsWorkspace $groupsWorkspace,
 		IGroupManager $groupManager,
 		ILogger $logger,
 		IUserManager $userManager,
-		UserService $userService
+		UserFormatter $userFormatter,
+		UserService $userService,
+		UserWorkspace $userWorkspace
 	){
 		$this->groupManager = $groupManager;
+		$this->groupsWorkspace = $groupsWorkspace;
 		$this->logger = $logger;
+		$this->userFormatter = $userFormatter;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->userWorkspace = $userWorkspace;
 	}
 
 	/**
@@ -146,6 +153,7 @@ class GroupController extends Controller {
 				Http::STATUS_FORBIDDEN
 			);
 		}
+
 		if (substr($newGroupName, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
 				['Workspace groups must ends with the ID of the space they belong to'],
@@ -281,4 +289,50 @@ class GroupController extends Controller {
 		]);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @GeneralManagerRequired
+	 * @param string|object $groupfolder
+	 *
+	 */
+	public function transferUsersToGroups(string $spaceId, $groupfolder) {
+		if (gettype($groupfolder) === 'string') {
+			$groupfolder = json_decode($groupfolder, true);
+		}
+
+        $groupsName = array_keys($groupfolder['groups']);
+
+		$groups = GroupFormatter::formatGroups(
+			array_merge(
+				[
+					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
+					$this->groupsWorkspace->getUserGroup($spaceId)
+				],
+				array_map(function ($groupName)
+				{
+					return $this->groupManager->get($groupName);
+				}, $groupsName)
+			)
+		);
+
+		$groupsNameFromAdvancedPermissions = GroupFolderManage::filterGroup($groupfolder);
+
+		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
+		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
+
+		$this->groupsWorkspace
+			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
+		$this->groupsWorkspace
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
+		$this->groupsWorkspace
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS));
+
+		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
+
+		return new JSONResponse([
+			'groups' => $groups,
+			'users' => (object)$users
+		], Http::STATUS_OK);
+	}
 }

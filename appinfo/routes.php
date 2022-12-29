@@ -54,14 +54,14 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#createSpace',
+			'name' => 'workspace#createWorkspace',
 			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'workspace#convertGroupfolderToSpace',
-			'url' => '/spaces/convert',
+			'name' => 'group#transferUsersToGroups',
+			'url' => '/spaces/{spaceId}/transfer-users',
 			'verb' => 'POST'
 		],
 		[

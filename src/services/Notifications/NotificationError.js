@@ -1,8 +1,7 @@
 /**
  * copyright Copyright (c) 2017 Arawa
  *
- * author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * author 202é1 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * license GNU AGPL version 3 or any later version
  *
@@ -21,7 +20,32 @@
  *
  */
 
-export const ESPACE_MANAGERS_PREFIX = 'GE-'
-export const ESPACE_USERS_PREFIX = 'U-'
-export const ESPACE_GID_PREFIX = 'SPACE-'
-export const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
+const configDefault = {
+	type: 'error',
+	duration: 3000,
+}
+
+export default class NotificationError {
+
+	constructor(instanceVue) {
+		this.instanceVue = instanceVue
+	}
+
+	/**
+	 *
+	 * @param {object} config {
+	 * title: string,
+	 * text: string,
+	 * duration: integer
+	 * }
+	 * @description in the config param, Only the title and text keys are required.
+	 * @link please, read the official doc : https://www.npmjs.com/package/vue-notification#props
+	 */
+	push(config) {
+		this.instanceVue.$notify({
+			...configDefault,
+			...config,
+		})
+	}
+
+}

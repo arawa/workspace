@@ -30,38 +30,38 @@ use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
+use OCP\IUser;
 use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\Share\IManager;
 
 class WorkspaceService {
 
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var SpaceMapper  */
-	private $spaceMapper;
-
-	/** @var UserService */
-	private $userService;
+	private IGroupManager $groupManager;
+	private ILogger $logger;
+	private IManager $shareManager;
+	private IUserManager $userManager;
+	private IUserSession $userSession;
+	private SpaceMapper $spaceMapper;
+	private UserService $userService;
 
 	public function __construct(
 		IGroupManager $groupManager,
 		ILogger $logger,
+		IManager $shareManager,
 		IUserManager $userManager,
+		IUserSession $userSession,
 		SpaceMapper $spaceMapper,
 		UserService $userService
 	)
 	{
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
+		$this->shareManager = $shareManager;
 		$this->spaceMapper = $spaceMapper;
 		$this->userManager = $userManager;
 		$this->userService = $userService;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -104,6 +104,26 @@ class WorkspaceService {
 	}
 
 	/**
+	 * @param IUser[] $users
+	 * @return IUser[]
+	 */
+	private function getUsersFromGroupsOnly($users)
+	{
+		$usersFromGroups = [];
+		$userSession = $this->userSession->getUser();
+		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
+		foreach ($groupsOfUserSession as $group) {
+			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
+		}
+
+		$usersFromGroups = array_filter($usersFromGroups, function ($user) use ($users) {
+			return in_array($user, $users);
+		});
+
+		return $usersFromGroups;
+	}
+
+	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
@@ -122,6 +142,11 @@ class WorkspaceService {
 				}
 		}
 
+		if ($this->shareManager->shareWithGroupMembersOnly())
+		{
+			$users = $this->getUsersFromGroupsOnly($users);
+		}
+
 		// transform in a format suitable for the app
 		$data = [];
 		foreach($users as $user) {
@@ -135,7 +160,6 @@ class WorkspaceService {
 			$data[] = $this->userService->formatUser($user, $space, $role);
 		}
 
-		// return info
 		return $data;
 	}
 
