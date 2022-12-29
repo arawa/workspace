@@ -26,9 +26,9 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
-use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -41,22 +41,12 @@ use OCP\IUserManager;
 
 class GroupController extends Controller {
 
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var UserService */
-	private $userService;
-
 	private GroupsWorkspace $groupsWorkspace;
-
+	private IGroupManager $groupManager;
+	private ILogger $logger;
+	private IUserManager $userManager;
 	private UserFormatter $userFormatter;
-
+	private UserService $userService;
 	private UserWorkspace $userWorkspace;
 
 	public function __construct(
@@ -323,6 +313,8 @@ class GroupController extends Controller {
 			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
 		$this->groupsWorkspace
 			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
+		$this->groupsWorkspace
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get(Application::GROUP_WKSUSER));
 
 		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
 

@@ -21,11 +21,11 @@
  *
  */
 
-import router from '../router'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { addGroupToGroupfolder } from '../services/groupfoldersService'
+import router from '../router.js'
 
 export default {
 	// Adds a user to a group
@@ -91,48 +91,14 @@ export default {
 		// Creates group in backend
 		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
 			.then((resp) => {
-				if (resp.status === 200) {
-					// add this group in groupfolders
-					addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
-						.then(res => {
-							if (res.success === false) {
-								axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
-									.then(resp => {
-										// eslint-disable-next-line no-console
-										console.log(`The ${gid} group is deleted`, resp)
-										context.commit('removeGroupFromSpace', { name, gid })
-										this._vm.$notify({
-											title: t('workspace', 'Error'),
-											text: t('workspace', 'There is a problem to add group to groupfolder. The group is deleted.'),
-											type: 'error',
-										})
-									})
-									.catch(error => {
-										console.error(`Problem to delete the ${gid} group`, error)
-									})
-								return false
-							}
-							// Navigates to the group's details page
-							context.state.spaces[name].isOpen = true
-							router.push({
-								path: `/group/${name}/${gid}`,
-							})
-							// eslint-disable-next-line no-console
-							console.log('Group ' + gid + ' created')
-
-							return res
-						})
-						.catch(error => {
-							console.error('Problem to add addGroup', error)
-						})
-				} else {
-					context.commit('removeGroupFromSpace', { name, gid })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
-				}
+				addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
+				// Navigates to the group's details page
+				context.state.spaces[name].isOpen = true
+				router.push({
+					path: `/group/${name}/${gid}`,
+				})
+				// eslint-disable-next-line no-console
+				console.log('Group ' + gid + ' created')
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })

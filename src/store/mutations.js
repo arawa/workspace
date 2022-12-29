@@ -124,7 +124,9 @@ export default {
 		// Removes also the group from all users' groups attribute
 		Object.keys(space.users).forEach(key => {
 			const index = space.users[key].groups.indexOf(gid)
-			space.users[key].groups.splice(index, 1)
+			if (index >= 0) {
+				space.users[key].groups.splice(index, 1)
+			}
 		})
 		// Saves the space back in the store
 		delete state.spaces[space.name]
