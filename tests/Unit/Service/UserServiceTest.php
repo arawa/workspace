@@ -25,18 +25,19 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use PHPUnit\Framework\TestCase;
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
-use OCP\IGroupManager;
 use OCP\IGroup;
+use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
+use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase {
-	
+
 	/** @var IUser */
 	private $user;
 
@@ -101,14 +102,14 @@ class UserServiceTest extends TestCase {
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), Application::GENERAL_MANAGER)
+			->with($this->user->getUID(), ManagersWorkspace::GENERAL_MANAGER)
 			->willReturn(true);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->with()
 			->willReturn($this->user);
-		
+
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
@@ -130,7 +131,7 @@ class UserServiceTest extends TestCase {
 		// Let's say user is in General manager group
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), Application::GENERAL_MANAGER)
+			->with($this->user->getUID(), ManagersWorkspace::GENERAL_MANAGER)
 			->willReturn(false);
 
 		$this->userSession->expects($this->once())
@@ -151,7 +152,7 @@ class UserServiceTest extends TestCase {
 	}
 
 	/**
-	 * This test makes sure that the isSpaceManager() method return true when user 
+	 * This test makes sure that the isSpaceManager() method return true when user
 	 * is a space manager
 	 */
 	public function testIsSpaceManager() {
@@ -186,7 +187,7 @@ class UserServiceTest extends TestCase {
 	}
 
 	/**
-	 * This test makes sure that the isSpaceManager() method return false when user 
+	 * This test makes sure that the isSpaceManager() method return false when user
 	 * is not a space manager
 	 */
 	public function testIsNotSpaceManager() {
@@ -221,7 +222,7 @@ class UserServiceTest extends TestCase {
 	}
 
 	/**
-	 * This test makes sure that the isSpaceManagerOfSpace() method return true when user 
+	 * This test makes sure that the isSpaceManagerOfSpace() method return true when user
 	 * is manager of a space
 	 */
 	public function testIsNotSpaceManagerOfSpace() {
@@ -251,7 +252,7 @@ class UserServiceTest extends TestCase {
 	}
 
 	/**
-	 * This test makes sure that the isSpaceManagerOfSpace() method return false when user 
+	 * This test makes sure that the isSpaceManagerOfSpace() method return false when user
 	 * is not manager of a space
 	 */
 	public function testIsSpaceManagerOfSpace() {
@@ -262,7 +263,7 @@ class UserServiceTest extends TestCase {
 		     	->method('isInGroup')
 	     		->with($this->user->getUID(), $group->getGID())
 			->willReturn(false);
-		
+
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->with()

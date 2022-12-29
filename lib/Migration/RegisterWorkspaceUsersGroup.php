@@ -25,7 +25,7 @@
 
 namespace OCA\Workspace\Migration;
 
-use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\ManagersWorkspace;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\ILogger;
@@ -53,25 +53,25 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
-	
+
 	public function getName() {
 		return 'Creates the group of user allowed to use the application';
 	}
 
 	public function run(IOutput $output) {
 		// The group already exists when we upgrade the app
-		if (!$this->groupManager->groupExists(Application::GROUP_WKSUSER)) {
-			$this->logger->debug('Group ' . Application::GROUP_WKSUSER . ' does not exist. Let\'s create it.');
-			$this->groupManager->createGroup(Application::GROUP_WKSUSER);
+		if (!$this->groupManager->groupExists(ManagersWorkspace::WORKSPACES_MANAGERS)) {
+			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist. Let\'s create it.');
+			$this->groupManager->createGroup(ManagersWorkspace::WORKSPACES_MANAGERS);
 		} else {
-			$this->logger->debug('Group ' . Application::GROUP_WKSUSER . ' already exists. No need to create it.');
+			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' already exists. No need to create it.');
 		}
 
-		if(!$this->groupManager->groupExists(Application::GENERAL_MANAGER)) {
-			$this->logger->debug('Group ' . Application::GENERAL_MANAGER . ' does not exist. Let\'s create it.');
-			$this->groupManager->createGroup(Application::GENERAL_MANAGER);
+		if(!$this->groupManager->groupExists(ManagersWorkspace::GENERAL_MANAGER)) {
+			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' does not exist. Let\'s create it.');
+			$this->groupManager->createGroup(ManagersWorkspace::GENERAL_MANAGER);
 		} else {
-			$this->logger->debug('Group ' . Application::GENERAL_MANAGER . ' already exists. No need to create it.');
+			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
 		}
 	}
 }
