@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
+
 ## [1.3.1] - 2022-12-29
 
 ### Fixed
