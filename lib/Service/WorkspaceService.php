@@ -168,7 +168,7 @@ class WorkspaceService {
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
 		$users = array();
-		$group = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $workspace['id']);
+		$group = $this->groupManager->get(GroupsWorkspace::getUserGroup($workspace) . $workspace['id']);
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {

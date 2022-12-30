@@ -52,16 +52,19 @@ class GroupsWorkspaceService {
 	/**
 	 * @throws GroupException
 	 */
-	public function getUserGroup(string $spaceId): IGroup {
-		$groupUser = $this->groupManager->get(
-			GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $spaceId
-		);
+	public function getUserGroup(array $workspace): String {
+		$groups = array_keys($workspace['groups']);
 
-		if (is_null($groupUser)) {
-			throw new GroupException('Error to get the workspace manage group relative to workspace.');
+		$regex = '/^' . GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . '[0-9]/';
+		foreach ($groups as $group)
+		{
+			if (preg_match($regex, $group))
+			{
+				return GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS;
+			}
 		}
 
-		return $groupUser;
+		return GroupsWorkspace::GID_SPACE . GroupsWorkspace::USER_GROUP;
 	}
 
 	/**

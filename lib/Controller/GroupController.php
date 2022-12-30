@@ -161,6 +161,7 @@ class GroupController extends Controller {
 	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
 	 * manager group when we are adding a workspace manager
 	 *
+	 * @var mixed $workspace
 	 * @var string $gid
 	 * @var string $user
 	 *
@@ -182,7 +183,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 
 		// Adds the user to the application manager group when we are adding a workspace manager
-		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER. $spaceId) {
+		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER. $workspace['id']) {
 			$workspaceUsersGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
 			if (!is_null($workspaceUsersGroup)) {
 				$workspaceUsersGroup->addUser($NCUser);
@@ -195,7 +196,7 @@ class GroupController extends Controller {
 
 		// Adds user to workspace user group
 		// This must be the last action done, when all other previous actions have succeeded
-		$UGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $spaceId);
+		$UGroup = $this->groupManager->get(GroupsWorkspace::getUserGroup($workspace) . $workspace['id']);
 		$UGroup->addUser($NCUser);
 
 		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);
@@ -233,7 +234,8 @@ class GroupController extends Controller {
 		// Removes user from group(s)
 		$NCUser = $this->userManager->get($user);
 		$groups = [];
-		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space['id']) {
+		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']
+		|| $gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::USER_GROUP . $space['id']) {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
 			$users = (array)$space['users'];
