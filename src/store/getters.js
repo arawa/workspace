@@ -21,7 +21,8 @@
  *
  */
 
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
+import UserGroup from '../services/Groups/UserGroup.js'
 
 export const getters = {
 	// Returns the GE group of a workspace
@@ -82,7 +83,7 @@ export const getters = {
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.gid === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + state.spaces[name].id
+			return group.gid === UserGroup.getUserGroup(state.spaces[name]) + state.spaces[name].id
 		})
 		return groups[0]
 	},

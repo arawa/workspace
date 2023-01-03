@@ -23,5 +23,6 @@
 
 export const ESPACE_MANAGERS_PREFIX = 'GE-'
 export const ESPACE_USERS_PREFIX = 'U-'
+export const ESPACE_USERS_GROUP_PREFIX = 'Users-'
 export const ESPACE_GID_PREFIX = 'SPACE-'
 export const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'

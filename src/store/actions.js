@@ -22,11 +22,12 @@
  */
 
 import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
 import router from '../router.js'
+import UserGroup from '../services/Groups/UserGroup.js'
 
 export default {
 	// Adds a user to a group
@@ -38,11 +39,12 @@ export default {
 		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
 		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
-		axios.patch(url, {
+		axios.post(url, {
 			gid,
 			user: user.uid,
+			workspace: space,
 		}).then((resp) => {
-			if (resp.status === 204) {
+			if (resp.status === 201) {
 				// Everything went well, we can thus also add this user to the UGroup in the frontend
 				context.commit('addUserToGroup', {
 					name,
@@ -146,7 +148,7 @@ export default {
 		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
-		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+		if (gid.startsWith(UserGroup.getUserGroup(space))) {
 			context.commit('removeUserFromWorkspace', { name, user })
 		} else {
 			context.commit('removeUserFromGroup', { name, gid, user })
@@ -169,7 +171,7 @@ export default {
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: e })
 			showNotificationError('Error', text, 4000)
-			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+			if (gid.startsWith(UserGroup.getUserGroup(space))) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
 				)

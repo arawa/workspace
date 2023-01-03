@@ -97,6 +97,7 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
+import UserGroup from './services/Groups/UserGroup.js'
 
 export default {
 	name: 'UserTable',
@@ -145,7 +146,7 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				gid: ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id,
+				gid: UserGroup.getUserGroup(space) + space.id,
 				user,
 			})
 		},

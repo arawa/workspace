@@ -76,6 +76,7 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
 
 export default {
@@ -99,7 +100,7 @@ export default {
 			// Prevents deleting GE- and U- groups
 			const space = this.$store.state.spaces[this.$route.params.space]
 			if (this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-			|| this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
+			|| UserGroup.getUserGroup(space) + ESPACE_USERS_PREFIX + space.id) {
 				// TODO Inform user
 				return
 			}

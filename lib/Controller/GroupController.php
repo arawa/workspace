@@ -199,7 +199,8 @@ class GroupController extends Controller {
 		$UGroup = $this->groupManager->get(GroupsWorkspace::getUserGroup($workspace) . $workspace['id']);
 		$UGroup->addUser($NCUser);
 
-		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);
+		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_CREATED);
+
 	}
 
 	/**
