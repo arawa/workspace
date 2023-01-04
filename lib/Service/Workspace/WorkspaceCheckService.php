@@ -47,7 +47,7 @@ class WorkspaceCheckService {
 	 * @throws BadRequestException
      */
 	public function containSpecialChar(string $spacename) {
-		if (preg_match(Application::REGEX_CHECK_NOTHING_SPECIAL_CHARACTER, $spacename)) {
+		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
             throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
         }
 
