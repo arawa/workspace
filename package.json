@@ -76,7 +76,7 @@
     "jsdom": "^20.0.0",
     "jsdom-global": "^3.0.2",
     "prettier": "^2.7.1",
-    "vue-jest": "^3.0.7",
+    "vue-jest": "^4.0.1",
     "vue-template-compiler": "^2.7.0",
     "webpack-node-externals": "^3.0.0"
   },
