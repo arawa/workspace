@@ -39,8 +39,7 @@ export default new Router({
 	routes: [
 		{
 			path: '/',
-			name: 'home',
-			component: Home,
+			component: resolve => resolve(Home),
 			children: [
 				{
 					path: '',

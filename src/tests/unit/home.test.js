@@ -21,20 +21,23 @@
  *
  */
 
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { createLocalVue, mount } from '@vue/test-utils'
+import { createSpace } from '../../services/spaceService.js'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import axios from '@nextcloud/axios'
 import Home from '../../Home.vue'
+import Notifications from 'vue-notification'
+import store from '../../store/index.js'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import store from '../../store/index.js'
-import axios from '@nextcloud/axios'
-import { createSpace } from '../../services/spaceService'
 
 jest.mock('axios')
 
 Vue.prototype.t = t
 Vue.prototype.n = n
+
+Vue.use(Notifications)
 
 const localVue = createLocalVue()
 const router = new VueRouter()
