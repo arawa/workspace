@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
 
+### Chore
+
+- Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
+
 ## [1.3.1] - 2022-12-29
 
 ### Fixed
