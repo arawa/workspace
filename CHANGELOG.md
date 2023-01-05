@@ -6,14 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+### Added
+
+- Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
+- Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
+
 ### Changed
 
+- Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
 
-### Chore
+### Fixed
 
-- Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
+- Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
 
 ## [1.3.1] - 2022-12-29
 
