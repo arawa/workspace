@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;

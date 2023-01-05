@@ -41,7 +41,6 @@ use OCP\ILogger;
 use OCP\IUserManager;
 
 class GroupController extends Controller {
-
 	private GroupsWorkspaceService $groupsWorkspace;
 	private IGroupManager $groupManager;
 	private ILogger $logger;
@@ -58,7 +57,7 @@ class GroupController extends Controller {
 		UserFormatter $userFormatter,
 		UserService $userService,
 		UserWorkspace $userWorkspace
-	){
+	) {
 		$this->groupManager = $groupManager;
 		$this->groupsWorkspace = $groupsWorkspace;
 		$this->logger = $logger;
@@ -297,7 +296,7 @@ class GroupController extends Controller {
 			$groupfolder = json_decode($groupfolder, true);
 		}
 
-        $groupsName = array_keys($groupfolder['groups']);
+		$groupsName = array_keys($groupfolder['groups']);
 
 		$groups = GroupFormatter::formatGroups(
 			array_merge(
@@ -305,8 +304,7 @@ class GroupController extends Controller {
 					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
 					$this->groupsWorkspace->getUserGroup($spaceId)
 				],
-				array_map(function ($groupName)
-				{
+				array_map(function ($groupName) {
 					return $this->groupManager->get($groupName);
 				}, $groupsName)
 			)

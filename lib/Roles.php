@@ -2,8 +2,7 @@
 
 namespace OCA\Workspace;
 
-class Roles
-{
+class Roles {
 	public const Admin = 'admin';
 	public const User = 'user';
 }

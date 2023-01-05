@@ -27,7 +27,6 @@ namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUser;
@@ -36,7 +35,6 @@ use OCP\IUserSession;
 use OCP\Share\IManager;
 
 class WorkspaceService {
-
 	private IGroupManager $groupManager;
 	private ILogger $logger;
 	private IManager $shareManager;
@@ -105,8 +103,7 @@ class WorkspaceService {
 	 * @param IUser[] $users
 	 * @return IUser[]
 	 */
-	private function getUsersFromGroupsOnly($users)
-	{
+	private function getUsersFromGroupsOnly($users) {
 		$usersFromGroups = [];
 		$userSession = $this->userSession->getUser();
 		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
@@ -140,8 +137,7 @@ class WorkspaceService {
 			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly())
-		{
+		if ($this->shareManager->shareWithGroupMembersOnly()) {
 			$users = $this->getUsersFromGroupsOnly($users);
 		}
 
@@ -150,9 +146,9 @@ class WorkspaceService {
 		foreach ($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
-					$user->getUID(),
-					GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
-				) {
+				$user->getUID(),
+				GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
+			) {
 				$role = 'admin';
 			}
 			$data[] = $this->userService->formatUser($user, $space, $role);

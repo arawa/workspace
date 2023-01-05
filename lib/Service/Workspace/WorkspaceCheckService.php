@@ -25,7 +25,6 @@
 namespace OCA\Workspace\Service\Workspace;
 
 use OCP\AppFramework\Http;
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\WorkspaceNameExistException;
@@ -46,8 +45,8 @@ class WorkspaceCheckService {
 	 */
 	public function containSpecialChar(string $spacename) {
 		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
-            throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
-        }
+			throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
+		}
 
 		return;
 	}

@@ -28,27 +28,21 @@ use OCA\Workspace\Roles;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCP\IUser;
 
-class UserFormatter
-{
-
+class UserFormatter {
 	private GroupsWorkspaceService $groupsWorkspace;
 
-	public function __construct(GroupsWorkspaceService $groupsWorkspace)
-	{
+	public function __construct(GroupsWorkspaceService $groupsWorkspace) {
 		$this->groupsWorkspace = $groupsWorkspace;
 	}
 
 	/**
 	 * @param IUser[] $users
 	 */
-	public function formatUsers($users, array $groupfolder, string $spaceId): array
-	{
-
+	public function formatUsers($users, array $groupfolder, string $spaceId): array {
 		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
 
 		$usersFormatted = [];
 		foreach ($users as $user) {
-
 			if ($groupWorkspaceManager->inGroup($user)) {
 				$role = Roles::Admin;
 			} else {

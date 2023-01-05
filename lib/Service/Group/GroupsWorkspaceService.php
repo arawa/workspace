@@ -30,28 +30,24 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 
-class GroupsWorkspaceService
-{
+class GroupsWorkspaceService {
 	private IGroupManager $groupManager;
 
 	public function __construct(
 		IGroupManager $groupManager
-	)
-	{
+	) {
 		$this->groupManager = $groupManager;
 	}
 
 	/**
 	 * @throws GroupException
 	 */
-	public function getWorkspaceManagerGroup(string $spaceId): IGroup
-	{
+	public function getWorkspaceManagerGroup(string $spaceId): IGroup {
 		$groupSpaceManager = $this->groupManager->get(
 			GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $spaceId
 		);
 
-		if (is_null($groupSpaceManager))
-		{
+		if (is_null($groupSpaceManager)) {
 			throw new GroupException('Error to get the workspace manage group relative to workspace.');
 		}
 
@@ -61,14 +57,12 @@ class GroupsWorkspaceService
 	/**
 	 * @throws GroupException
 	 */
-	public function getUserGroup(string $spaceId): IGroup
-	{
+	public function getUserGroup(string $spaceId): IGroup {
 		$groupUser = $this->groupManager->get(
 			GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $spaceId
 		);
 
-		if (is_null($groupUser))
-		{
+		if (is_null($groupUser)) {
 			throw new GroupException('Error to get the workspace manage group relative to workspace.');
 		}
 
@@ -78,14 +72,13 @@ class GroupsWorkspaceService
 	/**
 	 * @return String[]
 	 */
-	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId)
-	{
+	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId) {
 		$groupsWorkspace = [
 			$this->getWorkspaceManagerGroup($spaceId)->getGID(),
 			$this->getUserGroup($spaceId)->getGID()
 		];
 		$groups = [];
-		foreach($this->groupManager->getUserGroups($user) as $group) {
+		foreach ($this->groupManager->getUserGroups($user) as $group) {
 			if (
 				in_array($group->getGID(), array_keys($groupfolder['groups']))
 				|| in_array($group->getGID(), $groupsWorkspace)
@@ -100,15 +93,12 @@ class GroupsWorkspaceService
 	/**
 	 * @param IUser[] $users
 	 */
-	public function transferUsersToGroup($users, IGroup $group): void
-	{
-		if (is_null($group))
-		{
+	public function transferUsersToGroup($users, IGroup $group): void {
+		if (is_null($group)) {
 			throw new GroupException('Error parameter, $group is null.');
 		}
 
-		foreach($users as $user)
-		{
+		foreach ($users as $user) {
 			$group->addUser($user);
 		}
 	}
