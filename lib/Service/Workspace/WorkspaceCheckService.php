@@ -25,33 +25,30 @@
 namespace OCA\Workspace\Service\Workspace;
 
 use OCP\AppFramework\Http;
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\WorkspaceNameExistException;
 
 class WorkspaceCheckService {
-
 	private SpaceService $spaceService;
 
-	public function __construct(SpaceService $spaceService)
-	{
+	public function __construct(SpaceService $spaceService) {
 		$this->spaceService = $spaceService;
 	}
 
 
 	/**
-     * Check if the space name contains specials characters or a blank into the end its name.
-     * @param string $spacename
-     * @return
+	 * Check if the space name contains specials characters or a blank into the end its name.
+	 * @param string $spacename
+	 * @return
 	 * @throws BadRequestException
-     */
+	 */
 	public function containSpecialChar(string $spacename) {
 		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
-            throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
-        }
+			throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
+		}
 
-        return;
+		return;
 	}
 
 
@@ -61,9 +58,9 @@ class WorkspaceCheckService {
 	 * @throws WorkspaceNameExistException
 	 */
 	public function isExist(string $spacename) {
-        if($this->spaceService->checkSpaceNameExist($spacename)) {
+		if ($this->spaceService->checkSpaceNameExist($spacename)) {
 			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist', Http::STATUS_CONFLICT);
-        }
+		}
 
 		return;
 	}

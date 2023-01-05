@@ -33,39 +33,37 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class Application extends App {
+	public const APP_ID = 'workspace';
 
-    public const APP_ID = 'workspace';
+	public function __construct(array $urlParams = []) {
+		parent::__construct(self::APP_ID, $urlParams);
+	}
 
-    public function __construct(array $urlParams=[] ) {
-        parent::__construct(self::APP_ID, $urlParams);
-    }
+	public function register(IRegistrationContext $context): void {
+		$context->registerService(WorkspaceAccessControlMiddleware::class, function ($c) {
+			return new WorkspaceAccessControlMiddleware(
+				$c->query(IURLGenerator::class),
+				$c->query(UserService::class)
+			);
+		});
 
-    public function register(IRegistrationContext $context): void
-    {
-        $context->registerService(WorkspaceAccessControlMiddleware::class, function($c){
-            return new WorkspaceAccessControlMiddleware(
-                $c->query(IURLGenerator::class),
-                $c->query(UserService::class)
-            );
-        });
+		$context->registerService(IsSpaceAdminMiddleware::class, function ($c) {
+			return new IsSpaceAdminMiddleware(
+				$c->query(IControllerMethodReflector::class),
+				$c->query(IRequest::class),
+				$c->query(UserService::class)
+			);
+		});
 
-        $context->registerService(IsSpaceAdminMiddleware::class, function($c){
-            return new IsSpaceAdminMiddleware(
-                $c->query(IControllerMethodReflector::class),
-                $c->query(IRequest::class),
-                $c->query(UserService::class)
-            );
-        });
+		$context->registerService(IsGeneralManagerMiddleware::class, function ($c) {
+			return new IsGeneralManagerMiddleware(
+				$c->query(IControllerMethodReflector::class),
+				$c->query(IRequest::class),
+				$c->query(UserService::class)
+			);
+		});
 
-        $context->registerService(IsGeneralManagerMiddleware::class, function($c){
-            return new IsGeneralManagerMiddleware(
-                $c->query(IControllerMethodReflector::class),
-                $c->query(IRequest::class),
-                $c->query(UserService::class)
-            );
-        });
-
-        $context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
-        $context->registerMiddleware(IsSpaceAdminMiddleware::class);
-    }
+		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
+		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
+	}
 }

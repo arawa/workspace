@@ -27,7 +27,6 @@ namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IUser;
@@ -36,7 +35,6 @@ use OCP\IUserSession;
 use OCP\Share\IManager;
 
 class WorkspaceService {
-
 	private IGroupManager $groupManager;
 	private ILogger $logger;
 	private IManager $shareManager;
@@ -53,8 +51,7 @@ class WorkspaceService {
 		IUserSession $userSession,
 		SpaceMapper $spaceMapper,
 		UserService $userService
-	)
-	{
+	) {
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->shareManager = $shareManager;
@@ -83,7 +80,6 @@ class WorkspaceService {
 		$users = $this->userManager->searchDisplayName($term, 50);
 
 		return $users;
-
 	}
 
 	/**
@@ -94,7 +90,7 @@ class WorkspaceService {
 		$users = [];
 		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
 
-		if (preg_match($REGEX_FULL_MAIL, $term) === 1 ) {
+		if (preg_match($REGEX_FULL_MAIL, $term) === 1) {
 			$users = $this->searchUsersByMailing($term);
 		} else {
 			$users = $this->searchUsersByDisplayName($term);
@@ -107,8 +103,7 @@ class WorkspaceService {
 	 * @param IUser[] $users
 	 * @return IUser[]
 	 */
-	private function getUsersFromGroupsOnly($users)
-	{
+	private function getUsersFromGroupsOnly($users) {
 		$usersFromGroups = [];
 		$userSession = $this->userSession->getUser();
 		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
@@ -136,25 +131,24 @@ class WorkspaceService {
 		$searchingUsers = $this->searchUsers($term);
 
 		$users = [];
-		foreach($searchingUsers as $user) {
-			if($user->isEnabled()) {
-					$users[] = $user;
-				}
+		foreach ($searchingUsers as $user) {
+			if ($user->isEnabled()) {
+				$users[] = $user;
+			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly())
-		{
+		if ($this->shareManager->shareWithGroupMembersOnly()) {
 			$users = $this->getUsersFromGroupsOnly($users);
 		}
 
 		// transform in a format suitable for the app
 		$data = [];
-		foreach($users as $user) {
+		foreach ($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
-					$user->getUID(),
-					GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
-				) {
+				$user->getUID(),
+				GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
+			) {
 				$role = 'admin';
 			}
 			$data[] = $this->userService->formatUser($user, $space, $role);
@@ -167,11 +161,10 @@ class WorkspaceService {
 	 * Gets all workspaces
 	 */
 	public function getAll() {
-
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
 		$newSpaces = [];
-		foreach($spaces as $space) {
+		foreach ($spaces as $space) {
 			$newSpace = $space->jsonSerialize();
 			$newSpaces[] = $newSpace;
 		}
@@ -193,14 +186,14 @@ class WorkspaceService {
 		$group = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $workspace['id']);
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
-			foreach($group->getUsers() as $user) {
+			foreach ($group->getUsers() as $user) {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'user');
 			};
 		}
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		$group = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
 		if (!is_null($group)) {
-			foreach($group->getUsers() as $user) {
+			foreach ($group->getUsers() as $user) {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
 			};
 		}

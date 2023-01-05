@@ -32,14 +32,12 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class PageController extends Controller {
-
 	/** @var UserService */
 	private $userService;
 
 	public function __construct(
 		UserService $userService
-	)
-	{
+	) {
 		$this->userService = $userService;
 	}
 
@@ -55,5 +53,4 @@ class PageController extends Controller {
 	
 		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => $this->userService->canAccessApp() ]); 	// templates/index.php
 	}
-
 }

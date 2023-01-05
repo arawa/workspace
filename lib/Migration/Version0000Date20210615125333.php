@@ -36,7 +36,6 @@ use OCP\Migration\SimpleMigrationStep;
  * Auto-generated migration step: Please modify to your needs!
  */
 class Version0000Date20210615125333 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -52,10 +51,9 @@ class Version0000Date20210615125333 extends SimpleMigrationStep {
 	 * @return null|ISchemaWrapper
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-
 		$schema = $schemaClosure();
 
-		if ( $schema->hasTable('work_spaces') ) {
+		if ($schema->hasTable('work_spaces')) {
 			$schema->dropTable('work_spaces');
 		}
 

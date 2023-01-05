@@ -41,7 +41,6 @@ use OCP\ILogger;
 use OCP\IUserManager;
 
 class GroupController extends Controller {
-
 	private GroupsWorkspaceService $groupsWorkspace;
 	private IGroupManager $groupManager;
 	private ILogger $logger;
@@ -58,7 +57,7 @@ class GroupController extends Controller {
 		UserFormatter $userFormatter,
 		UserService $userService,
 		UserWorkspace $userWorkspace
-	){
+	) {
 		$this->groupManager = $groupManager;
 		$this->groupsWorkspace = $groupsWorkspace;
 		$this->logger = $logger;
@@ -185,7 +184,6 @@ class GroupController extends Controller {
 	 * @return @JSONResponse
 	 */
 	public function addUser($spaceId, $gid, $user) {
-
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
@@ -211,7 +209,6 @@ class GroupController extends Controller {
 				return new JSONResponse(['Generar error: Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist'],
 					Http::STATUS_EXPECTATION_FAILED);
 			}
-
 		}
 
 		// Adds user to workspace user group
@@ -220,7 +217,6 @@ class GroupController extends Controller {
 		$UGroup->addUser($NCUser);
 
 		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);
-
 	}
 
 	/**
@@ -239,7 +235,6 @@ class GroupController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function removeUser($space, $gid, $user) {
-
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -260,7 +255,7 @@ class GroupController extends Controller {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
 			$users = (array)$space['users'];
-			foreach($users[$NCUser->getUID()]['groups'] as $groupId) {
+			foreach ($users[$NCUser->getUID()]['groups'] as $groupId) {
 				$NCGroup = $this->groupManager->get($groupId);
 				$NCGroup->removeUser($NCUser);
 				$groups[] = $NCGroup->getGID();
@@ -301,7 +296,7 @@ class GroupController extends Controller {
 			$groupfolder = json_decode($groupfolder, true);
 		}
 
-        $groupsName = array_keys($groupfolder['groups']);
+		$groupsName = array_keys($groupfolder['groups']);
 
 		$groups = GroupFormatter::formatGroups(
 			array_merge(
@@ -309,8 +304,7 @@ class GroupController extends Controller {
 					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
 					$this->groupsWorkspace->getUserGroup($spaceId)
 				],
-				array_map(function ($groupName)
-				{
+				array_map(function ($groupName) {
 					return $this->groupManager->get($groupName);
 				}, $groupsName)
 			)

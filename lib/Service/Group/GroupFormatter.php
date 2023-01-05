@@ -26,18 +26,14 @@ namespace OCA\Workspace\Service\Group;
 
 use OCP\IGroup;
 
-class GroupFormatter
-{
-
+class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
 	 */
-	public static function formatGroups($groups): array
-	{
+	public static function formatGroups($groups): array {
 		$groupsFormat = [];
 
-		foreach($groups as $group)
-		{
+		foreach ($groups as $group) {
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName()

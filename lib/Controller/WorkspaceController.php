@@ -45,17 +45,16 @@ use OCP\IRequest;
 use OCP\IUserManager;
 
 class WorkspaceController extends Controller {
-
 	private IGroupManager $groupManager;
-    private ILogger $logger;
-    private IUserManager $userManager;
-    private SpaceMapper $spaceMapper;
-    private SpaceService $spaceService;
-    private UserService $userService;
-    private WorkspaceCheckService $workspaceCheck;
-    private WorkspaceService $workspaceService;
+	private ILogger $logger;
+	private IUserManager $userManager;
+	private SpaceMapper $spaceMapper;
+	private SpaceService $spaceService;
+	private UserService $userService;
+	private WorkspaceCheckService $workspaceCheck;
+	private WorkspaceService $workspaceService;
 
-    public function __construct(
+	public function __construct(
 		$AppName,
 		IGroupManager $groupManager,
 		ILogger $logger,
@@ -66,9 +65,8 @@ class WorkspaceController extends Controller {
 		UserService $userService,
 		WorkspaceCheckService $workspaceCheck,
 		WorkspaceService $workspaceService
-    )
-    {
-	parent::__construct($AppName, $request);
+	) {
+		parent::__construct($AppName, $request);
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 		$this->spaceMapper = $mapper;
@@ -77,212 +75,207 @@ class WorkspaceController extends Controller {
 		$this->userService = $userService;
 		$this->workspaceCheck = $workspaceCheck;
 		$this->workspaceService = $workspaceService;
-    }
+	}
 
-    /**
-     * @param string $spaceName it's the space name
-     * @return string whithout the blank to start and end of the space name
+	/**
+	 * @param string $spaceName it's the space name
+	 * @return string whithout the blank to start and end of the space name
 	 * @todo move this method
-     */
-    private function deleteBlankSpaceName(string $spaceName) {
-        return trim($spaceName);
-    }
+	 */
+	private function deleteBlankSpaceName(string $spaceName) {
+		return trim($spaceName);
+	}
 
-    /**
-     * @NoAdminRequired
-     * @GeneralManagerRequired
-     * @NoCSRFRequired
+	/**
+	 * @NoAdminRequired
+	 * @GeneralManagerRequired
+	 * @NoCSRFRequired
 	 * @param string $spaceName
 	 * @param int $folderId
 	 * @throws BadRequestException
 	 * @throws CreateWorkspaceException
 	 * @throws CreateGroupException
-     */
-    public function createWorkspace(string $spaceName, int $folderId) {
-        if ( $spaceName === false ||
-            $spaceName === null ||
-            $spaceName === ''
-        ) {
-            throw new BadRequestException('spaceName must be provided');
-        }
+	 */
+	public function createWorkspace(string $spaceName, int $folderId) {
+		if ($spaceName === false ||
+			$spaceName === null ||
+			$spaceName === ''
+		) {
+			throw new BadRequestException('spaceName must be provided');
+		}
 
-        $this->workspaceCheck->containSpecialChar($spaceName);
-        $this->workspaceCheck->isExist($spaceName);
+		$this->workspaceCheck->containSpecialChar($spaceName);
+		$this->workspaceCheck->isExist($spaceName);
 
-        $spaceName = $this->deleteBlankSpaceName($spaceName);
+		$spaceName = $this->deleteBlankSpaceName($spaceName);
 
-        $space = new Space();
-        $space->setSpaceName($spaceName);
-        $space->setGroupfolderId($folderId);
-        $space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
-        $this->spaceMapper->insert($space);
+		$space = new Space();
+		$space->setSpaceName($spaceName);
+		$space->setGroupfolderId($folderId);
+		$space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+		$this->spaceMapper->insert($space);
 
-        if (is_null($space)) {
+		if (is_null($space)) {
 			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
-        }
+		}
 
-        // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space->getId());
+		// #2 create groups
+		$newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space->getId());
 
-        if (is_null($newSpaceManagerGroup)) {
+		if (is_null($newSpaceManagerGroup)) {
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
-        }
+		}
 
-        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getId());
+		$newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getId());
 
-        if (is_null($newSpaceUsersGroup)) {
+		if (is_null($newSpaceUsersGroup)) {
 			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
-        }
+		}
 
-        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getId());
+		$newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
+		$newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getId());
 
 		// #3 Returns result
-        return new JSONResponse ([
-            'space_name' => $space->getSpaceName(),
-            'id_space' => $space->getId(),
-            'folder_id' => $space->getGroupfolderId(),
-            'color' => $space->getColorCode(),
-            'groups' => [
-                $newSpaceManagerGroup->getGID() => [
-                    'gid' => $newSpaceManagerGroup->getGID(),
-                    'displayName' => $newSpaceManagerGroup->getDisplayName(),
-                ],
-                $newSpaceUsersGroup->getGID() => [
-                    'gid' => $newSpaceUsersGroup->getGID(),
-                    'displayName' => $newSpaceUsersGroup->getDisplayName(),
-                ]
-            ],
-            'statuscode' => Http::STATUS_CREATED,
-        ]);
-    }
+		return new JSONResponse([
+			'space_name' => $space->getSpaceName(),
+			'id_space' => $space->getId(),
+			'folder_id' => $space->getGroupfolderId(),
+			'color' => $space->getColorCode(),
+			'groups' => [
+				$newSpaceManagerGroup->getGID() => [
+					'gid' => $newSpaceManagerGroup->getGID(),
+					'displayName' => $newSpaceManagerGroup->getDisplayName(),
+				],
+				$newSpaceUsersGroup->getGID() => [
+					'gid' => $newSpaceUsersGroup->getGID(),
+					'displayName' => $newSpaceUsersGroup->getDisplayName(),
+				]
+			],
+			'statuscode' => Http::STATUS_CREATED,
+		]);
+	}
 
   /**
-     *
-     * Deletes the workspace, and the corresponding groupfolder and groups
-     *
-     * @NoAdminRequired
-     * @SpaceAdminRequired
-     * @param object $workspace
-     *
-     */
-    public function destroy($workspace) {
+   *
+   * Deletes the workspace, and the corresponding groupfolder and groups
+   *
+   * @NoAdminRequired
+   * @SpaceAdminRequired
+   * @param object $workspace
+   *
+   */
+	public function destroy($workspace) {
+		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+		$GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
+		foreach ($GEGroup->getUsers() as $user) {
+			$this->userService->removeGEFromWM($user, $workspace['id']);
+		}
 
-        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
-        foreach ($GEGroup->getUsers() as $user) {
-		$this->userService->removeGEFromWM($user, $workspace['id']);
-        }
+		// Removes all workspaces groups
+		$groups = [];
+		$this->logger->debug('Removing workspaces groups.');
+		foreach (array_keys($workspace['groups']) as $group) {
+			$groups[] = $group;
+			$this->groupManager->get($group)->delete();
+		}
 
-	    // Removes all workspaces groups
-        $groups = [];
-    	$this->logger->debug('Removing workspaces groups.');
-        foreach ( array_keys($workspace['groups']) as $group ) {
-            $groups[] = $group;
-            $this->groupManager->get($group)->delete();
-        }
-
-	    return new JSONResponse([
-            'http' => [
-                'statuscode' => 200,
-                'message' => 'The space is deleted.'
-            ],
-            'data' => [
-                'space_name' => $workspace['name'],
-                'groups' => $groups,
-                'space_id' => $workspace['id'],
-                'groupfolder_id' => $workspace['groupfolderId'],
-                'state' => 'delete'
-            ]
-        ]);
-
-    }
+		return new JSONResponse([
+			'http' => [
+				'statuscode' => 200,
+				'message' => 'The space is deleted.'
+			],
+			'data' => [
+				'space_name' => $workspace['name'],
+				'groups' => $groups,
+				'space_id' => $workspace['id'],
+				'groupfolder_id' => $workspace['groupfolderId'],
+				'state' => 'delete'
+			]
+		]);
+	}
 
 	/**
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
 	 *
 	 * @NoAdminRequired
-     * @NoCSRFRequired
+	 * @NoCSRFRequired
 	 *
 	 */
 	public function findAll() {
-
 		$workspaces = $this->workspaceService->getAll();
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
-	    		$filteredWorkspaces = array_values(array_filter($workspaces, function($workspace) {
+			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
 				return $this->userService->isSpaceManagerOfSpace($workspace['id']);
 			}));
 			$workspaces = $filteredWorkspaces;
 		}
 
 		return new JSONResponse($workspaces);
-
 	}
 
-    /**
-     * @NoAdminRequired
-     * @param string|object $workspace
-     * @return JSONResponse
-     */
-    public function addGroupsInfo($workspace) {
-        return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
-    }
-
-    /**
-     * @NoAdminRequired
-     * @param string|object $workspace
-     * @return JSONResponse
-     */
-    public function addUsersInfo($workspace) {
-        return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
-    }
+	/**
+	 * @NoAdminRequired
+	 * @param string|object $workspace
+	 * @return JSONResponse
+	 */
+	public function addGroupsInfo($workspace) {
+		return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
+	}
 
 	/**
-     * Returns a list of users whose name matches $term
-     *
-     * @NoAdminRequired
+	 * @NoAdminRequired
+	 * @param string|object $workspace
+	 * @return JSONResponse
+	 */
+	public function addUsersInfo($workspace) {
+		return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
+	}
+
+	/**
+	 * Returns a list of users whose name matches $term
+	 *
+	 * @NoAdminRequired
 	 * @NoCSRFRequired
-     * @param string $term
-     * @param string $spaceId
-     * @param string|object $space
-     *
-     * @return JSONResponse
-     */
-    public function lookupUsers(string $term, string $spaceId, $space) {
-        if (gettype($space) === 'string') {
-            $space = json_decode($space, true);
-        }
-        $users = $this->workspaceService->autoComplete($term, $space);
-        return new JSONResponse($users);
-    }
+	 * @param string $term
+	 * @param string $spaceId
+	 * @param string|object $space
+	 *
+	 * @return JSONResponse
+	 */
+	public function lookupUsers(string $term, string $spaceId, $space) {
+		if (gettype($space) === 'string') {
+			$space = json_decode($space, true);
+		}
+		$users = $this->workspaceService->autoComplete($term, $space);
+		return new JSONResponse($users);
+	}
 
 	/**
-	*
-	* Change a user's role in a workspace
-	*
-	* @NoAdminRequired
-	* @SpaceAdminRequired
-	*
-	* @param object|string $space
-	* @param string $userId
-	*
-	*/
+	 *
+	 * Change a user's role in a workspace
+	 *
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 *
+	 * @param object|string $space
+	 * @param string $userId
+	 *
+	 */
 	public function changeUserRole($space, string $userId) {
-
-        if (gettype($space) === 'string') {
+		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
 
 		$user = $this->userManager->get($userId);
-        $GEgroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']);
+		$GEgroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']);
 
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
-        		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
+			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
 			$this->userService->removeGEFromWM($user, $space['id']);
 		} else {
 			// Changing a user's role from user to admin
@@ -293,40 +286,39 @@ class WorkspaceController extends Controller {
 		return new JSONResponse();
 	}
 
-    /**
-     *
-     * @NoAdminRequired
-     * @SpaceAdminRequired
-     * @NoCSRFRequired
-     * @param object|string $workspace
-     * @param string $newSpaceName
-     * @return JSONResponse
-     *
-     * @todo Manage errors
-     */
-    public function renameSpace($workspace, $newSpaceName) {
+	/**
+	 *
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 * @NoCSRFRequired
+	 * @param object|string $workspace
+	 * @param string $newSpaceName
+	 * @return JSONResponse
+	 *
+	 * @todo Manage errors
+	 */
+	public function renameSpace($workspace, $newSpaceName) {
+		if (gettype($workspace) === 'object') {
+			$workspace = json_decode($workspace, true);
+		}
 
-        if (gettype($workspace) === 'object') {
-            $workspace = json_decode($workspace, true);
-        }
+		$this->workspaceCheck->containSpecialChar($newSpaceName);
 
-        $this->workspaceCheck->containSpecialChar($newSpaceName);
-
-		if( $newSpaceName === false ||
+		if ($newSpaceName === false ||
 			$newSpaceName === null ||
 			$newSpaceName === ''
 		) {
 			throw new BadRequestException('newSpaceName must be provided');
 		}
 
-        $spaceName = $this->deleteBlankSpaceName($newSpaceName);
+		$spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
-        $spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
+		$spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
 
-	    // TODO Handle API call failure (revert space rename and inform user)
-        return new JSONResponse([
-            'statuscode' => Http::STATUS_NO_CONTENT,
-            'space' => $spaceRenamed,
-        ]);
-    }
+		// TODO Handle API call failure (revert space rename and inform user)
+		return new JSONResponse([
+			'statuscode' => Http::STATUS_NO_CONTENT,
+			'space' => $spaceRenamed,
+		]);
+	}
 }

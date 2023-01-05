@@ -89,7 +89,7 @@ return [
 			// TODO move this route to /api/spaces
 			'url' => '/api/space/rename',
 			'verb' => 'PATCH'
-	    	],
+		],
 		[
 			'name' => 'workspace#changeUserRole',
 			'url' => '/api/space/{spaceId}/user/{userId}',

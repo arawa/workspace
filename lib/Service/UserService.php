@@ -32,8 +32,7 @@ use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
 
-Class UserService {
-
+class UserService {
 	/** @var $IGroupManager */
 	private $groupManager;
 
@@ -48,8 +47,7 @@ Class UserService {
 		IGroupManager $group,
 		ILogger $logger,
 		IUserSession $userSession
-	)
-	{
+	) {
 		$this->groupManager = $group;
 		$this->logger = $logger;
 		$this->userSession = $userSession;
@@ -69,14 +67,13 @@ Class UserService {
 	 */
 
 	public function formatUser($user, $space, $role) {
-
 		if (is_null($user)) {
 			return;
 		}
 
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
-		foreach($this->groupManager->getUserGroups($user) as $group) {
+		foreach ($this->groupManager->getUserGroups($user) as $group) {
 			if (in_array($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
@@ -91,12 +88,11 @@ Class UserService {
 			'groups' => $groups,
 			'role' => $role
 		);
-
 	}
 
 	/**
 	 * @return boolean true if user is general admin, false otherwise
-	*/
+	 */
 	public function isUserGeneralAdmin() {
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), ManagersWorkspace::GENERAL_MANAGER)) {
 			return true;
@@ -106,10 +102,10 @@ Class UserService {
 
 	/**
 	 * @return boolean true if user is a space manager, false otherwise
-	*/
+	 */
 	public function isSpaceManager() {
 		$workspaceAdminGroups = $this->groupManager->search(GroupsWorkspace::SPACE_MANAGER);
-		foreach($workspaceAdminGroups as $group) {
+		foreach ($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
 			}
@@ -131,9 +127,8 @@ Class UserService {
 	/**
 	 * @param string $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
-	*/
+	 */
 	public function isSpaceManagerOfSpace($id) {
-
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $id)) {
 			return true;
 		}
@@ -150,7 +145,7 @@ Class UserService {
 		$groups = $this->groupManager->getUserGroups($user);
 
 		// Checks if the user is member of the GE- group of another workspace
-		foreach($groups as $group) {
+		foreach ($groups as $group) {
 			$gid = $group->getGID();
 			if (strpos($gid, GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER) === 0 &&
 				$gid !== GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $spaceId
@@ -171,5 +166,4 @@ Class UserService {
 
 		return;
 	}
-
 }

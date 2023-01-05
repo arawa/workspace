@@ -33,53 +33,45 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 
-class WorkspaceAccessControlMiddleware extends Middleware{
+class WorkspaceAccessControlMiddleware extends Middleware {
+	/** @var IURLGenerator */
+	private $urlGenerator;
 
-    /** @var IURLGenerator */
-    private $urlGenerator;
+	/** @var IUserSession */
+	private $userSession;
 
-    /** @var IUserSession */
-    private $userSession;
+	/** @var UserService */
+	private $userService;
 
-    /** @var UserService */
-    private $userService;
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		UserService $userService
+	) {
+		$this->urlGenerator = $urlGenerator;
+		$this->userService = $userService;
+	}
 
-    public function __construct(
-        IURLGenerator $urlGenerator,
-	    UserService $userService
-    )
-    {
-        $this->urlGenerator = $urlGenerator;
-        $this->userService = $userService;
-    }
+	public function beforeController($controller, $methodName) {
+		// Checks if user is member of the General managers group
+		if ($this->userService->isUserGeneralAdmin()) {
+			return;
+		}
 
-    public function beforeController($controller, $methodName ){
+		// Checks if user if member of a Space managers group
+		if ($this->userService->isSpaceManager()) {
+			return;
+		}
 
-        // Checks if user is member of the General managers group
-        if ($this->userService->isUserGeneralAdmin()){
-                return;
-        }
+		throw new AccessDeniedException();
+	}
 
-        // Checks if user if member of a Space managers group
-        if ($this->userService->isSpaceManager()){
-                return;
-        }
+	// TODO: Find a solution to use this method.
+	public function afterException($controller, $methodName, \Exception $exception) {
+		if ($exception instanceof AccessDeniedException) {
+			Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
+			Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 
-        throw new AccessDeniedException();
-
-    }
-
-    // TODO: Find a solution to use this method.
-    public function afterException($controller, $methodName, \Exception $exception){
-        if($exception instanceof AccessDeniedException){            
-
-            Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
-            Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-
-            return new TemplateResponse("workspace", "index", ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
-
-        }
-
-    }
-
+			return new TemplateResponse("workspace", "index", ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
+		}
+	}
 }
