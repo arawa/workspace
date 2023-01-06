@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - npm: bump @nextcloud/axios from 2.0.0 to 2.3.0 ( [#636](https://github.com/arawa/workspace/pull/636) )
 - npm: bump @nextcloud/webpack-vue-config from 5.3.0 to 5.4.0 ( [#652](https://github.com/arawa/workspace/pull/652) )
 - chore(): Replace OCP's christophwurst by Nextcloud ( [#654](https://github.com/arawa/workspace/pull/654) )
+- chore(): Add informations about the release PHP ( [#655](https://github.com/arawa/workspace/pull/655) )
 
 ### Fixed
 
