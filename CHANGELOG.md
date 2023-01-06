@@ -18,6 +18,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
 
+### Chore
+
+- npm: bump vue and vue-template-compiler ( [#591](https://github.com/arawa/workspace/pull/591) )
+- npm: bump @nextcloud/stylelint-config from 2.2.0 to 2.3.0 ( [#595](https://github.com/arawa/workspace/pull/595) )
+- npm: bump jest-environment-jsdom from 29.0.3 to 29.3.1 ( [#613](https://github.com/arawa/workspace/pull/613) )
+- npm: bump jest from 29.0.3 to 29.3.1 [#613](https://github.com/arawa/workspace/pull/614)
+- npm: bump loader-utils from 1.4.0 to 1.4.2 ( [#621](https://github.com/arawa/workspace/pull/621) )
+- npm: bump jsdom from 20.0.0 to 20.0.3 ( [#622](https://github.com/arawa/workspace/pull/622) )
+- npm: bump decode-uri-component from 0.2.0 to 0.2.2 ( [#628](https://github.com/arawa/workspace/pull/628) )
+- Composer: Bump phpunit/phpunit from 9.5.24 to 9.5.27 ( [#634](https://github.com/arawa/workspace/pull/634) )
+- npm: bump core-js from 3.25.2 to 3.27.1 ( [#646](https://github.com/arawa/workspace/pull/646) )
+- npm: bump @nextcloud/axios from 2.0.0 to 2.3.0 ( [#636](https://github.com/arawa/workspace/pull/636) )
+- npm: bump @nextcloud/webpack-vue-config from 5.3.0 to 5.4.0 ( [#652](https://github.com/arawa/workspace/pull/652) )
+
 ### Fixed
 
 - Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
