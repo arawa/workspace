@@ -30,27 +30,21 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroup;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class UserServiceTest extends TestCase {
-	/** @var IUser */
-	private $user;
-
-	/** @var IGroupManager */
-	private $groupManager;
-
-	/** @var ILogger */
-	private $logger;
-
-	/** @var UserSession */
-	private $userSession;
+	private IGroupManager $groupManager;
+	private IUser $user;
+	private IUserSession $userSession;
+	private LoggerInterface $logger;
+	private WorkspaceService $workspaceService;
 
 	public function setUp(): void {
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
 
 		// Sets up the user'session

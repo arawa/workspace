@@ -40,14 +40,14 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
 	private IGroupManager $groupManager;
-	private ILogger $logger;
 	private IUserManager $userManager;
+	private LoggerInterface $logger;
 	private SpaceMapper $spaceMapper;
 	private SpaceService $spaceService;
 	private UserService $userService;
@@ -57,7 +57,7 @@ class WorkspaceController extends Controller {
 	public function __construct(
 		$AppName,
 		IGroupManager $groupManager,
-		ILogger $logger,
+		LoggerInterface $logger,
 		IRequest $request,
 		IUserManager $userManager,
 		SpaceMapper $mapper,

@@ -28,27 +28,27 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\GroupsWorkspace;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceService {
 	private IGroupManager $groupManager;
-	private ILogger $logger;
 	private IManager $shareManager;
 	private IUserManager $userManager;
 	private IUserSession $userSession;
+	private LoggerInterface $logger;
 	private SpaceMapper $spaceMapper;
 	private UserService $userService;
 
 	public function __construct(
 		IGroupManager $groupManager,
-		ILogger $logger,
 		IManager $shareManager,
 		IUserManager $userManager,
 		IUserSession $userSession,
+		LoggerInterface $logger,
 		SpaceMapper $spaceMapper,
 		UserService $userService
 	) {

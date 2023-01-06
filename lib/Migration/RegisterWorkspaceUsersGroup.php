@@ -26,26 +26,18 @@
 namespace OCA\Workspace\Migration;
 
 use OCA\Workspace\ManagersWorkspace;
-use OCP\IConfig;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
+use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
-	/** @var IConfig */
-	private $config;
 
-	/** @var IGroupManager */
-	private $groupManager;
+	private IGroupManager $groupManager;
+	private LoggerInterface $logger;
 
-	/** @var ILogger */
-	private $logger;
-
-	public function __construct(IConfig $config,
-		IGroupManager $groupManager,
-		ILogger $logger) {
-		$this->config = $config;
+	public function __construct(IGroupManager $groupManager,
+		LoggerInterface $logger) {
 		$this->groupManager = $groupManager;
 		$this->logger = $logger;
 

@@ -37,14 +37,14 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
 	private GroupsWorkspaceService $groupsWorkspace;
 	private IGroupManager $groupManager;
-	private ILogger $logger;
 	private IUserManager $userManager;
+	private LoggerInterface $logger;
 	private UserFormatter $userFormatter;
 	private UserService $userService;
 	private UserWorkspace $userWorkspace;
@@ -52,7 +52,7 @@ class GroupController extends Controller {
 	public function __construct(
 		GroupsWorkspaceService $groupsWorkspace,
 		IGroupManager $groupManager,
-		ILogger $logger,
+		LoggerInterface $logger,
 		IUserManager $userManager,
 		UserFormatter $userFormatter,
 		UserService $userService,
