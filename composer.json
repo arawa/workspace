@@ -13,8 +13,8 @@
     ],
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "christophwurst/nextcloud": "^24.0",
-        "nextcloud/coding-standard": "^1.0"
+        "nextcloud/coding-standard": "^1.0",
+        "nextcloud/ocp": "^24.0"
     },
     "scripts": {
 		"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",
