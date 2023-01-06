@@ -32,7 +32,6 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
-
 	private IGroupManager $groupManager;
 	private LoggerInterface $logger;
 
