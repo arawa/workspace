@@ -102,8 +102,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -130,8 +130,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -159,8 +159,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
@@ -198,8 +198,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -227,8 +227,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
@@ -256,8 +256,8 @@ class UserServiceTest extends TestCase {
 		// Instantiates our service
 		$userService = new UserService(
 			$this->groupManager,
-			$this->logger,
-			$this->userSession);
+			$this->userSession,
+			$this->logger);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace(1);
