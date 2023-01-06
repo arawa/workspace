@@ -28,25 +28,19 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
 use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class UserService {
-	/** @var $IGroupManager */
-	private $groupManager;
-
-	/** @var $ILogger */
-	private $logger;
-
-
-	/** @var IUserSession */
-	private $userSession;
+	private IGroupManager $groupManager;
+	private IUserSession $userSession;
+	private LoggerInterface $logger;
 
 	public function __construct(
 		IGroupManager $group,
-		ILogger $logger,
-		IUserSession $userSession
+		IUserSession $userSession,
+		LoggerInterface $logger
 	) {
 		$this->groupManager = $group;
 		$this->logger = $logger;
