@@ -320,7 +320,7 @@ export default {
 				groups: workspace.groups,
 				isOpen: false,
 				id: workspace.id_space,
-				groupfolderId,
+				groupfolderId: groupfolderId.data.id,
 				name,
 				quota: t('workspace', 'unlimited'),
 				users: {},
