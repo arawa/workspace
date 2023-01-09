@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
+- Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
+- Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
 
 ## [1.3.1] - 2022-12-29
 
