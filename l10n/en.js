@@ -5,6 +5,8 @@ OC.L10N.register(
 		'Are you sure you want to delete the {space} space ?': 'Are you sure you want to delete the {space} space ?',
 		'Add users': 'Add users',
 		'All spaces': 'All Workspaces',
+		'Administrators': 'General manager',
+		'admin': 'Workspace manager',
 		'Error': 'Error',
 		'Settings': 'Settings',
 		'Please specify a name.': 'Please specify a name.',
