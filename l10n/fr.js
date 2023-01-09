@@ -5,6 +5,8 @@ OC.L10N.register(
 		'Are you sure you want to delete the {space} space ?': 'Êtes vous sûr de vouloir supprimer l\'espace {space} ?',
 		'Add users': 'Ajouter un utilisateur',
 		'All spaces': 'Tous les espaces de travail',
+		'Administrators': 'Gestionnaires généraux',
+		'admin': "Gestionnaire d'espace",
 		'Group name': 'Nom du groupe',
 		'Space name': 'Nom de l\'espace de travail',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': "Attention, les utilisateurs surlignés en rouge ne sont pas encore membres de l'espace. Ils seront ajoutés automatiquement à ce dernier.",
