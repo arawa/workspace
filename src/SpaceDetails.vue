@@ -92,15 +92,17 @@
 <script>
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import SelectUsers from './SelectUsers'
-import UserTable from './UserTable'
-import { destroy, rename } from './services/groupfoldersService'
+import Actions from '@nextcloud/vue/dist/Components/Actions.js'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton.js'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput.js'
+import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker.js'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect.js'
+import Modal from '@nextcloud/vue/dist/Components/Modal.js'
+import SelectUsers from './SelectUsers.vue'
+import UserTable from './UserTable.vue'
+import { destroy, rename } from './services/groupfoldersService.js'
+import { removeAllUsersFromGroup, deleteAllGroups } from './services/spaceService.js'
+import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX } from './constants.js'
 
 export default {
 	name: 'SpaceDetails',
@@ -136,23 +138,26 @@ export default {
 	},
 	methods: {
 		// Deletes a space
-		deleteSpace() {
-			const space = this.$route.params.space
+		async deleteSpace() {
 
-			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space: space.name }))
 
 			if (isDeleted) {
-				destroy(this.$store.state.spaces[space])
-					.then(resp => {
-						if (resp.http.statuscode === 200) {
-							this.$store.dispatch('removeSpace', {
-								space: this.$store.state.spaces[space],
-							})
-							this.$router.push({
-								path: '/',
-							})
-						}
-					})
+
+				await removeAllUsersFromGroup(space.id, ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+
+				await deleteAllGroups(space.id, Object.keys(space.groups))
+
+				await destroy(space)
+
+				this.$store.dispatch('removeSpace', {
+					space,
+				})
+
+				this.$router.push({
+					path: '/',
+				})
 			}
 		},
 		onNewGroup(e) {

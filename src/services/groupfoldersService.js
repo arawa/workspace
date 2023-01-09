@@ -294,32 +294,16 @@ export function createGroupfolder(spaceName, vueInstance = undefined) {
 }
 
 /**
- * @param {object} workspace it's an object relative to workspace
+ * @param {Array} workspace
  * @return {Promise}
  */
 export function destroy(workspace) {
 	// It's possible to send data with the DELETE verb adding `data` key word as
 	// second argument in the `delete` method.
-	const result = axios.delete(generateUrl('/apps/workspace/api/delete/space'),
-		{
-			data: {
-				workspace,
-			},
-		})
-		.then(resp => {
-			if (resp.status === 200) {
-				// delete groupfolders
-				axios.delete(generateUrl(`/apps/groupfolders/folders/${workspace.groupfolderId}`))
-					.then(resp => {
-						if (!resp.data.ocs.meta.status === 'ok') {
-							console.error('Error to delete this groupfolder', workspace)
-						}
-					})
-					.catch(error => {
-						console.error('Error to delete a groupfolder. May be a problem network ?', error)
-					})
-			}
-			return resp.data
+	const result = axios.delete(generateUrl(`/apps/groupfolders/folders/${workspace.groupfolderId}`))
+		.then()
+		.catch(error => {
+			console.error('Error to delete a groupfolder. May be a problem network ?', error)
 		})
 	return result
 }

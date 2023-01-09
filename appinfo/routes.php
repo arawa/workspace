@@ -80,8 +80,13 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'workspace#destroy',
-			'url' => '/api/delete/space',
+			'name' => 'workspace#removeUsersFromWorkspacesManagers',
+			'url' => '/{spaceId}/groups/{gid}/users',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'workspace#destroyAllGroupsFromAWorkspace',
+			'url' => '/{spaceId}/groups',
 			'verb' => 'DELETE'
 		],
 		[

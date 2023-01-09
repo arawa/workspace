@@ -103,3 +103,29 @@ export function isSpaceUsers(group) {
 	const SPACE_USER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
 	return SPACE_USER_REGEX.test(group)
 }
+
+/**
+ * @description Remove all users from a group. Specially in the workspace case,
+ * we remove users from the WorkspacesManagers group.
+ * @param {string} spaceId
+ * @param {string} gid
+ * @return {Promise}
+ */
+export function removeAllUsersFromGroup(spaceId, gid) {
+	return axios.delete(generateUrl(`/apps/workspace/${spaceId}/groups/${gid}/users`))
+}
+
+/**
+ * @param {string} spaceId it's the id space
+ * @param {Array} groupsName it's an array of a string which contains the display name of groups.
+ */
+export function deleteAllGroups(spaceId, groupsName) {
+	// It's possible to send data with the DELETE verb adding `data` key word as
+	// second argument in the `delete` method.
+	return axios.delete(generateUrl(`/apps/workspace/${spaceId}/groups`),
+		{
+			data: {
+				groupsName,
+			},
+		})
+}

@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use Exception;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\CreateWorkspaceException;
@@ -155,44 +156,36 @@ class WorkspaceController extends Controller {
 		]);
 	}
 
-  /**
-   *
-   * Deletes the workspace, and the corresponding groupfolder and groups
-   *
-   * @NoAdminRequired
-   * @SpaceAdminRequired
-   * @param object $workspace
-   *
-   */
-	public function destroy($workspace) {
-		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		$GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
-		foreach ($GEGroup->getUsers() as $user) {
-			$this->userService->removeGEFromWM($user, $workspace['id']);
-		}
+    /**
+    *
+    * @NoCSRFRequired
+    * @NoAdminRequired
+    * @SpaceAdminRequired
+    */
+    public function removeUsersFromWorkspacesManagers(string $gid, string $spaceId): JSONResponse {
+        if (!preg_match(
+            '/^'. GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . '[0-9]/',
+            $gid))
+        {
+            throw new Exception('It\'s not a manager group related to workspace'
+            . ' (example : ' . GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . '-<ID>)');
+        }
 
-		// Removes all workspaces groups
-		$groups = [];
-		$this->logger->debug('Removing workspaces groups.');
-		foreach (array_keys($workspace['groups']) as $group) {
-			$groups[] = $group;
-			$this->groupManager->get($group)->delete();
-		}
+        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+        $managerGroup = $this->groupManager
+            ->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $spaceId);
 
-		return new JSONResponse([
-			'http' => [
-				'statuscode' => 200,
-				'message' => 'The space is deleted.'
-			],
-			'data' => [
-				'space_name' => $workspace['name'],
-				'groups' => $groups,
-				'space_id' => $workspace['id'],
-				'groupfolder_id' => $workspace['groupfolderId'],
-				'state' => 'delete'
-			]
-		]);
-	}
+        $users = [];
+        foreach ($managerGroup->getUsers() as $user) {
+            $users[] = $user->getUID();
+            $this->userService->removeGEFromWM($user, $spaceId);
+        }
+
+        return new JSONResponse([
+            'message' => 'All users are removed of the WorkspacesManagers group.',
+            'users' => $users
+        ], HTTP::STATUS_OK);
+    }
 
 	/**
 	 *
@@ -321,4 +314,23 @@ class WorkspaceController extends Controller {
 			'space' => $spaceRenamed,
 		]);
 	}
+
+    /**
+     * @NoAdminRequired
+     * @SpaceAdminRequired
+     */
+    public function destroyAllGroupsFromAWorkspace(string $spaceId, array $groupsName): JSONResponse
+    {
+        $groups = [];
+		$this->logger->debug('Removing workspaces groups.');
+		foreach ($groupsName as $groupName) {
+			$groups[] = $groupName;
+			$this->groupManager->get($groupName)->delete();
+		}
+
+        return new JSONResponse([
+            'message' => 'All groups are deleted for a workspace',
+            'groups' => $groups
+        ], HTTP::STATUS_OK);
+    }
 }
