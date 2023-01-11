@@ -1,4 +1,4 @@
-import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_USERS_GROUP_PREFIX } from '../../constants.js'
+import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../../constants.js'
 
 /**
  * @param {object} space
@@ -6,13 +6,14 @@ import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_USERS_GROUP_PREFIX } fro
  */
 function getUserGroup(space) {
 	const groups = Object.keys(space.groups)
+	const regex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + '[0-9]$')
 
 	let group = ''
 	groups.forEach(groupname => {
-		if (groupname.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
-			group = ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX
-		} else if (groupname.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_GROUP_PREFIX)) {
-			group = ESPACE_GID_PREFIX + ESPACE_USERS_GROUP_PREFIX
+		if (regex.test(groupname)) {
+			group = ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id
+		} else {
+			group = ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.name
 		}
 	})
 

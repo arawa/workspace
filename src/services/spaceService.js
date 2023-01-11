@@ -22,11 +22,10 @@
  */
 
 import axios from '@nextcloud/axios'
-import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX } from '../constants.js'
+import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
 import showNotificationError from './Notifications/NotificationError.js'
-import UserGroup from './Groups/UserGroup.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
@@ -94,10 +93,9 @@ export function isSpaceManagers(group) {
 
 /**
 	* @param {string} group it's the groupname to test
-	* @param {object} workspace
 	* @return {boolean}
 	*/
-export function isSpaceUsers(group, workspace) {
-	const SPACE_USER_REGEX = new RegExp('^' + UserGroup.getUserGroup(workspace))
+export function isSpaceUsers(group) {
+	const SPACE_USER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
 	return SPACE_USER_REGEX.test(group)
 }

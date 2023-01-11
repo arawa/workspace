@@ -148,7 +148,7 @@ export default {
 		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
-		if (gid.startsWith(UserGroup.getUserGroup(space))) {
+		if (gid === UserGroup.getUserGroup(space)) {
 			context.commit('removeUserFromWorkspace', { name, user })
 		} else {
 			context.commit('removeUserFromGroup', { name, gid, user })
@@ -171,7 +171,7 @@ export default {
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: e })
 			showNotificationError('Error', text, 4000)
-			if (gid.startsWith(UserGroup.getUserGroup(space))) {
+			if (gid === UserGroup.getUserGroup(space)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
 				)

@@ -100,7 +100,7 @@ export default {
 			// Prevents deleting GE- and U- groups
 			const space = this.$store.state.spaces[this.$route.params.space]
 			if (this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-			|| UserGroup.getUserGroup(space) + ESPACE_USERS_PREFIX + space.id) {
+			|| UserGroup.getUserGroup(space)) {
 				// TODO Inform user
 				return
 			}

@@ -109,14 +109,14 @@ class WorkspaceController extends Controller {
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
 		}
 
-        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::USER_GROUP . $space->getId());
+        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getSpaceName());
 
 		if (is_null($newSpaceUsersGroup)) {
 			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
 		}
 
         $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
-        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::USER_GROUP . $space->getId());
+        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getSpaceName());
 
 		// #3 Returns result
 		return new JSONResponse([
@@ -211,6 +211,9 @@ class WorkspaceController extends Controller {
 	 * @param string|array $workspace
 	 */
 	public function addUsersInfo(string|array $workspace): JSONResponse {
+        if (gettype($workspace) === 'string') {
+			$workspace = json_decode($workspace, true);
+		}
 		return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
 	}
 

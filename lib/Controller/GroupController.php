@@ -196,7 +196,7 @@ class GroupController extends Controller {
 
 		// Adds user to workspace user group
 		// This must be the last action done, when all other previous actions have succeeded
-		$UGroup = $this->groupManager->get(GroupsWorkspace::getUserGroup($workspace) . $workspace['id']);
+		$UGroup = $this->groupManager->get(GroupsWorkspace::getUserGroup($workspace));
 		$UGroup->addUser($NCUser);
 
 		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_CREATED);
@@ -236,7 +236,7 @@ class GroupController extends Controller {
 		$NCUser = $this->userManager->get($user);
 		$groups = [];
 		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']
-		|| $gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::USER_GROUP . $space['id']) {
+		|| $gid === GroupsWorkspace::getUserGroup($space)) {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
 			$users = (array)$space['users'];

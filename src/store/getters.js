@@ -83,7 +83,7 @@ export const getters = {
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
 		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.gid === UserGroup.getUserGroup(state.spaces[name]) + state.spaces[name].id
+			return group.gid === UserGroup.getUserGroup(state.spaces[name])
 		})
 		return groups[0]
 	},

@@ -168,9 +168,8 @@ export default {
 					if (user.role === 'admin') {
 						gid = ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
 					} else {
-						gid = UserGroup.getUserGroup(space) + space.id
+						gid = UserGroup.getUserGroup(space)
 					}
-					// gid = user.role === 'admin' ? ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id : ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
 						gid,
