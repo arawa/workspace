@@ -120,7 +120,7 @@ class WorkspaceController extends Controller {
 
 		// #3 Returns result
 		return new JSONResponse([
-			'space_name' => $space->getSpaceName(),
+			'name' => $space->getSpaceName(),
 			'id_space' => $space->getId(),
 			'folder_id' => $space->getGroupfolderId(),
 			'color' => $space->getColorCode(),

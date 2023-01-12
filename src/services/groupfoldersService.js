@@ -314,7 +314,7 @@ export function rename(workspace, newSpaceName) {
 				// ... the groupfolder is updating
 				const groupfolderUpdated = axios.post(generateUrl(`/apps/groupfolders/folders/${space.groupfolder_id}/mountpoint`),
 					{
-						mountpoint: space.space_name,
+						mountpoint: space.name,
 					})
 					.then(resp => {
 						return resp
