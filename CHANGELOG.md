@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
-### Added
+### Added
 
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
 
-### Chore
+### Chore
 
 - npm: bump vue and vue-template-compiler ( [#591](https://github.com/arawa/workspace/pull/591) )
 - npm: bump @nextcloud/stylelint-config from 2.2.0 to 2.3.0 ( [#595](https://github.com/arawa/workspace/pull/595) )
@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore(): Replace OCP's christophwurst by Nextcloud ( [#654](https://github.com/arawa/workspace/pull/654) )
 - chore(): Add informations about the release PHP ( [#655](https://github.com/arawa/workspace/pull/655) )
 - Replace ILogger by LoggerInterface ( [#656](https://github.com/arawa/workspace/pull/656) )
+- chore(MD): Change the groupfolder release to 9.2.0 ( [#665](https://github.com/arawa/workspace/pull/665) )
 
 ### Fixed
 
