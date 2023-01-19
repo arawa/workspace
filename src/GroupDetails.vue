@@ -31,66 +31,66 @@
 			</div>
 			<div class="group-actions">
 				<div>
-					<Actions default-icon="icon-add">
-						<ActionButton icon="icon-add"
+					<NcActions default-icon="icon-add">
+						<NcActionButton icon="icon-add"
 							:close-after-click="true"
 							@click="toggleShowSelectUsersModal">
 							{{ t('workspace', 'Add users') }}
-						</ActionButton>
-					</Actions>
+						</NcActionButton>
+					</NcActions>
 				</div>
-				<Actions>
-					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+				<NcActions>
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
-					</ActionButton>
-					<ActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					</NcActionButton>
+					<NcActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						v-show="showRenameGroupInput"
 						ref="renameGroupInput"
 						icon="icon-group"
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
-					</ActionInput>
-					<ActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					</NcActionInput>
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
 						icon="icon-delete"
 						@click="deleteGroup">
 						{{ t('workspace', 'Delete group') }}
-					</ActionButton>
-				</Actions>
+					</NcActionButton>
+				</NcActions>
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.group" />
-		<Modal v-if="showSelectUsersModal"
+		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
-		</Modal>
+		</NcModal>
 	</div>
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import SelectUsers from './SelectUsers'
-import UserTable from './UserTable'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import SelectUsers from './SelectUsers.vue'
+import UserTable from './UserTable.vue'
 
 export default {
 	name: 'GroupDetails',
 	components: {
-		Actions,
-		ActionButton,
-		ActionInput,
-		Modal,
+		NcActions,
+		NcActionButton,
+		NcActionInput,
+		NcModal,
 		SelectUsers,
 		UserTable,
 	},
 	data() {
 		return {
-			showRenameGroupInput: false, // true to display 'Rename Group' ActionInput
+			showRenameGroupInput: false, // true to display 'Rename Group' NcActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
 	},
@@ -110,7 +110,7 @@ export default {
 			})
 		},
 		onRenameGroup(e) {
-			// Hides ActionInput
+			// Hides NcActionInput
 			this.toggleShowRenameGroupInput()
 
 			// Don't accept empty names
