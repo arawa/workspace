@@ -21,23 +21,23 @@
 -->
 
 <template>
-	<Content id="content" app-name="workspace">
+	<NcContent id="content" app-name="workspace">
 		<notifications
 			position="top center"
 			width="50%"
 			class="notifications"
 			:close-on-click="true" />
-		<AppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<AppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+		<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
 				@new-item="createSpace" />
-			<AppNavigationItem
+			<NcAppNavigationItem
 				:title="t('workspace', 'All spaces')"
 				:to="{path: '/'}"
 				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 			<template #list>
-				<AppNavigationItem
+				<NcAppNavigationItem
 					v-for="(space, spaceName) in $store.state.spaces"
 					:key="space.id"
 					:class="$route.params.space === spaceName ? 'space-selected' : ''"
@@ -45,12 +45,12 @@
 					:open="$route.params.space === spaceName"
 					:title="spaceName"
 					:to="{path: `/workspace/${spaceName}`}">
-					<AppNavigationIconBullet slot="icon" :color="space.color" />
+					<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 					<CounterBubble slot="counter" class="user-counter">
 						{{ $store.getters.spaceUserCount(spaceName) }}
 					</CounterBubble>
 					<div>
-						<AppNavigationItem
+						<NcAppNavigationItem
 							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 							:key="group.gid"
 							icon="icon-group"
@@ -59,9 +59,9 @@
 							<CounterBubble slot="counter" class="user-counter">
 								{{ $store.getters.groupUserCount( spaceName, group.gid) }}
 							</CounterBubble>
-						</AppNavigationItem>
+						</NcAppNavigationItem>
 					</div>
-				</AppNavigationItem>
+				</NcAppNavigationItem>
 				<div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
@@ -72,16 +72,16 @@
 						</button>
 					</div>
 					<div id="app-settings-content">
-						<ActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							:close-after-click="true"
 							:title="t('workspace', 'Convert group folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div>
 			</template>
-		</AppNavigation>
-		<AppContent>
-			<AppContentDetails>
+		</NcAppNavigation>
+		<NcAppContent>
+			<NcAppContentDetails>
 				<div
 					v-if="$store.state.loading"
 					class="lds-ring">
@@ -90,14 +90,14 @@
 				<div v-else class="workspace-content">
 					<router-view />
 				</div>
-			</AppContentDetails>
-		</AppContent>
-		<Modal
+			</NcAppContentDetails>
+		</NcAppContent>
+		<NcModal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</Modal>
-	</Content>
+		</NcModal>
+	</NcContent>
 </template>
 
 <script>
@@ -106,32 +106,32 @@ import { generateUrl } from '@nextcloud/router'
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { getLocale } from '@nextcloud/l10n'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
+import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
+import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
+import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
+import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
 import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
-import Content from '@nextcloud/vue/dist/Components/Content'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NotificationError from './services/Notifications/NotificationError.js'
 import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
 	name: 'Home',
 	components: {
-		ActionButton,
-		AppContent,
-		AppContentDetails,
-		AppNavigation,
-		AppNavigationIconBullet,
-		AppNavigationItem,
-		AppNavigationNewItem,
-		Content,
-		Modal,
+		NcActionButton,
+		NcAppContent,
+		NcAppContentDetails,
+		NcAppNavigation,
+		NcAppNavigationIconBullet,
+		NcAppNavigationItem,
+		NcAppNavigationNewItem,
+		NcContent,
+		NcModal,
 		SelectGroupfolders,
 	},
 	data() {

@@ -42,7 +42,7 @@
 				<td> {{ space.quota }} </td>
 				<td>
 					<div class="admin-avatars">
-						<Avatar v-for="user in workspaceManagers(space)"
+						<NcAvatar v-for="user in workspaceManagers(space)"
 							:key="user.uid"
 							:style="{ marginRight: 2 + 'px' }"
 							:display-name="user.name"
@@ -51,24 +51,24 @@
 				</td>
 			</tr>
 		</table>
-		<EmptyContent v-else>
+		<NcEmptyContent v-else>
 			<p>{{ t('workspace', 'No spaces') }}</p>
 			<template #desc>
 				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
-		</EmptyContent>
+		</NcEmptyContent>
 	</div>
 </template>
 
 <script>
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 export default {
 	name: 'SpaceTable',
 	components: {
-		Avatar,
-		EmptyContent,
+		NcAvatar,
+		NcEmptyContent,
 	},
 	methods: {
 		convertQuotaForFrontend(quota) {
