@@ -20,7 +20,7 @@
 
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="20" max-version="24"/>
+        <nextcloud min-version="25" max-version="25"/>
     </dependencies>
 
     <summary>Create Groupfolders with delegated management</summary>
