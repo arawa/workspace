@@ -160,7 +160,7 @@ export default {
 			this.toggleCreateGroup()
 
 			// Don't accept empty names
-			const gid = e.target[1].value
+			const gid = e.target[0].value
 			if (!gid) {
 				return
 			}
@@ -172,9 +172,9 @@ export default {
 			// Hides ActionInput
 			this.toggleRenameSpace()
 
-			if (e.target[1].value === false
-				 || e.target[1].value === null
-				 || e.target[1].value === ''
+			if (e.target[0].value === false
+				 || e.target[0].value === null
+				 || e.target[0].value === ''
 			) {
 				this.$notify({
 					title: t('workspace', 'Error to rename space'),
@@ -186,7 +186,7 @@ export default {
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			rename(this.$store.state.spaces[oldSpaceName], e.target[1].value)
+			rename(this.$store.state.spaces[oldSpaceName], e.target[0].value)
 				.then(resp => {
 					const data = resp.data
 					if (data.statuscode === 409) {
