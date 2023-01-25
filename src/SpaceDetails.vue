@@ -24,13 +24,13 @@
 	<div>
 		<div class="header">
 			<div class="space-name">
-				<ColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
+				<NcColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
 					<button class="color-dot color-picker" :style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
-				</ColorPicker>
+				</NcColorPicker>
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<Multiselect :class="isESR ? 'quota-select-esr' : 'quota-select'"
+				<NcMultiselect :class="isESR ? 'quota-select-esr' : 'quota-select'"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
 					:taggable="true"
@@ -41,76 +41,76 @@
 			</div>
 			<div class="space-actions">
 				<div>
-					<Actions default-icon="icon-add">
-						<ActionButton icon="icon-user"
+					<NcActions default-icon="icon-add">
+						<NcActionButton icon="icon-user"
 							:close-after-click="true"
 							class="no-bold"
 							:title="t('workspace', 'Add users')"
 							@click="toggleShowSelectUsersModal" />
-						<ActionButton v-show="!createGroup"
+						<NcActionButton v-show="!createGroup"
 							icon="icon-group"
 							:title="t('workspace', 'Create group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
-						<ActionInput v-show="createGroup"
+						<NcActionInput v-show="createGroup"
 							ref="createGroupInput"
 							icon="icon-group"
 							:close-after-click="true"
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
-						</ActionInput>
-					</Actions>
+						</NcActionInput>
+					</NcActions>
 				</div>
-				<Actions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<ActionButton v-show="!renameSpace"
+				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
+					<NcActionButton v-show="!renameSpace"
 						icon="icon-rename"
 						:title="t('workspace', 'Rename space')"
 						class="no-bold"
 						@click="toggleRenameSpace" />
-					<ActionInput v-show="renameSpace"
+					<NcActionInput v-show="renameSpace"
 						ref="renameSpaceInput"
 						icon="icon-rename"
 						@submit="onSpaceRename">
 						{{ t('workspace', 'Space name') }}
-					</ActionInput>
-					<ActionButton icon="icon-delete"
+					</NcActionInput>
+					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="deleteSpace">
 						{{ t('workspace', 'Delete space') }}
-					</ActionButton>
-				</Actions>
+					</NcActionButton>
+				</NcActions>
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<Modal v-if="showSelectUsersModal"
+		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
-		</Modal>
+		</NcModal>
 	</div>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import SelectUsers from './SelectUsers'
-import UserTable from './UserTable'
-import { destroy, rename } from './services/groupfoldersService'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
+import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import SelectUsers from './SelectUsers.vue'
+import UserTable from './UserTable.vue'
+import { destroy, rename } from './services/groupfoldersService.js'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
-		Actions,
-		ActionButton,
-		ActionInput,
-		ColorPicker,
-		Modal,
-		Multiselect,
+		NcActions,
+		NcActionButton,
+		NcActionInput,
+		NcColorPicker,
+		NcModal,
+		NcMultiselect,
 		SelectUsers,
 		UserTable,
 	},

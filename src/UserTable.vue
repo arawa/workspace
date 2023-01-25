@@ -39,7 +39,7 @@
 					:key="user.uid"
 					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
 					<td class="avatar">
-						<Avatar :display-name="user.name" :user="user.uid" />
+						<NcAvatar :display-name="user.name" :user="user.uid" />
 					</td>
 					<td style="width: 30%;">
 						<div class="user-name">
@@ -53,8 +53,8 @@
 					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
 					<td>
 						<div class="user-actions">
-							<Actions>
-								<ActionButton v-if="$route.params.group === undefined"
+							<NcActions>
+								<NcActionButton v-if="$route.params.group === undefined"
 									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
@@ -63,48 +63,48 @@
 											t('workspace', 'Make administrator')
 											: t('workspace', 'Remove admin rights')
 									}}
-								</ActionButton>
-								<ActionButton v-if="$route.params.group === undefined"
+								</NcActionButton>
+								<NcActionButton v-if="$route.params.group === undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
-								</ActionButton>
-								<ActionButton v-if="$route.params.group !== undefined"
+								</NcActionButton>
+								<NcActionButton v-if="$route.params.group !== undefined"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
 									{{ t('workspace', 'Remove from group') }}
-								</ActionButton>
-							</Actions>
+								</NcActionButton>
+							</NcActions>
 						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<EmptyContent v-else>
+		<NcEmptyContent v-else>
 			{{ t('workspace', 'No users') }}
 			<template #desc>
 				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
-		</EmptyContent>
+		</NcEmptyContent>
 	</div>
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
-import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
 
 export default {
 	name: 'UserTable',
 	components: {
-		Avatar,
-		Actions,
-		ActionButton,
-		EmptyContent,
+		NcAvatar,
+		NcActions,
+		NcActionButton,
+		NcEmptyContent,
 	},
 	data() {
 		return {

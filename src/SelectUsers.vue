@@ -26,12 +26,12 @@
 			<h1 class="title-add-users-modal">
 				{{ t('workspace', 'Add users') }}
 			</h1>
-			<Actions class="action-close">
-				<ActionButton icon="icon-close"
+			<NcActions class="action-close">
+				<NcActionButton icon="icon-close"
 					@click="$emit('close')" />
-			</Actions>
+			</NcActions>
 		</div>
-		<Multiselect class="select-users-input"
+		<NcMultiselect class="select-users-input"
 			label="name"
 			:custom-label="displayForSearching"
 			track-by="uid"
@@ -45,7 +45,7 @@
 			@close="selectableUsers=[]"
 			@search-change="lookupUsers">
 			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
-		</Multiselect>
+		</NcMultiselect>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -60,7 +60,7 @@
 					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'">
 					<div>
 						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-						<Avatar :display-name="user.name" :user="user.uid" />
+						<NcAvatar :display-name="user.name" :user="user.uid" />
 						<div class="user-name">
 							<span> {{ user.name }} </span>
 						</div>
@@ -73,12 +73,12 @@
 								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
-						<Actions>
-							<ActionButton icon="icon-delete"
+						<NcActions>
+							<NcActionButton icon="icon-delete"
 								@click="removeUserFromBatch(user)">
 								{{ t('workspace', 'remove users from selection') }}
-							</ActionButton>
-						</Actions>
+							</NcActionButton>
+						</NcActions>
 					</div>
 				</div>
 			</div>
@@ -95,21 +95,21 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
 import axios from '@nextcloud/axios'
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import { generateUrl } from '@nextcloud/router'
 
 export default {
 	name: 'SelectUsers',
 	components: {
-		Avatar,
-		Actions,
-		ActionButton,
-		Multiselect,
+		NcAvatar,
+		NcActions,
+		NcActionButton,
+		NcMultiselect,
 	},
 	data() {
 		return {
