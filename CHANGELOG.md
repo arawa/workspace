@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) ]
+- 
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
 
@@ -41,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
 - Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
 - Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
+- fix(Vue): Change the index from Nextcloud 25 ( [#683](https://github.com/arawa/workspace/pull/683) )
 
 ## [1.3.1] - 2022-12-29
 
