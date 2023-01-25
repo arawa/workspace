@@ -114,7 +114,7 @@ export default {
 			this.toggleShowRenameGroupInput()
 
 			// Don't accept empty names
-			const group = e.target[1].value
+			const group = e.target[0].value
 			if (!group) {
 				// TODO Inform user
 				return
