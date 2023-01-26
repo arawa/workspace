@@ -2,9 +2,9 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, stable* ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, stable* ]
 
 jobs:
   build:
@@ -12,11 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'master']
-        include:
-            - php: 8.0
-              nextcloud-version: master
+        php-versions: ['8.0']
+        nextcloud-versions: ['stable21', 'stable22', 'stable23', 'stable24']
 
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
