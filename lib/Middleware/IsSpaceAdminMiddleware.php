@@ -71,5 +71,8 @@ class IsSpaceAdminMiddleware extends Middleware {
 				'msg' => 'You are not allowed to perform this action.'
 			], Http::STATUS_FORBIDDEN);
 		}
+        // Re-throw the exception, to pass it on to other middlewares.
+        // @see \OC\AppFramework\Middleware\MiddlewareDispatcher.
+        throw $exception;
 	}
 }
