@@ -59,11 +59,15 @@ return [
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
-		[
-			'name' => 'group#transferUsersToGroups',
-			'url' => '/spaces/{spaceId}/transfer-users',
-			'verb' => 'POST'
-		],
+		/**
+		 * @todo Decomment these lines to convert a groupfolder to workspace.
+		 * This may be possible from NC25 or NC26.
+		 */
+		// [
+		// 	'name' => 'group#transferUsersToGroups',
+		// 	'url' => '/spaces/{spaceId}/transfer-users',
+		// 	'verb' => 'POST'
+		// ],
 		[
 			'name' => 'space#find',
 			'url' => '/workspaces/{id}',
