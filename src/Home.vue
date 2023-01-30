@@ -62,7 +62,7 @@
 						</NcAppNavigationItem>
 					</div>
 				</NcAppNavigationItem>
-				<div id="app-settings">
+				<!-- <div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							icon="icon-settings-dark"
@@ -77,7 +77,7 @@
 							:title="t('workspace', 'Convert group folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
-				</div>
+				</div> -->
 			</template>
 		</NcAppNavigation>
 		<NcAppContent>
@@ -92,11 +92,11 @@
 				</div>
 			</NcAppContentDetails>
 		</NcAppContent>
-		<NcModal
+		<!-- <NcModal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</NcModal>
+		</NcModal> -->
 	</NcContent>
 </template>
 
@@ -366,10 +366,10 @@ export default {
 
 			return groups
 		},
-		toggleShowSelectGroupfoldersModal() {
-			this.$store.dispatch('emptyGroupfolders')
-			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
-		},
+		// toggleShowSelectGroupfoldersModal() {
+		//  this.$store.dispatch('emptyGroupfolders')
+		//  this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
+		// },
 	},
 }
 </script>
