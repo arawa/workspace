@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
+- Backport : Disable the conversion feature - stable25 ( [#704](https://github.com/arawa/workspace/pull/704) )
 
 ### Chore
 
