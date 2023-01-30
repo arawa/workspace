@@ -62,7 +62,7 @@
 						</AppNavigationItem>
 					</div>
 				</AppNavigationItem>
-				<div id="app-settings">
+				<!-- <div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							icon="icon-settings-dark"
@@ -77,7 +77,7 @@
 							:title="t('workspace', 'Convert group folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
-				</div>
+				</div> -->
 			</template>
 		</AppNavigation>
 		<AppContent>
@@ -92,11 +92,11 @@
 				</div>
 			</AppContentDetails>
 		</AppContent>
-		<Modal
+		<!-- <Modal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</Modal>
+		</Modal> -->
 	</Content>
 </template>
 
@@ -366,10 +366,10 @@ export default {
 
 			return groups
 		},
-		toggleShowSelectGroupfoldersModal() {
-			this.$store.dispatch('emptyGroupfolders')
-			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
-		},
+		// toggleShowSelectGroupfoldersModal() {
+		//  this.$store.dispatch('emptyGroupfolders')
+		//  this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
+		// },
 	},
 }
 </script>
