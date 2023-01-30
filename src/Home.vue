@@ -90,25 +90,14 @@
 				<div v-else class="workspace-content">
 					<router-view />
 				</div>
-<<<<<<< HEAD
 			</AppContentDetails>
 		</AppContent>
-		<Modal
+		<!-- <Modal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</Modal>
+		</Modal> -->
 	</Content>
-=======
-			</NcAppContentDetails>
-		</NcAppContent>
-		<!-- <NcModal
-			v-if="showSelectGroupfoldersModal"
-			@close="toggleShowSelectGroupfoldersModal">
-			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</NcModal> -->
-	</NcContent>
->>>>>>> be1b671... feat(PHP,Vue): Disable the conversion feature
 </template>
 
 <script>
