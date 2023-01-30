@@ -62,7 +62,7 @@
 						</AppNavigationItem>
 					</div>
 				</AppNavigationItem>
-				<div id="app-settings">
+				<!-- <div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							icon="icon-settings-dark"
@@ -77,7 +77,7 @@
 							:title="t('workspace', 'Convert group folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
-				</div>
+				</div> -->
 			</template>
 		</AppNavigation>
 		<AppContent>
@@ -90,6 +90,7 @@
 				<div v-else class="workspace-content">
 					<router-view />
 				</div>
+<<<<<<< HEAD
 			</AppContentDetails>
 		</AppContent>
 		<Modal
@@ -98,6 +99,16 @@
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
 		</Modal>
 	</Content>
+=======
+			</NcAppContentDetails>
+		</NcAppContent>
+		<!-- <NcModal
+			v-if="showSelectGroupfoldersModal"
+			@close="toggleShowSelectGroupfoldersModal">
+			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
+		</NcModal> -->
+	</NcContent>
+>>>>>>> be1b671... feat(PHP,Vue): Disable the conversion feature
 </template>
 
 <script>
@@ -366,10 +377,10 @@ export default {
 
 			return groups
 		},
-		toggleShowSelectGroupfoldersModal() {
-			this.$store.dispatch('emptyGroupfolders')
-			this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
-		},
+		// toggleShowSelectGroupfoldersModal() {
+		//  this.$store.dispatch('emptyGroupfolders')
+		//  this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
+		// },
 	},
 }
 </script>
