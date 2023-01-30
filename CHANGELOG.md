@@ -8,11 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.2] - 2023-01-27
 
-### Added
-
-- Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
-- Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
-
 ### Changed
 
 - Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
