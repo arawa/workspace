@@ -50,8 +50,8 @@ tr:hover {
 }
 
 .color-dot {
-	min-height: 25px !important;
-	min-width: 25px !important;
+	min-height: 35px !important;
+	min-width: 35px !important;
 	border-radius: 50%;
 	padding: 0px;
 	margin-top: 10px !important;
