@@ -28,11 +28,6 @@
 					{{ t('workspace', 'Select groupfolders to convert in workspace') }}
 				</h1>
 			</div>
-			<NcActions class="action-close">
-				<NcActionButton
-					icon="icon-close"
-					@click="$emit('close')" />
-			</NcActions>
 		</div>
 		<div class="select-groupfolders-list">
 			<div
@@ -60,16 +55,12 @@
 
 <script>
 
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import { get, getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { createSpace, isSpaceManagers, isSpaceUsers, transferUsersToUserGroup } from './services/spaceService.js'
 
 export default {
 	name: 'SelectGroupfolders',
 	components: {
-		NcActions,
-		NcActionButton,
 	},
 	data() {
 		return {

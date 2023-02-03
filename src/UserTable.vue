@@ -37,7 +37,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'user-admin list-users' : 'list-users'">
+					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin' : 'list user-simple'">
 					<td class="avatar">
 						<NcAvatar :display-name="user.name" :user="user.uid" />
 					</td>
@@ -184,6 +184,14 @@ export default {
 
 .user-admin {
 	background-color: var(--color-primary-light);
+}
+
+.user-admin:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.user-simple:hover {
+  background-color: #f5f5f5 !important;
 }
 
 .user-name {

@@ -387,14 +387,6 @@ export default {
 	padding-right: 0px;
 }
 
-.space-selected {
-	background-color: #EAF5FC;
-}
-
-.all-spaces {
-	background-color: inherit !important;
-}
-
 .user-counter {
 	margin-right: 5px;
 }
