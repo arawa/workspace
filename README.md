@@ -19,6 +19,15 @@ For more information, please visit [our website](https://www.arawa.fr/solutions/
 
 ## Installation
 ### Requirements
+
+#### From Nextcloud 25
+
+- PHP 8.0
+- Nextcloud 25 or after
+- Install Group Folders on the Nextxloud app store
+
+#### For Nextcloud 24 and before
+
 - PHP 7.4 to 8.1
 - Nextcloud 21 to 24
 - Our forked Groupfolders app, available on https://github.com/arawa/groupfolders, release [v9.2.0](https://github.com/arawa/groupfolders/releases/download/v9.2.0/groupfolders-9.2.0.tar.gz) (we are working with Nextcloud to make Workspace compatible with the standard Groupfolders application ; this version will be available soon)
