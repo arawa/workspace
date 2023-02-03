@@ -26,10 +26,6 @@
 			<h1 class="title-add-users-modal">
 				{{ t('workspace', 'Add users') }}
 			</h1>
-			<NcActions class="action-close">
-				<NcActionButton icon="icon-close"
-					@click="$emit('close')" />
-			</NcActions>
 		</div>
 		<NcMultiselect class="select-users-input"
 			label="name"
@@ -371,7 +367,7 @@ export default {
 }
 
 .user-not-member {
-	background-color: #ffebee
+	/* background-color: #ffebee */
 }
 
 .role-toggle {
