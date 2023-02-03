@@ -29,6 +29,13 @@ In your "application management" administrator interface, limit the application 
 
 ### 🔧 Configure Groupfolders for Workspace
 
+#### From Nextcloud 25
+
+In `Settings` > `Group folders` > `Group folder admin delegation` section, add the group `GeneralManager` to the **first** field, and the group `WorkspacesManagers` to the **second** field
+
+
+#### For Nextcloud 24 and before
+
 In `Settings` > `Group folders` > `Group folder admin delegation` section, add the groups `GeneralManager` and `WorkspacesManagers`.
 
 ### Define which users will be General Managers
