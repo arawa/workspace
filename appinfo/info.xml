@@ -33,7 +33,7 @@
     - configure advanced permissions on workspace folders
 - All through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
-As this application is a Nextcloud extension of the Group Folders application, it is necessary to install it for the application to work.
+It is necessary to install the Group Folders app for the Workspace app to work.
 
 Before using Workspace, you must configure the app, following these important steps:
 
@@ -43,7 +43,7 @@ Before using Workspace, you must configure the app, following these important st
     - until Nextcloud 24 : in "Settings" > "Group folders" > "Group folder admin delegation" section, add the groups "GeneralManager" and "WorkspacesManagers".
     - from Nextcloud 25 : in "Settings" > "Group folders" > "Group folder admin delegation" section, add the group "GeneralManager" to the **first** field, and the group "WorkspacesManagers" to the **second** field
 
-Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the standard Group folde app (since 13.1.0), available on [Nextcloud app store](https://apps.nextcloud.com/apps/groupfolders/).
+Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the standard Group folders app (since 13.1.0), available on [Nextcloud app store](https://apps.nextcloud.com/apps/groupfolders/).
 
 **Caution** if you are using a major version 24 of Nextcloud or earlier : to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.2.0](https://github.com/arawa/groupfolders/releases/download/v9.2.0/groupfolders-9.2.0.tar.gz).
 
