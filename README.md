@@ -24,7 +24,7 @@ For more information, please visit [our website](https://www.arawa.fr/solutions/
 
 - PHP 8.0
 - Nextcloud 25 or after
-- Install Group Folders on the Nextxloud app store
+- Install Group Folders on the Nextcloud app store
 
 #### For Nextcloud 24 and before
 
