@@ -21,16 +21,13 @@
  *
  */
 
-import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
+import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import UserGroup from '../services/Groups/UserGroup.js'
 
 export const getters = {
 	// Returns the GE group of a workspace
 	GEGroup: state => name => {
-		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.gid === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + state.spaces[name].id
-		})
-		return groups[0]
+		return ManagerGroup.getManagerGroup(state.spaces[name])
 	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
@@ -48,12 +45,12 @@ export const getters = {
 	},
 	// Tests wheter a user if General manager of a space
 	isSpaceAdmin: state => (user, spaceName) => {
-		return user.groups.includes(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + state.spaces[spaceName].id)
+		return user.groups.includes(ManagerGroup.getManagerGroup(state.spaces[spaceName]))
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
-		if (gid === getters.GEGroup(spaceName).gid
-		|| gid === getters.UGroup(spaceName).gid) {
+		if (gid === getters.GEGroup(spaceName)
+		|| gid === getters.UGroup(spaceName)) {
 			return true
 		}
 		return false
@@ -82,9 +79,6 @@ export const getters = {
 	},
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
-		const groups = Object.values(state.spaces[name].groups).filter(group => {
-			return group.gid === UserGroup.getUserGroup(state.spaces[name])
-		})
-		return groups[0]
+		return UserGroup.getUserGroup(state.spaces[name])
 	},
 }

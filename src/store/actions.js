@@ -22,10 +22,10 @@
  */
 
 import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
+import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
 
@@ -48,7 +48,7 @@ export default {
 				// Everything went well, we can thus also add this user to the UGroup in the frontend
 				context.commit('addUserToGroup', {
 					name,
-					gid: context.getters.UGroup(name).gid,
+					gid: context.getters.UGroup(name),
 					user,
 				})
 				// eslint-disable-next-line no-console
@@ -213,9 +213,9 @@ export default {
 	toggleUserRole(context, { name, user }) {
 		const space = context.state.spaces[name]
 		if (context.getters.isSpaceAdmin(user, name)) {
-			user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+			user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
 		} else {
-			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+			user.groups.push(ManagerGroup.getManagerGroup(space))
 		}
 		const spaceId = space.id
 		const userId = user.uid
@@ -232,9 +232,9 @@ export default {
 				} else {
 					// Revert action an inform user
 					if (context.getters.isSpaceAdmin(user, name)) {
-						user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+						user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
 					} else {
-						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+						user.groups.push(ManagerGroup.getManagerGroup(space))
 					}
 					context.commit('updateUser', { name, user })
 					const text = t('workspace', 'An error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: resp.statusText })
@@ -243,9 +243,9 @@ export default {
 			}).catch((e) => {
 				// Revert action an inform user
 				if (context.getters.isSpaceAdmin(user, name)) {
-					user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+					user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
 				} else {
-					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+					user.groups.push(ManagerGroup.getManagerGroup(space))
 				}
 				context.commit('updateUser', { name, user })
 				const text = t('workspace', 'Network error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: e })

@@ -20,22 +20,22 @@
  *
  */
 
-import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_USERS_GROUP_PREFIX } from '../../constants.js'
+import { SPACE_WORKSPACE_MANAGER_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../../constants.js'
 
 /**
  * @param {object} space
  * @return {string}
  */
-function getUserGroup(space) {
+function getManagerGroup(space) {
 	const groups = Object.keys(space.groups)
 
-	const uGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + '[0-9]*$')
-	const usersGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + '[a-zA-Z]*[0-9]*$')
+	const spaceGeneralGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + '[0-9]*$')
+	const workspaceManagerGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + SPACE_WORKSPACE_MANAGER_PREFIX + '[a-zA-Z]*[0-9]*$')
 
-	const groupFound = groups.find(group => {
-		if (uGroupRegex.test(group)) {
+	const groupFound = groups.find(function(group) {
+		if (spaceGeneralGroupRegex.test(group)) {
 			return true
-		} else if (usersGroupRegex.test(group)) {
+		} else if (workspaceManagerGroupRegex.test(group)) {
 			return true
 		}
 
@@ -45,8 +45,8 @@ function getUserGroup(space) {
 	return groupFound
 }
 
-const UserGroup = {
-	getUserGroup,
+const ManagerGroup = {
+	getManagerGroup,
 }
 
-export default UserGroup
+export default ManagerGroup

@@ -102,8 +102,8 @@ class WorkspaceController extends Controller {
 			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
 		}
 
-		// #2 create groups
-		$newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space->getId());
+        // #2 create groups
+        $newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_WORKSPACE_MANAGER . $space->getSpaceName());
 
 		if (is_null($newSpaceManagerGroup)) {
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
@@ -115,7 +115,7 @@ class WorkspaceController extends Controller {
 			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
 		}
 
-        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_MANAGER . $space->getId());
+        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_WORKSPACE_MANAGER . $space->getSpaceName());
         $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getSpaceName());
 
 		// #3 Returns result
@@ -148,34 +148,35 @@ class WorkspaceController extends Controller {
    *
    */
 	public function destroy(array $workspace): JSONResponse {
-		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		$GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
-		foreach ($GEGroup->getUsers() as $user) {
-			$this->userService->removeGEFromWM($user, $workspace['id']);
-		}
+        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+        $GEGroup = $this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($workspace));
+        foreach ($GEGroup->getUsers() as $user) {
+			$this->userService->removeGEFromWM($user, $workspace);
+        }
 
-		// Removes all workspaces groups
-		$groups = [];
-		$this->logger->debug('Removing workspaces groups.');
-		foreach (array_keys($workspace['groups']) as $group) {
-			$groups[] = $group;
-			$this->groupManager->get($group)->delete();
-		}
+	    // Removes all workspaces groups
+        $groups = [];
+    	$this->logger->debug('Removing workspaces groups.');
+        foreach ( array_keys($workspace['groups']) as $group ) {
+            $groups[] = $group;
+            $this->groupManager->get($group)->delete();
+        }
 
-		return new JSONResponse([
-			'http' => [
-				'statuscode' => 200,
-				'message' => 'The space is deleted.'
-			],
-			'data' => [
-				'space_name' => $workspace['name'],
-				'groups' => $groups,
-				'space_id' => $workspace['id'],
-				'groupfolder_id' => $workspace['groupfolderId'],
-				'state' => 'delete'
-			]
-		]);
-	}
+	    return new JSONResponse([
+            'http' => [
+                'statuscode' => 200,
+                'message' => 'The space is deleted.'
+            ],
+            'data' => [
+                'name' => $workspace['name'],
+                'groups' => $groups,
+                'space_id' => $workspace['id'],
+                'groupfolder_id' => $workspace['groupfolderId'],
+                'state' => 'delete'
+            ]
+        ]);
+
+    }
 
 	/**
 	 *
@@ -189,8 +190,8 @@ class WorkspaceController extends Controller {
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
-			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
-				return $this->userService->isSpaceManagerOfSpace($workspace['id']);
+	    		$filteredWorkspaces = array_values(array_filter($workspaces, function($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace);
 			}));
 			$workspaces = $filteredWorkspaces;
 		}
@@ -254,16 +255,16 @@ class WorkspaceController extends Controller {
 		}
 
 		$user = $this->userManager->get($userId);
-		$GEgroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']);
+        $GEgroup = $this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($space));
 
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
-			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
-			$this->userService->removeGEFromWM($user, $space['id']);
+        		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
+			$this->userService->removeGEFromWM($user, $space);
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])->addUser($user);
+			$this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($space))->addUser($user);
 			$this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS)->addUser($user);
 		}
 

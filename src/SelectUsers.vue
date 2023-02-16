@@ -97,6 +97,7 @@ import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
@@ -145,7 +146,7 @@ export default {
 						if (user.role === 'user') {
 							this.$store.dispatch('removeUserFromGroup', {
 								name: this.$route.params.space,
-								gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id,
+								gid: ManagerGroup.getManagerGroup(space),
 								user,
 							})
 						}
@@ -159,14 +160,14 @@ export default {
 					if (user.role === 'admin') {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
-							gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id,
+							gid: ManagerGroup.getManagerGroup(space),
 							user,
 						})
 					}
 				} else {
 					// Adding a user to the workspace
 					if (user.role === 'admin') {
-						gid = ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
+						gid = ManagerGroup.getManagerGroup(space)
 					} else {
 						gid = UserGroup.getUserGroup(space)
 					}

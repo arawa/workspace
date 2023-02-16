@@ -131,9 +131,9 @@ class WorkspaceService {
 		foreach ($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
-				$user->getUID(),
-				GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id'])
-			) {
+					$user->getUID(),
+					GroupsWorkspace::getWorkspacesManagersGroup($space))
+				) {
 				$role = 'admin';
 			}
 			$data[] = $this->userService->formatUser($user, $space, $role);

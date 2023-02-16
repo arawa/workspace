@@ -22,6 +22,7 @@
  */
 
 export const ESPACE_MANAGERS_PREFIX = 'GE-'
+export const SPACE_WORKSPACE_MANAGER_PREFIX = 'WM-'
 export const ESPACE_USERS_PREFIX = 'U-'
 export const ESPACE_USERS_GROUP_PREFIX = 'Users-'
 export const ESPACE_GID_PREFIX = 'SPACE-'
