@@ -106,7 +106,7 @@ class SpaceMapper extends QBMapper {
 			->select('space_name')
 			->from($this->getTableName())
 			->where('upper(space_name) like upper(:spaceName)')
-            ->setParameter('spaceName', $spacename);
+			->setParameter('spaceName', $spacename);
 
 		$cursor = $qb->execute();
 
