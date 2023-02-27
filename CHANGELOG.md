@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Define a parameter for the spacename var ( [#737](https://github.com/arawa/workspace/pull/737) )
 
 ### Added
 
