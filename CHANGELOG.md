@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix/set parameter spacename/737/stable25 ( [#738](https://github.com/arawa/workspace/pull/738) )
 
 ### Added
 
