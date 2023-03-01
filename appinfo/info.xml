@@ -45,7 +45,7 @@ Before using Workspace, you must configure the app, following these important st
 
 Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the standard Group folders app (since 13.1.0), available on [Nextcloud app store](https://apps.nextcloud.com/apps/groupfolders/).
 
-**Caution** if you are using a major version 24 of Nextcloud or earlier : to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.2.0](https://github.com/arawa/groupfolders/releases/download/v9.2.0/groupfolders-9.2.0.tar.gz).
+**Caution** if you are using a major version 24 of Nextcloud or earlier : to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.2.1](https://github.com/arawa/groupfolders/releases/download/v9.2.1/groupfolders-9.2.1.tar.gz).
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
