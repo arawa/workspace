@@ -89,7 +89,6 @@ class WorkspaceController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @GeneralManagerRequired
-	 * @NoCSRFRequired
 	 * @param string $spaceName
 	 * @param int $folderId
 	 * @throws BadRequestException
@@ -199,7 +198,6 @@ class WorkspaceController extends Controller {
 	 * Returns a list of all the workspaces that the connected user may use.
 	 *
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 */
 	public function findAll() {
@@ -238,7 +236,6 @@ class WorkspaceController extends Controller {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string $term
 	 * @param string $spaceId
 	 * @param string|object $space
@@ -290,7 +287,6 @@ class WorkspaceController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @NoCSRFRequired
 	 * @param object|string $workspace
 	 * @param string $newSpaceName
 	 * @return JSONResponse
