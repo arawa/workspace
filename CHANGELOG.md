@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Chore
 
+- chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
 - npm: bump vue and vue-template-compiler ( [#591](https://github.com/arawa/workspace/pull/591) )
 - npm: bump @nextcloud/stylelint-config from 2.2.0 to 2.3.0 ( [#595](https://github.com/arawa/workspace/pull/595) )
 - npm: bump jest-environment-jsdom from 29.0.3 to 29.3.1 ( [#613](https://github.com/arawa/workspace/pull/613) )
