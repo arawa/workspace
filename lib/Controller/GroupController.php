@@ -173,7 +173,6 @@ class GroupController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @NoCSRFRequired
 	 * Adds a user to a group.
 	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
 	 * manager group when we are adding a workspace manager
@@ -221,7 +220,6 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @SpaceAdminRequired
 	 *
 	 * Removes a user from a group
