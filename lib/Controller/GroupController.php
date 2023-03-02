@@ -284,7 +284,6 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @GeneralManagerRequired
 	 * @param string|object $groupfolder
 	 *
