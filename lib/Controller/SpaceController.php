@@ -53,7 +53,6 @@ class SpaceController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function find($id) {
 		return new DataResponse($this->spaceService->find($id));
@@ -61,7 +60,6 @@ class SpaceController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function findAll() {
 		return new DataResponse($this->spaceService->findAll());
@@ -70,7 +68,6 @@ class SpaceController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function updateColorCode(string $colorCode, int $spaceId) {
 		return new DataResponse($this->spaceService->updateColorCode($colorCode, (int)$spaceId));

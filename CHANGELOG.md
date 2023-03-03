@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fix/set parameter spacename/737/stable24 ( [#739](https://github.com/arawa/workspace/pull/739) )
+- chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
 
 ## [1.3.2] - 2023-01-27
 
