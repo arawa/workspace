@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) ]
+- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) )
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
 
