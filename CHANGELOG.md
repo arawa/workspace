@@ -6,11 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2023-03-03
+
 ### Fixed
 
 - Fix/set parameter spacename/737/stable25 ( [#738](https://github.com/arawa/workspace/pull/738) )
 
-### Chore
+### Changed
 
 - chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
 
@@ -135,7 +137,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.1...main
+[2.0.0]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.0...1.3.1
 [1.3.0]: https://github.com/arawa/workspace/compare/v1.2.3...1.3.0
