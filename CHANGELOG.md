@@ -6,12 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
 - Fix/set parameter spacename/737/stable25 ( [#738](https://github.com/arawa/workspace/pull/738) )
+
+## [2.0.0] - 2023-02-06
 
 ### Added
 
 - npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) ]
-- 
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
 
@@ -128,7 +131,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.3.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.0...main
+[1.3.1]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.0...1.3.1
 [1.3.0]: https://github.com/arawa/workspace/compare/v1.2.3...1.3.0
 [1.2.3]: https://github.com/arawa/workspace/compare/v1.2.2...1.2.3
