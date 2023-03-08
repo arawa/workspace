@@ -32,10 +32,13 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\UserGroup;
+use OCA\Workspace\WorkspaceManagerGroup;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -55,6 +58,8 @@ class WorkspaceController extends Controller {
 		private UserService $userService,
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
+        private UserGroup $userGroup,
+        private WorkspaceManagerGroup $workspaceManagerGroup,
 		public $AppName
 	) {
 		parent::__construct($AppName, $request);
@@ -103,20 +108,8 @@ class WorkspaceController extends Controller {
 		}
 
         // #2 create groups
-        $newSpaceManagerGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_WORKSPACE_MANAGER . $space->getSpaceName());
-
-		if (is_null($newSpaceManagerGroup)) {
-			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
-		}
-
-        $newSpaceUsersGroup = $this->groupManager->createGroup(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space->getSpaceName());
-
-		if (is_null($newSpaceUsersGroup)) {
-			throw new CreateGroupException('Error to create a Space Users group.', Http::STATUS_CONFLICT);
-		}
-
-        $newSpaceManagerGroup->setDisplayName(GroupsWorkspace::SPACE_WORKSPACE_MANAGER . $space->getSpaceName());
-        $newSpaceUsersGroup->setDisplayName(GroupsWorkspace::SPACE_USERS . $space->getSpaceName());
+        $newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
+        $newSpaceUsersGroup = $this->userGroup->create($space);
 
 		// #3 Returns result
 		return new JSONResponse([
@@ -124,16 +117,10 @@ class WorkspaceController extends Controller {
 			'id_space' => $space->getId(),
 			'folder_id' => $space->getGroupfolderId(),
 			'color' => $space->getColorCode(),
-			'groups' => [
-				$newSpaceManagerGroup->getGID() => [
-					'gid' => $newSpaceManagerGroup->getGID(),
-					'displayName' => $newSpaceManagerGroup->getDisplayName(),
-				],
-				$newSpaceUsersGroup->getGID() => [
-					'gid' => $newSpaceUsersGroup->getGID(),
-					'displayName' => $newSpaceUsersGroup->getDisplayName(),
-				]
-			],
+			'groups' => GroupFormatter::formatGroups([
+                $newSpaceManagerGroup,
+                $newSpaceUsersGroup
+            ]),
 			'statuscode' => Http::STATUS_CREATED,
 		]);
 	}
@@ -149,7 +136,7 @@ class WorkspaceController extends Controller {
    */
 	public function destroy(array $workspace): JSONResponse {
         $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($workspace));
+        $GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
         foreach ($GEGroup->getUsers() as $user) {
 			$this->userService->removeGEFromWM($user, $workspace);
         }
@@ -255,16 +242,16 @@ class WorkspaceController extends Controller {
 		}
 
 		$user = $this->userManager->get($userId);
-        $GEgroup = $this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($space));
-
+        $GEgroup = $this->groupManager->get(WorkspaceManagerGroup::get($space['id']));
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
         		$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
 			$this->userService->removeGEFromWM($user, $space);
+            // var_dump('coucou');
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(GroupsWorkspace::getWorkspacesManagersGroup($space))->addUser($user);
+			$this->groupManager->get(WorkspaceManagerGroup::get($space['id']))->addUser($user);
 			$this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS)->addUser($user);
 		}
 

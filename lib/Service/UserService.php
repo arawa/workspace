@@ -25,12 +25,14 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\ManagersWorkspace;
-use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserSession;
+use OCP\IGroupManager;
+use OCA\Workspace\UserGroup;
 use Psr\Log\LoggerInterface;
+use OCA\Workspace\GroupsWorkspace;
+use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\WorkspaceManagerGroup;
 
 class UserService {
 	public function __construct(
@@ -90,11 +92,8 @@ class UserService {
 	/**
 	 * @return boolean true if user is a space manager, false otherwise
 	 */
-    public function isSpaceManager(): bool {
-        $workspaceAdminGroups = array_merge(
-			$this->groupManager->search(GroupsWorkspace::SPACE_MANAGER),
-			$this->groupManager->search(GroupsWorkspace::SPACE_WORKSPACE_MANAGER)
-		);
+	public function isSpaceManager(): bool {
+		$workspaceAdminGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
 		foreach($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -120,7 +119,7 @@ class UserService {
 	*/
 	public function isSpaceManagerOfSpace(array $space): bool {
 
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), GroupsWorkspace::getWorkspacesManagersGroup($space))) {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {
 			return true;
 		}
 		return false;
@@ -136,8 +135,8 @@ class UserService {
 		// Checks if the user is member of the GE- group of another workspace
 		foreach ($groups as $group) {
 			$gid = $group->getGID();
-			if (strpos($gid, GroupsWorkspace::getWorkspacesManagersGroup($space)) === 0 &&
-				$gid !== GroupsWorkspace::getWorkspacesManagersGroup($space)
+			if (strpos($gid, WorkspaceManagerGroup::get($space['id'])) === 0 &&
+				$gid !== UserGroup::get($space['id'])
 			) {
 				$found = true;
 				break;

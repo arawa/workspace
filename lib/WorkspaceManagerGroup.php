@@ -1,0 +1,65 @@
+<?php
+/**
+ * @copyright Copyright (c) 2017 Arawa
+ *
+ * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace OCA\Workspace;
+
+use OCA\Workspace\Db\Space;
+use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\AppFramework\Http;
+use OCA\Workspace\GroupsWorkspace;
+
+class WorkspaceManagerGroup extends GroupsWorkspace
+{
+
+    private IGroupManager $groupManager;
+
+    public function __construct(IGroupManager $groupManager)
+    {
+        $this->groupManager = $groupManager;
+    }
+
+    public static function get(int $spaceId): string
+    {
+        return self::GID_MANAGERS . $spaceId;
+    }
+
+    public static function getPrefix(): string
+    {
+        return self::GID_MANAGERS;
+    }
+
+    public function create(Space $space): IGroup
+    {
+        $group = $this->groupManager->createGroup(self::GID_MANAGERS . $space->getId());
+
+        if (is_null($group)) {
+			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
+		}
+
+        $group->setDisplayName(self::SPACE_WORKSPACE_MANAGER . $space->getSpaceName());
+
+        return $group;
+    }
+}
+
