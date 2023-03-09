@@ -20,22 +20,19 @@
  *
  */
 
-import { ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX, ESPACE_USERS_GROUP_PREFIX } from '../../constants.js'
+import { PREFIX_USER } from '../../constants.js'
 
 /**
  * @param {object} space
  * @return {string}
  */
-function getUserGroup(space) {
+function get(space) {
 	const groups = Object.keys(space.groups)
 
-	const uGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + '[0-9]*$')
-	const usersGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + '[a-zA-Z]*[0-9]*$')
+	const uGroupRegex = new RegExp('^' + PREFIX_USER + '[0-9]*$')
 
 	const groupFound = groups.find(group => {
 		if (uGroupRegex.test(group)) {
-			return true
-		} else if (usersGroupRegex.test(group)) {
 			return true
 		}
 
@@ -46,7 +43,7 @@ function getUserGroup(space) {
 }
 
 const UserGroup = {
-	getUserGroup,
+	get,
 }
 
 export default UserGroup

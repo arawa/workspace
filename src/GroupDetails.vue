@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
+import { PREFIX_MANAGER, PREFIX_USER } from './constants.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
@@ -99,8 +99,8 @@ export default {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
 			const space = this.$store.state.spaces[this.$route.params.space]
-			if (this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-			|| UserGroup.getUserGroup(space)) {
+			if (this.$route.params.group === PREFIX_MANAGER + space.id
+			|| UserGroup.get(space)) {
 				// TODO Inform user
 				return
 			}
@@ -124,8 +124,8 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 
 			// Prevents renaming SPACE-GE- and SPACE-U- groups
-			if (group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-				|| group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
+			if (group === PREFIX_MANAGER + space.id
+				|| group === PREFIX_USER + space.id) {
 				// TODO Inform user
 				return
 			}

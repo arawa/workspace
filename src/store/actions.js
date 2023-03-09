@@ -148,7 +148,7 @@ export default {
 		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
-		if (gid === UserGroup.getUserGroup(space)) {
+		if (gid === UserGroup.get(space)) {
 			context.commit('removeUserFromWorkspace', { name, user })
 		} else {
 			context.commit('removeUserFromGroup', { name, gid, user })
@@ -171,7 +171,7 @@ export default {
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: e })
 			showNotificationError('Error', text, 4000)
-			if (gid === UserGroup.getUserGroup(space)) {
+			if (gid === UserGroup.get(space)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
 				)
@@ -213,9 +213,9 @@ export default {
 	toggleUserRole(context, { name, user }) {
 		const space = context.state.spaces[name]
 		if (context.getters.isSpaceAdmin(user, name)) {
-			user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
+			user.groups.splice(user.groups.indexOf(ManagerGroup.get(space)), 1)
 		} else {
-			user.groups.push(ManagerGroup.getManagerGroup(space))
+			user.groups.push(ManagerGroup.get(space))
 		}
 		const spaceId = space.id
 		const userId = user.uid
@@ -232,9 +232,9 @@ export default {
 				} else {
 					// Revert action an inform user
 					if (context.getters.isSpaceAdmin(user, name)) {
-						user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
+						user.groups.splice(user.groups.indexOf(ManagerGroup.get(space)), 1)
 					} else {
-						user.groups.push(ManagerGroup.getManagerGroup(space))
+						user.groups.push(ManagerGroup.get(space))
 					}
 					context.commit('updateUser', { name, user })
 					const text = t('workspace', 'An error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: resp.statusText })
@@ -243,9 +243,9 @@ export default {
 			}).catch((e) => {
 				// Revert action an inform user
 				if (context.getters.isSpaceAdmin(user, name)) {
-					user.groups.splice(user.groups.indexOf(ManagerGroup.getManagerGroup(space)), 1)
+					user.groups.splice(user.groups.indexOf(ManagerGroup.get(space)), 1)
 				} else {
-					user.groups.push(ManagerGroup.getManagerGroup(space))
+					user.groups.push(ManagerGroup.get(space))
 				}
 				context.commit('updateUser', { name, user })
 				const text = t('workspace', 'Network error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: e })

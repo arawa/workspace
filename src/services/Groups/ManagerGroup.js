@@ -20,22 +20,19 @@
  *
  */
 
-import { SPACE_WORKSPACE_MANAGER_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_GID_PREFIX } from '../../constants.js'
+import { PREFIX_MANAGER } from '../../constants.js'
 
 /**
  * @param {object} space
  * @return {string}
  */
-function getManagerGroup(space) {
+function get(space) {
 	const groups = Object.keys(space.groups)
 
-	const spaceGeneralGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + '[0-9]*$')
-	const workspaceManagerGroupRegex = new RegExp('^' + ESPACE_GID_PREFIX + SPACE_WORKSPACE_MANAGER_PREFIX + '[a-zA-Z]*[0-9]*$')
+	const spaceGeneralGroupRegex = new RegExp('^' + PREFIX_MANAGER + '[0-9]*$')
 
 	const groupFound = groups.find(function(group) {
 		if (spaceGeneralGroupRegex.test(group)) {
-			return true
-		} else if (workspaceManagerGroupRegex.test(group)) {
 			return true
 		}
 
@@ -46,7 +43,7 @@ function getManagerGroup(space) {
 }
 
 const ManagerGroup = {
-	getManagerGroup,
+	get,
 }
 
 export default ManagerGroup

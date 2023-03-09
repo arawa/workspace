@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
+// import { PREFIX_MANAGER, PREFIX_USER } from './constants.js'
 import axios from '@nextcloud/axios'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
@@ -146,7 +146,7 @@ export default {
 						if (user.role === 'user') {
 							this.$store.dispatch('removeUserFromGroup', {
 								name: this.$route.params.space,
-								gid: ManagerGroup.getManagerGroup(space),
+								gid: ManagerGroup.get(space),
 								user,
 							})
 						}
@@ -160,16 +160,16 @@ export default {
 					if (user.role === 'admin') {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
-							gid: ManagerGroup.getManagerGroup(space),
+							gid: ManagerGroup.get(space),
 							user,
 						})
 					}
 				} else {
 					// Adding a user to the workspace
 					if (user.role === 'admin') {
-						gid = ManagerGroup.getManagerGroup(space)
+						gid = ManagerGroup.get(space)
 					} else {
-						gid = UserGroup.getUserGroup(space)
+						gid = UserGroup.get(space)
 					}
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
