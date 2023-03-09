@@ -40,23 +40,23 @@ class UserGroup extends GroupsWorkspace
 
     public static function get(int $spaceId): string
     {
-        return self::GID_USERS . $spaceId;
+        return self::PREFIX_GID_USERS . $spaceId;
     }
 
     public static function getPrefix(): string
     {
-        return self::GID_USERS;
+        return self::PREFIX_GID_USERS;
     }
 
     public function create(Space $space): IGroup
     {
-        $group = $this->groupManager->createGroup(self::GID_USERS . $space->getId());
+        $group = $this->groupManager->createGroup(self::PREFIX_GID_USERS . $space->getId());
 
         if (is_null($group)) {
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
 		}
 
-        $group->setDisplayName(self::USER_GROUP . $space->getSpaceName());
+        $group->setDisplayName(self::DISPLAY_PREFIX_USER_GROUP . $space->getSpaceName());
 
         return $group;
     }

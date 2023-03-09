@@ -26,7 +26,6 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\UserGroup;
 use OCA\Workspace\WorkspaceManagerGroup;
 use OCP\IGroupManager;

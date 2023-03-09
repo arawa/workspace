@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;

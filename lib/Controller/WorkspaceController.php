@@ -30,7 +30,6 @@ use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\CreateWorkspaceException;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\SpaceService;

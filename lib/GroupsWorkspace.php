@@ -23,18 +23,22 @@
 
 namespace OCA\Workspace;
 
+use OCA\Workspace\Db\Space;
+use OCP\IGroup;
+
 abstract class GroupsWorkspace {
-	private const SPACE_MANAGER = 'GE-';
-    private const SPACE_USERS = 'U-';
+	private const GID_SPACE_MANAGER = 'GE-';
+    private const GID_SPACE_USERS = 'U-';
     private const GID_SPACE = 'SPACE-';
 
-    protected const GID_MANAGERS = self::GID_SPACE . self::SPACE_MANAGER;
-    protected const GID_USERS = self::GID_SPACE . self::SPACE_USERS;
+    protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
+    protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
 
-	public const SPACE_WORKSPACE_MANAGER = 'WM-';
-	public const USER_GROUP = 'Users-';
+	public const DISPLAY_PREFIX_MANAGER_GROUP = 'WM-';
+	public const DISPLAY_PREFIX_USER_GROUP = 'Users-';
 
     abstract public static function get(int $spaceId): string;
     abstract public static function getPrefix(): string;
+    abstract public function create(Space $space): IGroup;
 
 }
