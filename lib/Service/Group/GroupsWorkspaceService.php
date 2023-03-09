@@ -25,7 +25,6 @@
 namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\GroupException;
-use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\UserGroup;
 use OCA\Workspace\WorkspaceManagerGroup;
 use OCP\IGroup;
@@ -54,19 +53,16 @@ class GroupsWorkspaceService {
 	/**
 	 * @throws GroupException
 	 */
-	public function getUserGroup(array $workspace): String {
-		$groups = array_keys($workspace['groups']);
+	public function getUserGroup(string $spaceId): IGroup {
+        $groupUser = $this->groupManager->get(
+            UserGroup::get($spaceId)
+        );
 
-		$regex = '/^' . UserGroup::getPrefix() . '[0-9]/';
-		foreach ($groups as $group)
-		{
-			if (preg_match($regex, $group))
-			{
-				return UserGroup::getPrefix();
-			}
-		}
+		if (is_null($groupUser)) {
+            throw new GroupException('Error to get the workspace manage group relative to workspace.');
+        }
 
-		return UserGroup::getPrefix();
+		return $groupUser;
 	}
 
 	/**
