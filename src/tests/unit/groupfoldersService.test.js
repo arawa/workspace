@@ -20,12 +20,14 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
+import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
 
 jest.mock('axios')
 jest.mock('../../services/Notifications/NotificationError')
+jest.mock('../../Errors/Groupfolders/CheckGroupfolderNameError')
 
 const responseValue = {
 	data: {
@@ -169,5 +171,36 @@ describe('formatUsers function', () => {
 		axios.post.mockResolvedValue({ data: 'foobar' })
 		const res = await formatUsers({})
 		expect(res).toEqual({ data: 'foobar' })
+	})
+})
+
+describe('checkGroupfolderNameExist function', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('does call to axios.get method', () => {
+		const getSpy = jest.spyOn(axios, 'get')
+		try {
+			checkGroupfolderNameExist('foobar')
+		} catch (err) {
+			expect(getSpy).toBeCalled()
+		}
+	})
+	it('throws an error if name is in the obj received from getAll call', async () => {
+		const spy = jest.spyOn(CheckGroupfolderNameExistError.prototype, 'constructor')
+		axios.get.mockResolvedValue(responseValue)
+		try {
+			await checkGroupfolderNameExist('first')
+		} catch (err) {
+
+			expect(spy).toBeCalled()
+		}
+	})
+	it('returns Promise if name does not exist', async () => {
+		axios.get.mockResolvedValue(responseValue)
+		await expect(checkGroupfolderNameExist('foobar')).resolves.not.toThrow()
 	})
 })
