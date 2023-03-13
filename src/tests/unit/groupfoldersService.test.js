@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -202,5 +202,23 @@ describe('checkGroupfolderNameExist function', () => {
 	it('returns Promise if name does not exist', async () => {
 		axios.get.mockResolvedValue(responseValue)
 		await expect(checkGroupfolderNameExist('foobar')).resolves.not.toThrow()
+	})
+})
+
+describe('enableAcl function', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method', async () => {
+		axios.post.mockResolvedValue({ status: 200, ...responseValue })
+		const result = await enableAcl(1)
+		expect(result).toEqual(responseValue.data.ocs.data)
+	})
+	it('throws error if resp.status is not 200', async () => {
+		axios.post.mockResolvedValue({ status: 500, ...responseValue })
+		expect(async () => await enableAcl(1).toThrow())
 	})
 })
