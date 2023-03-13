@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 
@@ -144,8 +144,30 @@ describe('formatGroups function', () => {
 		}
 	})
 	it('returns entire object received from axios.post', async () => {
-		axios.post.mockResolvedValue({data: 'foobar'})
-		let res = await formatGroups({})
-		expect(res).toEqual({data: 'foobar'})
+		axios.post.mockResolvedValue({ data: 'foobar' })
+		const res = await formatGroups({})
+		expect(res).toEqual({ data: 'foobar' })
+	})
+})
+
+describe('formatUsers function', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method', () => {
+		const spy = jest.spyOn(axios, 'post')
+		try {
+			formatUsers({})
+		} catch (err) {
+			expect(spy).toBeCalled()
+		}
+	})
+	it('returns entire object received from axios.post', async () => {
+		axios.post.mockResolvedValue({ data: 'foobar' })
+		const res = await formatUsers({})
+		expect(res).toEqual({ data: 'foobar' })
 	})
 })
