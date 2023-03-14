@@ -43,6 +43,7 @@ export function getAll() {
 			if (resp.data.ocs.meta.status === 'ok') {
 				return resp.data.ocs.data
 			}
+			throw new Error()
 		})
 		.catch(error => {
 			throw new BadGetError('Error to get all spaces', error.reason)
