@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -240,7 +240,7 @@ describe('addGroupToGroupfolder', () => {
 		axios.post.mockImplementation(() => Promise.resolve(responseValue))
 		await expect(addGroupToGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
 	})
-	it('throws an error if request fails', async () => {
+	it('throws a proper error message if request fails', async () => {
 		axios.post.mockImplementation(() => Promise.reject(new Error()))
 		await expect(addGroupToGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add Space Manager group in the groupfolder')
 	})
@@ -248,5 +248,36 @@ describe('addGroupToGroupfolder', () => {
 		axios.post.mockResolvedValue(responseValue)
 		await addGroupToGroupfolder(1, 'SPACE-U-1')
 		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/1/groups', { group: 'SPACE-U-1' })
+	})
+})
+
+describe('addGroupToManageACLForGroupfolder', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method', () => {
+		const spy = jest.spyOn(axios, 'post')
+		addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(spy).toBeCalled()
+	})
+	it('calls API with proper parameters', async () => {
+		axios.post.mockResolvedValue(responseValue)
+		await addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/5/manageACL', {
+			mappingType: 'group',
+			mappingId: 'SPACE-U-5',
+			manageAcl: true,
+		})
+	})
+	it('returns data value of the object received from axios.post call', async () => {
+		axios.post.mockImplementation(() => Promise.resolve(responseValue))
+		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
+	})
+	it('throws proper error message if request fails', async () => {
+		axios.post.mockImplementation(() => Promise.reject(new Error()))
+		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add the Space Manager group in manage ACL groupfolder')
 	})
 })
