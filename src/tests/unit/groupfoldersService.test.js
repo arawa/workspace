@@ -87,13 +87,14 @@ describe('getAll function', () => {
 		axios.get.mockResolvedValue(responseValue)
 		const result = await getAll()
 		expect(Object.keys(result)).not.toContain('data')
+		expect(result).toEqual(responseValue.data.ocs.data)
 	})
 	it('throws error if resp status is not ok', async () => {
 		axios.get.mockResolvedValue(badResponseValue)
 		try {
 			await getAll()
 		} catch (err) {
-			expect(err).toMatch('error')
+			expect(err).toBeInstanceOf(Error)
 		}
 	})
 })
