@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -263,7 +263,7 @@ describe('addGroupToManageACLForGroupfolder', () => {
 		addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
 		expect(spy).toBeCalled()
 	})
-	it('calls API with proper parameters', async () => {
+	it('calls groupfolders API with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
 		await addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
 		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/5/manageACL', {
@@ -279,5 +279,36 @@ describe('addGroupToManageACLForGroupfolder', () => {
 	it('throws proper error message if request fails', async () => {
 		axios.post.mockImplementation(() => Promise.reject(new Error()))
 		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add the Space Manager group in manage ACL groupfolder')
+	})
+})
+
+describe('removeGroupToManageACLForGroupfolder', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method', () => {
+		const spy = jest.spyOn(axios, 'post')
+		removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(spy).toBeCalled()
+	})
+	it('calls groupfolders API with proper parameters', async () => {
+		axios.post.mockResolvedValue(responseValue)
+		await removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/5/manageACL', {
+			mappingType: 'group',
+			mappingId: 'SPACE-U-5',
+			manageAcl: false,
+		})
+	})
+	it('returns data value of the object received from axios.post call', async () => {
+		axios.post.mockImplementation(() => Promise.resolve(responseValue))
+		await expect(removeGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
+	})
+	it('throws proper error message if request fails', async () => {
+		axios.post.mockImplementation(() => Promise.reject(new Error()))
+		await expect(removeGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Impossible to remove the group from the advanced permissions.')
 	})
 })
