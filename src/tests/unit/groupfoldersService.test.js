@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -221,5 +221,32 @@ describe('enableAcl function', () => {
 	it('throws error if resp.status is not 200', async () => {
 		axios.post.mockResolvedValue({ status: 500, ...responseValue })
 		expect(async () => await enableAcl(1).toThrow())
+	})
+})
+
+describe('addGroupToGroupfolder', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method', () => {
+		const spy = jest.spyOn(axios, 'post')
+		addGroupToGroupfolder(1, 'SPACE-U-1')
+		expect(spy).toBeCalled()
+	})
+	it('returns data value of the object received from axios.post call', async () => {
+		axios.post.mockImplementation(() => Promise.resolve(responseValue))
+		await expect(addGroupToGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
+	})
+	it('throws an error if request fails', async () => {
+		axios.post.mockImplementation(() => Promise.reject(new Error()))
+		await expect(addGroupToGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add Space Manager group in the groupfolder')
+	})
+	it('calls proper API path and object as a parameter', async () => {
+		axios.post.mockResolvedValue(responseValue)
+		await addGroupToGroupfolder(1, 'SPACE-U-1')
+		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/1/groups', { group: 'SPACE-U-1' })
 	})
 })
