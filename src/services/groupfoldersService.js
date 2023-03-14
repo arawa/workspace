@@ -183,7 +183,7 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-			if (typeof typeof (vueInstance) !== 'undefined') {
+			if (typeof vueInstance !== 'undefined') {
 				const toastErrorToAddGroupToGroupfolder = new NotificationError(vueInstance)
 				toastErrorToAddGroupToGroupfolder.push({
 					title: t('workspace', 'Error groups'),
