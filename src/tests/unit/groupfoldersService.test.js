@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -67,6 +67,7 @@ const badResponseValue = {
 		ocs: {
 			meta: {
 				status: 'error',
+				statuscode: 400
 			},
 		},
 	},
@@ -314,5 +315,29 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 	it('throws proper error message if request fails', async () => {
 		axios.post.mockImplementation(() => Promise.reject(new Error()))
 		await expect(removeGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Impossible to remove the group from the advanced permissions.')
+	})
+})
+
+describe('createGroupfolder', () => {
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('calls axios.post method with proper parameters', async () => {
+		axios.post.mockResolvedValue(responseValue)
+		await createGroupfolder('foobar')
+		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders', {
+			mountpoint: 'foobar'
+		})
+	})
+	it('throws error if response status is not 200', async () => {
+		axios.post.mockResolvedValue(badResponseValue)
+		try {
+			await createGroupfolder('foobar')
+		} catch (err) {
+			expect(err).toBeInstanceOf(Error)
+		}
 	})
 })
