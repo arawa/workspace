@@ -3,7 +3,7 @@
 Hi. Software security researchers are welcome to help us find vulnerabilities in our Workspace application.
 
 If you find a bug that you think is distruptive or critical.
-You can submit us your it on GitHub with Issues and Pull Request or send us an email.
+You can open an Issue / Pull Request on the project repository or send us an email.
 
 # Reporting Procedures
 
@@ -132,7 +132,7 @@ But, in short, I created a function that parses all special characters before cr
 
 The hight and critical bugs are sensibles and using them hackers can get access and modify data, exploit or damage an application and so on.
 
-We ask that you do not share or publicize an unresolved vulnerability with others. Instead of creating an Issue or a Pull Request, please send a description of the issue to mail.
+We ask that you do not share or publicize an unresolved vulnerability with others. Instead of creating an Issue or a Pull Request, please send a description of the issue to email.
 
 ### Vulnerability threat levels
 
@@ -141,7 +141,7 @@ We ask that you do not share or publicize an unresolved vulnerability with other
 |Critical | Example : "0-day" attacks or the application is compromised |
 | Hight | Example : SQLi, CSRF, XSS, and so on.|
 
-### Send us a mail
+### Send us an email
 
 So please, it's very important to send us an email to security@arawa.fr following the template below for the message body.
 
