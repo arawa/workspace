@@ -341,3 +341,16 @@ describe('createGroupfolder', () => {
 		}
 	})
 })
+
+describe('destroy', () => {
+  beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+  it('calls axios.delete method with proper parameters', async () => {
+    axios.delete.mockResolvedValue(responseValue)
+    await 
+  })
+})
