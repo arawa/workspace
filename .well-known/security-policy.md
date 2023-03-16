@@ -3,17 +3,17 @@ Welcome dear users and contributors
 
 Software security researchers are welcome to help us in finding vulnerabilities in our Workspace application.
 
-If you find a bug that you consider distruptive or critical, you can open an Issue / Pull Request on the Workspace project repository or send us an email, depending on the bug's severity.
+If you find a bug that you consider distruptive or critical, you can open an Issue / Pull Request on the Workspace project repository or send us an email, depending on the bug's severity. (à revoir)
 
 # Reporting Procedures
-## Determine if you want to report a bug or a vulnerability in order to report it in the right way
-First, you need to determine the nature of the reported problem, so you know what reporting procedure you should follow.
+## Determine wether you want to report a bug or a vulnerability
+First, you need to determine the nature of the reported problem, so you know which reporting procedure you should follow.
 
-A bug is a functional or technical problem that affects the performance of the application. 
+A bug is a functional or technical problem that affects the performance or usability of the application. 
 Some bugs may turn out to be vulnerabilities that can lead to security breaches. A security breach is a security vulnerability that can be exploited to access sensitive information or harm the application. Vulnerabilities allow hackers to access and modify data, exploit or damage an application, etc.
 
 * a bug can be reported through an issue or corrected through a pull request
-* a vulnerability must be reported by email only. Indeed, making a vulnerability public increases the risks of attacking an application
+* **a vulnerability must be reported by email only**. Indeed, **making a vulnerability public increases the risks of the application beeing attacked**
 
 ## What should I do to report a vulnerability?
 
