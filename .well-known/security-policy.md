@@ -128,9 +128,9 @@ But, in short, I created a function that parses all special characters before cr
 
 7. You will be notified when we check your solution.
 
-## What should I do to report a Hight or Critical bug ?
+## What should I do to report a High or Critical bug ?
 
-The hight and critical bugs are sensibles and using them hackers can get access and modify data, exploit or damage an application and so on.
+The high and critical bugs are sensibles and using them hackers can get access and modify data, exploit or damage an application and so on.
 
 We ask that you do not share or publicize an unresolved vulnerability with others. Instead of creating an Issue or a Pull Request, please send a description of the issue to email.
 
@@ -139,7 +139,7 @@ We ask that you do not share or publicize an unresolved vulnerability with other
 | Level | Description |
 |:---|:---|
 |Critical | Example : "0-day" attacks or the application is compromised |
-| Hight | Example : SQLi, CSRF, XSS, and so on.|
+| High | Example : SQLi, CSRF, XSS, and so on.|
 
 ### Send us an email
 
