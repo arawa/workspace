@@ -20,10 +20,11 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
+import * as gfService from '../../services/groupfoldersService.js'
 
 jest.mock('axios')
 jest.mock('../../services/Notifications/NotificationError')
@@ -343,14 +344,49 @@ describe('createGroupfolder', () => {
 })
 
 describe('destroy', () => {
-  beforeEach(() => {
+	beforeEach(() => {
 		axios.mockClear()
 	})
 	afterEach(() => {
 		jest.resetAllMocks()
 	})
-  it('calls axios.delete method with proper parameters', async () => {
-    axios.delete.mockResolvedValue(responseValue)
-    await 
-  })
+	it('calls axios.delete method with proper parameters', async () => {
+		axios.delete.mockResolvedValue(responseValue)
+		await destroy('foobar')
+		expect(axios.delete).toHaveBeenCalledWith('/apps/workspace/api/delete/space', {
+			data: { workspace: 'foobar' }
+		})
+	})
+	it('calls axios.delete method 2 times', async () => {
+		const spy = jest.spyOn(axios, 'delete')
+		try {
+			await destroy('foobar')
+			expect(spy).toHaveBeenCalledTimes(2)
+		} catch {}
+	})
+	it('calls axios.delete 2 times and returns resp.data value', async () => {
+		const mockAxios = axios.delete.mockImplementationOnce(() => Promise.resolve({ status: 200, ...responseValue }))
+			.mockImplementationOnce(() => Promise.resolve(responseValue))
+		const result = await destroy('foobar')
+		expect(result).toEqual(responseValue.data)
+		expect(mockAxios).toHaveBeenCalledTimes(2)
+	})
+	it('returns result of first axios call if returned status is not 200', async () => {
+		axios.delete.mockResolvedValue({ status: 500, ...responseValue })
+		const result = await destroy('foobar')
+		expect(result).toEqual(responseValue.data)
+	})
 })
+
+// describe('rename', () => {
+// 	beforeEach(() => {
+// 		axios.mockClear()
+// 	})
+// 	afterEach(() => {
+// 		jest.resetAllMocks()
+// 	})
+// 	it('calls checkGroupfolderNameExist', () => { 
+
+// 	})
+
+// })
