@@ -132,4 +132,4 @@ sudo -u nginx /usr/local/bin/composer run test
 
 Please, read the [security.txt](.well-known/security.txt).
 
-If you want to report us a security issue. Please, read our [security-policy.txt](.well-known/security-policy.txt) file.
+If you want to report us a security issue. Please, read our [security-policy.md](.well-known/security-policy.md) file.
