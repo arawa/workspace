@@ -23,8 +23,6 @@
 import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
-import CheckGroupfolderNameExistError from '../../Errors/Groupfolders/CheckGroupfolderNameError.js'
-import * as gfService from '../../services/groupfoldersService.js'
 
 jest.mock('axios')
 jest.mock('../../services/Notifications/NotificationError')
@@ -109,11 +107,10 @@ describe('get function', () => {
 		jest.resetAllMocks()
 	})
 	it('calls axios.get method', () => {
-		const getSpy = jest.spyOn(axios, 'get')
-		try {
-			get(1)
-			expect(getSpy).toBeCalled()
-		} catch {}
+		// const spy = jest.spyOn(axios, 'get')
+		axios.get.mockResolvedValue(responseValue)
+		get(1)
+		expect(axios.get).toBeCalled()
 	})
 	it('returns data property of the object if response status is ok', async () => {
 		axios.get.mockResolvedValue(responseValue)
@@ -123,12 +120,9 @@ describe('get function', () => {
 	it('throws exception if response status is not ok', async () => {
 		const spy = jest.spyOn(NotificationError.prototype, 'push')
 		axios.get.mockResolvedValue(badResponseValue)
-		try {
-			await get(1)
-		} catch (err) {
-			expect(spy).toBeCalled()
-			expect(err).toBeInstanceOf(Error)
-		}
+		const promise = get(1)
+		await expect(promise).rejects.toThrow('Impossible to get the groupfolder')
+		expect(spy).toBeCalled()
 	})
 })
 
@@ -141,15 +135,14 @@ describe('formatGroups function', () => {
 	})
 	it('calls axios.post method', async () => {
 		const spy = jest.spyOn(axios, 'post')
-		try {
-			await formatGroups({})
-			expect(spy).toHaveBeenCalled()
-		} catch {}
+		axios.post.mockResolvedValue(responseValue)
+		await formatGroups({})
+		expect(spy).toHaveBeenCalled()
 	})
 	it('returns entire object received from axios.post', async () => {
-		axios.post.mockResolvedValue({ data: 'foobar' })
+		axios.post.mockResolvedValue(responseValue)
 		const res = await formatGroups({})
-		expect(res).toEqual({ data: 'foobar' })
+		expect(res).toEqual(responseValue)
 	})
 })
 
@@ -161,16 +154,14 @@ describe('formatUsers function', () => {
 		jest.resetAllMocks()
 	})
 	it('calls axios.post method', () => {
-		const spy = jest.spyOn(axios, 'post')
-		try {
-			formatUsers({})
-			expect(spy).toBeCalled()
-		} catch {}
+		axios.post.mockResolvedValue(responseValue)
+		formatUsers({})
+		expect(axios.post).toBeCalled()
 	})
 	it('returns entire object received from axios.post', async () => {
-		axios.post.mockResolvedValue({ data: 'foobar' })
+		axios.post.mockResolvedValue(responseValue)
 		const res = await formatUsers({})
-		expect(res).toEqual({ data: 'foobar' })
+		expect(res).toEqual(responseValue)
 	})
 })
 
@@ -183,22 +174,13 @@ describe('checkGroupfolderNameExist function', () => {
 	})
 	it('does call to axios.get method', () => {
 		const getSpy = jest.spyOn(axios, 'get')
-		try {
-			checkGroupfolderNameExist('foobar')
-			expect(getSpy).toBeCalled()
-		} catch {}
-	})
-	it('throws an error if name is in the obj received from getAll call', async () => {
-		const spy = jest.spyOn(CheckGroupfolderNameExistError.prototype, 'constructor')
 		axios.get.mockResolvedValue(responseValue)
-		try {
-			await checkGroupfolderNameExist('first')
-			expect(spy).toBeCalled()
-		} catch {}
+		checkGroupfolderNameExist('foobar')
+		expect(getSpy).toBeCalled()
 	})
-	it('returns Promise if name does not exist', async () => {
+	it('returns undefined if name does not exist', async () => {
 		axios.get.mockResolvedValue(responseValue)
-		await expect(checkGroupfolderNameExist('foobar')).resolves.not.toThrow()
+		await expect(checkGroupfolderNameExist('foobar')).resolves.toBe()
 	})
 })
 
@@ -216,11 +198,8 @@ describe('enableAcl function', () => {
 	})
 	it('throws error if resp.status is not 200', async () => {
 		axios.post.mockResolvedValue({ status: 500, ...responseValue })
-		try {
-			await enableAcl()
-		} catch (err) {
-			expect(err).toBeInstanceOf(Error)
-		}
+		const promise = enableAcl()
+		await expect(promise).rejects.toThrow('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?')
 	})
 })
 
@@ -233,10 +212,9 @@ describe('addGroupToGroupfolder', () => {
 	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
-		try {
-			addGroupToGroupfolder(1, 'SPACE-U-1')
-			expect(spy).toBeCalled()
-		} catch {}
+		axios.post.mockResolvedValue(responseValue)
+		addGroupToGroupfolder(1, 'SPACE-U-1')
+		expect(spy).toBeCalled()
 	})
 	it('returns data value of the object received from axios.post call', async () => {
 		axios.post.mockImplementation(() => Promise.resolve(responseValue))
@@ -262,10 +240,9 @@ describe('addGroupToManageACLForGroupfolder', () => {
 	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
-		try {
-			addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-			expect(spy).toBeCalled()
-		} catch {}
+		axios.post.mockResolvedValue(responseValue)
+		addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(spy).toBeCalled()
 	})
 	it('calls groupfolders API with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
@@ -295,10 +272,9 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
-		try {
-			removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-			expect(spy).toBeCalled()
-		} catch {}
+		axios.post.mockResolvedValue(responseValue)
+		removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
+		expect(spy).toBeCalled()
 	})
 	it('calls groupfolders API with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
@@ -335,11 +311,8 @@ describe('createGroupfolder', () => {
 	})
 	it('throws error if response status is not 200', async () => {
 		axios.post.mockResolvedValue(badResponseValue)
-		try {
-			await createGroupfolder('foobar')
-		} catch (err) {
-			expect(err).toBeInstanceOf(Error)
-		}
+		const promise = createGroupfolder('foobar')
+		await expect(promise).rejects.toThrow('Impossible to create a groupfolder')
 	})
 })
 
@@ -357,13 +330,6 @@ describe('destroy', () => {
 			data: { workspace: 'foobar' }
 		})
 	})
-	it('calls axios.delete method 2 times', async () => {
-		const spy = jest.spyOn(axios, 'delete')
-		try {
-			await destroy('foobar')
-			expect(spy).toHaveBeenCalledTimes(2)
-		} catch {}
-	})
 	it('calls axios.delete 2 times and returns resp.data value', async () => {
 		const mockAxios = axios.delete.mockImplementationOnce(() => Promise.resolve({ status: 200, ...responseValue }))
 			.mockImplementationOnce(() => Promise.resolve(responseValue))
@@ -377,16 +343,3 @@ describe('destroy', () => {
 		expect(result).toEqual(responseValue.data)
 	})
 })
-
-// describe('rename', () => {
-// 	beforeEach(() => {
-// 		axios.mockClear()
-// 	})
-// 	afterEach(() => {
-// 		jest.resetAllMocks()
-// 	})
-// 	it('calls checkGroupfolderNameExist', () => { 
-
-// 	})
-
-// })
