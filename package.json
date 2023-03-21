@@ -75,7 +75,7 @@
     "jest-serializer-vue": "^2.0.2",
     "jsdom": "^20.0.3",
     "jsdom-global": "^3.0.2",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.5",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.7.13",
     "webpack-node-externals": "^3.0.0"
