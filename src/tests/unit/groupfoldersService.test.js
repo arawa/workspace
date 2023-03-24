@@ -20,7 +20,7 @@
 *
 */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy } from '../../services/groupfoldersService.js'
+import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import NotificationError from '../../services/Notifications/NotificationError.js'
 
@@ -178,9 +178,10 @@ describe('checkGroupfolderNameExist function', () => {
 		checkGroupfolderNameExist('foobar')
 		expect(getSpy).toBeCalled()
 	})
-	it('returns undefined if name does not exist', async () => {
+	it('should be return false if new workspace name does not exist', async () => {
 		axios.get.mockResolvedValue(responseValue)
-		await expect(checkGroupfolderNameExist('foobar')).resolves.toBe()
+		const result = await checkGroupfolderNameExist('foobar')
+		expect(result).toBe(false)
 	})
 })
 
@@ -342,4 +343,32 @@ describe('destroy', () => {
 		const result = await destroy('foobar')
 		expect(result).toEqual(responseValue.data)
 	})
+})
+
+describe('rename', () => {
+	const workspace = {
+		color: '#d3a967', groupfolderId: 1, groups: { 'SPACE-GE-1': { gid: 'SPACE-GE-1', displayName: 'GE-1' }, 'SPACE-U-1': { gid: 'SPACE-U-1', displayName: 'U-1' } }, id: 1, isOpen: false, name: 'Bonjour', quota: '20GB', users: { 'celine.pariel': { uid: 'celine.pariel', name: 'Céline Pariel', email: null, subtitle: null, groups: ['SPACE-U-1'], role: 'user' } },
+	}
+
+	beforeEach(() => {
+		axios.mockClear()
+	})
+	afterEach(() => {
+		jest.resetAllMocks()
+	})
+	it('should call axios.get method', async () => {
+		const spy = jest.spyOn(axios, 'get')
+		axios.get.mockResolvedValue(responseValue)
+		axios.patch.mockResolvedValue({})
+		await rename(workspace, 'new')
+		expect(spy).toBeCalled()
+	})
+	it('should return undefined if workspace name already exist', async () => {
+		responseValue.data.ocs.data[1].mount_point = 'Bonjour'
+		axios.get.mockResolvedValue(responseValue)
+		axios.patch.mockResolvedValue({})
+		const result = await rename(workspace, 'Bonjour')
+		expect(result).toEqual(undefined)
+	})
+
 })
