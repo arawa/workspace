@@ -88,9 +88,7 @@
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
       @close="toggleShowDelWorkspaceModal">
-      <div class="modal__content">
-				<h2>Are you sure you want to delete the Workspace?</h2>
-      </div>
+      <RemoveSpace :space-name="$route.params.space" />
     </NcModal>
 	</div>
 </template>
@@ -105,6 +103,7 @@ import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename } from './services/groupfoldersService.js'
 
@@ -118,6 +117,7 @@ export default {
 		NcModal,
 		NcMultiselect,
 		SelectUsers,
+    RemoveSpace,
 		UserTable,
 	},
 	data() {
