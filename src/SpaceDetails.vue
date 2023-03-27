@@ -1,23 +1,23 @@
 <!--
-  @copyright Copyright (c) 2017 Arawa
+	@copyright Copyright (c) 2017 Arawa
 
-  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+	@author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+	@author 2021 Cyrille Bollu <cyrille@bollu.be>
 
-  @license GNU AGPL version 3 or any later version
+	@license GNU AGPL version 3 or any later version
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -75,7 +75,7 @@
 					</NcActionInput>
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
-						@click="deleteSpace">
+						@click="toggleShowDelWorkspaceModal">
 						{{ t('workspace', 'Delete space') }}
 					</NcActionButton>
 				</NcActions>
@@ -86,6 +86,12 @@
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
+		<NcModal v-if="showDelWorkspaceModal"
+      @close="toggleShowDelWorkspaceModal">
+      <div class="modal__content">
+				<h2>Are you sure you want to delete the Workspace?</h2>
+      </div>
+    </NcModal>
 	</div>
 </template>
 
@@ -119,6 +125,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			showDelWorkspaceModal: false,
 			isESR: false,
 		}
 	},
@@ -258,6 +265,9 @@ export default {
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
+		},
+		toggleShowDelWorkspaceModal() {
+			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
