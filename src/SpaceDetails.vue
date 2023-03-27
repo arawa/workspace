@@ -87,9 +87,9 @@
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-      @close="toggleShowDelWorkspaceModal">
-      <RemoveSpace :space-name="$route.params.space" />
-    </NcModal>
+		 @close="toggleShowDelWorkspaceModal">
+		 <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+		</NcModal>
 	</div>
 </template>
 
@@ -117,7 +117,7 @@ export default {
 		NcModal,
 		NcMultiselect,
 		SelectUsers,
-    RemoveSpace,
+		RemoveSpace,
 		UserTable,
 	},
 	data() {
@@ -145,22 +145,17 @@ export default {
 		// Deletes a space
 		deleteSpace() {
 			const space = this.$route.params.space
-
-			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
-
-			if (isDeleted) {
-				destroy(this.$store.state.spaces[space])
-					.then(resp => {
-						if (resp.http.statuscode === 200) {
-							this.$store.dispatch('removeSpace', {
-								space: this.$store.state.spaces[space],
-							})
-							this.$router.push({
-								path: '/',
-							})
-						}
-					})
-			}
+			destroy(this.$store.state.spaces[space])
+				.then(resp => {
+					if (resp.http.statuscode === 200) {
+						this.$store.dispatch('removeSpace', {
+							space: this.$store.state.spaces[space],
+						})
+						this.$router.push({
+							path: '/',
+						})
+					}
+				})
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
