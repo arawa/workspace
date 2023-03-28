@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import NcActionButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 export default {
 	name: 'RemoveSpace',
 	components: {
