@@ -87,7 +87,8 @@
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-       size="small"
+      style="min-heigth: 8rem;"
+      size="small"
 		  @close="toggleShowDelWorkspaceModal">
 		  <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 		</NcModal>
@@ -329,5 +330,7 @@ export default {
 .user-actions {
 	flex-flow: row-reverse;
 }
-
+.modal-wrapper--small .modal-container {
+  min-height: 12rem !important;
+}
 </style>
