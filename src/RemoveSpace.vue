@@ -44,11 +44,11 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+  width: 600px !important;
 }
 .modal__content h2 {
   font-weight: bold;
   font-size: 16px;
-  width: 80%;
   text-align: center;
 }
 .remove-space-actions {
