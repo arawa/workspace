@@ -87,8 +87,9 @@
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-		 @close="toggleShowDelWorkspaceModal">
-		 <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+       size="small"
+		  @close="toggleShowDelWorkspaceModal">
+		  <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 		</NcModal>
 	</div>
 </template>

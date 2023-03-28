@@ -4,24 +4,26 @@
 			{{ t('workspace', 'Are you sure you want to delete the {spaceName} space ?', { spaceName }) }}
 		</h2>
 		<div class="remove-space-actions">
-			<NcActions style="display: flex; align-items: center;">
-				<NcActionButton @click="handleCancel">
-					{{ t('workspace', 'Cancel') }}
-				</NcActionButton>
-				<NcActionButton :close-after-click="true" @click="handleDelete">
-					{{ t('workspace', 'Delete') }}
-				</NcActionButton>
-			</NcActions>
+			<NcButton
+				type="success"
+				@click="handleCancel()">
+				{{ t('workspace', 'Cancel') }}
+			</NcButton>
+			<NcButton
+				type="error"
+				@click="handleDelete()">
+				{{ t('workspace', 'Delete space') }}
+			</NcButton>
 		</div>
 	</div>
 </template>
 
 <script>
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 export default {
 	name: 'RemoveSpace',
 	components: {
-		NcActionButton,
+		NcButton,
 	},
 	props: {
 		spaceName: { type: String, default: '' },
@@ -32,25 +34,28 @@ export default {
 		},
 		handleDelete() {
 			this.$emit('handle-delete')
-		}
+		},
 	},
 }
 </script>
 <style>
-div.modal__content {
+.modal__content {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin: 0 auto;
-	font-weight: bold;
-	font-size: 18px;
 }
-div.remove-space-actions {
-	margin-top: 2rem;
+.modal__content h2 {
+  font-weight: bold;
+  font-size: 16px;
+  width: 80%;
+  text-align: center;
+}
+.remove-space-actions {
+	margin-top: 1.5rem;
 	display: flex;
 }
 div.remove-space-actions button {
-  margin: 0 2rem;
+	margin: 0 1rem;
 }
 </style>
