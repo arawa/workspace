@@ -5,7 +5,7 @@
 		</h2>
 		<div class="remove-space-actions">
 			<NcButton
-				type="success"
+				type="secondary"
 				@click="handleCancel()">
 				{{ t('workspace', 'Cancel') }}
 			</NcButton>
@@ -49,7 +49,10 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 600px !important;
+  width: 600px !important;
+}
+.modal-container {
+  min-width: 600px;
 }
 .modal__content h2 {
 	font-weight: bold;
@@ -60,7 +63,7 @@ export default {
 	margin-top: 1.5rem;
 	display: flex;
 }
-div.remove-space-actions button {
+.remove-space-actions button {
 	margin: 0 1rem;
 }
 </style>
