@@ -1,8 +1,8 @@
 /**
  * @copyright Copyright (c) 2017 Arawa
 *
-* @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-*
+* @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+* @author 2023 Andrei Zheksi <andrei.zheksi@arawa.fr>
 * @license AGPL-3.0-or-later
 *
 * This program is free software: you can redistribute it and/or modify
