@@ -1,23 +1,23 @@
 <!--
-  @copyright Copyright (c) 2017 Arawa
+	@copyright Copyright (c) 2017 Arawa
 
-  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+	@author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+	@author 2021 Cyrille Bollu <cyrille@bollu.be>
 
-  @license GNU AGPL version 3 or any later version
+	@license GNU AGPL version 3 or any later version
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -118,6 +118,8 @@ import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NotificationError from './services/Notifications/NotificationError.js'
+import { showError } from '@nextcloud/dialogs'
+import '@nextcloud/dialogs/dist/index.css'
 import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
@@ -271,12 +273,15 @@ export default {
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
-				const toastSpacenameEmpty = new NotificationError(this)
-				toastSpacenameEmpty.push({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'Please specify a name.'),
-					type: 'error',
-				})
+				const errorMsg = t('workspace', 'Please specify a name.')
+				showError(errorMsg)
+
+				// const toastSpacenameEmpty = new NotificationError(this)
+				// toastSpacenameEmpty.push({
+				// 	title: t('workspace', 'Error'),
+				// 	text: t('workspace', 'Please specify a name.'),
+				// 	type: 'error',
+				// })
 				return
 			}
 			name = deleteBlankSpacename(name)
