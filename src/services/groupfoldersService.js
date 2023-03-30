@@ -32,6 +32,8 @@ import CreateGroupfolderError from '../Errors/Groupfolders/BadCreateError.js'
 import EnableAclGroupfolderError from '../Errors/Groupfolders/EnableAclGroupfolderError.js'
 import GetGroupfolderError from '../Errors/Groupfolders/GetGroupfolderError.js'
 import NotificationError from './Notifications/NotificationError.js'
+import { showError } from '@nextcloud/dialogs'
+import '@nextcloud/dialogs/dist/index.css'
 import RemoveGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/RemoveGroupToManageACLForGroupfolderError.js'
 
 /**
