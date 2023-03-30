@@ -75,9 +75,6 @@ describe('getAll function', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.get method', () => {
 		const getSpy = jest.spyOn(axios, 'get')
 		getAll()
@@ -103,9 +100,6 @@ describe('get function', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.get method', () => {
 		// const spy = jest.spyOn(axios, 'get')
 		axios.get.mockResolvedValue(responseValue)
@@ -130,9 +124,6 @@ describe('formatGroups function', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.post method', async () => {
 		const spy = jest.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
@@ -150,9 +141,6 @@ describe('formatUsers function', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.post method', () => {
 		axios.post.mockResolvedValue(responseValue)
 		formatUsers({})
@@ -168,9 +156,6 @@ describe('formatUsers function', () => {
 describe('checkGroupfolderNameExist function', () => {
 	beforeEach(() => {
 		axios.mockClear()
-	})
-	afterEach(() => {
-		jest.resetAllMocks()
 	})
 	it('does call to axios.get method', () => {
 		const getSpy = jest.spyOn(axios, 'get')
@@ -188,9 +173,6 @@ describe('checkGroupfolderNameExist function', () => {
 describe('enableAcl function', () => {
 	beforeEach(() => {
 		axios.mockClear()
-	})
-	afterEach(() => {
-		jest.resetAllMocks()
 	})
 	it('calls axios.post method', async () => {
 		axios.post.mockResolvedValue({ status: 200, ...responseValue })
@@ -236,9 +218,6 @@ describe('addGroupToManageACLForGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
@@ -268,9 +247,6 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	afterEach(() => {
-		jest.resetAllMocks()
-	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
@@ -299,9 +275,6 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 describe('createGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
-	})
-	afterEach(() => {
-		jest.resetAllMocks()
 	})
 	it('calls axios.post method with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
