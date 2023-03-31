@@ -22,5 +22,18 @@
  */
 
 const webpackConfig = require('@nextcloud/webpack-vue-config')
+const path = require('path')
+const appId = 'workspace'
+
+webpackConfig.entry = {
+	main: {
+		import: path.join(__dirname, 'src', 'main.js'),
+		filename: appId + '-main.js',
+	},
+	sidebar: {
+		import: path.join(__dirname, 'src', 'sidebar.js'),
+		filename: appId + '-sidebar.js',
+	},
+}
 
 module.exports = webpackConfig

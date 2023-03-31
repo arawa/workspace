@@ -22,17 +22,21 @@
 
 namespace OCA\Workspace\AppInfo;
 
+use OCA\Files\Event\LoadSidebar;
+use OCA\Workspace\Listener\LoadSidebarScripts;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
 
 	public function __construct(array $urlParams = []) {
@@ -65,5 +69,9 @@ class Application extends App {
 
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
+        $context->registerEventListener(LoadSidebar::class, LoadSidebarScripts::class);
 	}
+
+    public function boot(IBootContext $context): void {
+    }
 }
