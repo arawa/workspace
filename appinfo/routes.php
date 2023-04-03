@@ -130,6 +130,11 @@ return [
 			'url' => '/api/group/delUser/{spaceId}',
 			'verb' => 'PATCH',
 		],
+		[
+			'name' => 'workspacefichier#getGroupFolderId',
+			'url' => '/ocfilecache/files/{folderId}/path',
+			'verb' => 'GET',
+		],
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that
 		// don't have a route registered here redirect to NC's general homepage upon refresh)
