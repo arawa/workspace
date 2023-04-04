@@ -1,23 +1,23 @@
 <!--
-  @copyright Copyright (c) 2017 Arawa
+	@copyright Copyright (c) 2017 Arawa
 
-  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+	@author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+	@author 2021 Cyrille Bollu <cyrille@bollu.be>
 
-  @license GNU AGPL version 3 or any later version
+	@license GNU AGPL version 3 or any later version
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -75,7 +75,7 @@
 					</NcActionInput>
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
-						@click="deleteSpace">
+						@click="toggleShowDelWorkspaceModal">
 						{{ t('workspace', 'Delete space') }}
 					</NcActionButton>
 				</NcActions>
@@ -85,6 +85,12 @@
 		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
+		</NcModal>
+		<NcModal v-if="showDelWorkspaceModal"
+      style="min-heigth: 8rem;"
+      size="small"
+		  @close="toggleShowDelWorkspaceModal">
+		  <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 		</NcModal>
 	</div>
 </template>
@@ -99,6 +105,7 @@ import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename } from './services/groupfoldersService.js'
 
@@ -112,6 +119,7 @@ export default {
 		NcModal,
 		NcMultiselect,
 		SelectUsers,
+		RemoveSpace,
 		UserTable,
 	},
 	data() {
@@ -119,6 +127,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			showDelWorkspaceModal: false,
 			isESR: false,
 		}
 	},
@@ -138,22 +147,17 @@ export default {
 		// Deletes a space
 		deleteSpace() {
 			const space = this.$route.params.space
-
-			const isDeleted = window.confirm(t('workspace', 'Are you sure you want to delete the {space} space ?', { space }))
-
-			if (isDeleted) {
-				destroy(this.$store.state.spaces[space])
-					.then(resp => {
-						if (resp.http.statuscode === 200) {
-							this.$store.dispatch('removeSpace', {
-								space: this.$store.state.spaces[space],
-							})
-							this.$router.push({
-								path: '/',
-							})
-						}
-					})
-			}
+			destroy(this.$store.state.spaces[space])
+				.then(resp => {
+					if (resp.http.statuscode === 200) {
+						this.$store.dispatch('removeSpace', {
+							space: this.$store.state.spaces[space],
+						})
+						this.$router.push({
+							path: '/',
+						})
+					}
+				})
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
@@ -251,6 +255,9 @@ export default {
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
+		toggleShowDelWorkspaceModal() {
+			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
+		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
 			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
@@ -315,5 +322,7 @@ export default {
 .user-actions {
 	flex-flow: row-reverse;
 }
-
+.modal-wrapper--small .modal-container {
+  min-height: 12rem !important;
+}
 </style>
