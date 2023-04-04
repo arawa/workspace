@@ -43,6 +43,7 @@ export function getAll() {
 			if (resp.data.ocs.meta.status === 'ok') {
 				return resp.data.ocs.data
 			}
+			throw new Error()
 		})
 		.catch(error => {
 			throw new BadGetError('Error to get all spaces', error.reason)
@@ -112,34 +113,42 @@ export function formatUsers(space) {
 /**
  * @param {string} spaceName it's the name of space to check
  * @param {object} vueInstance it's the instance of vue
- * @return {Promise}
+ * @return {boolean}
  * @throws {CheckGroupfolderNameExistError}
  */
-export function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
-	return getAll()
+export async function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
+	const duplicateExists = await getAll()
 		.then(groupfolders => {
 			for (const folderId in groupfolders) {
 				if (spaceName.toLowerCase() === groupfolders[folderId].mount_point.toLowerCase()) {
-					throw new CheckGroupfolderNameExistError('The groupfolder with this name : ' + spaceName + ' already exist')
+					return true
 				}
 			}
+			return false
 		})
 		.catch((error) => {
-			if (typeof (vueInstance) !== 'undefined') {
-				const toastSpaceOrGroupfoldersExisting = new NotificationError(vueInstance)
-				toastSpaceOrGroupfoldersExisting.push({
-					title: t('workspace', 'Error - Creating space'),
-					text: t(
-						'workspace',
-						'This space or groupfolder already exist. Please, input another space.'
-						+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
-						+ '\nMake sure you the groupfolder doesn\'t exist.',
-					),
-					duration: 6000,
-				})
-			}
-			throw new CheckGroupfolderNameExistError(error)
+			console.error(error)
 		})
+
+	if (duplicateExists) {
+		if (typeof (vueInstance) !== 'undefined') {
+			const toastSpaceOrGroupfoldersExisting = new NotificationError(vueInstance)
+			toastSpaceOrGroupfoldersExisting.push({
+				title: t('workspace', 'Error - Creating space'),
+				text: t(
+					'workspace',
+					'This space or groupfolder already exist. Please, input another space.'
+					+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
+					+ '\nMake sure you the groupfolder doesn\'t exist.',
+				),
+				duration: 6000,
+			})
+			throw new CheckGroupfolderNameExistError('This space or groupfolder already exist. Please, input another space.'
+			+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
+			+ '\nMake sure you the groupfolder doesn\'t exist.')
+		}
+	}
+	return false
 }
 
 /**
@@ -182,7 +191,7 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-			if (typeof typeof (vueInstance) !== 'undefined') {
+			if (typeof vueInstance !== 'undefined') {
 				const toastErrorToAddGroupToGroupfolder = new NotificationError(vueInstance)
 				toastErrorToAddGroupToGroupfolder.push({
 					title: t('workspace', 'Error groups'),
@@ -328,9 +337,10 @@ export function destroy(workspace) {
  *
  * @param {object} workspace it's the object relative to workspace
  * @param {string} newSpaceName it's the new name for the workspace
+ * @param {object} vueInstance it's an instance from Vue
  * @return {Promise}
  */
-export function rename(workspace, newSpaceName) {
+export async function rename(workspace, newSpaceName, vueInstance = undefined) {
 	// Response format to return
 	const respFormat = {
 		data: {},
@@ -338,12 +348,8 @@ export function rename(workspace, newSpaceName) {
 	respFormat.data.statuscode = 500
 	respFormat.data.message = 'Rename the space is impossible.'
 
-	if (!checkGroupfolderNameExist(workspace.name)) {
-		respFormat.data.statuscode = 409
-		respFormat.data.message = 'The space name already exist. We cannot rename with this name.'
-		console.error('The groupfolder name already exist. Please, choose another name to rename your space.')
-		return respFormat
-	}
+	await checkGroupfolderNameExist(newSpaceName, vueInstance)
+
 	newSpaceName = deleteBlankSpacename(newSpaceName)
 	// Update space side
 	const workspaceUpdated = axios.patch(generateUrl('/apps/workspace/api/space/rename'),
