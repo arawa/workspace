@@ -101,7 +101,10 @@ export default {
 				console.log('Group ' + gid + ' created')
 			})
 			.catch((e) => {
-				context.commit('removeGroupFromSpace', { name, gid })
+				// get 403 status if usergroup already exists
+				if (e.response.status !== 403) {
+					context.commit('removeGroupFromSpace', { name, gid })
+				}
 				this._vm.$notify({
 					title: t('workspace', 'Network error'),
 					text: t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e,
