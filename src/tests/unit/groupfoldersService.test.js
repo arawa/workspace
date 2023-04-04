@@ -101,7 +101,6 @@ describe('get function', () => {
 		axios.mockClear()
 	})
 	it('calls axios.get method', () => {
-		// const spy = jest.spyOn(axios, 'get')
 		axios.get.mockResolvedValue(responseValue)
 		get(1)
 		expect(axios.get).toBeCalled()
@@ -189,9 +188,6 @@ describe('enableAcl function', () => {
 describe('addGroupToGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
-	})
-	afterEach(() => {
-		jest.resetAllMocks()
 	})
 	it('calls axios.post method', () => {
 		const spy = jest.spyOn(axios, 'post')
@@ -325,9 +321,6 @@ describe('rename', () => {
 
 	beforeEach(() => {
 		axios.mockClear()
-	})
-	afterEach(() => {
-		jest.resetAllMocks()
 	})
 	it('should call axios.get method', async () => {
 		const spy = jest.spyOn(axios, 'get')
