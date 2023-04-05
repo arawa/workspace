@@ -25,6 +25,7 @@ import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
 import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import NotificationError from '../services/Notifications/NotificationError.js'
 import router from '../router.js'
 
 export default {
@@ -79,11 +80,21 @@ export default {
 			})
 		})
 	},
-	// Creates a group and navigates to its details page
-	createGroup(context, { name, gid }) {
+	  // Creates a group and navigates to its details page
+	  createGroup(context, { name, gid, vueInstance = undefined }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
 		gid = gid + '-' + space.id
+
+		const groups = Object.keys(space.groups)
+		if (groups.includes(gid)) {
+			const duplicateError = new NotificationError(vueInstance)
+			duplicateError.push({
+				title: t('workspace', 'Duplication of groups'),
+				text: t('workspace', 'The group already exists.'),
+			})
+			return
+		}
 
 		// Creates group in frontend
 		context.commit('addGroupToSpace', { name, gid })
