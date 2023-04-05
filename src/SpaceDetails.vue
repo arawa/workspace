@@ -166,7 +166,7 @@ export default {
 			}
 
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid, vueInstance: this })
 		},
 		onSpaceRename(e) {
 			// Hides ActionInput

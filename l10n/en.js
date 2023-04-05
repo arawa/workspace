@@ -19,6 +19,8 @@ OC.L10N.register(
 		'return to home': 'return to home',
 		'Email': 'Emails',
 		'Groups': 'Groups',
+		'Duplication of groups': 'Duplication of groups',
+		'The group already exists.': 'The group already exists.',
 		'Make administrator': 'Assign as Workspace manager',
 		'Error to rename space': 'Error to rename space',
 		'The space name already exist. We cannot rename with this name.': 'The space name already exist. We cannot rename with this name.',
