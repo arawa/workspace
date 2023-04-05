@@ -340,15 +340,13 @@ export function destroy(workspace) {
  * @param {object} vueInstance it's an instance from Vue
  * @return {Promise}
  */
-export async function rename(workspace, newSpaceName, vueInstance = undefined) {
+export function rename(workspace, newSpaceName, vueInstance = undefined) {
 	// Response format to return
 	const respFormat = {
 		data: {},
 	}
 	respFormat.data.statuscode = 500
 	respFormat.data.message = 'Rename the space is impossible.'
-
-	await checkGroupfolderNameExist(newSpaceName, vueInstance)
 
 	newSpaceName = deleteBlankSpacename(newSpaceName)
 	// Update space side
