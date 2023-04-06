@@ -134,7 +134,7 @@ export async function checkGroupfolderNameExist(spaceName, vueInstance = undefin
 		if (typeof (vueInstance) !== 'undefined') {
 			const toastSpaceOrGroupfoldersExisting = new NotificationError(vueInstance)
 			toastSpaceOrGroupfoldersExisting.push({
-				title: t('workspace', 'Error - Creating space'),
+				title: t('workspace', 'Error - Duplicate space name'),
 				text: t(
 					'workspace',
 					'This space or groupfolder already exist. Please, input another space.'

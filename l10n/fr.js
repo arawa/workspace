@@ -52,7 +52,7 @@ OC.L10N.register(
 		'Start typing to lookup users': 'Commencez à saisir du texte pour rechercher des utilisateurs',
 		'remove users from selection': 'retirer l\'utilisateur de la sélection',
 		'Workspace name': "Nom de l'espace de travail",
-		'Error - Creating space': 'Erreur - Création d\'un espace de travail',
+		'Error - Duplicate space name': 'Erreur - Duplication de nom de l\'espace de travail',
 		'Error - This workspace name already exists': 'Erreur - Ce nom d\'espace de travail existe déjà',
 		'No spaces': 'Aucun espace de travail',
 		'You have not yet created any workspace': 'Vous n\'avez pas encore créé d\'espace de travail',

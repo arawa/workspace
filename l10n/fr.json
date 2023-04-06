@@ -31,6 +31,7 @@
 	"Error to rename space": "Erreur pour renommer l'espace de travail",
 	"The space name already exist. We cannot rename with this name.": "Le nom de l'espace de travail existe déjà. Vous ne pouvez pas le renommer avec ce nom.",
 	"Error 403": "Erreur 403",
+	"Error - Duplicate space name": "Erreur - Duplication de nom de l'espace de travail",
 	"Error - This workspace name already exists": "Erreur - Ce nom d'espace de travail existe déjà",
 	"Please enter a new workspace name. Please note that workspace names are not case sensitive (france and FRANCE are considered the same workspace name)": "Veuillez saisir un nouveau nom d'espace de travail. Attention, les noms d'espaces de travail ne sont pas sensibles à la casse (france et FRANCE sont considérés comme un même nom d'espace de travail)",
 	"return to home": "retourner à l'accueil",
