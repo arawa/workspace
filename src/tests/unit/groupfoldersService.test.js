@@ -322,16 +322,23 @@ describe('rename', () => {
 	beforeEach(() => {
 		axios.mockClear()
 	})
-	it('should call axios.get method', async () => {
-		const spy = jest.spyOn(axios, 'get')
-		axios.get.mockResolvedValue(responseValue)
-		axios.patch.mockResolvedValue({})
+	it('the requests relative to the rename function should be called', async () => {
+		const spyPatch = jest.spyOn(axios, 'patch')
+		axios.patch.mockResolvedValue({
+			data: {
+				statuscode: 204,
+				space: {},
+			},
+		})
+		const spyPost = jest.spyOn(axios, 'post')
+		axios.post.mockResolvedValue({})
 		await rename(workspace, 'new')
-		expect(spy).toBeCalled()
+		expect(spyPatch).toBeCalled()
+		expect(spyPost).toBeCalled()
 	})
 	it('should return undefined if workspace name already exist', async () => {
 		responseValue.data.ocs.data[1].mount_point = 'Bonjour'
-		axios.get.mockResolvedValue(responseValue)
+		// axios.get.mockResolvedValue(responseValue)
 		axios.patch.mockResolvedValue({})
 		const result = await rename(workspace, 'Bonjour')
 		expect(result).toEqual(undefined)

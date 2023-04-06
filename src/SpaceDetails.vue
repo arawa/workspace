@@ -107,7 +107,7 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { destroy, rename } from './services/groupfoldersService.js'
+import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 
 export default {
 	name: 'SpaceDetails',
@@ -172,7 +172,7 @@ export default {
 			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid, vueInstance: this })
 		},
-		onSpaceRename(e) {
+		async onSpaceRename(e) {
 			// Hides ActionInput
 			this.toggleRenameSpace()
 
@@ -187,39 +187,45 @@ export default {
 					duration: 6000,
 				})
 			}
+
+			const newSpaceName = e.target[0].value
+
+			await checkGroupfolderNameExist(newSpaceName, this)
+
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			rename(this.$store.state.spaces[oldSpaceName], e.target[0].value, this)
-				.then(resp => {
-					const data = resp.data
-					if (data.statuscode === 204) {
-						const space = { ...this.$store.state.spaces[oldSpaceName] }
-						space.name = data.space
-						space.groups = data.groups
-						this.$store.dispatch('updateSpace', {
-							space,
-						})
-						this.$store.dispatch('removeSpace', {
-							space: this.$store.state.spaces[oldSpaceName],
-						})
-						this.$router.push({
-							path: `/workspace/${space.name}`,
-						})
-					}
-					if (data.statuscode === 401) {
-						// TODO: May be to print an error message temporary
-						console.error(data.message)
-					}
-					if (data.statuscode === 400) {
-						this.$notify({
-							title: t('workspace', 'Error to rename space'),
-							text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
-							type: 'error',
-							duration: 6000,
-						})
-					}
+			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName, this)
+			responseRename = responseRename.data
+
+			if (responseRename.statuscode === 204) {
+				const space = { ...this.$store.state.spaces[oldSpaceName] }
+				space.name = responseRename.space
+				space.groups = responseRename.groups
+				this.$store.dispatch('updateSpace', {
+					space,
 				})
+				this.$store.dispatch('removeSpace', {
+					space: this.$store.state.spaces[oldSpaceName],
+				})
+				this.$router.push({
+					path: `/workspace/${space.name}`,
+				})
+			}
+
+			if (responseRename.statuscode === 401) {
+				// TODO: May be to print an error message temporary
+				console.error(responseRename.message)
+			}
+
+			if (responseRename.statuscode === 400) {
+				this.$notify({
+					title: t('workspace', 'Error to rename space'),
+					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
+					type: 'error',
+					duration: 6000,
+				})
+			}
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {

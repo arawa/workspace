@@ -55,7 +55,7 @@ OC.L10N.register(
 		'There are no users in this space/group yet': 'There are no users in this space/group yet',
 		'Start typing to lookup users': 'Start typing to lookup users',
 		'remove users from selection': 'remove users from selection',
-		'Error - Creating space': 'Error - Creating space',
+		'Error - Duplicate space name': 'Error - Duplicate space name',
 		'Error - This workspace name already exists': 'Error - This workspace name already exists',
 		'No spaces': 'No spaces',
 		'You have not yet created any workspace': 'You have not yet created any workspace',

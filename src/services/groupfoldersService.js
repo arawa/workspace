@@ -134,7 +134,7 @@ export async function checkGroupfolderNameExist(spaceName, vueInstance = undefin
 		if (typeof (vueInstance) !== 'undefined') {
 			const toastSpaceOrGroupfoldersExisting = new NotificationError(vueInstance)
 			toastSpaceOrGroupfoldersExisting.push({
-				title: t('workspace', 'Error - Creating space'),
+				title: t('workspace', 'Error - Duplicate space name'),
 				text: t(
 					'workspace',
 					'This space or groupfolder already exist. Please, input another space.'
@@ -340,15 +340,13 @@ export function destroy(workspace) {
  * @param {object} vueInstance it's an instance from Vue
  * @return {Promise}
  */
-export async function rename(workspace, newSpaceName, vueInstance = undefined) {
+export function rename(workspace, newSpaceName, vueInstance = undefined) {
 	// Response format to return
 	const respFormat = {
 		data: {},
 	}
 	respFormat.data.statuscode = 500
 	respFormat.data.message = 'Rename the space is impossible.'
-
-	await checkGroupfolderNameExist(newSpaceName, vueInstance)
 
 	newSpaceName = deleteBlankSpacename(newSpaceName)
 	// Update space side
