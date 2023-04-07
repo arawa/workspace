@@ -25,7 +25,10 @@
 
 namespace OCA\Workspace\Migration;
 
+use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\ManagersWorkspace;
+use OCP\AppFramework\Services\IAppConfig as ServicesIAppConfig;
+use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -33,7 +36,9 @@ use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(private IGroupManager $groupManager,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger,
+        private IAppConfig $appConfigManager,
+        private ServicesIAppConfig $appConfig) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 
@@ -56,5 +61,11 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 		} else {
 			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
 		}
+
+        if ($this->appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP') === ''
+            && $this->appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP') === '') {
+            $this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
+            $this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'Users-');
+        }
 	}
 }

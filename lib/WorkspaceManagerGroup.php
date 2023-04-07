@@ -28,14 +28,16 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http;
 use OCA\Workspace\GroupsWorkspace;
+use OCP\AppFramework\Services\IAppConfig;
 
 class WorkspaceManagerGroup extends GroupsWorkspace
 {
 
     private IGroupManager $groupManager;
 
-    public function __construct(IGroupManager $groupManager)
+    public function __construct(IGroupManager $groupManager, IAppConfig $appConfig)
     {
+        parent::__construct($appConfig);
         $this->groupManager = $groupManager;
     }
 
@@ -57,7 +59,7 @@ class WorkspaceManagerGroup extends GroupsWorkspace
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
 		}
 
-        $group->setDisplayName(self::DISPLAY_PREFIX_MANAGER_GROUP . $space->getSpaceName());
+        $group->setDisplayName(self::getDisplayPrefixManagerGroup() . $space->getSpaceName());
 
         return $group;
     }
