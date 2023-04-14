@@ -101,7 +101,7 @@ return [
 		],
 		[
 			'name' => 'group#create',
-			'url' => '/api/group/{gid}',
+			'url' => '/api/group',
 			'verb' => 'POST',
 		],
 		[

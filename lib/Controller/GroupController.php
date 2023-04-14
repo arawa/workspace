@@ -42,6 +42,11 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
+    private const DEFAULT = [
+        'gid' => null,
+        'displayName' => null,
+    ];
+
 	public function __construct(
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
@@ -60,20 +65,30 @@ class GroupController extends Controller {
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
-	 * @var string $gid
+	 * @var array $data [
+     *      "gid" => 'Space01',
+     *      "displayName" => 'Space01'
+     * ]
 	 * @var string $spaceId for Middleware
 	 *
 	 */
-	public function create(string $gid): JSONResponse {
-		if (!is_null($this->groupManager->get($gid))) {
-			return new JSONResponse(['Group ' . $gid . ' already exists'], Http::STATUS_FORBIDDEN);
+	public function create(array $data = []): JSONResponse {
+
+        $data = array_merge(self::DEFAULT, $data);
+
+		if (!is_null($this->groupManager->get($data['gid']))) {
+			return new JSONResponse(['Group ' . $data['gid'] . ' already exists'], Http::STATUS_FORBIDDEN);
 		}
 
 		// Creates group
-		$NCGroup = $this->groupManager->createGroup($gid);
+		$NCGroup = $this->groupManager->createGroup($data['gid']);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Could not create group ' . $gid], Http::STATUS_FORBIDDEN);
+			return new JSONResponse(['Could not create group ' . $data['gid']], Http::STATUS_FORBIDDEN);
 		}
+
+        if (!is_null($data['displayName'])) {
+            $NCGroup->setDisplayName($data['displayName']);
+        }
 
 		return new JSONResponse([
 			'group' => [

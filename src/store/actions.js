@@ -23,6 +23,7 @@
 
 import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
 import { generateUrl } from '@nextcloud/router'
+import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
@@ -76,7 +77,8 @@ export default {
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		gid = gid + '-' + space.id
+		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
+		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
 		const groups = Object.keys(space.groups)
 		if (groups.includes(gid)) {
@@ -85,10 +87,16 @@ export default {
 		}
 
 		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, gid })
+		context.commit('addGroupToSpace', { name, gid, displayName })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
+		axios.post(generateUrl('/apps/workspace/api/group'),
+			{
+				data: {
+					gid,
+					displayName,
+				},
+			})
 			.then((resp) => {
 				addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
 				// Navigates to the g roup's details page
@@ -186,7 +194,7 @@ export default {
 		const oldGroupName = space.groups[gid].displayName
 
 		// Groups must be postfixed with the ID of the space they belong
-		newGroupName = newGroupName + '-' + space.id
+		newGroupName = `${PREFIX_GID_SUBGROUP_SPACE}${newGroupName}-${space.name}`
 
 		// Creates group in frontend
 		context.commit('renameGroup', { name, gid, newGroupName })
