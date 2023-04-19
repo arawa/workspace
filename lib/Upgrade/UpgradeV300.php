@@ -1,67 +1,66 @@
 <?php
 
+/**
+ * @copyright Copyright (c) 2017 Arawa
+ *
+ * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 namespace OCA\Workspace\Upgrade;
 
-use OCP\IGroupManager;
-use OCA\Workspace\UserGroup;
+use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\GroupsWorkspace;
 use OCA\Workspace\Upgrade\Upgrade;
+use OCA\Workspace\Upgrade\UpgradeInterface;
+use OCA\Workspace\UserGroup;
 use OCA\Workspace\WorkspaceManagerGroup;
 use OCP\AppFramework\Services\IAppConfig;
-use OCA\Workspace\Upgrade\UpgradeInterface;
-use OCA\Workspace\Db\GroupFoldersGroupsMapper;
+use OCP\IGroupManager;
 
 class UpgradeV300 implements UpgradeInterface
 {
+    private GroupFoldersGroupsMapper $groupfoldersGroupsMapper;
+    private IAppConfig $appConfig;
     private IGroupManager $groupManager;
     private SpaceMapper $spaceMapper;
-    private UserGroup $userGroup;
-    private WorkspaceManagerGroup $workspaceManagerGroup;
-    private IAppConfig $appConfig;
-    private GroupFoldersGroupsMapper $groupfoldersGroupsMapper;
     
-    public function __construct(IGroupManager $groupManager,
-        SpaceMapper $spaceMapper,
-        UserGroup $userGroup,
-        WorkspaceManagerGroup $workspaceManagerGroup,
+    public function __construct(
+        GroupFoldersGroupsMapper $groupfoldersGroupsMapper,
         IAppConfig $appConfig,
-        GroupFoldersGroupsMapper $groupfoldersGroupsMapper)
+        IGroupManager $groupManager,
+        SpaceMapper $spaceMapper)
     {
-        $this->groupManager = $groupManager;
-        $this->spaceMapper = $spaceMapper;
-        $this->userGroup = $userGroup;
-        $this->workspaceManagerGroup = $workspaceManagerGroup;
         $this->appConfig = $appConfig;
         $this->groupfoldersGroupsMapper = $groupfoldersGroupsMapper;
+        $this->groupManager = $groupManager;
+        $this->spaceMapper = $spaceMapper;
     }
 
     public function upgrade(): void
     {
-        // Loop on GE- groups
-        $workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
-        foreach($workspaceManagerGroups as $group) {
-            $groupname = $group->getGID();
-            $groupnameSplitted = explode('-', $groupname);
-            $spaceId = (int)$groupnameSplitted[2];
-            $space = $this->spaceMapper->find($spaceId);
-            $group->setDisplayName(
-                $this->appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP') . $space->getSpaceName()
-            );
-        }
-        // Loop on U- groups
-        $userGroups = $this->groupManager->search(UserGroup::getPrefix());
-        foreach($userGroups as $group) {
-            $groupname = $group->getGID();
-            $groupnameSplitted = explode('-', $groupname);
-            $spaceId = (int)$groupnameSplitted[2];
-            $space = $this->spaceMapper->find($spaceId);
-            $group->setDisplayName(
-                $this->appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP') . $space->getSpaceName()
-            );
-        }
+        $this->changePrefixForWorkspaceManagerGroups();
+        $this->changePrefixForWorkspaceUserGroups();
+        $this->changeConventionForSubgroups();
+        $this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');
+    }
 
-        // Début du changement des noms de groupes.
+    private function changeConventionForSubgroups(): void {
         $subgroups = $this->groupfoldersGroupsMapper->getSpacenamesGroupIds();
         foreach ($subgroups as $subgroup) {
             $group = $this->groupManager->get($subgroup['group_id']);
@@ -75,7 +74,31 @@ class UpgradeV300 implements UpgradeInterface
             $groupname = 'G-' . $groupname . '-' . $subgroup['space_name'];
             $group->setDisplayName($groupname);
         }
+    }
 
-        $this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');
+    private function changePrefixForWorkspaceManagerGroups(): void {
+        $workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
+        foreach($workspaceManagerGroups as $group) {
+            $groupname = $group->getGID();
+            $groupnameSplitted = explode('-', $groupname);
+            $spaceId = (int)$groupnameSplitted[2];
+            $space = $this->spaceMapper->find($spaceId);
+            $group->setDisplayName(
+                $this->appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP') . $space->getSpaceName()
+            );
+        }
+    }
+
+    private function changePrefixForWorkspaceUserGroups(): void {
+        $userGroups = $this->groupManager->search(UserGroup::getPrefix());
+        foreach($userGroups as $group) {
+            $groupname = $group->getGID();
+            $groupnameSplitted = explode('-', $groupname);
+            $spaceId = (int)$groupnameSplitted[2];
+            $space = $this->spaceMapper->find($spaceId);
+            $group->setDisplayName(
+                $this->appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP') . $space->getSpaceName()
+            );
+        }
     }
 }
