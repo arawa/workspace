@@ -23,14 +23,11 @@
 
 namespace OCA\Workspace;
 
-use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Db\Space;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 
 abstract class GroupsWorkspace {
-
-    private IAppConfig $appConfig;
 
 	private const GID_SPACE_MANAGER = 'GE-';
     private const GID_SPACE_USERS = 'U-';
