@@ -71,7 +71,7 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
         if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
             && !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
             $this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
-            $this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'Users-');
+            $this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'U-');
         }
 
         if (!$this->appConfigManager->hasKey(Application::APP_ID, Upgrade::CONTROL_MIGRATION_V3)) {
