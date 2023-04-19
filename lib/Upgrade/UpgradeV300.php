@@ -41,7 +41,7 @@ class UpgradeV300 implements UpgradeInterface
             $spaceId = (int)$groupnameSplitted[2];
             $space = $this->spaceMapper->find($spaceId);
             $group->setDisplayName(
-                $this->workspaceManagerGroup->getDisplayPrefixManagerGroup() . $space->getSpaceName()
+                $this->appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP') . $space->getSpaceName()
             );
         }
         // Loop on U- groups
@@ -52,7 +52,7 @@ class UpgradeV300 implements UpgradeInterface
             $spaceId = (int)$groupnameSplitted[2];
             $space = $this->spaceMapper->find($spaceId);
             $group->setDisplayName(
-                $this->userGroup->getDisplayPrefixUserGroup() . $space->getSpaceName()
+                $this->appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP') . $space->getSpaceName()
             );
         }
         $this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');

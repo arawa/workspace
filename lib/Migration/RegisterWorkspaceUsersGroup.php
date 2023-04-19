@@ -68,8 +68,8 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
 		}
 
-        if ($this->appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP') === ''
-            && $this->appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP') === '') {
+        if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
+            && !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
             $this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
             $this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'Users-');
         }
