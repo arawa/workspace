@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { showError } from '@nextcloud/dialogs'
 
 const configDefault = {
 	type: 'error',
@@ -27,8 +28,12 @@ const configDefault = {
 
 export default class NotificationError {
 
-	constructor(instanceVue) {
-		this.instanceVue = instanceVue
+	// constructor(instanceVue) {
+	constructor(title = 'Error', text, duration = null) {
+		this.title = title
+		this.text = text
+		this.duration = duration
+		// this.instanceVue = instanceVue
 	}
 
 	/**
@@ -41,11 +46,16 @@ export default class NotificationError {
 	 * @description in the config param, Only the title and text keys are required.
 	 * @link please, read the official doc : https://www.npmjs.com/package/vue-notification#props
 	 */
-	push(config) {
-		this.instanceVue.$notify({
-			...configDefault,
-			...config,
-		})
+	push() {
+		// this.instanceVue.$notify({
+		// 	...configDefault,
+		// 	...config,
+		// })
+		// const messageTitle = t('workspace', this.title)
+		// const messageText = t('workspace', this.text)
+		const message = `<div><p style="font-weight: bold;display: block;/*! width: 100%; */">${this.title}</p><p>${this.text}</p></div>`
+		const options = this.duration ? { isHTML: true, timeout: this.duration } : { isHTML: true }
+		showError(message, options)
 	}
 
 }

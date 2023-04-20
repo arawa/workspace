@@ -118,7 +118,7 @@ import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NotificationError from './services/Notifications/NotificationError.js'
-import { showError } from '@nextcloud/dialogs'
+// import { showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/dist/index.css'
 import SelectGroupfolders from './SelectGroupfolders.vue'
 
@@ -152,15 +152,17 @@ export default {
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spaces'))
+			axios.get(generateUrl('/apps/workspace/spacesFoo'))
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
-						this.$notify({
-							title: t('workspace', 'Error'),
-							text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
-							type: 'error',
-						})
+						// this.$notify({
+						// 	title: t('workspace', 'Error'),
+						// 	text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
+						// 	type: 'error',
+						// })
+						const errorMsg = 
+						showError()
 						this.$store.state.loading = false
 						return
 					}
@@ -273,8 +275,10 @@ export default {
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
-				const errorMsg = t('workspace', 'Please specify a name.')
-				showError(errorMsg)
+				const title = t('workspace', 'Error')
+				const text = t('workspace', 'Please specify a name.')
+				const toastSpacenameEmpty = new NotificationError(title, text, 3000)
+				toastSpacenameEmpty.push()
 
 				// const toastSpacenameEmpty = new NotificationError(this)
 				// toastSpacenameEmpty.push({
