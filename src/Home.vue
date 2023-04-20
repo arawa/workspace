@@ -161,8 +161,7 @@ export default {
 						// 	text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
 						// 	type: 'error',
 						// })
-						const errorMsg = 
-						showError()
+						
 						this.$store.state.loading = false
 						return
 					}
@@ -302,8 +301,10 @@ export default {
 				// 	),
 				// 	duration: 6000,
 				// })
-				const errorMsg = 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'
-				showError(errorMsg, { timeout: 3000 })
+				const title = t('workspace', 'Error - Creating space')
+				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
+				const toastSpacenameEmpty = new NotificationError(title, text, 3000)
+				toastSpacenameEmpty.push()
 				throw new BadCreateError(
 					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
 				)
