@@ -289,15 +289,17 @@ export default {
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 
 			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				const toastCharacterNotAuthoized = new NotificationError(this)
-				toastCharacterNotAuthoized.push({
-					title: t('workspace', 'Error - Creating space'),
-					text: t(
-						'workspace',
-						'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
-					),
-					duration: 6000,
-				})
+				// const toastCharacterNotAuthoized = new NotificationError(this)
+				// toastCharacterNotAuthoized.push({
+				// 	title: t('workspace', 'Error - Creating space'),
+				// 	text: t(
+				// 		'workspace',
+				// 		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
+				// 	),
+				// 	duration: 6000,
+				// })
+				const errorMsg = 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'
+				showError(errorMsg, { timeout: 3000 })
 				throw new BadCreateError(
 					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
 				)
