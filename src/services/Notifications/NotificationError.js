@@ -26,7 +26,15 @@ const configDefault = {
 	duration: 3000,
 }
 
-export default class NotificationError {
+export default function showNotificationError(title, text, duration = null) {
+	const t_title = t('workspace', title)
+	const t_text = t('workspace', text)
+	const message = `<div><p style="font-weight: bold;display: block;/*! width: 100%; */">${t_title}</p><p>${t_text}</p></div>`
+	const options = duration ? { isHTML: true, timeout: duration } : { isHTML: true }
+	showError(message, options)
+}
+
+class NotificationError {
 
 	// constructor(instanceVue) {
 	constructor(title = 'Error', text, duration = null) {

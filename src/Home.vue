@@ -117,7 +117,7 @@ import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NotificationError from './services/Notifications/NotificationError.js'
+import showNotificationError from './services/Notifications/NotificationError.js'
 // import { showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/dist/index.css'
 import SelectGroupfolders from './SelectGroupfolders.vue'
@@ -152,7 +152,7 @@ export default {
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spacesFoo'))
+			axios.get(generateUrl('/apps/workspace/spaces'))
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
@@ -161,7 +161,6 @@ export default {
 						// 	text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
 						// 	type: 'error',
 						// })
-						
 						this.$store.state.loading = false
 						return
 					}
@@ -274,11 +273,7 @@ export default {
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
-				const title = t('workspace', 'Error')
-				const text = t('workspace', 'Please specify a name.')
-				const toastSpacenameEmpty = new NotificationError(title, text, 3000)
-				toastSpacenameEmpty.push()
-
+				showNotificationError('Error', 'Please specify a name', 3000)
 				// const toastSpacenameEmpty = new NotificationError(this)
 				// toastSpacenameEmpty.push({
 				// 	title: t('workspace', 'Error'),
@@ -301,10 +296,7 @@ export default {
 				// 	),
 				// 	duration: 6000,
 				// })
-				const title = t('workspace', 'Error - Creating space')
-				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
-				const toastSpacenameEmpty = new NotificationError(title, text, 3000)
-				toastSpacenameEmpty.push()
+				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
 				throw new BadCreateError(
 					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
 				)
