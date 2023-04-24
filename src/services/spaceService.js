@@ -48,11 +48,6 @@ export function createSpace(spaceName, folderId, vueInstance = undefined) {
 		})
 		.catch(error => {
 			if (typeof (vueInstance) !== 'undefined') {
-				// const toastErrorToCreateWorkspace = new NotificationError(vueInstance)
-				// toastErrorToCreateWorkspace.push({
-				// 	title: t('workspace', 'Error to create a workspace'),
-				// 	text: t('workspace', error.message),
-				// })
 				showNotificationError('Error to create a workspace', error.msg)
 			}
 			throw new BadCreateError(error.message)

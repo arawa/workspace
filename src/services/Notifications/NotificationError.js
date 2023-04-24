@@ -21,49 +21,10 @@
  */
 import { showError } from '@nextcloud/dialogs'
 
-const configDefault = {
-	type: 'error',
-	duration: 3000,
-}
-
 export default function showNotificationError(title, text, duration = null) {
 	const t_title = t('workspace', title)
 	const t_text = t('workspace', text)
-	const message = `<div><p style="font-weight: bold;display: block;/*! width: 100%; */">${t_title}</p><p>${t_text}</p></div>`
+	const message = `<div style="max-width: 36rem;"><p style="font-weight: bold;display: block;">${t_title}</p><p>${t_text}</p></div>`
 	const options = duration ? { isHTML: true, timeout: duration } : { isHTML: true }
 	showError(message, options)
-}
-
-class NotificationError {
-
-	// constructor(instanceVue) {
-	constructor(title = 'Error', text, duration = null) {
-		this.title = title
-		this.text = text
-		this.duration = duration
-		// this.instanceVue = instanceVue
-	}
-
-	/**
-	 *
-	 * @param {object} config {
-	 * title: string,
-	 * text: string,
-	 * duration: integer
-	 * }
-	 * @description in the config param, Only the title and text keys are required.
-	 * @link please, read the official doc : https://www.npmjs.com/package/vue-notification#props
-	 */
-	push() {
-		// this.instanceVue.$notify({
-		// 	...configDefault,
-		// 	...config,
-		// })
-		// const messageTitle = t('workspace', this.title)
-		// const messageText = t('workspace', this.text)
-		const message = `<div><p style="font-weight: bold;display: block;/*! width: 100%; */">${this.title}</p><p>${this.text}</p></div>`
-		const options = this.duration ? { isHTML: true, timeout: this.duration } : { isHTML: true }
-		showError(message, options)
-	}
-
 }

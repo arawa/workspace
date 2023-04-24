@@ -88,12 +88,7 @@ export default {
 
 		const groups = Object.keys(space.groups)
 		if (groups.includes(gid)) {
-			// const duplicateError = new NotificationError(vueInstance)
-			// duplicateError.push({
-			// 	title: t('workspace', 'Duplication of groups'),
-			// 	text: t('workspace', 'The group already exists.'),
-			// })
-			showNotificationError('Duplication of groups', 'The group already exists.')
+			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
 			return
 		}
 

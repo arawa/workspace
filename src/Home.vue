@@ -118,8 +118,6 @@ import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
-// import { showError } from '@nextcloud/dialogs'
-import '@nextcloud/dialogs/dist/index.css'
 import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
@@ -156,11 +154,6 @@ export default {
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
-						// this.$notify({
-						// 	title: t('workspace', 'Error'),
-						// 	text: t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
-						// 	type: 'error',
-						// })
 						this.$store.state.loading = false
 						return
 					}
@@ -274,12 +267,6 @@ export default {
 		async createSpace(name) {
 			if (name === '') {
 				showNotificationError('Error', 'Please specify a name.', 3000)
-				// const toastSpacenameEmpty = new NotificationError(this)
-				// toastSpacenameEmpty.push({
-				// 	title: t('workspace', 'Error'),
-				// 	text: t('workspace', 'Please specify a name.'),
-				// 	type: 'error',
-				// })
 				return
 			}
 			name = deleteBlankSpacename(name)
@@ -287,15 +274,6 @@ export default {
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 
 			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				// const toastCharacterNotAuthoized = new NotificationError(this)
-				// toastCharacterNotAuthoized.push({
-				// 	title: t('workspace', 'Error - Creating space'),
-				// 	text: t(
-				// 		'workspace',
-				// 		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
-				// 	),
-				// 	duration: 6000,
-				// })
 				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
 				throw new BadCreateError(
 					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
