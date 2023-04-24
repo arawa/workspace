@@ -28,15 +28,15 @@ namespace OCA\Workspace\Migration;
 use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
-use OCA\Workspace\UserGroup;
+use OCA\Workspace\Service\Group\UserGroup;
 use Psr\Log\LoggerInterface;
 use OCP\Migration\IRepairStep;
-use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Upgrade\Upgrade;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Upgrade\UpgradeV300;
-use OCA\Workspace\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\AppFramework\Services\IAppConfig as ServicesIAppConfig;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {

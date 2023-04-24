@@ -28,8 +28,8 @@ use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Upgrade\Upgrade;
 use OCA\Workspace\Upgrade\UpgradeInterface;
-use OCA\Workspace\UserGroup;
-use OCA\Workspace\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 

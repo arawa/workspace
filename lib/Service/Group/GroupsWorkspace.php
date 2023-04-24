@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Workspace;
+namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\Db\Space;
 use OCP\AppFramework\Services\IAppConfig;

@@ -22,7 +22,7 @@
  *
  */
 
-namespace OCA\Workspace;
+namespace OCA\Workspace\Service\Group;
 
 class ManagersWorkspace {
 	public const WORKSPACES_MANAGERS = 'WorkspacesManagers';

@@ -28,11 +28,10 @@ namespace OCA\Workspace\Service;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\IGroupManager;
-use OCA\Workspace\UserGroup;
+use OCA\Workspace\Service\Group\UserGroup;
 use Psr\Log\LoggerInterface;
-use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\ManagersWorkspace;
-use OCA\Workspace\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 
 class UserService {
 	public function __construct(

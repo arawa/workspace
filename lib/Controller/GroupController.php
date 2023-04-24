@@ -25,15 +25,15 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\UserGroup;
-use OCA\Workspace\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
