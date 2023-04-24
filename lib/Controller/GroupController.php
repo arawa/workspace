@@ -216,7 +216,6 @@ class GroupController extends Controller {
 		$UGroup->addUser($NCUser);
 
 		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_CREATED);
-
 	}
 
 	/**

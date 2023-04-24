@@ -161,7 +161,6 @@ class WorkspaceController extends Controller {
 				'state' => 'delete'
 			]
 		]);
-
 	}
 
 	/**

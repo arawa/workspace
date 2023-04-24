@@ -93,7 +93,7 @@ class UserService {
 	 */
 	public function isSpaceManager(): bool {
 		$workspaceAdminGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
-		foreach($workspaceAdminGroups as $group) {
+		foreach	($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
 			}

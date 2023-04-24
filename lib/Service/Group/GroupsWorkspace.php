@@ -28,7 +28,6 @@ use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 
 abstract class GroupsWorkspace {
-
 	private const GID_SPACE_MANAGER = 'GE-';
 	private const GID_SPACE_USERS = 'U-';
 	private const GID_SPACE = 'SPACE-';
@@ -56,12 +55,11 @@ abstract class GroupsWorkspace {
 	 * @return string - Just the GID with the spaceId.
 	 */
 	abstract public static function get(int $spaceId): string;
-	
+
 	abstract public static function getPrefix(): string;
 
 	/**
 	 * Use the OCA\Workspace\Db\Space to get its spaceId and spaceName.
 	 */
 	abstract public function create(Space $space): IGroup;
-
 }
