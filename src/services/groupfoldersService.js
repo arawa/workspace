@@ -146,7 +146,7 @@ export async function checkGroupfolderNameExist(spaceName, vueInstance = undefin
 			// 	),
 			// 	duration: 6000,
 			// })
-			showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exist. Please, input another space\nIf "toto" space exist, you cannot create the "tOTo" space\nMake sure you the groupfolder doesn\'t exist.', 6000)
+			showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.', 6000)
 			throw new CheckGroupfolderNameExistError('This space or groupfolder already exist. Please, input another space.'
 			+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
 			+ '\nMake sure you the groupfolder doesn\'t exist.')

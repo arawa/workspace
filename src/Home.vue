@@ -273,7 +273,7 @@ export default {
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
-				showNotificationError('Error', 'Please specify a name', 3000)
+				showNotificationError('Error', 'Please specify a name.', 3000)
 				// const toastSpacenameEmpty = new NotificationError(this)
 				// toastSpacenameEmpty.push({
 				// 	title: t('workspace', 'Error'),

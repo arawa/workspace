@@ -57,6 +57,7 @@ OC.L10N.register(
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Duplicate space name': 'Erreur - Duplication de nom de l\'espace de travail',
 		'Error - This workspace name already exists': 'Erreur - Ce nom d\'espace de travail existe déjà',
+		'Error - Creating space': 'Erreur lors de la création de l\'espace',
 		'No spaces': 'Aucun espace de travail',
 		'You have not yet created any workspace': 'Vous n\'avez pas encore créé d\'espace de travail',
 		'unlimited': 'illimité',
