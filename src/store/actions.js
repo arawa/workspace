@@ -109,11 +109,13 @@ export default {
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e,
-					type: 'error',
-				})
+				// this._vm.$notify({
+				// 	title: t('workspace', 'Network error'),
+				// 	text: t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e,
+				// 	type: 'error',
+				// })
+        const text = t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e
+        showNotificationError('Network error', text, 5000)
 			})
 	},
 	// Deletes a group

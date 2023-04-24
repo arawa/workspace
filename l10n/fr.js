@@ -27,6 +27,8 @@ OC.L10N.register(
 		'Select groupfolders to convert in workspace': 'Selectionner les dossiers du groupe à convertir en espace projet',
 		'Convert in spaces': 'Convertir en espace projet',
 		'Add users': 'Ajouter des utilisateurs',
+		'Network error': 'Erreur réseau',
+		'A network error occured while trying to create group ': 'Une erreur réseau s\'est produite lors de la tentative de création d\'un groupe',
 		'No username matches your current entry.': 'Aucun nom d\'utilisateur ne correspond à votre saisie actuelle',
 		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
 		'There is a problem to add group to groupfolder. The group is deleted.': 'Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.',
