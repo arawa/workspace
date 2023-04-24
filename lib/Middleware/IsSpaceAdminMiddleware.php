@@ -26,8 +26,8 @@
 namespace OCA\Workspace\Middleware;
 
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
-use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
@@ -47,10 +47,10 @@ class IsSpaceAdminMiddleware extends Middleware {
         if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
             $spaceId = $this->request->getParam('spaceId');
 			$space = $this->spaceService->find($spaceId);
-            if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize()) && !$this->userService->isUserGeneralAdmin()){
-                throw new AccessDeniedException();
-            }
-        }
+			if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize()) && !$this->userService->isUserGeneralAdmin()) {
+				throw new AccessDeniedException();
+			}
+		}
 	}
 
 	public function afterException($controller, $methodName, \Exception $exception): JSONResponse {

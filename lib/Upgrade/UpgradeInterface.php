@@ -24,7 +24,6 @@
 
 namespace OCA\Workspace\Upgrade;
 
-interface UpgradeInterface 
-{
-   public function upgrade(): void; 
+interface UpgradeInterface {
+	public function upgrade(): void;
 }

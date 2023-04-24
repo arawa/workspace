@@ -132,9 +132,9 @@ class WorkspaceService {
 		foreach ($users as $user) {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
-					$user->getUID(),
-					WorkspaceManagerGroup::get($space['id']))
-				) {
+				$user->getUID(),
+				WorkspaceManagerGroup::get($space['id']))
+			) {
 				$role = 'admin';
 			}
 			$data[] = $this->userService->formatUser($user, $space, $role);

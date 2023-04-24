@@ -25,15 +25,15 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -66,15 +66,15 @@ class GroupController extends Controller {
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
 	 * @var array $data [
-     *      "gid" => 'Space01',
-     *      "displayName" => 'Space01'
-     * ]
+	 *      "gid" => 'Space01',
+	 *      "displayName" => 'Space01'
+	 * ]
 	 * @var string $spaceId for Middleware
 	 *
 	 */
 	public function create(array $data = []): JSONResponse {
 
-        $data = array_merge(self::DEFAULT, $data);
+		$data = array_merge(self::DEFAULT, $data);
 
 		if (!is_null($this->groupManager->get($data['gid']))) {
 			return new JSONResponse(['Group ' . $data['gid'] . ' already exists'], Http::STATUS_FORBIDDEN);
@@ -86,9 +86,9 @@ class GroupController extends Controller {
 			return new JSONResponse(['Could not create group ' . $data['gid']], Http::STATUS_FORBIDDEN);
 		}
 
-        if (!is_null($data['displayName'])) {
-            $NCGroup->setDisplayName($data['displayName']);
-        }
+		if (!is_null($data['displayName'])) {
+			$NCGroup->setDisplayName($data['displayName']);
+		}
 
 		return new JSONResponse([
 			'group' => [

@@ -30,41 +30,38 @@ use OCP\IGroup;
 abstract class GroupsWorkspace {
 
 	private const GID_SPACE_MANAGER = 'GE-';
-    private const GID_SPACE_USERS = 'U-';
-    private const GID_SPACE = 'SPACE-';
+	private const GID_SPACE_USERS = 'U-';
+	private const GID_SPACE = 'SPACE-';
 
-    protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
-    protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
+	protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
+	protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
 
 	protected static string $DISPLAY_PREFIX_MANAGER_GROUP;
 	protected static string $DISPLAY_PREFIX_USER_GROUP;
 
-    public function __construct(IAppConfig $appConfig)
-    {
-        self::$DISPLAY_PREFIX_MANAGER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP');
-        self::$DISPLAY_PREFIX_USER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP');
-    }
+	public function __construct(IAppConfig $appConfig) {
+		self::$DISPLAY_PREFIX_MANAGER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP');
+		self::$DISPLAY_PREFIX_USER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP');
+	}
 
-    public static function getDisplayPrefixManagerGroup(): string
-    {
-        return self::$DISPLAY_PREFIX_MANAGER_GROUP;
-    }
+	public static function getDisplayPrefixManagerGroup(): string {
+		return self::$DISPLAY_PREFIX_MANAGER_GROUP;
+	}
 
-    public static function getDisplayPrefixUserGroup(): string
-    {
-        return self::$DISPLAY_PREFIX_USER_GROUP;
-    }
+	public static function getDisplayPrefixUserGroup(): string {
+		return self::$DISPLAY_PREFIX_USER_GROUP;
+	}
 
-    /**
-     * @return string - Just the GID with the spaceId.
-     */
-    abstract public static function get(int $spaceId): string;
-    
-    abstract public static function getPrefix(): string;
+	/**
+	 * @return string - Just the GID with the spaceId.
+	 */
+	abstract public static function get(int $spaceId): string;
+	
+	abstract public static function getPrefix(): string;
 
-    /**
-     * Use the OCA\Workspace\Db\Space to get its spaceId and spaceName.
-     */
-    abstract public function create(Space $space): IGroup;
+	/**
+	 * Use the OCA\Workspace\Db\Space to get its spaceId and spaceName.
+	 */
+	abstract public function create(Space $space): IGroup;
 
 }

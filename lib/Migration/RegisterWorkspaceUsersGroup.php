@@ -25,19 +25,16 @@
 
 namespace OCA\Workspace\Migration;
 
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Upgrade\Upgrade;
+use OCA\Workspace\Upgrade\UpgradeV300;
+use OCP\AppFramework\Services\IAppConfig as ServicesIAppConfig;
 use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
-use OCA\Workspace\Service\Group\UserGroup;
-use Psr\Log\LoggerInterface;
 use OCP\Migration\IRepairStep;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Upgrade\Upgrade;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Upgrade\UpgradeV300;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCP\AppFramework\Services\IAppConfig as ServicesIAppConfig;
+use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(private IGroupManager $groupManager,
@@ -68,25 +65,25 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
 		}
 
-        if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
-            && !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
-            $this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
-            $this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'U-');
-        }
+		if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
+			&& !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'U-');
+		}
 
-        if (!$this->appConfigManager->hasKey(Application::APP_ID, Upgrade::CONTROL_MIGRATION_V3)) {
-            $this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '0');
-        }
+		if (!$this->appConfigManager->hasKey(Application::APP_ID, Upgrade::CONTROL_MIGRATION_V3)) {
+			$this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '0');
+		}
 
-        $versionString = $this->appConfig->getAppValue('installed_version');
-        $versionSplitted = explode('.', $versionString);
-        $version = intval(implode('', $versionSplitted));
+		$versionString = $this->appConfig->getAppValue('installed_version');
+		$versionSplitted = explode('.', $versionString);
+		$version = intval(implode('', $versionSplitted));
    
-        $controlMigration = boolval($this->appConfig->getAppValue(Upgrade::CONTROL_MIGRATION_V3));
+		$controlMigration = boolval($this->appConfig->getAppValue(Upgrade::CONTROL_MIGRATION_V3));
 
 
-        if ($version <= Application::V300 && $controlMigration === false) {
-                $this->upgradeV300->upgrade();
-        }
+		if ($version <= Application::V300 && $controlMigration === false) {
+			$this->upgradeV300->upgrade();
+		}
 	}
 }

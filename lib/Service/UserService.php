@@ -25,13 +25,13 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserSession;
-use OCP\IGroupManager;
-use OCA\Workspace\Service\Group\UserGroup;
 use Psr\Log\LoggerInterface;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 
 class UserService {
 	public function __construct(
@@ -115,7 +115,7 @@ class UserService {
 	/**
 	 * @param array $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
-	*/
+	 */
 	public function isSpaceManagerOfSpace(array $space): bool {
 
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {

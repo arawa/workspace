@@ -68,12 +68,12 @@ class SpaceService {
 		return $space;
 	}
 
-    /**
-     *
-     */
-    public function updateSpaceName(string $newSpaceName, int $spaceId) {
-        return $this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
-    }
+	/**
+	 *
+	 */
+	public function updateSpaceName(string $newSpaceName, int $spaceId) {
+		return $this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
+	}
 
 	public function updateColorCode(string $colorCode, int $spaceId): Space {
 		return $this->spaceMapper->updateColorCode($colorCode, $spaceId);
@@ -82,12 +82,12 @@ class SpaceService {
 	public function checkSpaceNameExist(string $spacename): bool {
 		$checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
 
-        if (!is_bool($checkSpacename)) {
-            if (array_key_exists('name', $checkSpacename)) {
-                return true;
-            }
-        }
+		if (!is_bool($checkSpacename)) {
+			if (array_key_exists('name', $checkSpacename)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }
