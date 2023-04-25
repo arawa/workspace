@@ -101,7 +101,7 @@ export default {
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
 				const text = t('workspace', 'A network error occured while trying to create group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
-				showNotificationError('Network error', text, 5000)
+				showNotificationError('Network error', text, 4000)
 			})
 	},
 	// Deletes a group
@@ -163,19 +163,14 @@ export default {
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
-				this._vm.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'An error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while removing user from group ') + gid + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+				showNotificationError('Error', text, 4000)
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			this._vm.$notify({
-				title: t('workspace', 'Network error'),
-				text: t('workspace', 'A network error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + e,
-				type: 'error',
-			})
+			const text = t('workspace', 'An error occured while removing user from group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
+			showNotificationError('Error', text, 4000)
+			context.commit('addUserToGroup', { name, gid, user })
 			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user })

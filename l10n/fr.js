@@ -30,6 +30,7 @@ OC.L10N.register(
 		'Network error': 'Erreur réseau',
 		'A network error occured while trying to create group ': 'Une erreur réseau s\'est produite lors de la tentative de création d\'un groupe',
 		'A network error occured while trying to add user ': 'Une erreur réseau s\'est produite lors de la tentative d\'ajout d\'un utilisateur',
+		'An error occured while removing user from group ': 'Une erreur s\'est produite lors de la suppression de l\'utilisateur du groupe',
 		' to workspaces.': ' aux espaces de travail.',
 		'The error is: ': 'L\'erreur est : ',
 		'An error occured while trying to delete group ': 'Une erreur s\'est produite lors de la tentative de suppression du groupe',
