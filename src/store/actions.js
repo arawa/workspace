@@ -237,11 +237,13 @@ export default {
 						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 					}
 					context.commit('updateUser', { name, user })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
+					// this._vm.$notify({
+					// 	title: t('workspace', 'Error'),
+					// 	text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + resp.statusText,
+					// 	type: 'error',
+					// })
+          const text = t('workspace', 'An error occured while trying to change the role of user ') + user.name + '.<br>' + t('workspace', 'The error is: ') + resp.statusText
+          showNotificationError('Error', text, 3000)
 				}
 			}).catch((e) => {
 				// Revert action an inform user
@@ -251,11 +253,13 @@ export default {
 					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 				}
 				context.commit('updateUser', { name, user })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + e,
-					type: 'error',
-				})
+				// this._vm.$notify({
+				// 	title: t('workspace', 'Network error'),
+				// 	text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + e,
+				// 	type: 'error',
+				// })
+        const text = t('workspace', 'An error occured while trying to change the role of user ') + user.name + '.<br>' + t('workspace', 'The error is: ') + e
+          showNotificationError('Network error', text, 3000)
 			})
 	},
 	updateSpace(context, { space }) {
