@@ -27,7 +27,6 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
 import router from '../router.js'
-import { showError } from '@nextcloud/dialogs'
 
 export default {
 	// Adds a user to a group
