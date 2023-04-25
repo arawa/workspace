@@ -172,11 +172,9 @@ export default {
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+					// this branch is never called in case of network error (generateDataCreated raises exception instead)
+					const text = t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
+					showNotificationError('Network error', text, 4000)
 					this.$store.state.loading = false
 				})
 		}
