@@ -28,7 +28,6 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
 class GroupFoldersGroupsMapper extends QBMapper {
-
 	protected $db;
 	
 	public function __construct(IDBConnection $db) {

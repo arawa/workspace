@@ -117,7 +117,6 @@ class UserService {
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
 	public function isSpaceManagerOfSpace(array $space): bool {
-
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {
 			return true;
 		}
