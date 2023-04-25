@@ -27,6 +27,7 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
 import router from '../router.js'
+import { showError } from '@nextcloud/dialogs'
 
 export default {
 	// Adds a user to a group
@@ -99,7 +100,7 @@ export default {
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-				const text = t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e
+				const text = t('workspace', 'A network error occured while trying to create group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
 				showNotificationError('Network error', text, 5000)
 			})
 	},
@@ -123,20 +124,14 @@ export default {
 					console.log('Group ' + gid + ' deleted')
 				} else {
 					context.commit('addGroupToSpace', { name, gid })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
+					const text = t('workspace', 'An error occured while trying to delete group ') + gid + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+					showNotificationError('Error', text)
 				}
 			})
 			.catch((e) => {
 				context.commit('addGroupToSpace', { name, gid })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + e,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to delete group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
+				showNotificationError('Network error', text)
 			})
 	},
 	// Deletes a space

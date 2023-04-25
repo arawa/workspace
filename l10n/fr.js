@@ -32,6 +32,7 @@ OC.L10N.register(
 		'A network error occured while trying to add user ': 'Une erreur réseau s\'est produite lors de la tentative d\'ajout d\'un utilisateur',
 		' to workspaces.': ' aux espaces de travail.',
 		'The error is: ': 'L\'erreur est : ',
+		'An error occured while trying to delete group ': 'Une erreur s\'est produite lors de la tentative de suppression du groupe',
 		'No username matches your current entry.': 'Aucun nom d\'utilisateur ne correspond à votre saisie actuelle',
 		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
 		'There is a problem to add group to groupfolder. The group is deleted.': 'Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.',
