@@ -35,6 +35,7 @@ OC.L10N.register(
 		'The error is: ': 'L\'erreur est : ',
 		'An error occured while trying to delete group ': 'Une erreur s\'est produite lors de la tentative de suppression du groupe',
 		'An error occured while trying to change the role of user ': 'Une erreur s\'est produite lors de la tentative de modification du rôle de l\'utilisateur',
+		'An error occured while trying to update the workspace\'s quota.': 'Une erreur s\'est produite lors de la tentative de mise à jour du quota de l\'espace de travail.',
 		'No username matches your current entry.': 'Aucun nom d\'utilisateur ne correspond à votre saisie actuelle',
 		'Please specify a name.': 'S\'il vous plaît, spécifier un nom',
 		'There is a problem to add group to groupfolder. The group is deleted.': 'Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.',
