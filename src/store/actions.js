@@ -54,13 +54,8 @@ export default {
 			} else {
 				// Restore frontend and inform user
 				context.commit('removeUserFromGroup', { name, gid, user })
-				this._vm.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'An error occured while trying to add user ') + user.name
-						+ t('workspace', ' to workspaces.') + '<br>'
-						+ t('workspace', 'The error is: ') + resp.statusText,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to add user ') + user.name
+				showNotificationError('Error', text)
 			}
 		}).catch((e) => {
 			// Restore frontend and inform user
@@ -71,17 +66,12 @@ export default {
 			console.error('e.lineNumber', e.lineNumber)
 			console.error('e.columnNumber', e.columnNumber)
 			console.error('e.stack', e.stack)
-			this._vm.$notify({
-				title: t('workspace', 'Network error'),
-				text: t('workspace', 'A network error occured while trying to add user ') + user.name
-					+ t('workspace', ' to workspaces.') + '<br>'
-					+ t('workspace', 'The error is: ') + e,
-				type: 'error',
-			})
+			const text = t('workspace', 'A network error occured while trying to add user ') + user.name + t('workspace', ' to workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
+			showNotificationError('Network error', text, 4000)
 		})
 	},
-		// Creates a group and navigates to its details page
-		createGroup(context, { name, gid, vueInstance = undefined }) {
+	// Creates a group and navigates to its details page
+	createGroup(context, { name, gid, vueInstance = undefined }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
 		gid = gid + '-' + space.id
@@ -109,8 +99,8 @@ export default {
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-        const text = t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e
-        showNotificationError('Network error', text, 5000)
+				const text = t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e
+				showNotificationError('Network error', text, 5000)
 			})
 	},
 	// Deletes a group
