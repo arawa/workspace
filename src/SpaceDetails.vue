@@ -331,4 +331,7 @@ export default {
 .modal-wrapper--small .modal-container {
   min-height: 12rem !important;
 }
+.toastify.dialogs {
+  z-index: 100200 !important;
+}
 </style>
