@@ -25,12 +25,12 @@
 
 namespace OCA\Workspace\Tests\Unit\Middleware;
 
-use PHPUnit\Framework\TestCase;
-use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\IUrlGenerator;
+use PHPUnit\Framework\TestCase;
 
 class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	/**

@@ -25,13 +25,13 @@
 
 namespace OCA\Workspace\Middleware;
 
-use OCP\Util;
-use OCP\IURLGenerator;
-use OCP\AppFramework\Middleware;
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCP\AppFramework\Middleware;
+use OCP\IURLGenerator;
+use OCP\Util;
 
 class WorkspaceAccessControlMiddleware extends Middleware {
 	/** @var IURLGenerator */

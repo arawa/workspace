@@ -25,11 +25,11 @@
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
-use PHPUnit\Framework\TestCase;
-
 use OCA\Workspace\Controller\PageController;
+
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
+use PHPUnit\Framework\TestCase;
 
 class PageControllerTest extends TestCase {
 	private $controller;

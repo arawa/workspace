@@ -26,13 +26,13 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
-use OCP\IRequest;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Middleware;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Middleware;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
+use OCP\IRequest;
 
 class IsGeneralManagerMiddleware extends Middleware {
 	/** @var IControllerMethodReflector */
