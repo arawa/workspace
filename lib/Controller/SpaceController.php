@@ -25,11 +25,11 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\IRequest;
-use OCP\AppFramework\Controller;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IRequest;
 
 class SpaceController extends Controller {
 	/** @var SpaceService */

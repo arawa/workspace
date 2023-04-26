@@ -25,10 +25,10 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\BadRequestException;
 use OCA\Workspace\DB\Space;
 use OCA\Workspace\DB\SpaceMapper;
 use OCP\IGroupManager;
-use OCA\Workspace\BadRequestException;
 
 class SpaceService {
 	/** @var SpaceMapper */

@@ -25,8 +25,8 @@
 
 namespace OCA\Workspace\Db;
 
-use OCP\IDBConnection;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\IDBConnection;
 
 class SpaceMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {

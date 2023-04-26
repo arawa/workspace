@@ -25,8 +25,8 @@
 
 namespace OCA\Workspace\Middleware;
 
-use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
@@ -44,9 +44,9 @@ class IsSpaceAdminMiddleware extends Middleware {
 	private $userService;
 
 	public function __construct(
-	IControllerMethodReflector $reflector,
-	IRequest $request,
-	UserService $userService
+		IControllerMethodReflector $reflector,
+		IRequest $request,
+		UserService $userService
 	) {
 		$this->reflector = $reflector;
 		$this->request = $request;

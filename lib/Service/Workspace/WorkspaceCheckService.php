@@ -24,10 +24,10 @@
 
 namespace OCA\Workspace\Service\Workspace;
 
-use OCP\AppFramework\Http;
 use OCA\Workspace\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\WorkspaceNameExistException;
+use OCP\AppFramework\Http;
 
 class WorkspaceCheckService {
 	private SpaceService $spaceService;
