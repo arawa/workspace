@@ -25,7 +25,7 @@ import axios from '@nextcloud/axios'
 import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
-import NotificationError from './Notifications/NotificationError.js'
+import showNotificationError from './Notifications/NotificationError.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
@@ -48,11 +48,7 @@ export function createSpace(spaceName, folderId, vueInstance = undefined) {
 		})
 		.catch(error => {
 			if (typeof (vueInstance) !== 'undefined') {
-				const toastErrorToCreateWorkspace = new NotificationError(vueInstance)
-				toastErrorToCreateWorkspace.push({
-					title: t('workspace', 'Error to create a workspace'),
-					text: t('workspace', error.message),
-				})
+        showNotificationError('Error to create a workspace', error.msg)
 			}
 			throw new BadCreateError(error.message)
 		})
