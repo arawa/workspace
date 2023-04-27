@@ -20,32 +20,19 @@
  *
  */
 
-const configDefault = {
-	type: 'error',
-	duration: 3000,
-}
+import { showError } from '@nextcloud/dialogs'
 
-export default class NotificationError {
-
-	constructor(instanceVue) {
-		this.instanceVue = instanceVue
-	}
-
-	/**
-	 *
-	 * @param {object} config {
-	 * title: string,
-	 * text: string,
-	 * duration: integer
-	 * }
-	 * @description in the config param, Only the title and text keys are required.
-	 * @link please, read the official doc : https://www.npmjs.com/package/vue-notification#props
-	 */
-	push(config) {
-		this.instanceVue.$notify({
-			...configDefault,
-			...config,
-		})
-	}
-
+/**
+  *
+  * @param {string} title error notification title
+  * @param {string} text error notification text
+  * @param {number} duration -1 for permanent notification
+  * @return {undefined}
+  */
+export default function showNotificationError(title, text, duration = null) {
+	title = t('workspace', title)
+	text = t('workspace', text)
+	const message = `<div style="max-width: 36rem;"><p style="font-weight: bold;display: block;">${title}</p><p>${text}</p></div>`
+	const options = duration ? { isHTML: true, timeout: duration } : { isHTML: true }
+	showError(message, options)
 }
