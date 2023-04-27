@@ -134,7 +134,7 @@ export default {
 	computed: {
 		// The title to display at the top of the page
 		title() {
-			return this.$route.params.space + ' [ID: ' + this.$store.state.spaces[this.$route.params.space].id + ']'
+			return this.$route.params.space
 		},
 	},
 	created() {
