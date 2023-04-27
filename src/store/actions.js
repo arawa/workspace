@@ -25,7 +25,7 @@ import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
 import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import NotificationError from '../services/Notifications/NotificationError.js'
+import showNotificationError from '../services/Notifications/NotificationError.js'
 import router from '../router.js'
 
 export default {
@@ -54,13 +54,8 @@ export default {
 			} else {
 				// Restore frontend and inform user
 				context.commit('removeUserFromGroup', { name, gid, user })
-				this._vm.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'An error occured while trying to add user ') + user.name
-						+ t('workspace', ' to workspaces.') + '<br>'
-						+ t('workspace', 'The error is: ') + resp.statusText,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to add user ') + user.name
+				showNotificationError('Error', text)
 			}
 		}).catch((e) => {
 			// Restore frontend and inform user
@@ -71,28 +66,19 @@ export default {
 			console.error('e.lineNumber', e.lineNumber)
 			console.error('e.columnNumber', e.columnNumber)
 			console.error('e.stack', e.stack)
-			this._vm.$notify({
-				title: t('workspace', 'Network error'),
-				text: t('workspace', 'A network error occured while trying to add user ') + user.name
-					+ t('workspace', ' to workspaces.') + '<br>'
-					+ t('workspace', 'The error is: ') + e,
-				type: 'error',
-			})
+			const text = t('workspace', 'A network error occured while trying to add user ') + user.name + t('workspace', ' to workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
+			showNotificationError('Network error', text, 4000)
 		})
 	},
-	  // Creates a group and navigates to its details page
-	  createGroup(context, { name, gid, vueInstance = undefined }) {
+	// Creates a group and navigates to its details page
+	createGroup(context, { name, gid, vueInstance = undefined }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
 		gid = gid + '-' + space.id
 
 		const groups = Object.keys(space.groups)
 		if (groups.includes(gid)) {
-			const duplicateError = new NotificationError(vueInstance)
-			duplicateError.push({
-				title: t('workspace', 'Duplication of groups'),
-				text: t('workspace', 'The group already exists.'),
-			})
+			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
 			return
 		}
 
@@ -113,11 +99,8 @@ export default {
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to create group ') + gid + t('workspace', '<br>The error is: ') + e,
-					type: 'error',
-				})
+				const text = t('workspace', 'A network error occured while trying to create group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
+				showNotificationError('Network error', text, 4000)
 			})
 	},
 	// Deletes a group
@@ -140,20 +123,14 @@ export default {
 					console.log('Group ' + gid + ' deleted')
 				} else {
 					context.commit('addGroupToSpace', { name, gid })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
+					const text = t('workspace', 'An error occured while trying to delete group ') + gid + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+					showNotificationError('Error', text)
 				}
 			})
 			.catch((e) => {
 				context.commit('addGroupToSpace', { name, gid })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to delete group ') + gid + t('workspace', '<br>The error is: ') + e,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to delete group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
+				showNotificationError('Network error', text)
 			})
 	},
 	// Deletes a space
@@ -185,19 +162,14 @@ export default {
 				// eslint-disable-next-line no-console
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
-				this._vm.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'An error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + resp.statusText,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while removing user from group ') + gid + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+				showNotificationError('Error', text, 4000)
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			this._vm.$notify({
-				title: t('workspace', 'Network error'),
-				text: t('workspace', 'A network error occured while removing user from group ') + gid + t('workspace', '<br>The error is: ') + e,
-				type: 'error',
-			})
+			const text = t('workspace', 'An error occured while removing user from group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
+			showNotificationError('Error', text, 4000)
+			context.commit('addUserToGroup', { name, gid, user })
 			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user })
@@ -264,11 +236,8 @@ export default {
 						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 					}
 					context.commit('updateUser', { name, user })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
+					const text = t('workspace', 'An error occured while trying to change the role of user ') + user.name + '.<br>' + t('workspace', 'The error is: ') + resp.statusText
+					showNotificationError('Error', text, 3000)
 				}
 			}).catch((e) => {
 				// Revert action an inform user
@@ -278,11 +247,8 @@ export default {
 					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
 				}
 				context.commit('updateUser', { name, user })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'An error occured while trying to change the role of user ') + user.name + t('workspace', '.<br>The error is: ') + e,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to change the role of user ') + user.name + '.<br>' + t('workspace', 'The error is: ') + e
+				showNotificationError('Network error', text, 3000)
 			})
 	},
 	updateSpace(context, { space }) {
@@ -318,21 +284,15 @@ export default {
 				if (resp.status !== 200) {
 					// Reverts change made in the frontend in case of error
 					context.commit('setSpaceQuota', { name, oldQuota })
-					this._vm.$notify({
-						title: t('workspace', 'Error'),
-						text: t('workspace', 'An error occured while trying to update the workspace\'s quota.<br>The error is: ') + resp.statusText,
-						type: 'error',
-					})
+					const text = t('workspace', 'An error occured while trying to update the workspace\'s quota.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+					showNotificationError('Error', text, 3000)
 				}
 			})
 			.catch((e) => {
 				// Reverts change made in the frontend in case of error
 				context.commit('setSpaceQuota', { name, oldQuota })
-				this._vm.$notify({
-					title: t('workspace', 'Network error'),
-					text: t('workspace', 'A network error occured while trying to update the workspace\'s quota.<br>The error is: ') + e,
-					type: 'error',
-				})
+				const text = t('workspace', 'An error occured while trying to update the workspace\'s quota.') + '<br>' + t('workspace', 'The error is: ') + e
+				showNotificationError('Network error', text, 3000)
 			})
 	},
 	updateColor(context, { name, colorCode }) {
