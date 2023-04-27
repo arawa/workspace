@@ -1,5 +1,0 @@
-Contact: mailto:security@arawa.fr
-Expires: 2024-03-09T09:00:00.000Z
-Preferred-Languages: en, fr
-Canonical: https://github.com/arawa/workspace/blob/main/.well-known/security.txt
-Policy: https://github.com/arawa/workspace/blob/main/.well-known/security-policy.txt

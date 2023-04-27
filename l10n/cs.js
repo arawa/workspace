@@ -50,7 +50,7 @@ OC.L10N.register(
 		'There are no users in this space/group yet': 'V tomto prostoru/skupině zatím nejsou žádní uživatelé',
 		'Start typing to lookup users': 'Uživatele vyhledáte psaním',
 		'remove users from selection': 'odebrat uživatele z výběru',
-		'Error - Duplicate space name': 'Chyba – vytváření prostoru',
+		'Error - Creating space': 'Chyba – vytváření prostoru',
 		'Error - This workspace name already exists': 'Chyba – takto nazvaný prac. prostor už existuje',
 		'No spaces': 'Žádné prostory',
 		'You have not yet created any workspace': 'Zatím jste nevytvořili žádný prac. prostor',

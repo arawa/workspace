@@ -19,10 +19,4 @@ config.mocks.$n = function(app, singular, plural, count) {
 config.mocks.n = config.mocks.$n
 global.n = config.mocks.$n
 
-global.console = {
-	...console,
-	error: jest.fn(),
-	debug: jest.fn(),
-}
-
 global.OCA = {}

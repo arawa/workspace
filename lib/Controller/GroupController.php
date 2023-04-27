@@ -81,13 +81,13 @@ class GroupController extends Controller {
 	 */
 	public function create($gid) {
 		if (!is_null($this->groupManager->get($gid))) {
-			return new JSONResponse(['Group ' . $gid . ' already exists'], Http::STATUS_FORBIDDEN);
+			return new JSONResponse(['Group ' + $gid + ' already exists'], Http::STATUS_FORBIDDEN);
 		}
 
 		// Creates group
 		$NCGroup = $this->groupManager->createGroup($gid);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Could not create group ' . $gid], Http::STATUS_FORBIDDEN);
+			return new JSONResponse(['Could not create group ' + $gid], Http::STATUS_FORBIDDEN);
 		}
 
 		return new JSONResponse([
@@ -119,7 +119,7 @@ class GroupController extends Controller {
 		// Delete group
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+			return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
 		}
 		$NCGroup->delete();
 
@@ -189,7 +189,7 @@ class GroupController extends Controller {
 			// In some cases, frontend might give a group's displayName rather than its gid
 			$NCGroup = $this->groupManager->search($gid);
 			if (empty($NCGroup)) {
-				return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+				return new JSONResponse(['Group ' + $gid + ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
 			}
 			$NCGroup = $NCGroup[0];
 		}

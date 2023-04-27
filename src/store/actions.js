@@ -258,7 +258,7 @@ export default {
 				// 	type: 'error',
 				// })
 				const text = t('workspace', 'An error occured while trying to change the role of user ') + user.name + '.<br>' + t('workspace', 'The error is: ') + e
-					showNotificationError('Network error', text, 3000)
+				showNotificationError('Network error', text, 3000)
 			})
 	},
 	updateSpace(context, { space }) {

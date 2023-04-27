@@ -127,9 +127,3 @@ or
 ```bash
 sudo -u nginx /usr/local/bin/composer run test
 ```
-
-## Security Issues
-
-Please, read the [security.txt](.well-known/security.txt).
-
-If you want to report us a security issue. Please, read our [security-policy.md](.well-known/security-policy.md) file.
