@@ -191,13 +191,9 @@ export default {
 	// Renames a group and navigates to its details page
 	renameGroup(context, { name, gid, newGroupName }) {
 		const space = context.state.spaces[name]
-		const oldGroupName = space.groups[gid].displayName
 
 		// Groups must be postfixed with the ID of the space they belong
 		newGroupName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${newGroupName}-${space.name}`
-
-		// Creates group in frontend
-		context.commit('renameGroup', { name, gid, newGroupName })
 
 		// Creates group in backend
 		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
@@ -207,14 +203,13 @@ export default {
 					context.state.spaces[name].isOpen = true
 					// eslint-disable-next-line no-console
 					console.log('Group ' + gid + ' renamed to ' + newGroupName)
-				} else {
-					context.commit('renameGroup', { name, gid, oldGroupName })
-					// TODO Inform user
+
+					// Creates group in frontend
+					context.commit('renameGroup', { name, gid, newGroupName })
 				}
 			})
 			.catch((e) => {
-				context.commit('renameGroup', { name, gid, oldGroupName })
-				// TODO Inform user
+				console.error(e.message)
 			})
 	},
 	// Change a user's role from admin to user (or the opposite way)
