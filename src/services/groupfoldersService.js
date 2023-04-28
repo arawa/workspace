@@ -54,11 +54,10 @@ export function getAll() {
 /**
  *
  * @param {number} groupfolderId it's the id of a groupfolder
- * @param {object} vueInstance it's an instance of vue
  * @return {Promise}
  * @throws {GetGroupfolderError}
  */
-export function get(groupfolderId, vueInstance = undefined) {
+export function get(groupfolderId) {
 	return axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
 		.then(resp => {
 			if (resp.data.ocs.meta.status === 'ok') {
@@ -108,11 +107,10 @@ export function formatUsers(space) {
 
 /**
  * @param {string} spaceName it's the name of space to check
- * @param {object} vueInstance it's the instance of vue
  * @return {boolean}
  * @throws {CheckGroupfolderNameExistError}
  */
-export async function checkGroupfolderNameExist(spaceName, vueInstance = undefined) {
+export async function checkGroupfolderNameExist(spaceName) {
 	const duplicateExists = await getAll()
 		.then(groupfolders => {
 			for (const folderId in groupfolders) {
@@ -127,12 +125,10 @@ export async function checkGroupfolderNameExist(spaceName, vueInstance = undefin
 		})
 
 	if (duplicateExists) {
-		if (typeof (vueInstance) !== 'undefined') {
-			showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.', 5000)
-			throw new CheckGroupfolderNameExistError('This space or groupfolder already exist. Please, input another space.'
-			+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
-			+ '\nMake sure you the groupfolder doesn\'t exist.')
-		}
+		showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.', 5000)
+		throw new CheckGroupfolderNameExistError('This space or groupfolder already exist. Please, input another space.'
+		+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
+		+ '\nMake sure you the groupfolder doesn\'t exist.')
 	}
 	return false
 }
@@ -164,11 +160,10 @@ export function enableAcl(folderId) {
 /**
  * @param {number} folderId of an groupfolder
  * @param {string} gid it's an id (string format) of a group
- * @param {object} vueInstance it's an instance of vue
  * @return {Promise}
  * @throws {AddGroupToGroupfolderError}
  */
-export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
+export function addGroupToGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
 		{
 			group: gid,
@@ -177,9 +172,7 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-			if (typeof vueInstance !== 'undefined') {
-				showNotificationError('Error groups', `Impossible to attach the ${error} group to groupfolder. May be a problem with the connection ?`)
-			}
+      showNotificationError('Error groups', `Impossible to attach the ${error} group to groupfolder. May be a problem with the connection ?`)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
@@ -188,11 +181,10 @@ export function addGroupToGroupfolder(folderId, gid, vueInstance = undefined) {
 /**
  * @param {number} folderId it's an id of a groupfolder
  * @param {string} gid it's an id (string format) of a group
- * @param {object} vueInstance it's an instance of vue
  * @return {Promise}
  * @throws {AddGroupToManageACLForGroupfolderError}
  */
-export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
+export function addGroupToManageACLForGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
@@ -203,9 +195,7 @@ export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-			if (typeof (vueInstance) !== 'undefined') {
 				showNotificationError('Error to add group as manager acl', 'Impossible to add the Space Manager group in Manage ACL groupfolder')
-			}
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
 			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
 		})
@@ -214,11 +204,10 @@ export function addGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
 /**
  * @param {number} folderId it's an id of a groupfolder
  * @param {string} gid it's an id (string format) of a group
- * @param {object} vueInstance it's an instance of vue
  * @return {Promise}
  * @throws {RemoveGroupToManageACLForGroupfolderError}
  */
-export function removeGroupToManageACLForGroupfolder(folderId, gid, vueInstance) {
+export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
 		{
 			mappingType: 'group',
@@ -229,9 +218,7 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid, vueInstance)
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-			if (typeof (vueInstance) !== 'undefined') {
-				showNotificationError('Error to remove group as manager acl', 'Impossible to remove the group from the advanced permissions.')
-			}
+      showNotificationError('Error to remove group as manager acl', 'Impossible to remove the group from the advanced permissions.')
 			console.error('Impossible to remove the group from the advanced permissions.', error)
 			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
 		})
@@ -239,11 +226,10 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid, vueInstance)
 
 /**
  * @param {string} spaceName it's the name space to create
- * @param {object} vueInstance it's the instance of vue
  * @return {Promise}
  * @throws {CreateGroupfolderError}
  */
-export function createGroupfolder(spaceName, vueInstance = undefined) {
+export function createGroupfolder(spaceName) {
 	return axios.post(generateUrl('/apps/groupfolders/folders'),
 		{
 			mountpoint: spaceName,
@@ -256,14 +242,10 @@ export function createGroupfolder(spaceName, vueInstance = undefined) {
 		})
 		.catch(error => {
 			if (error instanceof Error) {
-				if (typeof (vueInstance) !== 'undefined') {
-					showNotificationError('Error to create', error.message)
-				}
+        showNotificationError('Error to create', error.message)
 				throw new Error(error.message)
 			}
-			if (typeof (vueInstance) !== 'undefined') {
-				showNotificationError('Network error', 'A network error occured while trying to create the workspaces.')
-			}
+      showNotificationError('Network error', 'A network error occured while trying to create the workspaces.')
 			throw new CreateGroupfolderError('Network error - the error is: ' + error)
 		})
 }
@@ -303,10 +285,9 @@ export function destroy(workspace) {
  *
  * @param {object} workspace it's the object relative to workspace
  * @param {string} newSpaceName it's the new name for the workspace
- * @param {object} vueInstance it's an instance from Vue
  * @return {Promise}
  */
-export function rename(workspace, newSpaceName, vueInstance = undefined) {
+export function rename(workspace, newSpaceName) {
 	// Response format to return
 	const respFormat = {
 		data: {},

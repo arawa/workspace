@@ -169,7 +169,6 @@ export default {
 		}).catch((e) => {
 			const text = t('workspace', 'An error occured while removing user from group ') + gid + '<br>' + t('workspace', 'The error is: ') + e
 			showNotificationError('Error', text, 4000)
-			context.commit('addUserToGroup', { name, gid, user })
 			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user })

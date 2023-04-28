@@ -282,22 +282,22 @@ export default {
 				)
 			}
 
-			await checkGroupfolderNameExist(name, this)
+			await checkGroupfolderNameExist(name)
 
-			const groupfolderId = await createGroupfolder(name, this)
+			const groupfolderId = await createGroupfolder(name)
 
 			await enableAcl(groupfolderId.data.id)
 
-			const workspace = await createSpace(name, groupfolderId.data.id, this)
+			const workspace = await createSpace(name, groupfolderId.data.id)
 
 			const GROUPS_WORKSPACE = Object.keys(workspace.groups)
 			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
 			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
 
-			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid, this)
-			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid, this)
+			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
+			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
 
-			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid, this)
+			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,

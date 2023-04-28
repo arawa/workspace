@@ -170,7 +170,7 @@ export default {
 			}
 
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid, vueInstance: this })
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
 		},
 		async onSpaceRename(e) {
 			// Hides ActionInput
@@ -190,7 +190,7 @@ export default {
 
 			const newSpaceName = e.target[0].value
 
-			await checkGroupfolderNameExist(newSpaceName, this)
+			await checkGroupfolderNameExist(newSpaceName)
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
