@@ -85,10 +85,10 @@ clean:
 # npm
 .PHONY: distclean
 fullclean: clean
-	rm -rf vendor
-	rm -rf node_modules
-	rm -rf js/vendor
-	rm -rf js/node_modules
+	rm -rf vendor \
+	node_modules \
+	package-lock.json \
+	composer.lock
 
 .PHONY: test
 test: composer
