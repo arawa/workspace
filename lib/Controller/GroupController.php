@@ -145,6 +145,13 @@ class GroupController extends Controller {
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
+        if (!is_null($this->groupManager->get($gid))) {
+            throw new GroupException(
+                'This group already exists. Please, change the name',
+                Http::STATUS_CONFLICT
+            );
+        }
+        
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
