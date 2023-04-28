@@ -71,7 +71,7 @@ export default {
 		})
 	},
 	// Creates a group and navigates to its details page
-	createGroup(context, { name, gid, vueInstance = undefined }) {
+	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
 		gid = gid + '-' + space.id

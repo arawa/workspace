@@ -68,7 +68,7 @@
 						class="no-bold"
 						@click="toggleRenameSpace" />
 					<NcActionInput v-show="renameSpace"
-						ref="renameSpaceInput"
+            ref="renameSpaceInput"
 						icon="icon-rename"
 						@submit="onSpaceRename">
 						{{ t('workspace', 'Space name') }}
@@ -108,6 +108,7 @@ import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
 	name: 'SpaceDetails',
@@ -175,17 +176,9 @@ export default {
 		async onSpaceRename(e) {
 			// Hides ActionInput
 			this.toggleRenameSpace()
-
-			if (e.target[0].value === false
-				 || e.target[0].value === null
-				 || e.target[0].value === ''
-			) {
-				this.$notify({
-					title: t('workspace', 'Error to rename space'),
-					text: t('workspace', 'The name space must be defined.'),
-					type: 'error',
-					duration: 6000,
-				})
+      if (!e.target[0].value) {
+        showNotificationError('Error to rename space', 'The name space must be defined.', 3000)
+        return
 			}
 
 			const newSpaceName = e.target[0].value
