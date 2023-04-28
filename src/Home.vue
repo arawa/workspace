@@ -154,7 +154,6 @@ export default {
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
-						// this branch is never called in case of network error (generateDataCreated raises exception instead)
 						const text = t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
 						showNotificationError('Network error', text, 4000)
 						this.$store.state.loading = false
