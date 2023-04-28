@@ -87,6 +87,7 @@ clean:
 fullclean: clean
 	rm -rf vendor \
 	node_modules \
+	js \
 	package-lock.json \
 	composer.lock
 
