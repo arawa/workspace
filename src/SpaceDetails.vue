@@ -188,7 +188,7 @@ export default {
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName, this)
+			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName)
 			responseRename = responseRename.data
 
 			if (responseRename.statuscode === 204) {
@@ -212,12 +212,8 @@ export default {
 			}
 
 			if (responseRename.statuscode === 400) {
-				this.$notify({
-					title: t('workspace', 'Error to rename space'),
-					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
-					type: 'error',
-					duration: 6000,
-				})
+        const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
+        showNotificationError('Error to rename space', text, 5000)
 			}
 		},
 		// Sets a space's quota
@@ -227,11 +223,8 @@ export default {
 			}
 			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
-				this.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota'),
-					type: 'error',
-				})
+        const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
+        showNotificationError('Error', text, 3000)
 				return
 			}
 			this.$store.dispatch('setSpaceQuota', {
@@ -270,11 +263,8 @@ export default {
 					})
 				})
 				.catch(err => {
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err,
-						type: 'error',
-					})
+          const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err
+          showNotificationError('Network error', text, 3000)
 				})
 		},
 	},
