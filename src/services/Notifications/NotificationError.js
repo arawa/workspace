@@ -26,10 +26,10 @@ import { showError } from '@nextcloud/dialogs'
   *
   * @param {string} title error notification title
   * @param {string} text error notification text
-  * @param {number} duration -1 for permanent notification
-  * @return {undefined}
+  * @param {number | undefined} duration in milliseconds, 7 seconds by default, -1 for permanent notification
+  * @return {Toast}
   */
-export default function showNotificationError(title, text, duration = null) {
+export default function showNotificationError(title, text, duration = undefined) {
 	title = t('workspace', title)
 	text = t('workspace', text)
 	const message = `<div style="max-width: 36rem;"><p style="font-weight: bold;display: block;">${title}</p><p>${text}</p></div>`
