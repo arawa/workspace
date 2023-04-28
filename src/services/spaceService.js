@@ -48,9 +48,9 @@ export function createSpace(spaceName, folderId, vueInstance = undefined) {
 		})
 		.catch(error => {
 			if (typeof (vueInstance) !== 'undefined') {
-        showNotificationError('Error to create a workspace', error.msg)
+        showNotificationError('Error to create a workspace', error)
 			}
-			throw new BadCreateError(error.message)
+			throw new BadCreateError(error)
 		})
 	return result
 }

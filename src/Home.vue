@@ -270,6 +270,7 @@ export default {
 		async createSpace(name) {
 			if (name === '') {
 				showNotificationError('Error', 'Please specify a name.', 3000)
+        return
 			}
 			name = deleteBlankSpacename(name)
 
