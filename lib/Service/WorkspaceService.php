@@ -99,7 +99,7 @@ class WorkspaceService {
 		if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludedGroupsList")) {
 			$excludeGroupsFromOwnGroups = $this->shareManager->shareWithGroupMembersOnlyExcludedGroupsList();
 			if (!empty($excludeGroupsFromOwnGroups)) {
-				$groupsOfUserSession = array_filter($groupsOfUserSession, function($group) use ($excludeGroupsFromOwnGroups) {
+				$groupsOfUserSession = array_filter($groupsOfUserSession, function ($group) use ($excludeGroupsFromOwnGroups) {
 					return !in_array($group->getGID(), $excludeGroupsFromOwnGroups);
 				});
 			}
