@@ -95,6 +95,16 @@ class WorkspaceService {
 		$usersFromGroups = [];
 		$userSession = $this->userSession->getUser();
 		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
+
+		if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludedGroupsList")) {
+			$excludeGroupsFromOwnGroups = $this->shareManager->shareWithGroupMembersOnlyExcludedGroupsList();
+			if (!empty($excludeGroupsFromOwnGroups)) {
+				$groupsOfUserSession = array_filter( $groupsOfUserSession, function($group) use ($excludeGroupsFromOwnGroups) {
+					return !in_array($group->getGID(), $excludeGroupsFromOwnGroups);
+				});
+			}
+		}
+
 		foreach ($groupsOfUserSession as $group) {
 			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
 		}
