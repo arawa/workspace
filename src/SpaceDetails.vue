@@ -163,7 +163,7 @@ export default {
 			// Hides ActionInput
 			this.toggleCreateGroup()
 			// Hide popup menu
-			this.$refs.ncAction.closeMenu()
+			this.$refs.ncAction.opened = false
 
 			// Don't accept empty names
 			const gid = e.target[0].value
