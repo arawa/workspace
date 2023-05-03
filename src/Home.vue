@@ -154,8 +154,8 @@ export default {
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
-						const text = t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
-						showNotificationError('Network error', text, 4000)
+						const text = t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+						showNotificationError('Eerror', text, 4000)
 						this.$store.state.loading = false
 						return
 					}
@@ -174,11 +174,8 @@ export default {
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+					const text = t('workspace', 'A network error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + e
+					showNotificationError('Network error', text)
 					this.$store.state.loading = false
 				})
 		}
@@ -269,7 +266,7 @@ export default {
 		async createSpace(name) {
 			if (name === '') {
 				showNotificationError('Error', 'Please specify a name.', 3000)
-        return
+				return
 			}
 			name = deleteBlankSpacename(name)
 
