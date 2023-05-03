@@ -1,23 +1,23 @@
 <!--
-  @copyright Copyright (c) 2017 Arawa
+	@copyright Copyright (c) 2017 Arawa
 
-  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+	@author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+	@author 2021 Cyrille Bollu <cyrille@bollu.be>
 
-  @license GNU AGPL version 3 or any later version
+	@license GNU AGPL version 3 or any later version
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -98,6 +98,7 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import { generateUrl } from '@nextcloud/router'
+import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
 	name: 'SelectUsers',
@@ -222,19 +223,13 @@ export default {
 							}
 						})
 					} else {
-						this.$notify({
-							title: t('workspace', 'Error'),
-							text: t('workspace', 'An error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText,
-							type: 'error',
-						})
+						const text = t('workspace', 'An error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+						showNotificationError('Error', text, 3000)
 					}
 				})
 				.catch((e) => {
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e,
-						type: 'error',
-					})
+					const text = t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e
+					showNotificationError('Network error', text, 3000)
 					console.error('Problem to search users', e)
 				})
 			this.isLookingUpUsers = false
