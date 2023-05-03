@@ -223,12 +223,12 @@ export default {
 							}
 						})
 					} else {
-						const text = t('workspace', 'An error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText
+						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 3000)
 					}
 				})
 				.catch((e) => {
-					const text = t('workspace', 'A network error occured while trying to lookup users.') + '<br>' + t('workspace', 'The error is: ') + e
+					const text = t('workspace', 'A network error occured while trying to lookup users.<br>The error is: {error}', { error: e })
 					showNotificationError('Network error', text, 3000)
 					console.error('Problem to search users', e)
 				})

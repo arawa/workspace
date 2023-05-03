@@ -68,7 +68,7 @@
 						class="no-bold"
 						@click="toggleRenameSpace" />
 					<NcActionInput v-show="renameSpace"
-            ref="renameSpaceInput"
+						ref="renameSpaceInput"
 						icon="icon-rename"
 						@submit="onSpaceRename">
 						{{ t('workspace', 'Space name') }}
@@ -87,10 +87,10 @@
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-      style="min-heigth: 8rem;"
-      size="small"
-		  @close="toggleShowDelWorkspaceModal">
-		  <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+			style="min-heigth: 8rem;"
+			size="small"
+			@close="toggleShowDelWorkspaceModal">
+			<RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 		</NcModal>
 	</div>
 </template>
@@ -176,9 +176,9 @@ export default {
 		async onSpaceRename(e) {
 			// Hides ActionInput
 			this.toggleRenameSpace()
-      if (!e.target[0].value) {
-        showNotificationError('Error to rename space', 'The name space must be defined.', 3000)
-        return
+			if (!e.target[0].value) {
+				showNotificationError('Error to rename space', 'The name space must be defined.', 3000)
+				return
 			}
 
 			const newSpaceName = e.target[0].value
@@ -212,8 +212,8 @@ export default {
 			}
 
 			if (responseRename.statuscode === 400) {
-        const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
-        showNotificationError('Error to rename space', text, 5000)
+				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
+				showNotificationError('Error to rename space', text, 5000)
 			}
 		},
 		// Sets a space's quota
@@ -223,8 +223,8 @@ export default {
 			}
 			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
-        const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
-        showNotificationError('Error', text, 3000)
+				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
+				showNotificationError('Error', text, 3000)
 				return
 			}
 			this.$store.dispatch('setSpaceQuota', {
@@ -263,8 +263,8 @@ export default {
 					})
 				})
 				.catch(err => {
-          const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err
-          showNotificationError('Network error', text, 3000)
+					const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
+					showNotificationError('Network error', text, 3000)
 				})
 		},
 	},
@@ -312,6 +312,6 @@ export default {
 	flex-flow: row-reverse;
 }
 .modal-wrapper--small .modal-container {
-  min-height: 12rem !important;
+	min-height: 12rem !important;
 }
 </style>

@@ -172,7 +172,7 @@ export function addGroupToGroupfolder(folderId, gid) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-      showNotificationError('Error groups', `Impossible to attach the ${error} group to groupfolder. May be a problem with the connection ?`)
+			showNotificationError('Error groups', `Impossible to attach the ${error} group to groupfolder. May be a problem with the connection ?`)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
@@ -195,7 +195,7 @@ export function addGroupToManageACLForGroupfolder(folderId, gid) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-				showNotificationError('Error to add group as manager acl', 'Impossible to add the Space Manager group in Manage ACL groupfolder')
+			showNotificationError('Error to add group as manager acl', 'Impossible to add the Space Manager group in Manage ACL groupfolder')
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
 			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
 		})
@@ -218,7 +218,7 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 			return resp.data.ocs.data
 		})
 		.catch(error => {
-      showNotificationError('Error to remove group as manager acl', 'Impossible to remove the group from the advanced permissions.')
+			showNotificationError('Error to remove group as manager acl', 'Impossible to remove the group from the advanced permissions.')
 			console.error('Impossible to remove the group from the advanced permissions.', error)
 			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
 		})
@@ -242,10 +242,10 @@ export function createGroupfolder(spaceName) {
 		})
 		.catch(error => {
 			if (error instanceof Error) {
-        showNotificationError('Error to create', error.message)
+				showNotificationError('Error to create', error.message)
 				throw new Error(error.message)
 			}
-      showNotificationError('Network error', 'A network error occured while trying to create the workspaces.')
+			showNotificationError('Network error', 'A network error occured while trying to create the workspaces.')
 			throw new CreateGroupfolderError('Network error - the error is: ' + error)
 		})
 }
