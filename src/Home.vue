@@ -155,7 +155,7 @@ export default {
 					// Checks for application errors
 					if (resp.status !== 200) {
 						const text = t('workspace', 'An error occured while trying to retrieve workspaces.') + '<br>' + t('workspace', 'The error is: ') + resp.statusText
-						showNotificationError('Eerror', text, 4000)
+						showNotificationError('Error', text, 4000)
 						this.$store.state.loading = false
 						return
 					}
