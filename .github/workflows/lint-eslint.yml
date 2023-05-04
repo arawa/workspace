@@ -1,0 +1,41 @@
+# the workflow will run ESLint using `npm run lint` command
+name: ESLint CI
+
+on:
+  push:
+    branches: [ main, stable* ]
+  pull_request:
+    branches: [ main, stable* ]
+
+jobs:
+  lint: 
+    runs-on: ubuntu-lates
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        - name: Read package.json for npm engine version only
+        uses: skjnldsv/read-package-engines-version-actions@v1.1
+        id: versions
+        with:
+          fallbackNpm: '^7'
+          fallbackNode: '^14'
+
+      - name: Use Node.js ${{ steps.versions.outputs.nodeVersion }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.versions.outputs.nodeVersion }}
+
+      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}"
+        run: npm i -g npm@${{ steps.versions.outputs.npmVersion }}
+
+      - name: Debug npm
+        run: npm --version
+
+      - name: Install all dependencies & build
+        run: |
+          npm ci -f
+          npm run build --if-present
+
+      - name: Lint
+        run: npm run lint
+
