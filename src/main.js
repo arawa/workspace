@@ -27,8 +27,6 @@ import store from './store'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
-Vue.use(Notifications)
-
 Vue.mixin({
 	methods: {
 		t,
