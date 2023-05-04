@@ -87,10 +87,10 @@
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-      style="min-heigth: 8rem;"
-      size="small"
-		  @close="toggleShowDelWorkspaceModal">
-		  <RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+			style="min-heigth: 8rem;"
+			size="small"
+			@close="toggleShowDelWorkspaceModal">
+			<RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 		</NcModal>
 	</div>
 </template>
@@ -108,6 +108,7 @@ import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
 	name: 'SpaceDetails',
@@ -170,32 +171,24 @@ export default {
 			}
 
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid, vueInstance: this })
+			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
 		},
 		async onSpaceRename(e) {
 			// Hides ActionInput
 			this.toggleRenameSpace()
-
-			if (e.target[0].value === false
-				 || e.target[0].value === null
-				 || e.target[0].value === ''
-			) {
-				this.$notify({
-					title: t('workspace', 'Error to rename space'),
-					text: t('workspace', 'The name space must be defined.'),
-					type: 'error',
-					duration: 6000,
-				})
+			if (!e.target[0].value) {
+				showNotificationError('Error to rename space', 'The name space must be defined.', 3000)
+				return
 			}
 
 			const newSpaceName = e.target[0].value
 
-			await checkGroupfolderNameExist(newSpaceName, this)
+			await checkGroupfolderNameExist(newSpaceName)
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName, this)
+			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName)
 			responseRename = responseRename.data
 
 			if (responseRename.statuscode === 204) {
@@ -219,12 +212,8 @@ export default {
 			}
 
 			if (responseRename.statuscode === 400) {
-				this.$notify({
-					title: t('workspace', 'Error to rename space'),
-					text: t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]'),
-					type: 'error',
-					duration: 6000,
-				})
+				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
+				showNotificationError('Error to rename space', text, 5000)
 			}
 		},
 		// Sets a space's quota
@@ -234,11 +223,8 @@ export default {
 			}
 			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
-				this.$notify({
-					title: t('workspace', 'Error'),
-					text: t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota'),
-					type: 'error',
-				})
+				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
+				showNotificationError('Error', text, 3000)
 				return
 			}
 			this.$store.dispatch('setSpaceQuota', {
@@ -277,11 +263,8 @@ export default {
 					})
 				})
 				.catch(err => {
-					this.$notify({
-						title: t('workspace', 'Network error'),
-						text: t('workspace', 'A network error occured when trying to change the workspace\'s color.') + '<br>' + t('workspace', 'The error is: ') + err,
-						type: 'error',
-					})
+					const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
+					showNotificationError('Network error', text, 3000)
 				})
 		},
 	},
@@ -329,6 +312,6 @@ export default {
 	flex-flow: row-reverse;
 }
 .modal-wrapper--small .modal-container {
-  min-height: 12rem !important;
+	min-height: 12rem !important;
 }
 </style>

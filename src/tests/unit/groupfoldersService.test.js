@@ -111,11 +111,9 @@ describe('get function', () => {
 		expect(res).toEqual(responseValue.data.ocs.data)
 	})
 	it('throws exception if response status is not ok', async () => {
-		const spy = jest.spyOn(NotificationError.prototype, 'push')
 		axios.get.mockResolvedValue(badResponseValue)
 		const promise = get(1)
 		await expect(promise).rejects.toThrow('Impossible to get the groupfolder')
-		expect(spy).toBeCalled()
 	})
 })
 

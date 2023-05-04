@@ -26,7 +26,6 @@ import { createSpace } from '../../services/spaceService.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import axios from '@nextcloud/axios'
 import Home from '../../Home.vue'
-import Notifications from 'vue-notification'
 import store from '../../store/index.js'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -36,8 +35,6 @@ jest.mock('axios')
 
 Vue.prototype.t = t
 Vue.prototype.n = n
-
-Vue.use(Notifications)
 
 const localVue = createLocalVue()
 const router = new VueRouter()
