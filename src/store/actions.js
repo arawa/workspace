@@ -194,7 +194,7 @@ export default {
 		const oldGroupName = space.groups[gid].displayName
 
 		// Groups must be postfixed with the ID of the space they belong
-		newGroupName = `${PREFIX_GID_SUBGROUP_SPACE}${newGroupName}-${space.name}`
+		newGroupName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${newGroupName}-${space.name}`
 
 		// Creates group in frontend
 		context.commit('renameGroup', { name, gid, newGroupName })
