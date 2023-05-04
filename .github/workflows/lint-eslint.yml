@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        - name: Read package.json for npm engine version only
+      - name: Read package.json for npm engine version only
         uses: skjnldsv/read-package-engines-version-actions@v1.1
         id: versions
         with:
