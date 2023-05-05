@@ -1,5 +1,7 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
+import 'core-js/stable/index.js'
+/* eslint-disable-next-line */
+import 'regenerator-runtime/runtime.js'
+/* eslint-disable-next-line */
 import { OC } from './OC.js'
 import { config } from '@vue/test-utils'
 

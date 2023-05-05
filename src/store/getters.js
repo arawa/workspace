@@ -21,7 +21,7 @@
  *
  */
 
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants'
+import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 
 export const getters = {
 	// Returns the GE group of a workspace

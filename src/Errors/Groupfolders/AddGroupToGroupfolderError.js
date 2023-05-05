@@ -20,7 +20,7 @@
  *
  */
 
- export default class AddGroupToGroupfolderError extends Error {
+export default class AddGroupToGroupfolderError extends Error {
 
 	constructor(message) {
 		super(message)

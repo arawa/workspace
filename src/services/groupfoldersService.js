@@ -212,7 +212,7 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 		{
 			mappingType: 'group',
 			mappingId: gid,
-			manageAcl: false
+			manageAcl: false,
 		})
 		.then(resp => {
 			return resp.data.ocs.data

@@ -23,12 +23,11 @@
 import { showError } from '@nextcloud/dialogs'
 
 /**
-  *
-  * @param {string} title error notification title
-  * @param {string} text error notification text
-  * @param {number | undefined} duration in milliseconds, 7 seconds by default, -1 for permanent notification
-  * @return {Toast}
-  */
+ *
+ * @param {string} title error notification title
+ * @param {string} text error notification text
+ * @param {number | undefined} duration in milliseconds, 7 seconds by default, -1 for permanent notification
+ */
 export default function showNotificationError(title, text, duration = undefined) {
 	title = t('workspace', title)
 	text = t('workspace', text)

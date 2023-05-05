@@ -171,7 +171,7 @@ export default {
 			showNotificationError('Error', text, 4000)
 			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
 				backupGroups.forEach(group =>
-					context.commit('addUserToGroup', { name, group, user })
+					context.commit('addUserToGroup', { name, group, user }),
 				)
 			} else {
 				context.commit('addUserToGroup', { name, gid, user })

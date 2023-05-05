@@ -1,28 +1,27 @@
 /**
  * @copyright Copyright (c) 2017 Arawa
-*
-* @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
-* @author 2023 Andrei Zheksi <andrei.zheksi@arawa.fr>
-* @license AGPL-3.0-or-later
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License as
-* published by the Free Software Foundation, either version 3 of the
-* License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ *
+ * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2023 Andrei Zheksi <andrei.zheksi@arawa.fr>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
-import NotificationError from '../../services/Notifications/NotificationError.js'
 
 jest.mock('axios')
 jest.mock('../../services/Notifications/NotificationError')
@@ -66,7 +65,7 @@ const badResponseValue = {
 		ocs: {
 			meta: {
 				status: 'error',
-				statuscode: 400
+				statuscode: 400,
 			},
 		},
 	},
@@ -274,7 +273,7 @@ describe('createGroupfolder', () => {
 		axios.post.mockResolvedValue(responseValue)
 		await createGroupfolder('foobar')
 		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders', {
-			mountpoint: 'foobar'
+			mountpoint: 'foobar',
 		})
 	})
 	it('throws error if response status is not 200', async () => {
@@ -295,7 +294,7 @@ describe('destroy', () => {
 		axios.delete.mockResolvedValue(responseValue)
 		await destroy('foobar')
 		expect(axios.delete).toHaveBeenCalledWith('/apps/workspace/api/delete/space', {
-			data: { workspace: 'foobar' }
+			data: { workspace: 'foobar' },
 		})
 	})
 	it('calls axios.delete 2 times and returns resp.data value', async () => {
