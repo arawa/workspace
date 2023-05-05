@@ -2,7 +2,7 @@ OC.L10N.register(
 	'workspace',
 	{
 		'Workspace': 'Pracovní prostor',
-		'Are you sure you want to delete the {space} space ?': 'Opravdu chcete prostor {space} smazat?',
+		'Are you sure you want to delete the {space} workspace ?': 'Opravdu chcete prostor {space} smazat?',
 		'Add users': 'Přidat uživatele',
 		'All spaces': 'Všechny prac. prostory',
 		'admin': 'Správce prac. prostour',

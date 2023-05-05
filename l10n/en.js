@@ -2,7 +2,7 @@ OC.L10N.register(
 	'workspace',
 	{
 		'Workspace': 'Workspace',
-		'Are you sure you want to delete the {space} space ?': 'Are you sure you want to delete the {space} space ?',
+		'Are you sure you want to delete the {space} workspace ?': 'Are you sure you want to delete the {space} workspace ?',
 		'Add users': 'Add users',
 		'All spaces': 'All Workspaces',
 		'Administrators': 'General manager',
