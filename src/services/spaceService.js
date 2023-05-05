@@ -64,10 +64,10 @@ export function deleteBlankSpacename(spacename) {
 }
 
 /**
-* @param {string} spaceId
-* @param {object} groupfolder
-* @return {object}
-*/
+ * @param {string} spaceId - workspace id as identifier
+ * @param {object} groupfolder - groupfolder object
+ * @return {object}
+ */
 export function transferUsersToUserGroup(spaceId, groupfolder) {
 	const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/transfer-users`),
 		{
@@ -83,9 +83,9 @@ export function transferUsersToUserGroup(spaceId, groupfolder) {
 }
 
 /**
-* @param {string} group it's the groupname to test
-* @return {boolean}
-*/
+ * @param {string} group it's the groupname to test
+ * @return {boolean}
+ */
 export function isSpaceManagers(group) {
 	const SPACE_MANAGER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX)
 	return SPACE_MANAGER_REGEX.test(group)

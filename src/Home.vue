@@ -106,7 +106,6 @@ import { generateUrl } from '@nextcloud/router'
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { getLocale } from '@nextcloud/l10n'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
@@ -116,14 +115,12 @@ import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigati
 import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
 	name: 'Home',
 	components: {
-		NcActionButton,
 		NcAppContent,
 		NcAppContentDetails,
 		NcAppNavigation,
@@ -131,8 +128,6 @@ export default {
 		NcAppNavigationItem,
 		NcAppNavigationNewItem,
 		NcContent,
-		NcModal,
-		SelectGroupfolders,
 	},
 	data() {
 		return {

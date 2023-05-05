@@ -128,6 +128,6 @@ describe('SelectUsers component tests', () => {
 			wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')
 			expect(count).toEqual(1)
-		}
+		},
 	)
 })

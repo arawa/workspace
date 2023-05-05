@@ -24,11 +24,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
-import GroupDetails from './GroupDetails'
-import Home from './Home'
-import SpaceDetails from './SpaceDetails'
-import SpaceTable from './SpaceTable'
-import Error403 from './Error403'
+import GroupDetails from './GroupDetails.vue'
+import Home from './Home.vue'
+import SpaceDetails from './SpaceDetails.vue'
+import SpaceTable from './SpaceTable.vue'
+import Error403 from './Error403.vue'
 
 Vue.use(Router)
 

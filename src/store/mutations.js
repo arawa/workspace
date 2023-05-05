@@ -21,7 +21,7 @@
  *
  */
 
-import Vue from 'vue'
+import { set as VueSet } from 'vue'
 import { getLocale } from '@nextcloud/l10n'
 
 // Function to sort spaces case-insensitively, and locale-based
@@ -86,7 +86,7 @@ export default {
 			gid,
 			displayName: gid,
 		}
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Adds a space to the workspaces list
@@ -105,7 +105,7 @@ export default {
 			user.groups.push(gid)
 			space.users[user.uid] = user
 		}
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Adds a user to a workspace
@@ -113,7 +113,7 @@ export default {
 	addUserToWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.uid] = user
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Removes a group from a space
@@ -130,7 +130,7 @@ export default {
 		})
 		// Saves the space back in the store
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Removes a user from a group
@@ -140,7 +140,7 @@ export default {
 		const index = space.users[user.uid].groups.indexOf(gid)
 		space.users[user.uid].groups.splice(index, 1)
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Removes a user from a workspace
@@ -149,7 +149,7 @@ export default {
 		const space = state.spaces[name]
 		delete space.users[user.uid]
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	// Renames a group
@@ -160,13 +160,13 @@ export default {
 			displayName: newGroupName,
 		}
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	setSpaceQuota(state, { name, quota }) {
 		const space = state.spaces[name]
 		space.quota = quota
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	deleteSpace(state, { space }) {
@@ -174,26 +174,26 @@ export default {
 	},
 	updateSpace(state, space) {
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, space.name, space)
+		VueSet(state.spaces, space.name, space)
 		sortSpaces(state)
 	},
 	updateUser(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.uid] = user
 		delete state.spaces[space.name]
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
 	UPDATE_COLOR(state, { name, colorCode }) {
 		const space = state.spaces[name]
 		space.color = colorCode
-		Vue.set(state.spaces, name, space)
+		VueSet(state.spaces, name, space)
 	},
 	EMPTY_GROUPFOLDERS(state) {
 		state.groupfolders = {}
 	},
 	UPDATE_GROUPFOLDERS(state, { groupfolder }) {
-		Vue.set(state.groupfolders, groupfolder.mount_point, groupfolder)
+		VueSet(state.groupfolders, groupfolder.mount_point, groupfolder)
 		sortGroupfolders(state)
 	},
 }

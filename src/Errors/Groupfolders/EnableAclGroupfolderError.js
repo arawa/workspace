@@ -20,7 +20,7 @@
  *
  */
 
- export default class EnableAclGroupfolderError extends Error {
+export default class EnableAclGroupfolderError extends Error {
 
 	constructor(message) {
 		super(message)

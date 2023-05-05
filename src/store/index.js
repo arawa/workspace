@@ -23,9 +23,9 @@
 
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import actions from './actions'
-import { getters } from './getters'
-import mutations from './mutations'
+import actions from './actions.js'
+import { getters } from './getters.js'
+import mutations from './mutations.js'
 
 Vue.use(Vuex)
 Vue.config.devtools = true // Debug mode
