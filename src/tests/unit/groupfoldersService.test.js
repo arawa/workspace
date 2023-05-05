@@ -22,7 +22,6 @@
 
 import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
-import NotificationError from '../../services/Notifications/NotificationError.js'
 
 jest.mock('axios')
 jest.mock('../../services/Notifications/NotificationError')
