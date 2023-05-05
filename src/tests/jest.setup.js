@@ -1,6 +1,6 @@
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-import { OC } from './OC.js'
+import 'core-js/stable/index.js'
+/* eslint-disable-next-line */
+import 'regenerator-runtime/runtime.js'
 import { config } from '@vue/test-utils'
 
 document.title = 'Standard Nextcloud title'
