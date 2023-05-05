@@ -116,7 +116,6 @@ import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import SelectGroupfolders from './SelectGroupfolders.vue'
 
 export default {
 	name: 'Home',
