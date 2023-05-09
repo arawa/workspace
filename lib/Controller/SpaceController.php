@@ -45,7 +45,7 @@ class SpaceController extends Controller {
 
 	/**
 	 * @param $id - The space id to get a space - OCA\Workspace\Db\Space .
-     * @return DataResponse - The space serialized
+	 * @return DataResponse - The space serialized
 	 */
     #[NoAdminRequired]
 	public function find(int $id): DataResponse {
