@@ -25,6 +25,5 @@ namespace OCA\Workspace\Middleware\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class SpaceAdminRequired
-{
+class SpaceAdminRequired {
 }

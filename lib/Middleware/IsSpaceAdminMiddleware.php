@@ -37,7 +37,6 @@ use OCP\IRequest;
 class IsSpaceAdminMiddleware extends Middleware {
 
 	public function __construct(
-		private IControllerMethodReflector $reflector,
 		private IRequest $request,
 		private UserService $userService,
 		private SpaceService $spaceService

@@ -28,9 +28,9 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class PageController extends Controller {
