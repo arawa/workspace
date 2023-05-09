@@ -26,24 +26,24 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
+use OCA\Workspace\Middleware\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
-use OCP\IRequest;
 
 class IsGeneralManagerMiddleware extends Middleware {
+
 	public function __construct(
-		private IControllerMethodReflector $reflector,
-		private IRequest $request,
 		private UserService $userService
 	) {
 	}
 
 	public function beforeController($controller, $methodName): void {
-		if ($this->reflector->hasAnnotation('GeneralManagerRequired')) {
+        $reflectionMethod = new \ReflectionMethod($controller, $methodName);
+        $hasAttribute = !empty($reflectionMethod->getAttributes(GeneralManagerRequired::class));
+		if ($hasAttribute) {
 			if (!$this->userService->isUserGeneralAdmin()) {
 				throw new AccessDeniedException();
 			}
