@@ -34,12 +34,16 @@ use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Middleware\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Middleware\Attribute\SpaceAdminRequired;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -74,14 +78,14 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @GeneralManagerRequired
 	 * @param string $spaceName
 	 * @param int $folderId
 	 * @throws BadRequestException
 	 * @throws CreateWorkspaceException
 	 * @throws CreateGroupException
 	 */
+    #[NoAdminRequired]
+    #[GeneralManagerRequired]
 	public function createWorkspace(string $spaceName,
 		int $folderId): JSONResponse {
 		if ($spaceName === false ||
@@ -124,15 +128,15 @@ class WorkspaceController extends Controller {
 		]);
 	}
 
-	/**
-	 *
-	 * Deletes the workspace, and the corresponding groupfolder and groups
-	 *
-	 * @NoAdminRequired
-	 * @SpaceAdminRequired
-	 * @param array $workspace
-	 *
-	 */
+  /**
+   *
+   * Deletes the workspace, and the corresponding groupfolder and groups
+   *
+   * @param array $workspace
+   *
+   */
+    #[NoAdminRequired]
+    #[SpaceAdminRequired]
 	public function destroy(array $workspace): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
 		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
@@ -169,9 +173,8 @@ class WorkspaceController extends Controller {
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
 	 *
-	 * @NoAdminRequired
-	 *
 	 */
+    #[NoAdminRequired]
 	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
 		// We only want to return those workspaces for which the connected user is a manager
@@ -187,17 +190,17 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string|array $workspace
 	 */
+    #[NoAdminRequired]
 	public function addGroupsInfo(string|array $workspace): JSONResponse {
 		return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string|array $workspace
 	 */
+    #[NoAdminRequired]
 	public function addUsersInfo(string|array $workspace): JSONResponse {
 		if (gettype($workspace) === 'string') {
 			$workspace = json_decode($workspace, true);
@@ -208,12 +211,12 @@ class WorkspaceController extends Controller {
 	/**
 	 * Returns a list of users whose name matches $term
 	 *
-	 * @NoAdminRequired
 	 * @param string $term
 	 * @param string $spaceId
 	 * @param string|array $space
 	 *
 	 */
+    #[NoAdminRequired]
 	public function lookupUsers(string $term,
 		string $spaceId,
 		string|array $space): JSONResponse {
@@ -228,13 +231,13 @@ class WorkspaceController extends Controller {
 	 *
 	 * Change a user's role in a workspace
 	 *
-	 * @NoAdminRequired
-	 * @SpaceAdminRequired
 	 *
 	 * @param array|string $space
 	 * @param string $userId
 	 *
 	 */
+    #[NoAdminRequired]
+    #[SpaceAdminRequired]
 	public function changeUserRole(array|string $space,
 		string $userId): JSONResponse {
 		if (gettype($space) === 'string') {
@@ -261,13 +264,13 @@ class WorkspaceController extends Controller {
 
 	/**
 	 *
-	 * @NoAdminRequired
-	 * @SpaceAdminRequired
 	 * @param array|string $workspace
 	 * @param string $newSpaceName
 	 *
 	 * @todo Manage errors
 	 */
+    #[NoAdminRequired]
+    #[SpaceAdminRequired]
 	public function renameSpace(array|string $workspace,
 		string $newSpaceName): JSONResponse {
 		if (gettype($workspace) === 'string') {
