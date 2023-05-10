@@ -1,6 +1,5 @@
 <template>
   <NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
-    <div>you accessed app</div>
 			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				icon="icon-add"
 				:title="t('workspace', 'New space')"
@@ -69,6 +68,44 @@ export default {
     NcAppNavigationItem,
     NcAppNavigationIconBullet,
     NcCounterBubble,
+  },
+  methods: {
+    sortedGroups(groups, space) {
+			groups.sort((a, b) => {
+				// Makes sure the GE- group is first in the list
+				// These tests must happen before the tests for the U- group
+				const GEGroup = this.$store.getters.GEGroup(space)
+				if (a === GEGroup) {
+					return -1
+				}
+				if (b === GEGroup) {
+					return 1
+				}
+				// Makes sure the U- group is second in the list
+				// These tests must be done after the tests for the GE- group
+				const UGroup = this.$store.getters.UGroup(space)
+				if (a === UGroup) {
+					return -1
+				}
+				if (b === UGroup) {
+					return 1
+				}
+				// Normal locale based sort
+				// Some javascript engines don't support localCompare's locales
+				// and options arguments.
+				// This is especially the case of the mocha test framework
+				try {
+					return a.displayName.localeCompare(b.displayName, getLocale(), {
+						sensitivity: 'base',
+						ignorePunctuation: true,
+					})
+				} catch (e) {
+					return a.displayName.localeCompare(b.displayName)
+				}
+			})
+
+			return groups
+		},
   }
 }
 </script>
