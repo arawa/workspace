@@ -22,81 +22,8 @@
 
 <template>
 	<NcContent id="content" app-name="workspace">
-		<notifications
-			position="top center"
-			width="50%"
-			class="notifications"
-			:close-on-click="true" />
-		<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
-				icon="icon-add"
-				:title="t('workspace', 'New space')"
-				@new-item="createSpace" />
-			<NcAppNavigationItem
-				:title="t('workspace', 'All spaces')"
-				:to="{path: '/'}"
-				:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
-			<template #list>
-				<NcAppNavigationItem
-					v-for="(space, spaceName) in $store.state.spaces"
-					:key="space.id"
-					:class="$route.params.space === spaceName ? 'space-selected' : ''"
-					:allow-collapse="true"
-					:open="$route.params.space === spaceName"
-					:title="spaceName"
-					:to="{path: `/workspace/${spaceName}`}">
-					<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-					<CounterBubble slot="counter" class="user-counter">
-						{{ $store.getters.spaceUserCount(spaceName) }}
-					</CounterBubble>
-					<div>
-						<NcAppNavigationItem
-							v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
-							:key="group.gid"
-							icon="icon-group"
-							:to="{path: `/group/${spaceName}/${group.gid}`}"
-							:title="group.displayName">
-							<CounterBubble slot="counter" class="user-counter">
-								{{ $store.getters.groupUserCount( spaceName, group.gid) }}
-							</CounterBubble>
-						</NcAppNavigationItem>
-					</div>
-				</NcAppNavigationItem>
-				<!-- <div id="app-settings">
-					<div id="app-settings-header">
-						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
-							icon="icon-settings-dark"
-							class="settings-button"
-							data-apps-slide-toggle="#app-settings-content">
-							{{ t('workspace', 'Settings') }}
-						</button>
-					</div>
-					<div id="app-settings-content">
-						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
-							:close-after-click="true"
-							:title="t('workspace', 'Convert group folders')"
-							@click="toggleShowSelectGroupfoldersModal" />
-					</div>
-				</div> -->
-			</template>
-		</NcAppNavigation>
-		<NcAppContent>
-			<NcAppContentDetails>
-				<div
-					v-if="$store.state.loading"
-					class="lds-ring">
-					<div /><div /><div /><div />
-				</div>
-				<div v-else class="workspace-content">
-					<router-view />
-				</div>
-			</NcAppContentDetails>
-		</NcAppContent>
-		<!-- <NcModal
-			v-if="showSelectGroupfoldersModal"
-			@close="toggleShowSelectGroupfoldersModal">
-			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />
-		</NcModal> -->
+		<WorkspaceContent />
+    <LeftSidebar />
 	</NcContent>
 </template>
 
@@ -116,18 +43,22 @@ import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import LeftSidebar from './LeftSidebar.vue'
+import WorkspaceContent from './WorkspaceContent.vue'
 
 export default {
 	name: 'Home',
 	components: {
-		NcAppContent,
-		NcAppContentDetails,
-		NcAppNavigation,
-		NcAppNavigationIconBullet,
-		NcAppNavigationItem,
-		NcAppNavigationNewItem,
-		NcContent,
-	},
+    NcAppContent,
+    NcAppContentDetails,
+    NcAppNavigation,
+    NcAppNavigationIconBullet,
+    NcAppNavigationItem,
+    NcAppNavigationNewItem,
+    NcContent,
+    LeftSidebar,
+    WorkspaceContent,
+},
 	data() {
 		return {
 			showSelectGroupfoldersModal: false,
