@@ -28,16 +28,7 @@
 </template>
 
 <script>
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
-import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
-import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
-import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
-import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
-import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
-import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
-import showNotificationError from './services/Notifications/NotificationError.js'
 import LeftSidebar from './LeftSidebar.vue'
 import WorkspaceContent from './WorkspaceContent.vue'
 
@@ -62,54 +53,6 @@ export default {
 		}
 	},
 	methods: {
-		// Creates a new space and navigates to its details page
-		async createSpace(name) {
-			if (name === '') {
-				showNotificationError('Error', 'Please specify a name.', 3000)
-				return
-			}
-			name = deleteBlankSpacename(name)
-
-			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
-
-			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
-				throw new BadCreateError(
-					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
-				)
-			}
-
-			await checkGroupfolderNameExist(name)
-
-			const groupfolderId = await createGroupfolder(name)
-
-			await enableAcl(groupfolderId.data.id)
-
-			const workspace = await createSpace(name, groupfolderId.data.id)
-
-			const GROUPS_WORKSPACE = Object.keys(workspace.groups)
-			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
-			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
-
-			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
-			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
-
-			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid)
-
-			this.$store.commit('addSpace', {
-				color: workspace.color,
-				groups: workspace.groups,
-				isOpen: false,
-				id: workspace.id_space,
-				groupfolderId: groupfolderId.data.id,
-				name,
-				quota: t('workspace', 'unlimited'),
-				users: {},
-			})
-			this.$router.push({
-				path: `/workspace/${name}`,
-			})
-		},
 		// toggleShowSelectGroupfoldersModal() {
 		//  this.$store.dispatch('emptyGroupfolders')
 		//  this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
