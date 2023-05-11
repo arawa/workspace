@@ -148,3 +148,12 @@ export default {
 	},
 }
 </script>
+
+<style scoped>
+.app-navigation-entry {
+	padding-right: 0px;
+}
+.user-counter {
+	margin-right: 5px;
+}
+</style>

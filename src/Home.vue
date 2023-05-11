@@ -50,31 +50,6 @@ export default {
 </script>
 
 <style scoped>
-
-.app-content-details {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-}
-
-.app-navigation-entry {
-	padding-right: 0px;
-}
-
-.user-counter {
-	margin-right: 5px;
-}
-
-/* .notifications {
-	margin-top: 70px;
-} */
-
-/* .workspace-content {
-	height: 100%;
-	width: 100%;
-} */
-
 /*
 	Code for the loading.
 	Source code: https://loading.io/css/

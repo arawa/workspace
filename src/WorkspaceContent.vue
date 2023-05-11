@@ -17,7 +17,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { get, formatGroups, formatUsers } from './services/groupfoldersService.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
 export default {
@@ -146,10 +146,14 @@ export default {
 </script>
 
 <style scoped>
-
 .workspace-content {
 	height: 100%;
 	width: 100%;
 }
-
+.app-content-details {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
 </style>
