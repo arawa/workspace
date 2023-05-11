@@ -70,6 +70,7 @@ export default {
     NcCounterBubble,
   },
   methods: {
+    // sorts groups alphabetically
     sortedGroups(groups, space) {
 			groups.sort((a, b) => {
 				// Makes sure the GE- group is first in the list

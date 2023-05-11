@@ -22,14 +22,13 @@
 
 <template>
 	<NcContent id="content" app-name="workspace">
+		<LeftSidebar />
 		<WorkspaceContent />
-    <LeftSidebar />
 	</NcContent>
 </template>
 
 <script>
 import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
-import { generateUrl } from '@nextcloud/router'
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { getLocale } from '@nextcloud/l10n'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
@@ -39,7 +38,6 @@ import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
-import axios from '@nextcloud/axios'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
@@ -49,16 +47,16 @@ import WorkspaceContent from './WorkspaceContent.vue'
 export default {
 	name: 'Home',
 	components: {
-    NcAppContent,
-    NcAppContentDetails,
-    NcAppNavigation,
-    NcAppNavigationIconBullet,
-    NcAppNavigationItem,
-    NcAppNavigationNewItem,
-    NcContent,
-    LeftSidebar,
-    WorkspaceContent,
-},
+		NcAppContent,
+		NcAppContentDetails,
+		NcAppNavigation,
+		NcAppNavigationIconBullet,
+		NcAppNavigationItem,
+		NcAppNavigationNewItem,
+		NcContent,
+		LeftSidebar,
+		WorkspaceContent,
+	},
 	data() {
 		return {
 			showSelectGroupfoldersModal: false,
@@ -72,121 +70,7 @@ export default {
 			})
 		}
 	},
-	created() {
-		if (Object.entries(this.$store.state.spaces).length === 0) {
-			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spaces'))
-				.then(resp => {
-					// Checks for application errors
-					if (resp.status !== 200) {
-						const text = t('workspace', 'An error occured while trying to retrieve workspaces.<br>The error is: {error}', { error: resp.statusText })
-						showNotificationError('Error', text, 4000)
-						this.$store.state.loading = false
-						return
-					}
-					this.generateDataCreated(resp.data)
-						// resp return [ undefined, undefined, undefined, undefined]
-						// it is serious ?
-						.then(resp => {
-							// Finished loading
-							// When all promises is finished
-							this.$store.state.loading = false
-						})
-						.catch(error => {
-							console.error('The generateDataCreated method has a problem in promises', error)
-							this.$store.state.loading = false
-						})
-				})
-				.catch((e) => {
-					console.error('Problem to load spaces only', e)
-					const text = t('workspace', 'A network error occured while trying to retrieve workspaces.<br>The error is: {error}', { error: e })
-					showNotificationError('Network error', text, 5000)
-					this.$store.state.loading = false
-				})
-		}
-	},
 	methods: {
-		// Method to generate the data when this component is created.
-		// It is necessary to await promises and catch the response to
-		// stop the loading.
-		// data object/json from space
-		generateDataCreated(data) {
-			// It possible which the data is not an array but an object.
-			// Because, the `/apps/workspace/spaces` route return an object if there is one element.
-			if (!Array.isArray(data)) {
-				data = [data]
-			}
-			// loop to build the json final
-			const result = Promise.all(data.map(async space => {
-				await get(space.groupfolder_id)
-					.then((resp) => {
-						space.acl = resp.acl
-						space.groups = resp.groups
-						space.quota = resp.quota
-						space.size = resp.size
-						return space
-					})
-					.catch((e) => {
-						console.error('Impossible to format the spaces', e)
-					})
-				const spaceWithUsers = await formatUsers(space)
-					.then((resp) => {
-						return resp.data
-					})
-					.catch((error) => {
-						console.error('Impossible to generate a space with users format', error)
-					})
-				const spaceWithUsersAndGroups = await formatGroups(spaceWithUsers)
-					.then((resp) => {
-						return resp.data
-					})
-					.catch((error) => {
-						console.error('Impossible to generate a space with groups format', error)
-					})
-				// Initialises the store
-				let codeColor = spaceWithUsersAndGroups.color_code
-				if (spaceWithUsersAndGroups.color_code === null) {
-					codeColor = '#' + (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
-				}
-				let quota = this.convertQuotaForFrontend(spaceWithUsersAndGroups.quota)
-				if (quota === 'unlimited') {
-					quota = t('workspace', 'unlimited')
-				}
-				// Convert an array empty to object
-				if (Array.isArray(spaceWithUsersAndGroups.users)
-				&& spaceWithUsersAndGroups.users.length === 0) {
-					spaceWithUsersAndGroups.users = { }
-				}
-				this.$store.commit('addSpace', {
-					color: codeColor,
-					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
-					groups: spaceWithUsersAndGroups.groups,
-					id: spaceWithUsersAndGroups.id,
-					isOpen: false,
-					name: spaceWithUsersAndGroups.space_name,
-					quota,
-					users: spaceWithUsersAndGroups.users,
-				})
-			}))
-			return result
-		},
-		// Shows a space quota in a user-friendly way
-		convertQuotaForFrontend(quota) {
-			if (quota === -3 || quota === '-3') {
-				return 'unlimited'
-			} else {
-				const units = ['', 'KB', 'MB', 'GB', 'TB']
-				let i = 0
-				while (quota >= 1024) {
-					quota = quota / 1024
-					i++
-				}
-				if (Number.isInteger(quota) === false) {
-					quota = quota * 1.024
-				}
-				return quota + units[i]
-			}
-		},
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
@@ -234,43 +118,6 @@ export default {
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})
-		},
-		// Sorts groups alphabeticaly
-		sortedGroups(groups, space) {
-			groups.sort((a, b) => {
-				// Makes sure the GE- group is first in the list
-				// These tests must happen before the tests for the U- group
-				const GEGroup = this.$store.getters.GEGroup(space)
-				if (a === GEGroup) {
-					return -1
-				}
-				if (b === GEGroup) {
-					return 1
-				}
-				// Makes sure the U- group is second in the list
-				// These tests must be done after the tests for the GE- group
-				const UGroup = this.$store.getters.UGroup(space)
-				if (a === UGroup) {
-					return -1
-				}
-				if (b === UGroup) {
-					return 1
-				}
-				// Normal locale based sort
-				// Some javascript engines don't support localCompare's locales
-				// and options arguments.
-				// This is especially the case of the mocha test framework
-				try {
-					return a.displayName.localeCompare(b.displayName, getLocale(), {
-						sensitivity: 'base',
-						ignorePunctuation: true,
-					})
-				} catch (e) {
-					return a.displayName.localeCompare(b.displayName)
-				}
-			})
-
-			return groups
 		},
 		// toggleShowSelectGroupfoldersModal() {
 		//  this.$store.dispatch('emptyGroupfolders')
