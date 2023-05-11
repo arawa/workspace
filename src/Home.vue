@@ -30,7 +30,6 @@
 <script>
 import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
-import { getLocale } from '@nextcloud/l10n'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
