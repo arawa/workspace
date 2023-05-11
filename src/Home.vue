@@ -32,8 +32,6 @@ import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { getLocale } from '@nextcloud/l10n'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
-import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
@@ -47,8 +45,6 @@ import WorkspaceContent from './WorkspaceContent.vue'
 export default {
 	name: 'Home',
 	components: {
-		NcAppContent,
-		NcAppContentDetails,
 		NcAppNavigation,
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
@@ -144,14 +140,14 @@ export default {
 	margin-right: 5px;
 }
 
-.notifications {
+/* .notifications {
 	margin-top: 70px;
-}
+} */
 
-.workspace-content {
+/* .workspace-content {
 	height: 100%;
 	width: 100%;
-}
+} */
 
 /*
 	Code for the loading.

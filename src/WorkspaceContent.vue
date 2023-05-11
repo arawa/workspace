@@ -18,8 +18,14 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import { get, formatGroups, createGroupfolder, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
 export default {
 	name: 'WorkspaceContent',
+	components: {
+		NcAppContent,
+		NcAppContentDetails,
+	},
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
@@ -138,3 +144,12 @@ export default {
 	},
 }
 </script>
+
+<style scoped>
+
+.workspace-content {
+	height: 100%;
+	width: 100%;
+}
+
+</style>
