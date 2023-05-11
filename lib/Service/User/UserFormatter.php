@@ -29,10 +29,8 @@ use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCP\IUser;
 
 class UserFormatter {
-	private GroupsWorkspaceService $groupsWorkspace;
 
-	public function __construct(GroupsWorkspaceService $groupsWorkspace) {
-		$this->groupsWorkspace = $groupsWorkspace;
+    public function __construct(private GroupsWorkspaceService $groupsWorkspace) {
 	}
 
 	/**

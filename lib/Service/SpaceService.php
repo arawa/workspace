@@ -31,15 +31,11 @@ use OCA\Workspace\DB\SpaceMapper;
 use OCP\IGroupManager;
 
 class SpaceService {
-	/** @var SpaceMapper */
-	private $spaceMapper;
 
 	public function __construct(
-		SpaceMapper $spaceMapper,
-		IGroupManager $groupManager
+		private IGroupManager $groupManager,
+		private SpaceMapper $spaceMapper
 	) {
-		$this->spaceMapper = $spaceMapper;
-		$this->groupManager = $groupManager;
 	}
 
 	public function findAll() {

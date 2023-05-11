@@ -34,21 +34,11 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 class WorkspaceAccessControlMiddleware extends Middleware {
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var UserService */
-	private $userService;
 
 	public function __construct(
-		IURLGenerator $urlGenerator,
-		UserService $userService
+		private IURLGenerator $urlGenerator,
+		private UserService $userService
 	) {
-		$this->urlGenerator = $urlGenerator;
-		$this->userService = $userService;
 	}
 
 	public function beforeController($controller, $methodName) {

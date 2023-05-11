@@ -30,10 +30,8 @@ use OCA\Workspace\WorkspaceNameExistException;
 use OCP\AppFramework\Http;
 
 class WorkspaceCheckService {
-	private SpaceService $spaceService;
 
-	public function __construct(SpaceService $spaceService) {
-		$this->spaceService = $spaceService;
+	public function __construct(private SpaceService $spaceService) {
 	}
 
 

@@ -45,36 +45,20 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
-	private IGroupManager $groupManager;
-	private IUserManager $userManager;
-	private LoggerInterface $logger;
-	private SpaceMapper $spaceMapper;
-	private SpaceService $spaceService;
-	private UserService $userService;
-	private WorkspaceCheckService $workspaceCheck;
-	private WorkspaceService $workspaceService;
 
-	public function __construct(
-		$AppName,
-		IGroupManager $groupManager,
-		LoggerInterface $logger,
+    public function __construct(
 		IRequest $request,
-		IUserManager $userManager,
-		SpaceMapper $mapper,
-		SpaceService $spaceService,
-		UserService $userService,
-		WorkspaceCheckService $workspaceCheck,
-		WorkspaceService $workspaceService
+		private IGroupManager $groupManager,
+		private IUserManager $userManager,
+		private LoggerInterface $logger,
+		private SpaceMapper $spaceMapper,
+		private SpaceService $spaceService,
+		private UserService $userService,
+		private WorkspaceCheckService $workspaceCheck,
+		private WorkspaceService $workspaceService,
+		public $AppName
 	) {
 		parent::__construct($AppName, $request);
-		$this->groupManager = $groupManager;
-		$this->logger = $logger;
-		$this->spaceMapper = $mapper;
-		$this->spaceService = $spaceService;
-		$this->userManager = $userManager;
-		$this->userService = $userService;
-		$this->workspaceCheck = $workspaceCheck;
-		$this->workspaceService = $workspaceService;
 	}
 
 	/**

@@ -41,30 +41,16 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
-	private GroupsWorkspaceService $groupsWorkspace;
-	private IGroupManager $groupManager;
-	private IUserManager $userManager;
-	private LoggerInterface $logger;
-	private UserFormatter $userFormatter;
-	private UserService $userService;
-	private UserWorkspace $userWorkspace;
 
-	public function __construct(
-		GroupsWorkspaceService $groupsWorkspace,
-		IGroupManager $groupManager,
-		LoggerInterface $logger,
-		IUserManager $userManager,
-		UserFormatter $userFormatter,
-		UserService $userService,
-		UserWorkspace $userWorkspace
+    public function __construct(
+		private GroupsWorkspaceService $groupsWorkspace,
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+		private IUserManager $userManager,
+		private UserFormatter $userFormatter,
+		private UserService $userService,
+		private UserWorkspace $userWorkspace
 	) {
-		$this->groupManager = $groupManager;
-		$this->groupsWorkspace = $groupsWorkspace;
-		$this->logger = $logger;
-		$this->userFormatter = $userFormatter;
-		$this->userManager = $userManager;
-		$this->userService = $userService;
-		$this->userWorkspace = $userWorkspace;
 	}
 
 	/**

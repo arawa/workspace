@@ -33,18 +33,12 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class UserService {
-	private IGroupManager $groupManager;
-	private IUserSession $userSession;
-	private LoggerInterface $logger;
 
 	public function __construct(
-		IGroupManager $group,
-		IUserSession $userSession,
-		LoggerInterface $logger
+		private IGroupManager $groupManager,
+		private IUserSession $userSession,
+		private LoggerInterface $logger
 	) {
-		$this->groupManager = $group;
-		$this->logger = $logger;
-		$this->userSession = $userSession;
 	}
 
 	/**

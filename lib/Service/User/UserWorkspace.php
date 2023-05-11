@@ -6,12 +6,10 @@ use OCP\IGroupManager;
 use OCP\IUser;
 
 class UserWorkspace {
-	private IGroupManager $groupManager;
 
-	public function __construct(
-		IGroupManager $groupManager
+    public function __construct(
+		private IGroupManager $groupManager
 	) {
-		$this->groupManager = $groupManager;
 	}
 
 	/**

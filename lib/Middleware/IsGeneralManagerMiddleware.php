@@ -35,20 +35,12 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 
 class IsGeneralManagerMiddleware extends Middleware {
-	/** @var IControllerMethodReflector */
-	private $reflector;
 
-	/** @var UserService */
-	private $userService;
-
-	public function __construct(
-		IControllerMethodReflector $reflector,
-		IRequest $request,
-		UserService $userService
+    public function __construct(
+		private IControllerMethodReflector $reflector,
+		private IRequest $request,
+		private UserService $userService
 	) {
-		$this->reflector = $reflector;
-		$this->request = $request;
-		$this->userService = $userService;
 	}
 
 	public function beforeController($controller, $methodName) {

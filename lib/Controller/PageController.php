@@ -32,13 +32,10 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class PageController extends Controller {
-	/** @var UserService */
-	private $userService;
 
-	public function __construct(
-		UserService $userService
+    public function __construct(
+		private UserService $userService
 	) {
-		$this->userService = $userService;
 	}
 
 	/**

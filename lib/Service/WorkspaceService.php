@@ -35,30 +35,16 @@ use OCP\Share\IManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceService {
-	private IGroupManager $groupManager;
-	private IManager $shareManager;
-	private IUserManager $userManager;
-	private IUserSession $userSession;
-	private LoggerInterface $logger;
-	private SpaceMapper $spaceMapper;
-	private UserService $userService;
 
 	public function __construct(
-		IGroupManager $groupManager,
-		IManager $shareManager,
-		IUserManager $userManager,
-		IUserSession $userSession,
-		LoggerInterface $logger,
-		SpaceMapper $spaceMapper,
-		UserService $userService
+		private IGroupManager $groupManager,
+		private IManager $shareManager,
+		private IUserManager $userManager,
+		private IUserSession $userSession,
+		private LoggerInterface $logger,
+		private SpaceMapper $spaceMapper,
+		private UserService $userService
 	) {
-		$this->groupManager = $groupManager;
-		$this->logger = $logger;
-		$this->shareManager = $shareManager;
-		$this->spaceMapper = $spaceMapper;
-		$this->userManager = $userManager;
-		$this->userService = $userService;
-		$this->userSession = $userSession;
 	}
 
 	/**

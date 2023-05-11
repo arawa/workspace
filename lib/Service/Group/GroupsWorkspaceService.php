@@ -31,12 +31,8 @@ use OCP\IGroupManager;
 use OCP\IUser;
 
 class GroupsWorkspaceService {
-	private IGroupManager $groupManager;
 
-	public function __construct(
-		IGroupManager $groupManager
-	) {
-		$this->groupManager = $groupManager;
+    public function __construct(private IGroupManager $groupManager) {
 	}
 
 	/**
