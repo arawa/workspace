@@ -31,7 +31,6 @@ use OCA\Workspace\DB\SpaceMapper;
 use OCP\IGroupManager;
 
 class SpaceService {
-
 	public function __construct(
 		private IGroupManager $groupManager,
 		private SpaceMapper $spaceMapper

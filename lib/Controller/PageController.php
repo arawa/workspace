@@ -32,8 +32,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class PageController extends Controller {
-
-    public function __construct(
+	public function __construct(
 		private UserService $userService
 	) {
 	}

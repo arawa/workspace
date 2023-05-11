@@ -6,8 +6,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 
 class UserWorkspace {
-
-    public function __construct(
+	public function __construct(
 		private IGroupManager $groupManager
 	) {
 	}

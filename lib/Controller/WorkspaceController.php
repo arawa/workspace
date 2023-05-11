@@ -45,8 +45,7 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
-
-    public function __construct(
+	public function __construct(
 		IRequest $request,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
@@ -80,7 +79,7 @@ class WorkspaceController extends Controller {
 	 * @throws CreateGroupException
 	 */
 	public function createWorkspace(string $spaceName,
-        int $folderId): JSONResponse {
+		int $folderId): JSONResponse {
 		if ($spaceName === false ||
 			$spaceName === null ||
 			$spaceName === ''
@@ -225,8 +224,8 @@ class WorkspaceController extends Controller {
 	 *
 	 */
 	public function lookupUsers(string $term,
-        string $spaceId,
-        string|array $space): JSONResponse {
+		string $spaceId,
+		string|array $space): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -246,7 +245,7 @@ class WorkspaceController extends Controller {
 	 *
 	 */
 	public function changeUserRole(array|string $space,
-        string $userId): JSONResponse {
+		string $userId): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -278,7 +277,7 @@ class WorkspaceController extends Controller {
 	 * @todo Manage errors
 	 */
 	public function renameSpace(array|string $workspace,
-        string $newSpaceName): JSONResponse {
+		string $newSpaceName): JSONResponse {
 		if (gettype($workspace) === 'string') {
 			$workspace = json_decode($workspace, true);
 		}

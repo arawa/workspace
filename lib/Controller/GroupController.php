@@ -41,8 +41,7 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
-
-    public function __construct(
+	public function __construct(
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
@@ -128,8 +127,8 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function rename(string $newGroupName,
-        string $gid,
-        int $spaceId): JSONResponse {
+		string $gid,
+		int $spaceId): JSONResponse {
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
@@ -216,8 +215,8 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function removeUser(array|string $space,
-        string $gid,
-        string $user): JSONResponse {
+		string $gid,
+		string $user): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -274,7 +273,7 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function transferUsersToGroups(string $spaceId,
-        string|array $groupfolder): JSONResponse {
+		string|array $groupfolder): JSONResponse {
 		if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}

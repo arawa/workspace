@@ -34,7 +34,6 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 class WorkspaceAccessControlMiddleware extends Middleware {
-
 	public function __construct(
 		private IURLGenerator $urlGenerator,
 		private UserService $userService

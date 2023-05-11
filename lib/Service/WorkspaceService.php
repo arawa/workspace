@@ -35,7 +35,6 @@ use OCP\Share\IManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceService {
-
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IManager $shareManager,

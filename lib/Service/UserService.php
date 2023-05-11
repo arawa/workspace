@@ -33,7 +33,6 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class UserService {
-
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IUserSession $userSession,

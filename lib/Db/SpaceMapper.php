@@ -48,7 +48,7 @@ class SpaceMapper extends QBMapper {
 
 	/**
 	 * work
-     * @return Space[]
+	 * @return Space[]
 	 */
 	public function findAll($limit = null, $offset = null): array {
 		$qb = $this->db->getQueryBuilder();

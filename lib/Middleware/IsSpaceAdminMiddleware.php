@@ -34,8 +34,7 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 
 class IsSpaceAdminMiddleware extends Middleware {
-
-    public function __construct(
+	public function __construct(
 		private IControllerMethodReflector $reflector,
 		private IRequest $request,
 		private UserService $userService
@@ -61,6 +60,6 @@ class IsSpaceAdminMiddleware extends Middleware {
 			], Http::STATUS_FORBIDDEN);
 		}
 
-        return new JSONResponse([]);
+		return new JSONResponse([]);
 	}
 }

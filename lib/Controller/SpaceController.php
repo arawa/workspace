@@ -32,7 +32,6 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
 class SpaceController extends Controller {
-
 	public function __construct(
 		IRequest $request,
 		private $AppName,

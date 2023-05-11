@@ -35,8 +35,7 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 
 class IsGeneralManagerMiddleware extends Middleware {
-
-    public function __construct(
+	public function __construct(
 		private IControllerMethodReflector $reflector,
 		private IRequest $request,
 		private UserService $userService
