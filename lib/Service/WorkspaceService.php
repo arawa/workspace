@@ -51,7 +51,7 @@ class WorkspaceService {
 	 * @param string $term
 	 * @return OCP\IUser[]
 	 */
-	private function searchUsersByMailing($term) {
+	private function searchUsersByMailing(string $term): array {
 		return $this->userManager->getByEmail($term);
 	}
 
@@ -59,7 +59,7 @@ class WorkspaceService {
 	 * @param string $term
 	 * @return OCP\IUser[]
 	 */
-	private function searchUsersByDisplayName($term) {
+	private function searchUsersByDisplayName(string $term): array {
 		$users = [];
 
 		$term = $term === '*' ? '' : $term;
@@ -72,7 +72,7 @@ class WorkspaceService {
 	 * @param string $term
 	 * @return OCP\IUser[]
 	 */
-	private function searchUsers($term) {
+	private function searchUsers(string $term): array {
 		$users = [];
 		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
 
@@ -89,7 +89,7 @@ class WorkspaceService {
 	 * @param IUser[] $users
 	 * @return IUser[]
 	 */
-	private function getUsersFromGroupsOnly($users) {
+	private function getUsersFromGroupsOnly(array $users): array {
 		$usersFromGroups = [];
 		$userSession = $this->userSession->getUser();
 		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
@@ -108,11 +108,11 @@ class WorkspaceService {
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @param string $term
-	 * @param array|object $space
+	 * @param array|string $space
 	 *
 	 * @return array
 	 */
-	public function autoComplete(string $term, array $space) {
+	public function autoComplete(string $term, array|string $space): array {
 		// lookup users
 		$searchingUsers = $this->searchUsers($term);
 
@@ -143,10 +143,10 @@ class WorkspaceService {
 		return $data;
 	}
 
-	/*
-	 * Gets all workspaces
+	/**
+	 * @return Space[] - all spaces
 	 */
-	public function getAll() {
+	public function getAll(): array {
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
 		$newSpaces = [];
@@ -161,10 +161,10 @@ class WorkspaceService {
 	 *
 	 * Adds users information to a workspace
 	 *
-	 * @param array The workspace to which we want to add users info
+	 * @param string|array The workspace to which we want to add users info
 	 *
 	 */
-	public function addUsersInfo($workspace) {
+	public function addUsersInfo(string|array $workspace): array {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -192,11 +192,11 @@ class WorkspaceService {
 	 *
 	 * Adds groups information to a workspace
 	 *
-	 * @param array The workspace to which we want to add groups info
-	 * @return object|array assoc $workspace
+	 * @param array|string The workspace to which we want to add groups info
+	 * @return array assoc $workspace
 	 *
 	 */
-	public function addGroupsInfo($workspace) {
+	public function addGroupsInfo(array|string $workspace): array {
 		$groups = array();
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);

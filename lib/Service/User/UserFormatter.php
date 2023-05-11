@@ -36,7 +36,7 @@ class UserFormatter {
 	/**
 	 * @param IUser[] $users
 	 */
-	public function formatUsers($users, array $groupfolder, string $spaceId): array {
+	public function formatUsers(array $users, array $groupfolder, string $spaceId): array {
 		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
 
 		$usersFormatted = [];

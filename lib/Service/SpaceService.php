@@ -38,11 +38,11 @@ class SpaceService {
 	) {
 	}
 
-	public function findAll() {
+	public function findAll(): array {
 		return $this->spaceMapper->findAll();
 	}
 
-	public function find($id) {
+	public function find($id): Space {
 		return $this->spaceMapper->find($id);
 	}
 
@@ -50,17 +50,17 @@ class SpaceService {
 	 * @deprecated
 	 * @see WorkspaceController->destroy().
 	 */
-	public function delete(int $id) {
+	public function delete(int $id): mixed {
 		return $this->spaceMapper->deleteSpace($id);
 	}
 
 	/**
 	 * @param $spaceName
-	 * @return object
+	 * @return Space
 	 * @throws BadRequestException
 	 * @todo to debug this part
 	 */
-	public function create(string $spaceName, int $folderId) {
+	public function create(string $spaceName, int $folderId): Space {
 		$space = new Space();
 		$space->setSpaceName($spaceName);
 		$space->setGroupfolderId($folderId);
@@ -76,11 +76,11 @@ class SpaceService {
 		return $this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
 	}
 
-	public function updateColorCode(string $colorCode, int $spaceId) {
+	public function updateColorCode(string $colorCode, int $spaceId): Space {
 		return $this->spaceMapper->updateColorCode($colorCode, $spaceId);
 	}
 
-	public function checkSpaceNameExist(string $spacename) {
+	public function checkSpaceNameExist(string $spacename): bool {
 		$checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
 
 		if (!is_bool($checkSpacename)) {

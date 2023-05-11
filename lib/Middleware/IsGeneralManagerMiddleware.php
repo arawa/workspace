@@ -43,7 +43,7 @@ class IsGeneralManagerMiddleware extends Middleware {
 	) {
 	}
 
-	public function beforeController($controller, $methodName) {
+	public function beforeController($controller, $methodName): void {
 		if ($this->reflector->hasAnnotation('GeneralManagerRequired')) {
 			if (!$this->userService->isUserGeneralAdmin()) {
 				throw new AccessDeniedException();
@@ -53,7 +53,7 @@ class IsGeneralManagerMiddleware extends Middleware {
 		return;
 	}
 
-	public function afterException($controller, $methodName, Exception $exception) {
+	public function afterException($controller, $methodName, Exception $exception): void {
 		if ($exception instanceof AccessDeniedException) {
 			return new JSONResponse([
 				'status' => 'forbidden',

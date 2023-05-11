@@ -44,7 +44,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NOCSRFRequired
 	 */
-	public function index() {
+	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	

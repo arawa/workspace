@@ -30,7 +30,7 @@ class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
 	 */
-	public static function formatGroups($groups): array {
+	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
 
 		foreach ($groups as $group) {

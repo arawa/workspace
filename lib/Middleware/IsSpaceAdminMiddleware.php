@@ -42,7 +42,7 @@ class IsSpaceAdminMiddleware extends Middleware {
 	) {
 	}
 
-	public function beforeController($controller, $methodName) {
+	public function beforeController($controller, $methodName): void {
 		if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
 			$spaceId = $this->request->getParam('spaceId');
 			if (!$this->userService->isSpaceManagerOfSpace($spaceId) && !$this->userService->isUserGeneralAdmin()) {
@@ -53,12 +53,14 @@ class IsSpaceAdminMiddleware extends Middleware {
 		return;
 	}
 
-	public function afterException($controller, $methodName, \Exception $exception) {
+	public function afterException($controller, $methodName, \Exception $exception): JSONResponse {
 		if ($exception instanceof AccessDeniedException) {
 			return new JSONResponse([
 				'status' => 'forbidden',
 				'msg' => 'You are not allowed to perform this action.'
 			], Http::STATUS_FORBIDDEN);
 		}
+
+        return new JSONResponse([]);
 	}
 }

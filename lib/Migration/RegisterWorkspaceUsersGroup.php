@@ -38,11 +38,11 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 
-	public function getName() {
+	public function getName(): string {
 		return 'Creates the group of user allowed to use the application';
 	}
 
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		// The group already exists when we upgrade the app
 		if (!$this->groupManager->groupExists(ManagersWorkspace::WORKSPACES_MANAGERS)) {
 			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist. Let\'s create it.');

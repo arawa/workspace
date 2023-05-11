@@ -54,7 +54,7 @@ class Space extends Entity implements JsonSerializable {
 	 * id when it created (POST). But, with GETs method, it has to
 	 * write $this->getSpaceId().
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'id' => (int)$this->getSpaceId(),
 			'groupfolder_id' => (int)$this->groupfolderId,

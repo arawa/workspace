@@ -16,7 +16,7 @@ class UserWorkspace {
 	 * @param String[] $groupsName
 	 * @return IUser[]
 	 */
-	public function getUsersFromGroup($groupsName) {
+	public function getUsersFromGroup(array $groupsName): array {
 		$users = [];
 
 		foreach ($groupsName as $groupName) {

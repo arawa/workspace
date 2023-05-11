@@ -54,9 +54,9 @@ class UserService {
 	 *
 	 */
 
-	public function formatUser($user, $space, $role) {
+	public function formatUser(IUser $user, array $space, string $role): array|null {
 		if (is_null($user)) {
-			return;
+			return null;
 		}
 
 		// Gets the workspace subgroups the user is member of
@@ -81,7 +81,7 @@ class UserService {
 	/**
 	 * @return boolean true if user is general admin, false otherwise
 	 */
-	public function isUserGeneralAdmin() {
+	public function isUserGeneralAdmin(): bool {
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), ManagersWorkspace::GENERAL_MANAGER)) {
 			return true;
 		}
@@ -91,7 +91,7 @@ class UserService {
 	/**
 	 * @return boolean true if user is a space manager, false otherwise
 	 */
-	public function isSpaceManager() {
+	public function isSpaceManager(): bool {
 		$workspaceAdminGroups = $this->groupManager->search(GroupsWorkspace::SPACE_MANAGER);
 		foreach ($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
@@ -105,7 +105,7 @@ class UserService {
 	 * @return boolean true if user is space manager or general manager, false otherwise
 	 * @todo Can we move this function in the lib/AppInfo/Application.php ?
 	 */
-	public function canAccessApp() {
+	public function canAccessApp(): bool {
 		if ($this->isSpaceManager() || $this->isUserGeneralAdmin()) {
 			return true;
 		}
@@ -116,7 +116,7 @@ class UserService {
 	 * @param string $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
-	public function isSpaceManagerOfSpace($id) {
+	public function isSpaceManagerOfSpace(string $id): bool {
 		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $id)) {
 			return true;
 		}
@@ -128,7 +128,7 @@ class UserService {
 	 * This function removes a GE from the WorkspaceManagers group when necessary
 	 *
 	 */
-	public function removeGEFromWM(IUser $user, int $spaceId) {
+	public function removeGEFromWM(IUser $user, int $spaceId): void {
 		$found = false;
 		$groups = $this->groupManager->getUserGroups($user);
 

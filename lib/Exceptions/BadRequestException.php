@@ -32,7 +32,7 @@ class BadRequestException extends \Exception {
 		parent::__construct($message);
 	}
 
-	public function getStatus() {
+	public function getStatus(): int {
 		return HTTP::STATUS_BAD_REQUEST;
 	}
 }

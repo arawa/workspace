@@ -68,7 +68,7 @@ class GroupsWorkspaceService {
 	/**
 	 * @return String[]
 	 */
-	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId) {
+	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId): array {
 		$groupsWorkspace = [
 			$this->getWorkspaceManagerGroup($spaceId)->getGID(),
 			$this->getUserGroup($spaceId)->getGID()
@@ -89,7 +89,7 @@ class GroupsWorkspaceService {
 	/**
 	 * @param IUser[] $users
 	 */
-	public function transferUsersToGroup($users, IGroup $group): void {
+	public function transferUsersToGroup(array $users, IGroup $group): void {
 		if (is_null($group)) {
 			throw new GroupException('Error parameter, $group is null.');
 		}
