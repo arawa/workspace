@@ -39,24 +39,12 @@ export default {
 		LeftSidebar,
 		WorkspaceContent,
 	},
-	data() {
-		return {
-			showSelectGroupfoldersModal: false,
-			// notificationError: NotificationError,
-		}
-	},
 	beforeCreate() {
 		if (this.$root.$data.canAccessApp === 'false') {
 			this.$router.push({
 				path: '/unauthorized',
 			})
 		}
-	},
-	methods: {
-		// toggleShowSelectGroupfoldersModal() {
-		//  this.$store.dispatch('emptyGroupfolders')
-		//  this.showSelectGroupfoldersModal = !this.showSelectGroupfoldersModal
-		// },
 	},
 }
 </script>
