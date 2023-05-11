@@ -39,9 +39,9 @@
 				:title="spaceName"
 				:to="{path: `/workspace/${spaceName}`}">
 				<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-				<CounterBubble slot="counter" class="user-counter">
+				<NcCounterBubble slot="counter" class="user-counter">
 					{{ $store.getters.spaceUserCount(spaceName) }}
-				</CounterBubble>
+				</NcCounterBubble>
 				<div>
 					<NcAppNavigationItem
 						v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
