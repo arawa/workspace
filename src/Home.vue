@@ -44,10 +44,6 @@ import WorkspaceContent from './WorkspaceContent.vue'
 export default {
 	name: 'Home',
 	components: {
-		NcAppNavigation,
-		NcAppNavigationIconBullet,
-		NcAppNavigationItem,
-		NcAppNavigationNewItem,
 		NcContent,
 		LeftSidebar,
 		WorkspaceContent,
