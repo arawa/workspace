@@ -55,7 +55,7 @@ class UserServiceTest extends TestCase {
 			->willReturn($this->user);
 	}
 
-	private function createTestUser($id, $name, $email): void {
+	private function createTestUser($id, $name, $email): IUser {
 		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
