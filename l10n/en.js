@@ -10,6 +10,7 @@ OC.L10N.register(
 		'Error': 'Error',
 		'Settings': 'Settings',
 		'Please specify a name.': 'Please specify a name.',
+		'Cancel': 'Cancel',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.',
 		'Create group': 'Create group',
 		'Delete space': 'Delete Workspace',

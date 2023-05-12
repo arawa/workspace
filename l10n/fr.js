@@ -9,6 +9,7 @@ OC.L10N.register(
 		'admin': "Gestionnaire d'espace",
 		'Group name': 'Nom du groupe',
 		'Space name': 'Nom de l\'espace de travail',
+		'Cancel': 'Annuler',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': "Attention, les utilisateurs surlignés en rouge ne sont pas encore membres de l'espace. Ils seront ajoutés automatiquement à ce dernier.",
 		'Create group': 'Créer un groupe',
 		'Delete space': "Supprimer l'espace de travail",

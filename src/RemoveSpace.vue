@@ -22,7 +22,7 @@
 <template>
 	<div class="modal__content">
 		<h2>
-			{{ t('workspace', 'Are you sure you want to delete the {space} workspace ?', { space }) }}
+			{{ t('workspace', 'Are you sure you want to delete the {space} space ?', { space }) }}
 		</h2>
 		<div class="remove-space-actions">
 			<NcButton
