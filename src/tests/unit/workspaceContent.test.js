@@ -25,7 +25,8 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { createSpace } from '../../services/spaceService.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import axios from '@nextcloud/axios'
-import Home from '../../Home.vue'
+import WorkspaceContent from '../../WorkspaceContent.vue'
+import LeftSidebar from '../../LeftSidebar.vue'
 import store from '../../store/index.js'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -40,7 +41,7 @@ const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(Vuex)
 localVue.use(VueRouter)
-const wrappedHome = mount(Home, {
+const wrappedHome = mount(WorkspaceContent, {
 	store,
 	localVue,
 	router,
@@ -93,7 +94,7 @@ describe('Creating spaces with different entries', () => {
 	})
 
 	it('Home.methods.createSpace has been called', () => {
-		const mockCreateSpace = jest.spyOn(Home.methods, 'createSpace')
+		const mockCreateSpace = jest.spyOn(LeftSidebar.methods, 'createSpace')
 
 		mockCreateSpace('44_Sri_Lanka')
 
