@@ -55,7 +55,7 @@ class UserServiceTest extends TestCase {
 			->willReturn($this->user);
 	}
 
-	private function createTestUser($id, $name, $email) {
+	private function createTestUser($id, $name, $email): IUser {
 		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
@@ -69,7 +69,7 @@ class UserServiceTest extends TestCase {
 		return $mockUser;
 	}
 
-	private function createTestGroup($id, $name, $users) {
+	private function createTestGroup($id, $name, $users): IGroup {
 		$mockGroup = $this->createMock(IGroup::class);
 		$mockGroup->expects($this->any())
 			->method('getGID')
@@ -143,7 +143,7 @@ class UserServiceTest extends TestCase {
 	 * This test makes sure that the isSpaceManager() method return true when user
 	 * is a space manager
 	 */
-	public function testIsSpaceManager() {
+	public function testIsSpaceManager(): void {
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
 				 ->method('isInGroup')
@@ -177,7 +177,7 @@ class UserServiceTest extends TestCase {
 	 * This test makes sure that the isSpaceManager() method return false when user
 	 * is not a space manager
 	 */
-	public function testIsNotSpaceManager() {
+	public function testIsNotSpaceManager(): void {
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
 				 ->method('isInGroup')
@@ -211,7 +211,7 @@ class UserServiceTest extends TestCase {
 	 * This test makes sure that the isSpaceManagerOfSpace() method return true when user
 	 * is manager of a space
 	 */
-	public function testIsNotSpaceManagerOfSpace() {
+	public function testIsNotSpaceManagerOfSpace(): void {
 		// Let's say user is manager of the space
 		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
@@ -240,7 +240,7 @@ class UserServiceTest extends TestCase {
 	 * This test makes sure that the isSpaceManagerOfSpace() method return false when user
 	 * is not manager of a space
 	 */
-	public function testIsSpaceManagerOfSpace() {
+	public function testIsSpaceManagerOfSpace(): void {
 		// Let's say user is not manager of the space
 		$group = $this->createTestGroup('SPACE-GE-1', 'GE-Test', []);
 		$this->groupManager->expects($this->once())

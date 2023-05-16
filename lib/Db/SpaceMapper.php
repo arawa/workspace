@@ -36,7 +36,7 @@ class SpaceMapper extends QBMapper {
 	/**
 	 * Work
 	 */
-	public function find($id) {
+	public function find($id): Space {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb->select('*')
 		   ->from($this->getTableName())
@@ -48,8 +48,9 @@ class SpaceMapper extends QBMapper {
 
 	/**
 	 * work
+	 * @return Space[]
 	 */
-	public function findAll($limit = null, $offset = null) {
+	public function findAll($limit = null, $offset = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -64,7 +65,7 @@ class SpaceMapper extends QBMapper {
 	 * @deprecated
 	 * @see WorkspaceController->destroy().
 	 */
-	public function deleteSpace(int $id) {
+	public function deleteSpace(int $id): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->delete('work_spaces')
@@ -73,7 +74,7 @@ class SpaceMapper extends QBMapper {
 			->execute();
 	}
 
-	public function updateSpaceName(string $newSpaceName, int $spaceId) {
+	public function updateSpaceName(string $newSpaceName, int $spaceId): Space {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb
@@ -86,7 +87,7 @@ class SpaceMapper extends QBMapper {
 		return $this->find($spaceId);
 	}
 
-	public function updateColorCode(string $colorCode, int $spaceId) {
+	public function updateColorCode(string $colorCode, int $spaceId): Space {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb
@@ -99,7 +100,7 @@ class SpaceMapper extends QBMapper {
 		return $this->find($spaceId);
 	}
 
-	public function checkSpaceNameExist(string $spacename) {
+	public function checkSpaceNameExist(string $spacename): mixed {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb

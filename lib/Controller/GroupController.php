@@ -41,30 +41,15 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
-	private GroupsWorkspaceService $groupsWorkspace;
-	private IGroupManager $groupManager;
-	private IUserManager $userManager;
-	private LoggerInterface $logger;
-	private UserFormatter $userFormatter;
-	private UserService $userService;
-	private UserWorkspace $userWorkspace;
-
 	public function __construct(
-		GroupsWorkspaceService $groupsWorkspace,
-		IGroupManager $groupManager,
-		LoggerInterface $logger,
-		IUserManager $userManager,
-		UserFormatter $userFormatter,
-		UserService $userService,
-		UserWorkspace $userWorkspace
+		private GroupsWorkspaceService $groupsWorkspace,
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+		private IUserManager $userManager,
+		private UserFormatter $userFormatter,
+		private UserService $userService,
+		private UserWorkspace $userWorkspace
 	) {
-		$this->groupManager = $groupManager;
-		$this->groupsWorkspace = $groupsWorkspace;
-		$this->logger = $logger;
-		$this->userFormatter = $userFormatter;
-		$this->userManager = $userManager;
-		$this->userService = $userService;
-		$this->userWorkspace = $userWorkspace;
 	}
 
 	/**
@@ -77,9 +62,8 @@ class GroupController extends Controller {
 	 * @var string $gid
 	 * @var string $spaceId for Middleware
 	 *
-	 * @return @JSONResponse
 	 */
-	public function create($gid) {
+	public function create(string $gid): JSONResponse {
 		if (!is_null($this->groupManager->get($gid))) {
 			return new JSONResponse(['Group ' . $gid . ' already exists'], Http::STATUS_FORBIDDEN);
 		}
@@ -106,11 +90,10 @@ class GroupController extends Controller {
 	 * Cannot delete GE- and U- groups (This is on-purpose)
 	 *
 	 * @var string $gid
-	 * @var string $spaceId
+	 * @var int $spaceId
 	 *
-	 * @return @JSONResponse
 	 */
-	public function delete($gid, $spaceId) {
+	public function delete(string $gid, int $spaceId): JSONResponse {
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
@@ -140,11 +123,12 @@ class GroupController extends Controller {
 	 *
 	 * @var string $gid ID of the group to be renamed
 	 * @var string $newGroupName The group's new name
-	 * @var string $spaceId
+	 * @var int $spaceId
 	 *
-	 * @return @JSONResponse
 	 */
-	public function rename($newGroupName, $gid, $spaceId) {
+	public function rename(string $newGroupName,
+		string $gid,
+		int $spaceId): JSONResponse {
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(
@@ -180,9 +164,8 @@ class GroupController extends Controller {
 	 * @var string $gid
 	 * @var string $user
 	 *
-	 * @return @JSONResponse
 	 */
-	public function addUser($spaceId, $gid, $user) {
+	public function addUser(string $spaceId, string $gid, string $user): JSONResponse {
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
@@ -226,13 +209,14 @@ class GroupController extends Controller {
 	 * The function also remove the user from all workspace 'subgroup when the user is being removed from the U- group
 	 * and from the WorkspacesManagers group when the user is being removed from the GE- group
 	 *
-	 * @param object|string $space
+	 * @param array|string $space
 	 * @var string $gid
 	 * @var string $user
 	 *
-	 * @return JSONResponse
 	 */
-	public function removeUser($space, $gid, $user) {
+	public function removeUser(array|string $space,
+		string $gid,
+		string $user): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -285,10 +269,11 @@ class GroupController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @GeneralManagerRequired
-	 * @param string|object $groupfolder
+	 * @param string|array $groupfolder
 	 *
 	 */
-	public function transferUsersToGroups(string $spaceId, $groupfolder) {
+	public function transferUsersToGroups(string $spaceId,
+		string|array $groupfolder): JSONResponse {
 		if (gettype($groupfolder) === 'string') {
 			$groupfolder = json_decode($groupfolder, true);
 		}

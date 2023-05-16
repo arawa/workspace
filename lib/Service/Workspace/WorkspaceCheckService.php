@@ -30,20 +30,16 @@ use OCA\Workspace\WorkspaceNameExistException;
 use OCP\AppFramework\Http;
 
 class WorkspaceCheckService {
-	private SpaceService $spaceService;
-
-	public function __construct(SpaceService $spaceService) {
-		$this->spaceService = $spaceService;
+	public function __construct(private SpaceService $spaceService) {
 	}
 
 
 	/**
 	 * Check if the space name contains specials characters or a blank into the end its name.
 	 * @param string $spacename
-	 * @return
 	 * @throws BadRequestException
 	 */
-	public function containSpecialChar(string $spacename) {
+	public function containSpecialChar(string $spacename): void {
 		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
 			throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
 		}
@@ -54,10 +50,9 @@ class WorkspaceCheckService {
 
 	/**
 	 * Check if the space name exist in groupfolders or workspace
-	 * @return
 	 * @throws WorkspaceNameExistException
 	 */
-	public function isExist(string $spacename) {
+	public function isExist(string $spacename): void {
 		if ($this->spaceService->checkSpaceNameExist($spacename)) {
 			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist', Http::STATUS_CONFLICT);
 		}

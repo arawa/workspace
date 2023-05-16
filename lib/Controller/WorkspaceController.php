@@ -45,36 +45,19 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
-	private IGroupManager $groupManager;
-	private IUserManager $userManager;
-	private LoggerInterface $logger;
-	private SpaceMapper $spaceMapper;
-	private SpaceService $spaceService;
-	private UserService $userService;
-	private WorkspaceCheckService $workspaceCheck;
-	private WorkspaceService $workspaceService;
-
 	public function __construct(
-		$AppName,
-		IGroupManager $groupManager,
-		LoggerInterface $logger,
 		IRequest $request,
-		IUserManager $userManager,
-		SpaceMapper $mapper,
-		SpaceService $spaceService,
-		UserService $userService,
-		WorkspaceCheckService $workspaceCheck,
-		WorkspaceService $workspaceService
+		private IGroupManager $groupManager,
+		private IUserManager $userManager,
+		private LoggerInterface $logger,
+		private SpaceMapper $spaceMapper,
+		private SpaceService $spaceService,
+		private UserService $userService,
+		private WorkspaceCheckService $workspaceCheck,
+		private WorkspaceService $workspaceService,
+		public $AppName
 	) {
 		parent::__construct($AppName, $request);
-		$this->groupManager = $groupManager;
-		$this->logger = $logger;
-		$this->spaceMapper = $mapper;
-		$this->spaceService = $spaceService;
-		$this->userManager = $userManager;
-		$this->userService = $userService;
-		$this->workspaceCheck = $workspaceCheck;
-		$this->workspaceService = $workspaceService;
 	}
 
 	/**
@@ -82,7 +65,7 @@ class WorkspaceController extends Controller {
 	 * @return string whithout the blank to start and end of the space name
 	 * @todo move this method
 	 */
-	private function deleteBlankSpaceName(string $spaceName) {
+	private function deleteBlankSpaceName(string $spaceName): string {
 		return trim($spaceName);
 	}
 
@@ -95,7 +78,8 @@ class WorkspaceController extends Controller {
 	 * @throws CreateWorkspaceException
 	 * @throws CreateGroupException
 	 */
-	public function createWorkspace(string $spaceName, int $folderId) {
+	public function createWorkspace(string $spaceName,
+		int $folderId): JSONResponse {
 		if ($spaceName === false ||
 			$spaceName === null ||
 			$spaceName === ''
@@ -160,10 +144,10 @@ class WorkspaceController extends Controller {
    *
    * @NoAdminRequired
    * @SpaceAdminRequired
-   * @param object $workspace
+   * @param array $workspace
    *
    */
-	public function destroy($workspace) {
+	public function destroy(array $workspace): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
 		$GEGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $workspace['id']);
 		foreach ($GEGroup->getUsers() as $user) {
@@ -200,7 +184,7 @@ class WorkspaceController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 */
-	public function findAll() {
+	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
@@ -216,19 +200,17 @@ class WorkspaceController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param string|object $workspace
-	 * @return JSONResponse
+	 * @param string|array $workspace
 	 */
-	public function addGroupsInfo($workspace) {
+	public function addGroupsInfo(string|array $workspace): JSONResponse {
 		return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @param string|object $workspace
-	 * @return JSONResponse
+	 * @param string|array $workspace
 	 */
-	public function addUsersInfo($workspace) {
+	public function addUsersInfo(string|array $workspace): JSONResponse {
 		return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
 	}
 
@@ -238,11 +220,12 @@ class WorkspaceController extends Controller {
 	 * @NoAdminRequired
 	 * @param string $term
 	 * @param string $spaceId
-	 * @param string|object $space
+	 * @param string|array $space
 	 *
-	 * @return JSONResponse
 	 */
-	public function lookupUsers(string $term, string $spaceId, $space) {
+	public function lookupUsers(string $term,
+		string $spaceId,
+		string|array $space): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -257,11 +240,12 @@ class WorkspaceController extends Controller {
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
-	 * @param object|string $space
+	 * @param array|string $space
 	 * @param string $userId
 	 *
 	 */
-	public function changeUserRole($space, string $userId) {
+	public function changeUserRole(array|string $space,
+		string $userId): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
 		}
@@ -287,14 +271,14 @@ class WorkspaceController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @param object|string $workspace
+	 * @param array|string $workspace
 	 * @param string $newSpaceName
-	 * @return JSONResponse
 	 *
 	 * @todo Manage errors
 	 */
-	public function renameSpace($workspace, $newSpaceName) {
-		if (gettype($workspace) === 'object') {
+	public function renameSpace(array|string $workspace,
+		string $newSpaceName): JSONResponse {
+		if (gettype($workspace) === 'string') {
 			$workspace = json_decode($workspace, true);
 		}
 

@@ -31,12 +31,7 @@ use OCP\IGroupManager;
 use OCP\IUser;
 
 class GroupsWorkspaceService {
-	private IGroupManager $groupManager;
-
-	public function __construct(
-		IGroupManager $groupManager
-	) {
-		$this->groupManager = $groupManager;
+	public function __construct(private IGroupManager $groupManager) {
 	}
 
 	/**
@@ -72,7 +67,7 @@ class GroupsWorkspaceService {
 	/**
 	 * @return String[]
 	 */
-	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId) {
+	public function getGroupsUserFromGroupfolder(IUser $user, array $groupfolder, string $spaceId): array {
 		$groupsWorkspace = [
 			$this->getWorkspaceManagerGroup($spaceId)->getGID(),
 			$this->getUserGroup($spaceId)->getGID()
@@ -93,7 +88,7 @@ class GroupsWorkspaceService {
 	/**
 	 * @param IUser[] $users
 	 */
-	public function transferUsersToGroup($users, IGroup $group): void {
+	public function transferUsersToGroup(array $users, IGroup $group): void {
 		if (is_null($group)) {
 			throw new GroupException('Error parameter, $group is null.');
 		}

@@ -32,36 +32,26 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
 class SpaceController extends Controller {
-	/** @var SpaceService */
-	private $spaceService;
-
-	/** @var SpaceMapper */
-	private $spaceMapper;
-
 	public function __construct(
-		$AppName,
 		IRequest $request,
-		SpaceMapper $mapper,
-		SpaceService $spaceService
+		private $AppName,
+		private SpaceMapper $spaceMapper,
+		private SpaceService $spaceService
 	) {
 		parent::__construct($AppName, $request);
-
-		$this->spaceMapper = $mapper;
-
-		$this->spaceService = $spaceService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 */
-	public function find($id) {
+	public function find(int $id): DataResponse {
 		return new DataResponse($this->spaceService->find($id));
 	}
 
 	/**
 	 * @NoAdminRequired
 	 */
-	public function findAll() {
+	public function findAll(): DataResponse {
 		return new DataResponse($this->spaceService->findAll());
 	}
 
@@ -69,7 +59,7 @@ class SpaceController extends Controller {
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
-	public function updateColorCode(string $colorCode, int $spaceId) {
+	public function updateColorCode(string $colorCode, int $spaceId): DataResponse {
 		return new DataResponse($this->spaceService->updateColorCode($colorCode, (int)$spaceId));
 	}
 }

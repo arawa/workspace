@@ -29,16 +29,13 @@ use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCP\IUser;
 
 class UserFormatter {
-	private GroupsWorkspaceService $groupsWorkspace;
-
-	public function __construct(GroupsWorkspaceService $groupsWorkspace) {
-		$this->groupsWorkspace = $groupsWorkspace;
+	public function __construct(private GroupsWorkspaceService $groupsWorkspace) {
 	}
 
 	/**
 	 * @param IUser[] $users
 	 */
-	public function formatUsers($users, array $groupfolder, string $spaceId): array {
+	public function formatUsers(array $users, array $groupfolder, string $spaceId): array {
 		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
 
 		$usersFormatted = [];

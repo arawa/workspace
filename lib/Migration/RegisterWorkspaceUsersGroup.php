@@ -32,22 +32,16 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
-	private IGroupManager $groupManager;
-	private LoggerInterface $logger;
-
-	public function __construct(IGroupManager $groupManager,
-		LoggerInterface $logger) {
-		$this->groupManager = $groupManager;
-		$this->logger = $logger;
-
+	public function __construct(private IGroupManager $groupManager,
+		private LoggerInterface $logger) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 
-	public function getName() {
+	public function getName(): string {
 		return 'Creates the group of user allowed to use the application';
 	}
 
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		// The group already exists when we upgrade the app
 		if (!$this->groupManager->groupExists(ManagersWorkspace::WORKSPACES_MANAGERS)) {
 			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist. Let\'s create it.');

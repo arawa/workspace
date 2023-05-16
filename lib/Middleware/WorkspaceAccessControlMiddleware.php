@@ -34,24 +34,13 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 class WorkspaceAccessControlMiddleware extends Middleware {
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var UserService */
-	private $userService;
-
 	public function __construct(
-		IURLGenerator $urlGenerator,
-		UserService $userService
+		private IURLGenerator $urlGenerator,
+		private UserService $userService
 	) {
-		$this->urlGenerator = $urlGenerator;
-		$this->userService = $userService;
 	}
 
-	public function beforeController($controller, $methodName) {
+	public function beforeController($controller, $methodName): void {
 		// Checks if user is member of the General managers group
 		if ($this->userService->isUserGeneralAdmin()) {
 			return;
@@ -66,7 +55,7 @@ class WorkspaceAccessControlMiddleware extends Middleware {
 	}
 
 	// TODO: Find a solution to use this method.
-	public function afterException($controller, $methodName, \Exception $exception) {
+	public function afterException($controller, $methodName, \Exception $exception): TemplateResponse {
 		if ($exception instanceof AccessDeniedException) {
 			Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 			Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css

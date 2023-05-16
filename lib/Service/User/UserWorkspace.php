@@ -6,19 +6,16 @@ use OCP\IGroupManager;
 use OCP\IUser;
 
 class UserWorkspace {
-	private IGroupManager $groupManager;
-
 	public function __construct(
-		IGroupManager $groupManager
+		private IGroupManager $groupManager
 	) {
-		$this->groupManager = $groupManager;
 	}
 
 	/**
 	 * @param String[] $groupsName
 	 * @return IUser[]
 	 */
-	public function getUsersFromGroup($groupsName) {
+	public function getUsersFromGroup(array $groupsName): array {
 		$users = [];
 
 		foreach ($groupsName as $groupName) {

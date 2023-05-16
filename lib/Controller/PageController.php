@@ -32,13 +32,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Util;
 
 class PageController extends Controller {
-	/** @var UserService */
-	private $userService;
-
 	public function __construct(
-		UserService $userService
+		private UserService $userService
 	) {
-		$this->userService = $userService;
 	}
 
 	/**
@@ -47,7 +43,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NOCSRFRequired
 	 */
-	public function index() {
+	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	

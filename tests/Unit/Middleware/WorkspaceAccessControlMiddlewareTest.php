@@ -60,7 +60,7 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 	/**
 	 * This test makes sure that the middleware allows space managers to use the app
 	 */
-	public function testSpaceManagerAllowed() {
+	public function testSpaceManagerAllowed(): void {
 		// Setup UserService so that isUserGeneralAdmin will return false
 		// but isSpaceManager will return true
 		$userService = $this->createMock(UserService::class);
