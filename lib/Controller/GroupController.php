@@ -148,7 +148,7 @@ class GroupController extends Controller {
 		int $spaceId): JSONResponse {
 
 		if (!is_null($this->groupManager->get($newGroupName))) {
-			throw new GroupException(
+			return new JSONResponse(
 				'This group already exists. Please, change the name',
 				Http::STATUS_CONFLICT
 			);

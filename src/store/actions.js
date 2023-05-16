@@ -209,7 +209,8 @@ export default {
 				}
 			})
 			.catch((e) => {
-				console.error(e.message)
+				console.error(e)
+				showNotificationError('Error', e.response.data, 4000)
 			})
 	},
 	// Change a user's role from admin to user (or the opposite way)
