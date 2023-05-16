@@ -55,6 +55,22 @@
 					</NcAppNavigationItem>
 				</div>
 			</NcAppNavigationItem>
+      <!-- <div id="app-settings">
+					<div id="app-settings-header">
+						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
+							icon="icon-settings-dark"
+							class="settings-button"
+							data-apps-slide-toggle="#app-settings-content">
+							{{ t('workspace', 'Settings') }}
+						</button>
+					</div>
+					<div id="app-settings-content">
+						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+							:close-after-click="true"
+							:title="t('workspace', 'Convert group folders')"
+							@click="toggleShowSelectGroupfoldersModal" />
+					</div>
+				</div> -->
 		</template>
 	</NcAppNavigation>
 </template>
