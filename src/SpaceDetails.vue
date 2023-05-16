@@ -41,7 +41,7 @@
 			</div>
 			<div class="space-actions">
 				<div>
-					<NcActions default-icon="icon-add">
+					<NcActions ref="ncAction" default-icon="icon-add">
 						<NcActionButton icon="icon-user"
 							:close-after-click="true"
 							class="no-bold"
@@ -128,7 +128,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
-			showDelWorkspaceModal: false,
+			showSpaceMenu: false,
 			isESR: false,
 		}
 	},
@@ -163,6 +163,8 @@ export default {
 		onNewGroup(e) {
 			// Hides ActionInput
 			this.toggleCreateGroup()
+			// Hide popup menu
+			this.$refs.ncAction.opened = false
 
 			// Don't accept empty names
 			const gid = e.target[0].value
