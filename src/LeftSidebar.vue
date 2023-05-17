@@ -151,19 +151,19 @@ export default {
 				// Makes sure the GE- group is first in the list
 				// These tests must happen before the tests for the U- group
 				const GEGroup = this.$store.getters.GEGroup(space)
-				if (a === GEGroup) {
+				if (a.gid === GEGroup) {
 					return -1
 				}
-				if (b === GEGroup) {
+				if (b.gid === GEGroup) {
 					return 1
 				}
 				// Makes sure the U- group is second in the list
 				// These tests must be done after the tests for the GE- group
 				const UGroup = this.$store.getters.UGroup(space)
-				if (a === UGroup) {
+				if (a.gid === UGroup) {
 					return -1
 				}
-				if (b === UGroup) {
+				if (b.gid === UGroup) {
 					return 1
 				}
 				// Normal locale based sort
