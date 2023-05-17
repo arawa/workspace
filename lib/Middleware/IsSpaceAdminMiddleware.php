@@ -39,13 +39,13 @@ class IsSpaceAdminMiddleware extends Middleware {
 		private IControllerMethodReflector $reflector,
 		private IRequest $request,
 		private UserService $userService,
-        private SpaceService $spaceService
+		private SpaceService $spaceService
 	) {
 	}
 
 	public function beforeController($controller, $methodName): void {
-        if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
-            $spaceId = $this->request->getParam('spaceId');
+		if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
+			$spaceId = $this->request->getParam('spaceId');
 			$space = $this->spaceService->find($spaceId);
 			if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize()) && !$this->userService->isUserGeneralAdmin()) {
 				throw new AccessDeniedException();

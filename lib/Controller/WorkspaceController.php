@@ -57,8 +57,8 @@ class WorkspaceController extends Controller {
 		private UserService $userService,
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
-        private UserGroup $userGroup,
-        private WorkspaceManagerGroup $workspaceManagerGroup,
+		private UserGroup $userGroup,
+		private WorkspaceManagerGroup $workspaceManagerGroup,
 		public $AppName
 	) {
 		parent::__construct($AppName, $request);
@@ -134,9 +134,9 @@ class WorkspaceController extends Controller {
    *
    */
 	public function destroy(array $workspace): JSONResponse {
-        $this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
-        foreach ($GEGroup->getUsers() as $user) {
+		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
+		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
+		foreach ($GEGroup->getUsers() as $user) {
 			$this->userService->removeGEFromWM($user, $workspace);
 		}
 
@@ -197,7 +197,7 @@ class WorkspaceController extends Controller {
 	 * @param string|array $workspace
 	 */
 	public function addUsersInfo(string|array $workspace): JSONResponse {
-        if (gettype($workspace) === 'string') {
+		if (gettype($workspace) === 'string') {
 			$workspace = json_decode($workspace, true);
 		}
 		return new JSONResponse($this->workspaceService->addUsersInfo($workspace));

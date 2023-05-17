@@ -58,7 +58,7 @@ class Space extends Entity implements JsonSerializable {
 		return [
 			'id' => (int)$this->getSpaceId(),
 			'groupfolder_id' => (int)$this->groupfolderId,
-            'name' => $this->spaceName,
+			'name' => $this->spaceName,
 			'color_code' => $this->colorCode,
 		];
 	}

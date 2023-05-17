@@ -39,9 +39,9 @@ use Psr\Log\LoggerInterface;
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(private IGroupManager $groupManager,
 		private LoggerInterface $logger,
-        private IAppConfig $appConfigManager,
-        private ServicesIAppConfig $appConfig,
-        private UpgradeV300 $upgradeV300) {
+		private IAppConfig $appConfigManager,
+		private ServicesIAppConfig $appConfig,
+		private UpgradeV300 $upgradeV300) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 

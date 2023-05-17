@@ -42,10 +42,10 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
-    private const DEFAULT = [
-        'gid' => null,
-        'displayName' => null,
-    ];
+	private const DEFAULT = [
+		'gid' => null,
+		'displayName' => null,
+	];
 
 	public function __construct(
 		private GroupsWorkspaceService $groupsWorkspace,
