@@ -32,7 +32,7 @@
 			</div>
 		</NcAppContentDetails>
 	</NcAppContent>
-  <!-- <NcModal
+	<!-- <NcModal
 			v-if="showSelectGroupfoldersModal"
 			@close="toggleShowSelectGroupfoldersModal">
 			<SelectGroupfolders @close="toggleShowSelectGroupfoldersModal" />

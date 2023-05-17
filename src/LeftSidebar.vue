@@ -55,7 +55,7 @@
 					</NcAppNavigationItem>
 				</div>
 			</NcAppNavigationItem>
-      <!-- <div id="app-settings">
+			<!-- <div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							icon="icon-settings-dark"
