@@ -18,7 +18,7 @@ OC.L10N.register(
 		'Delete user': "Retirer de l'espace de travail",
 		'Email': 'Email',
 		'Settings': 'Paramètres',
-		'This group already exists. Please, change the name': 'Ce groupe existe déjà. Changez le nom, s\'il vous isPlainObject.',
+		'This group already exists. Please, change the name': 'Ce groupe existe déjà. Changez le nom, s\'il vous plaît.',
 		'Groups': 'Groupes',
 		'Make administrator': "Assigner en tant que G.E.",
 		'New space': 'Créer un espace de travail',
