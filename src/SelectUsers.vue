@@ -91,7 +91,6 @@
 </template>
 
 <script>
-// import { PREFIX_MANAGER, PREFIX_USER } from './constants.js'
 import axios from '@nextcloud/axios'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
