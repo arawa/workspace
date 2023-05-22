@@ -147,7 +147,7 @@ class GroupController extends Controller {
 		string $gid,
 		int $spaceId): JSONResponse {
 
-		if (!is_null($this->groupManager->get($newGroupName))) {
+       if (!empty($this->groupManager->search($newGroupName))) {
 			return new JSONResponse(
 				'This group already exists. Please, change the name',
 				Http::STATUS_CONFLICT
