@@ -25,7 +25,12 @@
 
 namespace OCA\Workspace\Migration;
 
-use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Upgrade\Upgrade;
+use OCA\Workspace\Upgrade\UpgradeV300;
+use OCP\AppFramework\Services\IAppConfig as ServicesIAppConfig;
+use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -33,7 +38,10 @@ use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(private IGroupManager $groupManager,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger,
+		private IAppConfig $appConfigManager,
+		private ServicesIAppConfig $appConfig,
+		private UpgradeV300 $upgradeV300) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 
@@ -55,6 +63,27 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 			$this->groupManager->createGroup(ManagersWorkspace::GENERAL_MANAGER);
 		} else {
 			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
+		}
+
+		if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
+			&& !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'U-');
+		}
+
+		if (!$this->appConfigManager->hasKey(Application::APP_ID, Upgrade::CONTROL_MIGRATION_V3)) {
+			$this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '0');
+		}
+
+		$versionString = $this->appConfig->getAppValue('installed_version');
+		$versionSplitted = explode('.', $versionString);
+		$version = intval(implode('', $versionSplitted));
+   
+		$controlMigration = boolval($this->appConfig->getAppValue(Upgrade::CONTROL_MIGRATION_V3));
+
+
+		if ($version <= Application::V300 && $controlMigration === false) {
+			$this->upgradeV300->upgrade();
 		}
 	}
 }

@@ -91,12 +91,13 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
 import axios from '@nextcloud/axios'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
+import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
@@ -136,7 +137,7 @@ export default {
 		// We might use them here.
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close')
-			const spaceId = this.$store.state.spaces[this.$route.params.space].id
+			const space = this.$store.state.spaces[this.$route.params.space]
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
@@ -144,7 +145,7 @@ export default {
 						if (user.role === 'user') {
 							this.$store.dispatch('removeUserFromGroup', {
 								name: this.$route.params.space,
-								gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+								gid: ManagerGroup.getGid(space),
 								user,
 							})
 						}
@@ -158,13 +159,17 @@ export default {
 					if (user.role === 'admin') {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
-							gid: ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId,
+							gid: ManagerGroup.getGid(space),
 							user,
 						})
 					}
 				} else {
 					// Adding a user to the workspace
-					gid = user.role === 'admin' ? ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + spaceId : ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + spaceId
+					if (user.role === 'admin') {
+						gid = ManagerGroup.getGid(space)
+					} else {
+						gid = UserGroup.getGid(space)
+					}
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
 						gid,

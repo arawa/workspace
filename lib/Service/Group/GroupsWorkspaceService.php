@@ -25,7 +25,8 @@
 namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\GroupException;
-use OCA\Workspace\GroupsWorkspace;
+use OCA\Workspace\UserGroup;
+use OCA\Workspace\WorkspaceManagerGroup;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -39,7 +40,7 @@ class GroupsWorkspaceService {
 	 */
 	public function getWorkspaceManagerGroup(string $spaceId): IGroup {
 		$groupSpaceManager = $this->groupManager->get(
-			GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $spaceId
+			WorkspaceManagerGroup::get($spaceId)
 		);
 
 		if (is_null($groupSpaceManager)) {
@@ -54,7 +55,7 @@ class GroupsWorkspaceService {
 	 */
 	public function getUserGroup(string $spaceId): IGroup {
 		$groupUser = $this->groupManager->get(
-			GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $spaceId
+			UserGroup::get($spaceId)
 		);
 
 		if (is_null($groupUser)) {

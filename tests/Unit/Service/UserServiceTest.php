@@ -25,7 +25,7 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroup;
@@ -147,13 +147,13 @@ class UserServiceTest extends TestCase {
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
 				 ->method('isInGroup')
-				 ->with($this->user->getUID(), 'GE-Test')
+				 ->with($this->user->getUID(), 'SPACE-GE-Test')
 			->willReturn(true);
-		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
+		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
 				   ->method('search')
 			// TODO Use global constant instead of 'GE-'
-			->with('GE-')
+			->with('SPACE-GE-')
 			->willReturn([$groups]);
 
 		// Instantiates our service
@@ -181,13 +181,13 @@ class UserServiceTest extends TestCase {
 		// Let's say user is in a space manager group
 		$this->groupManager->expects($this->once())
 				 ->method('isInGroup')
-				 ->with($this->user->getUID(), 'GE-Test')
+				 ->with($this->user->getUID(), 'SPACE-GE-Test')
 			->willReturn(true);
-		$groups = $this->createTestGroup('GE-Test', 'GE-Test', [$this->user]);
+		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
 		$this->groupManager->expects($this->once())
 				   ->method('search')
 			// TODO Use global constant instead of 'GE-'
-			->with('GE-')
+			->with('SPACE-GE-')
 			->willReturn([$groups]);
 
 		$this->userSession->expects($this->once())
@@ -231,7 +231,12 @@ class UserServiceTest extends TestCase {
 			$this->logger);
 
 		// Runs the method to be tested
-		$result = $userService->isSpaceManagerOfSpace(1);
+		$result = $userService->isSpaceManagerOfSpace([
+			'id' => 1,
+			'groupfolder_id' => 32,
+			'name' => 'Foo',
+			'color_code' => '#ffffff'
+		]);
 
 		$this->assertEquals(true, $result);
 	}
@@ -260,7 +265,12 @@ class UserServiceTest extends TestCase {
 			$this->logger);
 
 		// Runs the method to be tested
-		$result = $userService->isSpaceManagerOfSpace(1);
+		$result = $userService->isSpaceManagerOfSpace([
+			'id' => 1,
+			'groupfolder_id' => 32,
+			'name' => 'Foo',
+			'color_code' => '#ffffff'
+		]);
 
 		$this->assertEquals(false, $result);
 	}

@@ -22,11 +22,13 @@
  */
 
 import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
+import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
 import showNotificationError from '../services/Notifications/NotificationError.js'
+import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
+import UserGroup from '../services/Groups/UserGroup.js'
 
 export default {
 	// Adds a user to a group
@@ -38,15 +40,16 @@ export default {
 		// Update backend and revert frontend changes if something fails
 		const space = context.state.spaces[name]
 		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
-		axios.patch(url, {
+		axios.post(url, {
 			gid,
 			user: user.uid,
+			workspace: space,
 		}).then((resp) => {
-			if (resp.status === 204) {
+			if (resp.status === 201) {
 				// Everything went well, we can thus also add this user to the UGroup in the frontend
 				context.commit('addUserToGroup', {
 					name,
-					gid: context.getters.UGroup(name).gid,
+					gid: context.getters.UGroup(name),
 					user,
 				})
 				// eslint-disable-next-line no-console
@@ -74,7 +77,8 @@ export default {
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
-		gid = gid + '-' + space.id
+		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
+		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
 		const groups = Object.keys(space.groups)
 		if (groups.includes(gid)) {
@@ -83,10 +87,16 @@ export default {
 		}
 
 		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, gid })
+		context.commit('addGroupToSpace', { name, gid, displayName })
 
 		// Creates group in backend
-		axios.post(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id })
+		axios.post(generateUrl('/apps/workspace/api/group'),
+			{
+				data: {
+					gid,
+					displayName,
+				},
+			})
 			.then((resp) => {
 				addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
 				// Navigates to the g roup's details page
@@ -146,7 +156,7 @@ export default {
 		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
-		if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+		if (gid === UserGroup.getGid(space)) {
 			context.commit('removeUserFromWorkspace', { name, user })
 		} else {
 			context.commit('removeUserFromGroup', { name, gid, user })
@@ -169,7 +179,7 @@ export default {
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: e })
 			showNotificationError('Error', text, 4000)
-			if (gid.startsWith(ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)) {
+			if (gid === UserGroup.getGid(space)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
 				)
@@ -184,7 +194,7 @@ export default {
 		const oldGroupName = space.groups[gid].displayName
 
 		// Groups must be postfixed with the ID of the space they belong
-		newGroupName = newGroupName + '-' + space.id
+		newGroupName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${newGroupName}-${space.name}`
 
 		// Creates group in frontend
 		context.commit('renameGroup', { name, gid, newGroupName })
@@ -211,9 +221,9 @@ export default {
 	toggleUserRole(context, { name, user }) {
 		const space = context.state.spaces[name]
 		if (context.getters.isSpaceAdmin(user, name)) {
-			user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+			user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 		} else {
-			user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+			user.groups.push(ManagerGroup.getGid(space))
 		}
 		const spaceId = space.id
 		const userId = user.uid
@@ -230,9 +240,9 @@ export default {
 				} else {
 					// Revert action an inform user
 					if (context.getters.isSpaceAdmin(user, name)) {
-						user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+						user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 					} else {
-						user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+						user.groups.push(ManagerGroup.getGid(space))
 					}
 					context.commit('updateUser', { name, user })
 					const text = t('workspace', 'An error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: resp.statusText })
@@ -241,9 +251,9 @@ export default {
 			}).catch((e) => {
 				// Revert action an inform user
 				if (context.getters.isSpaceAdmin(user, name)) {
-					user.groups.splice(user.groups.indexOf(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id), 1)
+					user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 				} else {
-					user.groups.push(ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id)
+					user.groups.push(ManagerGroup.getGid(space))
 				}
 				context.commit('updateUser', { name, user })
 				const text = t('workspace', 'Network error occured while trying to change the role of user {user}.<br>The error is: {error}', { user: user.name, error: e })

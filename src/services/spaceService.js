@@ -22,7 +22,7 @@
  */
 
 import axios from '@nextcloud/axios'
-import { ESPACE_GID_PREFIX, ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX } from '../constants.js'
+import { PREFIX_MANAGER, PREFIX_USER } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
 import showNotificationError from './Notifications/NotificationError.js'
@@ -87,8 +87,10 @@ export function transferUsersToUserGroup(spaceId, groupfolder) {
  * @return {boolean}
  */
 export function isSpaceManagers(group) {
-	const SPACE_MANAGER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX)
-	return SPACE_MANAGER_REGEX.test(group)
+	const OLD_SPACE_MANAGER_REGEX = new RegExp('^' + PREFIX_MANAGER)
+
+	return OLD_SPACE_MANAGER_REGEX.test(group) === true
+
 }
 
 /**
@@ -96,6 +98,6 @@ export function isSpaceManagers(group) {
 	* @return {boolean}
 	*/
 export function isSpaceUsers(group) {
-	const SPACE_USER_REGEX = new RegExp('^' + ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX)
+	const SPACE_USER_REGEX = new RegExp('^' + PREFIX_USER)
 	return SPACE_USER_REGEX.test(group)
 }

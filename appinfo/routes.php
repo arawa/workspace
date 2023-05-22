@@ -101,7 +101,7 @@ return [
 		],
 		[
 			'name' => 'group#create',
-			'url' => '/api/group/{gid}',
+			'url' => '/api/group',
 			'verb' => 'POST',
 		],
 		[
@@ -116,8 +116,12 @@ return [
 		],
 		[
 			'name' => 'group#addUser',
+			/**
+			 * @todo Rewrite this route
+			 * I should write : /groups/{gid}/users
+			 */
 			'url' => '/api/group/addUser/{spaceId}',
-			'verb' => 'PATCH',
+			'verb' => 'POST',
 		],
 		[
 			'name' => 'space#updateColorCode',

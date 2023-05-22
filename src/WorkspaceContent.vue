@@ -143,7 +143,7 @@ export default {
 					groups: spaceWithUsersAndGroups.groups,
 					id: spaceWithUsersAndGroups.id,
 					isOpen: false,
-					name: spaceWithUsersAndGroups.space_name,
+					name: spaceWithUsersAndGroups.name,
 					quota,
 					users: spaceWithUsersAndGroups.users,
 				})

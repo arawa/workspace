@@ -1,8 +1,7 @@
 /**
  * copyright Copyright (c) 2017 Arawa
  *
- * author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * license GNU AGPL version 3 or any later version
  *
@@ -21,12 +20,30 @@
  *
  */
 
-const ESPACE_MANAGERS = 'GE-'
-const ESPACE_USERS = 'U-'
-const ESPACE_GID = 'SPACE-'
-const ESPACE_GROUP = 'G-'
-export const PREFIX_USER = ESPACE_GID + ESPACE_USERS
-export const PREFIX_MANAGER = ESPACE_GID + ESPACE_MANAGERS
-export const PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER = '[~<>{}|;.:,!?\'@#$+()%\\\\^=/&*[\\]]'
-export const PREFIX_GID_SUBGROUP_SPACE = ESPACE_GID + ESPACE_GROUP
-export const PREFIX_DISPLAYNAME_SUBGROUP_SPACE = ESPACE_GROUP
+import { PREFIX_MANAGER } from '../../constants.js'
+
+/**
+ * @param {object} space
+ * @return {string}
+ */
+function getGid(space) {
+	const groups = Object.keys(space.groups)
+
+	const spaceGeneralGroupRegex = new RegExp('^' + PREFIX_MANAGER + '[0-9]*$')
+
+	const groupFound = groups.find(function(group) {
+		if (spaceGeneralGroupRegex.test(group)) {
+			return true
+		}
+
+		return false
+	})
+
+	return groupFound
+}
+
+const ManagerGroup = {
+	getGid,
+}
+
+export default ManagerGroup

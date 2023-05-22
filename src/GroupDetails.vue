@@ -70,12 +70,13 @@
 </template>
 
 <script>
-import { ESPACE_MANAGERS_PREFIX, ESPACE_USERS_PREFIX, ESPACE_GID_PREFIX } from './constants.js'
+import { PREFIX_MANAGER, PREFIX_USER } from './constants.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
 
 export default {
@@ -98,12 +99,11 @@ export default {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
 			const space = this.$store.state.spaces[this.$route.params.space]
-			if (this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-			|| this.$route.params.group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
+			if (this.$route.params.group === PREFIX_MANAGER + space.id
+			|| this.$route.params.group === UserGroup.getGid(space)) {
 				// TODO Inform user
 				return
 			}
-
 			this.$store.dispatch('deleteGroup', {
 				name: this.$route.params.space,
 				gid: this.$route.params.group,
@@ -123,8 +123,8 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 
 			// Prevents renaming SPACE-GE- and SPACE-U- groups
-			if (group === ESPACE_GID_PREFIX + ESPACE_MANAGERS_PREFIX + space.id
-				|| group === ESPACE_GID_PREFIX + ESPACE_USERS_PREFIX + space.id) {
+			if (group === PREFIX_MANAGER + space.id
+				|| group === PREFIX_USER + space.id) {
 				// TODO Inform user
 				return
 			}

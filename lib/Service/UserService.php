@@ -25,8 +25,9 @@
 
 namespace OCA\Workspace\Service;
 
-use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\ManagersWorkspace;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserSession;
@@ -91,7 +92,7 @@ class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	 */
 	public function isSpaceManager(): bool {
-		$workspaceAdminGroups = $this->groupManager->search(GroupsWorkspace::SPACE_MANAGER);
+		$workspaceAdminGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
 		foreach ($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -112,30 +113,28 @@ class UserService {
 	}
 
 	/**
-	 * @param string $id The space id
+	 * @param array $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
-	public function isSpaceManagerOfSpace(string $id): bool {
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $id)) {
+	public function isSpaceManagerOfSpace(array $space): bool {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 *
 	 * This function removes a GE from the WorkspaceManagers group when necessary
-	 *
 	 */
-	public function removeGEFromWM(IUser $user, int $spaceId): void {
+	public function removeGEFromWM(IUser $user, array|object $space): void {
 		$found = false;
 		$groups = $this->groupManager->getUserGroups($user);
 
 		// Checks if the user is member of the GE- group of another workspace
 		foreach ($groups as $group) {
 			$gid = $group->getGID();
-			if (strpos($gid, GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER) === 0 &&
-				$gid !== GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $spaceId
+			if (strpos($gid, WorkspaceManagerGroup::get($space['id'])) === 0 &&
+				$gid !== UserGroup::get($space['id'])
 			) {
 				$found = true;
 				break;

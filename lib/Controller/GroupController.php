@@ -25,11 +25,12 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\GroupsWorkspace;
-use OCA\Workspace\ManagersWorkspace;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -41,6 +42,11 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
+	private const DEFAULT = [
+		'gid' => null,
+		'displayName' => null,
+	];
+
 	public function __construct(
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
@@ -59,19 +65,29 @@ class GroupController extends Controller {
 	 * Creates a group
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
-	 * @var string $gid
+	 * @var array $data [
+	 *      "gid" => 'Space01',
+	 *      "displayName" => 'Space01'
+	 * ]
 	 * @var string $spaceId for Middleware
 	 *
 	 */
-	public function create(string $gid): JSONResponse {
-		if (!is_null($this->groupManager->get($gid))) {
-			return new JSONResponse(['Group ' . $gid . ' already exists'], Http::STATUS_FORBIDDEN);
+	public function create(array $data = []): JSONResponse {
+
+		$data = array_merge(self::DEFAULT, $data);
+
+		if (!is_null($this->groupManager->get($data['gid']))) {
+			return new JSONResponse(['Group ' . $data['gid'] . ' already exists'], Http::STATUS_FORBIDDEN);
 		}
 
 		// Creates group
-		$NCGroup = $this->groupManager->createGroup($gid);
+		$NCGroup = $this->groupManager->createGroup($data['gid']);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Could not create group ' . $gid], Http::STATUS_FORBIDDEN);
+			return new JSONResponse(['Could not create group ' . $data['gid']], Http::STATUS_FORBIDDEN);
+		}
+
+		if (!is_null($data['displayName'])) {
+			$NCGroup->setDisplayName($data['displayName']);
 		}
 
 		return new JSONResponse([
@@ -161,6 +177,7 @@ class GroupController extends Controller {
 	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
 	 * manager group when we are adding a workspace manager
 	 *
+	 * @var mixed $workspace
 	 * @var string $gid
 	 * @var string $user
 	 *
@@ -182,7 +199,7 @@ class GroupController extends Controller {
 		$NCGroup->addUser($NCUser);
 
 		// Adds the user to the application manager group when we are adding a workspace manager
-		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER. $spaceId) {
+		if ($gid === WorkspaceManagerGroup::get($spaceId)) {
 			$workspaceUsersGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
 			if (!is_null($workspaceUsersGroup)) {
 				$workspaceUsersGroup->addUser($NCUser);
@@ -195,10 +212,10 @@ class GroupController extends Controller {
 
 		// Adds user to workspace user group
 		// This must be the last action done, when all other previous actions have succeeded
-		$UGroup = $this->groupManager->get(GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $spaceId);
+		$UGroup = $this->groupManager->get(UserGroup::get($spaceId));
 		$UGroup->addUser($NCUser);
 
-		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_NO_CONTENT);
+		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_CREATED);
 	}
 
 	/**
@@ -233,7 +250,8 @@ class GroupController extends Controller {
 		// Removes user from group(s)
 		$NCUser = $this->userManager->get($user);
 		$groups = [];
-		if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_USERS . $space['id']) {
+		if ($gid === WorkspaceManagerGroup::get($space['id'])
+		|| $gid === UserGroup::get($space['id'])) {
 			// Removing user from a U- group
 			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
 			$users = (array)$space['users'];
@@ -242,9 +260,9 @@ class GroupController extends Controller {
 				$NCGroup->removeUser($NCUser);
 				$groups[] = $NCGroup->getGID();
 				$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-				if ($groupId === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']) {
+				if ($groupId === WorkspaceManagerGroup::get($space['id'])) {
 					$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-					$this->userService->removeGEFromWM($NCUser, $space['id']);
+					$this->userService->removeGEFromWM($NCUser, $space);
 				}
 			}
 		} else {
@@ -252,10 +270,10 @@ class GroupController extends Controller {
 			$groups[] = $gid;
 			$NCGroup->removeUser($NCUser);
 			$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-			if ($gid === GroupsWorkspace::GID_SPACE . GroupsWorkspace::SPACE_MANAGER . $space['id']) {
+			if ($gid === WorkspaceManagerGroup::get($space['id'])) {
 				// Removing user from a GE- group
 				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-				$this->userService->removeGEFromWM($NCUser, $space['id']);
+				$this->userService->removeGEFromWM($NCUser, $space);
 			}
 		}
 

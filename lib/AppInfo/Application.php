@@ -34,6 +34,7 @@ use OCP\IURLGenerator;
 
 class Application extends App {
 	public const APP_ID = 'workspace';
+	public const V300 = 300;
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
