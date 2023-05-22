@@ -27,7 +27,7 @@ import UserGroup from '../services/Groups/UserGroup.js'
 export const getters = {
 	// Returns the GE group of a workspace
 	GEGroup: state => name => {
-		return ManagerGroup.get(state.spaces[name])
+		return ManagerGroup.getGid(state.spaces[name])
 	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
@@ -45,15 +45,11 @@ export const getters = {
 	},
 	// Tests wheter a user if General manager of a space
 	isSpaceAdmin: state => (user, spaceName) => {
-		return user.groups.includes(ManagerGroup.get(state.spaces[spaceName]))
+		return user.groups.includes(ManagerGroup.getGid(state.spaces[spaceName]))
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
-		if (gid === getters.GEGroup(spaceName)
-		|| gid === getters.UGroup(spaceName)) {
-			return true
-		}
-		return false
+		return gid === getters.GEGroup(spaceName) || gid === getters.UGroup(spaceName)
 	},
 	// Tests whether a user is member of workspace
 	isMember: state => (name, user) => {
@@ -79,6 +75,6 @@ export const getters = {
 	},
 	// Returns the U- group of a workspace
 	UGroup: state => name => {
-		return UserGroup.get(state.spaces[name])
+		return UserGroup.getGid(state.spaces[name])
 	},
 }

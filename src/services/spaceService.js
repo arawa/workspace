@@ -88,13 +88,9 @@ export function transferUsersToUserGroup(spaceId, groupfolder) {
  */
 export function isSpaceManagers(group) {
 	const OLD_SPACE_MANAGER_REGEX = new RegExp('^' + PREFIX_MANAGER)
-	let result = false
 
-	if (OLD_SPACE_MANAGER_REGEX.test(group)) {
-		result = true
-	}
+	return OLD_SPACE_MANAGER_REGEX.test(group) === true
 
-	return result
 }
 
 /**

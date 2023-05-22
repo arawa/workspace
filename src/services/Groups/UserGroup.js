@@ -26,7 +26,7 @@ import { PREFIX_USER } from '../../constants.js'
  * @param {object} space
  * @return {string}
  */
-function get(space) {
+function getGid(space) {
 	const groups = Object.keys(space.groups)
 
 	const uGroupRegex = new RegExp('^' + PREFIX_USER + '[0-9]*$')
@@ -43,7 +43,7 @@ function get(space) {
 }
 
 const UserGroup = {
-	get,
+	getGid,
 }
 
 export default UserGroup

@@ -145,7 +145,7 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				gid: UserGroup.get(space),
+				gid: UserGroup.getGid(space),
 				user,
 			})
 		},

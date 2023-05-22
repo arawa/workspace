@@ -26,7 +26,7 @@ import { PREFIX_MANAGER } from '../../constants.js'
  * @param {object} space
  * @return {string}
  */
-function get(space) {
+function getGid(space) {
 	const groups = Object.keys(space.groups)
 
 	const spaceGeneralGroupRegex = new RegExp('^' + PREFIX_MANAGER + '[0-9]*$')
@@ -43,7 +43,7 @@ function get(space) {
 }
 
 const ManagerGroup = {
-	get,
+	getGid,
 }
 
 export default ManagerGroup

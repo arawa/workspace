@@ -145,7 +145,7 @@ export default {
 						if (user.role === 'user') {
 							this.$store.dispatch('removeUserFromGroup', {
 								name: this.$route.params.space,
-								gid: ManagerGroup.get(space),
+								gid: ManagerGroup.getGid(space),
 								user,
 							})
 						}
@@ -159,16 +159,16 @@ export default {
 					if (user.role === 'admin') {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
-							gid: ManagerGroup.get(space),
+							gid: ManagerGroup.getGid(space),
 							user,
 						})
 					}
 				} else {
 					// Adding a user to the workspace
 					if (user.role === 'admin') {
-						gid = ManagerGroup.get(space)
+						gid = ManagerGroup.getGid(space)
 					} else {
-						gid = UserGroup.get(space)
+						gid = UserGroup.getGid(space)
 					}
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
