@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
@@ -147,7 +146,7 @@ class GroupController extends Controller {
 		string $gid,
 		int $spaceId): JSONResponse {
 
-       if (!empty($this->groupManager->search($newGroupName))) {
+		if (!empty($this->groupManager->search($newGroupName))) {
 			return new JSONResponse(
 				'This group already exists. Please, change the name',
 				Http::STATUS_CONFLICT
