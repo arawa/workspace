@@ -16,6 +16,7 @@ OC.L10N.register(
 		'Delete space': 'Delete Workspace',
 		'Delete user': 'Remove user',
 		'Error 403': 'Error 403',
+		'This group already exists. Please, change the name': 'This group already exists. Please, change the name',
 		'You aren\'t allowed to access into this application !': 'You aren\'t allowed to access into this application !',
 		'return to home': 'return to home',
 		'Email': 'Emails',
