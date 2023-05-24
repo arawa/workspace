@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 #666 ( [#666](https://github.com/arawa/workspace/pull/666) )
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
+- NcModal component to delete a workspace ( [#774](https://github.com/arawa/workspace/pull/774) )
+- Experiment/change user group ( [#663](https://github.com/arawa/workspace/pull/663) )
 
 ### Changed
 
@@ -20,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
 - replace vue-notification by @nextcloud/dialogs ( [#798](https://github.com/arawa/workspace/pull/798) )
+- Remove the space id in the title ( [#794](https://github.com/arawa/workspace/pull/794) )
+- replace vue-notification by @nextcloud/dialogs ( [#798](https://github.com/arawa/workspace/pull/798) )
+- Change the translation in workspace ( [#808](https://github.com/arawa/workspace/pull/808) )
+- Add 5s to notifications in a few places ( [#814](https://github.com/arawa/workspace/pull/814) )
+- Refactor Home.vue component ( [#817](https://github.com/arawa/workspace/pull/817) )
+- Refactor to be compatible with php8.0 ( [#818](https://github.com/arawa/workspace/pull/818) )
 
 ### Chore
 
@@ -46,6 +54,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
 - Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
 - Change the index from Nextcloud 25 ( [#681](https://github.com/arawa/workspace/pull/681) )
+- Prevent duplicate spacename rename ( [#781](https://github.com/arawa/workspace/pull/781) )
+- Prevent the duplication of group ( [#782](https://github.com/arawa/workspace/pull/782) )
+- Replace the plus by a dot ( [#784](https://github.com/arawa/workspace/pull/784) )
+- Fix/rename group ( [#799](https://github.com/arawa/workspace/pull/799) )
+- Fix/modal window hide ( [#801](https://github.com/arawa/workspace/pull/801) )
 
 ## [1.3.1] - 2022-12-29
 
