@@ -41,6 +41,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix/rename group ( [#799](https://github.com/arawa/workspace/pull/799) )
 - Fix/modal window hide ( [#801](https://github.com/arawa/workspace/pull/801) )
 
+## [2.0.1] - 2023-03-03
+
+### Fixed
+
+- Fix/set parameter spacename/737/stable25 ( [#738](https://github.com/arawa/workspace/pull/738) )
+
+### Changed
+
+- chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
+
+## [2.0.0] - 2023-02-06
+
+### Added
+
+- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) )
+- Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
+- Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
+
+### Changed
+
+- Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
+- Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
+- Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
+- Backport : Disable the conversion feature - stable25 ( [#704](https://github.com/arawa/workspace/pull/704) )
+
+### Chore
+
+- npm: bump vue and vue-template-compiler ( [#591](https://github.com/arawa/workspace/pull/591) )
+- npm: bump @nextcloud/stylelint-config from 2.2.0 to 2.3.0 ( [#595](https://github.com/arawa/workspace/pull/595) )
+- npm: bump jest-environment-jsdom from 29.0.3 to 29.3.1 ( [#613](https://github.com/arawa/workspace/pull/613) )
+- npm: bump jest from 29.0.3 to 29.3.1 [#613](https://github.com/arawa/workspace/pull/614)
+- npm: bump loader-utils from 1.4.0 to 1.4.2 ( [#621](https://github.com/arawa/workspace/pull/621) )
+- npm: bump jsdom from 20.0.0 to 20.0.3 ( [#622](https://github.com/arawa/workspace/pull/622) )
+- npm: bump decode-uri-component from 0.2.0 to 0.2.2 ( [#628](https://github.com/arawa/workspace/pull/628) )
+- Composer: Bump phpunit/phpunit from 9.5.24 to 9.5.27 ( [#634](https://github.com/arawa/workspace/pull/634) )
+- npm: bump core-js from 3.25.2 to 3.27.1 ( [#646](https://github.com/arawa/workspace/pull/646) )
+- npm: bump @nextcloud/axios from 2.0.0 to 2.3.0 ( [#636](https://github.com/arawa/workspace/pull/636) )
+- npm: bump @nextcloud/webpack-vue-config from 5.3.0 to 5.4.0 ( [#652](https://github.com/arawa/workspace/pull/652) )
+- chore(): Replace OCP's christophwurst by Nextcloud ( [#654](https://github.com/arawa/workspace/pull/654) )
+- chore(): Add informations about the release PHP ( [#655](https://github.com/arawa/workspace/pull/655) )
+- Replace ILogger by LoggerInterface ( [#656](https://github.com/arawa/workspace/pull/656) )
+- chore(MD): Change the groupfolder release to 9.2.0 ( [#665](https://github.com/arawa/workspace/pull/665) )
+
+### Fixed
+
+- Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
+- Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
+- Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
+- fix(Vue): Change the index from Nextcloud 25 ( [#683](https://github.com/arawa/workspace/pull/683) )
+
 ## [1.3.1] - 2022-12-29
 
 ### Fixed
@@ -122,7 +172,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.3.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.1...main
+[2.0.1]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
+[2.0.0]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.0...1.3.1
 [1.3.0]: https://github.com/arawa/workspace/compare/v1.2.3...1.3.0
 [1.2.3]: https://github.com/arawa/workspace/compare/v1.2.2...1.2.3
