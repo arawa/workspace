@@ -6,8 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Define a parameter for the spacename var ( [#737](https://github.com/arawa/workspace/pull/737) )
-
 ### Added
 
 - npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 #666 ( [#666](https://github.com/arawa/workspace/pull/666) )
@@ -40,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace the plus by a dot ( [#784](https://github.com/arawa/workspace/pull/784) )
 - Fix/rename group ( [#799](https://github.com/arawa/workspace/pull/799) )
 - Fix/modal window hide ( [#801](https://github.com/arawa/workspace/pull/801) )
+- Define a parameter for the spacename var ( [#737](https://github.com/arawa/workspace/pull/737) )
 
 ## [2.0.1] - 2023-03-03
 
