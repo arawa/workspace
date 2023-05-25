@@ -4,10 +4,11 @@
 
 ### Added
 
-- Composer: Bump nextcloud/coding-standard from 1.0.0 to 1.1.0 ( [#785](https://github.com/arawa/workspace/pull/785) )
 - Create files related to security ( [#759](https://github.com/arawa/workspace/pull/759) )
 - build(CI): Init Semgrep for the Workspace app ( [#765](https://github.com/arawa/workspace/pull/765) )
 - build(CI): add lint-eslint.yml file ( [#807](https://github.com/arawa/workspace/pull/807) )
+- Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
+- Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
 
 ### Changed
 
@@ -20,6 +21,7 @@
 - Change fullclean command ( [#796](https://github.com/arawa/workspace/pull/796) )
 - Change php required to 8.2 ( [#797](https://github.com/arawa/workspace/pull/797) )
 - Refactor to be compatible with php8.0 ( [#818](https://github.com/arawa/workspace/pull/818) )
+- Composer: Bump nextcloud/coding-standard from 1.0.0 to 1.1.0 ( [#785](https://github.com/arawa/workspace/pull/785) )
 
 ### Chore
 
