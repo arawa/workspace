@@ -6,11 +6,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) )
+- NcModal component to delete a workspace ( [#774](https://github.com/arawa/workspace/pull/774) )
+- Experiment/change user group ( [#663](https://github.com/arawa/workspace/pull/663) )
+
+### Changed
+
+- Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
+- Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
+- Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
+- replace vue-notification by @nextcloud/dialogs ( [#798](https://github.com/arawa/workspace/pull/798) )
+- Remove the space id in the title ( [#794](https://github.com/arawa/workspace/pull/794) )
+- replace vue-notification by @nextcloud/dialogs ( [#798](https://github.com/arawa/workspace/pull/798) )
+- Change the translation in workspace ( [#808](https://github.com/arawa/workspace/pull/808) )
+- Add 5s to notifications in a few places ( [#814](https://github.com/arawa/workspace/pull/814) )
+- Refactor Home.vue component ( [#817](https://github.com/arawa/workspace/pull/817) )
+- Refactor to be compatible with php8.0 ( [#818](https://github.com/arawa/workspace/pull/818) )
+
+### Fixed
+
+- Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
+- Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
+- Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
+- Change the index from Nextcloud 25 ( [#681](https://github.com/arawa/workspace/pull/681) )
+- Prevent duplicate spacename rename ( [#781](https://github.com/arawa/workspace/pull/781) )
+- Prevent the duplication of group ( [#782](https://github.com/arawa/workspace/pull/782) )
+- Replace the plus by a dot ( [#784](https://github.com/arawa/workspace/pull/784) )
+- Fix/rename group ( [#799](https://github.com/arawa/workspace/pull/799) )
+- Fix/modal window hide ( [#801](https://github.com/arawa/workspace/pull/801) )
 - Define a parameter for the spacename var ( [#737](https://github.com/arawa/workspace/pull/737) )
+
+## [2.0.1] - 2023-03-03
+
+### Fixed
+
+- Fix/set parameter spacename/737/stable25 ( [#738](https://github.com/arawa/workspace/pull/738) )
+
+### Changed
+
+- chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
+
+## [2.0.0] - 2023-02-06
 
 ### Added
 
-- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 #666 ( [#666](https://github.com/arawa/workspace/pull/666) )
+- npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) )
 - Add coding standard ( [#624](https://github.com/arawa/workspace/pull/624) )
 - Init the .editorconfig file ( [#625](https://github.com/arawa/workspace/pull/625) )
 
@@ -19,11 +61,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create the register function ( [#649](https://github.com/arawa/workspace/pull/649) )
 - Fix the pattern to check special char ( [#648](https://github.com/arawa/workspace/pull/648) )
 - Replace constants ( [#589](https://github.com/arawa/workspace/pull/589))
-- replace vue-notification by @nextcloud/dialogs ( [#798](https://github.com/arawa/workspace/pull/798) )
+- Backport : Disable the conversion feature - stable25 ( [#704](https://github.com/arawa/workspace/pull/704) )
 
 ### Chore
 
-- chore(): remove @noCSRFRequired tokens from controllers ( [#745](https://github.com/arawa/workspace/pull/745) )
 - npm: bump vue and vue-template-compiler ( [#591](https://github.com/arawa/workspace/pull/591) )
 - npm: bump @nextcloud/stylelint-config from 2.2.0 to 2.3.0 ( [#595](https://github.com/arawa/workspace/pull/595) )
 - npm: bump jest-environment-jsdom from 29.0.3 to 29.3.1 ( [#613](https://github.com/arawa/workspace/pull/613) )
@@ -45,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bugfix npm test ( [#637](https://github.com/arawa/workspace/pull/637) )
 - Re-add the translating of the "admin" ( [#662](https://github.com/arawa/workspace/pull/662) )
 - Filter the groupfolderId ( [#661](https://github.com/arawa/workspace/pull/661) )
-- Change the index from Nextcloud 25 ( [#681](https://github.com/arawa/workspace/pull/681) )
+- fix(Vue): Change the index from Nextcloud 25 ( [#683](https://github.com/arawa/workspace/pull/683) )
 
 ## [1.3.1] - 2022-12-29
 
@@ -128,7 +169,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v1.3.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.1...main
+[2.0.1]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
+[2.0.0]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.0...1.3.1
 [1.3.0]: https://github.com/arawa/workspace/compare/v1.2.3...1.3.0
 [1.2.3]: https://github.com/arawa/workspace/compare/v1.2.2...1.2.3
