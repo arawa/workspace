@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2023-05-25
+
 ### Added
 
 - npm: Bump @nextcloud/vue from 5.4.0 to 7.4.0 ( [#666](https://github.com/arawa/workspace/pull/666) )
@@ -169,7 +171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v2.0.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.0...main
+[3.0.0]: https://github.com/arawa/workspace/compare/v2.0.1...3.0.0
 [2.0.1]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
 [2.0.0]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
 [1.3.1]: https://github.com/arawa/workspace/compare/v1.3.0...1.3.1
