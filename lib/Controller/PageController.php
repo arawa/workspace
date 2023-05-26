@@ -43,7 +43,7 @@ class PageController extends Controller {
 	 * Application's main page
 	 *
 	 */
-    #[NoAdminRequired]
+	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js

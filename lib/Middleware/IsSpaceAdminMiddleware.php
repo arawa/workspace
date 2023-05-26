@@ -44,8 +44,8 @@ class IsSpaceAdminMiddleware extends Middleware {
 	}
 
 	public function beforeController($controller, $methodName): void {
-        $reflectionMethod = new \ReflectionMethod($controller, $methodName);
-        $hasAttribute = !empty($reflectionMethod->getAttributes(SpaceAdminRequired::class));
+		$reflectionMethod = new \ReflectionMethod($controller, $methodName);
+		$hasAttribute = !empty($reflectionMethod->getAttributes(SpaceAdminRequired::class));
 		if ($hasAttribute) {
 			$spaceId = $this->request->getParam('spaceId');
 			$space = $this->spaceService->find($spaceId);
