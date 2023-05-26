@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+# [3.0.1] - 2023-05-26
+
+### Fixed
+
+-  Hotfix/update change groupsname/834/stable3.0 ( [#835](https://github.com/arawa/workspace/pull/835) )
+
 ## [3.0.0] - 2023-05-25
 
 ### Added
@@ -171,7 +177,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.1...main
+[3.0.1]: https://github.com/arawa/workspace/compare/v3.0.0...3.0.1
 [3.0.0]: https://github.com/arawa/workspace/compare/v2.0.1...3.0.0
 [2.0.1]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
 [2.0.0]: https://github.com/arawa/workspace/compare/v1.3.1...2.0.0
