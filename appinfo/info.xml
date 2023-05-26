@@ -20,7 +20,7 @@
 
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="26" max-version="26"/>
+        <nextcloud min-version="25" max-version="26"/>
     </dependencies>
 
     <summary>Create Groupfolders with delegated management</summary>
@@ -72,6 +72,9 @@ For more details, please go to the [admin documentation](https://github.com/araw
     </navigations>
 
     <repair-steps>
+        <pre-migration>
+            <step>OCA\Workspace\Migration\ChangeGroupnamesV300</step>
+        </pre-migration>
 	    <install>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
 	    </install>
