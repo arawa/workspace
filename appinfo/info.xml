@@ -72,6 +72,9 @@ For more details, please go to the [admin documentation](https://github.com/araw
     </navigations>
 
     <repair-steps>
+        <pre-migration>
+            <step>OCA\Workspace\Migration\ChangeGroupnamesV300</step>
+        </pre-migration>
 	    <install>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
 	    </install>
