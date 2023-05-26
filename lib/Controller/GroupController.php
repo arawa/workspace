@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Middleware\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Middleware\Attribute\SpaceAdminRequired;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
@@ -73,8 +72,8 @@ class GroupController extends Controller {
 	 * @var string $spaceId for Middleware
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function create(array $data = []): JSONResponse {
 
 		$data = array_merge(self::DEFAULT, $data);
@@ -109,10 +108,10 @@ class GroupController extends Controller {
 	 * @var int $spaceId
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
-    public function delete(string $gid, int $spaceId): JSONResponse {
-        // TODO Use groupfolder api to retrieve workspace group.
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
+	public function delete(string $gid, int $spaceId): JSONResponse {
+		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
 		}
@@ -141,8 +140,8 @@ class GroupController extends Controller {
 	 * @var int $spaceId
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
@@ -185,8 +184,8 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function addUser(string $spaceId, string $gid, string $user): JSONResponse {
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
@@ -233,8 +232,8 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function removeUser(array|string $space,
 		string $gid,
 		string $user): JSONResponse {
@@ -293,11 +292,11 @@ class GroupController extends Controller {
 	}
 
 	/**
-     * @param string $spaceId
+	 * @param string $spaceId
 	 * @param string|array $groupfolder
 	 */
-    #[NoAdminRequired]
-    #[GeneralManagerRequired]
+	#[NoAdminRequired]
+	#[GeneralManagerRequired]
 	public function transferUsersToGroups(string $spaceId,
 		string|array $groupfolder): JSONResponse {
 		if (gettype($groupfolder) === 'string') {

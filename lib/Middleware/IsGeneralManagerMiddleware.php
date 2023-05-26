@@ -41,8 +41,8 @@ class IsGeneralManagerMiddleware extends Middleware {
 	}
 
 	public function beforeController($controller, $methodName): void {
-        $reflectionMethod = new \ReflectionMethod($controller, $methodName);
-        $hasAttribute = !empty($reflectionMethod->getAttributes(GeneralManagerRequired::class));
+		$reflectionMethod = new \ReflectionMethod($controller, $methodName);
+		$hasAttribute = !empty($reflectionMethod->getAttributes(GeneralManagerRequired::class));
 		if ($hasAttribute) {
 			if (!$this->userService->isUserGeneralAdmin()) {
 				throw new AccessDeniedException();
