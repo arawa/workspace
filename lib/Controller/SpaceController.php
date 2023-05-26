@@ -47,12 +47,12 @@ class SpaceController extends Controller {
 	 * @param $id - The space id to get a space - OCA\Workspace\Db\Space .
 	 * @return DataResponse - The space serialized
 	 */
-    #[NoAdminRequired]
+	#[NoAdminRequired]
 	public function find(int $id): DataResponse {
 		return new DataResponse($this->spaceService->find($id));
 	}
 
-    #[NoAdminRequired]
+	#[NoAdminRequired]
 	public function findAll(): DataResponse {
 		return new DataResponse($this->spaceService->findAll());
 	}
@@ -60,8 +60,8 @@ class SpaceController extends Controller {
 	/**
 	 * @return DataResponse - The space serialized
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function updateColorCode(string $colorCode, int $spaceId): DataResponse {
 		return new DataResponse($this->spaceService->updateColorCode($colorCode, (int)$spaceId));
 	}
