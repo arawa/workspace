@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix workspace removal issue ( [#838](https://github.com/arawa/workspace/pull/838))
+
 ## [3.0.0] - 2023-05-25
 
 ### Added
