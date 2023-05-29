@@ -36,16 +36,22 @@ class UpgradeV300 implements UpgradeInterface {
 	private IAppConfig $appConfig;
 	private IGroupManager $groupManager;
 	private SpaceMapper $spaceMapper;
+    private UserGroup $userGroup;
+    private WorkspaceManagerGroup $workspaceManagerGroup;
 	
 	public function __construct(
 		GroupFoldersGroupsMapper $groupfoldersGroupsMapper,
 		IAppConfig $appConfig,
 		IGroupManager $groupManager,
-		SpaceMapper $spaceMapper) {
+		SpaceMapper $spaceMapper,
+        UserGroup $userGroup,
+        WorkspaceManagerGroup $workspaceManagerGroup) {
 		$this->appConfig = $appConfig;
 		$this->groupfoldersGroupsMapper = $groupfoldersGroupsMapper;
 		$this->groupManager = $groupManager;
 		$this->spaceMapper = $spaceMapper;
+        $this->userGroup = $userGroup;
+        $this->workspaceManagerGroup = $workspaceManagerGroup;
 	}
 
 	public function upgrade(): void {
@@ -72,7 +78,7 @@ class UpgradeV300 implements UpgradeInterface {
 	}
 
 	private function changePrefixForWorkspaceManagerGroups(): void {
-		$workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
+		$workspaceManagerGroups = $this->groupManager->search($this->workspaceManagerGroup->getGidPrefix());
 		foreach ($workspaceManagerGroups as $group) {
 			$groupname = $group->getGID();
 			$groupnameSplitted = explode('-', $groupname);
@@ -85,7 +91,7 @@ class UpgradeV300 implements UpgradeInterface {
 	}
 
 	private function changePrefixForWorkspaceUserGroups(): void {
-		$userGroups = $this->groupManager->search(UserGroup::getPrefix());
+		$userGroups = $this->groupManager->search($this->userGroup->getGidPrefix());
 		foreach ($userGroups as $group) {
 			$groupname = $group->getGID();
 			$groupnameSplitted = explode('-', $groupname);

@@ -25,26 +25,27 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\BadRequestException;
-use OCA\Workspace\CreateGroupException;
-use OCA\Workspace\CreateWorkspaceException;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
-use OCA\Workspace\Service\WorkspaceService;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
 use Psr\Log\LoggerInterface;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\BadRequestException;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\CreateGroupException;
+use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\CreateWorkspaceException;
+use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class WorkspaceController extends Controller {
 	public function __construct(
@@ -54,12 +55,13 @@ class WorkspaceController extends Controller {
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
 		private SpaceService $spaceService,
+		private UserGroup $userGroup,
 		private UserService $userService,
 		private WorkspaceCheckService $workspaceCheck,
-		private WorkspaceService $workspaceService,
-		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
-		public $AppName
+		private WorkspaceService $workspaceService,
+		public $AppName,
+        private GroupsWorkspace $groupsWorkspace
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -107,8 +109,8 @@ class WorkspaceController extends Controller {
 		}
 
 		// #2 create groups
-		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
-		$newSpaceUsersGroup = $this->userGroup->create($space);
+		$newSpaceManagerGroup = $this->groupsWorkspace->create($this->workspaceManagerGroup, $space);
+		$newSpaceUsersGroup = $this->groupsWorkspace->create($this->userGroup, $space);
 
 		// #3 Returns result
 		return new JSONResponse([
@@ -135,7 +137,7 @@ class WorkspaceController extends Controller {
    */
 	public function destroy(array $workspace): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
+		$GEGroup = $this->groupManager->get($this->workspaceManagerGroup->get($workspace['id']));
 		foreach ($GEGroup->getUsers() as $user) {
 			$this->userService->removeGEFromWM($user, $workspace);
 		}
@@ -240,7 +242,7 @@ class WorkspaceController extends Controller {
 		}
 
 		$user = $this->userManager->get($userId);
-		$GEgroup = $this->groupManager->get(WorkspaceManagerGroup::get($space['id']));
+		$GEgroup = $this->groupManager->get($this->workspaceManagerGroup->get($space['id']));
 		if ($GEgroup->inGroup($user)) {
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
@@ -248,7 +250,7 @@ class WorkspaceController extends Controller {
 			$this->userService->removeGEFromWM($user, $space);
 		} else {
 			// Changing a user's role from user to admin
-			$this->groupManager->get(WorkspaceManagerGroup::get($space['id']))->addUser($user);
+			$this->groupManager->get($this->workspaceManagerGroup->get($space['id']))->addUser($user);
 			$this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS)->addUser($user);
 		}
 

@@ -23,38 +23,30 @@
 
 namespace OCA\Workspace\Service\Group;
 
-use OCA\Workspace\CreateGroupException;
-use OCA\Workspace\Db\Space;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Services\IAppConfig;
-use OCP\IGroup;
-use OCP\IGroupManager;
+use OCA\Workspace\Service\Group\IGroupWorkspace;
 
-class UserGroup extends GroupsWorkspace {
-	private IGroupManager $groupManager;
+class UserGroup implements IGroupWorkspace {
 
-	public function __construct(IGroupManager $groupManager, IAppConfig $appConfig) {
-		parent::__construct($appConfig);
-		$this->groupManager = $groupManager;
+	private const GID_SPACE = 'SPACE-';
+	private const PREFIX_GID_USERS = self::GID_SPACE . 'U-';
+	private string $DISPLAY_PREFIX_USER_GROUP;
+
+
+	public function __construct(IAppConfig $appConfig) {
+		$this->DISPLAY_PREFIX_USER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP');
 	}
 
-	public static function get(int $spaceId): string {
+	public function get(int $spaceId): string {
 		return self::PREFIX_GID_USERS . $spaceId;
 	}
 
-	public static function getPrefix(): string {
+	public function getGidPrefix(): string {
 		return self::PREFIX_GID_USERS;
 	}
 
-	public function create(Space $space): IGroup {
-		$group = $this->groupManager->createGroup(self::PREFIX_GID_USERS . $space->getId());
-
-		if (is_null($group)) {
-			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
-		}
-
-		$group->setDisplayName(self::getDisplayPrefixUserGroup() . $space->getSpaceName());
-
-		return $group;
-	}
+    public function getDisplayPrefix(): string
+    {
+        return $this->DISPLAY_PREFIX_USER_GROUP;
+    }
 }

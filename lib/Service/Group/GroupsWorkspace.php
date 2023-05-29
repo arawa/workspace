@@ -23,43 +23,32 @@
 
 namespace OCA\Workspace\Service\Group;
 
+use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Db\Space;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
+use OCP\IGroupManager;
 
-abstract class GroupsWorkspace {
-	private const GID_SPACE_MANAGER = 'GE-';
-	private const GID_SPACE_USERS = 'U-';
-	private const GID_SPACE = 'SPACE-';
-
-	protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
-	protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
-
-	protected static string $DISPLAY_PREFIX_MANAGER_GROUP;
-	protected static string $DISPLAY_PREFIX_USER_GROUP;
-
-	public function __construct(IAppConfig $appConfig) {
-		self::$DISPLAY_PREFIX_MANAGER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP');
-		self::$DISPLAY_PREFIX_USER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP');
+class GroupsWorkspace {
+    
+	public function __construct(private IAppConfig $appConfig,
+        private IGroupManager $groupManager) {
 	}
-
-	public static function getDisplayPrefixManagerGroup(): string {
-		return self::$DISPLAY_PREFIX_MANAGER_GROUP;
-	}
-
-	public static function getDisplayPrefixUserGroup(): string {
-		return self::$DISPLAY_PREFIX_USER_GROUP;
-	}
-
-	/**
-	 * @return string - Just the GID with the spaceId.
-	 */
-	abstract public static function get(int $spaceId): string;
-
-	abstract public static function getPrefix(): string;
 
 	/**
 	 * Use the OCA\Workspace\Db\Space to get its spaceId and spaceName.
 	 */
-	abstract public function create(Space $space): IGroup;
+    public function create(IGroupWorkspace $groupWorkspace, Space $space): IGroup {
+    	$group = $this->groupManager->createGroup($groupWorkspace->getGidPrefix() . $space->getId());
+
+    	if (is_null($group)) {
+    		throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
+    	}
+
+    	$group->setDisplayName($groupWorkspace->getDisplayPrefix() . $space->getSpaceName());
+
+    	return $group;
+    }
+
 }

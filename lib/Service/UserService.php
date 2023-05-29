@@ -37,7 +37,9 @@ class UserService {
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IUserSession $userSession,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
+        private UserGroup $userGroup,
+        private WorkspaceManagerGroup $workspaceManagerGroup
 	) {
 	}
 
@@ -92,7 +94,7 @@ class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	 */
 	public function isSpaceManager(): bool {
-		$workspaceAdminGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
+		$workspaceAdminGroups = $this->groupManager->search($this->workspaceManagerGroup->getGidPrefix());
 		foreach ($workspaceAdminGroups as $group) {
 			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
 				return true;
@@ -117,7 +119,7 @@ class UserService {
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
 	public function isSpaceManagerOfSpace(array $space): bool {
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {
+		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $this->workspaceManagerGroup->get($space['id']))) {
 			return true;
 		}
 		return false;
@@ -133,8 +135,8 @@ class UserService {
 		// Checks if the user is member of the GE- group of another workspace
 		foreach ($groups as $group) {
 			$gid = $group->getGID();
-			if (strpos($gid, WorkspaceManagerGroup::get($space['id'])) === 0 &&
-				$gid !== UserGroup::get($space['id'])
+			if (strpos($gid, $this->workspaceManagerGroup->get($space['id'])) === 0 &&
+				$gid !== $this->userGroup->get($space['id'])
 			) {
 				$found = true;
 				break;

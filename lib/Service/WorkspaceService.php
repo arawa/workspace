@@ -43,7 +43,9 @@ class WorkspaceService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private UserService $userService
+        private UserGroup $userGroup,
+		private UserService $userService,
+        private WorkspaceManagerGroup $workspaceManagerGroup
 	) {
 	}
 
@@ -133,7 +135,7 @@ class WorkspaceService {
 			$role = 'user';
 			if ($this->groupManager->isInGroup(
 				$user->getUID(),
-				WorkspaceManagerGroup::get($space['id']))
+				$this->workspaceManagerGroup->get($space['id']))
 			) {
 				$role = 'admin';
 			}
@@ -169,7 +171,7 @@ class WorkspaceService {
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
 		$users = array();
-		$group = $this->groupManager->get(UserGroup::get($workspace['id']));
+		$group = $this->groupManager->get($this->userGroup->get($workspace['id']));
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {
@@ -177,7 +179,7 @@ class WorkspaceService {
 			};
 		}
 		// TODO Handle is_null($group) better (remove workspace from list?)
-		$group = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
+		$group = $this->groupManager->get($this->workspaceManagerGroup->get($workspace['id']));
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
