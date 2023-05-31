@@ -128,7 +128,7 @@ export default {
 			createGroup: false, // true to display 'Create Group' ActionInput
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
-			showSpaceMenu: false,
+			showDelWorkspaceModal: false,
 			isESR: false,
 		}
 	},
