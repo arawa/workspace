@@ -34,6 +34,9 @@ use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
 
 class ChangeGroupnamesV300 implements IRepairStep {
+
+	public const V300 = 300;
+
 	public function __construct(private LoggerInterface $logger,
 		private IAppConfig $appConfigManager,
 		private ServicesIAppConfig $appConfig,
@@ -63,7 +66,7 @@ class ChangeGroupnamesV300 implements IRepairStep {
 		$controlMigration = boolval($this->appConfig->getAppValue(Upgrade::CONTROL_MIGRATION_V3));
 
 
-		if ($version <= Application::V300 && $controlMigration === false) {
+		if ($version <= self::V300 && $controlMigration === false) {
 			$this->upgradeV300->upgrade();
 		}
 	}
