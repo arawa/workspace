@@ -53,7 +53,7 @@ class Application extends App {
 				$c->query(IControllerMethodReflector::class),
 				$c->query(IRequest::class),
 				$c->query(UserService::class),
-				$c->query(SpaceService::class)
+                $c->query(SpaceService::class)
 			);
 		});
 
