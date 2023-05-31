@@ -25,6 +25,7 @@ namespace OCA\Workspace\AppInfo;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
@@ -34,7 +35,6 @@ use OCP\IURLGenerator;
 
 class Application extends App {
 	public const APP_ID = 'workspace';
-	public const V300 = 300;
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
@@ -52,7 +52,8 @@ class Application extends App {
 			return new IsSpaceAdminMiddleware(
 				$c->query(IControllerMethodReflector::class),
 				$c->query(IRequest::class),
-				$c->query(UserService::class)
+				$c->query(UserService::class),
+                $c->query(SpaceService::class)
 			);
 		});
 
