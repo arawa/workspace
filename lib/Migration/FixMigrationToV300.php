@@ -33,7 +33,8 @@ class FixMigrationToV300 implements IRepairStep
 		$versionSplitted = explode('.', $versionString);
 		$version = intval(implode('', $versionSplitted));
 
-        if (!($version >= 300 && $version < 302)) {
+        if (!($version >= 300 && $version < 302) === false) {
+            $this->appConfig->setAppValue('test', 'ça marche ! :)');
             return;
         }
 
