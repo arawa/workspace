@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
 
+### Fixed
+
+- Fix workspace removal issue ( [#838](https://github.com/arawa/workspace/pull/838))
+- fix(php): Move the V300 constant ( [#841](https://github.com/arawa/workspace/pull/841) )
+
 ## [3.0.0] - 2023-05-25
 
 ### Added

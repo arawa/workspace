@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+
 ### Added
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
+
+### Fixed
+
+- Fix workspace removal issue ( [#838](https://github.com/arawa/workspace/pull/838))
 
 ## [3.0.0] - 2023-05-25
 
