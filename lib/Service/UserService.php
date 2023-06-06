@@ -70,14 +70,14 @@ class UserService {
         }
 
 		// Returns a user that is valid for the frontend
-		return array(
+		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
-		);
+		];
 	}
 
 	/**
