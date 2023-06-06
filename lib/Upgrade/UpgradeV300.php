@@ -28,6 +28,7 @@ use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Upgrade\Upgrade;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 
@@ -73,9 +74,9 @@ class UpgradeV300 implements UpgradeInterface {
 
 	private function changePrefixForWorkspaceManagerGroups(): void {
 		$workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
-		$workspaceManagerGroups = array_filter($workspaceManagerGroups, function ($group) {
-			return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
-		});
+        $workspaceManagerGroups = array_filter($workspaceManagerGroups, function ($group) {
+            return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
+        });
 		foreach ($workspaceManagerGroups as $group) {
 			$groupname = $group->getGID();
 			$groupnameSplitted = explode('-', $groupname);
@@ -89,9 +90,15 @@ class UpgradeV300 implements UpgradeInterface {
 
 	private function changePrefixForWorkspaceUserGroups(): void {
 		$userGroups = $this->groupManager->search(UserGroup::getPrefix());
+<<<<<<< HEAD
 		$userGroups = array_filter($userGroups, function ($group) {
 			return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
 		});
+=======
+        $userGroups = array_filter($userGroups, function ($group) {
+            return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
+        });
+>>>>>>> 906ac13 (hotfix(php): Ignore guest virtual group)
 		foreach ($userGroups as $group) {
 			$groupname = $group->getGID();
 			$groupnameSplitted = explode('-', $groupname);
