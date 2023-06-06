@@ -28,7 +28,6 @@ use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Upgrade\Upgrade;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 
