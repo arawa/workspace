@@ -59,14 +59,14 @@ class UserService {
 		}
 
 		// Gets the workspace subgroups the user is member of
-        $groups = [];
-        if (isset($space['groups']) && is_array($space['groups'])) {
-            foreach ($this->groupManager->getUserGroups($user) as $group) {
-                if (in_array($group->getGID(), array_keys($space['groups']))) {
-                    array_push($groups, $group->getGID());
-                }
-            }
-        }
+		$groups = [];
+		if (isset($space['groups']) && is_array($space['groups'])) {
+			foreach ($this->groupManager->getUserGroups($user) as $group) {
+				if (in_array($group->getGID(), array_keys($space['groups']))) {
+					array_push($groups, $group->getGID());
+				}
+			}
+		}
 
 		// Returns a user that is valid for the frontend
 		return [
