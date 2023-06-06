@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix workspace removal issue ( [#838](https://github.com/arawa/workspace/pull/838))
 - fix(php): Move the V300 constant ( [#841](https://github.com/arawa/workspace/pull/841) )
+- Ignore guest virtual group ( [#847](https://github.com/arawa/workspace/pull/847) )
 
 ## [3.0.0] - 2023-05-25
 
