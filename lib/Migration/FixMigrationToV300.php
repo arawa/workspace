@@ -32,7 +32,6 @@ class FixMigrationToV300 implements IRepairStep
         $versionInstalled = $this->appConfig->getAppValue('installed_version');
         $isBetween300And301 = version_compare($versionInstalled, '3.0.0', '>=') && version_compare($versionInstalled, '3.0.2', '<');
         if (!$isBetween300And301) {
-            $this->appConfig->setAppValue('test', 'restopped');
             return;
         }
 
