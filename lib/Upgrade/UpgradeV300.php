@@ -74,7 +74,7 @@ class UpgradeV300 implements UpgradeInterface {
 	private function changePrefixForWorkspaceManagerGroups(): void {
 		$workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
 		$workspaceManagerGroups = array_filter($workspaceManagerGroups, function ($group) {
-			return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
+			return str_starts_with($group->getGID(), 'SPACE-GE');
 		});
 		foreach ($workspaceManagerGroups as $group) {
 			$groupname = $group->getGID();
@@ -90,7 +90,7 @@ class UpgradeV300 implements UpgradeInterface {
 	private function changePrefixForWorkspaceUserGroups(): void {
 		$userGroups = $this->groupManager->search(UserGroup::getPrefix());
 		$userGroups = array_filter($userGroups, function ($group) {
-			return !in_array('OCA\\Guests\\GroupBackend', $group->getBackendNames());
+			return str_starts_with($group->getGID(), 'SPACE-U');
 		});
 		foreach ($userGroups as $group) {
 			$groupname = $group->getGID();
