@@ -109,8 +109,6 @@ import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import ManagerGroup from './services/Groups/ManagerGroup'
-import UserGroup from './services/Groups/UserGroup'
 
 export default {
 	name: 'SpaceDetails',
