@@ -145,12 +145,12 @@ class GroupController extends Controller {
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
-        $groups = $this->groupManager->search($newGroupName);
-        $groups = array_filter($groups, function($group) {
-            return str_starts_with($group->getGID(), 'SPACE-GE-') 
-                || str_starts_with($group->getGID(), 'SPACE-U-') 
-                || str_starts_with($group->getGID(), 'SPACE-G-');
-        });
+		$groups = $this->groupManager->search($newGroupName);
+		$groups = array_filter($groups, function ($group) {
+			return str_starts_with($group->getGID(), 'SPACE-GE-')
+				|| str_starts_with($group->getGID(), 'SPACE-U-')
+				|| str_starts_with($group->getGID(), 'SPACE-G-');
+		});
 
 		if (!empty($groups)) {
 			return new JSONResponse(
