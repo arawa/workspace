@@ -83,6 +83,12 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
+      <!-- UPLOAD FILE BUTTON -->
+		<!-- <div class="upload-file-btn"> -->
+			<button class="icon-upload">
+				<span>{{ t('workspace', 'Add users from csv file') }}</span>
+			</button>
+
 			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
@@ -296,8 +302,14 @@ export default {
 
 .select-users-actions {
 	display: flex;
-	flex-flow: row-reverse;
+	/* flex-flow: row-reverse; */
 	margin-top: 10px;
+  width: 80%;
+  justify-content: space-around;
+}
+.select-users-actions button {
+  width: 40%;
+  flex-grow: 1;
 }
 
 .header-modal {
@@ -372,5 +384,20 @@ export default {
 
 .role-toggle {
 	cursor: pointer !important;
+}
+
+/* .upload-file-btn {
+	display: flex;
+} */
+.icon-upload {
+  background-position: 16px center;
+	/* flex-grow: 1; */
+	/* height: 44px; */
+	/* margin-top: 12px; */
+	text-align: left;
+  /* width: auto; */
+}
+.icon-upload span {
+  padding-left: 28px;
 }
 </style>
