@@ -83,11 +83,15 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-      <!-- UPLOAD FILE BUTTON -->
-		<!-- <div class="upload-file-btn"> -->
-			<button class="icon-upload">
+			<!-- UPLOAD FILE BUTTON -->
+			<button class="icon-upload" @click="uploadNewFile()">
 				<span>{{ t('workspace', 'Add users from csv file') }}</span>
 			</button>
+			<input ref="filesAttachment"
+				type="file"
+				style="display: none;"
+				multiple
+				@change="handleUploadFile">
 
 			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
@@ -261,6 +265,12 @@ export default {
 					return u
 				}
 			})
+		},
+		handleUploadFile(event) {
+			console.debug('handleUploadFile ', event.target.files)
+		},
+		uploadNewFile() {
+			this.$refs.filesAttachment.click()
 		},
 	},
 }
