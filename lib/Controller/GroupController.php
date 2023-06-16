@@ -145,29 +145,20 @@ class GroupController extends Controller {
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
+        $groups = $this->groupManager->search($newGroupName);
+        $groups = array_filter($groups, function($group) {
+            return str_starts_with($group->getGID(), 'SPACE-GE-') 
+                || str_starts_with($group->getGID(), 'SPACE-U-') 
+                || str_starts_with($group->getGID(), 'SPACE-G-');
+        });
 
-		if (!empty($this->groupManager->search($newGroupName))) {
+		if (!empty($groups)) {
 			return new JSONResponse(
 				'This group already exists. Please, change the name',
 				Http::STATUS_CONFLICT
 			);
 		}
 		
-		// TODO Use groupfolder api to retrieve workspace group.
-		if (substr($gid, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(
-				['You may only rename workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'],
-				Http::STATUS_FORBIDDEN
-			);
-		}
-
-		if (substr($newGroupName, -strlen($spaceId)) != $spaceId) {
-			return new JSONResponse(
-				['Workspace groups must ends with the ID of the space they belong to'],
-				Http::STATUS_FORBIDDEN
-			);
-		}
-
 		// Rename group
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {

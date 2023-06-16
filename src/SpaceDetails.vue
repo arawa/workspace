@@ -109,6 +109,8 @@ import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import ManagerGroup from './services/Groups/ManagerGroup'
+import UserGroup from './services/Groups/UserGroup'
 
 export default {
 	name: 'SpaceDetails',
@@ -203,6 +205,21 @@ export default {
 				this.$store.dispatch('removeSpace', {
 					space: this.$store.state.spaces[oldSpaceName],
 				})
+
+				const groupKeys = Object.keys(space.groups)
+
+				groupKeys.forEach(key => {
+					const group = space.groups[key]
+					const newDisplayName = group.displayName.replace(oldSpaceName, newSpaceName)
+
+					// Renames group
+					this.$store.dispatch('renameGroup', {
+					  name: newSpaceName,
+					  gid: group.gid,
+					  newGroupName: newDisplayName,
+					})
+				})
+
 				this.$router.push({
 					path: `/workspace/${space.name}`,
 				})
