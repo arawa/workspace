@@ -192,9 +192,6 @@ export default {
 	renameGroup(context, { name, gid, newGroupName }) {
 		const space = context.state.spaces[name]
 
-		// Groups must be postfixed with the ID of the space they belong
-		newGroupName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${newGroupName}-${space.name}`
-
 		// Creates group in backend
 		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
 			.then((resp) => {
