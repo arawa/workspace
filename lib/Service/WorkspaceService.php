@@ -44,8 +44,7 @@ class WorkspaceService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private UserService $userService,
-        private IUserSession $userSession
+		private UserService $userService
 	) {
 	}
 
