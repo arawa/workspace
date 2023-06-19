@@ -266,8 +266,23 @@ export default {
 				}
 			})
 		},
-		handleUploadFile(event) {
-			console.debug('handleUploadFile ', event.target.files)
+		async handleUploadFile(event) {
+			if (event.target.files[0]) {
+				const bodyFormData = new FormData()
+				console.debug('handleUploadFile files[0] ', event.target.files[0])
+				const files = event.target.files
+				for (const file of files) {
+					bodyFormData.append('file', file)
+					const space = this.$store.state.spaces[this.$route.params.space]
+					await this.$store.dispatch('addUsersFromCSV', {
+						formData: bodyFormData,
+						gid: ManagerGroup.getGid(space),
+					})
+
+				}
+				console.debug('handleUploadFile ', event.target.files)
+				event.target.value = ''
+			}
 		},
 		uploadNewFile() {
 			this.$refs.filesAttachment.click()
@@ -314,12 +329,12 @@ export default {
 	display: flex;
 	/* flex-flow: row-reverse; */
 	margin-top: 10px;
-  width: 80%;
-  justify-content: space-around;
+	width: 80%;
+	justify-content: space-around;
 }
 .select-users-actions button {
-  width: 40%;
-  flex-grow: 1;
+	width: 40%;
+	flex-grow: 1;
 }
 
 .header-modal {
@@ -400,14 +415,14 @@ export default {
 	display: flex;
 } */
 .icon-upload {
-  background-position: 16px center;
+	background-position: 16px center;
 	/* flex-grow: 1; */
 	/* height: 44px; */
 	/* margin-top: 12px; */
 	text-align: left;
-  /* width: auto; */
+	/* width: auto; */
 }
 .icon-upload span {
-  padding-left: 28px;
+	padding-left: 28px;
 }
 </style>
