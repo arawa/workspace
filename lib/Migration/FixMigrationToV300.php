@@ -8,14 +8,14 @@ use Psr\Log\LoggerInterface;
 use OCP\Migration\IRepairStep;
 use OCA\Workspace\Upgrade\Upgrade;
 use OCA\Workspace\AppInfo\Application;
-use OCA\Workspace\Upgrade\UpgradeV300;
+use OCA\Workspace\Upgrade\UpgradeFixV300V301;
 use OCP\AppFramework\Services\IAppConfig as ServiceIAppConfig;
 
 class FixMigrationToV300 implements IRepairStep
 {
 
     public function __construct(private ServiceIAppConfig $appConfig,
-        private UpgradeV300 $upgrade,
+        private UpgradeFixV300V301 $upgrade,
         private IAppConfig $appConfigManager,
         private LoggerInterface $logger)
     {
