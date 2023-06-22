@@ -25,11 +25,11 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateGroupException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;

@@ -25,8 +25,8 @@
 namespace OCA\Workspace\Service\Workspace;
 
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Service\SpaceService;
 use OCP\AppFramework\Http;
 
 class WorkspaceCheckService {
