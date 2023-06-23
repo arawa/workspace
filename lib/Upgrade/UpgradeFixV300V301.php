@@ -24,40 +24,38 @@
 
 namespace OCA\Workspace\Upgrade;
 
-use OCP\IGroupManager;
+use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
 use OCP\AppFramework\Services\IAppConfig;
-use OCA\Workspace\Db\GroupFoldersGroupsMapper;
+use OCP\IGroupManager;
 
-class UpgradeFixV300V301 extends UpgradeV300
-{
-    public function __construct(
+class UpgradeFixV300V301 extends UpgradeV300 {
+	public function __construct(
 		private GroupFoldersGroupsMapper $groupfoldersGroupsMapper,
 		private IAppConfig $appConfig,
 		private IGroupManager $groupManager,
 		private SpaceMapper $spaceMapper
-    )
-    {
-        parent::__construct(
-            $groupfoldersGroupsMapper,
-            $appConfig,
-            $groupManager,
-            $spaceMapper
-        );
-    }
+	) {
+		parent::__construct(
+			$groupfoldersGroupsMapper,
+			$appConfig,
+			$groupManager,
+			$spaceMapper
+		);
+	}
 
-    public function upgrade(): void {
-        parent::changePrefixForWorkspaceManagerGroups();
-        parent::changePrefixForWorkspaceUserGroups();
-        $this->changeConventionForSubgroups();
-        $this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');
-    }
+	public function upgrade(): void {
+		parent::changePrefixForWorkspaceManagerGroups();
+		parent::changePrefixForWorkspaceUserGroups();
+		$this->changeConventionForSubgroups();
+		$this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');
+	}
 
-    protected function changeConventionForSubgroups(): void {
+	protected function changeConventionForSubgroups(): void {
 		$subgroups = $this->groupfoldersGroupsMapper->getSpacenamesGroupIds();
-        $subgroups = array_filter($subgroups, function($subgroup) {
-            return !str_starts_with($subgroup['group_id'], 'SPACE-G');
-        });
+		$subgroups = array_filter($subgroups, function ($subgroup) {
+			return !str_starts_with($subgroup['group_id'], 'SPACE-G');
+		});
 		foreach ($subgroups as $subgroup) {
 			$group = $this->groupManager->get($subgroup['group_id']);
 			if (is_null($group)) {
