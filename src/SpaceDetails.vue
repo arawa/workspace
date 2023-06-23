@@ -203,6 +203,21 @@ export default {
 				this.$store.dispatch('removeSpace', {
 					space: this.$store.state.spaces[oldSpaceName],
 				})
+
+				const groupKeys = Object.keys(space.groups)
+
+				groupKeys.forEach(key => {
+					const group = space.groups[key]
+					const newDisplayName = group.displayName.replace(oldSpaceName, newSpaceName)
+
+					// Renames group
+					this.$store.dispatch('renameGroup', {
+					  name: newSpaceName,
+					  gid: group.gid,
+					  newGroupName: newDisplayName,
+					})
+				})
+
 				this.$router.push({
 					path: `/workspace/${space.name}`,
 				})
