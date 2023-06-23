@@ -114,13 +114,17 @@ export default {
 			this.toggleShowRenameGroupInput()
 
 			// Don't accept empty names
-			const group = e.target[0].value
+			let group = e.target[0].value
 			if (!group) {
 				// TODO Inform user
 				return
 			}
 
 			const space = this.$store.state.spaces[this.$route.params.space]
+			const groupSpace = space.groups[this.$route.params.group]
+
+			group = ''.concat('G-', group, '-', space.name)
+			group = groupSpace.displayName.replace(groupSpace.displayName, group)
 
 			// Prevents renaming SPACE-GE- and SPACE-U- groups
 			if (group === PREFIX_MANAGER + space.id
