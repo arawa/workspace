@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
+- Repair the migration v3.0.0 and v3.0.1 ( [#843] https://github.com/arawa/workspace/pull/843 )
 
 # [3.0.1] - 2023-05-26
 
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix(php): Move the V300 constant ( [#841](https://github.com/arawa/workspace/pull/841) )
 - Ignore guest virtual group ( [#847](https://github.com/arawa/workspace/pull/847) )
 - Get SPACE-GE and SPACE-U groups only ( [#858](https://github.com/arawa/workspace/pull/858) )
+- fix(Vue,Php): Rename the groups with the spacename ( [#860](https://github.com/arawa/workspace/pull/860) )
 
 ## [3.0.0] - 2023-05-25
 
