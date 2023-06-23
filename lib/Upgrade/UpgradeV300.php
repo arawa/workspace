@@ -55,7 +55,7 @@ class UpgradeV300 implements UpgradeInterface {
 		$this->appConfig->setAppValue(Upgrade::CONTROL_MIGRATION_V3, '1');
 	}
 
-	private function changeConventionForSubgroups(): void {
+	protected function changeConventionForSubgroups(): void {
 		$subgroups = $this->groupfoldersGroupsMapper->getSpacenamesGroupIds();
 		foreach ($subgroups as $subgroup) {
 			$group = $this->groupManager->get($subgroup['group_id']);
@@ -71,7 +71,7 @@ class UpgradeV300 implements UpgradeInterface {
 		}
 	}
 
-	private function changePrefixForWorkspaceManagerGroups(): void {
+	protected function changePrefixForWorkspaceManagerGroups(): void {
 		$workspaceManagerGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
 		$workspaceManagerGroups = array_filter($workspaceManagerGroups, function ($group) {
 			return str_starts_with($group->getGID(), 'SPACE-GE');
@@ -87,7 +87,7 @@ class UpgradeV300 implements UpgradeInterface {
 		}
 	}
 
-	private function changePrefixForWorkspaceUserGroups(): void {
+	protected function changePrefixForWorkspaceUserGroups(): void {
 		$userGroups = $this->groupManager->search(UserGroup::getPrefix());
 		$userGroups = array_filter($userGroups, function ($group) {
 			return str_starts_with($group->getGID(), 'SPACE-U');

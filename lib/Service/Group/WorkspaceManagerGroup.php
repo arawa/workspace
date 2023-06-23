@@ -38,23 +38,23 @@ class WorkspaceManagerGroup extends GroupsWorkspace {
 		$this->groupManager = $groupManager;
 	}
 
-		public static function get(int $spaceId): string {
-			return self::PREFIX_GID_MANAGERS . $spaceId;
+	public static function get(int $spaceId): string {
+		return self::PREFIX_GID_MANAGERS . $spaceId;
+	}
+
+	public static function getPrefix(): string {
+		return self::PREFIX_GID_MANAGERS;
+	}
+
+	public function create(Space $space): IGroup {
+		$group = $this->groupManager->createGroup(self::PREFIX_GID_MANAGERS . $space->getId());
+
+		if (is_null($group)) {
+			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
 		}
 
-		public static function getPrefix(): string {
-			return self::PREFIX_GID_MANAGERS;
-		}
+		$group->setDisplayName(self::getDisplayPrefixManagerGroup() . $space->getSpaceName());
 
-		public function create(Space $space): IGroup {
-			$group = $this->groupManager->createGroup(self::PREFIX_GID_MANAGERS . $space->getId());
-
-			if (is_null($group)) {
-				throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
-			}
-
-			$group->setDisplayName(self::getDisplayPrefixManagerGroup() . $space->getSpaceName());
-
-			return $group;
-		}
+		return $group;
+	}
 }

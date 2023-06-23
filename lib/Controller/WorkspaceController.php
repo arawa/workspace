@@ -124,15 +124,15 @@ class WorkspaceController extends Controller {
 		]);
 	}
 
-  /**
-   *
-   * Deletes the workspace, and the corresponding groupfolder and groups
-   *
-   * @NoAdminRequired
-   * @SpaceAdminRequired
-   * @param array $workspace
-   *
-   */
+	/**
+	 *
+	 * Deletes the workspace, and the corresponding groupfolder and groups
+	 *
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 * @param array $workspace
+	 *
+	 */
 	public function destroy(array $workspace): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
 		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
