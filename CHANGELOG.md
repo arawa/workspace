@@ -8,10 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
-- Repair the migration v3.0.0 and v3.0.1 ( [#843] https://github.com/arawa/workspace/pull/843 )
+- Backport/update to 3.0.0/stable3.0 ( [#868] https://github.com/arawa/workspace/pull/868 )
 - Fix/remove space issue/stable3.0 ( [#840](https://github.com/arawa/workspace/pull/840))
-- fix(php): Move the V300 constant ( [#841](https://github.com/arawa/workspace/pull/841) )
 - Hotfix/ingore guest virtual group upgrade300/stable3.0 # ( [#848](https://github.com/arawa/workspace/pull/848) )
 - Backport/ignore virtual groups/stable3.0 ( [#867](https://github.com/arawa/workspace/pull/867) )
 - Backport/rename workspace for 3.x.x/stable3.0 ( [#866](https://github.com/arawa/workspace/pull/866) )
