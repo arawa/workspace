@@ -193,6 +193,7 @@ export default {
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
+			console.debug('addUserToBatch user', user.name, user.uid)
 			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
@@ -203,6 +204,7 @@ export default {
 			}
 
 			const space = this.$store.state.spaces[this.$route.params.space]
+			console.debug('lookupUsers space', typeof space, space)
 			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
@@ -269,17 +271,17 @@ export default {
 		async handleUploadFile(event) {
 			if (event.target.files[0]) {
 				const bodyFormData = new FormData()
-				console.debug('handleUploadFile files[0] ', event.target.files[0])
-				const files = event.target.files
-				for (const file of files) {
-					bodyFormData.append('file', file)
-					const space = this.$store.state.spaces[this.$route.params.space]
-					await this.$store.dispatch('addUsersFromCSV', {
-						formData: bodyFormData,
-						gid: ManagerGroup.getGid(space),
-					})
-
-				}
+				const file = event.target.files[0]
+				const space = this.$store.state.spaces[this.$route.params.space]
+				const spaceObj = JSON.stringify(space)
+				console.debug('handleUploadFile space ', typeof space, space)
+				bodyFormData.append('file', file)
+				bodyFormData.append('gid', ManagerGroup.getGid(space))
+				bodyFormData.append('space', spaceObj)
+				await this.$store.dispatch('addUsersFromCSV', {
+					formData: bodyFormData,
+					// gid: ManagerGroup.getGid(space),
+				})
 				console.debug('handleUploadFile ', event.target.files)
 				event.target.value = ''
 			}
