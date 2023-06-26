@@ -202,9 +202,7 @@ export default {
 			if (term === undefined || term === '') {
 				return
 			}
-
 			const space = this.$store.state.spaces[this.$route.params.space]
-			console.debug('lookupUsers space', typeof space, space)
 			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
@@ -213,32 +211,9 @@ export default {
 					space,
 				})
 				.then((resp) => {
-					let users = []
+					// let users = []
 					if (resp.status === 200) {
-						// When adding users to a space, show only those users who are not already member of the space
-						if (this.$route.params.group === undefined) {
-							const space = this.$store.state.spaces[this.$route.params.space]
-							users = resp.data.filter(user => {
-								return (!(user.uid in space.users))
-							}, space)
-						} else {
-							users = resp.data.filter(user => {
-								return (!(user.groups.includes(this.$route.params.group)))
-							})
-						}
-						// Filters user that are already selected
-						users = users.filter(newUser => {
-							return this.allSelectedUsers.every(user => {
-								return newUser.uid !== user.uid
-							})
-						})
-						// subtitle may not be null
-						this.selectableUsers = users.map(user => {
-							return {
-								...user,
-								subtitle: user.subtitle ?? '',
-							}
-						})
+						this.selectableUsers = this.filterAndFormatUsers(resp.data)
 					} else {
 						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 3000)
@@ -268,6 +243,33 @@ export default {
 				}
 			})
 		},
+		filterAndFormatUsers(recvUsers) {
+			let users = []
+			// When adding users to a space, show only those users who are not already member of the space
+			if (this.$route.params.group === undefined) {
+				const space = this.$store.state.spaces[this.$route.params.space]
+				users = recvUsers.filter(user => {
+					return (!(user.uid in space.users))
+				}, space)
+			} else {
+				users = recvUsers.filter(user => {
+					return (!(user.groups.includes(this.$route.params.group)))
+				})
+			}
+			// Filters user that are already selected
+			users = users.filter(newUser => {
+				return this.allSelectedUsers.every(user => {
+					return newUser.uid !== user.uid
+				})
+			})
+			return users.map(user => {
+				return {
+					...user,
+					subtitle: user.subtitle ?? '',
+				}
+			})
+
+		},
 		async handleUploadFile(event) {
 			if (event.target.files[0]) {
 				const bodyFormData = new FormData()
@@ -278,7 +280,7 @@ export default {
 				bodyFormData.append('file', file)
 				bodyFormData.append('gid', ManagerGroup.getGid(space))
 				bodyFormData.append('space', spaceObj)
-				await this.$store.dispatch('addUsersFromCSV', {
+				const users = await this.$store.dispatch('addUsersFromCSV', {
 					formData: bodyFormData,
 					// gid: ManagerGroup.getGid(space),
 				})
