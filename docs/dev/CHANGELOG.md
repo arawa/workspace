@@ -68,6 +68,7 @@
 - 
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.2...main
+[3.0.2]: https://github.com/arawa/workspace/compare/v3.0.0...3.0.2
 [3.0.0]: https://github.com/arawa/workspace/compare/v2.0.1...3.0.0
 [2.0.1]: https://github.com/arawa/workspace/releases/tag/v2.0.1
