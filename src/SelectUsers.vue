@@ -193,7 +193,7 @@ export default {
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
-			console.debug('addUserToBatch user', user.name, user.uid)
+			// console.debug('addUserToBatch user', user.name, user.uid)
 			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
@@ -272,19 +272,25 @@ export default {
 		},
 		async handleUploadFile(event) {
 			if (event.target.files[0]) {
+				this.isLookingUpUsers = true
 				const bodyFormData = new FormData()
 				const file = event.target.files[0]
 				const space = this.$store.state.spaces[this.$route.params.space]
 				const spaceObj = JSON.stringify(space)
-				console.debug('handleUploadFile space ', typeof space, space)
 				bodyFormData.append('file', file)
 				bodyFormData.append('gid', ManagerGroup.getGid(space))
 				bodyFormData.append('space', spaceObj)
-				const users = await this.$store.dispatch('addUsersFromCSV', {
-					formData: bodyFormData,
-					// gid: ManagerGroup.getGid(space),
-				})
-				console.debug('handleUploadFile ', event.target.files)
+				try {
+					const users = await this.$store.dispatch('addUsersFromCSV', {
+						formData: bodyFormData,
+					})
+					this.allSelectedUsers = this.filterAndFormatUsers(users)
+				} catch (err) {
+					console.debug(err)
+					const text = t('workspace', 'Wrong format of the file. Must be \'.csv\'.')
+					showNotificationError('Error', text, 3000)
+				}
+				this.isLookingUpUsers = false
 				event.target.value = ''
 			}
 		},
