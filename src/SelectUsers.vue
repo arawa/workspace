@@ -278,7 +278,6 @@ export default {
 				const space = this.$store.state.spaces[this.$route.params.space]
 				const spaceObj = JSON.stringify(space)
 				bodyFormData.append('file', file)
-				bodyFormData.append('gid', ManagerGroup.getGid(space))
 				bodyFormData.append('space', spaceObj)
 				try {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
