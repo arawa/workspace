@@ -83,7 +83,6 @@
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
 		<div class="select-users-actions">
-			<!-- UPLOAD FILE BUTTON -->
 			<button class="icon-upload" @click="uploadNewFile()">
 				<span>{{ t('workspace', 'Add users from csv file') }}</span>
 			</button>
