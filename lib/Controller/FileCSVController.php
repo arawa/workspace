@@ -49,11 +49,7 @@ class FileCSVController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * Gets list of users from csv file.
-	 * @param string $gid
-	 * @param array|string $space
-	 *
-	 * @return JSONResponse
+	 * Returns formatted list of existing users of the instance.
 	 *
 	 */
 	public function import(): JSONResponse {
