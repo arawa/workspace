@@ -77,5 +77,7 @@ OC.L10N.register(
 		'Network error occured while trying to change the role of user {user}.<br>The error is: {error}': 'Network error occured while trying to change the role of user {user}.<br>The error is: {error}',
 		'An error occured while trying to update the workspace\'s quota.<br>The error is: {error}': 'An error occured while trying to update the workspace\'s quota.<br>The error is: {error}',
 		'Network error occured while trying to update the workspace\'s quota.<br>The error is: {error}': 'Network error occured while trying to update the workspace\'s quota.<br>The error is: {error}',
+		'Wrong file format. Must be <b>.csv</b>.': 'Wrong file format. Must be <b>.csv</b>.',
+
 	},
 "nplurals=2; plural=(n > 1)");
