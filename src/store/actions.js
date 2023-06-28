@@ -310,19 +310,12 @@ export default {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
 	},
 	async addUsersFromCSV(context, { formData }) {
-		// console.debug('store.actions.addUsersFromCSV formData', formData)
 		const url = generateUrl('/apps/workspace/file/csv/import-data')
-		try {
-			const resp = await axios({
-				method: 'POST',
-				url,
-				data: formData,
-			 })
-			 if (resp.status === 200) {
-					 return resp.data
-				 }
-		} catch (error) {
-			console.debug('addUsersFromCSV error ', error)
-		}
+		const resp = await axios({
+			method: 'POST',
+			url,
+			data: formData,
+		})
+		return resp.data
 	},
 }
