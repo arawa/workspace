@@ -193,7 +193,6 @@ export default {
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
-			// console.debug('addUserToBatch user', user.name, user.uid)
 			this.allSelectedUsers.push(user)
 		},
 		// Lookups users in NC directory when user types text in the MultiSelect
@@ -211,7 +210,6 @@ export default {
 					space,
 				})
 				.then((resp) => {
-					// let users = []
 					if (resp.status === 200) {
 						this.selectableUsers = this.filterAndFormatUsers(resp.data)
 					} else {
@@ -285,8 +283,7 @@ export default {
 					})
 					this.allSelectedUsers = this.filterAndFormatUsers(users)
 				} catch (err) {
-					console.debug(err)
-					const text = t('workspace', 'Wrong format of the file. Must be \'.csv\'.')
+					const text = t('workspace', 'Wrong file format. Must be \'.csv\'.')
 					showNotificationError('Error', text, 3000)
 				}
 				this.isLookingUpUsers = false
@@ -336,7 +333,6 @@ export default {
 
 .select-users-actions {
 	display: flex;
-	/* flex-flow: row-reverse; */
 	margin-top: 10px;
 	width: 80%;
 	justify-content: space-around;
