@@ -26,14 +26,14 @@
 namespace OCA\Workspace\Files;
 
 class Csv {
-    public function parser(array $file): array {
-        $users = [];
-        if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
-    		while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-				$users[] = ['name'=> $data[0]];
-    		}
-    		fclose($handle);
+	public function parser(array $file): array {
+		$users = [];
+		if (($handle = fopen($file['tmp_name'], "r")) !== false) {
+			while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+				$users[] = ['name' => $data[0]];
+			}
+			fclose($handle);
 		}
-        return $users;
-    }
+		return $users;
+	}
 }

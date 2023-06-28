@@ -26,61 +26,61 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Files\Csv;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use OCP\AppFramework\Http;
 use OCP\IUserManager;
-use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Service\UserService;
 
 class FileCSVController extends Controller {
 
-    public function __construct(
-        string $appName,
-        IRequest $request,
-        private IUserManager $userManager,
-        private WorkspaceService $workspaceService,
-        private UserService $userService,
-    ) {
-        parent::__construct($appName, $request);
-    }
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private IUserManager $userManager,
+		private WorkspaceService $workspaceService,
+		private UserService $userService,
+	) {
+		parent::__construct($appName, $request);
+	}
 
-    /**
-     * @NoAdminRequired
-     * @SpaceAdminRequired
-     * Gets list of users from csv file.
-     * @param string $gid
-     * @param array|string $space
-     * 
-     * @return JSONResponse
+	/**
+	 * @NoAdminRequired
+	 * @SpaceAdminRequired
+	 * Gets list of users from csv file.
+	 * @param string $gid
+	 * @param array|string $space
+	 *
+	 * @return JSONResponse
 	 *
 	 */
-    public function import(): JSONResponse {
-        $params = $this->request->getParams();
-        $parser = new Csv();
-        $spaceObj = $params['space'];
-        $space = json_decode($spaceObj, true);
-        $file = $this->request->getUploadedFile('file');
-        // verify that file has csv format
-        if ($file['type'] !== 'text/csv') {
-            return new JSONResponse(['Invalid file extension - ' . $file['type']], Http::STATUS_FORBIDDEN);
-        }
-        $names = $parser->parser($file);
-        // filter array to leave only existing users
-        $existingNames = array_filter($names, function($user) {
-            return $this->userManager->userExists($user['name']);
-            
-        });
-        // get list of IUser objects
-        $users = [];
-        foreach( $existingNames as $user) {
-            $users[] = $this->userManager->get($user['name']);
-        }
-        $data = [];
-        foreach ($users as $user) {
-            $data[] = $this->userService->formatUser($user, $space, 'user');
-        }
-        return new JSONResponse($data);
-    }
+	public function import(): JSONResponse {
+		$params = $this->request->getParams();
+		$parser = new Csv();
+		$spaceObj = $params['space'];
+		$space = json_decode($spaceObj, true);
+		$file = $this->request->getUploadedFile('file');
+		// verify that file has csv format
+		if ($file['type'] !== 'text/csv') {
+			return new JSONResponse(['Invalid file extension - ' . $file['type']], Http::STATUS_FORBIDDEN);
+		}
+		$names = $parser->parser($file);
+		// filter array to leave only existing users
+		$existingNames = array_filter($names, function ($user) {
+			return $this->userManager->userExists($user['name']);
+			
+		});
+		// get list of IUser objects
+		$users = [];
+		foreach($existingNames as $user) {
+			$users[] = $this->userManager->get($user['name']);
+		}
+		$data = [];
+		foreach ($users as $user) {
+			$data[] = $this->userService->formatUser($user, $space, 'user');
+		}
+		return new JSONResponse($data);
+	}
 }
