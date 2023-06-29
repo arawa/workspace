@@ -74,6 +74,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'space#getByName',
+			'url' => '/spaces/search/{name}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'space#findAll',
 			'url' => '/workspaces',
 			'verb' => 'GET'
