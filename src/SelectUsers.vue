@@ -210,7 +210,8 @@ export default {
 				})
 				.then((resp) => {
 					if (resp.status === 200) {
-						this.selectableUsers = this.filterAndFormatUsers(resp.data)
+						const usersToDisplay = this.filterAlreadyPresentUsers(resp.data)
+						this.selectableUsers = this.addSubtitleToUsers(usersToDisplay)
 					} else {
 						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 3000)
@@ -240,7 +241,7 @@ export default {
 				}
 			})
 		},
-		filterAndFormatUsers(recvUsers) {
+		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
 			// When adding users to a space, show only those users who are not already member of the space
 			if (this.$route.params.group === undefined) {
@@ -254,18 +255,19 @@ export default {
 				})
 			}
 			// Filters user that are already selected
-			users = users.filter(newUser => {
+			return users.filter(newUser => {
 				return this.allSelectedUsers.every(user => {
 					return newUser.uid !== user.uid
 				})
 			})
+		},
+		addSubtitleToUsers(users) {
 			return users.map(user => {
 				return {
 					...user,
 					subtitle: user.subtitle ?? '',
 				}
 			})
-
 		},
 		async handleUploadFile(event) {
 			if (event.target.files[0]) {
@@ -280,9 +282,10 @@ export default {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
 						formData: bodyFormData,
 					})
-					this.allSelectedUsers = this.filterAndFormatUsers(users)
+					const usersToDisplay = this.filterAlreadyPresentUsers(users)
+					this.allSelectedUsers = this.addSubtitleToUsers(usersToDisplay)
 				} catch (err) {
-					const text = t('workspace', 'Wrong file format. Must be \'.csv\'.')
+					const text = t('workspace', 'Wrong file format. Must be <b>.csv</b>.')
 					showNotificationError('Error', text, 3000)
 				}
 				this.isLookingUpUsers = false
