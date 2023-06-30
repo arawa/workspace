@@ -282,8 +282,11 @@ export default {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
 						formData: bodyFormData,
 					})
-					const usersToDisplay = this.filterAlreadyPresentUsers(users)
-					this.allSelectedUsers = this.addSubtitleToUsers(usersToDisplay)
+					let usersToDisplay = this.filterAlreadyPresentUsers(users)
+					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
+					console.debug('usersToDisplay ', usersToDisplay)
+					console.debug('allSelectedUsers ', this.allSelectedUsers)
+					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 				} catch (err) {
 					const text = t('workspace', 'Wrong file format. Must be <b>.csv</b>.')
 					showNotificationError('Error', text, 3000)
