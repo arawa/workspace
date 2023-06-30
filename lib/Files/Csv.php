@@ -29,8 +29,11 @@ class Csv {
 	public function parser(array $file): array {
 		$users = [];
 		if (($handle = fopen($file['tmp_name'], "r")) !== false) {
+            $tableHeader = fgetcsv($handle, 1000, ",");
+            $nameIndex = array_search('displayName', $tableHeader);
+            $roleIndex = array_search('role', $tableHeader);
 			while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-				$users[] = ['name' => $data[0]];
+				$users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
 			}
 			fclose($handle);
 		}

@@ -65,17 +65,17 @@ class FileCSVController extends Controller {
 		$names = $parser->parser($file);
 		// filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);
-			
+			return $this->userManager->userExists($user['name']);	
 		});
 		// get list of IUser objects
 		$users = [];
 		foreach($existingNames as $user) {
-			$users[] = $this->userManager->get($user['name']);
+            $users[] = [$this->userManager->get($user['name']), $user['role']];
 		}
 		$data = [];
 		foreach ($users as $user) {
-			$data[] = $this->userService->formatUser($user, $space, 'user');
+            $role = $user[1] == "admin" ? "admin" : "user";
+			$data[] = $this->userService->formatUser($user[0], $space, $role);
 		}
 		return new JSONResponse($data);
 	}
