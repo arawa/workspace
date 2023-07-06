@@ -286,10 +286,14 @@ export default {
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
 					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 				} catch (err) {
-					const text = err.response.data.length === 1
-						? t('workspace', err.response.data[0])
-						: t('workspace', `${err.response.data[0]} {values}`, { values: err.response.data[1] })
-					showNotificationError('Error', text, 3000)
+					if (err.response.data.length === 1) {
+						const text = t('workspace', err.response.data[0])
+						showNotificationError('Error', text, 3000)
+					} else {
+						const values = err.response.data[1].join()
+						const text = t('workspace', `${err.response.data[0]} {values}`, { values })
+						showNotificationError('Error', text, 5000)
+					}
 				}
 				this.isLookingUpUsers = false
 				event.target.value = ''
