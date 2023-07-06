@@ -26,12 +26,25 @@
 namespace OCA\Workspace\Files;
 
 class Csv {
+
+    const DISPLAY_NAME = ["username", "displayname", "name"];
+    const ROLE = ["role", "status", "userrole"];
+
 	public function parser(array $file): array {
 		$users = [];
 		if (($handle = fopen($file['tmp_name'], "r")) !== false) {
             $tableHeader = fgetcsv($handle, 1000, ",");
-            $nameIndex = array_search('displayName', $tableHeader);
-            $roleIndex = array_search('role', $tableHeader);
+            $tableHeader = array_map('strtolower', $tableHeader);
+            $nameIndex = false;
+            $roleIndex = false;
+            foreach($this::DISPLAY_NAME as $key=>$value) {
+                $nameIndex = array_search($value, $tableHeader);
+                if ($nameIndex !== false) break;
+            }
+            foreach($this::ROLE as $key=>$value) {
+                $roleIndex = array_search($value, $tableHeader);
+                if ($roleIndex !== false) break;
+            }
 			while (($data = fgetcsv($handle, 1000, ",")) !== false) {
 				$users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
 			}
@@ -43,7 +56,18 @@ class Csv {
     public function hasProperHeader(array $file): bool {
         if (($handle = fopen($file['tmp_name'], "r")) !== false) {
             $tableHeader = fgetcsv($handle, 1000, ",");
-            return in_array('displayName', $tableHeader) && in_array('role', $tableHeader);
+            $tableHeader = array_map('strtolower', $tableHeader);
+            $nameIndex = false;
+            $roleIndex = false;
+            foreach($this::DISPLAY_NAME as $key=>$value) {
+                $nameIndex = array_search($value, $tableHeader);
+                if ($nameIndex !== false) break;
+            }
+            foreach($this::ROLE as $key=>$value) {
+                $roleIndex = array_search($value, $tableHeader);
+                if ($roleIndex !== false) break;
+            }
+            return ($nameIndex !== false) && ($roleIndex !== false);
         }
         return false;
     }
