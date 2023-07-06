@@ -39,4 +39,13 @@ class Csv {
 		}
 		return $users;
 	}
+
+    public function hasProperHeader(array $file): bool {
+        if (($handle = fopen($file['tmp_name'], "r")) !== false) {
+            $tableHeader = fgetcsv($handle, 1000, ",");
+            return in_array('displayName', $tableHeader) && in_array('role', $tableHeader);
+        }
+        return false;
+    }
+    
 }

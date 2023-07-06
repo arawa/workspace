@@ -54,15 +54,18 @@ class FileCSVController extends Controller {
 	 */
 	public function import(): JSONResponse {
 		$params = $this->request->getParams();
-		$parser = new Csv();
 		$spaceObj = $params['space'];
 		$space = json_decode($spaceObj, true);
 		$file = $this->request->getUploadedFile('file');
 		// verify that file has csv format
 		if ($file['type'] !== 'text/csv') {
-			return new JSONResponse(['Invalid file extension - ' . $file['type']], Http::STATUS_FORBIDDEN);
+            return new JSONResponse(['Invalid file extension - ' . $file['type']], Http::STATUS_FORBIDDEN);
 		}
-		$names = $parser->parser($file);
+        $csv = new Csv();
+        if (!$csv->hasProperHeader($file)) {
+            return new JSONResponse(['Invalid file format. Doesn\'t contain "displayName" or "role" columns'], Http::STATUS_FORBIDDEN);
+        }
+		$names = $csv->parser($file);
 		// filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);	
