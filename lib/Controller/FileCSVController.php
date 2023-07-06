@@ -59,11 +59,11 @@ class FileCSVController extends Controller {
 		$file = $this->request->getUploadedFile('file');
 		// verify that file has csv format
 		if ($file['type'] !== 'text/csv') {
-            return new JSONResponse(['Invalid file extension - ' . $file['type']], Http::STATUS_FORBIDDEN);
+            return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
 		}
         $csv = new Csv();
         if (!$csv->hasProperHeader($file)) {
-            return new JSONResponse(['Invalid file format. Doesn\'t contain "displayName" or "role" columns'], Http::STATUS_FORBIDDEN);
+            return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
         }
 		$names = $csv->parser($file);
 		// filter array to leave only existing users

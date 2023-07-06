@@ -284,11 +284,11 @@ export default {
 					})
 					let usersToDisplay = this.filterAlreadyPresentUsers(users)
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
-					console.debug('usersToDisplay ', usersToDisplay)
-					console.debug('allSelectedUsers ', this.allSelectedUsers)
 					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 				} catch (err) {
-					const text = t('workspace', err.response.data[0])
+					const text = err.response.data.length === 1
+						? t('workspace', err.response.data[0])
+						: t('workspace', `${err.response.data[0]} {values}`, { values: err.response.data[1] })
 					showNotificationError('Error', text, 3000)
 				}
 				this.isLookingUpUsers = false

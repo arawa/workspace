@@ -79,6 +79,7 @@ OC.L10N.register(
 		'unlimited': 'illimité',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
 		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'Cet espace projet ou le dossier du groupe (groupfolder) existe déjà. Saisissez un autre espace, s\'il vous plaît.\nPar exemple, si l\'espace "toto" existe, vous ne pouvez pas créer l\'espace "tOTo".\nAssurez-vous que le groupfolder n\'existe pas.',
-		'Wrong file format. Must be <b>.csv</b>.': 'Mauvais format de fichier. Doit être <b>.csv</b>.',
+		'Wrong file extension. Must be <b>.csv</b>.': 'Mauvais format de fichier. Doit être <b>.csv</b>.',
+		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Format de fichier est invalide. L\'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}'
 	},
 "nplurals=2; plural=(n > 1)");

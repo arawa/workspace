@@ -73,7 +73,8 @@
 	"There are no users in this space/group yet": "Il n'y a pas encore d'utilisateur dans cet espace de travail",
 	"Start typing to lookup users": "Commencez à saisir du texte pour rechercher des utilisateurs",
 	"remove users from selection": "retirer l'utilisateur de la sélection",
-	"Wrong file format. Must be <b>.csv</b>.": "Mauvais format de fichier. Doit être <b>.csv</b>."
+	"Wrong file extension. Must be <b>.csv</b>.": "Mauvais format de fichier. Doit être <b>.csv</b>.",
+	"Invalid file format. Table header doesn't contain any of the following values:<br> {values}": "Format de fichier est invalide. L'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
 }
