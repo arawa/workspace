@@ -288,7 +288,7 @@ export default {
 					console.debug('allSelectedUsers ', this.allSelectedUsers)
 					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 				} catch (err) {
-					const text = t('workspace', 'Wrong file format. Must be <b>.csv</b>.')
+					const text = t('workspace', err.response.data[0])
 					showNotificationError('Error', text, 3000)
 				}
 				this.isLookingUpUsers = false
