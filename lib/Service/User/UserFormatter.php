@@ -25,11 +25,11 @@
 namespace OCA\Workspace\Service\User;
 
 use OCA\Workspace\Roles;
-use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Groups\GroupManager;
 use OCP\IUser;
 
 class UserFormatter {
-	public function __construct(private GroupsWorkspaceService $groupsWorkspace) {
+	public function __construct(private GroupManager $groupsWorkspace) {
 	}
 
 	/**

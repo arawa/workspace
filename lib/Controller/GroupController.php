@@ -27,7 +27,7 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Groups\GroupFormatter;
-use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Groups\GroupManager;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Groups\Workspace\UserGroup;
 use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
@@ -48,7 +48,7 @@ class GroupController extends Controller {
 	];
 
 	public function __construct(
-		private GroupsWorkspaceService $groupsWorkspace,
+		private GroupManager $groupWorkspaceManager,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
@@ -311,8 +311,8 @@ class GroupController extends Controller {
 		$groups = GroupFormatter::formatGroups(
 			array_merge(
 				[
-					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
-					$this->groupsWorkspace->getUserGroup($spaceId)
+					$this->groupWorkspaceManager->getWorkspaceManagerGroup($spaceId),
+					$this->groupWorkspaceManager->getUserGroup($spaceId)
 				],
 				array_map(function ($groupName) {
 					return $this->groupManager->get($groupName);
@@ -325,11 +325,11 @@ class GroupController extends Controller {
 		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
 		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
 
-		$this->groupsWorkspace
-			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
-		$this->groupsWorkspace
-			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
-		$this->groupsWorkspace
+		$this->groupWorkspaceManager
+			->transferUsersToGroup($allUsers, $this->groupWorkspaceManager->getUserGroup($spaceId));
+		$this->groupWorkspaceManager
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupWorkspaceManager->getWorkspaceManagerGroup($spaceId));
+		$this->groupWorkspaceManager
 			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS));
 
 		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);

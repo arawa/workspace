@@ -22,7 +22,7 @@
  *
  */
 
-namespace OCA\Workspace\Service\Group;
+namespace OCA\Workspace\Groups;
 
 use OCP\IUser;
 use OCP\IGroup;
@@ -31,7 +31,7 @@ use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Groups\Workspace\UserGroup;
 use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
 
-class GroupsWorkspaceService {
+class GroupManager {
 	public function __construct(private IGroupManager $groupManager,
         private WorkspaceManagerGroup $workspaceManagerGroup,
         private UserGroup $userGroup) {
