@@ -91,7 +91,9 @@
 				style="display: none;"
 				multiple
 				@change="handleUploadFile">
-
+			<button class="icon-folder" @click="shareFromFiles()">
+				<span>{{ t('deck', 'Import csv from Files') }}</span>
+			</button>
 			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
@@ -333,6 +335,7 @@ export default {
 	display: flex !important;
 	min-height: 520px !important;
 	max-height: 520px !important;
+	width: 38vw !important;
 }
 
 .multiselect__tags {
@@ -343,12 +346,15 @@ export default {
 .select-users-actions {
 	display: flex;
 	margin-top: 10px;
-	width: 80%;
+	width: 93%;
 	justify-content: space-around;
 }
 .select-users-actions button {
-	width: 40%;
+	width: 30%;
 	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	background-position: 10px center;
 }
 
 .header-modal {
@@ -395,9 +401,9 @@ export default {
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
-	margin: 10px;
+	margin: 10px auto;
 	min-width: 600px;
-	max-width: 600px;
+	/* max-width: 600px; */
 }
 
 .user-entry {
@@ -425,16 +431,9 @@ export default {
 	cursor: pointer !important;
 }
 
-/* .upload-file-btn {
-	display: flex;
-} */
 .icon-upload {
 	background-position: 16px center;
-	/* flex-grow: 1; */
-	/* height: 44px; */
-	/* margin-top: 12px; */
 	text-align: left;
-	/* width: auto; */
 }
 .icon-upload span {
 	padding-left: 28px;
