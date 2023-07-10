@@ -38,13 +38,13 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Service\SpaceService;
 use OCP\AppFramework\Http\JSONResponse;
-use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Groups\Workspace\UserGroup;
 use OCA\Workspace\CreateWorkspaceException;
 use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Groups\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class WorkspaceController extends Controller {

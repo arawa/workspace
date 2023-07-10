@@ -26,8 +26,8 @@ namespace OCA\Workspace\Upgrade;
 
 use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Groups\Workspace\UserGroup;
+use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 

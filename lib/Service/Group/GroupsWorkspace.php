@@ -25,6 +25,7 @@ namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Db\Space;
+use OCA\Workspace\Groups\GroupWorkspaceInterface;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
@@ -39,7 +40,7 @@ class GroupsWorkspace {
 	/**
 	 * Use the OCA\Workspace\Db\Space to get its spaceId and spaceName.
 	 */
-    public function create(IGroupWorkspace $groupWorkspace, Space $space): IGroup {
+    public function create(GroupWorkspaceInterface $groupWorkspace, Space $space): IGroup {
     	$group = $this->groupManager->createGroup($groupWorkspace->getGidPrefix() . $space->getId());
 
     	if (is_null($group)) {

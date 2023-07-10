@@ -28,8 +28,8 @@ use OCP\IUser;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCA\Workspace\Exceptions\GroupException;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Groups\Workspace\UserGroup;
+use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
 
 class GroupsWorkspaceService {
 	public function __construct(private IGroupManager $groupManager,

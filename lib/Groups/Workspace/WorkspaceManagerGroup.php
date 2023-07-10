@@ -21,32 +21,31 @@
  *
  */
 
-namespace OCA\Workspace\Service\Group;
+namespace OCA\Workspace\Groups\Workspace;
 
 use OCP\AppFramework\Services\IAppConfig;
-use OCA\Workspace\Service\Group\IGroupWorkspace;
+use OCA\Workspace\Groups\GroupWorkspaceInterface;
 
-class UserGroup implements IGroupWorkspace {
+class WorkspaceManagerGroup implements GroupWorkspaceInterface {
 
 	private const GID_SPACE = 'SPACE-';
-	private const PREFIX_GID_USERS = self::GID_SPACE . 'U-';
-	private string $DISPLAY_PREFIX_USER_GROUP;
-
+	private const PREFIX_GID_MANAGERS = self::GID_SPACE . 'GE-';
+	private string $DISPLAY_PREFIX_MANAGER_GROUP;
 
 	public function __construct(IAppConfig $appConfig) {
-		$this->DISPLAY_PREFIX_USER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_USER_GROUP');
+		$this->DISPLAY_PREFIX_MANAGER_GROUP = $appConfig->getAppValue('DISPLAY_PREFIX_MANAGER_GROUP');
 	}
 
-	public function get(int $spaceId): string {
-		return self::PREFIX_GID_USERS . $spaceId;
-	}
+    public function get(int $spaceId): string {
+        return self::PREFIX_GID_MANAGERS . $spaceId;
+    }
 
-	public function getGidPrefix(): string {
-		return self::PREFIX_GID_USERS;
-	}
+    public function getGidPrefix(): string {
+        return self::PREFIX_GID_MANAGERS;
+    }
 
     public function getDisplayPrefix(): string
     {
-        return $this->DISPLAY_PREFIX_USER_GROUP;
+        return $this->DISPLAY_PREFIX_MANAGER_GROUP;
     }
 }

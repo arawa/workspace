@@ -21,9 +21,9 @@
  *
  */
 
-namespace OCA\Workspace\Service\Group;
+namespace OCA\Workspace\Groups;
 
-interface IGroupWorkspace {
+interface GroupWorkspaceInterface {
 
     /**
 	 * @return string - Just the GID with the spaceId.

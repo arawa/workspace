@@ -26,8 +26,8 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Groups\Workspace\UserGroup;
+use OCA\Workspace\Groups\Workspace\WorkspaceManagerGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserSession;

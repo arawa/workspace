@@ -22,7 +22,7 @@
  *
  */
 
-namespace OCA\Workspace\Service\Group;
+namespace OCA\Workspace\Groups;
 
 use OCP\IGroup;
 
