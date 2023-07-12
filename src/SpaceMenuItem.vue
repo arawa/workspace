@@ -31,31 +31,28 @@
 			{{ $store.getters.spaceUserCount(spaceName) }}
 		</NcCounterBubble>
 		<div>
-			<NcAppNavigationItem
+			<GroupMenuItem
 				v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
 				:key="group.gid"
-				icon="icon-group"
-				:to="{path: `/group/${spaceName}/${group.gid}`}"
-				:title="group.displayName">
-				<NcCounterBubble slot="counter" class="user-counter">
-					{{ $store.getters.groupUserCount( spaceName, group.gid) }}
-				</NcCounterBubble>
-			</NcAppNavigationItem>
+				:group="group"
+				:space-name="spaceName" />
 		</div>
 	</NcAppNavigationItem>
 </template>
 
 <script>
-import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
-import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
-import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
 import { getLocale } from '@nextcloud/l10n'
+import GroupMenuItem from './GroupMenuItem.vue'
+import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
+import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
+import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
 
 export default {
 	name: 'SpaceMenuItem',
 	components: {
-		NcAppNavigationItem,
+		GroupMenuItem,
 		NcAppNavigationIconBullet,
+		NcAppNavigationItem,
 		NcCounterBubble,
 	},
 	props: {
@@ -111,7 +108,4 @@ export default {
 </script>
 
 <style>
-.user-counter {
-	margin-right: 5px;
-}
 </style>
