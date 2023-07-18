@@ -34,6 +34,7 @@ use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
 use Psr\Log\LoggerInterface;
+use stdClass;
 
 class WorkspaceService {
 	public function __construct(
@@ -164,7 +165,7 @@ class WorkspaceService {
 	 * @param string|array The workspace to which we want to add users info
 	 *
 	 */
-	public function addUsersInfo(string|array $workspace): array {
+	public function addUsersInfo(string|array $workspace): stdClass {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -176,6 +177,8 @@ class WorkspaceService {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'user');
 			};
 		}
+        // var_dump($users);
+        // die();
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		$group = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
 		if (!is_null($group)) {
@@ -183,9 +186,10 @@ class WorkspaceService {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
 			};
 		}
-		$workspace['users'] = (object) $users;
+        return (object) $users;
+		// $workspace['users'] = (object) $users;
 
-		return $workspace;
+		// return $workspace;
 	}
 
 	/**
