@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use Exception;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -146,6 +147,7 @@ class WorkspaceController extends Controller {
 		// #3 Returns result
 		return new JSONResponse(
             array_merge(
+                $groupfolders,
                 [
                     'name' => $space->getSpaceName(),
                     'id_space' => $space->getId(),
@@ -158,7 +160,6 @@ class WorkspaceController extends Controller {
                     ]),
                     'statuscode' => Http::STATUS_CREATED,
                 ],
-                $groupfolders
             )
         );
 	}
@@ -227,7 +228,7 @@ class WorkspaceController extends Controller {
 
             $space['groups'] = GroupFormatter::formatGroups($groups);
 
-            $space['users'] = $this->workspaceService->addUsersInfo($workspace);
+            $space['users'] = $this->workspaceService->addUsersInfo($space);
 
             $spaces[] = $space;
         }
