@@ -29,15 +29,13 @@ import showNotificationError from './Notifications/NotificationError.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
-	* @param {number} folderId it's the id of groupfolder
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
-export function createSpace(spaceName, folderId, vueInstance = undefined) {
+export function createSpace(spaceName, vueInstance = undefined) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
 			spaceName,
-			folderId,
 		})
 		.then(resp => {
 			if (typeof (resp.data) !== 'object') {
