@@ -91,7 +91,7 @@
 				style="display: none;"
 				multiple
 				@change="handleUploadFile">
-			<button class="icon-folder" @click="shareFromFiles()">
+			<button class="icon-folder" @click="shareCsvFromFiles()">
 				<span>{{ t('deck', 'Import csv from Files') }}</span>
 			</button>
 			<button @click="addUsersToWorkspaceOrGroup()">
@@ -109,8 +109,16 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
+
+const picker = getFilePickerBuilder(t('deck', 'File to share'))
+	.setMultiSelect(false)
+	.setModal(true)
+	.setType(1)
+	.allowDirectories()
+	.build()
 
 export default {
 	name: 'SelectUsers',
@@ -303,6 +311,25 @@ export default {
 		},
 		uploadNewFile() {
 			this.$refs.filesAttachment.click()
+		},
+		shareCsvFromFiles() {
+			picker.pick()
+				.then(async (path, title) => {
+					console.debug(`path ${path} selected for sharing, title ${title}`)
+					const space = this.$store.state.spaces[this.$route.params.space]
+					const spaceString = JSON.stringify(space)
+					const bodyFormData = new FormData()
+					bodyFormData.append('path', path)
+					bodyFormData.append('space', spaceString)
+					try {
+						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData })
+						let usersToDisplay = this.filterAlreadyPresentUsers(users)
+						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
+						this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
+					} catch (err) {
+						showNotificationError('Error', err, 3000)
+					}
+				})
 		},
 	},
 }
