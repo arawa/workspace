@@ -30,46 +30,42 @@ class Csv {
     const DISPLAY_NAME = ["username", "displayname", "name"];
     const ROLE = ["role", "status", "userrole"];
 
-	public function parser(array $file): array {
+    public function parser($handle) {
 		$users = [];
-		if (($handle = fopen($file['tmp_name'], "r")) !== false) {
-            $tableHeader = fgetcsv($handle, 1000, ",");
-            $tableHeader = array_map('strtolower', $tableHeader);
-            $nameIndex = false;
-            $roleIndex = false;
-            foreach($this::DISPLAY_NAME as $key=>$value) {
-                $nameIndex = array_search($value, $tableHeader);
-                if ($nameIndex !== false) break;
-            }
-            foreach($this::ROLE as $key=>$value) {
-                $roleIndex = array_search($value, $tableHeader);
-                if ($roleIndex !== false) break;
-            }
-			while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-				$users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
-			}
-			fclose($handle);
-		}
+        $tableHeader = fgetcsv($handle, 1000, ",");
+        $tableHeader = array_map('strtolower', $tableHeader);
+        $nameIndex = false;
+        $roleIndex = false;
+        foreach($this::DISPLAY_NAME as $key=>$value) {
+            $nameIndex = array_search($value, $tableHeader);
+            if ($nameIndex !== false) break;
+        }
+        foreach($this::ROLE as $key=>$value) {
+            $roleIndex = array_search($value, $tableHeader);
+            if ($roleIndex !== false) break;
+        }
+        while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+            $users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
+        }
+        fclose($handle);
 		return $users;
 	}
 
-    public function hasProperHeader(array $file): bool {
-        if (($handle = fopen($file['tmp_name'], "r")) !== false) {
-            $tableHeader = fgetcsv($handle, 1000, ",");
-            $tableHeader = array_map('strtolower', $tableHeader);
-            $nameIndex = false;
-            $roleIndex = false;
-            foreach($this::DISPLAY_NAME as $key=>$value) {
-                $nameIndex = array_search($value, $tableHeader);
-                if ($nameIndex !== false) break;
-            }
-            foreach($this::ROLE as $key=>$value) {
-                $roleIndex = array_search($value, $tableHeader);
-                if ($roleIndex !== false) break;
-            }
-            return ($nameIndex !== false) && ($roleIndex !== false);
+    public function hasProperHeader($handle): bool {
+        $tableHeader = fgetcsv($handle, 1000, ",");
+        $tableHeader = array_map('strtolower', $tableHeader);
+        $nameIndex = false;
+        $roleIndex = false;
+        foreach($this::DISPLAY_NAME as $key=>$value) {
+            $nameIndex = array_search($value, $tableHeader);
+            if ($nameIndex !== false) break;
         }
-        return false;
+        foreach($this::ROLE as $key=>$value) {
+            $roleIndex = array_search($value, $tableHeader);
+            if ($roleIndex !== false) break;
+        }
+        fclose($handle);
+        return ($nameIndex !== false) && ($roleIndex !== false);
     }
     
 }
