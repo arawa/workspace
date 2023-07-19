@@ -80,12 +80,12 @@ class FileCSVController extends Controller {
 		    if (!$csv->hasProperHeader($handler)) {
 		        return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
 		    }
+            $names = $csv->parser($handler);
+            fclose($handler);
+
 		} else {
 		    return new JSONResponse(['Something went wrong. Couldn\'t open a file.'], Http::STATUS_FORBIDDEN);
 		}
-		if (($handle = fopen($file['tmp_name'], "r")) !== false) {
-			$names = $csv->parser($handle);
-		} 
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);	
 		});
@@ -109,7 +109,6 @@ class FileCSVController extends Controller {
 		$space = json_decode($spaceObj, true);
 		$uid = $this->currentUser->getUID();
 		$folder = $this->rootFolder->getUserFolder($uid);
-		// $fullPath = $folder->getPath($path);
 		$file = $folder->get($path);
 		if ($file->getMimetype() !== 'text/csv') {
 			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
@@ -121,13 +120,11 @@ class FileCSVController extends Controller {
 			if (!$csv->hasProperHeader($handle)) {
 				return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
 			}
+            $names = $csv->parser($handle);
+            fclose($handle);
 		} else {
             return new JSONResponse(['Something went wrong. Couldn\'t open a file.'], Http::STATUS_FORBIDDEN);
         }
-		$handler = $store->fopen($fullPath, "r");
-		if ($handler) {
-			$names = $csv->parser($handler);
-		}
 		// filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);	

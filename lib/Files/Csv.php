@@ -32,6 +32,7 @@ class Csv {
 
     public function parser($handle) {
 		$users = [];
+        rewind($handle);
         $tableHeader = fgetcsv($handle, 1000, ",");
         $tableHeader = array_map('strtolower', $tableHeader);
         $nameIndex = false;
@@ -47,7 +48,6 @@ class Csv {
         while (($data = fgetcsv($handle, 1000, ",")) !== false) {
             $users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
         }
-        fclose($handle);
 		return $users;
 	}
 
@@ -64,7 +64,6 @@ class Csv {
             $roleIndex = array_search($value, $tableHeader);
             if ($roleIndex !== false) break;
         }
-        fclose($handle);
         return ($nameIndex !== false) && ($roleIndex !== false);
     }
     
