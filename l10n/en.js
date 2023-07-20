@@ -78,6 +78,7 @@ OC.L10N.register(
 		'An error occured while trying to update the workspace\'s quota.<br>The error is: {error}': 'An error occured while trying to update the workspace\'s quota.<br>The error is: {error}',
 		'Network error occured while trying to update the workspace\'s quota.<br>The error is: {error}': 'Network error occured while trying to update the workspace\'s quota.<br>The error is: {error}',
 		'Wrong file extension. Must be <b>.csv</b>.': 'Wrong file extension. Must be <b>.csv</b>.',
-		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}'
+		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}',
+		'Something went wrong. Couldn\'t open a file.': 'Quelque chose s\'est mal passé. Impossible d\'ouvrir un fichier.',
 	},
 "nplurals=2; plural=(n > 1)");
