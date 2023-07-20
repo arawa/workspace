@@ -25,25 +25,23 @@
 
 namespace OCA\Workspace\Controller;
 
-use Exception;
-use OCA\Workspace\Files\Csv;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\WorkspaceService;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\Files\IRootFolder;
 use OCP\IRequest;
-use OCP\IUserManager;
-use OCP\Files\Folder;
 use OCP\Files\Node;
-use OCP\IUser;
-use OCP\Files\Storage\IStorage;
+use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\AppFramework\Http;
+use OCP\Files\IRootFolder;
+use OCA\Workspace\Files\Csv;
+use OCP\Files\Storage\IStorage;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Files\LocalFile;
+use OCA\Workspace\Files\InternalFile;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Service\WorkspaceService;
 
 class FileCSVController extends Controller {
 	private $currentUser;
-	private IStorage $storage;
 	
 	public function __construct(
 		string $appName,
@@ -54,8 +52,6 @@ class FileCSVController extends Controller {
 		// private FileInfo $file,
 		private IUserSession $userSession,
 		private IRootFolder $rootFolder,
-		
-	
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -72,37 +68,55 @@ class FileCSVController extends Controller {
 		$spaceObj = $params['space'];
 		$space = json_decode($spaceObj, true);
 		$file = $this->request->getUploadedFile('file');
-		if ($file['type'] !== 'text/csv') {
-			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
-		}
-		$csv = new Csv();
-		if (($handler = fopen($file['tmp_name'], "r")) !== false) {
-		    if (!$csv->hasProperHeader($handler)) {
-		        return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
-		    }
-            $names = $csv->parser($handler);
-            fclose($handler);
 
-		} else {
-		    return new JSONResponse(['Something went wrong. Couldn\'t open a file.'], Http::STATUS_FORBIDDEN);
+		if ($this->isCSVMimeType($file)) {
+			return new JSONResponse(
+                [
+                    'Wrong file extension. Must be <b>.csv</b>.'
+                ],
+                Http::STATUS_FORBIDDEN
+            );
 		}
+
+        $csv = new Csv();
+
+        $localFile = new LocalFile($file['tmp_name']);
+
+        if (!$csv->hasProperHeader($localFile)) {
+            return new JSONResponse(
+                [
+                    'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
+                    [
+                        ...$csv::DISPLAY_NAME,
+                        ...$csv::ROLE
+                    ]
+                ],
+                Http::STATUS_FORBIDDEN
+            );
+        } else {
+            new JSONResponse(
+                [
+                    'Something went wrong. Couldn\'t open a file.'
+                ],
+                Http::STATUS_FORBIDDEN
+            );
+        }
+
+        $names = $csv->parser($localFile);
+        
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);	
 		});
+        
 		// get list of IUser objects
-		$users = [];
-		foreach($existingNames as $user) {
-			$users[] = [$this->userManager->get($user['name']), $user['role']];
-		}
-		$data = [];
-		foreach ($users as $user) {
-			$role = $user[1] == "admin" ? "admin" : "user";
-			$data[] = $this->userService->formatUser($user[0], $space, $role);
-		}
+		$users = $this->formatUsers($existingNames);
+
+		$data = $this->formatData($users, $space);
+
 		return new JSONResponse($data);
 	}
 
-	public function getFromFiles():JSONResponse {
+	public function getFromFiles(): JSONResponse {
 		$params = $this->request->getParams();
 		$path = $params['path'];
 		$spaceObj = $params['space'];
@@ -110,35 +124,59 @@ class FileCSVController extends Controller {
 		$uid = $this->currentUser->getUID();
 		$folder = $this->rootFolder->getUserFolder($uid);
 		$file = $folder->get($path);
-		if ($file->getMimetype() !== 'text/csv') {
+
+		if ($this->isCSVMimeType($file)) {
 			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
 		}
+
 		$fullPath = $file->getInternalPath();
-		$store = $file->getStorage();
-		$csv = new Csv();
-        if (($handle = $store->fopen($fullPath , "r")) !== false) {
-			if (!$csv->hasProperHeader($handle)) {
-				return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
-			}
-            $names = $csv->parser($handle);
-            fclose($handle);
-		} else {
-            return new JSONResponse(['Something went wrong. Couldn\'t open a file.'], Http::STATUS_FORBIDDEN);
+        $csv = new Csv();
+        $internalFile = new InternalFile($fullPath, $file->getStorage());
+
+        if (!$csv->hasProperHeader($internalFile)) {
+            return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
         }
-		// filter array to leave only existing users
+
+        $names = $csv->parser($internalFile);
+
+        // filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);	
 		});
-		// get list of IUser objects
-		$users = [];
-		foreach($existingNames as $user) {
-			$users[] = [$this->userManager->get($user['name']), $user['role']];
-		}
-		$data = [];
-		foreach ($users as $user) {
-			$role = $user[1] == "admin" ? "admin" : "user";
-			$data[] = $this->userService->formatUser($user[0], $space, $role);
-		}
+
+        $users = $this->formatUsers($existingNames);
+
+		$data = $this->formatData($users, $space);
+
 		return new JSONResponse($data);
 	}
+
+    private function formatData(array $users, array $space): array {
+        $data = [];
+		foreach ($users as $user) {
+			$role = $user['role'] == "admin" ? "admin" : "user";
+			$data[] = $this->userService->formatUser($user['user'], $space, $role);
+		}
+
+        return $data;
+    }
+
+    private function formatUsers(array $data): array {
+        $users = [];
+        foreach($data as $user) {
+			$users[] = [
+                'user' => $this->userManager->get($user['name']),
+                'role' => $user['role']
+            ];
+		}
+        return $users;
+    }
+
+    private function isCSVMimeType(Node|array $file): bool {
+        if($file instanceof Node) {
+            return $file->getMimetype() !== 'text/csv';
+        }
+
+        return $file['type'] !== 'text/csv';
+    }
 }

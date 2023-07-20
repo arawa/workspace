@@ -25,46 +25,66 @@
 
 namespace OCA\Workspace\Files;
 
+use Exception;
+use OCP\AppFramework\Http\JSONResponse;
+
 class Csv {
 
     const DISPLAY_NAME = ["username", "displayname", "name"];
     const ROLE = ["role", "status", "userrole"];
 
-    public function parser($handle) {
+    private function getIndex(array $haystack, array $needles): int|bool {
+        $index = null;
+        foreach($haystack as $key=>$value) {
+            $index = array_search($value, $needles);
+            if ($index !== false) {
+                return $index;
+            }
+        }
+        return false;
+    }
+    
+    public function parser(ManagerConnectionFileInterface $file) {
+        $handle = $file->open();
+        
+        if ($handle === false) {
+            throw new Exception("Imposible to open the $file->getPath() file.");
+        }
+
 		$users = [];
-        rewind($handle);
-        $tableHeader = fgetcsv($handle, 1000, ",");
+        // rewind($handle);
+        $tableHeader = fgetcsv($handle, 1000, ","); // ignore the first line
         $tableHeader = array_map('strtolower', $tableHeader);
-        $nameIndex = false;
-        $roleIndex = false;
-        foreach($this::DISPLAY_NAME as $key=>$value) {
-            $nameIndex = array_search($value, $tableHeader);
-            if ($nameIndex !== false) break;
-        }
-        foreach($this::ROLE as $key=>$value) {
-            $roleIndex = array_search($value, $tableHeader);
-            if ($roleIndex !== false) break;
-        }
+
+        $nameIndex = $this->getIndex($this::DISPLAY_NAME, $tableHeader);
+        $roleIndex = $this->getIndex($this::ROLE, $tableHeader);
+
         while (($data = fgetcsv($handle, 1000, ",")) !== false) {
             $users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
         }
+        $file->close();
+
 		return $users;
 	}
 
-    public function hasProperHeader($handle): bool {
-        $tableHeader = fgetcsv($handle, 1000, ",");
-        $tableHeader = array_map('strtolower', $tableHeader);
-        $nameIndex = false;
-        $roleIndex = false;
-        foreach($this::DISPLAY_NAME as $key=>$value) {
-            $nameIndex = array_search($value, $tableHeader);
-            if ($nameIndex !== false) break;
+    public function hasProperHeader(ManagerConnectionFileInterface $file): bool {
+        // var_dump($path);
+        // die();
+        $res = false;
+        if (($handle = $file->open()) !== false) {
+            $tableHeader = fgetcsv($handle, 1000, ",");
+            $tableHeader = array_map('strtolower', $tableHeader);
+            // var_dump($tableHeader);
+            // die();
+
+            $nameIndex = $this->getIndex(self::DISPLAY_NAME, $tableHeader);
+            $roleIndex = $this->getIndex(self::ROLE, $tableHeader);
+
+            $res = ($nameIndex !== false) && ($roleIndex !== false);
         }
-        foreach($this::ROLE as $key=>$value) {
-            $roleIndex = array_search($value, $tableHeader);
-            if ($roleIndex !== false) break;
-        }
-        return ($nameIndex !== false) && ($roleIndex !== false);
+        
+        $file->close();
+
+        return $res;
     }
-    
 }
