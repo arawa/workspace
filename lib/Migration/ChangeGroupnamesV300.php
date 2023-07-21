@@ -65,7 +65,6 @@ class ChangeGroupnamesV300 implements IRepairStep {
    
 		$controlMigration = boolval($this->appConfig->getAppValue(Upgrade::CONTROL_MIGRATION_V3));
 
-
 		if ($version < self::V300 && $controlMigration === false) {
 			$this->upgradeV300->upgrade();
 		}
