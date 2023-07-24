@@ -82,11 +82,6 @@
 		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
-		<div class="add-users-wrapper">
-			<button @click="addUsersToWorkspaceOrGroup()">
-				{{ t('workspace', 'Add users') }}
-			</button>
-		</div>
 		<div class="select-users-actions">
 			<button class="icon-upload" @click="uploadNewFile()">
 				<span>{{ t('workspace', 'Add users from csv file') }}</span>
@@ -98,6 +93,9 @@
 				@change="handleUploadFile">
 			<button class="icon-folder" @click="shareCsvFromFiles()">
 				<span>{{ t('deck', 'Import csv from Files') }}</span>
+			</button>
+			<button @click="addUsersToWorkspaceOrGroup()">
+				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
 	</div>
@@ -371,7 +369,7 @@ export default {
 	display: flex !important;
 	min-height: 520px !important;
 	max-height: 520px !important;
-	width: 640px !important;
+	width: 38vw !important;
 }
 
 .multiselect__tags {
@@ -386,12 +384,11 @@ export default {
 	justify-content: space-around;
 }
 .select-users-actions button {
+	width: 30%;
+	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
 	background-position: 10px center;
-}
-.select-users-actions button, .add-users-wrapper button {
-	width: 14rem;
 }
 
 .header-modal {
