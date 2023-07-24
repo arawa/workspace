@@ -21,23 +21,26 @@
  *
  */
 
-th {
+ table-space-detail {
+	width: 100%;
+	margin-top: -25px;
+}
+.workspace-th {
 	color: grey;
 	padding: 5px;
 	border-bottom: 1px solid lightgray;
 }
 
-td {
+.workspace-td {
 	padding: 5px;
 	border-bottom: 1px solid lightgray;
 }
 
-tr {
+.workspace-tr {
 	height: 50px;
 	padding: 5px;
 }
-
-tr:hover {
+.workspace-tr:hover {
 	background-color: var(--color-backgroud-hover) !important;
 }
 
