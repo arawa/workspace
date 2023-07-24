@@ -20,27 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-th {
-	color: grey;
-	padding: 5px;
-	border-bottom: 1px solid lightgray;
-}
-
-td {
-	padding: 5px;
-	border-bottom: 1px solid lightgray;
-}
-
-tr {
-	height: 50px;
-	padding: 5px;
-}
-
-tr:hover {
-	background-color: var(--color-backgroud-hover) !important;
-}
-
 .header {
 	height: 0px;
 	display: flex;
@@ -69,7 +48,31 @@ tr:hover {
 	font-size: 20px;
 	margin-top: 10px;
 }
+<<<<<<< HEAD
 
 .user-counter {
 	margin-right: 5px;
+=======
+.table-space-detail {
+	width: 100%;
+	margin-top: -25px;
+}
+.workspace-th {
+	color: grey;
+	padding: 5px;
+	border-bottom: 1px solid lightgray;
+}
+
+.workspace-td {
+	padding: 5px;
+	border-bottom: 1px solid lightgray;
+}
+
+.workspace-tr {
+	height: 50px;
+	padding: 5px;
+}
+.workspace-tr:hover {
+	background-color: var(--color-backgroud-hover) !important;
+>>>>>>> 1b7d897 (style(vue, css): change classes for table elements to fix picker behaviour (hover effect))
 }

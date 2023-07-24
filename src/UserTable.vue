@@ -24,24 +24,24 @@
 	<div>
 		<table v-if="users.length" class="table-space-detail">
 			<thead>
-				<tr>
-					<th />
-					<th style="padding-left: 15px; width: 30%;">
+				<tr class="workspace-tr">
+					<th class="workspace-th" />
+					<th class="workspace-th" style="padding-left: 15px; width: 30%;">
 						{{ t('workspace', 'Users') }}
 					</th>
-					<th>{{ t('workspace', 'Role') }}</th>
-					<th>{{ t('workspace', 'Groups') }}</th>
-					<th />
+					<th class="workspace-th">{{ t('workspace', 'Role') }}</th>
+					<th class="workspace-th">{{ t('workspace', 'Groups') }}</th>
+					<th class="workspace-th" />
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin' : 'list user-simple'">
-					<td class="avatar">
+					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
+					<td class="avatar workspace-td">
 						<NcAvatar :display-name="user.name" :user="user.uid" />
 					</td>
-					<td style="width: 30%;">
+					<td style="width: 30%;" class="workspace-td">
 						<div class="user-name">
 							{{ user.name }}
 						</div>
@@ -49,9 +49,9 @@
 							{{ user.email }}
 						</div>
 					</td>
-					<td> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
-					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
-					<td>
+					<td class="workspace-td"> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
+					<td class="workspace-td"> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
+					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
 								<NcActionButton v-if="$route.params.group === undefined"
@@ -201,10 +201,5 @@ export default {
 .user-email {
 	color: gray;
 	padding-left: 10px;
-}
-
-.table-space-detail {
-	width: 100%;
-	margin-top: -25px;
 }
 </style>
