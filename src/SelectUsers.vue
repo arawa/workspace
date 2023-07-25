@@ -461,7 +461,7 @@ export default {
 }
 
 .user-not-member {
-	/* background-color: #ffebee */
+	background-color: #ffebee
 }
 
 .role-toggle {
