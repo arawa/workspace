@@ -96,8 +96,8 @@
 				style="display: none;"
 				multiple
 				@change="handleUploadFile">
-			<button class="icon-folder" @click="shareCsvFromFiles()">
-				<span>{{ t('deck', 'Import csv from Files') }}</span>
+			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
+				<span>{{ t('workspace', 'Import csv from Files') }}</span>
 			</button>
 		</div>
 	</div>
@@ -111,7 +111,7 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
-import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 
@@ -391,7 +391,7 @@ export default {
 	background-position: 10px center;
 }
 .select-users-actions button, .add-users-wrapper button {
-  width: 230px;
+  width: fit-content;
 }
 
 .header-modal {
