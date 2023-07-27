@@ -45,7 +45,7 @@ import showNotificationError from './services/Notifications/NotificationError.js
 import { get, formatGroups, formatUsers } from './services/groupfoldersService.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 export default {
 	name: 'WorkspaceContent',
 	components: {
