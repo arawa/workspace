@@ -28,6 +28,7 @@ namespace OCA\Workspace\Controller;
 use Exception;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Events\WorkspaceCreateEvent;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateGroupException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
@@ -44,6 +45,7 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\IRootFolder;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -65,6 +67,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceManagerGroup $workspaceManagerGroup,
         private Wrapper $groupfoldersWrapper,
         private IRootFolder $rootFolder,
+        private IEventDispatcher $dispatcher,
 		public $AppName
 	) {
 		parent::__construct($AppName, $request);
@@ -111,17 +114,25 @@ class WorkspaceController extends Controller {
 		$space->setSpaceName($spaceName);
 		$space->setGroupfolderId($folderId);
 		$space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
-		$this->spaceMapper->insert($space);
+		// $this->spaceMapper->insert($space);
 
 		if (is_null($space)) {
 			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
 		}
 
-        $this->groupfoldersWrapper->setFolderAcl($folderId, true);
-
-		// #2 create groups
+        // #2 create groups
 		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
 		$newSpaceUsersGroup = $this->userGroup->create($space);
+
+        $event = new WorkspaceCreateEvent($space, $newSpaceManagerGroup, $newSpaceUsersGroup);
+        $this->dispatcher->dispatchTyped($event);
+
+        die('You win !');
+        // $groupfolder = $getEvent()->getFolder();
+		// $space->setGroupfolderId($folderId);
+		$this->spaceMapper->insert($space);
+
+        $this->groupfoldersWrapper->setFolderAcl($folderId, true);
 
         $this->groupfoldersWrapper->addApplicableGroup(
             $folderId,
