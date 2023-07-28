@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+
+### Changed
+
+- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
+
 ### Fixed
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
