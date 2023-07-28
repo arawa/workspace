@@ -14,8 +14,7 @@ module.exports = {
 	command(role) {
 	  const login = role === 'admin' ? this.globals.adminLogin : ''
 	  const pwd = role === 'admin' ? this.globals.adminPwd : ''
-    //   console.log('this.api.launchUrl ', this.api.launchUrl)
-	  this.navigateTo('http://stable26.local/index.php')
+	  this.navigateTo(this.launchUrl)
 	  this
 			.waitForElementVisible('body')
 			.setValue('input#user', login)
