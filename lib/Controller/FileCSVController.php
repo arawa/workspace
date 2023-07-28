@@ -25,20 +25,19 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\IRequest;
+use OCA\Workspace\Files\Csv;
+use OCA\Workspace\Files\InternalFile;
+use OCA\Workspace\Files\LocalFile;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\WorkspaceService;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\AppFramework\Http;
-use OCP\Files\IRootFolder;
-use OCA\Workspace\Files\Csv;
-use OCP\Files\Storage\IStorage;
-use OCP\AppFramework\Controller;
-use OCA\Workspace\Files\LocalFile;
-use OCA\Workspace\Files\InternalFile;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Http\JSONResponse;
-use OCA\Workspace\Service\WorkspaceService;
 
 class FileCSVController extends Controller {
 	private $currentUser;
@@ -71,43 +70,43 @@ class FileCSVController extends Controller {
 
 		if ($this->isCSVMimeType($file)) {
 			return new JSONResponse(
-                [
-                    'Wrong file extension. Must be <b>.csv</b>.'
-                ],
-                Http::STATUS_FORBIDDEN
-            );
+				[
+					'Wrong file extension. Must be <b>.csv</b>.'
+				],
+				Http::STATUS_FORBIDDEN
+			);
 		}
 
-        $csv = new Csv();
+		$csv = new Csv();
 
-        $localFile = new LocalFile($file['tmp_name']);
+		$localFile = new LocalFile($file['tmp_name']);
 
-        if (!$csv->hasProperHeader($localFile)) {
-            return new JSONResponse(
-                [
-                    'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
-                    [
-                        ...$csv::DISPLAY_NAME,
-                        ...$csv::ROLE
-                    ]
-                ],
-                Http::STATUS_FORBIDDEN
-            );
-        } else {
-            new JSONResponse(
-                [
-                    'Something went wrong. Couldn\'t open a file.'
-                ],
-                Http::STATUS_FORBIDDEN
-            );
-        }
+		if (!$csv->hasProperHeader($localFile)) {
+			return new JSONResponse(
+				[
+					'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
+					[
+						...$csv::DISPLAY_NAME,
+						...$csv::ROLE
+					]
+				],
+				Http::STATUS_FORBIDDEN
+			);
+		} else {
+			new JSONResponse(
+				[
+					'Something went wrong. Couldn\'t open a file.'
+				],
+				Http::STATUS_FORBIDDEN
+			);
+		}
 
-        $names = $csv->parser($localFile);
-        
+		$names = $csv->parser($localFile);
+		
 		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);	
+			return $this->userManager->userExists($user['name']);
 		});
-        
+		
 		// get list of IUser objects
 		$users = $this->formatUsers($existingNames);
 
@@ -136,53 +135,53 @@ class FileCSVController extends Controller {
 		}
 
 		$fullPath = $file->getInternalPath();
-        $csv = new Csv();
-        $internalFile = new InternalFile($fullPath, $file->getStorage());
+		$csv = new Csv();
+		$internalFile = new InternalFile($fullPath, $file->getStorage());
 
-        if (!$csv->hasProperHeader($internalFile)) {
-            return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
-        }
+		if (!$csv->hasProperHeader($internalFile)) {
+			return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
+		}
 
-        $names = $csv->parser($internalFile);
+		$names = $csv->parser($internalFile);
 
-        // filter array to leave only existing users
+		// filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);	
+			return $this->userManager->userExists($user['name']);
 		});
 
-        $users = $this->formatUsers($existingNames);
+		$users = $this->formatUsers($existingNames);
 
 		$data = $this->formatData($users, $space);
 
 		return new JSONResponse($data);
 	}
 
-    private function formatData(array $users, array $space): array {
-        $data = [];
+	private function formatData(array $users, array $space): array {
+		$data = [];
 		foreach ($users as $user) {
 			$role = $user['role'] == "admin" ? "admin" : "user";
 			$data[] = $this->userService->formatUser($user['user'], $space, $role);
 		}
 
-        return $data;
-    }
+		return $data;
+	}
 
-    private function formatUsers(array $data): array {
-        $users = [];
-        foreach($data as $user) {
+	private function formatUsers(array $data): array {
+		$users = [];
+		foreach($data as $user) {
 			$users[] = [
-                'user' => $this->userManager->get($user['name']),
-                'role' => $user['role']
-            ];
+				'user' => $this->userManager->get($user['name']),
+				'role' => $user['role']
+			];
 		}
-        return $users;
-    }
+		return $users;
+	}
 
-    private function isCSVMimeType(Node|array $file): bool {
-        if($file instanceof Node) {
-            return $file->getMimetype() !== 'text/csv';
-        }
+	private function isCSVMimeType(Node|array $file): bool {
+		if($file instanceof Node) {
+			return $file->getMimetype() !== 'text/csv';
+		}
 
-        return $file['type'] !== 'text/csv';
-    }
+		return $file['type'] !== 'text/csv';
+	}
 }

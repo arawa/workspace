@@ -2,8 +2,7 @@
 
 namespace OCA\Workspace\Files;
 
-interface ManagerConnectionFileInterface
-{
-    public function open();
-    public function close();
+interface ManagerConnectionFileInterface {
+	public function open();
+	public function close();
 }
