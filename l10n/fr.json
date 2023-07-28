@@ -72,8 +72,12 @@
 	"You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota": "Vous devez spécifier le terme \"unlimited\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple: \"5GB\") comme quota.",
 	"There are no users in this space/group yet": "Il n'y a pas encore d'utilisateur dans cet espace de travail",
 	"Start typing to lookup users": "Commencez à saisir du texte pour rechercher des utilisateurs",
-	"remove users from selection": "retirer l'utilisateur de la sélection"
-
+	"remove users from selection": "retirer l'utilisateur de la sélection",
+	"Wrong file extension. Must be <b>.csv</b>.": "Mauvais format de fichier. Doit être <b>.csv</b>.",
+	"Invalid file format. Table header doesn't contain any of the following values:<br> {values}": "Format de fichier est invalide. L'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}",
+	"Something went wrong. Couldn't open a file.": "Quelque chose s'est mal passé. Impossible d'ouvrir un fichier.",
+	"Add users from csv file": "Ajouter à partir du fichier csv",
+	"Import csv from Files": "Importer csv à partir de Files"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
 }

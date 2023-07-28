@@ -82,9 +82,22 @@
 		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
 			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 		</p>
+    <div class="add-users-wrapper">
+      <button @click="addUsersToWorkspaceOrGroup()">
+        {{ t('workspace', 'Add users') }}
+      </button>
+    </div>
 		<div class="select-users-actions">
-			<button @click="addUsersToWorkspaceOrGroup()">
-				{{ t('workspace', 'Add users') }}
+			<button class="icon-upload" @click="uploadNewFile()">
+				<span>{{ t('workspace', 'Add users from csv file') }}</span>
+			</button>
+			<input ref="filesAttachment"
+				type="file"
+				style="display: none;"
+				multiple
+				@change="handleUploadFile">
+			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
+				<span>{{ t('workspace', 'Import csv from Files') }}</span>
 			</button>
 		</div>
 	</div>
@@ -100,6 +113,14 @@ import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
+
+const picker = getFilePickerBuilder(t('deck', 'File to share'))
+	.setMultiSelect(false)
+	.setModal(true)
+	.setType(1)
+	.allowDirectories()
+	.build()
 
 export default {
 	name: 'SelectUsers',
@@ -191,7 +212,6 @@ export default {
 			if (term === undefined || term === '') {
 				return
 			}
-
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const spaceId = space.id
 			// TODO: limit max results?
@@ -201,32 +221,9 @@ export default {
 					space,
 				})
 				.then((resp) => {
-					let users = []
 					if (resp.status === 200) {
-						// When adding users to a space, show only those users who are not already member of the space
-						if (this.$route.params.group === undefined) {
-							const space = this.$store.state.spaces[this.$route.params.space]
-							users = resp.data.filter(user => {
-								return (!(user.uid in space.users))
-							}, space)
-						} else {
-							users = resp.data.filter(user => {
-								return (!(user.groups.includes(this.$route.params.group)))
-							})
-						}
-						// Filters user that are already selected
-						users = users.filter(newUser => {
-							return this.allSelectedUsers.every(user => {
-								return newUser.uid !== user.uid
-							})
-						})
-						// subtitle may not be null
-						this.selectableUsers = users.map(user => {
-							return {
-								...user,
-								subtitle: user.subtitle ?? '',
-							}
-						})
+						const usersToDisplay = this.filterAlreadyPresentUsers(resp.data)
+						this.selectableUsers = this.addSubtitleToUsers(usersToDisplay)
 					} else {
 						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 3000)
@@ -255,6 +252,93 @@ export default {
 					return u
 				}
 			})
+		},
+		// When adding users to a space, show only those users who are not already member of the space
+		filterAlreadyPresentUsers(recvUsers) {
+			let users = []
+			if (this.$route.params.group === undefined) {
+				const space = this.$store.state.spaces[this.$route.params.space]
+				users = recvUsers.filter(user => {
+					return (!(user.uid in space.users))
+				}, space)
+			} else {
+				users = recvUsers.filter(user => {
+					return (!(user.groups.includes(this.$route.params.group)))
+				})
+			}
+			// Filters user that are already selected
+			return users.filter(newUser => {
+				return this.allSelectedUsers.every(user => {
+					return newUser.uid !== user.uid
+				})
+			})
+		},
+		addSubtitleToUsers(users) {
+			return users.map(user => {
+				return {
+					...user,
+					subtitle: user.subtitle ?? '',
+				}
+			})
+		},
+		async handleUploadFile(event) {
+			if (event.target.files[0]) {
+				this.isLookingUpUsers = true
+				const bodyFormData = new FormData()
+				const file = event.target.files[0]
+				const space = this.$store.state.spaces[this.$route.params.space]
+				const spaceObj = JSON.stringify(space)
+				bodyFormData.append('file', file)
+				bodyFormData.append('space', spaceObj)
+				try {
+					const users = await this.$store.dispatch('addUsersFromCSV', {
+						formData: bodyFormData,
+					})
+					let usersToDisplay = this.filterAlreadyPresentUsers(users)
+					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
+					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
+				} catch (err) {
+					if (err.response.data.length === 1) {
+						const text = t('workspace', err.response.data[0])
+						showNotificationError('Error', text, 3000)
+					} else {
+						const values = err.response.data[1].join()
+						const text = t('workspace', `${err.response.data[0]} {values}`, { values })
+						showNotificationError('Error', text, 5000)
+					}
+				}
+				this.isLookingUpUsers = false
+				event.target.value = ''
+			}
+		},
+		uploadNewFile() {
+			this.$refs.filesAttachment.click()
+		},
+		shareCsvFromFiles() {
+			picker.pick()
+				.then(async (path, title) => {
+					console.debug(`path ${path} selected for sharing, title ${title}`)
+					const space = this.$store.state.spaces[this.$route.params.space]
+					const spaceString = JSON.stringify(space)
+					const bodyFormData = new FormData()
+					bodyFormData.append('path', path)
+					bodyFormData.append('space', spaceString)
+					try {
+						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData })
+						let usersToDisplay = this.filterAlreadyPresentUsers(users)
+						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
+						this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
+					} catch (err) {
+						if (err.response.data.length === 1) {
+							const text = t('workspace', err.response.data[0])
+							showNotificationError('Error', text, 3000)
+						} else {
+							const values = err.response.data[1].join()
+							const text = t('workspace', `${err.response.data[0]} {values}`, { values })
+							showNotificationError('Error', text, 5000)
+						}
+					}
+				})
 		},
 	},
 }
@@ -287,6 +371,7 @@ export default {
 	display: flex !important;
 	min-height: 520px !important;
 	max-height: 520px !important;
+	width: 640px !important;
 }
 
 .multiselect__tags {
@@ -296,8 +381,17 @@ export default {
 
 .select-users-actions {
 	display: flex;
-	flex-flow: row-reverse;
 	margin-top: 10px;
+	width: 93%;
+	justify-content: space-around;
+}
+.select-users-actions button {
+  display: flex;
+	flex-direction: column;
+	background-position: 10px center;
+}
+.select-users-actions button, .add-users-wrapper button {
+  width: fit-content;
 }
 
 .header-modal {
@@ -344,9 +438,9 @@ export default {
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
-	margin: 10px;
+	margin: 10px auto;
 	min-width: 600px;
-	max-width: 600px;
+	/* max-width: 600px; */
 }
 
 .user-entry {
@@ -372,5 +466,13 @@ export default {
 
 .role-toggle {
 	cursor: pointer !important;
+}
+
+.icon-upload {
+	background-position: 16px center;
+	text-align: left;
+}
+.icon-upload span {
+	padding-left: 28px;
 }
 </style>

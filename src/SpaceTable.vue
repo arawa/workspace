@@ -25,22 +25,23 @@
 		<div class="header" />
 		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
-				<tr>
+				<tr class="workspace-tr">
 					<th />
-					<th>{{ t('workspace', 'Workspace name') }}</th>
-					<th>{{ t('workspace', 'Quota') }}</th>
-					<th>{{ t('workspace', 'Space administrators') }}</th>
+					<th class="workspace-th">{{ t('workspace', 'Workspace name') }}</th>
+					<th class="workspace-th">{{ t('workspace', 'Quota') }}</th>
+					<th class="workspace-th">{{ t('workspace', 'Space administrators') }}</th>
 				</tr>
 			</thead>
 			<tr v-for="(space,name) in $store.state.spaces"
 				:key="name"
+        class="workspace-tr"
 				@click="openSpace(name)">
-				<td style="width: 50px;">
+				<td style="width: 50px;" class="workspace-td">
 					<span class="color-dot-home" :style="{background: space.color}" />
 				</td>
-				<td> {{ name }} </td>
-				<td> {{ space.quota }} </td>
-				<td>
+				<td class="workspace-td"> {{ name }} </td>
+				<td class="workspace-td"> {{ space.quota }} </td>
+				<td class="workspace-td">
 					<div class="admin-avatars">
 						<NcAvatar v-for="user in workspaceManagers(space)"
 							:key="user.uid"

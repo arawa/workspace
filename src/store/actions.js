@@ -306,4 +306,22 @@ export default {
 	updateGroupfolders(context, { groupfolder }) {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
 	},
+	async addUsersFromCSV(context, { formData }) {
+		const url = generateUrl('/apps/workspace/file/csv/import-data')
+		const resp = await axios({
+			method: 'POST',
+			url,
+			data: formData,
+		})
+		return resp.data
+	},
+	async importCsvFromFiles(context, { formData }) {
+		const url = generateUrl('/apps/workspace/file/csv/import-from-files')
+		const resp = await axios({
+			method: 'POST',
+			url,
+			data: formData,
+		})
+		return resp.data
+	},
 }
