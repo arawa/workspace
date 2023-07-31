@@ -12,7 +12,8 @@
     "test": "jest",
     "lint": "eslint --ext .js,.vue src",
     "stylelint": "stylelint css/*.css css/*.scss src/**/*.vue",
-    "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.vue --fix"
+    "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.vue --fix",
+    "e-2-e": "nightwatch -t"
   },
   "repository": {
     "type": "git",
