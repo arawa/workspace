@@ -1,4 +1,4 @@
-describe('Create, rename and remove workspaces', function() {
+describe('Create workspaces', function() {
 	before((browser) => {
 		browser.loginAs('admin')
 	})
@@ -18,6 +18,9 @@ describe('Create, rename and remove workspaces', function() {
 		console.debug('currentGroupfolders ', currentGroupfolders)
 		browser.expect(currentGroupfolders.indexOf('new-espace-01') !== -1).to.be.equal(true)
 	})
+})
+
+describe('Remove a workspace', function() {
 	it('removes a workspace', async (browser) => {
 		browser
 			.workspace.remove('new-espace-01')
@@ -25,5 +28,5 @@ describe('Create, rename and remove workspaces', function() {
 		console.debug('currentGroupfolders', currentGroupfolders)
 		browser.expect(currentGroupfolders.indexOf('new-espace-01') === -1).to.be.equal(true)
 	})
-
 })
+// ToDo: add "rename workspace" test function
