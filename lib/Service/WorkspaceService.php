@@ -65,6 +65,8 @@ class WorkspaceService {
 		$term = $term === '*' ? '' : $term;
 		$users = $this->userManager->searchDisplayName($term, 50);
 
+		$users = array_unique($users, SORT_REGULAR);
+
 		return $users;
 	}
 
