@@ -24,9 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent duplicate users_oidc ( [#892](https://github.com/arawa/workspace/pull/892) )
 
 
-### [3.0.2] - 2023-06-26
+## [3.0.2] - 2023-06-26
 
-#### Fixed
+### Fixed
 
 - Backport/update to 3.0.0/stable3.0 ( [#868](https://github.com/arawa/workspace/pull/868) )
 - Fix/remove space issue/stable3.0 ( [#840](https://github.com/arawa/workspace/pull/840))
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backport/rename workspace for 3.x.x/stable3.0 ( [#866](https://github.com/arawa/workspace/pull/866) )
 - Get SPACE-GE and SPACE-U groups only ( [#858](https://github.com/arawa/workspace/pull/858) )
 
-# [3.0.1] - 2023-05-26
+## [3.0.1] - 2023-05-26
 
 ### Fixed
 
