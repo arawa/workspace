@@ -9,13 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
+- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+
+### Changed
+
+- Create spaceitem and groupitem components ( [#880](https://github.com/arawa/workspace/pull/880) )
+- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
 
 ### Fixed
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
 - Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
+- Change Exceptions path, changing namespace ( [#863](https://github.com/arawa/workspace/pull/863) )
+- Prevent duplicate users_oidc ( [#892](https://github.com/arawa/workspace/pull/892) )
 
-# [3.0.1] - 2023-05-26
+
+## [3.0.2] - 2023-06-26
+
+### Fixed
+
+- Backport/update to 3.0.0/stable3.0 ( [#868](https://github.com/arawa/workspace/pull/868) )
+- Fix/remove space issue/stable3.0 ( [#840](https://github.com/arawa/workspace/pull/840))
+- Hotfix/ingore guest virtual group upgrade300/stable3.0 ( [#848](https://github.com/arawa/workspace/pull/848) )
+- Backport/ignore virtual groups/stable3.0 ( [#867](https://github.com/arawa/workspace/pull/867) )
+- Backport/rename workspace for 3.x.x/stable3.0 ( [#866](https://github.com/arawa/workspace/pull/866) )
+- Get SPACE-GE and SPACE-U groups only ( [#858](https://github.com/arawa/workspace/pull/858) )
+
+## [3.0.1] - 2023-05-26
 
 ### Fixed
 
