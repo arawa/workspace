@@ -60,8 +60,8 @@ class GroupFoldersGroupsMapper extends QBMapper {
 					'gf_groups.folder_id'
 				)
 			)
-			->where('group_id not like "SPACE-GE%"')
-			->andWhere('group_id not like "SPACE-U%"');
+			->where('group_id not like \'SPACE-GE%\'')
+			->andWhere('group_id not like \'SPACE-U%\'');
 
 		return $qb->executeQuery()->fetchAll();
 	}
