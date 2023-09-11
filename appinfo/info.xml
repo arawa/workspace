@@ -90,6 +90,7 @@ For this version, you should refresh your browser from the Workspace app with `C
         <pre-migration>
             <step>OCA\Workspace\Migration\ChangeGroupnamesV300</step>
             <step>OCA\Workspace\Migration\FixMigrationToV300</step>
+            <step>OCA\Workspace\Migration\ReRunChangeGroupnamesForPgSql</step>
         </pre-migration>
 	    <install>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
