@@ -49,7 +49,7 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
 	 */
 	private function searchUsersByMailing(string $term): array {
 		return $this->userManager->getByEmail($term);
@@ -57,7 +57,7 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
 	 */
 	private function searchUsersByDisplayName(string $term): array {
 		$users = [];
@@ -72,9 +72,9 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
 	 */
-	private function searchUsers(string $term): array {
+	public function searchUsers(string $term): array {
 		$users = [];
 		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
 
@@ -83,6 +83,11 @@ class WorkspaceService {
 		} else {
 			$users = $this->searchUsersByDisplayName($term);
 		}
+
+		/**
+		 * Change OC\User\LazyUser to OC\User\User.
+		 */
+		$users = array_map(fn ($user) => $this->userManager->get($user->getUID()), $users);
 
 		return $users;
 	}
