@@ -6,13 +6,13 @@ use OCP\IUserManager;
 
 class UserPresenceChecker {
 	public function __construct(private IUserManager $userManager,
-		private UserSearcher $userSearcher) {
+		private UserFinder $userFinder) {
 	}
 
-	public function checkUserExist(string $username): bool {
-		$user = $this->userSearcher->searchUsers($username)[0];
+	public function checkUserExist(string $pattern): bool {
+		$user = $this->userFinder->findUser($pattern);
 		if (is_null($user)) {
-			throw new \Exception("The $username user is not exist.", 1);
+			throw new \Exception("The $pattern user or email is not exist.", 1);
 		}
 		return false;
 	}
