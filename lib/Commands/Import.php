@@ -2,20 +2,20 @@
 
 namespace OCA\Workspace\Commands;
 
+use OCA\Workspace\Files\CsvMassCreatingWorkspaces;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminGroupManager;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\User\UserFinder;
+use OCA\Workspace\User\UserPresenceChecker;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCA\Workspace\User\UserFinder;
-use OCA\Workspace\Space\SpaceManager;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\User\UserPresenceChecker;
 use Symfony\Component\Console\Command\Command;
-use OCA\Workspace\Group\Admin\AdminGroupManager;
-use OCA\Workspace\Files\CsvMassCreatingWorkspaces;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class Import extends Command {
 
@@ -26,9 +26,9 @@ class Import extends Command {
 		private CsvMassCreatingWorkspaces $csvCreatingWorkspaces,
 		private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
-        private UserPresenceChecker $userChecker,
+		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder,
-        private WorkspaceCheckService $workspaceCheckService) {
+		private WorkspaceCheckService $workspaceCheckService) {
 		parent::__construct();
 	}
 
@@ -45,10 +45,10 @@ class Import extends Command {
 
 		$dataFormated = $this->csvCreatingWorkspaces->parser($path);
 
-        foreach ($dataFormated as $data) {
-            $this->workspaceCheckService->isExist($data['workspace_name']);
-            $this->userChecker->checkUserExist($data['user_uid']);
-        }
+		foreach ($dataFormated as $data) {
+			$this->workspaceCheckService->isExist($data['workspace_name']);
+			$this->userChecker->checkUserExist($data['user_uid']);
+		}
 
 		foreach ($dataFormated as $data) {
 

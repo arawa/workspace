@@ -7,7 +7,6 @@ use OCA\Workspace\Group\Admin\AdminGroupManager;
 use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\User\UserPresenceChecker;
-use OCA\Workspace\User\UserSearcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

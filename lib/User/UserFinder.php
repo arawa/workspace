@@ -5,18 +5,16 @@ namespace OCA\Workspace\User;
 use OCP\IUser;
 use OCP\IUserManager;
 
-class UserFinder
-{
-    public function __construct(private IUserManager $userManager)
-    {
-    }
+class UserFinder {
+	public function __construct(private IUserManager $userManager) {
+	}
 
-    	/**
+	/**
 	 * @param string $email
 	 */
 	public function findByEmail(string $email): ?IUser {
 		$users = $this->userManager->getByEmail($email);
-        return $users[0];
+		return $users[0];
 	}
 
 	/**
