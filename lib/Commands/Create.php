@@ -27,7 +27,7 @@ class Create extends Command {
 			->setName('workspace:create')
 			->setDescription('This command allows you to create a workspace')
 			->addArgument('name', InputArgument::REQUIRED, 'The name of your workspace.')
-			->addOption('user-workspace-manager', 'um', InputOption::VALUE_REQUIRED, 'The user will be workspace manager of your workspace. Please, use its uid or email address');
+			->addOption('user-workspace-manager', 'uwm', InputOption::VALUE_REQUIRED, 'The user will be workspace manager of your workspace. Please, use its uid or email address');
 
 		parent::configure();
 	}
