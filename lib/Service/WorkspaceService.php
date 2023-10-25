@@ -50,6 +50,8 @@ class WorkspaceService {
 	/**
 	 * @param string $term
 	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	private function searchUsersByMailing(string $term): array {
 		return $this->userManager->getByEmail($term);
@@ -58,6 +60,8 @@ class WorkspaceService {
 	/**
 	 * @param string $term
 	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	private function searchUsersByDisplayName(string $term): array {
 		$users = [];
@@ -73,6 +77,8 @@ class WorkspaceService {
 	/**
 	 * @param string $term
 	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	public function searchUsers(string $term): array {
 		$users = [];
