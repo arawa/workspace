@@ -83,7 +83,7 @@ class SpaceService {
 		$checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
 
 		if (!is_bool($checkSpacename)) {
-			if (array_key_exists('name', $checkSpacename)) {
+			if (array_key_exists('space_name', $checkSpacename)) {
 				return true;
 			}
 		}
