@@ -5,6 +5,7 @@ namespace OCA\Workspace\Commands;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminGroupManager;
 use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\User\UserPresenceChecker;
 use OCA\Workspace\User\UserSearcher;
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +18,7 @@ class Create extends Command {
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
 		private UserPresenceChecker $userChecker,
-		private UserSearcher $userSearcher) {
+		private UserFinder $userFinder) {
 		parent::__construct();
 	}
 
@@ -55,7 +56,7 @@ class Create extends Command {
 	}
 
 	private function addUserToAdminGroupManager(string $username, array $workspace): bool {
-		$user = $this->userSearcher->searchUsers($username)[0];
+		$user = $this->userFinder->findUser($username);
 		$groupname = AdminGroupManager::findWorkspaceManager($workspace);
 		$this->adminGroup->addUser($user, $groupname);
 

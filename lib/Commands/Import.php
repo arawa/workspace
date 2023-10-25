@@ -2,18 +2,20 @@
 
 namespace OCA\Workspace\Commands;
 
-use OCA\Workspace\Files\CsvMassCreatingWorkspaces;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminGroupManager;
-use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Space\SpaceManager;
-use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCA\Workspace\User\UserFinder;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\User\UserPresenceChecker;
 use Symfony\Component\Console\Command\Command;
+use OCA\Workspace\Group\Admin\AdminGroupManager;
+use OCA\Workspace\Files\CsvMassCreatingWorkspaces;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class Import extends Command {
 
@@ -24,7 +26,9 @@ class Import extends Command {
 		private CsvMassCreatingWorkspaces $csvCreatingWorkspaces,
 		private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
-		private WorkspaceService $workspaceService) {
+        private UserPresenceChecker $userChecker,
+		private UserFinder $userFinder,
+        private WorkspaceCheckService $workspaceCheckService) {
 		parent::__construct();
 	}
 
@@ -32,7 +36,6 @@ class Import extends Command {
 		$path = realpath($input->getArgument('path'));
 	  
 		if (!$this->csvCreatingWorkspaces->isCsvFile($path)) {
-			// throw new Exception("It's not a csv file.");
 			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
 		}
 
@@ -42,10 +45,14 @@ class Import extends Command {
 
 		$dataFormated = $this->csvCreatingWorkspaces->parser($path);
 
+        foreach ($dataFormated as $data) {
+            $this->workspaceCheckService->isExist($data['workspace_name']);
+            $this->userChecker->checkUserExist($data['user_uid']);
+        }
+
 		foreach ($dataFormated as $data) {
 
-			$users = $this->workspaceService->searchUsers($data['user_uid']);
-			$user = $users[0];
+			$user = $this->userFinder->findUser($data['user_uid']);
 
 			$workspace = $this->spaceManager->create($data['workspace_name']);
 			$groupname = AdminGroupManager::findWorkspaceManager($workspace);
