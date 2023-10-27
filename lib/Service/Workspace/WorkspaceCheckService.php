@@ -28,6 +28,9 @@ use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
 
 class WorkspaceCheckService {
+
+    public const CHARACTERS_SPECIAL = "[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]";
+    
 	public function __construct(private SpaceService $spaceService) {
 	}
 
@@ -37,12 +40,12 @@ class WorkspaceCheckService {
 	 * @param string $spacename
 	 * @throws BadRequestException
 	 */
-	public function containSpecialChar(string $spacename): void {
-		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
-			throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
+	public function containSpecialChar(string $spacename): bool {
+		if (preg_match(sprintf("/%s/", self::CHARACTERS_SPECIAL), $spacename)) {
+            return true;
 		}
 
-		return;
+		return false;
 	}
 
 
