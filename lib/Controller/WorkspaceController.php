@@ -30,6 +30,7 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateGroupException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -92,7 +93,10 @@ class WorkspaceController extends Controller {
 		}
 
 		$this->workspaceCheck->containSpecialChar($spaceName);
-		$this->workspaceCheck->isExist($spaceName);
+		
+		if ($this->workspaceCheck->isExist($spaceName)) {
+			throw new WorkspaceNameExistException("The $spaceName space name already exist", Http::STATUS_CONFLICT);
+		}
 
 		$spaceName = $this->deleteBlankSpaceName($spaceName);
 

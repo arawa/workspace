@@ -28,6 +28,7 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -56,7 +57,10 @@ class SpaceManager {
 		}
 
 		$this->workspaceCheck->containSpecialChar($spacename);
-		$this->workspaceCheck->isExist($spacename);
+		
+		if ($this->workspaceCheck->isExist($spacename)) {
+			throw new WorkspaceNameExistException("The $spacename space name already exist", Http::STATUS_CONFLICT);
+		}
 
 		$spacename = $this->deleteBlankSpaceName($spacename);
 
