@@ -2,7 +2,7 @@
 
 namespace OCA\Workspace\Commands;
 
-use OCA\Workspace\Files\CsvMassCreatingWorkspaces;
+use OCA\Workspace\Files\MassiveWorkspaceCreation\Csv;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminGroupManager;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
@@ -23,7 +23,7 @@ class Import extends Command {
 		private IGroupManager $groupManager,
 		private IRequest $request,
 		private IUserManager $userManager,
-		private CsvMassCreatingWorkspaces $csvCreatingWorkspaces,
+		private Csv $csvCreatingWorkspaces,
 		private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
 		private UserPresenceChecker $userChecker,

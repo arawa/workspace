@@ -11,7 +11,7 @@ class LocalFile implements ManagerConnectionFileInterface {
 	/**
 	 * @return resource|false
 	 */
-	public function open() {
+	public function open(?string $path = null) {
 		$this->resource = fopen($this->path, "r");
 		return $this->resource;
 	}

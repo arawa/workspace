@@ -22,22 +22,26 @@
  *
  */
 
-namespace OCA\Workspace\Files;
+namespace OCA\Workspace\Files\MassiveWorkspaceCreation;
 
-class CsvMassCreatingWorkspaces extends CsvAbstract implements CsvInterface {
+use OCA\Workspace\Files\CsvAbstract;
+use OCA\Workspace\Files\CsvInterface;
+use OCA\Workspace\Files\Connection\Terminal;
+
+class Csv extends CsvAbstract implements CsvInterface {
 
 	public const WORKSPACE_FIELD = ["workspace-name", "spacename"];
 	public const USER_FIELD = ["user", "uid", "WorkspaceManager", "workspace-manager"];
 
-	public function __construct() {
+	public function __construct(private Terminal $managerConnectionFile) {
 		parent::__construct();
 	}
 
 	public function parser(string $path): array {
-		$stream = fopen($path, 'r');
+        $stream = $this->managerConnectionFile->open($path);
 
 		// ignore the header
-		$tableHeader = fgetcsv($stream, 1000, ',');
+		$tableHeader = $this->next($stream);
 
 		$tableHeader = array_map('strtolower', $tableHeader);
 
@@ -46,7 +50,7 @@ class CsvMassCreatingWorkspaces extends CsvAbstract implements CsvInterface {
 
 		$data = [];
 
-		while (($dataCsv = fgetcsv($stream, 1000, ',')) !== false) {
+		while (($dataCsv = $this->next($stream)) !== false) {
 			$userUid = $dataCsv[$userIndex];
 
 			if (empty($dataCsv[$userIndex])) {
@@ -59,7 +63,7 @@ class CsvMassCreatingWorkspaces extends CsvAbstract implements CsvInterface {
 			];
 		}
 
-		fclose($stream);
+		$this->managerConnectionFile->close();
 
 		return $data;
 	}
@@ -68,10 +72,10 @@ class CsvMassCreatingWorkspaces extends CsvAbstract implements CsvInterface {
 		
 		$res = true;
 
-		$stream = fopen($path, 'r');
+        $stream = $this->managerConnectionFile->open($path);
 
 		// ignore the header
-		$tableHeader = fgetcsv($stream, 1000, ',');
+		$tableHeader = $this->next($stream);
 
 		$tableHeader = array_map('strtolower', $tableHeader);
 
@@ -80,7 +84,7 @@ class CsvMassCreatingWorkspaces extends CsvAbstract implements CsvInterface {
 
 		$res = ($workspaceField !== false) && ($uidField !== false);
 		
-		fclose($stream);
+        $this->managerConnectionFile->close();
 
 		return $res;
 	}
