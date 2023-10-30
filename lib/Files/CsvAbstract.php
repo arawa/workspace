@@ -56,11 +56,10 @@ abstract class CsvAbstract {
 		return false;
 	}
 
-    /**
-     * @param resource $stream
-     */
-    protected function next($stream): array|false
-    {
-        return fgetcsv($stream, 1000, ',');
-    }
+	/**
+	 * @param resource $stream
+	 */
+	protected function next($stream): array|false {
+		return fgetcsv($stream, 1000, ',');
+	}
 }

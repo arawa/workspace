@@ -24,9 +24,9 @@
 
 namespace OCA\Workspace\Files\MassiveWorkspaceCreation;
 
+use OCA\Workspace\Files\Connection\Terminal;
 use OCA\Workspace\Files\CsvAbstract;
 use OCA\Workspace\Files\CsvInterface;
-use OCA\Workspace\Files\Connection\Terminal;
 
 /**
  * Allow to parse a csv file to create massive workspaces.
@@ -41,7 +41,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 	}
 
 	public function parser(string $path): array {
-        $stream = $this->managerConnectionFile->open($path);
+		$stream = $this->managerConnectionFile->open($path);
 
 		// ignore the header
 		$tableHeader = $this->next($stream);
@@ -75,7 +75,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 		
 		$res = true;
 
-        $stream = $this->managerConnectionFile->open($path);
+		$stream = $this->managerConnectionFile->open($path);
 
 		// ignore the header
 		$tableHeader = $this->next($stream);
@@ -87,7 +87,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 
 		$res = ($workspaceField !== false) && ($uidField !== false);
 		
-        $this->managerConnectionFile->close();
+		$this->managerConnectionFile->close();
 
 		return $res;
 	}
