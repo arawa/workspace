@@ -28,6 +28,9 @@ use OCA\Workspace\Files\CsvAbstract;
 use OCA\Workspace\Files\CsvInterface;
 use OCA\Workspace\Files\Connection\Terminal;
 
+/**
+ * Allow to parse a csv file to create massive workspaces.
+ */
 class Csv extends CsvAbstract implements CsvInterface {
 
 	public const WORKSPACE_FIELD = ["workspace-name", "spacename"];
