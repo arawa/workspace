@@ -58,7 +58,7 @@ class SpaceManager {
 
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
 			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
-        }
+		}
 		
 		if ($this->workspaceCheck->isExist($spacename)) {
 			throw new WorkspaceNameExistException("The $spacename space name already exist", Http::STATUS_CONFLICT);

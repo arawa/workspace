@@ -45,11 +45,11 @@ class Import extends Command {
 
 		$dataFormated = $this->csvCreatingWorkspaces->parser($path);
 
-        $spacenamesWithCharacterSpecials = $this->getWorkspacesWithCharacterSpecials($dataFormated);
+		$spacenamesWithCharacterSpecials = $this->getWorkspacesWithCharacterSpecials($dataFormated);
 
-        if (!is_null($spacenamesWithCharacterSpecials)) {
-            throw new \Exception($spacenamesWithCharacterSpecials);
-        }
+		if (!is_null($spacenamesWithCharacterSpecials)) {
+			throw new \Exception($spacenamesWithCharacterSpecials);
+		}
 
 		$message = $this->getSpacenamesDuplicated($dataFormated);
 		$message .= $this->getUsersArentExist($dataFormated);
@@ -121,24 +121,24 @@ class Import extends Command {
 		return null;
 	}
 
-    private function getWorkspacesWithCharacterSpecials(array $dataResponse): ?string {
-        $spacenamesWithCharacterSpecials = [];
-        $message = "";
+	private function getWorkspacesWithCharacterSpecials(array $dataResponse): ?string {
+		$spacenamesWithCharacterSpecials = [];
+		$message = "";
 
-        foreach ($dataResponse as $data) {
-            if ($this->workspaceCheckService->containSpecialChar($data['workspace_name'])) {
-                $spacenamesWithCharacterSpecials[] = $data['workspace_name'];
-            }
-        }
+		foreach ($dataResponse as $data) {
+			if ($this->workspaceCheckService->containSpecialChar($data['workspace_name'])) {
+				$spacenamesWithCharacterSpecials[] = $data['workspace_name'];
+			}
+		}
 
-        if (!empty($spacenamesWithCharacterSpecials)) {
-            $spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
-            $message .= "The workspace names below contain special characters :\n" . implode('', $spacenamesStringify);
-            $message .= "\nPlease, your Workspace names must not contain the following characters: " . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-            
-            return $message;
-        }
-        
-        return null;
-    }
+		if (!empty($spacenamesWithCharacterSpecials)) {
+			$spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
+			$message .= "The workspace names below contain special characters :\n" . implode('', $spacenamesStringify);
+			$message .= "\nPlease, your Workspace names must not contain the following characters: " . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+			
+			return $message;
+		}
+		
+		return null;
+	}
 }

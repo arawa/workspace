@@ -94,7 +94,7 @@ class WorkspaceController extends Controller {
 
 		if($this->workspaceCheck->containSpecialChar($spaceName)) {
 			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
-        }
+		}
 		
 		if ($this->workspaceCheck->isExist($spaceName)) {
 			throw new WorkspaceNameExistException("The $spaceName space name already exist", Http::STATUS_CONFLICT);
@@ -278,7 +278,7 @@ class WorkspaceController extends Controller {
 
 		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
 			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
-        }
+		}
 
 		if ($newSpaceName === false ||
 			$newSpaceName === null ||

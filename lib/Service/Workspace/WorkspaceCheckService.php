@@ -29,8 +29,8 @@ use OCA\Workspace\Service\SpaceService;
 
 class WorkspaceCheckService {
 
-    public const CHARACTERS_SPECIAL = "[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]";
-    
+	public const CHARACTERS_SPECIAL = "[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]";
+	
 	public function __construct(private SpaceService $spaceService) {
 	}
 
@@ -42,7 +42,7 @@ class WorkspaceCheckService {
 	 */
 	public function containSpecialChar(string $spacename): bool {
 		if (preg_match(sprintf("/%s/", self::CHARACTERS_SPECIAL), $spacename)) {
-            return true;
+			return true;
 		}
 
 		return false;
