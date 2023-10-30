@@ -62,7 +62,16 @@ class Import extends Command {
 		}
 
 		if (!$this->csvCreatingWorkspaces->hasProperHeader($path)) {
-			throw new \Exception('No respect the glossary headers.');
+			throw new \Exception(
+				sprintf(
+					"No respect the glossary headers.\n\n"
+					. "Please, you must define these 2 headers :\n"
+					. "     - %s : To specify the workspace name.\n"
+					. "     - %s : To specify the user's uid or email address.",
+					implode(", ", Csv::WORKSPACE_FIELD),
+					implode(", ", Csv::USER_FIELD)
+				)
+			);
 		}
 
 		$dataFormated = $this->csvCreatingWorkspaces->parser($path);
