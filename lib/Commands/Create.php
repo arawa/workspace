@@ -39,6 +39,7 @@ class Create extends Command {
 
 	public const OUTPUT_FORMAT_PLAIN = 'plain';
 	public const OUTPUT_FORMAT_JSON_PRETTY = 'json_pretty';
+	public const OPTION_FORMAT_AVAILABLE = [ 'json' ];
 
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
@@ -62,6 +63,13 @@ class Create extends Command {
 			->setDescription('This command allows you to create a workspace')
 			->addArgument('name', InputArgument::REQUIRED, 'The name of your workspace.')
 			->addOption(
+				'format',
+				'F',
+				InputOption::VALUE_REQUIRED,
+				'Output json',
+				'json'
+			)
+			->addOption(
 				'user-workspace-manager',
 				'uwm',
 				InputOption::VALUE_REQUIRED,
@@ -73,6 +81,7 @@ class Create extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 
+		$outputMessage = '<info>success</info>';
 		$spacename = $input->getArgument('name');
 
 		if ($input->hasParameterOption('--user-workspace-manager')) {
@@ -80,6 +89,15 @@ class Create extends Command {
 			if (!$this->userChecker->checkUserExist($pattern)) {
 				throw new \Exception("The $pattern user or email is not exist.");
 			}
+		}
+
+		if ($this->checkValueFormatOptionIsValid($input)) {
+			throw new \Exception(
+				sprintf(
+					"The value is not valid.\nPlease, define an option valid : %s",
+					implode(', ', self::OPTION_FORMAT_AVAILABLE)
+				)
+			);
 		}
 
 		$workspace = $this->spaceManager->create($spacename);
@@ -92,7 +110,14 @@ class Create extends Command {
 			);
 		}
 
-		$output->writeln($this->formatOutput($input, $workspace));
+		if ($input->hasParameterOption('--format')) {
+			$value = $input->getOption('format');
+			if (in_array($value, self::OPTION_FORMAT_AVAILABLE)) {
+				$outputMessage = $this->formatOutput($input, $workspace);
+			}
+		}
+
+		$output->writeln($outputMessage);
 
 		return 0;
 	}
@@ -103,6 +128,17 @@ class Create extends Command {
 		$this->adminGroup->addUser($user, $groupname);
 
 		return true;
+	}
+
+	private function checkValueFormatOptionIsValid(InputInterface $input): bool {
+		if ($input->hasParameterOption('--format')) {
+			$value = $input->getOption('format');
+			if ($value !== 'json') {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function formatOutput(InputInterface $input, array $items): string {
