@@ -29,6 +29,7 @@ use OCA\Workspace\Group\Admin\AdminGroupManager;
 use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\User\UserPresenceChecker;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,6 +44,7 @@ class Create extends Command {
 
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
+        private LoggerInterface $logger,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder) {
 		parent::__construct();
@@ -87,11 +89,18 @@ class Create extends Command {
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$pattern = $input->getOption('user-workspace-manager');
 			if (!$this->userChecker->checkUserExist($pattern)) {
+                $this->logger->error("The $pattern user or email is not exist.");
 				throw new \Exception("The $pattern user or email is not exist.");
 			}
 		}
 
 		if ($this->checkValueFormatOptionIsValid($input)) {
+            $this->logger->error(
+                sprintf(
+					"The value is not valid.\nPlease, define an option valid : %s",
+					implode(', ', self::OPTION_FORMAT_AVAILABLE)
+				)
+            );
 			throw new \Exception(
 				sprintf(
 					"The value is not valid.\nPlease, define an option valid : %s",
@@ -117,6 +126,7 @@ class Create extends Command {
 			}
 		}
 
+        $this->logger->info(sprintf("The workspace created with %s", $outputMessage));
 		$output->writeln($outputMessage);
 
 		return 0;

@@ -34,6 +34,7 @@ use OCA\Workspace\User\UserPresenceChecker;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,15 +43,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Import extends Command {
 
 	public function __construct(
+		private AdminGroup $adminGroup,
+		private Csv $csvCreatingWorkspaces,
 		private IGroupManager $groupManager,
 		private IRequest $request,
 		private IUserManager $userManager,
-		private Csv $csvCreatingWorkspaces,
 		private SpaceManager $spaceManager,
-		private AdminGroup $adminGroup,
-		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder,
-		private WorkspaceCheckService $workspaceCheckService) {
+		private UserPresenceChecker $userChecker,
+		private WorkspaceCheckService $workspaceCheckService,
+        private LoggerInterface $logger) {
 		parent::__construct();
 	}
 
@@ -58,10 +60,19 @@ class Import extends Command {
 		$path = realpath($input->getArgument('path'));
 	  
 		if (!$this->csvCreatingWorkspaces->isCsvFile($path)) {
+            $this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
 			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
 		}
 
 		if (!$this->csvCreatingWorkspaces->hasProperHeader($path)) {
+            $this->logger->error(sprintf(
+                "No respect the glossary headers. "
+                . "Please, you must define these 2 headers : "
+                . "%s : To specify the workspace name; "
+                . "%s : To specify the user's uid or email address.",
+                implode(", ", Csv::WORKSPACE_FIELD),
+                implode(", ", Csv::USER_FIELD)
+            ));
 			throw new \Exception(
 				sprintf(
 					"No respect the glossary headers.\n\n"
@@ -79,6 +90,7 @@ class Import extends Command {
 		$spacenamesWithCharacterSpecials = $this->getWorkspacesWithCharacterSpecials($dataFormated);
 
 		if (!is_null($spacenamesWithCharacterSpecials)) {
+            $this->logger->error($spacenamesWithCharacterSpecials);
 			throw new \Exception($spacenamesWithCharacterSpecials);
 		}
 
@@ -86,6 +98,7 @@ class Import extends Command {
 		$message .= $this->getUsersArentExist($dataFormated);
 
 		if (!empty($message)) {
+            $this->logger->error($message);
 			throw new \Exception($message);
 		}
 
@@ -98,6 +111,7 @@ class Import extends Command {
 			$this->adminGroup->addUser($user, $groupname);
 		}
 
+        $this->logger->info("The import is done.");
 		$output->writeln("The import is done.");
 
 		return 0;
