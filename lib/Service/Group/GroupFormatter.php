@@ -30,12 +30,20 @@ use OCP\IGroup;
 class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
+<<<<<<< HEAD
 	 * @return array [
 	 *  'gid' => string,
 	 *  'displayName' => string,
 	 *  'types' => string[],
 	 *  'is_ldap' => boolean
 	 * ]
+=======
+     * @return array [
+     *  'gid' => string,
+     *  'displayName' => string,
+     *  'types' => string[],
+     * ]
+>>>>>>> fc4e245 (feature(): First draft to connect groups)
 	 */
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
