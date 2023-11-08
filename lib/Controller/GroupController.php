@@ -337,4 +337,17 @@ class GroupController extends Controller {
 			'users' => (object)$users
 		], Http::STATUS_OK);
 	}
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function search(string $pattern): JSONResponse {
+        
+        $groups = $this->groupManager->search($pattern);
+
+        $groupsFormatted = GroupFormatter::formatGroups($groups);
+        
+        return new JSONResponse($groupsFormatted);
+    }
 }

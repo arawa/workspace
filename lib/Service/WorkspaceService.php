@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
@@ -190,15 +191,12 @@ class WorkspaceService {
 	 *
 	 */
 	public function addGroupsInfo(array|string $workspace): array {
-		$groups = [];
-		foreach (array_keys($workspace['groups']) as $gid) {
-			$NCGroup = $this->groupManager->get($gid);
-			$groups[$gid] = [
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
-			];
-		}
-		$workspace['groups'] = $groups;
+		$groups = array_map(
+            fn($gid) => $this->groupManager->get($gid),
+            array_keys($workspace['groups'])
+        );
+
+		$workspace['groups'] = GroupFormatter::formatGroups($groups);
 
 		return $workspace;
 	}
