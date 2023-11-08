@@ -118,6 +118,11 @@ return [
 			'verb' => 'PATCH',
 		],
 		[
+			'name' => 'group#search',
+			'url' => '/groups',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'group#addUser',
 			/**
 			 * @todo Rewrite this route

@@ -30,19 +30,22 @@
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.spaceUserCount(spaceName) }}
 		</NcCounterBubble>
-		<div>
-			<GroupMenuItem
-				v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
-				:key="group.gid"
-				:group="group"
-				:space-name="spaceName" />
-		</div>
+		<NcAppNavigationCaption
+			title="Workspace Groups" />
+		<GroupMenuItem
+			v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+			:key="group.gid"
+			:group="group"
+			:space-name="spaceName" />
+		<NcAppNavigationCaption
+			title="Connected Groups" />
 	</NcAppNavigationItem>
 </template>
 
 <script>
 import { getLocale } from '@nextcloud/l10n'
 import GroupMenuItem from './GroupMenuItem.vue'
+import NcAppNavigationCaption from '@nextcloud/vue/dist/Components/NcAppNavigationCaption.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
@@ -51,6 +54,7 @@ export default {
 	name: 'SpaceMenuItem',
 	components: {
 		GroupMenuItem,
+		NcAppNavigationCaption,
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
 		NcCounterBubble,
@@ -64,6 +68,19 @@ export default {
 			type: String,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			workspaceGroups: [],
+			connectedGroups: [],
+		}
+	},
+	beforeMount() {
+		// console.debug(this.space.groups.types)
+		// const groupnames = 
+		// const workspaceGroups = this.space.groups.filter((groupname))
+
+		// this.workspaceGroups.push()
 	},
 	methods: {
 		// sorts groups alphabetically
