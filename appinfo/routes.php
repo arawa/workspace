@@ -153,6 +153,7 @@ return [
 			'verb' => 'GET',
 			'requirements' => array('path' => '.*'),
 			'defaults' => array('path' => 'dummy'),
+			'postfix' => 'catchall',
 		]
 	]
 ];
