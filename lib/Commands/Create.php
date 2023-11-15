@@ -75,7 +75,7 @@ class Create extends Command {
 				'user-workspace-manager',
 				'uwm',
 				InputOption::VALUE_REQUIRED,
-				'The user will be workspace manager of your workspace. Please, use its uid or email address'
+				'The user will be workspace manager of your workspace. Please, use its user-id or email address'
 			);
 
 		parent::configure();
@@ -89,21 +89,21 @@ class Create extends Command {
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$pattern = $input->getOption('user-workspace-manager');
 			if (!$this->userChecker->checkUserExist($pattern)) {
-                $this->logger->error("The $pattern user or email is not exist.");
-				throw new \Exception("The $pattern user or email is not exist.");
+                $this->logger->error("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
+				throw new \Exception("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
 			}
 		}
 
 		if ($this->checkValueFormatOptionIsValid($input)) {
             $this->logger->error(
                 sprintf(
-					"The value is not valid.\nPlease, define an option valid : %s",
+					"The format value is not valid.\nPlease, add a valid option : %s",
 					implode(', ', self::OPTION_FORMAT_AVAILABLE)
 				)
             );
 			throw new \Exception(
 				sprintf(
-					"The value is not valid.\nPlease, define an option valid : %s",
+					"The format value is not valid.\nPlease, add a valid option : %s",
 					implode(', ', self::OPTION_FORMAT_AVAILABLE)
 				)
 			);

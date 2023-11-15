@@ -69,7 +69,7 @@ class Import extends Command {
                 "No respect the glossary headers. "
                 . "Please, you must define these 2 headers : "
                 . "%s : To specify the workspace name; "
-                . "%s : To specify the user's uid or email address.",
+                . "%s : To specify the user's user-id or email address.",
                 implode(", ", Csv::WORKSPACE_FIELD),
                 implode(", ", Csv::USER_FIELD)
             ));
@@ -78,7 +78,7 @@ class Import extends Command {
 					"No respect the glossary headers.\n\n"
 					. "Please, you must define these 2 headers :\n"
 					. "     - %s : To specify the workspace name.\n"
-					. "     - %s : To specify the user's uid or email address.",
+					. "     - %s : To specify the user's user-id or email address.",
 					implode(", ", Csv::WORKSPACE_FIELD),
 					implode(", ", Csv::USER_FIELD)
 				)
@@ -111,8 +111,8 @@ class Import extends Command {
 			$this->adminGroup->addUser($user, $groupname);
 		}
 
-        $this->logger->info("The import is done.");
-		$output->writeln("The import is done.");
+        $this->logger->info("Workspaces import done.");
+		$output->writeln("Workspaces import done.");
 
 		return 0;
 	}
@@ -120,7 +120,7 @@ class Import extends Command {
 	protected function configure(): void {
 		$this
 			->setName('workspace:import')
-			->setDescription('This command allows you to import a csv file to create workspaces and define the workspace manager users.')
+			->setDescription('This command allows you to import a csv file to create workspaces and define their managers.')
 			->addArgument('path', InputArgument::REQUIRED, 'The path of the csv file.');
 		parent::configure();
 	}
@@ -137,7 +137,7 @@ class Import extends Command {
 
 		if (!empty($workspacesAreNotExist)) {
 			$workspacesAreNotExist = array_map(fn ($spacename) => "  - $spacename\n", $workspacesAreNotExist);
-			$message .= "Workspace names below already exist :\n" . implode('', $workspacesAreNotExist);
+			$message .= "The Workspace names below already exist:\n" . implode('', $workspacesAreNotExist);
 			$message .= "\n";
 
 			return $message;
@@ -158,7 +158,7 @@ class Import extends Command {
 
 		if (!empty($usersAreNotExist)) {
 			$usersAreNotExist = array_map(fn ($username) => "  - $username\n", $usersAreNotExist);
-			$message .= "Users below aren't known :\n" . implode('', $usersAreNotExist);
+			$message .= "The below users do not exist:\n" . implode('', $usersAreNotExist);
 
 			return $message;
 		}
@@ -178,8 +178,8 @@ class Import extends Command {
 
 		if (!empty($spacenamesWithCharacterSpecials)) {
 			$spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
-			$message .= "The workspace names below contain special characters :\n" . implode('', $spacenamesStringify);
-			$message .= "\nPlease, your Workspace names must not contain the following characters: " . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+			$message .= "The below workspace names contain special characters :\n" . implode('', $spacenamesStringify);
+			$message .= "\nPlease, make sure the Workspace names do not contain one of the following characters: " . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
 			
 			return $message;
 		}
