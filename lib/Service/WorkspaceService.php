@@ -156,9 +156,6 @@ class WorkspaceService {
 		return $data;
 	}
 
-	/**
-	 * @return Space[] - all spaces
-	 */
 	public function getAll(): array {
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
@@ -171,13 +168,9 @@ class WorkspaceService {
 	}
 
 	/**
-	 *
 	 * Adds users information to a workspace
-	 *
-	 * @param string|array The workspace to which we want to add users info
-	 *
 	 */
-	public function addUsersInfo(string|array $workspace): array {
+	public function addUsersInfo(string|array $workspace): \stdClass {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -196,9 +189,8 @@ class WorkspaceService {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
 			};
 		}
-		$workspace['users'] = (object) $users;
 
-		return $workspace;
+        return (object) $users;
 	}
 
 	/**

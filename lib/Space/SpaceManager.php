@@ -29,18 +29,18 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
-use OCP\Files\IRootFolder;
 
 class SpaceManager {
 	public function __construct(
 		private GroupfolderHelper $folderHelper,
-		private IRootFolder $rootFolder,
+		private RootFolder $rootFolder,
 		private WorkspaceCheckService $workspaceCheck,
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
@@ -103,7 +103,7 @@ class SpaceManager {
 
 		$groupfolder = $this->folderHelper->getFolder(
 			$folderId,
-			$this->getRootFolderStorageId()
+			$this->rootFolder->getRootFolderStorageId()
 		);
 
 		return [
@@ -129,9 +129,5 @@ class SpaceManager {
 	 */
 	private function deleteBlankSpaceName(string $spaceName): string {
 		return trim($spaceName);
-	}
-
-	private function getRootFolderStorageId(): ?int {
-		return $this->rootFolder->getMountPoint()->getNumericStorageId();
 	}
 }
