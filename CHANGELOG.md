@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
 - Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
+- fix/delete-a-user-when-adding-him-to-another-group/901 ( [#907](https://github.com/arawa/workspace/pull/907) )
 
 # [3.0.1] - 2023-05-26
 
