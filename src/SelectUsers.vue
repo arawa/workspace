@@ -63,11 +63,12 @@
 					</div>
 					<div class="user-entry-actions">
 						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input type="checkbox"
+							<NcCheckboxRadioSwitch type="checkbox"
 								class="role-toggle"
 								:checked="user.role === 'admin'"
-								@change="toggleUserRole(user)">
-							<label>{{ t('workspace', 'S.A.') }}</label>
+								@update:checked="toggleUserRole(user)">
+								{{ t('workspace', 'S.A.') }}
+							</NcCheckboxRadioSwitch>
 						</div>
 						<NcActions>
 							<NcActionButton icon="icon-delete"
@@ -85,8 +86,9 @@
 				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 			</p>
 		</NcNoteCard>
-		<div class="add-users-wrapper">
-			<button @click="addUsersToWorkspaceOrGroup()">
+		<div class="buttons-groups">
+			<NcButton
+				@click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
 		</div>
@@ -96,8 +98,7 @@
 			</button>
 			<input ref="filesAttachment"
 				type="file"
-				style="display: none;"
-				multiple
+				hidden
 				@change="handleUploadFile">
 			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
 				<span>{{ t('workspace', 'Import csv from Files') }}</span>
@@ -107,17 +108,21 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
-import ManagerGroup from './services/Groups/ManagerGroup.js'
-import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
-import showNotificationError from './services/Notifications/NotificationError.js'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import axios from '@nextcloud/axios'
+import Folder from 'vue-material-design-icons/Folder.vue'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import showNotificationError from './services/Notifications/NotificationError.js'
+import Upload from 'vue-material-design-icons/Upload.vue'
+import UserGroup from './services/Groups/UserGroup.js'
 
 const picker = getFilePickerBuilder(t('deck', 'File to share'))
 	.setMultiSelect(false)
@@ -129,11 +134,15 @@ const picker = getFilePickerBuilder(t('deck', 'File to share'))
 export default {
 	name: 'SelectUsers',
 	components: {
-		NcAvatar,
-		NcActions,
+		Folder,
 		NcActionButton,
 		NcNoteCard,
+		NcActions,
+		NcAvatar,
+		NcButton,
+		NcCheckboxRadioSwitch,
 		NcMultiselect,
+		Upload,
 	},
 	data() {
 		return {
@@ -358,10 +367,7 @@ export default {
 }
 
 .modal-container {
-	display: flex !important;
-	min-height: 520px !important;
-	max-height: 520px !important;
-	width: 640px !important;
+	max-height: 660px !important;
 }
 
 .multiselect__tags {
@@ -386,25 +392,19 @@ export default {
 
 .header-modal {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	width: 100%;
-	justify-content: space-between;
+	margin: 30px 0;
+	margin-left: 60px;
+	align-self: start;
 }
 
 .title-add-users-modal {
-	position: relative;
-	left: 20px;
 	font-weight: bold;
 	font-size: 18px;
 }
 
 .select-users-input {
-	align-self: start;
 	width: 80%;
-	margin-left: auto !important;
-	margin-right: auto !important;
-	margin-top: 14px !important;
+	margin-bottom: 22px !important;
 }
 
 .select-users-list {
@@ -447,6 +447,11 @@ export default {
 .user-name {
 	margin-left: 10px;
 	max-width: 440px;
+}
+
+.buttons-groups {
+	display: flex;
+	margin: 30px 0;
 }
 
 .user-not-member {
