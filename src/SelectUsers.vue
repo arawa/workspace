@@ -89,9 +89,9 @@
 		<div class="buttons-groups">
 			<NcButton
 				@click="addUsersToWorkspaceOrGroup()">
-				{{ t('workspace', 'Add users') }}
+				{{ t('workspace', 'Add') }}
 			</NcButton>
-			<NcActions>
+			<NcActions placement="right">
 				<NcActionButton @click="uploadNewFile()">
 					<template #icon>
 						<Upload :size="20" />
@@ -373,7 +373,8 @@ export default {
 }
 
 .modal-container {
-	max-height: 660px !important;
+	display: flex !important;
+	height: 660px !important;
 }
 
 .multiselect__tags {
@@ -387,17 +388,6 @@ export default {
 	width: 93%;
 	justify-content: space-around;
 }
-<<<<<<< HEAD
-.select-users-actions button {
-	display: flex;
-	flex-direction: column;
-	background-position: 10px center;
-}
-.select-users-actions button, .add-users-wrapper button {
-	width: fit-content;
-}
-=======
->>>>>>> 68f6878 (refactor(vue): Grouped buttons and more spaces)
 
 .header-modal {
 	display: flex;
@@ -413,12 +403,11 @@ export default {
 
 .select-users-input {
 	width: 80%;
-	margin-bottom: 22px !important;
 }
 
 .select-users-list {
 	flex-grow: 1;
-	margin-top: 5px;
+	margin: 25px 0;
 	border-style: solid;
 	border-width: 1px;
 	border-color: transparent;
@@ -437,11 +426,8 @@ export default {
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
-<<<<<<< HEAD
 	margin: 10px;
 	max-width: 600px;
-=======
->>>>>>> 68f6878 (refactor(vue): Grouped buttons and more spaces)
 }
 
 .user-entry {
