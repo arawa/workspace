@@ -367,7 +367,8 @@ export default {
 }
 
 .modal-container {
-	max-height: 660px !important;
+	display: flex !important;
+	height: 660px !important;
 }
 
 .multiselect__tags {
@@ -404,12 +405,11 @@ export default {
 
 .select-users-input {
 	width: 80%;
-	margin-bottom: 22px !important;
 }
 
 .select-users-list {
 	flex-grow: 1;
-	margin-top: 5px;
+	margin: 25px 0;
 	border-style: solid;
 	border-width: 1px;
 	border-color: transparent;
