@@ -30,6 +30,7 @@ use OCA\Workspace\Files\InternalFile;
 use OCA\Workspace\Files\LocalFile;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -39,6 +40,9 @@ use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
 
+/**
+ * @todo rename to import csv users : ImportCsvUsersController
+*/
 class FileCSVController extends Controller {
 	private $currentUser;
 	
@@ -48,6 +52,7 @@ class FileCSVController extends Controller {
 		private IUserManager $userManager,
 		private WorkspaceService $workspaceService,
 		private UserService $userService,
+        private UsersExistCheck $userChecker,
 		// private FileInfo $file,
 		private IUserSession $userSession,
 		private IRootFolder $rootFolder,
@@ -103,6 +108,26 @@ class FileCSVController extends Controller {
 
 		$names = $csv->parser($localFile);
 		
+        $usernames = array_map(fn($user) => $user['name'], $names);
+        if (!$this->userChecker->checkUsersExist($usernames))
+        {
+            $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
+            $usersErrorInTheName = array_filter(
+                $usernames,
+                function ($name) {
+                    return !$this->userChecker->checkUserExist($name);
+                }
+            );
+            $usersErrorInTheName = array_map(
+                fn($name) => "- $name",
+                $usersErrorInTheName
+            );
+            $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
+            $errorMessage .= 'Please, check these users in your csv file :<br>';
+            $errorMessage .= $usersErrorInTheName;
+            return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
+        }
+
 		$existingNames = array_filter($names, function ($user) {
 			return $this->userManager->userExists($user['name']);
 		});
@@ -143,6 +168,26 @@ class FileCSVController extends Controller {
 		}
 
 		$names = $csv->parser($internalFile);
+
+        $usernames = array_map(fn($user) => $user['name'], $names);
+        if (!$this->userChecker->checkUsersExist($usernames))
+        {
+            $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
+            $usersErrorInTheName = array_filter(
+                $usernames,
+                function ($name) {
+                    return !$this->userChecker->checkUserExist($name);
+                }
+            );
+            $usersErrorInTheName = array_map(
+                fn($name) => "- $name",
+                $usersErrorInTheName
+            );
+            $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
+            $errorMessage .= 'Please, check these users in your csv file :<br>';
+            $errorMessage .= $usersErrorInTheName;
+            return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
+        }
 
 		// filter array to leave only existing users
 		$existingNames = array_filter($names, function ($user) {
