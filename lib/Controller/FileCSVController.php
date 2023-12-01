@@ -28,7 +28,6 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Files\Csv;
 use OCA\Workspace\Files\InternalFile;
 use OCA\Workspace\Files\LocalFile;
-use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
@@ -39,6 +38,7 @@ use OCP\Files\Node;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCA\Workspace\Users\UserFormatter;
 
 /**
  * @todo rename to import csv users : ImportCsvUsersController
@@ -51,7 +51,7 @@ class FileCSVController extends Controller {
 		IRequest $request,
 		private IUserManager $userManager,
 		private WorkspaceService $workspaceService,
-		private UserService $userService,
+        private UserFormatter $userFormatter,
         private UsersExistCheck $userChecker,
 		// private FileInfo $file,
 		private IUserSession $userSession,
@@ -128,14 +128,15 @@ class FileCSVController extends Controller {
             return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
 
-		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);
-		});
-		
-		// get list of IUser objects
-		$users = $this->formatUsers($existingNames);
+        $names = array_map(function($user) {
+            $user['user'] = $this->userManager->get($user['name']);
+            return $user;
+        }, $names);
 
-		$data = $this->formatData($users, $space);
+        $data = array_map(
+            fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+            $names
+        );
 
 		return new JSONResponse($data);
 	}
@@ -189,37 +190,17 @@ class FileCSVController extends Controller {
             return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
 
-		// filter array to leave only existing users
-		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);
-		});
+        $names = array_map(function($user) {
+            $user['user'] = $this->userManager->get($user['name']);
+            return $user;
+        }, $names);
 
-		$users = $this->formatUsers($existingNames);
-
-		$data = $this->formatData($users, $space);
+        $data = array_map(
+            fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+            $names
+        );
 
 		return new JSONResponse($data);
-	}
-
-	private function formatData(array $users, array $space): array {
-		$data = [];
-		foreach ($users as $user) {
-			$role = $user['role'] == "admin" ? "admin" : "user";
-			$data[] = $this->userService->formatUser($user['user'], $space, $role);
-		}
-
-		return $data;
-	}
-
-	private function formatUsers(array $data): array {
-		$users = [];
-		foreach($data as $user) {
-			$users[] = [
-				'user' => $this->userManager->get($user['name']),
-				'role' => $user['role']
-			];
-		}
-		return $users;
 	}
 
 	private function isCSVMimeType(Node|array $file): bool {
