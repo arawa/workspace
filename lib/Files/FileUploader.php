@@ -2,7 +2,7 @@
 
 namespace OCA\Workspace\Files;
 
-class LocalFile implements ManagerConnectionFileInterface {
+class FileUploader implements ManagerConnectionFileInterface {
 	private $resource;
 
 	public function __construct(private string $path) {
@@ -10,9 +10,15 @@ class LocalFile implements ManagerConnectionFileInterface {
 
 	/**
 	 * @return resource|false
+     * @throws \Exception
 	 */
 	public function open(?string $path = null) {
 		$this->resource = fopen($this->path, "r");
+
+        if (!$this->resource) {
+            throw new \Exception('Something went wrong. Couldn\'t open a file.');
+        }
+
 		return $this->resource;
 	}
 

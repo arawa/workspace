@@ -25,23 +25,26 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Files\Csv;
-use OCA\Workspace\Files\InternalFile;
-use OCA\Workspace\Files\LocalFile;
-use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Users\UsersExistCheck;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\Files\IRootFolder;
-use OCP\Files\Node;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\AppFramework\Http;
+use OCP\Files\IRootFolder;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Files\FileUploader;
+use OCA\Workspace\Files\NextcloudFile;
 use OCA\Workspace\Users\UserFormatter;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Users\UsersExistCheck;
+use OCA\Workspace\Files\Csv\CheckMimeType;
+use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Files\Csv\ImportUsers\Header;
+use OCA\Workspace\Files\Csv\ImportUsers\Parser;
+use OCA\Workspace\Files\Csv\ImportUsers\HeaderValidator;
+use OCA\Workspace\Files\Csv\SeparatorDetector;
 
 /**
- * @todo rename to import csv users : ImportCsvUsersController
+ * @todo rename to import csv users : ImportCsvUsersUploaderController
 */
 class FileCSVController extends Controller {
 	private $currentUser;
@@ -53,7 +56,9 @@ class FileCSVController extends Controller {
 		private WorkspaceService $workspaceService,
         private UserFormatter $userFormatter,
         private UsersExistCheck $userChecker,
-		// private FileInfo $file,
+        private CheckMimeType $csvCheckMimeType,
+        private HeaderValidator $headerValidator,
+        private Parser $csvParser,
 		private IUserSession $userSession,
 		private IRootFolder $rootFolder,
 	) {
@@ -73,7 +78,7 @@ class FileCSVController extends Controller {
 		$space = json_decode($spaceObj, true);
 		$file = $this->request->getUploadedFile('file');
 
-		if ($this->isCSVMimeType($file)) {
+		if ($this->csvCheckMimeType->checkOnArray($file)) {
 			return new JSONResponse(
 				[
 					'Wrong file extension. Must be <b>.csv</b>.'
@@ -82,31 +87,31 @@ class FileCSVController extends Controller {
 			);
 		}
 
-		$csv = new Csv();
+		$fileUploader = new FileUploader($file['tmp_name']);
 
-		$localFile = new LocalFile($file['tmp_name']);
+        if (!SeparatorDetector::isComma($fileUploader)) {
+            return new JSONResponse(
+                [
+                    'Your csv file should be a comma (",") as separator',
+                ],
+                Http::STATUS_FORBIDDEN
+			);
+        }
 
-		if (!$csv->hasProperHeader($localFile)) {
+		if (!$this->headerValidator->validate($fileUploader)) {
 			return new JSONResponse(
 				[
 					'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
 					[
-						...$csv::DISPLAY_NAME,
-						...$csv::ROLE
+						...Header::DISPLAY_NAME,
+						...Header::ROLE
 					]
-				],
-				Http::STATUS_FORBIDDEN
-			);
-		} else {
-			new JSONResponse(
-				[
-					'Something went wrong. Couldn\'t open a file.'
 				],
 				Http::STATUS_FORBIDDEN
 			);
 		}
 
-		$names = $csv->parser($localFile);
+		$names = $this->csvParser->parser($fileUploader);
 		
         $usernames = array_map(fn($user) => $user['name'], $names);
         if (!$this->userChecker->checkUsersExist($usernames))
@@ -156,19 +161,28 @@ class FileCSVController extends Controller {
 		$folder = $this->rootFolder->getUserFolder($uid);
 		$file = $folder->get($path);
 
-		if ($this->isCSVMimeType($file)) {
+		if ($this->csvCheckMimeType->checkOnNode($file)) {
 			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
 		}
 
 		$fullPath = $file->getInternalPath();
-		$csv = new Csv();
-		$internalFile = new InternalFile($fullPath, $file->getStorage());
 
-		if (!$csv->hasProperHeader($internalFile)) {
-			return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
+        $nextcloudFile = new NextcloudFile($fullPath, $file->getStorage());
+
+        if (!SeparatorDetector::isComma($nextcloudFile)) {
+            return new JSONResponse(
+                [
+                    'Your csv file should be a comma (",") as separator',
+                ],
+                Http::STATUS_FORBIDDEN
+			);
+        }
+
+		if (!$this->headerValidator->validate($nextcloudFile)) {
+			return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...Header::DISPLAY_NAME, ...Header::ROLE]], Http::STATUS_FORBIDDEN);
 		}
 
-		$names = $csv->parser($internalFile);
+		$names = $this->csvParser->parser($nextcloudFile);
 
         $usernames = array_map(fn($user) => $user['name'], $names);
         if (!$this->userChecker->checkUsersExist($usernames))
@@ -201,13 +215,5 @@ class FileCSVController extends Controller {
         );
 
 		return new JSONResponse($data);
-	}
-
-	private function isCSVMimeType(Node|array $file): bool {
-		if($file instanceof Node) {
-			return $file->getMimetype() !== 'text/csv';
-		}
-
-		return $file['type'] !== 'text/csv';
 	}
 }
