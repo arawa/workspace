@@ -4,6 +4,7 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 use OCA\Workspace\Files\BasicStreamInterface;
 use OCA\Workspace\Files\Csv\CsvParserInterface;
 use OCA\Workspace\Files\Csv\CsvReader;
@@ -66,10 +67,16 @@ class Parser implements CsvParserInterface {
 >>>>>>> b5211d5 (refactor(php): Improvement in reading speed)
 =======
 use OCA\Workspace\Users\Formatter\UserImportedFormatter;
+=======
+use OCA\Workspace\Files\Csv\CsvParserInterface;
+use OCA\Workspace\Files\Csv\ImportUsers\Header;
+use OCA\Workspace\Files\ManagerConnectionFileInterface;
+>>>>>>> 4e419d2 (refactor(php): Split the import users code)
 
 class Parser implements CsvParserInterface
 {
 
+<<<<<<< HEAD
     /**
      * @return UserImportedFormatter[]
      */
@@ -95,4 +102,27 @@ class Parser implements CsvParserInterface
             )
         )[0];
     }
+=======
+    public function parser(ManagerConnectionFileInterface $file): array {
+		$handle = $file->open();
+		
+		if ($handle === false) {
+			throw new \Exception("Imposible to open the $file->getPath() file.");
+		}
+
+		$users = [];
+		$tableHeader = fgetcsv($handle, 1000, ","); // ignore the first line
+		$tableHeader = array_map('strtolower', $tableHeader);
+
+		$nameIndex = HeaderExtractor::getIndex(Header::DISPLAY_NAME, $tableHeader);
+		$roleIndex = HeaderExtractor::getIndex(Header::ROLE, $tableHeader);
+
+		while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+			$users[] = ['name' => $data[$nameIndex], 'role' => $data[$roleIndex]];
+		}
+		$file->close();
+
+		return $users;
+	}
+>>>>>>> 4e419d2 (refactor(php): Split the import users code)
 }

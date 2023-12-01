@@ -4,8 +4,14 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 use OCA\Workspace\Files\Csv\CsvHeaderExtractorInterface;
 
+<<<<<<< HEAD
 class HeaderExtractor implements CsvHeaderExtractorInterface {
 	public static function getIndex(array $haystack, array $needles): int|bool {
+=======
+class HeaderExtractor implements CsvHeaderExtractorInterface
+{
+    public static function getIndex(array $haystack, array $needles): int|bool {
+>>>>>>> 4e419d2 (refactor(php): Split the import users code)
 		$index = null;
 		foreach($haystack as $key => $value) {
 			$index = array_search($value, $needles);
@@ -15,6 +21,7 @@ class HeaderExtractor implements CsvHeaderExtractorInterface {
 		}
 		return false;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * @throws \Exception when nothing header is found.
@@ -33,4 +40,6 @@ class HeaderExtractor implements CsvHeaderExtractorInterface {
 
 		return $key;
 	}
+=======
+>>>>>>> 4e419d2 (refactor(php): Split the import users code)
 }
