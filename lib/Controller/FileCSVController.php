@@ -111,9 +111,9 @@ class FileCSVController extends Controller {
 			);
 		}
 
-		$names = $this->csvParser->parser($fileUploader);
+		$usersFormatted = $this->csvParser->parser($fileUploader);
 		
-        $usernames = array_map(fn($user) => $user['name'], $names);
+        $usernames = array_map(fn($user) => $user->uid, $usersFormatted);
         if (!$this->userChecker->checkUsersExist($usernames))
         {
             $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
@@ -133,14 +133,17 @@ class FileCSVController extends Controller {
             return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
 
-        $names = array_map(function($user) {
-            $user['user'] = $this->userManager->get($user['name']);
-            return $user;
-        }, $names);
+        $data = [];
+        foreach($usersFormatted as $user) {
+            $data[] = [
+                'user' => $this->userManager->get($user->uid),
+                'role' => $user->role
+            ];
+        }
 
         $data = array_map(
             fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-            $names
+            $data
         );
 
 		return new JSONResponse($data);
@@ -184,7 +187,7 @@ class FileCSVController extends Controller {
 
 		$names = $this->csvParser->parser($nextcloudFile);
 
-        $usernames = array_map(fn($user) => $user['name'], $names);
+        $usernames = array_map(fn($user) => $user->uid, $names);
         if (!$this->userChecker->checkUsersExist($usernames))
         {
             $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
@@ -204,14 +207,17 @@ class FileCSVController extends Controller {
             return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
 
-        $names = array_map(function($user) {
-            $user['user'] = $this->userManager->get($user['name']);
-            return $user;
-        }, $names);
+        $data = [];
+        foreach($names as $user) {
+            $data[] = [
+                'user' => $this->userManager->get($user->uid),
+                'role' => $user->role
+            ];
+        }
 
         $data = array_map(
             fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-            $names
+            $data
         );
 
 		return new JSONResponse($data);
