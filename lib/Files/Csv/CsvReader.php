@@ -10,7 +10,7 @@ use OCA\Workspace\Files\ManagerConnectionFileInterface;
  */
 class CsvReader
 {
-    public array $headers;
+    public readonly array $headers;
 
     public function __construct(private ManagerConnectionFileInterface $file)
     {
