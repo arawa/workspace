@@ -2,6 +2,7 @@
 
 namespace OCA\Workspace\Files\Csv;
 
+use OCA\Workspace\Files\Csv\Separator;
 use OCA\Workspace\Files\ManagerConnectionFileInterface;
 
 class SeparatorDetector
@@ -16,6 +17,6 @@ class SeparatorDetector
 
         $file->close();
 
-        return strpos($firstLine, ',') !== false;
+        return strpos($firstLine, Separator::COMMA) !== false;
     }
 }

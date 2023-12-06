@@ -2,36 +2,35 @@
 
 namespace OCA\Workspace\Files\Csv;
 
-use Exception;
+use OCA\Workspace\Files\Csv\Separator;
 use OCA\Workspace\Files\ManagerConnectionFileInterface;
 
 /**
- * To use this class, you have to call this class as a function in a loop.
- * @example "foreach((new CsvReader)($file) as $data)" use from a loop.
+ * Use CscReader to read without consuming too much memory.
  */
 class CsvReader
 {
-    public function __invoke(ManagerConnectionFileInterface $file): \Generator {
-        $row = 0;
-        $header = [];
+    public array $headers;
+
+    public function __construct(private ManagerConnectionFileInterface $file)
+    {
         $handle = $file->open();
+        $this->headers = fgetcsv($handle, 1000, Separator::COMMA);
+        $file->close();
+    }
+
+    public function read(): \Generator {
+        $handle = $this->file->open();
+        fgetcsv($handle, 1000, Separator::COMMA);
 
         try {
-            while(($data = fgetcsv($handle, 1000, ',')) !== false) {
-                if ($row === 0) {
-                    $header = $data;
-                    $row++;
-                    continue;
-                }
-
-                yield array_combine($header, $data);
-
-                $row++;
+            while(($data = fgetcsv($handle, 1000, Separator::COMMA)) !== false) {
+                yield array_combine($this->headers, $data);
             }
         } catch (\Exception $reason){
-            throw new Exception($reason->getMessage());
+            throw new \Exception($reason->getMessage());
         } finally {
-            $file->close();
+            $this->file->close();
         }
     }
 }
