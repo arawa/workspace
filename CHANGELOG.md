@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Backport/fix delete a user when adding him to another group/907 ( [#908](https://github.com/arawa/workspace/pull/908) )
+
 ## [3.0.3] - 2023-07-20
 
 - Compatible with Nextcloud 27 ( [#884](https://github.com/arawa/workspace/pull/884) )

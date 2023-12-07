@@ -141,15 +141,6 @@ export default {
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
 				if (this.$route.params.group !== undefined) {
-					if (this.$store.getters.isMember(this.$route.params.space, user)) {
-						if (user.role === 'user') {
-							this.$store.dispatch('removeUserFromGroup', {
-								name: this.$route.params.space,
-								gid: ManagerGroup.getGid(space),
-								user,
-							})
-						}
-					}
 					// Adding a user to a workspace 'subgroup
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
