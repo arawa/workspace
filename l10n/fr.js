@@ -82,7 +82,7 @@ OC.L10N.register(
 		'Wrong file extension. Must be <b>.csv</b>.': 'Mauvais format de fichier. Doit être <b>.csv</b>.',
 		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Format de fichier est invalide. L\'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}',
 		'Something went wrong. Couldn\'t open a file.': 'Quelque chose s\'est mal passé. Impossible d\'ouvrir un fichier.',
-		'Add users from csv file': 'Ajouter à partir du fichier csv',
-		'Import csv from Files': 'Importer csv à partir de Files'
+		'Upload new files': 'Téléverser de nouveaux fichiers',
+		'Choose from Files': 'Choisir depuis Fichiers'
 	},
 "nplurals=2; plural=(n > 1)");
