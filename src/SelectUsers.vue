@@ -300,15 +300,24 @@ export default {
 						formData: bodyFormData,
 					})
 					let usersToDisplay = this.filterAlreadyPresentUsers(users)
+					console.debug('usersToDisplay', usersToDisplay)
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
 					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
+					console.debug('users', users)
+					console.debug('usersToDisplay with add subtitle', usersToDisplay)
 				} catch (err) {
 					if (err.response.data.length === 1) {
-						const text = t('workspace', err.response.data[0])
-						showNotificationError('Error', text, 3000)
+						const text = err.response.data[0]
+						// const text = t('workspace', err.response.data[0])
+						console.debug(err.response.data[0])
+						showNotificationError('Error', text)
 					} else {
 						const values = err.response.data[1].join()
-						const text = t('workspace', `${err.response.data[0]} {values}`, { values })
+						console.debug(values)
+						console.debug(err.response.data[0])
+						console.debug(`${err.response.data[0]} {values}`)
+						const text = `${err.response.data[0]} {values}`
+						// const text = t('workspace', `${err.response.data[0]} {values}`, { values })
 						showNotificationError('Error', text, 5000)
 					}
 				}
