@@ -25,7 +25,10 @@
 
     <summary>Create Groupfolders with delegated management</summary>
 
-    <description><![CDATA[Workspace allows managers to :
+    <description><![CDATA[
+# Description
+
+Workspace allows managers to :
 - Create shared workspaces
 - Delegate management of each workspace to users (workspace managers) in order for them to:
     - choose members
@@ -34,6 +37,8 @@
 - All through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
 It is necessary to install the Group Folders app for the Workspace app to work.
+
+# App configuration
 
 Before using Workspace, you must configure the app, following these important steps:
 
@@ -50,6 +55,16 @@ Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the sta
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
 For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation).
+
+# Upgrade guideline
+
+This section is very important to resolve rare bugs.
+We try hard to do resolve major bugs and to have a better user experience.
+
+## v3.0.4
+
+For this version, you should refresh your browser from the Workspace app with `Ctrl, Shift + R`.
+
     ]]></description>
 
     <documentation>
