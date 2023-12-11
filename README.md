@@ -133,3 +133,12 @@ sudo -u nginx /usr/local/bin/composer run test
 Please, read the [security.txt](.well-known/security.txt).
 
 If you want to report us a security issue. Please, read our [security-policy.md](.well-known/security-policy.md) file.
+
+## Upgrade guideline
+
+This section is very important to resolve rare bugs.
+We try hard to do resolve major bugs and to have a better user experience.
+
+### v3.0.4
+
+For this version, you should refresh your browser from the Workspace app with `Ctrl, Shift + R`.
