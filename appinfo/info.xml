@@ -25,7 +25,10 @@
 
     <summary>Create Groupfolders with delegated management</summary>
 
-    <description><![CDATA[Workspace allows managers to :
+    <description><![CDATA[
+# Description
+
+Workspace allows managers to :
 - Create shared workspaces
 - Delegate management of each workspace to users (workspace managers) in order for them to:
     - choose members
@@ -34,6 +37,8 @@
 - All through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
 It is necessary to install the Group Folders app for the Workspace app to work.
+
+# App configuration
 
 Before using Workspace, you must configure the app, following these important steps:
 
