@@ -300,26 +300,21 @@ export default {
 						formData: bodyFormData,
 					})
 					let usersToDisplay = this.filterAlreadyPresentUsers(users)
-					console.debug('usersToDisplay', usersToDisplay)
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
 					this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
-					console.debug('users', users)
-					console.debug('usersToDisplay with add subtitle', usersToDisplay)
 				} catch (err) {
-					if (err.response.data.length === 1) {
-						const text = err.response.data[0]
-						// const text = t('workspace', err.response.data[0])
-						console.debug(err.response.data[0])
-						showNotificationError('Error', text)
-					} else {
-						const values = err.response.data[1].join()
-						console.debug(values)
-						console.debug(err.response.data[0])
-						console.debug(`${err.response.data[0]} {values}`)
-						const text = `${err.response.data[0]} {values}`
-						// const text = t('workspace', `${err.response.data[0]} {values}`, { values })
-						showNotificationError('Error', text, 5000)
+					let duration = 5000
+
+					// change the duration of the notification
+					// related to the number of the word.
+					if (err.response.data.data.message.split(' ').length >= 30) {
+						duration = 8000
 					}
+
+					const title = err.response.data.data.title
+					const text = err.response.data.data.message
+					showNotificationError(title, text, duration)
+					console.error(err.response.data.exception)
 				}
 				this.isLookingUpUsers = false
 				event.target.value = ''
@@ -343,14 +338,18 @@ export default {
 						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
 						this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 					} catch (err) {
-						if (err.response.data.length === 1) {
-							const text = t('workspace', err.response.data[0])
-							showNotificationError('Error', text, 3000)
-						} else {
-							const values = err.response.data[1].join()
-							const text = t('workspace', `${err.response.data[0]} {values}`, { values })
-							showNotificationError('Error', text, 5000)
+						let duration = 5000
+
+						// change the duration of the notification
+						// related to the number of the word.
+						if (err.response.data.data.message.split(' ').length >= 30) {
+							duration = 8000
 						}
+
+						const title = err.response.data.data.title
+						const text = err.response.data.data.message
+						showNotificationError(title, text, duration)
+						console.error(err.response.data.exception)
 					}
 				})
 		},

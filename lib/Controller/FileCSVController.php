@@ -36,12 +36,20 @@ use OCA\Workspace\Files\NextcloudFile;
 use OCA\Workspace\Users\UserFormatter;
 use OCP\AppFramework\Http\JSONResponse;
 use OCA\Workspace\Users\UsersExistCheck;
+use OCA\Workspace\Exceptions\Notifications\BadMimeType;
 use OCA\Workspace\Files\Csv\CheckMimeType;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Files\Csv\SeparatorDetector;
+use OCA\Workspace\Notifications\ToastMessager;
 use OCA\Workspace\Files\Csv\ImportUsers\Header;
 use OCA\Workspace\Files\Csv\ImportUsers\Parser;
+use OCA\Workspace\Response\ErrorResponseFormatter;
 use OCA\Workspace\Files\Csv\ImportUsers\HeaderValidator;
-use OCA\Workspace\Files\Csv\SeparatorDetector;
+use OCA\Workspace\Exceptions\Notifications\AbstractNotificationException;
+use OCA\Workspace\Exceptions\Notifications\InvalidCsvFormatException;
+use OCA\Workspace\Exceptions\Notifications\InvalidSeparatorCsvException;
+use OCA\Workspace\Exceptions\Notifications\UserDoesntExistException;
+use OCP\IL10N;
 
 /**
  * @todo rename to import csv users : ImportCsvUsersUploaderController
@@ -60,6 +68,7 @@ class FileCSVController extends Controller {
         private HeaderValidator $headerValidator,
         private Parser $csvParser,
 		private IUserSession $userSession,
+        private IL10N $translate,
 		private IRootFolder $rootFolder,
 	) {
 		parent::__construct($appName, $request);
@@ -73,80 +82,117 @@ class FileCSVController extends Controller {
 	 *
 	 */
 	public function import(): JSONResponse {
-		$params = $this->request->getParams();
-		$spaceObj = $params['space'];
-		$space = json_decode($spaceObj, true);
-		$file = $this->request->getUploadedFile('file');
+        try {
+            $params = $this->request->getParams();
+            $spaceObj = $params['space'];
+            $space = json_decode($spaceObj, true);
+            $file = $this->request->getUploadedFile('file');
+    
+            if ($this->csvCheckMimeType->checkOnArray($file)) {
+                throw new BadMimeType(
+                    $this->translate->t('Error in the mimetype'),
+                    $this->translate->t('Wrong file extension. Must be <b>.csv</b>.'),
+                );
+            }
+    
+            $fileUploader = new FileUploader($file['tmp_name']);
+    
+            if (!SeparatorDetector::isComma($fileUploader)) {
+                throw new InvalidSeparatorCsvException(
+                    $this->translate->t('Invalid separator for the csv file'),
+                    $this->translate->t('Your csv file should be a comma (",") as separator'),
+                );
+            }
+    
+            if (!$this->headerValidator->validate($fileUploader)) {
 
-		if ($this->csvCheckMimeType->checkOnArray($file)) {
-			return new JSONResponse(
-				[
-					'Wrong file extension. Must be <b>.csv</b>.'
-				],
-				Http::STATUS_FORBIDDEN
-			);
-		}
+                $displaynamesBold = array_map(fn($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
+                $rolesBold = array_map(fn($role) => "<b>$role</b>", Header::ROLE);
+    
+                $separatorOr = $this->translate->t('or');
+                $displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
+                $rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
+    
+                $message = "Invalid file format. "
+                . "Table header doesn't contain any good values.<br>"
+                . "You have to get 2 columns to specify:<br><br>"
+                ."- The user name or uid : %s<br>"
+                . "- The user role : %s";
+    
+                $errorMessage = $this->translate->t(
+                    $message,
+                    [
+                        $displaynamesBoldStringify,
+                        $rolesBoldStringify
+                    ]
+                );
 
-		$fileUploader = new FileUploader($file['tmp_name']);
+                throw new InvalidCsvFormatException(
+                    $this->translate->t('Error in the csv format'),
+                    $this->translate->t($errorMessage),
+                );
+            }
+    
+            $usersFormatted = $this->csvParser->parser($fileUploader);
+            
+            $usernames = array_map(fn($user) => $user->uid, $usersFormatted);
+            if (!$this->userChecker->checkUsersExist($usernames))
+            {
+                $usersErrorInTheName = array_filter(
+                    $usernames,
+                    function ($name) {
+                        return !$this->userChecker->checkUserExist($name);
+                    }
+                );
 
-        if (!SeparatorDetector::isComma($fileUploader)) {
+                $usersErrorInTheName = array_slice($usersErrorInTheName, 0, 10);
+                $usersErrorInTheName[] = '...';
+
+                $usersErrorInTheName = array_map(
+                    fn($name) => "- $name",
+                    $usersErrorInTheName
+                );
+                $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
+                $errorMessage = $this->translate->t('Users doesn\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+                $errorMessage .= $usersErrorInTheName;
+                throw new UserDoesntExistException(
+                    $this->translate->t('User doesn\'t exist'),
+                    $errorMessage,
+                    Http::STATUS_FORBIDDEN
+                );
+            }
+    
+            $data = [];
+            foreach($usersFormatted as $user) {
+                $data[] = [
+                    'user' => $this->userManager->get($user->uid),
+                    'role' => $user->role
+                ];
+            }
+    
+            $data = array_map(
+                fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+                $data
+            );
+    
+            return new JSONResponse($data);
+        } catch(AbstractNotificationException $exception) {
             return new JSONResponse(
-                [
-                    'Your csv file should be a comma (",") as separator',
-                ],
-                Http::STATUS_FORBIDDEN
-			);
-        }
-
-		if (!$this->headerValidator->validate($fileUploader)) {
-			return new JSONResponse(
-				[
-					'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
-					[
-						...Header::DISPLAY_NAME,
-						...Header::ROLE
-					]
-				],
-				Http::STATUS_FORBIDDEN
-			);
-		}
-
-		$usersFormatted = $this->csvParser->parser($fileUploader);
-		
-        $usernames = array_map(fn($user) => $user->uid, $usersFormatted);
-        if (!$this->userChecker->checkUsersExist($usernames))
-        {
-            $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
-            $usersErrorInTheName = array_filter(
-                $usernames,
-                function ($name) {
-                    return !$this->userChecker->checkUserExist($name);
-                }
+                ErrorResponseFormatter::format(
+                    new ToastMessager($exception->getTitle(), $exception->getMessage()),
+                    $exception
+                ),
+                $exception->getCode()
             );
-            $usersErrorInTheName = array_map(
-                fn($name) => "- $name",
-                $usersErrorInTheName
+        } catch(\Exception $exception) {
+            return new JSONResponse(
+                ErrorResponseFormatter::format(
+                    new ToastMessager($this->translate->t('Error unknown'), $exception->getMessage()),
+                    $exception
+                ),
+                $exception->getCode()
             );
-            $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
-            $errorMessage .= 'Please, check these users in your csv file :<br>';
-            $errorMessage .= $usersErrorInTheName;
-            return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
-
-        $data = [];
-        foreach($usersFormatted as $user) {
-            $data[] = [
-                'user' => $this->userManager->get($user->uid),
-                'role' => $user->role
-            ];
-        }
-
-        $data = array_map(
-            fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-            $data
-        );
-
-		return new JSONResponse($data);
 	}
 
 	/**
@@ -156,70 +202,120 @@ class FileCSVController extends Controller {
 	 *
 	 */
 	public function getFromFiles():JSONResponse {
-		$params = $this->request->getParams();
-		$path = $params['path'];
-		$spaceObj = $params['space'];
-		$space = json_decode($spaceObj, true);
-		$uid = $this->currentUser->getUID();
-		$folder = $this->rootFolder->getUserFolder($uid);
-		$file = $folder->get($path);
+        try {
+            $params = $this->request->getParams();
+            $path = $params['path'];
+            $spaceObj = $params['space'];
+            $space = json_decode($spaceObj, true);
+            $uid = $this->currentUser->getUID();
+            $folder = $this->rootFolder->getUserFolder($uid);
+            $file = $folder->get($path);
+    
+            if ($this->csvCheckMimeType->checkOnNode($file)) {
+                throw new BadMimeType(
+                    $this->translate->t('Error in the mimetype'),
+                    $this->translate->t('Wrong file extension. Must be <b>.csv</b>.'),
+                );
+            }
+    
+            $fullPath = $file->getInternalPath();
+    
+            $nextcloudFile = new NextcloudFile($fullPath, $file->getStorage());
+    
+            if (!SeparatorDetector::isComma($nextcloudFile)) {
+                throw new InvalidSeparatorCsvException(
+                    $this->translate->t('Invalid separator for the csv file'),
+                    $this->translate->t('Your csv file should be a comma (",") as separator'),
+                );
+            }
+    
+            if (!$this->headerValidator->validate($nextcloudFile)) {
+                $displaynamesBold = array_map(fn($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
+                $rolesBold = array_map(fn($role) => "<b>$role</b>", Header::ROLE);
+    
+                $separatorOr = $this->translate->t('or');
+                $displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
+                $rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
+    
+                $message = "Invalid file format. "
+                . "Table header doesn't contain any good values.<br>"
+                . "You have to get 2 columns to specify:<br><br>"
+                ."- The user name or uid : %s<br>"
+                . "- The user role : %s";
+    
+                $errorMessage = $this->translate->t(
+                    $message,
+                    [
+                        $displaynamesBoldStringify,
+                        $rolesBoldStringify
+                    ]
+                );
 
-		if ($this->csvCheckMimeType->checkOnNode($file)) {
-			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
-		}
+                throw new InvalidCsvFormatException(
+                    $this->translate->t('Error in the csv format'),
+                    $this->translate->t($errorMessage),
+                );
+            }
+    
+            $names = $this->csvParser->parser($nextcloudFile);
+    
+            $usernames = array_map(fn($user) => $user->uid, $names);
+            if (!$this->userChecker->checkUsersExist($usernames))
+            {
+                $usersErrorInTheName = array_filter(
+                    $usernames,
+                    function ($name) {
+                        return !$this->userChecker->checkUserExist($name);
+                    }
+                );
+                $usersErrorInTheName = array_map(
+                    fn($name) => "- $name",
+                    $usersErrorInTheName
+                );
 
-		$fullPath = $file->getInternalPath();
+                $usersErrorInTheName = array_slice($usersErrorInTheName, 0, 10);
+                $usersErrorInTheName[] = '...';
 
-        $nextcloudFile = new NextcloudFile($fullPath, $file->getStorage());
-
-        if (!SeparatorDetector::isComma($nextcloudFile)) {
+                $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
+                $errorMessage = $this->translate->t('Users doesn\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+                $errorMessage .= $usersErrorInTheName;
+                throw new UserDoesntExistException(
+                    $this->translate->t('User doesn\'t exist'),
+                    $errorMessage,
+                    Http::STATUS_FORBIDDEN
+                );
+            }
+    
+            $data = [];
+            foreach($names as $user) {
+                $data[] = [
+                    'user' => $this->userManager->get($user->uid),
+                    'role' => $user->role
+                ];
+            }
+    
+            $data = array_map(
+                fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+                $data
+            );
+    
+            return new JSONResponse($data);
+        } catch(AbstractNotificationException $exception) {
             return new JSONResponse(
-                [
-                    'Your csv file should be a comma (",") as separator',
-                ],
-                Http::STATUS_FORBIDDEN
-			);
-        }
-
-		if (!$this->headerValidator->validate($nextcloudFile)) {
-			return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...Header::DISPLAY_NAME, ...Header::ROLE]], Http::STATUS_FORBIDDEN);
-		}
-
-		$names = $this->csvParser->parser($nextcloudFile);
-
-        $usernames = array_map(fn($user) => $user->uid, $names);
-        if (!$this->userChecker->checkUsersExist($usernames))
-        {
-            $errorMessage = 'Users doesn\'t exist in your csv file.<br>';
-            $usersErrorInTheName = array_filter(
-                $usernames,
-                function ($name) {
-                    return !$this->userChecker->checkUserExist($name);
-                }
+                ErrorResponseFormatter::format(
+                    new ToastMessager($exception->getTitle(), $exception->getMessage()),
+                    $exception
+                ),
+                $exception->getCode()
             );
-            $usersErrorInTheName = array_map(
-                fn($name) => "- $name",
-                $usersErrorInTheName
+        } catch(\Exception $exception) {
+            return new JSONResponse(
+                ErrorResponseFormatter::format(
+                    new ToastMessager($this->translate->t('Error unknown'), $exception->getMessage()),
+                    $exception
+                ),
+                $exception->getCode()
             );
-            $usersErrorInTheName = implode("<br>", $usersErrorInTheName);
-            $errorMessage .= 'Please, check these users in your csv file :<br>';
-            $errorMessage .= $usersErrorInTheName;
-            return new JSONResponse([$errorMessage], Http::STATUS_FORBIDDEN);
         }
-
-        $data = [];
-        foreach($names as $user) {
-            $data[] = [
-                'user' => $this->userManager->get($user->uid),
-                'role' => $user->role
-            ];
-        }
-
-        $data = array_map(
-            fn($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-            $data
-        );
-
-		return new JSONResponse($data);
 	}
 }
