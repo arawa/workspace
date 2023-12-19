@@ -376,7 +376,8 @@ export default {
 
 .modal-container {
 	display: flex !important;
-	height: 660px !important;
+	min-height: 660px !important;
+	max-height: 660px !important;
 }
 
 .multiselect__tags {
