@@ -10,7 +10,11 @@ use OCA\Workspace\Files\BasicStreamInterface;
 >>>>>>> f819151 (refactor(Files): Rename an interface and create a new)
 
 class HeaderValidator implements CsvValidatorInterface {
+<<<<<<< HEAD
 	public function validate(BasicStreamInterface $file): bool {
+=======
+	public function validate(ManagerConnectionFileInterface $file): bool {
+>>>>>>> 5d45ff9 (style(php): run composer cs:fix)
 		$res = false;
 		if (($handle = $file->open()) !== false) {
 			$tableHeader = fgetcsv($handle, 1000, ",");

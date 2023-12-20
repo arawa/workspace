@@ -10,6 +10,7 @@ class FileUploader implements FileInterface {
 
 	/**
 	 * @return resource|false
+	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
 		$this->resource = fopen($this->path, "r");
