@@ -28,7 +28,7 @@ namespace OCA\Workspace\Files;
 use Exception;
 
 /**
- * @deprecated 
+ * @deprecated
  * @uses OCA\Workspace\Files\Csv\ImportUsers\{Header,HeaderExtractor,HeaderValidator,Parser}
  * @uses OCA\Workspace\Files\Csv\{CheckMimeType,SeparatorDetector}
  */

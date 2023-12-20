@@ -5,8 +5,7 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 use OCA\Workspace\Files\Csv\CsvValidatorInterface;
 use OCA\Workspace\Files\ManagerConnectionFileInterface;
 
-class HeaderValidator implements CsvValidatorInterface
-{   
+class HeaderValidator implements CsvValidatorInterface {
 	public function validate(ManagerConnectionFileInterface $file): bool {
 		$res = false;
 		if (($handle = $file->open()) !== false) {
