@@ -4,6 +4,7 @@ import 'regenerator-runtime/runtime.js'
 /* eslint-disable-next-line */
 import { OC } from './OC.js'
 import { config } from '@vue/test-utils'
+import mockAxios from 'jest-mock-axios'
 
 document.title = 'Standard Nextcloud title'
 
@@ -28,3 +29,5 @@ global.console = {
 }
 
 global.OCA = {}
+
+jest.mock('@nextcloud/axios', () => mockAxios)
