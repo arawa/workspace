@@ -21,8 +21,8 @@ jobs:
         uses: skjnldsv/read-package-engines-version-actions@v1.1
         id: versions
         with:
-          fallbackNpm: '^7'
-          fallbackNode: '^14'
+          fallbackNpm: '^9'
+          fallbackNode: '^20'
 
       - name: Use Node.js ${{ steps.versions.outputs.nodeVersion }}
         uses: actions/setup-node@v2
