@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/arawa/workspace#readme",
   "engines": {
-    "npm": "^7.0.0",
-    "node": "^14.0.0"
+    "npm": "^9.0.0",
+    "node": "^20.0.0"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
