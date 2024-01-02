@@ -190,7 +190,7 @@ class WorkspaceService {
 			};
 		}
 
-        return (object) $users;
+		return (object) $users;
 	}
 
 	/**

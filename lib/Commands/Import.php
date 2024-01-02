@@ -52,7 +52,7 @@ class Import extends Command {
 		private UserFinder $userFinder,
 		private UserPresenceChecker $userChecker,
 		private WorkspaceCheckService $workspaceCheckService,
-        private LoggerInterface $logger) {
+		private LoggerInterface $logger) {
 		parent::__construct();
 	}
 
@@ -60,19 +60,19 @@ class Import extends Command {
 		$path = realpath($input->getArgument('path'));
 	  
 		if (!$this->csvCreatingWorkspaces->isCsvFile($path)) {
-            $this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
+			$this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
 			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
 		}
 
 		if (!$this->csvCreatingWorkspaces->hasProperHeader($path)) {
-            $this->logger->error(sprintf(
-                "No respect the glossary headers. "
-                . "Please, you must define these 2 headers : "
-                . "%s : To specify the workspace name; "
-                . "%s : To specify the user's user-id or email address.",
-                implode(", ", Csv::WORKSPACE_FIELD),
-                implode(", ", Csv::USER_FIELD)
-            ));
+			$this->logger->error(sprintf(
+				"No respect the glossary headers. "
+				. "Please, you must define these 2 headers : "
+				. "%s : To specify the workspace name; "
+				. "%s : To specify the user's user-id or email address.",
+				implode(", ", Csv::WORKSPACE_FIELD),
+				implode(", ", Csv::USER_FIELD)
+			));
 			throw new \Exception(
 				sprintf(
 					"No respect the glossary headers.\n\n"
@@ -90,7 +90,7 @@ class Import extends Command {
 		$spacenamesWithCharacterSpecials = $this->getWorkspacesWithCharacterSpecials($dataFormated);
 
 		if (!is_null($spacenamesWithCharacterSpecials)) {
-            $this->logger->error($spacenamesWithCharacterSpecials);
+			$this->logger->error($spacenamesWithCharacterSpecials);
 			throw new \Exception($spacenamesWithCharacterSpecials);
 		}
 
@@ -98,7 +98,7 @@ class Import extends Command {
 		$message .= $this->getUsersArentExist($dataFormated);
 
 		if (!empty($message)) {
-            $this->logger->error($message);
+			$this->logger->error($message);
 			throw new \Exception($message);
 		}
 
@@ -111,7 +111,7 @@ class Import extends Command {
 			$this->adminGroup->addUser($user, $groupname);
 		}
 
-        $this->logger->info("Workspaces import done.");
+		$this->logger->info("Workspaces import done.");
 		$output->writeln("Workspaces import done.");
 
 		return 0;

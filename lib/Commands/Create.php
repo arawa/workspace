@@ -44,7 +44,7 @@ class Create extends Command {
 
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
-        private LoggerInterface $logger,
+		private LoggerInterface $logger,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder) {
 		parent::__construct();
@@ -89,18 +89,18 @@ class Create extends Command {
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$pattern = $input->getOption('user-workspace-manager');
 			if (!$this->userChecker->checkUserExist($pattern)) {
-                $this->logger->error("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
+				$this->logger->error("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
 				throw new \Exception("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
 			}
 		}
 
 		if ($this->checkValueFormatOptionIsValid($input)) {
-            $this->logger->error(
-                sprintf(
+			$this->logger->error(
+				sprintf(
 					"The format value is not valid.\nPlease, add a valid option : %s",
 					implode(', ', self::OPTION_FORMAT_AVAILABLE)
 				)
-            );
+			);
 			throw new \Exception(
 				sprintf(
 					"The format value is not valid.\nPlease, add a valid option : %s",
@@ -126,7 +126,7 @@ class Create extends Command {
 			}
 		}
 
-        $this->logger->info(sprintf("The workspace created with %s", $outputMessage));
+		$this->logger->info(sprintf("The workspace created with %s", $outputMessage));
 		$output->writeln($outputMessage);
 
 		return 0;

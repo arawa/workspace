@@ -52,9 +52,9 @@ use Psr\Log\LoggerInterface;
 class WorkspaceController extends Controller {
 	public function __construct(
 		IRequest $request,
-        private GroupfolderHelper $folderHelper,
+		private GroupfolderHelper $folderHelper,
 		private IGroupManager $groupManager,
-        private RootFolder $rootFolder,
+		private RootFolder $rootFolder,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
@@ -182,24 +182,24 @@ class WorkspaceController extends Controller {
 	 */
 	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
-        $spaces = [];
-        foreach ($workspaces as $workspace) {
-            $space = array_merge(
-                $workspace,
-                $this->folderHelper->getFolder(
-                    $workspace['groupfolder_id'],
-                    $this->rootFolder->getRootFolderStorageId()
-                )
-            );
+		$spaces = [];
+		foreach ($workspaces as $workspace) {
+			$space = array_merge(
+				$workspace,
+				$this->folderHelper->getFolder(
+					$workspace['groupfolder_id'],
+					$this->rootFolder->getRootFolderStorageId()
+				)
+			);
 
-            $gids = array_keys($space['groups']);
-            $groups = array_map(fn($gid) => $this->groupManager->get($gid), $gids);
-    
-            $space['groups'] = GroupFormatter::formatGroups($groups);
-            $space['users'] = $this->workspaceService->addUsersInfo($space);
-    
-            $spaces[] = $space;
-        }
+			$gids = array_keys($space['groups']);
+			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+	
+			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['users'] = $this->workspaceService->addUsersInfo($space);
+	
+			$spaces[] = $space;
+		}
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
