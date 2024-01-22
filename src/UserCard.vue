@@ -89,6 +89,15 @@ export default {
 	max-width: 440px;
 }
 
+.icon-member {
+	position: relative;
+	left: 10px;
+	top: -10px;
+	z-index: 10;
+	width: 20px;
+	height: 20px;
+}
+
 .is-member {
 	background-image: url('../img/member.png');
 	background-repeat: no-repeat;
