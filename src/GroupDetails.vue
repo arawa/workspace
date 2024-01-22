@@ -64,7 +64,8 @@
 		<UserTable :space-name="$route.params.group" />
 		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
+			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
+			<!-- <SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" /> -->
 		</NcModal>
 	</div>
 </template>
@@ -75,18 +76,18 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import SelectUsers from './SelectUsers.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
+import AddUsersTabs from './AddUsersTabs.vue'
 
 export default {
 	name: 'GroupDetails',
 	components: {
+		AddUsersTabs,
 		NcActions,
 		NcActionButton,
 		NcActionInput,
 		NcModal,
-		SelectUsers,
 		UserTable,
 	},
 	data() {
