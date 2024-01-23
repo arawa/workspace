@@ -3,3 +3,6 @@ vendor/
 js/*
 build/
 .php-cs-fixer.cache
+.vscode/
+logs/
+tests_output
