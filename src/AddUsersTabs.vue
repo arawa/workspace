@@ -28,7 +28,8 @@
 			<NcAppSidebarTab id="manually"
 				name="Manually"
 				:order="1">
-				<MultiSelectUsers :all-selected-users="allSelectedUsers"
+				<MultiSelectUsers class="input-select-users"
+					:all-selected-users="allSelectedUsers"
 					@change="addUserToBatch" />
 			</NcAppSidebarTab>
 			<NcAppSidebarTab id="import"
@@ -250,7 +251,14 @@ section.app-sidebar__tab--active {
 	display: flex;
 	width: 560px;
 	justify-content: space-between;
-	margin-top: 6px;
+	margin-top: 15px;
+}
+
+.input-select-users {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: 15px;
 }
 
 </style>
