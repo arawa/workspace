@@ -23,7 +23,7 @@
 
 import { createLocalVue, mount } from '@vue/test-utils'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import SelectUsers from '../../SelectUsers.vue'
+import AddUsersTabs from '../../AddUsersTabs.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
@@ -36,7 +36,7 @@ const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(Vuex)
 localVue.use(VueRouter)
-const wrappedSelectUsers = mount(SelectUsers, {
+const wrappedSelectUsers = mount(AddUsersTabs, {
 	store,
 	localVue,
 	router,
@@ -44,7 +44,7 @@ const wrappedSelectUsers = mount(SelectUsers, {
 
 // const expect = require('chai').expect
 
-describe('SelectUsers component tests', () => {
+describe('AddUsersTabs component tests', () => {
 
 	wrappedSelectUsers.vm.$store.commit('addSpace', {
 		color: '#3794ac',
