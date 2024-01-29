@@ -32,7 +32,7 @@
 			<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
 				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
-					:checked="user.role === 'admin'"
+					:checked="isWorkspaceManager(user.role)"
 					@update:checked="toggleUserRole(user)">
 					{{ t('workspace', 'S.A.') }}
 				</NcCheckboxRadioSwitch>
@@ -74,6 +74,11 @@ export default {
 		removeUserFromBatch(user) {
 			this.$emit('remove-user', user)
 		},
+		isWorkspaceManager(role) {
+			role = role.toLowerCase()
+			return role === 'admin'
+				|| role === 'wm'
+		},
 	},
 }
 </script>
@@ -81,7 +86,7 @@ export default {
 <style scoped>
 
 .user-card {
-  display: flex;
+	display: flex;
 }
 
 .user-name {
@@ -112,7 +117,7 @@ export default {
 }
 
 .user-entry-actions {
-  display: flex;
+	display: flex;
 }
 
 </style>
