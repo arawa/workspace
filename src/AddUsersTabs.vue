@@ -120,7 +120,7 @@ export default {
 						gid: this.$route.params.group,
 						user,
 					})
-					if (user.role === 'admin') {
+					if (this.isWorkspaceManager(user.role)) {
 						this.$store.dispatch('addUserToGroup', {
 							name: this.$route.params.space,
 							gid: ManagerGroup.getGid(space),
@@ -129,7 +129,7 @@ export default {
 					}
 				} else {
 					// Adding a user to the workspace
-					if (user.role === 'admin') {
+					if (this.isWorkspaceManager(user.role)) {
 						gid = ManagerGroup.getGid(space)
 					} else {
 						gid = UserGroup.getGid(space)
@@ -145,6 +145,11 @@ export default {
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
 			this.allSelectedUsers.push(user)
+		},
+		isWorkspaceManager(role) {
+			role = role.toLowerCase()
+			return role === 'admin'
+				|| role === 'wm'
 		},
 		// Removes a user from the batch
 		removeUserFromBatch(user) {
