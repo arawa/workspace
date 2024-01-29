@@ -136,10 +136,4 @@ export default {
 	width: 80%;
 }
 
-.multiselect-area {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
 </style>
