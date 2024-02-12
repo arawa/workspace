@@ -26,6 +26,8 @@ namespace OCA\Workspace\Commands;
 
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminGroupManager;
+use OCA\Workspace\Group\User\UserGroup;
+use OCA\Workspace\Group\User\UserGroupManager;
 use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\User\UserPresenceChecker;
@@ -45,6 +47,7 @@ class Create extends Command {
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
 		private LoggerInterface $logger,
+        private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder) {
 		parent::__construct();
@@ -113,10 +116,16 @@ class Create extends Command {
 
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$userManagerName = $input->getOption('user-workspace-manager');
+
 			$this->addUserToAdminGroupManager(
 				$userManagerName,
 				$workspace
 			);
+
+            $this->addUserToUserGroupManager(
+                $userManagerName,
+                $workspace
+            );
 		}
 
 		if ($input->hasParameterOption('--format')) {
@@ -139,6 +148,14 @@ class Create extends Command {
 
 		return true;
 	}
+
+    private function addUserToUserGroupManager(string $username, array $workspace): bool {
+        $user = $this->userFinder->findUser($username);
+        $groupname = UserGroupManager::findWorkspaceManager($workspace);
+        $this->userGroup->addUser($user, $groupname);
+
+        return true;
+    }
 
 	private function checkValueFormatOptionIsValid(InputInterface $input): bool {
 		if ($input->hasParameterOption('--format')) {

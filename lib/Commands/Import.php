@@ -27,6 +27,8 @@ namespace OCA\Workspace\Commands;
 use OCA\Workspace\Files\MassiveWorkspaceCreation\Csv;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminGroupManager;
+use OCA\Workspace\Group\User\UserGroup;
+use OCA\Workspace\Group\User\UserGroupManager;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\User\UserFinder;
@@ -50,6 +52,7 @@ class Import extends Command {
 		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		private UserFinder $userFinder,
+        private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private WorkspaceCheckService $workspaceCheckService,
 		private LoggerInterface $logger) {
@@ -107,8 +110,11 @@ class Import extends Command {
 			$user = $this->userFinder->findUser($data['user_uid']);
 
 			$workspace = $this->spaceManager->create($data['workspace_name']);
-			$groupname = AdminGroupManager::findWorkspaceManager($workspace);
-			$this->adminGroup->addUser($user, $groupname);
+			$adminGroupname = AdminGroupManager::findWorkspaceManager($workspace);
+            $userGroupname = UserGroupManager::findWorkspaceManager($workspace);
+
+			$this->adminGroup->addUser($user, $adminGroupname);
+            $this->userGroup->addUser($user, $userGroupname);
 		}
 
 		$this->logger->info("Workspaces import done.");
