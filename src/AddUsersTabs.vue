@@ -26,14 +26,14 @@
 			:title="title"
 			@close="closeSidebar">
 			<NcAppSidebarTab id="manually"
-				name="Manually"
+				:name="titleManually"
 				:order="1">
 				<MultiSelectUsers class="input-select-users"
 					:all-selected-users="allSelectedUsers"
 					@change="addUserToBatch" />
 			</NcAppSidebarTab>
 			<NcAppSidebarTab id="import"
-				name="Import"
+				:name="titleImport"
 				:order="2">
 				<div class="buttons-import-groups">
 					<ButtonUploadLocalFile :all-selected-users="allSelectedUsers"
@@ -102,6 +102,12 @@ export default {
 	computed: {
 		title() {
 			return t('workspace', 'Add users')
+		},
+		titleImport() {
+			return t('workspace', 'Csv file import')
+		},
+		titleManually() {
+			return t('workspace', 'Manually')
 		},
 	},
 	methods: {
