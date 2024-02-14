@@ -60,6 +60,7 @@ OC.L10N.register(
 		'Rename group': 'Rename group',
 		'Delete group': 'Delete group',
 		'Role': 'Role',
+		'The %s email address is duplicated in your instance. Impossible to know which users choice or maybe is an error.': 'The %s email address is duplicated in your instance. Impossible to know which users choice or maybe is an error.',
 		'Add users': 'Add users',
 		'WM': 'WM',
 		'Set quota': 'Set quota',
