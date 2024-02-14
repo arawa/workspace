@@ -116,8 +116,8 @@ class FileCSVController extends Controller {
 				$message = "Invalid file format. "
 				. "Table header doesn't contain any good values.<br>"
 				. "You have to get 2 columns to specify:<br><br>"
-				."- The user name or uid : %s<br>"
-				. "- The user role : %s";
+				."- user : The user's uid or email<br>"
+				. "- role : The user role";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -135,25 +135,45 @@ class FileCSVController extends Controller {
 	
 			$usersFormatted = $this->csvParser->parser($fileUploader);
 			
-			$usernames = array_map(fn ($user) => $user->uid, $usersFormatted);
-			if (!$this->userChecker->checkUsersExist($usernames)) {
-				$usersErrorInTheName = array_filter(
+			$uids = array_map(fn ($user) => $user->uid, $usersFormatted);
+
+            $emails = array_values(
+                array_filter(
+                    $uids,
+                    fn($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+                )
+            );
+
+            $usernames = array_values(
+                array_diff($uids, $emails)
+            );
+
+			if (!$this->userChecker->checkUsersExist($usernames)
+                || !$this->userChecker->checkUsersExistByEmail($emails)) {
+				$usernamesUnknown = array_filter(
 					$usernames,
 					function ($name) {
 						return !$this->userChecker->checkUserExist($name);
 					}
 				);
 
-				$usersErrorInTheName = array_slice($usersErrorInTheName, 0, 10);
-				$usersErrorInTheName[] = '...';
+                $emailsUnknown = array_filter(
+                    $emails,
+                    fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+                );
 
-				$usersErrorInTheName = array_map(
+                $usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+
+				$usersUnknown = array_slice($usersUnknown, 0, 10);
+				$usersUnknown[] = '...';
+
+				$usersUnknown = array_map(
 					fn ($name) => "- $name",
-					$usersErrorInTheName
+					$usersUnknown
 				);
-				$usersErrorInTheName = implode("<br>", $usersErrorInTheName);
-				$errorMessage = $this->translate->t('Users doesn\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
-				$errorMessage .= $usersErrorInTheName;
+				$usersUnknown = implode("<br>", $usersUnknown);
+				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
 					$this->translate->t('User doesn\'t exist'),
 					$errorMessage,
@@ -163,8 +183,16 @@ class FileCSVController extends Controller {
 	
 			$data = [];
 			foreach($usersFormatted as $user) {
+                $uid = $user->uid;
+
+                if ($this->userChecker->checkUserExistByEmail($uid)) {
+                    $uid = $this->userManager->getByEmail($user->uid)[0];
+                } else {
+                    $uid = $this->userManager->get($user->uid);
+                }
+
 				$data[] = [
-					'user' => $this->userManager->get($user->uid),
+					'user' => $uid,
 					'role' => $user->role
 				];
 			}
@@ -239,8 +267,8 @@ class FileCSVController extends Controller {
 				$message = "Invalid file format. "
 				. "Table header doesn't contain any good values.<br>"
 				. "You have to get 2 columns to specify:<br><br>"
-				."- The user name or uid : %s<br>"
-				. "- The user role : %s";
+				."- user : The user's uid or email<br>"
+				. "- role : The user role";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -259,24 +287,47 @@ class FileCSVController extends Controller {
 			$names = $this->csvParser->parser($nextcloudFile);
 	
 			$usernames = array_map(fn ($user) => $user->uid, $names);
-			if (!$this->userChecker->checkUsersExist($usernames)) {
-				$usersErrorInTheName = array_filter(
+
+			$uids = array_map(fn ($user) => $user->uid, $names);
+
+            $emails = array_values(
+                array_filter(
+                    $uids,
+                    fn($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+                )
+            );
+
+            $usernames = array_values(
+                array_diff($uids, $emails)
+            );
+
+            if (!$this->userChecker->checkUsersExist($usernames)
+            || !$this->userChecker->checkUsersExistByEmail($emails)) {
+
+                $usernamesUnknown = array_filter(
 					$usernames,
 					function ($name) {
 						return !$this->userChecker->checkUserExist($name);
 					}
 				);
-				$usersErrorInTheName = array_map(
+
+                $emailsUnknown = array_filter(
+                    $emails,
+                    fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+                );
+
+                $usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+
+				$usersUnknown = array_slice($usersUnknown, 0, 10);
+				$usersUnknown[] = '...';
+
+				$usersUnknown = array_map(
 					fn ($name) => "- $name",
-					$usersErrorInTheName
+					$usersUnknown
 				);
-
-				$usersErrorInTheName = array_slice($usersErrorInTheName, 0, 10);
-				$usersErrorInTheName[] = '...';
-
-				$usersErrorInTheName = implode("<br>", $usersErrorInTheName);
-				$errorMessage = $this->translate->t('Users doesn\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
-				$errorMessage .= $usersErrorInTheName;
+				$usersUnknown = implode("<br>", $usersUnknown);
+				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
 					$this->translate->t('User doesn\'t exist'),
 					$errorMessage,
@@ -286,8 +337,16 @@ class FileCSVController extends Controller {
 	
 			$data = [];
 			foreach($names as $user) {
+                $uid = $user->uid;
+
+                if ($this->userChecker->checkUserExistByEmail($uid)) {
+                    $uid = $this->userManager->getByEmail($user->uid)[0];
+                } else {
+                    $uid = $this->userManager->get($user->uid);
+                }
+
 				$data[] = [
-					'user' => $this->userManager->get($user->uid),
+					'user' => $uid,
 					'role' => $user->role
 				];
 			}
