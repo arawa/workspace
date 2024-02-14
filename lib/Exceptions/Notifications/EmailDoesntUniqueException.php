@@ -9,4 +9,3 @@ class EmailDoesntUniqueException extends AbstractNotificationException {
 		parent::__construct($title, $message, $code);
 	}
 }
-

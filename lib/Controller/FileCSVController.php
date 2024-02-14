@@ -137,19 +137,19 @@ class FileCSVController extends Controller {
 			
 			$uids = array_map(fn ($user) => $user->uid, $usersFormatted);
 
-            $emails = array_values(
-                array_filter(
-                    $uids,
-                    fn($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
-                )
-            );
+			$emails = array_values(
+				array_filter(
+					$uids,
+					fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+				)
+			);
 
-            $usernames = array_values(
-                array_diff($uids, $emails)
-            );
+			$usernames = array_values(
+				array_diff($uids, $emails)
+			);
 
 			if (!$this->userChecker->checkUsersExist($usernames)
-                || !$this->userChecker->checkUsersExistByEmail($emails)) {
+				|| !$this->userChecker->checkUsersExistByEmail($emails)) {
 				$usernamesUnknown = array_filter(
 					$usernames,
 					function ($name) {
@@ -157,12 +157,12 @@ class FileCSVController extends Controller {
 					}
 				);
 
-                $emailsUnknown = array_filter(
-                    $emails,
-                    fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
-                );
+				$emailsUnknown = array_filter(
+					$emails,
+					fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+				);
 
-                $usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
 				$usersUnknown = array_slice($usersUnknown, 0, 10);
 				$usersUnknown[] = '...';
@@ -183,13 +183,13 @@ class FileCSVController extends Controller {
 	
 			$data = [];
 			foreach($usersFormatted as $user) {
-                $uid = $user->uid;
+				$uid = $user->uid;
 
-                if ($this->userChecker->checkUserExistByEmail($uid)) {
-                    $uid = $this->userManager->getByEmail($user->uid)[0];
-                } else {
-                    $uid = $this->userManager->get($user->uid);
-                }
+				if ($this->userChecker->checkUserExistByEmail($uid)) {
+					$uid = $this->userManager->getByEmail($user->uid)[0];
+				} else {
+					$uid = $this->userManager->get($user->uid);
+				}
 
 				$data[] = [
 					'user' => $uid,
@@ -290,33 +290,33 @@ class FileCSVController extends Controller {
 
 			$uids = array_map(fn ($user) => $user->uid, $names);
 
-            $emails = array_values(
-                array_filter(
-                    $uids,
-                    fn($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
-                )
-            );
+			$emails = array_values(
+				array_filter(
+					$uids,
+					fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+				)
+			);
 
-            $usernames = array_values(
-                array_diff($uids, $emails)
-            );
+			$usernames = array_values(
+				array_diff($uids, $emails)
+			);
 
-            if (!$this->userChecker->checkUsersExist($usernames)
-            || !$this->userChecker->checkUsersExistByEmail($emails)) {
+			if (!$this->userChecker->checkUsersExist($usernames)
+			|| !$this->userChecker->checkUsersExistByEmail($emails)) {
 
-                $usernamesUnknown = array_filter(
+				$usernamesUnknown = array_filter(
 					$usernames,
 					function ($name) {
 						return !$this->userChecker->checkUserExist($name);
 					}
 				);
 
-                $emailsUnknown = array_filter(
-                    $emails,
-                    fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
-                );
+				$emailsUnknown = array_filter(
+					$emails,
+					fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+				);
 
-                $usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
 				$usersUnknown = array_slice($usersUnknown, 0, 10);
 				$usersUnknown[] = '...';
@@ -337,13 +337,13 @@ class FileCSVController extends Controller {
 	
 			$data = [];
 			foreach($names as $user) {
-                $uid = $user->uid;
+				$uid = $user->uid;
 
-                if ($this->userChecker->checkUserExistByEmail($uid)) {
-                    $uid = $this->userManager->getByEmail($user->uid)[0];
-                } else {
-                    $uid = $this->userManager->get($user->uid);
-                }
+				if ($this->userChecker->checkUserExistByEmail($uid)) {
+					$uid = $this->userManager->getByEmail($user->uid)[0];
+				} else {
+					$uid = $this->userManager->get($user->uid);
+				}
 
 				$data[] = [
 					'user' => $uid,
