@@ -97,7 +97,11 @@ class Import extends Command {
 			throw new \Exception($spacenamesWithCharacterSpecials);
 		}
 
-		$message = $this->getSpacenamesDuplicated($dataFormated);
+        if ($this->workspaceCheckService->spacenamesIsDuplicated($dataFormated)) {
+            throw new \Exception('Impossible to import your workspaces from the csv file. You have spacenames duplicated.');
+        }
+
+        $message = $this->getSpacenamesDuplicated($dataFormated);
 		$message .= $this->getUsersArentExist($dataFormated);
 
 		if (!empty($message)) {
