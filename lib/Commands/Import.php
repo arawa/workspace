@@ -98,7 +98,9 @@ class Import extends Command {
 		}
 
         if ($this->workspaceCheckService->spacenamesIsDuplicated($dataFormated)) {
-            throw new \Exception('Impossible to import your workspaces from the csv file. You have spacenames duplicated.');
+            $message = "Impossible to import your workspaces from the csv file.\n";
+            $message .= $this->getSpacenamesFromCsvFileDuplicated($dataFormated);
+            throw new \Exception($message);
         }
 
         $message = $this->getSpacenamesDuplicated($dataFormated);
@@ -135,6 +137,25 @@ class Import extends Command {
 		parent::configure();
 	}
 
+    private function getSpacenamesFromCsvFileDuplicated(array $spaces): string {
+        $workspaceNames = [];
+        $message = '';
+
+        foreach ($spaces as $space) {
+            $workspaceNames[] = $space['workspace_name'];
+        }
+
+        $workspaceNamesDiff = array_values(
+            array_diff_assoc($workspaceNames, array_unique($workspaceNames))
+        );
+        
+        $spacenamesFormated = array_map(fn ($spacename) => "- $spacename\n", $workspaceNamesDiff);
+
+        $message .= "The Workspace names below are duplicated:\n" . implode('', $spacenamesFormated);
+
+        return $message;
+    }
+    
 	private function getSpacenamesDuplicated(array $dataResponse): ?string {
 		$workspacesAreNotExist = [];
 		$message = "";
