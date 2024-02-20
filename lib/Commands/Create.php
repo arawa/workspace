@@ -47,7 +47,7 @@ class Create extends Command {
 	public function __construct(private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
 		private LoggerInterface $logger,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder) {
 		parent::__construct();
@@ -122,10 +122,10 @@ class Create extends Command {
 				$workspace
 			);
 
-            $this->addUserToUserGroupManager(
-                $userManagerName,
-                $workspace
-            );
+			$this->addUserToUserGroupManager(
+				$userManagerName,
+				$workspace
+			);
 		}
 
 		if ($input->hasParameterOption('--format')) {
@@ -149,13 +149,13 @@ class Create extends Command {
 		return true;
 	}
 
-    private function addUserToUserGroupManager(string $username, array $workspace): bool {
-        $user = $this->userFinder->findUser($username);
-        $groupname = UserGroupManager::findWorkspaceManager($workspace);
-        $this->userGroup->addUser($user, $groupname);
+	private function addUserToUserGroupManager(string $username, array $workspace): bool {
+		$user = $this->userFinder->findUser($username);
+		$groupname = UserGroupManager::findWorkspaceManager($workspace);
+		$this->userGroup->addUser($user, $groupname);
 
-        return true;
-    }
+		return true;
+	}
 
 	private function checkValueFormatOptionIsValid(InputInterface $input): bool {
 		if ($input->hasParameterOption('--format')) {

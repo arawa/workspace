@@ -52,7 +52,7 @@ class Import extends Command {
 		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		private UserFinder $userFinder,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private WorkspaceCheckService $workspaceCheckService,
 		private LoggerInterface $logger) {
@@ -97,13 +97,13 @@ class Import extends Command {
 			throw new \Exception($spacenamesWithCharacterSpecials);
 		}
 
-        if ($this->workspaceCheckService->spacenamesIsDuplicated($dataFormated)) {
-            $message = "Impossible to import your workspaces from the csv file.\n";
-            $message .= $this->getSpacenamesFromCsvFileDuplicated($dataFormated);
-            throw new \Exception($message);
-        }
+		if ($this->workspaceCheckService->spacenamesIsDuplicated($dataFormated)) {
+			$message = "Impossible to import your workspaces from the csv file.\n";
+			$message .= $this->getSpacenamesFromCsvFileDuplicated($dataFormated);
+			throw new \Exception($message);
+		}
 
-        $message = $this->getSpacenamesDuplicated($dataFormated);
+		$message = $this->getSpacenamesDuplicated($dataFormated);
 		$message .= $this->getUsersArentExist($dataFormated);
 
 		if (!empty($message)) {
@@ -117,10 +117,10 @@ class Import extends Command {
 
 			$workspace = $this->spaceManager->create($data['workspace_name']);
 			$adminGroupname = AdminGroupManager::findWorkspaceManager($workspace);
-            $userGroupname = UserGroupManager::findWorkspaceManager($workspace);
+			$userGroupname = UserGroupManager::findWorkspaceManager($workspace);
 
 			$this->adminGroup->addUser($user, $adminGroupname);
-            $this->userGroup->addUser($user, $userGroupname);
+			$this->userGroup->addUser($user, $userGroupname);
 		}
 
 		$this->logger->info("Workspaces import done.");
@@ -137,25 +137,25 @@ class Import extends Command {
 		parent::configure();
 	}
 
-    private function getSpacenamesFromCsvFileDuplicated(array $spaces): string {
-        $workspaceNames = [];
-        $message = '';
+	private function getSpacenamesFromCsvFileDuplicated(array $spaces): string {
+		$workspaceNames = [];
+		$message = '';
 
-        foreach ($spaces as $space) {
-            $workspaceNames[] = $space['workspace_name'];
-        }
+		foreach ($spaces as $space) {
+			$workspaceNames[] = $space['workspace_name'];
+		}
 
-        $workspaceNamesDiff = array_values(
-            array_diff_assoc($workspaceNames, array_unique($workspaceNames))
-        );
-        
-        $spacenamesFormated = array_map(fn ($spacename) => "- $spacename\n", $workspaceNamesDiff);
+		$workspaceNamesDiff = array_values(
+			array_diff_assoc($workspaceNames, array_unique($workspaceNames))
+		);
+		
+		$spacenamesFormated = array_map(fn ($spacename) => "- $spacename\n", $workspaceNamesDiff);
 
-        $message .= "The Workspace names below are duplicated:\n" . implode('', $spacenamesFormated);
+		$message .= "The Workspace names below are duplicated:\n" . implode('', $spacenamesFormated);
 
-        return $message;
-    }
-    
+		return $message;
+	}
+	
 	private function getSpacenamesDuplicated(array $dataResponse): ?string {
 		$workspacesAreNotExist = [];
 		$message = "";

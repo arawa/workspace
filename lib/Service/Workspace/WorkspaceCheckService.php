@@ -60,18 +60,17 @@ class WorkspaceCheckService {
 		return false;
 	}
 
-    public function spacenamesIsDuplicated(array $spaces): bool
-    {
-        $workspaceNames = [];
+	public function spacenamesIsDuplicated(array $spaces): bool {
+		$workspaceNames = [];
 
-        foreach ($spaces as $space) {
-            $workspaceNames[] = $space['workspace_name'];
-        }
+		foreach ($spaces as $space) {
+			$workspaceNames[] = $space['workspace_name'];
+		}
 
-        $workspaceNamesDiff = array_values(
-            array_diff_assoc($workspaceNames, array_unique($workspaceNames))
-        );
+		$workspaceNamesDiff = array_values(
+			array_diff_assoc($workspaceNames, array_unique($workspaceNames))
+		);
 
-        return !empty($workspaceNamesDiff);
-    }
+		return !empty($workspaceNamesDiff);
+	}
 }
