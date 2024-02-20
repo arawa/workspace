@@ -20,7 +20,7 @@
 	"Manually": "Manuellement",
 	"Groups": "Groupes",
 	"Error in the table header": "Erreur dans l'en-tête",
-	"Invalid file format. Table header doesn't contain any good values.<br>You have to get 2 columns to specify:<br><br>- user : The user's uid or email<br>- role : The user role": "Format de fichier invalide. L'en-tête ne contient pas les bonnes valeurs<br>Vous devez avoir 2 colonnes pour spécifier:<br><br>- user : L'uid ou l'adresse email de l'utilisateur<br>- role : Le rôle de l'utilisateur",
+	"Invalid file format. Table header doesn't contain any good values.<br>You have to get 2 columns to specify:<br><br>- user : The user's uid or email<br>- role : The user role": "Le contenu de votre fichier est invalide. L'en-tête ne contient pas les valeurs souhaitées.<br>Deux colonnes sont requises, avec les noms d'en-tête et les valeurs suivantes :<br><br>- \"user\" : L'UID ou l'adresse email de l'utilisateur<br>- \"role\" : Le rôle de l'utilisateur",
 	"Make administrator" : "Assigner en tant que G.E.",
 	"New space" : "Créer un espace de travail",
 	"Settings": "Paramètres",

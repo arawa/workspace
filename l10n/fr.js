@@ -7,7 +7,7 @@ OC.L10N.register(
 		'All spaces': 'Tous les espaces de travail',
 		'Administrators': 'Gestionnaires généraux',
 		'admin': "Gestionnaire d'espace",
-		'Invalid file format. Table header doesn\'t contain any good values.<br>You have to get 2 columns to specify:<br><br>- user : The user\'s uid or email<br>- role : The user role': 'Format de fichier invalide. L\'en-tête ne contient pas les bonnes valeurs<br>Vous devez avoir 2 colonnes pour spécifier:<br><br>- user : L\'uid ou l\'adresse email de l\'utilisateur<br>- role : Le rôle de l\'utilisateur',
+		'Invalid file format. Table header doesn\'t contain any good values.<br>You have to get 2 columns to specify:<br><br>- user : The user\'s uid or email<br>- role : The user role': 'Le contenu de votre fichier est invalide. L\'en-tête ne contient pas les valeurs souhaitées.<br>Deux colonnes sont requises, avec les noms d\'en-tête et les valeurs suivantes :<br><br>- "user" : L\'UID ou l\'adresse email de l\'utilisateur<br>- "role" : Le rôle de l\'utilisateur',
 		'Group name': 'Nom du groupe',
 		'Space name': 'Nom de l\'espace de travail',
 		'Cancel': 'Annuler',
