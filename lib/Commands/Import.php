@@ -123,8 +123,8 @@ class Import extends Command {
 			$this->userGroup->addUser($user, $userGroupname);
 		}
 
-		$this->logger->info("Workspaces import done.");
-		$output->writeln("Workspaces import done.");
+		$this->logger->info("workspaces import done");
+		$output->writeln("<info>workspaces import done</info>");
 
 		return 0;
 	}
