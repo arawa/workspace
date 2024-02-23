@@ -24,6 +24,7 @@
 		<NcAppSidebar name="Ajouter des utilisateurs"
 			class="my-sidebar"
 			:title="title"
+			@update:active="toggleImportTab"
 			@close="closeSidebar">
 			<NcAppSidebarTab id="manually"
 				:name="titleManually"
@@ -43,6 +44,21 @@
 				</div>
 			</NcAppSidebarTab>
 		</NcAppSidebar>
+		<div class="information-import">
+			<NcPopover>
+				<template #trigger>
+					<InformationOutline class="information-image"
+						:class="onImportTab"
+						:size="17" />
+				</template>
+				<div class="popover">
+					<p>Please, your csv file has to respect this structure :</p>
+					<br>
+					<NcRichText :use-markdown="true"
+						:text="csvTemplateMarkdown" />
+				</div>
+			</NcPopover>
+		</div>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -74,29 +90,36 @@
 
 <script>
 import ButtonUploadLocalFile from './ButtonUploadLocalFile.vue'
+import ButtonUploadShareFiles from './ButtonUploadShareFiles.vue'
+import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
+import MultiSelectUsers from './MultiSelectUsers.vue'
 import NcAppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar.js'
 import NcAppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab.js'
-import UserCard from './UserCard.vue'
-import MultiSelectUsers from './MultiSelectUsers.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import ManagerGroup from './services/Groups/ManagerGroup.js'
+import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
+import NcRichText from '@nextcloud/vue/dist/Components/NcRichText.js'
+import UserCard from './UserCard.vue'
 import UserGroup from './services/Groups/UserGroup.js'
-import ButtonUploadShareFiles from './ButtonUploadShareFiles.vue'
 
 export default {
 	name: 'AddUsersTabs',
 	components: {
 		ButtonUploadLocalFile,
 		ButtonUploadShareFiles,
+		InformationOutline,
 		MultiSelectUsers,
 		NcAppSidebar,
 		NcAppSidebarTab,
+		NcRichText,
 		UserCard,
 		NcButton,
+		NcPopover,
 	},
 	data() {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
+			importTab: false,
 		}
 	},
 	computed: {
@@ -108,6 +131,22 @@ export default {
 		},
 		titleManually() {
 			return t('workspace', 'Manually')
+		},
+		csvTemplateMarkdown() {
+			return `> user, role
+				user1, wm,
+				user2, user,
+				user3, user,
+				user4, wm,
+				user5, u`
+		},
+		onImportTab() {
+			let cssClass = 'onImportTab'
+
+			if (this.importTab) {
+				cssClass = ''
+			}
+			return cssClass
 		},
 	},
 	methods: {
@@ -173,6 +212,13 @@ export default {
 					return u
 				}
 			})
+		},
+		toggleImportTab(active) {
+			if (active === 'import') {
+				this.importTab = true
+			} else {
+				this.importTab = false
+			}
 		},
 		pushUsersFromButton(element) {
 			this.allSelectedUsers = element
@@ -270,6 +316,25 @@ section.app-sidebar__tab--active {
 	justify-content: center;
 	width: 100%;
 	margin-top: 15px;
+}
+
+.information-import {
+	position: absolute;
+	top: 112px;
+	right: 60px;
+	z-index: 9999;
+}
+
+.information-image {
+	cursor: pointer;
+}
+
+.popover {
+	padding: 15px;
+}
+
+.onImportTab {
+	color: grey;
 }
 
 </style>
