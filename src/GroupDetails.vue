@@ -65,7 +65,6 @@
 		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
-			<!-- <SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" /> -->
 		</NcModal>
 	</div>
 </template>
