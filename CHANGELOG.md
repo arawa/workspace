@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrelease]
 
+## Changed
+
+- Preparing release 3.0.5 and making it available for nc28 ( [#919](https://github.com/arawa/workspace/pull/919) )
+
 ## [3.0.4] - 2023-12-11
 
 ### Fixed
