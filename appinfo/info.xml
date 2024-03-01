@@ -78,6 +78,11 @@ For this version, you should refresh your browser from the Workspace app with `C
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-add-users.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-subgroups.png</screenshot>
 
+    <commands>
+        <command>OCA\Workspace\Commands\Create</command>
+        <command>OCA\Workspace\Commands\Import</command>
+    </commands>
+
     <navigations>
         <navigation>
             <name>Workspace</name>

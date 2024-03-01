@@ -24,9 +24,7 @@
 
 namespace OCA\Workspace\Service\Group;
 
-use OCA\Workspace\GroupException;
-use OCA\Workspace\UserGroup;
-use OCA\Workspace\WorkspaceManagerGroup;
+use OCA\Workspace\Exceptions\GroupException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
