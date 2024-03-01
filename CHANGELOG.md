@@ -8,21 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
-- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+- Close menu after rename a group ([#839](https://github.com/arawa/workspace/pull/839))
+- Import users in a workspace group from a csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
 
 ### Changed
 
-- Create spaceitem and groupitem components ( [#880](https://github.com/arawa/workspace/pull/880) )
-- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
+- Create 2 components : A SpaceItem (Workspace with groups) and GroupItem (a Group) ( [#880](https://github.com/arawa/workspace/pull/880) )
+- Replace css spinner by the Nextcloud's spinner ( [#887](https://github.com/arawa/workspace/pull/887) )
 
 ### Fixed
 
-- Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
-- Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
-- Change Exceptions path, changing namespace ( [#863](https://github.com/arawa/workspace/pull/863) )
-- Prevent duplicate users_oidc ( [#892](https://github.com/arawa/workspace/pull/892) )
+- Repair the migration into the new groupnames on the release 3.0.0 and 3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843) )
+- Fix the namespace names for the Exception classes ( [#863](https://github.com/arawa/workspace/pull/863) )
+- Prevent duplicate users_oidc when we search users by their display name ( [#892](https://github.com/arawa/workspace/pull/892) )
+- Make the distinction between the page#index ( [#906](https://github.com/arawa/workspace/pull/906) )
+- Don't remove an user from a subgroup ( [#907](https://github.com/arawa/workspace/pull/907) )
 
+### Chore
+
+- Add a Upgrade guideline section in the documentation and appstore description ( [#911](https://github.com/arawa/workspace/pull/911) )
+- Add 2 docs for the general managers and workspace managers and move the user doc in another folder ( [#903](https://github.com/arawa/workspace/pull/903) )
+- Update the CHANGELOG ([#865](https://github.com/arawa/workspace/pull/865) & [#869](https://github.com/arawa/workspace/pull/869) & [#827](https://github.com/arawa/workspace/pull/827))
 
 ## [3.0.2] - 2023-06-26
 
