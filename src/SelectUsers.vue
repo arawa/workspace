@@ -87,7 +87,7 @@
         {{ t('workspace', 'Add users') }}
       </button>
     </div>
-		<div class="select-users-actions">
+		<!-- <div class="select-users-actions">
 			<button class="icon-upload" @click="uploadNewFile()">
 				<span>{{ t('workspace', 'Add users from csv file') }}</span>
 			</button>
@@ -99,7 +99,7 @@
 			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
 				<span>{{ t('workspace', 'Import csv from Files') }}</span>
 			</button>
-		</div>
+		</div> -->
 	</div>
 </template>
 
