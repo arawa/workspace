@@ -5,7 +5,7 @@
 
     <name>Workspace</name>
 
-    <version>3.0.4</version>
+    <version>3.0.5</version>
 
     <licence>agpl</licence>
 
@@ -20,7 +20,7 @@
 
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="25" max-version="27"/>
+        <nextcloud min-version="25" max-version="28"/>
     </dependencies>
 
     <summary>Create Groupfolders with delegated management</summary>
