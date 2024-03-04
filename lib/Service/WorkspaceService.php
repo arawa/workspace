@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
@@ -125,7 +126,11 @@ class WorkspaceService {
 			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly()) {
+		if ($this->shareManager->shareWithGroupMembersOnly() 
+            && !$this->groupManager->isInGroup(
+                $this->userSession->getUser()->getUID(),
+                ManagersWorkspace::GENERAL_MANAGER)
+            ) {
 			$users = $this->getUsersFromGroupsOnly($users);
 		}
 
