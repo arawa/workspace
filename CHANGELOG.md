@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrelease]
 
+## [3.0.5] - 2024-03-04
+
 ## Changed
 
 - Workspace release 3.0.5 and making it available for nc28 ( [#919](https://github.com/arawa/workspace/pull/919) )
@@ -205,7 +207,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.4...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.5...main
+[3.0.5]: https://github.com/arawa/workspace/compare/v3.0.4...3.0.5
 [3.0.4]: https://github.com/arawa/workspace/compare/v3.0.3...3.0.4
 [3.0.3]: https://github.com/arawa/workspace/compare/v3.0.2...3.0.3
 [3.0.2]: https://github.com/arawa/workspace/compare/v3.0.1...3.0.2
