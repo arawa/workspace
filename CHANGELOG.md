@@ -20,6 +20,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename a workspace name from plural to singular or inversely ( [#893](https://github.com/arawa/workspace/pull/893) )
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 
+## [3.0.5] - 2024-03-04
+
+## Changed
+
+- Workspace release 3.0.5 and making it available for nc28 ( [#919](https://github.com/arawa/workspace/pull/919) )
+
+## [3.0.4] - 2023-12-11
+
+### Fixed
+
+- Backport/fix delete a user when adding him to another group/907 ( [#908](https://github.com/arawa/workspace/pull/908) )
+
+### Changed
+
+- Backport/inform users refresh browser/911/stable3.0 ( [#912](https://github.com/arawa/workspace/pull/912) )
+
+## [3.0.3] - 2023-07-20
+
+- Compatible with Nextcloud 27 ( [#884](https://github.com/arawa/workspace/pull/884) )
+
+## [3.0.2] - 2023-06-26
+
+### Fixed
+
+- Backport/update to 3.0.0/stable3.0 ( [#868] https://github.com/arawa/workspace/pull/868 )
+- Fix/remove space issue/stable3.0 ( [#840](https://github.com/arawa/workspace/pull/840))
+- Hotfix/ingore guest virtual group upgrade300/stable3.0 # ( [#848](https://github.com/arawa/workspace/pull/848) )
+- Backport/ignore virtual groups/stable3.0 ( [#867](https://github.com/arawa/workspace/pull/867) )
+- Backport/rename workspace for 3.x.x/stable3.0 ( [#866](https://github.com/arawa/workspace/pull/866) )
+
 # [3.0.1] - 2023-05-26
 
 ### Fixed
@@ -196,7 +226,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.5...main
+[3.0.5]: https://github.com/arawa/workspace/compare/v3.0.4...3.0.5
+[3.0.4]: https://github.com/arawa/workspace/compare/v3.0.3...3.0.4
+[3.0.3]: https://github.com/arawa/workspace/compare/v3.0.2...3.0.3
+[3.0.2]: https://github.com/arawa/workspace/compare/v3.0.1...3.0.2
 [3.0.1]: https://github.com/arawa/workspace/compare/v3.0.0...3.0.1
 [3.0.0]: https://github.com/arawa/workspace/compare/v2.0.1...3.0.0
 [2.0.1]: https://github.com/arawa/workspace/compare/v2.0.0...2.0.1
