@@ -92,28 +92,41 @@ class WorkspaceService {
 	 * @return IUser[]
 	 */
 	private function getUsersFromGroupsOnly(array $users): array {
-		$usersFromGroups = [];
+		$usersDontExclude = [];
 		$userSession = $this->userSession->getUser();
 		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
 
-		if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
+        // Return the user list if share with group members only exclude groups list is defined.
+        if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
 			$excludeGroupsFromOwnGroups = $this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList();
 			if (!empty($excludeGroupsFromOwnGroups)) {
-				$groupsOfUserSession = array_filter($groupsOfUserSession, function ($group) use ($excludeGroupsFromOwnGroups) {
-					return !in_array($group->getGID(), $excludeGroupsFromOwnGroups);
-				});
+                $usersDontExclude = array_filter($users, function ($user) use ($excludeGroupsFromOwnGroups) {
+                    $groups = $this->groupManager->getUserGroups($user);
+                    $groupnames = array_values(array_map(fn ($group) => $group->getGID(), $groups));
+                    $diff = array_diff($excludeGroupsFromOwnGroups, $groupnames);
+                    return count($diff) !== 0;
+		        });
+
+                $usersDontExclude = array_filter($usersDontExclude, function($user) use ($groupsOfUserSession) {
+                    $groups = $this->groupManager->getUserGroups($user);
+                    $groupnames = array_values(array_map(fn ($group) => $group->getGID(), $groups));
+                    $groupnamesUserSession = array_values(array_map(fn ($group) => $group->getGID(), $groupsOfUserSession));
+                    foreach($groupnames as $groupname) {
+                        if (in_array($groupname, $groupnamesUserSession)) {
+                            return true;
+                        }
+                    }
+                });
+
+                return $usersDontExclude;
 			}
 		}
 
 		foreach ($groupsOfUserSession as $group) {
-			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
+			$usersDontExclude = array_merge($usersDontExclude, $group->getUsers());
 		}
 
-		$usersFromGroups = array_filter($usersFromGroups, function ($user) use ($users) {
-			return in_array($user, $users);
-		});
-
-		return $usersFromGroups;
+		return $usersDontExclude;
 	}
 
 	/**
