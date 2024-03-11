@@ -87,16 +87,13 @@ class WorkspaceService {
 		return $users;
 	}
 
-	/**
-	 * @param IUser[] $users
-	 * @return IUser[]
-	 */
-	private function getUsersFromGroupsOnly(array $users): array {
-		$usersDontExclude = [];
-		$userSession = $this->userSession->getUser();
-		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
+    /**
+     * @param IUser[] $users
+     * @return IUser[]
+     */
+    private function excludeGroupsList(array $users): array {
+        $usersDontExclude = [];
 
-        // Return the user list if share with group members only exclude groups list is defined.
         if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
 			$excludeGroupsFromOwnGroups = $this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList();
 			if (!empty($excludeGroupsFromOwnGroups)) {
@@ -107,24 +104,31 @@ class WorkspaceService {
                     return count($diff) !== 0;
 		        });
 
-                $usersDontExclude = array_filter($usersDontExclude, function($user) use ($groupsOfUserSession) {
-                    $groups = $this->groupManager->getUserGroups($user);
-                    $groupnames = array_values(array_map(fn ($group) => $group->getGID(), $groups));
-                    $groupnamesUserSession = array_values(array_map(fn ($group) => $group->getGID(), $groupsOfUserSession));
-                    foreach($groupnames as $groupname) {
-                        if (in_array($groupname, $groupnamesUserSession)) {
-                            return true;
-                        }
-                    }
-                });
-
                 return $usersDontExclude;
 			}
 		}
+    }
+
+	/**
+	 * @param IUser[] $users
+	 * 
+	 * @return IUser[]
+	 */
+	private function getUsersFromGroupsOnly(array $users): array {
+		$usersDontExclude = [];
+		$userSession = $this->userSession->getUser();
+		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
 
 		foreach ($groupsOfUserSession as $group) {
 			$usersDontExclude = array_merge($usersDontExclude, $group->getUsers());
 		}
+
+        $usersDontExclude = array_filter(
+			$users,
+			function ($user) use ($usersDontExclude) {
+				$usernames = array_values(array_map(fn ($user) => $user->getUID(), $usersDontExclude));
+				return in_array($user->getUID(), $usernames);
+			});
 
 		return $usersDontExclude;
 	}
@@ -151,6 +155,19 @@ class WorkspaceService {
 		if ($this->shareManager->shareWithGroupMembersOnly()) {
 			$users = $this->getUsersFromGroupsOnly($users);
 		}
+
+        if (
+            method_exists(
+                $this->shareManager,
+                "shareWithGroupMembersOnlyExcludeGroupsList"
+                )
+            ) {
+
+            if ($this->shareManager->shareWithGroupMembersOnly()
+                && !empty($this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList())) {
+                    $users = $this->excludeGroupsList($users);
+            }
+        }
 
 		// transform in a format suitable for the app
 		$data = [];
