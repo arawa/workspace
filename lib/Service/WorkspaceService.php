@@ -45,8 +45,8 @@ class WorkspaceService {
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
-        private ShareMembersOnlyFilter $shareMembersFilter,
-        private GroupMembersOnlyChecker $memberGroupOnlyChecker
+		private ShareMembersOnlyFilter $shareMembersFilter,
+		private GroupMembersOnlyChecker $memberGroupOnlyChecker
 	) {
 	}
 
@@ -114,9 +114,9 @@ class WorkspaceService {
 			$users = $this->shareMembersFilter->filterUsersGroupOnly($users);
 		}
 
-        if ($this->memberGroupOnlyChecker->groupsExcludeSelected()) {
-            $users = $this->shareMembersFilter->excludeGroupsList($users);
-        }
+		if ($this->memberGroupOnlyChecker->groupsExcludeSelected()) {
+			$users = $this->shareMembersFilter->excludeGroupsList($users);
+		}
 
 		// transform in a format suitable for the app
 		$data = [];
