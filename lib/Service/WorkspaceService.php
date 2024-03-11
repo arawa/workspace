@@ -28,8 +28,9 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
+use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
 use OCP\IGroupManager;
-use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
@@ -43,7 +44,9 @@ class WorkspaceService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private UserService $userService
+		private UserService $userService,
+        private ShareMembersOnlyFilter $shareMembersFilter,
+        private GroupMembersOnlyChecker $memberGroupOnlyChecker
 	) {
 	}
 
@@ -87,51 +90,6 @@ class WorkspaceService {
 		return $users;
 	}
 
-    /**
-     * @param IUser[] $users
-     * @return IUser[]
-     */
-    private function excludeGroupsList(array $users): array {
-        $usersDontExclude = [];
-
-        if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
-			$excludeGroupsFromOwnGroups = $this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList();
-			if (!empty($excludeGroupsFromOwnGroups)) {
-                $usersDontExclude = array_filter($users, function ($user) use ($excludeGroupsFromOwnGroups) {
-                    $groups = $this->groupManager->getUserGroups($user);
-                    $groupnames = array_values(array_map(fn ($group) => $group->getGID(), $groups));
-                    $diff = array_diff($excludeGroupsFromOwnGroups, $groupnames);
-                    return count($diff) !== 0;
-		        });
-
-                return $usersDontExclude;
-			}
-		}
-    }
-
-	/**
-	 * @param IUser[] $users
-	 * 
-	 * @return IUser[]
-	 */
-	private function getUsersFromGroupsOnly(array $users): array {
-		$usersDontExclude = [];
-		$userSession = $this->userSession->getUser();
-		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
-
-		foreach ($groupsOfUserSession as $group) {
-			$usersDontExclude = array_merge($usersDontExclude, $group->getUsers());
-		}
-
-        $usersDontExclude = array_filter(
-			$users,
-			function ($user) use ($usersDontExclude) {
-				$usernames = array_values(array_map(fn ($user) => $user->getUID(), $usersDontExclude));
-				return in_array($user->getUID(), $usernames);
-			});
-
-		return $usersDontExclude;
-	}
 
 	/**
 	 * Returns a list of users whose name matches $term
@@ -152,21 +110,12 @@ class WorkspaceService {
 			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly()) {
-			$users = $this->getUsersFromGroupsOnly($users);
+		if ($this->memberGroupOnlyChecker->checkboxIsChecked()) {
+			$users = $this->shareMembersFilter->filterUsersGroupOnly($users);
 		}
 
-        if (
-            method_exists(
-                $this->shareManager,
-                "shareWithGroupMembersOnlyExcludeGroupsList"
-                )
-            ) {
-
-            if ($this->shareManager->shareWithGroupMembersOnly()
-                && !empty($this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList())) {
-                    $users = $this->excludeGroupsList($users);
-            }
+        if ($this->memberGroupOnlyChecker->groupsExcludeSelected()) {
+            $users = $this->shareMembersFilter->excludeGroupsList($users);
         }
 
 		// transform in a format suitable for the app
