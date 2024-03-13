@@ -25,7 +25,7 @@
 			<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 			<NcAvatar :display-name="user.name" :user="user.uid" />
 			<div class="user-name">
-				<span> {{ user.name }} </span>
+				<span>{{ user.name }}</span>
 			</div>
 		</div>
 		<div class="user-entry-actions">
@@ -84,6 +84,10 @@ export default {
 </script>
 
 <style scoped>
+
+.avatar {
+  width: 75%;
+}
 
 .user-card {
 	display: flex;
