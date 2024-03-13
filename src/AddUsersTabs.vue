@@ -26,8 +26,8 @@
 			:title="title"
 			@update:active="toggleImportTab"
 			@close="closeSidebar">
-			<NcAppSidebarTab id="manually"
-				:name="titleManually"
+			<NcAppSidebarTab id="search"
+				:name="titleSearch"
 				:order="1">
 				<MultiSelectUsers class="input-select-users"
 					:all-selected-users="allSelectedUsers"
@@ -127,10 +127,10 @@ export default {
 			return t('workspace', 'Add users')
 		},
 		titleImport() {
-			return t('workspace', 'Csv file import')
+			return t('workspace', 'Import a .csv file')
 		},
-		titleManually() {
-			return t('workspace', 'Manually')
+		titleSearch() {
+			return t('workspace', 'Search users')
 		},
 		csvTemplateMarkdown() {
 			return `> user, role

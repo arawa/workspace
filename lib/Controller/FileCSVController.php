@@ -99,8 +99,8 @@ class FileCSVController extends Controller {
 	
 			if (!SeparatorDetector::isComma($fileUploader)) {
 				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for the csv file'),
-					$this->translate->t('Your csv file should be a comma (",") as separator'),
+					$this->translate->t('Invalid separator for .csv files'),
+					$this->translate->t('Your .csv file must use a comma (",") as separator'),
 				);
 			}
 	
@@ -113,11 +113,11 @@ class FileCSVController extends Controller {
 				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 	
-				$message = "Invalid file format. "
-				. "Table header doesn't contain any good values.<br>"
-				. "You have to get 2 columns to specify:<br><br>"
-				."- user : The user's uid or email<br>"
-				. "- role : The user role";
+				$message = "The content of your file is invalid. "
+                . "Header does not contain the desired values."
+                . "Two columns are required, with the following header names and values :<br>"
+				."- \"user\" : The user's UID or email address<br>"
+				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -128,7 +128,7 @@ class FileCSVController extends Controller {
 				);
 
 				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in the csv format'),
+					$this->translate->t('Error in .csv file format'),
 					$this->translate->t($errorMessage),
 				);
 			}
@@ -164,18 +164,20 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-				$usersUnknown = array_slice($usersUnknown, 0, 10);
-				$usersUnknown[] = '...';
+                if (count($usersUnknown) >= 9) {
+                    $usersUnknown = array_slice($usersUnknown, 0, 10);
+                    $usersUnknown[] = '...';
+                }
 
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",
 					$usersUnknown
 				);
 				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('User doesn\'t exist'),
+					$this->translate->t('Some users cannot be found'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
@@ -251,8 +253,8 @@ class FileCSVController extends Controller {
 	
 			if (!SeparatorDetector::isComma($nextcloudFile)) {
 				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for the csv file'),
-					$this->translate->t('Your csv file should be a comma (",") as separator'),
+					$this->translate->t('Invalid separator for .csv files'),
+					$this->translate->t('Your .csv file must use a comma (",") as separator'),
 				);
 			}
 	
@@ -264,11 +266,11 @@ class FileCSVController extends Controller {
 				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 	
-				$message = "Invalid file format. "
-				. "Table header doesn't contain any good values.<br>"
-				. "You have to get 2 columns to specify:<br><br>"
-				."- user : The user's uid or email<br>"
-				. "- role : The user role";
+                $message = "The content of your file is invalid. "
+                . "Header does not contain the desired values."
+                . "Two columns are required, with the following header names and values :<br>"
+				."- \"user\" : The user's UID or email address<br>"
+				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -279,7 +281,7 @@ class FileCSVController extends Controller {
 				);
 
 				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in the csv format'),
+					$this->translate->t('Error in .csv file format'),
 					$this->translate->t($errorMessage),
 				);
 			}
@@ -318,18 +320,20 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-				$usersUnknown = array_slice($usersUnknown, 0, 10);
-				$usersUnknown[] = '...';
+                if (count($usersUnknown) >= 9) {
+				    $usersUnknown = array_slice($usersUnknown, 0, 10);
+				    $usersUnknown[] = '...';
+                }
 
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",
 					$usersUnknown
 				);
 				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :<br><br>');
+				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('User doesn\'t exist'),
+					$this->translate->t('Some users cannot be found'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
