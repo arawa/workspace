@@ -114,8 +114,8 @@ class FileCSVController extends Controller {
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 	
 				$message = "The content of your file is invalid. "
-                . "Header does not contain the desired values."
-                . "Two columns are required, with the following header names and values :<br>"
+				. "Header does not contain the desired values."
+				. "Two columns are required, with the following header names and values :<br>"
 				."- \"user\" : The user's UID or email address<br>"
 				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
 	
@@ -164,10 +164,10 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-                if (count($usersUnknown) >= 9) {
-                    $usersUnknown = array_slice($usersUnknown, 0, 10);
-                    $usersUnknown[] = '...';
-                }
+				if (count($usersUnknown) >= 9) {
+					$usersUnknown = array_slice($usersUnknown, 0, 10);
+					$usersUnknown[] = '...';
+				}
 
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",
@@ -266,9 +266,9 @@ class FileCSVController extends Controller {
 				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 	
-                $message = "The content of your file is invalid. "
-                . "Header does not contain the desired values."
-                . "Two columns are required, with the following header names and values :<br>"
+				$message = "The content of your file is invalid. "
+				. "Header does not contain the desired values."
+				. "Two columns are required, with the following header names and values :<br>"
 				."- \"user\" : The user's UID or email address<br>"
 				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
 	
@@ -320,10 +320,10 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-                if (count($usersUnknown) >= 9) {
-				    $usersUnknown = array_slice($usersUnknown, 0, 10);
-				    $usersUnknown[] = '...';
-                }
+				if (count($usersUnknown) >= 9) {
+					$usersUnknown = array_slice($usersUnknown, 0, 10);
+					$usersUnknown[] = '...';
+				}
 
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",

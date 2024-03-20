@@ -26,13 +26,13 @@ class UserFormatter {
 			}
 		}
 
-		return array(
+		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
-		);
+		];
 	}
 }
