@@ -110,7 +110,7 @@
       "<rootDir>/node_modules/jest-serializer-vue"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!(splitpanes)).+\\.js$"
+      "/node_modules/(?!(bail|comma-separated-tokens|decode-named-character-reference|escape-string-regexp|hast-.*|is-*|mdast-.*|mdast-util-find-and-replace|micromark|property-information|rehype-.*|remark-.*|space-separated-tokens|splitpanes|trim-lines|trough|unified|unist-*|vfile|web-namespaces)).+\\.js$"
     ],
     "setupFilesAfterEnv": [
       "./src/tests/jest.setup.js"
