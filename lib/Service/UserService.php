@@ -61,19 +61,19 @@ class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 
-        if (!isset($space['groups'])) {
-            throw new \Exception('The "groups" key is not presetn');
-        }
+		if (!isset($space['groups'])) {
+			throw new \Exception('The "groups" key is not presetn');
+		}
 
-        if (!is_array($space['groups'])) {
-            throw new \Exception('The "groups" key is not an array');
-        }
+		if (!is_array($space['groups'])) {
+			throw new \Exception('The "groups" key is not an array');
+		}
 
-        foreach ($this->groupManager->getUserGroups($user) as $group) {
-            if (in_array($group->getGID(), array_keys($space['groups']))) {
-                array_push($groups, $group->getGID());
-            }
-        }
+		foreach ($this->groupManager->getUserGroups($user) as $group) {
+			if (in_array($group->getGID(), array_keys($space['groups']))) {
+				array_push($groups, $group->getGID());
+			}
+		}
 
 		// Returns a user that is valid for the frontend
 		return [
