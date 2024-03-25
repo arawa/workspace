@@ -77,7 +77,7 @@
     "jsdom-global": "^3.0.2",
     "prettier": "^2.7.1",
     "vue-jest": "^3.0.7",
-    "vue-template-compiler": "^2.7.13",
+    "vue-template-compiler": "^2.7.16",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
