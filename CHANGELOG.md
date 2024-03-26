@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
+- Add an arrow from the create group ([#900](https://github.com/arawa/workspace/pull/900))
 
 ### Fixed
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
 - Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
 - fix/delete-a-user-when-adding-him-to-another-group/901 ( [#907](https://github.com/arawa/workspace/pull/907) )
+- Check if an user is present in the WorkspacesManagers group before remove ( [#915](https://github.com/arawa/workspace/pull/915) )
+- Rename a workspace name from plural to singular or inversely ( [#893](https://github.com/arawa/workspace/pull/893) )
+- Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 
 # [3.0.1] - 2023-05-26
 
