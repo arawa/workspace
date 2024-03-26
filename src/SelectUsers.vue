@@ -79,15 +79,18 @@
 				</div>
 			</div>
 		</div>
-		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
-			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
-		</p>
-    <div class="add-users-wrapper">
-      <button @click="addUsersToWorkspaceOrGroup()">
-        {{ t('workspace', 'Add users') }}
-      </button>
-    </div>
-		<!-- <div class="select-users-actions">
+		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
+			type="warning">
+			<p>
+				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+			</p>
+		</NcNoteCard>
+		<div class="add-users-wrapper">
+			<button @click="addUsersToWorkspaceOrGroup()">
+				{{ t('workspace', 'Add users') }}
+			</button>
+		</div>
+		<div class="select-users-actions">
 			<button class="icon-upload" @click="uploadNewFile()">
 				<span>{{ t('workspace', 'Add users from csv file') }}</span>
 			</button>
@@ -99,7 +102,7 @@
 			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
 				<span>{{ t('workspace', 'Import csv from Files') }}</span>
 			</button>
-		</div> -->
+		</div>
 	</div>
 </template>
 
@@ -112,6 +115,7 @@ import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 
@@ -128,6 +132,7 @@ export default {
 		NcAvatar,
 		NcActions,
 		NcActionButton,
+		NcNoteCard,
 		NcMultiselect,
 	},
 	data() {
@@ -336,12 +341,6 @@ export default {
 </script>
 
 <style>
-.caution {
-	color: red;
-	margin: 5px;
-	width: 90%;
-}
-
 .icon-member {
 	position: relative;
 	left: 10px;
@@ -377,12 +376,12 @@ export default {
 	justify-content: space-around;
 }
 .select-users-actions button {
-  display: flex;
+	display: flex;
 	flex-direction: column;
 	background-position: 10px center;
 }
 .select-users-actions button, .add-users-wrapper button {
-  width: fit-content;
+	width: fit-content;
 }
 
 .header-modal {
@@ -429,9 +428,8 @@ export default {
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
-	margin: 10px auto;
-	min-width: 600px;
-	/* max-width: 600px; */
+	margin: 10px;
+	max-width: 600px;
 }
 
 .user-entry {
@@ -452,7 +450,7 @@ export default {
 }
 
 .user-not-member {
-	/* background-color: #ffebee */
+	background-color: rgba(var(--color-error-rgb), 0.5);
 }
 
 .role-toggle {
