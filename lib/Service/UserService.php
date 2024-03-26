@@ -123,32 +123,45 @@ class UserService {
 		return false;
 	}
 
+
 	/**
-	 * This function removes a GE from the WorkspaceManagers group when necessary
+	 * Return `true` if the user can be removed from workspace manager group (SPACE-GE), Otherwise, `false`.
+	 *
+	 * @param IUser $user
+	 * @param array|object $space
+	 * @return boolean
 	 */
-	public function removeGEFromWM(IUser $user, array|object $space): void {
-		$found = false;
+	public function canRemoveWorkspaceManagers(IUser $user, array|object $space): bool {
+		$canRemove = true;
 		$groups = $this->groupManager->getUserGroups($user);
 
-		// Checks if the user is member of the GE- group of another workspace
 		foreach ($groups as $group) {
 			$gid = $group->getGID();
-			if (strpos($gid, WorkspaceManagerGroup::get($space['id'])) === 0 &&
+			if (strpos($gid, WorkspaceManagerGroup::getPrefix()) === 0 &&
 				$gid !== UserGroup::get($space['id'])
 			) {
-				$found = true;
+				$canRemove = false;
 				break;
 			}
 		}
 
-		// Removing the user from the WorkspacesManagers group if needed
-		if (!$found) {
-			$this->logger->debug('User is not manager of any other workspace, removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
-			$workspaceUserGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
-			$workspaceUserGroup->removeUser($user);
-		} else {
+		if (!$canRemove) {
 			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
 		}
+
+		return $canRemove;
+	}
+	
+	/**
+	 * This function removes a GE from the WorkspaceManagers group when necessary
+	 *
+	 * @param IUser $user
+	 * @return void
+	 */
+	public function removeGEFromWM(IUser $user): void {
+		$this->logger->debug('User is not manager of any other workspace, removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
+		$workspaceUserGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
+		$workspaceUserGroup->removeUser($user);
 
 		return;
 	}
