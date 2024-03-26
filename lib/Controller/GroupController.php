@@ -152,7 +152,12 @@ class GroupController extends Controller {
 				|| str_starts_with($group->getGID(), 'SPACE-G-');
 		});
 
-		if (!empty($groups)) {
+		$groupsNameSearched = array_map(
+			fn ($group) => $group->getGID(),
+			$groups);
+
+		if (!empty($groups)
+			&& in_array($newGroupName, $groupsNameSearched)) {
 			return new JSONResponse(
 				'This group already exists. Please, change the name',
 				Http::STATUS_CONFLICT

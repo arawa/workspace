@@ -206,16 +206,23 @@ export default {
 				})
 
 				const groupKeys = Object.keys(space.groups)
-
 				groupKeys.forEach(key => {
 					const group = space.groups[key]
+					/**
+					 * To fix a bug where the space is renamed to single
+					 * then to plural (or inversely)
+					 * This bug is present from release 3.0.2
+					 */
+					if (!this.checkSpaceNameIsEqual(group.displayName, oldSpaceName)) {
+						group.displayName = this.replaceSpaceName(group.displayName, oldSpaceName)
+					}
 					const newDisplayName = group.displayName.replace(oldSpaceName, newSpaceName)
 
 					// Renames group
 					this.$store.dispatch('renameGroup', {
-					  name: newSpaceName,
-					  gid: group.gid,
-					  newGroupName: newDisplayName,
+						name: newSpaceName,
+						gid: group.gid,
+						newGroupName: newDisplayName,
 					})
 				})
 
@@ -233,6 +240,56 @@ export default {
 				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
 				showNotificationError('Error to rename space', text, 5000)
 			}
+		},
+		/**
+		 * @param {string} groupname the displayname from a group
+		 * @param {string} oldSpaceName the currently space name
+		 * To fix a bug from release 3.0.2
+		 */
+		checkSpaceNameIsEqual(groupname, oldSpaceName) {
+			let spaceNameFiltered = ''
+
+			if (groupname.startsWith('U-')) {
+				spaceNameFiltered = groupname.replace('U-', '')
+			}
+
+			if (groupname.startsWith('WM-')) {
+				spaceNameFiltered = groupname.replace('WM-', '')
+			} else if (groupname.startsWith('GE-')) {
+				spaceNameFiltered = groupname.replace('GE-', '')
+			}
+
+			if (groupname.startsWith('G-')) {
+				spaceNameFiltered = groupname.replace('G-', '')
+			}
+
+			if (spaceNameFiltered === oldSpaceName) {
+				return true
+			}
+
+			return false
+		},
+		/**
+		 * @param {string} groupname the displayname from a group
+		 * @param {string} oldSpaceName the currently space name
+		 * To fix a bug from release 3.0.2
+		 */
+		replaceSpaceName(groupname, oldSpaceName) {
+			const spaceNameSplitted = groupname
+				.split('-')
+				.filter(element => element)
+
+			if (spaceNameSplitted[0] === 'WM'
+					|| spaceNameSplitted[0] === 'U') {
+				spaceNameSplitted[1] = oldSpaceName
+			}
+
+			if (spaceNameSplitted[0] === 'G') {
+				const lengthMax = spaceNameSplitted.length - 1
+				spaceNameSplitted[lengthMax] = oldSpaceName
+			}
+
+			return spaceNameSplitted.join('-')
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
