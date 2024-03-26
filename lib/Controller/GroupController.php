@@ -261,7 +261,9 @@ class GroupController extends Controller {
 				$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
 				if ($groupId === WorkspaceManagerGroup::get($space['id'])) {
 					$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-					$this->userService->removeGEFromWM($NCUser, $space);
+					if ($this->userService->canRemoveWorkspaceManagers($NCUser, $space)) {
+						$this->userService->removeGEFromWM($NCUser);
+					}
 				}
 			}
 		} else {
@@ -272,7 +274,9 @@ class GroupController extends Controller {
 			if ($gid === WorkspaceManagerGroup::get($space['id'])) {
 				// Removing user from a GE- group
 				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-				$this->userService->removeGEFromWM($NCUser, $space);
+				if ($this->userService->canRemoveWorkspaceManagers($NCUser, $space)) {
+					$this->userService->removeGEFromWM($NCUser);
+				}
 			}
 		}
 
