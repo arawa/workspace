@@ -20,6 +20,7 @@
 
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
+        <php min-version="8.0"/>
         <nextcloud min-version="25" max-version="29"/>
     </dependencies>
 
