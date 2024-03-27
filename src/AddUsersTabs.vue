@@ -76,9 +76,13 @@
 					@remove-user="removeUserFromBatch" />
 			</div>
 		</div>
-		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
-			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
-		</p>
+		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
+			type="warning"
+      class="note-card">
+			<p>
+				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+			</p>
+		</NcNoteCard>
 		<div class="buttons-groups">
 			<NcButton
 				@click="addUsersToWorkspaceOrGroup()">
@@ -97,6 +101,7 @@ import MultiSelectUsers from './MultiSelectUsers.vue'
 import NcAppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar.js'
 import NcAppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
 import NcRichText from '@nextcloud/vue/dist/Components/NcRichText.js'
 import UserCard from './UserCard.vue'
@@ -111,10 +116,11 @@ export default {
 		MultiSelectUsers,
 		NcAppSidebar,
 		NcAppSidebarTab,
-		NcRichText,
-		UserCard,
 		NcButton,
 		NcPopover,
+		NcRichText,
+		UserCard,
+		NcNoteCard,
 	},
 	data() {
 		return {
@@ -147,6 +153,12 @@ export default {
 				cssClass = ''
 			}
 			return cssClass
+		},
+		// Returns true when at least 1 selected user is not yet member of the workspace
+		addingUsersToWorkspace() {
+			return !this.allSelectedUsers.every(user => {
+				return this.$store.getters.isMember(this.$route.params.space, user)
+			})
 		},
 	},
 	methods: {
@@ -227,7 +239,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 section.app-sidebar__tab--active {
 	min-height: auto !important;
@@ -237,6 +249,12 @@ section.app-sidebar__tab--active {
 	justify-content: center !important;
 	align-items: center !important;
 	overflow: visible !important;
+}
+
+// Change the height of the modal container
+// to make space for the NcNoteCard
+.modal-container {
+  max-height: 900px !important;
 }
 
 // FIXME: Obivously we should at some point not randomly reuse the sidebar component
@@ -304,6 +322,10 @@ section.app-sidebar__tab--active {
 	flex-flow: row;
 }
 
+.user-not-member {
+	background-color: rgba(var(--color-error-rgb), 0.5);
+}
+
 .buttons-import-groups {
 	display: flex;
 	width: 560px;
@@ -335,6 +357,14 @@ section.app-sidebar__tab--active {
 
 .onImportTab {
 	color: grey;
+}
+
+.note-card {
+  width: 500px;
+}
+
+.buttons-groups {
+  margin: 25px 0 25px 0;
 }
 
 </style>
