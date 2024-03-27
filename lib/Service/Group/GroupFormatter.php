@@ -29,6 +29,11 @@ use OCP\IGroup;
 class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
+     * @return array [
+     *  'gid' => string,
+     *  'displayName' => string,
+     *  'types' => string[],
+     * ]
 	 */
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
@@ -36,7 +41,8 @@ class GroupFormatter {
 		foreach ($groups as $group) {
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
-				'displayName' => $group->getDisplayName()
+				'displayName' => $group->getDisplayName(),
+                'types' => $group->getBackendNames(),
 			];
 		}
 
