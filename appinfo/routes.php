@@ -151,8 +151,8 @@ return [
 			'name' => 'page#index',
 			'url' => '/{path}',
 			'verb' => 'GET',
-			'requirements' => array('path' => '.*'),
-			'defaults' => array('path' => 'dummy'),
+			'requirements' => ['path' => '.*'],
+			'defaults' => ['path' => 'dummy'],
 			'postfix' => 'catchall',
 		]
 	]

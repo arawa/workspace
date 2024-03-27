@@ -170,7 +170,7 @@ class WorkspaceService {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
-		$users = array();
+		$users = [];
 		$group = $this->groupManager->get(UserGroup::get($workspace['id']));
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
@@ -199,13 +199,13 @@ class WorkspaceService {
 	 *
 	 */
 	public function addGroupsInfo(array|string $workspace): array {
-		$groups = array();
+		$groups = [];
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
-			$groups[$gid] = array(
+			$groups[$gid] = [
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName()
-			);
+			];
 		}
 		$workspace['groups'] = $groups;
 
