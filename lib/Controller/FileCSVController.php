@@ -28,10 +28,12 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Files\Csv;
 use OCA\Workspace\Files\InternalFile;
 use OCA\Workspace\Files\LocalFile;
+use OCA\Workspace\Middleware\Attribute\SpaceAdminRequired;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
@@ -57,11 +59,10 @@ class FileCSVController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @SpaceAdminRequired
 	 * Returns formatted list of existing users of the instance.
-	 *
 	 */
+    #[NoAdminRequired]
+    #[SpaceAdminRequired]
 	public function import(): JSONResponse {
 		$params = $this->request->getParams();
 		$spaceObj = $params['space'];
@@ -116,11 +117,10 @@ class FileCSVController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @SpaceAdminRequired
 	 * Returns formatted list of existing users of the instance.
-	 *
 	 */
+    #[NoAdminRequired]
+    #[SpaceAdminRequired]
 	public function getFromFiles():JSONResponse {
 		$params = $this->request->getParams();
 		$path = $params['path'];
