@@ -28,8 +28,9 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
+use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
 use OCP\IGroupManager;
-use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
@@ -43,7 +44,9 @@ class WorkspaceService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private UserService $userService
+		private UserService $userService,
+		private ShareMembersOnlyFilter $shareMembersFilter,
+		private GroupMembersOnlyChecker $memberGroupOnlyChecker
 	) {
 	}
 
@@ -87,24 +90,6 @@ class WorkspaceService {
 		return $users;
 	}
 
-	/**
-	 * @param IUser[] $users
-	 * @return IUser[]
-	 */
-	private function getUsersFromGroupsOnly(array $users): array {
-		$usersFromGroups = [];
-		$userSession = $this->userSession->getUser();
-		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
-		foreach ($groupsOfUserSession as $group) {
-			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
-		}
-
-		$usersFromGroups = array_filter($usersFromGroups, function ($user) use ($users) {
-			return in_array($user, $users);
-		});
-
-		return $usersFromGroups;
-	}
 
 	/**
 	 * Returns a list of users whose name matches $term
@@ -125,8 +110,12 @@ class WorkspaceService {
 			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly()) {
-			$users = $this->getUsersFromGroupsOnly($users);
+		if ($this->memberGroupOnlyChecker->checkboxIsChecked()) {
+			$users = $this->shareMembersFilter->filterUsersGroupOnly($users);
+		}
+
+		if ($this->memberGroupOnlyChecker->groupsExcludeSelected()) {
+			$users = $this->shareMembersFilter->excludeGroupsList($users);
 		}
 
 		// transform in a format suitable for the app
