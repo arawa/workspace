@@ -79,10 +79,13 @@
 				</div>
 			</div>
 		</div>
-		<p v-if="$route.params.group && addingUsersToWorkspace" class="caution">
-			{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
-		</p>
-		<div class="select-users-actions">
+		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
+			type="warning">
+			<p>
+				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+			</p>
+		</NcNoteCard>
+		<div class="add-users-wrapper">
 			<button @click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add users') }}
 			</button>
@@ -99,6 +102,7 @@ import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
@@ -107,6 +111,7 @@ export default {
 		NcAvatar,
 		NcActions,
 		NcActionButton,
+		NcNoteCard,
 		NcMultiselect,
 	},
 	data() {
@@ -252,12 +257,6 @@ export default {
 </script>
 
 <style>
-.caution {
-	color: red;
-	margin: 5px;
-	width: 90%;
-}
-
 .icon-member {
 	position: relative;
 	left: 10px;
@@ -289,6 +288,16 @@ export default {
 	display: flex;
 	flex-flow: row-reverse;
 	margin-top: 10px;
+	width: 93%;
+	justify-content: space-around;
+}
+.select-users-actions button {
+	display: flex;
+	flex-direction: column;
+	background-position: 10px center;
+}
+.select-users-actions button, .add-users-wrapper button {
+	width: fit-content;
 }
 
 .header-modal {
@@ -336,7 +345,6 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	margin: 10px;
-	min-width: 600px;
 	max-width: 600px;
 }
 
@@ -358,7 +366,7 @@ export default {
 }
 
 .user-not-member {
-	/* background-color: #ffebee */
+	background-color: rgba(var(--color-error-rgb), 0.5);
 }
 
 .role-toggle {
