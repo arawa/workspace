@@ -56,6 +56,7 @@
 							ref="createGroupInput"
 							icon="icon-group"
 							:close-after-click="true"
+							:show-trailing-button="true"
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</NcActionInput>
