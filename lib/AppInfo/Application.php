@@ -29,7 +29,6 @@ use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -50,7 +49,6 @@ class Application extends App {
 
 		$context->registerService(IsSpaceAdminMiddleware::class, function ($c) {
 			return new IsSpaceAdminMiddleware(
-				$c->query(IControllerMethodReflector::class),
 				$c->query(IRequest::class),
 				$c->query(UserService::class),
 				$c->query(SpaceService::class)
@@ -59,7 +57,6 @@ class Application extends App {
 
 		$context->registerService(IsGeneralManagerMiddleware::class, function ($c) {
 			return new IsGeneralManagerMiddleware(
-				$c->query(IControllerMethodReflector::class),
 				$c->query(IRequest::class),
 				$c->query(UserService::class)
 			);
