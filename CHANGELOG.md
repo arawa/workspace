@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### stableX.X
+
+#### Added
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
 - Add an arrow from the create group ([#900](https://github.com/arawa/workspace/pull/900))
 
-### Fixed
+#### Fixed
 
 - Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
 - Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
@@ -19,6 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Check if an user is present in the WorkspacesManagers group before remove ( [#915](https://github.com/arawa/workspace/pull/915) )
 - Rename a workspace name from plural to singular or inversely ( [#893](https://github.com/arawa/workspace/pull/893) )
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
+- Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
+
+### stable3.0
+
+#### Fixed
+
+- Reapply the highlight for new members when they are added to a workspace ( [#948](https://github.com/arawa/workspace/pull/948) )
+- Fixed of a bad renaming for a workspace (ex: rename a workspace from plural to single or inversely ) ( [#949](https://github.com/arawa/workspace/pull/949) )
+- Add an arrow in the create group field ( [#950](https://github.com/arawa/workspace/pull/950) )
+- Prevent a user from being removed from a workspace if he/she is a space manager for another workspace ( [#951](https://github.com/arawa/workspace/pull/951) )
+- Take into account the limitation of searches between members of the same group, except for specefic groups ( [#953](https://github.com/arawa/workspace/pull/953) )
 
 ## [3.0.5] - 2024-03-04
 
