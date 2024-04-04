@@ -18,71 +18,29 @@ class ShareMembersOnlyFilter {
 	/**
 	 * @param IUser[] $users
 	 * @return IUser[]
-<<<<<<< HEAD
-<<<<<<< HEAD
 	 * Return users with groups in common.
 	 * Except some listed in the drop-down list
 	 * (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
-=======
-     * Return users with groups in common.
-     * Except some listed in the drop-down list
-     * (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
->>>>>>> fc2d0de (fix(share): Return users with common groups)
-=======
-	 * Return users with groups in common.
-	 * Except some listed in the drop-down list
-	 * (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
->>>>>>> b122b8e (style(php): Run composer cs:fix)
 	 */
 	public function excludeGroupsList(array $users): array {
 		$usersNotExclude = [];
 
 		if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
 			$excludedGroups = $this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList();
-<<<<<<< HEAD
-<<<<<<< HEAD
 			$userSession = $this->userSession->getUser();
 			$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
 			$groupnamesOfUserSession = array_map(fn ($group) => $group->getGID(), $groupsOfUserSession);
-=======
-		    $userSession = $this->userSession->getUser();
-            $groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
-            $groupnamesOfUserSession = array_map(fn($group) => $group->getGID(), $groupsOfUserSession);
->>>>>>> fc2d0de (fix(share): Return users with common groups)
-=======
-			$userSession = $this->userSession->getUser();
-			$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
-			$groupnamesOfUserSession = array_map(fn ($group) => $group->getGID(), $groupsOfUserSession);
->>>>>>> b122b8e (style(php): Run composer cs:fix)
 
 			if (!empty($excludedGroups)) {
 				$usersNotExclude = array_filter($users, function ($user) use ($excludedGroups, $groupnamesOfUserSession) {
 					$groups = $this->groupManager->getUserGroups($user);
 					$groupnames = array_values(array_map(fn ($group) => $group->getGID(), $groups));
-<<<<<<< HEAD
-<<<<<<< HEAD
 					$commonGroups = array_intersect($groupnamesOfUserSession, $groupnames);
 					return count(array_diff($commonGroups, $excludedGroups)) !== 0;
 				});
 			}
 
 			return $usersNotExclude;
-=======
-                    $commonGroups = array_intersect($groupnamesOfUserSession, $groupnames);
-                    return count(array_diff($commonGroups, $excludedGroups)) !== 0;
-				});
-			}
-
-            return $usersNotExclude;
->>>>>>> fc2d0de (fix(share): Return users with common groups)
-=======
-					$commonGroups = array_intersect($groupnamesOfUserSession, $groupnames);
-					return count(array_diff($commonGroups, $excludedGroups)) !== 0;
-				});
-			}
-
-			return $usersNotExclude;
->>>>>>> b122b8e (style(php): Run composer cs:fix)
 		}
 	}
 
