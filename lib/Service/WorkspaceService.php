@@ -28,8 +28,9 @@ namespace OCA\Workspace\Service;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
+use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
 use OCP\IGroupManager;
-use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
@@ -43,7 +44,9 @@ class WorkspaceService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private UserService $userService
+		private UserService $userService,
+		private ShareMembersOnlyFilter $shareMembersFilter,
+		private GroupMembersOnlyChecker $memberGroupOnlyChecker
 	) {
 	}
 
@@ -85,24 +88,6 @@ class WorkspaceService {
 		return $users;
 	}
 
-	/**
-	 * @param IUser[] $users
-	 * @return IUser[]
-	 */
-	private function getUsersFromGroupsOnly(array $users): array {
-		$usersFromGroups = [];
-		$userSession = $this->userSession->getUser();
-		$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);
-		foreach ($groupsOfUserSession as $group) {
-			$usersFromGroups = array_merge($usersFromGroups, $group->getUsers());
-		}
-
-		$usersFromGroups = array_filter($usersFromGroups, function ($user) use ($users) {
-			return in_array($user, $users);
-		});
-
-		return $usersFromGroups;
-	}
 
 	/**
 	 * Returns a list of users whose name matches $term
@@ -123,8 +108,14 @@ class WorkspaceService {
 			}
 		}
 
-		if ($this->shareManager->shareWithGroupMembersOnly()) {
-			$users = $this->getUsersFromGroupsOnly($users);
+		if ($this->memberGroupOnlyChecker->checkboxIsChecked()) {
+			$users = $this->shareMembersFilter->filterUsersGroupOnly($users);
+		}
+
+		if ($this->memberGroupOnlyChecker->groupsExcludeSelected()) {
+			if ($this->memberGroupOnlyChecker->checkMemberInGroupExcluded()) {
+				$users = $this->shareMembersFilter->excludeGroupsList($users);
+			}
 		}
 
 		// transform in a format suitable for the app
@@ -168,7 +159,7 @@ class WorkspaceService {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
-		$users = array();
+		$users = [];
 		$group = $this->groupManager->get(UserGroup::get($workspace['id']));
 		// TODO Handle is_null($group) better (remove workspace from list?)
 		if (!is_null($group)) {
@@ -197,13 +188,13 @@ class WorkspaceService {
 	 *
 	 */
 	public function addGroupsInfo(array|string $workspace): array {
-		$groups = array();
+		$groups = [];
 		foreach (array_keys($workspace['groups']) as $gid) {
 			$NCGroup = $this->groupManager->get($gid);
-			$groups[$gid] = array(
+			$groups[$gid] = [
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName()
-			);
+			];
 		}
 		$workspace['groups'] = $groups;
 
