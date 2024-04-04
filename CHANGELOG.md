@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 
-## [3.0.6] - 2024-04-4
+## [3.0.6] - 2024-04-4
 
 ### Fixed
 
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed of a bad renaming for a workspace (ex: rename a workspace from plural to single or inversely ) ( [#949](https://github.com/arawa/workspace/pull/949) )
 - Add an arrow in the create group field ( [#950](https://github.com/arawa/workspace/pull/950) )
 - Prevent a user from being removed from a workspace if he/she is a space manager for another workspace ( [#951](https://github.com/arawa/workspace/pull/951) )
-- Take into account the limitation of searches between members of the same group, except for specefic groups ( [#953](https://github.com/arawa/workspace/pull/953) )
+- Take into account the limitation of searches between members of the same group, except for specific groups ( [#953](https://github.com/arawa/workspace/pull/953) )
 
 ## [3.0.5] - 2024-03-04
 
