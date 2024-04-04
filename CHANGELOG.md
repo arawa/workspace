@@ -23,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 
-### stable3.0
+## [3.0.6] - 2024-04-4
 
-#### Fixed
+### Fixed
 
 - Reapply the highlight for new members when they are added to a workspace ( [#948](https://github.com/arawa/workspace/pull/948) )
 - Fixed of a bad renaming for a workspace (ex: rename a workspace from plural to single or inversely ) ( [#949](https://github.com/arawa/workspace/pull/949) )
@@ -239,7 +239,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.5...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.6...main
+[3.0.6]: https://github.com/arawa/workspace/compare/v3.0.5...3.0.6
 [3.0.5]: https://github.com/arawa/workspace/compare/v3.0.4...3.0.5
 [3.0.4]: https://github.com/arawa/workspace/compare/v3.0.3...3.0.4
 [3.0.3]: https://github.com/arawa/workspace/compare/v3.0.2...3.0.3
