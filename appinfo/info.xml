@@ -54,7 +54,7 @@ Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the sta
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
-For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation).
+For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide).
 
 # Upgrade guideline
 
@@ -70,7 +70,7 @@ For this version, you should refresh your browser from the Workspace app with `C
     <documentation>
         <admin>https://github.com/arawa/workspace/blob/main/README.md#installation</admin>
         <developer>https://github.com/arawa/workspace/blob/main/README.md#development-and-build</developer>
-        <user>https://github.com/arawa/workspace/blob/main/docs/Documentation%20utilisateur%20de%20Workspace.pdf</user>
+        <user>https://github.com/arawa/workspace/tree/main/docs/user-guide</user>
     </documentation>
 
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-details.png</screenshot>
