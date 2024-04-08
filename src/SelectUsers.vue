@@ -358,7 +358,6 @@ export default {
 }
 
 .modal-container {
-	display: flex !important;
 	min-height: 520px !important;
 	max-height: 520px !important;
 	width: 640px !important;
