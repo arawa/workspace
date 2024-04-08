@@ -1,13 +1,19 @@
 <template>
-	<div>
-		<h1>Connect a group</h1>
+	<div class="container-select-groups">
+		<header class="header-select-groups">
+			<h1>Connect a group</h1>
+		</header>
 
-		<NcSelect
-			label="Start typing to lookup groups"
-			limit="10"
-			:options="groupsSelectable"
-			@search="lookupGroups"
-			@close="groupsSelectable=[]" />
+		<div class="body-select-groups">
+			<NcSelect
+				class="searchbar-groups"
+				track-by="gid"
+				label="displayName"
+				limit="10"
+				:options="groupsSelectable"
+				@search="lookupGroups"
+				@close="groupsSelectable=[]" />
+		</div>
 	</div>
 </template>
 
@@ -45,6 +51,7 @@ export default {
 			axios.get(generateUrl('/apps/workspace/groups'), {
 				params: {
 					pattern: term,
+					ignoreSpaces: true,
 				},
 			})
 				.then(response => {
@@ -61,4 +68,32 @@ export default {
 </script>
 
 <style>
+.container-select-groups {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.header-select-groups {
+	display: flex;
+	align-items: start;
+	width: 100%;
+	padding: 10px;
+}
+
+.header-select-groups h1 {
+	margin: 10px;
+	font-size: 24px;
+}
+
+.body-select-groups {
+	display: flex;
+}
+
+.searchbar-groups {
+	width: 400px;
+}
+
 </style>
