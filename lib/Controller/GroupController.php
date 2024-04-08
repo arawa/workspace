@@ -341,13 +341,30 @@ class GroupController extends Controller {
     /**
      * @NoAdminRequired
      * @NoCSRFRequired
+     * 
+     * @param string $pattern The pattern to search
+     * @param bool $ignoreSpaces (not require) Ignore the workspace groups
      */
-    public function search(string $pattern): JSONResponse {
-        
+    public function search(string $pattern, ?bool $ignoreSpaces = null): JSONResponse {
+
         $groups = $this->groupManager->search($pattern);
 
+		if (!is_null($ignoreSpaces) && (bool)$ignoreSpaces) {
+			$groups = array_filter($groups, function ($group) {
+				$gid = $group->getGID();
+
+				return !str_starts_with($gid, WorkspaceManagerGroup::getPrefix())
+                    && !str_starts_with($gid, UserGroup::getPrefix())
+                    && !str_starts_with($gid, 'SPACE-G')
+					&& $gid !== ManagersWorkspace::GENERAL_MANAGER
+                    && $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
+			});
+        }
+
         $groupsFormatted = GroupFormatter::formatGroups($groups);
-        
+
+        uksort($groupsFormatted, 'strcasecmp');
+
         return new JSONResponse($groupsFormatted);
     }
 }
