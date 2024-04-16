@@ -55,9 +55,13 @@ export default {
 				},
 			})
 				.then(response => {
-					console.debug(response.data)
-					// response.data is an object
-					this.groupsSelectable = response.data
+					const groups = []
+
+					for (const key in response.data) {
+						groups.push(response.data[key])
+					}
+
+					this.groupsSelectable = groups
 				})
 				.catch(reason => {
 					console.error(reason.message)

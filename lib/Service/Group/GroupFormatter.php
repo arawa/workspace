@@ -51,7 +51,7 @@ class GroupFormatter {
                 $isLdap = true;
             }
 
-			$groupsFormat[] = [
+			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
                 'types' => $group->getBackendNames(),
