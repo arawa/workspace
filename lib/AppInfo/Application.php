@@ -67,5 +67,7 @@ class Application extends App {
 
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
+		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 	}
+
 }
