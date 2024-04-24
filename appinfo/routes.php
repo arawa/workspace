@@ -123,16 +123,16 @@ return [
 			'url' => '/api/group/addUser/{spaceId}',
 			'verb' => 'POST',
 		],
-		// [
-		// 	'name' => 'fileCSV#import',
-		// 	'url' => '/file/csv/import-data',
-		// 	'verb' => 'POST',
-		// ],
-		// [
-		// 	'name' => 'fileCSV#getFromFiles',
-		// 	'url' => '/file/csv/import-from-files',
-		// 	'verb' => 'POST',
-		// ],
+		[
+			'name' => 'fileCSV#import',
+			'url' => '/file/csv/import-data',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'fileCSV#getFromFiles',
+			'url' => '/file/csv/import-from-files',
+			'verb' => 'POST',
+		],
 		[
 			'name' => 'space#updateColorCode',
 			'url' => '/workspaces/{spaceId}/color',
@@ -151,8 +151,8 @@ return [
 			'name' => 'page#index',
 			'url' => '/{path}',
 			'verb' => 'GET',
-			'requirements' => array('path' => '.*'),
-			'defaults' => array('path' => 'dummy'),
+			'requirements' => ['path' => '.*'],
+			'defaults' => ['path' => 'dummy'],
 			'postfix' => 'catchall',
 		]
 	]

@@ -46,6 +46,9 @@ class UserService {
 	 * Given a IUser, returns an array containing all the user information
 	 * needed for the frontend
 	 *
+	 * @deprecated 3.1.0|4.0.0
+	 * @uses OCA\Workspace\Users\UserFormatter
+	 *
 	 * @param IUser $user
 	 * @param array $space
 	 * @param string $role
@@ -53,7 +56,6 @@ class UserService {
 	 * @return array|null
 	 *
 	 */
-
 	public function formatUser(IUser $user, array $space, string $role): array|null {
 		if (is_null($user)) {
 			return null;
@@ -68,14 +70,14 @@ class UserService {
 		}
 
 		// Returns a user that is valid for the frontend
-		return array(
+		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
-		);
+		];
 	}
 
 	/**

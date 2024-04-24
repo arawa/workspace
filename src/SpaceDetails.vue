@@ -85,10 +85,9 @@
 		<UserTable :space-name="$route.params.space" />
 		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
+			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
-			style="min-heigth: 8rem;"
 			size="small"
 			@close="toggleShowDelWorkspaceModal">
 			<RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
@@ -105,22 +104,22 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import AddUsersTabs from './AddUsersTabs.vue'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
+		AddUsersTabs,
 		NcActions,
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
 		NcModal,
 		NcMultiselect,
-		SelectUsers,
 		RemoveSpace,
 		UserTable,
 	},
@@ -389,4 +388,5 @@ export default {
 .modal-wrapper--small .modal-container {
 	min-height: 12rem !important;
 }
+
 </style>
