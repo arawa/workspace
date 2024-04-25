@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
@@ -36,7 +37,8 @@ class UserService {
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IUserSession $userSession,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
+		private ConnectedGroupsService $connectedGroups,
 	) {
 	}
 
@@ -61,7 +63,7 @@ class UserService {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($space['groups']))) {
+			if (in_array($group->getGID(), array_keys($space['groups'])) || $this->connectedGroups->isConnectedToWorkspace($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
 		}
