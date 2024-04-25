@@ -31,7 +31,7 @@ export const getters = {
 	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
-		return state.spaces[name].groups[gid].displayName
+		return state.spaces[name].groups[gid] ? state.spaces[name].groups[gid].displayName : '[' + gid + ']'
 	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
