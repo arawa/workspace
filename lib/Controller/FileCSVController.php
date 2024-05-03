@@ -34,6 +34,8 @@ use OCA\Workspace\Files\Csv\CheckMimeType;
 use OCA\Workspace\Files\Csv\ImportUsers\Header;
 use OCA\Workspace\Files\Csv\ImportUsers\HeaderValidator;
 use OCA\Workspace\Files\Csv\ImportUsers\Parser;
+use OCA\Workspace\Files\Csv\ImportUsers\Values;
+use OCA\Workspace\Files\Csv\ImportUsers\ValuesValidator;
 use OCA\Workspace\Files\Csv\SeparatorDetector;
 use OCA\Workspace\Files\FileUploader;
 use OCA\Workspace\Files\NextcloudFile;
@@ -70,6 +72,7 @@ class FileCSVController extends Controller {
 		private IUserSession $userSession,
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
+        private ValuesValidator $valuesValidator
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -90,8 +93,8 @@ class FileCSVController extends Controller {
 	
 			if ($this->csvCheckMimeType->checkOnArray($file)) {
 				throw new BadMimeType(
-					$this->translate->t('Error in the mimetype'),
-					$this->translate->t('Wrong file extension. Must be <b>.csv</b>.'),
+					$this->translate->t('Error in file format'),
+					$this->translate->t('The file must be in <b>CSV format</b>.'),
 				);
 			}
 	
@@ -99,8 +102,8 @@ class FileCSVController extends Controller {
 	
 			if (!SeparatorDetector::isComma($fileUploader)) {
 				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for .csv files'),
-					$this->translate->t('Your .csv file must use a comma (",") as separator'),
+					$this->translate->t('Invalid separator for CSV file'),
+					$this->translate->t('Your CSV file must use a comma (",") as separator'),
 				);
 			}
 	
@@ -114,10 +117,10 @@ class FileCSVController extends Controller {
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 	
 				$message = "The content of your file is invalid. "
-				. "Header does not contain the desired values."
-				. "Two columns are required, with the following header names and values :<br>"
-				."- \"user\" : The user's UID or email address<br>"
-				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
+				. "Header does not contain the desired values. "
+				. "Two columns are required, with the following header names and values:<br>"
+				."- \"user\": the user's username or e-mail address<br>"
+				. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -128,11 +131,11 @@ class FileCSVController extends Controller {
 				);
 
 				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in .csv file format'),
+					$this->translate->t('Error in CSV file content'),
 					$this->translate->t($errorMessage),
 				);
 			}
-	
+            
 			$usersFormatted = $this->csvParser->parser($fileUploader);
 			
 			$uids = array_map(fn ($user) => $user->uid, $usersFormatted);
@@ -164,24 +167,45 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-				if (count($usersUnknown) >= 9) {
-					$usersUnknown = array_slice($usersUnknown, 0, 10);
-					$usersUnknown[] = '...';
-				}
-
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",
 					$usersUnknown
 				);
 				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :');
+				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('Some users cannot be found'),
+					$this->translate->t('Error'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
 			}
+
+            if (!$this->valuesValidator->validateRoles($fileUploader)) {
+
+                $usersBadRole = array_filter(
+                    $usersFormatted,
+                    fn ($user) => !in_array($user->role, Values::ROLES)
+                );
+
+                $message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
+                $message .= '- "wm" : To define the user as a workspace manager.<br>';
+                $message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
+                $message .= sprintf('Check the role for these users :<br>%s',
+                    implode(
+                        '<br>',
+                        array_map(
+                            fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
+                            $usersBadRole
+                        )
+                    )
+                );
+
+                throw new InvalidCsvFormatException(
+                    $this->translate->t('Error in the role value'),
+                    $this->translate->t($message)
+                );
+            }
 	
 			$data = [];
 			foreach($usersFormatted as $user) {
@@ -216,7 +240,7 @@ class FileCSVController extends Controller {
 		} catch(\Exception $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
-					new ToastMessager($this->translate->t('Error unknown'), $exception->getMessage()),
+					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
 					$exception
 				),
 				$exception->getCode()
@@ -242,8 +266,8 @@ class FileCSVController extends Controller {
 	
 			if ($this->csvCheckMimeType->checkOnNode($file)) {
 				throw new BadMimeType(
-					$this->translate->t('Error in the mimetype'),
-					$this->translate->t('Wrong file extension. Must be <b>.csv</b>.'),
+					$this->translate->t('Error in file format'),
+					$this->translate->t('The file must be in <b>CSV format</b>.'),
 				);
 			}
 	
@@ -253,8 +277,8 @@ class FileCSVController extends Controller {
 	
 			if (!SeparatorDetector::isComma($nextcloudFile)) {
 				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for .csv files'),
-					$this->translate->t('Your .csv file must use a comma (",") as separator'),
+					$this->translate->t('Invalid separator for CSV file'),
+					$this->translate->t('Your CSV file must use a comma (",") as separator'),
 				);
 			}
 	
@@ -265,12 +289,12 @@ class FileCSVController extends Controller {
 				$separatorOr = $this->translate->t('or');
 				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
-	
-				$message = "The content of your file is invalid. "
-				. "Header does not contain the desired values."
-				. "Two columns are required, with the following header names and values :<br>"
-				."- \"user\" : The user's UID or email address<br>"
-				. "- \"role\" : The user's role (\"u\" for a user and \"wm\" for a workspace manager)";
+
+                $message = "The content of your file is invalid. "
+				. "Header does not contain the desired values. "
+				. "Two columns are required, with the following header names and values:<br>"
+				."- \"user\": the user's username or e-mail address<br>"
+				. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
 	
 				$errorMessage = $this->translate->t(
 					$message,
@@ -281,11 +305,11 @@ class FileCSVController extends Controller {
 				);
 
 				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in .csv file format'),
+					$this->translate->t('Error in CSV file content'),
 					$this->translate->t($errorMessage),
 				);
 			}
-	
+
 			$names = $this->csvParser->parser($nextcloudFile);
 	
 			$usernames = array_map(fn ($user) => $user->uid, $names);
@@ -320,25 +344,41 @@ class FileCSVController extends Controller {
 
 				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
 
-				if (count($usersUnknown) >= 9) {
-					$usersUnknown = array_slice($usersUnknown, 0, 10);
-					$usersUnknown[] = '...';
-				}
-
 				$usersUnknown = array_map(
 					fn ($name) => "- $name",
 					$usersUnknown
 				);
 				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('Users don\'t exist in your csv file.<br>Please, check these users in your csv file :');
+				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('Some users cannot be found'),
+					$this->translate->t('Error'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
 			}
 	
+            if (!$this->valuesValidator->validateRoles($nextcloudFile)) {
+
+                $usersBadRole = array_filter(
+                    $names,
+                    fn ($user) => !in_array($user->role, Values::ROLES)
+                );
+
+                $message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
+                $message .= '- "wm" : To define the user as a workspace manager.<br>';
+                $message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
+                $message .= sprintf('Check the role for these users :<br>%s',
+                    implode(
+                        '<br>',
+                        array_map(
+                            fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
+                            $usersBadRole
+                        )
+                    )
+                );
+            }
+
 			$data = [];
 			foreach($names as $user) {
 				$uid = $user->uid;
@@ -372,7 +412,7 @@ class FileCSVController extends Controller {
 		} catch(\Exception $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
-					new ToastMessager($this->translate->t('Error unknown'), $exception->getMessage()),
+					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
 					$exception
 				),
 				$exception->getCode()

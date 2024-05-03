@@ -72,12 +72,12 @@ export default {
 						// this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 						this.$emit('push', [...this.allSelectedUsers, ...usersToDisplay])
 					} catch (err) {
-						let duration = 5000
+						let duration = 10000
 
 						// change the duration of the notification
 						// related to the number of the word.
 						if (err.response.data.data.message.split(' ').length >= 30) {
-							duration = 8000
+							duration = 13000
 						}
 
 						const title = err.response.data.data.title

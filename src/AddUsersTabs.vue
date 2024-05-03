@@ -52,7 +52,7 @@
 						:size="17" />
 				</template>
 				<div class="popover">
-					<p>Please, your csv file has to respect this structure :</p>
+					<p>{{ informCsvStructureMessage }}</p>
 					<br>
 					<NcRichText :use-markdown="true"
 						:text="csvTemplateMarkdown" />
@@ -78,7 +78,7 @@
 		</div>
 		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
 			type="warning"
-      class="note-card">
+			class="note-card">
 			<p>
 				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
 			</p>
@@ -138,13 +138,16 @@ export default {
 		titleSearch() {
 			return t('workspace', 'Search users')
 		},
+		informCsvStructureMessage() {
+			return t('workspace', 'You csv file must follow this structure:')
+		},
 		csvTemplateMarkdown() {
-			return `> user, role
-				user1, wm,
-				user2, user,
-				user3, user,
-				user4, wm,
-				user5, u`
+			return `> **user, role**
+				pierre.quiroul, user
+				awang, wm
+				radjiv.velasquez, user
+				christine.dupont@free.fr
+				jdoe@aol.com`
 		},
 		onImportTab() {
 			let cssClass = 'onImportTab'
@@ -205,8 +208,7 @@ export default {
 		},
 		isWorkspaceManager(role) {
 			role = role.toLowerCase()
-			return role === 'admin'
-				|| role === 'wm'
+			return role === 'wm'
 		},
 		// Removes a user from the batch
 		removeUserFromBatch(user) {
@@ -254,7 +256,7 @@ section.app-sidebar__tab--active {
 // Change the height of the modal container
 // to make space for the NcNoteCard
 .modal-container {
-  max-height: 900px !important;
+	max-height: 900px !important;
 }
 
 // FIXME: Obivously we should at some point not randomly reuse the sidebar component
@@ -329,7 +331,7 @@ section.app-sidebar__tab--active {
 .buttons-import-groups {
 	display: flex;
 	width: 560px;
-	justify-content: space-between;
+	justify-content: space-around;
 	margin-top: 15px;
 }
 
@@ -342,8 +344,8 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-	top: 112px;
-	right: 60px;
+	top: 120px;
+	right: 54px;
 	z-index: 9999;
 }
 
@@ -360,11 +362,11 @@ section.app-sidebar__tab--active {
 }
 
 .note-card {
-  width: 500px;
+	width: 500px;
 }
 
 .buttons-groups {
-  margin: 25px 0 25px 0;
+	margin: 25px 0 25px 0;
 }
 
 </style>

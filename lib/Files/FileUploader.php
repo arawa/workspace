@@ -16,7 +16,7 @@ class FileUploader implements ManagerConnectionFileInterface {
 		$this->resource = fopen($this->path, "r");
 
 		if (!$this->resource) {
-			throw new \Exception('Something went wrong. Couldn\'t open a file.');
+			throw new \Exception('Something went wrong. Couldn\'t open the file.');
 		}
 
 		return $this->resource;
