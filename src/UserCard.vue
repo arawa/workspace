@@ -76,8 +76,7 @@ export default {
 		},
 		isWorkspaceManager(role) {
 			role = role.toLowerCase()
-			return role === 'admin'
-				|| role === 'wm'
+			return role === 'wm'
 		},
 	},
 }
