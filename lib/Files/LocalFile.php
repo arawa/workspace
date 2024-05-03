@@ -13,6 +13,11 @@ class FileUploader implements FileInterface {
 	 */
 	public function open(?string $path = null) {
 		$this->resource = fopen($this->path, "r");
+
+		if (!$this->resource) {
+			throw new \Exception('Something went wrong. Couldn\'t open the file.');
+		}
+
 		return $this->resource;
 	}
 
