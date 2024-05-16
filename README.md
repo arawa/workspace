@@ -52,9 +52,17 @@ In `Settings` > `Group folders` > `Group folder admin delegation` section, add t
 Add the users in charge of creating Workspaces to the GeneralManager group.
 
 
+## Contributing
+
+Workspace is a Free Software that you can contribute freely to.
+If you would like to contribute by making a bug report or suggest a functionality for example, we invite you to read our [contribution policy beforehand](./CONTRIBUTING.md).
+
+
 ## Development and Build
 ### Requirements
-- npm v7.24.1
+- npm v10.0.0
+- node v20.0
+- php v8.0
 - composer v2.0.13
 - make v3.82
 - git v1.8
