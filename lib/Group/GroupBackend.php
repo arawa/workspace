@@ -30,14 +30,14 @@ use OCP\IUserManager;
 
 class GroupBackend extends ABackend implements GroupInterface {
 
-	private bool $_avoidRecurse_users;
-	private bool $_avoidRecurse_groups;
+	private bool $avoidRecurse_users;
+	private bool $avoidRecurse_groups;
 
 	/**
 	 * @param IGroupManager $groupManager parent group manager
 	 */
 	public function __construct(protected IGroupManager $groupManager, protected IUserManager $userManager, private ConnectedGroupsService $connectedGroups) {
-		$this->_avoidRecurse_users = $this->_avoidRecurse_groups = false;
+		$this->avoidRecurse_users = $this->avoidRecurse_groups = false;
 	}
 
 	/**
@@ -45,7 +45,6 @@ class GroupBackend extends ABackend implements GroupInterface {
 	 * @param string $uid uid of the user
 	 * @param string $gid gid of the group
 	 * @return bool
-	 * @since 4.5.0
 	 *
 	 * Checks whether the user is member of a group or not.
 	 */
@@ -56,26 +55,25 @@ class GroupBackend extends ABackend implements GroupInterface {
 	/**
 	 * Get all groups a user belongs to
 	 * @param string $uid Name of the user
-	 * @return array an array of group names
-	 * @since 4.5.0
+	 * @return string[] an array of group names
 	 *
 	 * This function fetches all groups a user belongs to. It does not check
 	 * if the user exists at all.
 	 */
 	public function getUserGroups($uid) {
-		if ($this->_avoidRecurse_groups) {
+		if ($this->avoidRecurse_groups) {
 			return [];
 		}
 
-		$avoid = $this->_avoidRecurse_groups;
-		$this->_avoidRecurse_groups = true;
+		$avoid = $this->avoidRecurse_groups;
+		$this->avoidRecurse_groups = true;
 		$user = $this->userManager->get($uid);
 		if ($user) {
 			$groupIds = $this->groupManager->getUserGroupIds($user);
 		} else {
 			$groupIds = [];
 		}
-		$this->_avoidRecurse_groups = $avoid;
+		$this->avoidRecurse_groups = $avoid;
 		if (empty($groupIds)) {
 			return [];
 		}
@@ -108,10 +106,10 @@ class GroupBackend extends ABackend implements GroupInterface {
 	 * check if a group exists
 	 * @param string $gid
 	 * @return bool
-	 * @since 4.5.0
 	 */
 	public function groupExists($gid) {
-		return true;
+		// @note : need to implement, but this backend doesn't manege existence of connected groups
+		return false;
 	}
 
 	/**
@@ -120,31 +118,30 @@ class GroupBackend extends ABackend implements GroupInterface {
 	 * @param string $search
 	 * @param int $limit
 	 * @param int $offset
-	 * @return array an array of user ids
-	 * @since 4.5.0
+	 * @return string[] an array of user ids
 	 */
 	public function usersInGroup($gid, $search = '', $limit = -1, $offset = 0) {
-		if ($this->_avoidRecurse_users) {
+		if ($this->avoidRecurse_users) {
 			return [];
 		}
 
 		$groups = $this->connectedGroups->getConnectedGroupsToSpace($gid);
-		if ($groups !== null) {
-			$users = [];
-			$avoid = $this->_avoidRecurse_users;
-			$this->_avoidRecurse_users = true;
-			foreach ($groups as $group) {
-				if (!is_null($group)) {
-					foreach ($group->getUsers() as $user) {
-						$users[] = $user->getUID();
-					};
-				}
-			}
-			$this->_avoidRecurse_users = $avoid;
-			return $users;
+		if ($groups === null) {
+			return [];
 		}
 
-		return [];
+		$users = [];
+		$avoid = $this->avoidRecurse_users;
+		$this->avoidRecurse_users = true;
+		foreach ($groups as $group) {
+			if (!is_null($group)) {
+				foreach ($group->getUsers() as $user) {
+					$users[] = $user->getUID();
+				};
+			}
+		}
+		$this->avoidRecurse_users = $avoid;
+		return $users;
 	}
 
 };

@@ -45,9 +45,9 @@ class ConnectedGroupsService {
 			foreach($linked_gids as $gidIn) {
 				if (!isset(self::$LINKED_GROUPS_IN[$gidIn])) {
 					self::$LINKED_GROUPS_IN[$gidIn] = [ $gid];
-				} else {
-					self::$LINKED_GROUPS_IN[$gidIn][] = [ $gid];
+					continue;
 				}
+				self::$LINKED_GROUPS_IN[$gidIn][] = [ $gid];
 			}
 		}
 	}
@@ -82,13 +82,13 @@ class ConnectedGroupsService {
 	 * @return array|null
 	 */
 	public function getConnectedGroupsToSpace(string $spaceGid): ?array {
-		if (isset(self::$LINKED_SPACE_GROUPS[$spaceGid])) {
-			$groups = [];
-			foreach (self::$LINKED_SPACE_GROUPS[$spaceGid] as $gid) {
-				$groups[] = $this->groupManager->get($gid);
-			}
-			return $groups;
+		if (!isset(self::$LINKED_SPACE_GROUPS[$spaceGid])) {
+			return null;
 		}
-		return null;
+		$groups = [];
+		foreach (self::$LINKED_SPACE_GROUPS[$spaceGid] as $gid) {
+			$groups[] = $this->groupManager->get($gid);
+		}
+		return $groups;
 	}
 }
