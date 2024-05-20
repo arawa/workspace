@@ -38,6 +38,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
+use OCP\IRequest;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
@@ -223,6 +224,62 @@ class GroupController extends Controller {
 	}
 
 	/**
+	 * Remove a user from a workspace.
+	 *
+	 * @param array|string $space
+	 * @param string $gid
+	 * @param string $user
+	 * @return JSONResponse
+	 */
+	public function removeUserFromWorkspace(
+		array|string $space,
+		string $gid,
+		string $user
+	): JSONResponse {
+		if (gettype($space) === 'string') {
+			$space = json_decode($space, true);
+		}
+
+		$NcUser = $this->userManager->get($user);
+
+		$gidsStringify = array_keys($space['groups']);
+
+		$gidsStringify = array_filter(
+			$gidsStringify,
+			fn ($gid) => $this->groupManager->isInGroup($NcUser->getUID(), $gid)
+		);
+
+		// Makes sure group exist
+		foreach ($gidsStringify as $gid) {
+			if (!$this->groupManager->groupExists($gid)) {
+				throw new \Exception("The $gid group is not exist");
+			}
+		}
+
+		$groups = array_map(
+			fn ($gid) => $this->groupManager->get($gid),
+			$gidsStringify
+		);
+
+		if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
+			$this->userService->removeGEFromWM($NcUser);
+			$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
+			$groupnames[] = $workspacesManagersGroup->getGID();
+		}
+
+		foreach ($groups as $group) {
+			$group->removeUser($NcUser);
+			$groupnames[] = $group->getGID();
+		}
+
+		return new JSONResponse([
+			'statuscode' => Http::STATUS_NO_CONTENT,
+			'user' => $NcUser->getUID(),
+			'groups' => $groupnames
+		]);
+	}
+
+	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
@@ -235,60 +292,77 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
-	public function removeUser(array|string $space,
+	public function removeUser(
+		IRequest $request,
+		array|string $space,
 		string $gid,
 		string $user): JSONResponse {
-		if (gettype($space) === 'string') {
-			$space = json_decode($space, true);
+		$cascade = $request->getParam('cascade', false);
+		
+		$NcUser = $this->userManager->get($user);
+		$group = $this->groupManager->get($gid);
+	
+		if (!$this->groupManager->isInGroup($NcUser->getUID(), $group->getGID())) {
+			throw new \Exception("The $NcUser->getUID() user is not present in the $group->getGID() group.");
 		}
-
-		$this->logger->debug('Removing user ' . $user . ' from group ' . $gid);
-
-		// Makes sure group exist
-		$NCGroup = $this->groupManager->get($gid);
-		if (is_null($NCGroup)) {
-			$this->logger->error('Group ' . $gid . ' does not exist');
-			return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+	
+		if ((str_starts_with($group->getGID(), 'SPACE-U'))
+			&& !$cascade) {
+			throw new \Exception("You must define cascade to true as parameter in the request to remove the user from $group->getGID() group.");
 		}
+	
+		$groupnames = [];
 
-		// Removes user from group(s)
-		$NCUser = $this->userManager->get($user);
-		$groups = [];
-		if ($gid === WorkspaceManagerGroup::get($space['id'])
-		|| $gid === UserGroup::get($space['id'])) {
-			// Removing user from a U- group
-			$this->logger->debug('Removing user from a workspace, removing it from all the workspace subgroups too.');
-			$users = (array)$space['users'];
-			foreach ($users[$NCUser->getUID()]['groups'] as $groupId) {
-				$NCGroup = $this->groupManager->get($groupId);
-				$NCGroup->removeUser($NCUser);
-				$groups[] = $NCGroup->getGID();
-				$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-				if ($groupId === WorkspaceManagerGroup::get($space['id'])) {
-					$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-					if ($this->userService->canRemoveWorkspaceManagers($NCUser, $space)) {
-						$this->userService->removeGEFromWM($NCUser);
-					}
-				}
-			}
-		} else {
-			// Removing user from a regular subgroup or a GE- group
-			$groups[] = $gid;
-			$NCGroup->removeUser($NCUser);
-			$this->logger->debug('User removed from group: ' . $NCGroup->getDisplayName());
-			if ($gid === WorkspaceManagerGroup::get($space['id'])) {
-				// Removing user from a GE- group
-				$this->logger->debug('Removing user from a workspace manager group, removing it from the WorkspacesManagers group if needed.');
-				if ($this->userService->canRemoveWorkspaceManagers($NCUser, $space)) {
-					$this->userService->removeGEFromWM($NCUser);
-				}
+		if (str_starts_with($group->getGID(), 'SPACE-GE')) {
+			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
+				$this->userService->removeGEFromWM($NcUser);
+				$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
+				$groupnames[] = $workspacesManagersGroup->getGID();
 			}
 		}
 
+		$group->removeUser($NcUser);
+		$groupnames[] = $group->getGID();
+	
+		if ($cascade) {
+			if (gettype($space) === 'string') {
+				$space = json_decode($space, true);
+			}
+	
+			$gidsStringify = array_keys($space['groups']);
+	
+			$gidsStringify = array_filter(
+				$gidsStringify,
+				fn ($gid) => $this->groupManager->isInGroup($NcUser->getUID(), $gid)
+			);
+	
+			foreach ($gidsStringify as $gid) {
+				if (!$this->groupManager->groupExists($gid)) {
+					throw new \Exception("The $gid group is not exist");
+				}
+			}
+	
+			$groups = array_map(
+				fn ($gid) => $this->groupManager->get($gid),
+				$gidsStringify
+			);
+	
+			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
+				$this->userService->removeGEFromWM($NcUser);
+				$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
+				$groupnames[] = $workspacesManagersGroup->getGID();
+			}
+	
+			foreach ($groups as $group) {
+				$group->removeUser($NcUser);
+				$groupnames[] = $group->getGID();
+			}
+		}
+	
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
-			'user' => $NCUser->getUID(),
-			'groups' => $groups
+			'user' => $NcUser->getUID(),
+			'groups' => $groupnames
 		]);
 	}
 
