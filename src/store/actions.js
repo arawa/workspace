@@ -149,6 +149,39 @@ export default {
 			space,
 		})
 	},
+	// Remove a user from a workspace
+	removeUserFromWorkspace(context, { name, gid, user }) {
+		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
+		const backupGroups = space.users[user.uid].groups
+
+		context.commit('removeUserFromWorkspace', { name, user })
+
+		const url = generateUrl('/apps/workspace/spaces/{spaceId}/users/{user}/groups', { spaceId: space.id, user: user.uid })
+		axios.patch(url, {
+			space,
+			gid,
+			user: user.uid,
+		}).then((resp) => {
+			if (resp.data.statuscode === 204) {
+				// eslint-disable-next-line no-console
+				console.log('User ' + user.name + ' removed from group ' + gid)
+			} else {
+				const text = t('workspace', 'An error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: resp.statusText })
+				showNotificationError('Error', text, 4000)
+				context.commit('addUserToGroup', { name, gid, user })
+			}
+		}).catch((e) => {
+			const text = t('workspace', 'Network error occured while removing user from group {group}<br>The error is: {error}', { group: gid, error: e })
+			showNotificationError('Error', text, 4000)
+			if (gid === UserGroup.getGid(space)) {
+				backupGroups.forEach(group =>
+					context.commit('addUserToGroup', { name, group, user }),
+				)
+			} else {
+				context.commit('addUserToGroup', { name, gid, user })
+			}
+		})
+	},
 	// Removes a user from a group
 	removeUserFromGroup(context, { name, gid, user }) {
 		// It's a deep copy to copy the object and not the reference.
@@ -162,7 +195,11 @@ export default {
 			context.commit('removeUserFromGroup', { name, gid, user })
 		}
 		// Update backend and revert frontend changes if something fails
-		const url = generateUrl('/apps/workspace/api/group/delUser/{spaceId}', { spaceId: space.id })
+		let ressource = '/apps/workspace/api/group/delUser/{spaceId}'
+		if (gid.startsWith('SPACE-U')) {
+			ressource += '?cascade=true'
+		}
+		const url = generateUrl(ressource, { spaceId: space.id })
 		axios.patch(url, {
 			space,
 			gid,

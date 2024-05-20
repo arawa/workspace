@@ -26,7 +26,6 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -68,14 +67,14 @@ class UserService {
 		}
 
 		// Returns a user that is valid for the frontend
-		return array(
+		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role
-		);
+		];
 	}
 
 	/**
@@ -128,22 +127,17 @@ class UserService {
 	 * Return `true` if the user can be removed from workspace manager group (SPACE-GE), Otherwise, `false`.
 	 *
 	 * @param IUser $user
-	 * @param array|object $space
 	 * @return boolean
 	 */
-	public function canRemoveWorkspaceManagers(IUser $user, array|object $space): bool {
-		$canRemove = true;
+	public function canRemoveWorkspaceManagers(IUser $user): bool {
+		$canRemove = false;
 		$groups = $this->groupManager->getUserGroups($user);
+		$allManagersGroups = array_filter(
+			$groups,
+			fn ($group) => str_starts_with($group->getGID(), 'SPACE-GE')
+		);
 
-		foreach ($groups as $group) {
-			$gid = $group->getGID();
-			if (strpos($gid, WorkspaceManagerGroup::getPrefix()) === 0 &&
-				$gid !== UserGroup::get($space['id'])
-			) {
-				$canRemove = false;
-				break;
-			}
-		}
+		$canRemove = count($allManagersGroups) > 0 && count($allManagersGroups) <= 1 ? true : false;
 
 		if (!$canRemove) {
 			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
