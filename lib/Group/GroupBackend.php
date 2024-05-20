@@ -108,8 +108,8 @@ class GroupBackend extends ABackend implements GroupInterface {
 	 * @return bool
 	 */
 	public function groupExists($gid) {
-		// @note : need to implement, but this backend doesn't manege existence of connected groups
-		return false;
+		// @note : need to implement, but this backend doesn't manage existence of connected groups
+		return $this->connectedGroups->hasConnectedGroups($gid);
 	}
 
 	/**

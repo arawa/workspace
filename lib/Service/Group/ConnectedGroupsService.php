@@ -91,4 +91,12 @@ class ConnectedGroupsService {
 		}
 		return $groups;
 	}
+
+	/**
+	 * @param string $gid
+	 * @return bool
+	 */
+	public function hasConnectedgroups(string $gid) : bool {
+		return isset(self::$LINKED_SPACE_GROUPS[$gid]);
+	}
 }
