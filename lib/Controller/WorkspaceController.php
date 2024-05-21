@@ -244,12 +244,12 @@ class WorkspaceController extends Controller {
 		$user = $this->userManager->get($userId);
 		$GEgroup = $this->groupManager->get(WorkspaceManagerGroup::get($space['id']));
 		if ($GEgroup->inGroup($user)) {
-			// Changing a user's role from admin to user
-			$GEgroup->removeUser($user);
-			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
 				$this->userService->removeGEFromWM($user, $space);
 			}
+			// Changing a user's role from admin to user
+			$GEgroup->removeUser($user);
+			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
 		} else {
 			// Changing a user's role from user to admin
 			$this->groupManager->get(WorkspaceManagerGroup::get($space['id']))->addUser($user);
