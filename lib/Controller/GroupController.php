@@ -226,9 +226,9 @@ class GroupController extends Controller {
 	/**
 	 * Remove a user from a workspace.
 	 *
-     * @NoAdminRequired
+	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-     * 
+	 *
 	 * @param array|string $space
 	 * @param string $gid
 	 * @param string $user
