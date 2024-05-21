@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 
+## [3.1.0] - 2024-05-20
+
+### Fixed
+
+* Preventing accidental deletion of the SPACE-GE ( [981](https://github.com/arawa/workspace/pull/981), [982](https://github.com/arawa/workspace/pull/982), [983](https://github.com/arawa/workspace/pull/983), [985](https://github.com/arawa/workspace/pull/985), [987](https://github.com/arawa/workspace/pull/987) )
+* New Workspace 3.1.0 release [988](https://github.com/arawa/workspace/pull/988)
+
 ## [3.0.6] - 2024-04-4
 
 ### Fixed
@@ -239,7 +246,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.6...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.1.0...main
+[3.1.0]: https://github.com/arawa/workspace/compare/v3.0.6...3.1.0
 [3.0.6]: https://github.com/arawa/workspace/compare/v3.0.5...3.0.6
 [3.0.5]: https://github.com/arawa/workspace/compare/v3.0.4...3.0.5
 [3.0.4]: https://github.com/arawa/workspace/compare/v3.0.3...3.0.4
