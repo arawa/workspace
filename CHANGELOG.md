@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
 - Add an arrow from the create group ([#900](https://github.com/arawa/workspace/pull/900))
+- Create occ command to import and create workspace ( [#902](https://github.com/arawa/workspace/pull/902) )
 
 #### Fixed
 
