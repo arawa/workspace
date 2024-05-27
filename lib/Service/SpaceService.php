@@ -26,8 +26,8 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\BadRequestException;
-use OCA\Workspace\DB\Space;
-use OCA\Workspace\DB\SpaceMapper;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
 use OCP\IGroupManager;
 
 class SpaceService {
@@ -83,7 +83,7 @@ class SpaceService {
 		$checkSpacename = $this->spaceMapper->checkSpaceNameExist($spacename);
 
 		if (!is_bool($checkSpacename)) {
-			if (array_key_exists('name', $checkSpacename)) {
+			if (array_key_exists('space_name', $checkSpacename)) {
 				return true;
 			}
 		}

@@ -23,8 +23,8 @@
 
 namespace OCA\Workspace\Service\Group;
 
-use OCA\Workspace\CreateGroupException;
 use OCA\Workspace\Db\Space;
+use OCA\Workspace\Exceptions\CreateGroupException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;

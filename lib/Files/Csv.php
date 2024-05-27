@@ -67,14 +67,10 @@ class Csv {
 	}
 
 	public function hasProperHeader(ManagerConnectionFileInterface $file): bool {
-		// var_dump($path);
-		// die();
 		$res = false;
 		if (($handle = $file->open()) !== false) {
 			$tableHeader = fgetcsv($handle, 1000, ",");
 			$tableHeader = array_map('strtolower', $tableHeader);
-			// var_dump($tableHeader);
-			// die();
 
 			$nameIndex = $this->getIndex(self::DISPLAY_NAME, $tableHeader);
 			$roleIndex = $this->getIndex(self::ROLE, $tableHeader);
