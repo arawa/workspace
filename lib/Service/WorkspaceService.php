@@ -52,7 +52,9 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	private function searchUsersByMailing(string $term): array {
 		return $this->userManager->getByEmail($term);
@@ -60,7 +62,9 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	private function searchUsersByDisplayName(string $term): array {
 		$users = [];
@@ -75,9 +79,11 @@ class WorkspaceService {
 
 	/**
 	 * @param string $term
-	 * @return OCP\IUser[]
+	 * @return IUser[]
+	 * @deprecated since 3.0.1
+	 * @uses OCA\Workspace\User\UserSearcher
 	 */
-	private function searchUsers(string $term): array {
+	public function searchUsers(string $term): array {
 		$users = [];
 		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
 
@@ -86,6 +92,11 @@ class WorkspaceService {
 		} else {
 			$users = $this->searchUsersByDisplayName($term);
 		}
+
+		/**
+		 * Change OC\User\LazyUser to OC\User\User.
+		 */
+		$users = array_map(fn ($user) => $this->userManager->get($user->getUID()), $users);
 
 		return $users;
 	}
@@ -136,9 +147,6 @@ class WorkspaceService {
 		return $data;
 	}
 
-	/**
-	 * @return Space[] - all spaces
-	 */
 	public function getAll(): array {
 		// Gets all spaces
 		$spaces = $this->spaceMapper->findAll();
@@ -151,13 +159,9 @@ class WorkspaceService {
 	}
 
 	/**
-	 *
 	 * Adds users information to a workspace
-	 *
-	 * @param string|array The workspace to which we want to add users info
-	 *
 	 */
-	public function addUsersInfo(string|array $workspace): array {
+	public function addUsersInfo(string|array $workspace): \stdClass {
 		// Caution: It is important to add users from the workspace's user group before adding the users
 		// from the workspace's manager group, as users may be members of both groups
 		$this->logger->debug('Adding users information to workspace');
@@ -176,9 +180,8 @@ class WorkspaceService {
 				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
 			};
 		}
-		$workspace['users'] = (object) $users;
 
-		return $workspace;
+		return (object) $users;
 	}
 
 	/**

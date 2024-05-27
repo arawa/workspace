@@ -13,7 +13,7 @@ class InternalFile implements ManagerConnectionFileInterface {
 	/**
 	 * @return resource|false
 	 */
-	public function open() {
+	public function open(?string $path = null) {
 		$this->resource = $this->store->fopen($this->path, "r");
 		return $this->resource;
 	}
