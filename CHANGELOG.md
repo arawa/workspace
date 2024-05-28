@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename a workspace name from plural to singular or inversely ( [#893](https://github.com/arawa/workspace/pull/893) )
 - Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
+- Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
 ## [3.1.0] - 2024-05-20
 
