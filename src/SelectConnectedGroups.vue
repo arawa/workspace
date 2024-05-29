@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <NcModal class="modal-connected-groups"
     @close="close()">
     <div class="container-select-groups">
@@ -56,6 +57,24 @@
       </NcButton>
     </div>
   </NcModal>
+=======
+	<div class="container-select-groups">
+		<header class="header-select-groups">
+			<h1>{{t('workspace', 'Add a group')}}</h1>
+		</header>
+
+		<div class="body-select-groups">
+			<NcSelect
+				class="searchbar-groups"
+				track-by="gid"
+				label="displayName"
+				limit="10"
+				:options="groupsSelectable"
+				@search="lookupGroups"
+				@close="groupsSelectable=[]" />
+		</div>
+	</div>
+>>>>>>> 5d1c6d5 (Handle Added groups list (sidebar) and group's users list view)
 </template>
 
 <script>

@@ -36,6 +36,11 @@ export default {
 			required: false,
 			default: false,
 		},
+		addedGroup: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
     count: {
       type: Number,
       required: true,
