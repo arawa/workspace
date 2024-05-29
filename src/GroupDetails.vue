@@ -29,7 +29,7 @@
 					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
 			</div>
-			<div class="group-actions">
+			<div v-if="!isAddedGroup" class="group-actions">
 				<div>
 					<NcActions default-icon="icon-add">
 						<NcActionButton icon="icon-add"
@@ -61,7 +61,7 @@
 				</NcActions>
 			</div>
 		</div>
-		<UserTable :space-name="$route.params.group" />
+		<UserTable :space-name="$route.params.group" :editable="!isAddedGroup" />
 		<NcModal v-if="showSelectUsersModal"
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
@@ -94,6 +94,12 @@ export default {
 			showRenameGroupInput: false, // true to display 'Rename Group' NcActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 		}
+	},
+	computed: {
+		// The title to display at the top of the page
+		isAddedGroup() {
+			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, this.$route.params.group)
+		},
 	},
 	methods: {
 		deleteGroup() {
