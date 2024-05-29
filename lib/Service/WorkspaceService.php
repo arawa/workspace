@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
@@ -47,7 +48,8 @@ class WorkspaceService {
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
 		private ShareMembersOnlyFilter $shareMembersFilter,
-		private GroupMembersOnlyChecker $memberGroupOnlyChecker
+		private GroupMembersOnlyChecker $memberGroupOnlyChecker,
+		private ConnectedGroupsService $connectedGroups,
 	) {
 	}
 
@@ -191,12 +193,23 @@ class WorkspaceService {
 	 *
 	 */
 	public function addGroupsInfo(array|string $workspace): array {
+		if (!isset($workspace['groups'])) {
+			return $workspace;
+		}
 		$groups = array_map(
-            fn($gid) => $this->groupManager->get($gid),
-            array_keys($workspace['groups'])
-        );
+			fn($gid) => $this->groupManager->get($gid),
+			array_keys($workspace['groups'])
+		);
+		$addedGroups = [];
+		foreach(array_keys($workspace['groups']) as $gid) {
+			$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+			if ($addedToGroup !== null) {
+				$addedGroups = array_merge($addedGroups, $addedToGroup);
+			}
+		}
 
 		$workspace['groups'] = GroupFormatter::formatGroups($groups);
+		$workspace['addedGroups'] = GroupFormatter::formatGroups($addedGroups);
 
 		return $workspace;
 	}

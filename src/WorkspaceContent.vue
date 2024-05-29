@@ -142,6 +142,7 @@ export default {
 					color: codeColor,
 					groupfolderId: spaceWithUsersAndGroups.groupfolder_id,
 					groups: spaceWithUsersAndGroups.groups,
+					addedGroups: spaceWithUsersAndGroups.addedGroups,
 					id: spaceWithUsersAndGroups.id,
 					isOpen: false,
 					name: spaceWithUsersAndGroups.name,

@@ -1,7 +1,7 @@
 <template>
 	<div class="container-select-groups">
 		<header class="header-select-groups">
-			<h1>Connect a group</h1>
+			<h1>{{t('workspace', 'Add a group')}}</h1>
 		</header>
 
 		<div class="body-select-groups">

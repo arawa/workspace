@@ -125,7 +125,7 @@ class GroupBackend extends ABackend implements GroupInterface {
 			return [];
 		}
 
-		$groups = $this->connectedGroups->getConnectedGroupsToSpace($gid);
+		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
 		if ($groups === null) {
 			return [];
 		}

@@ -64,7 +64,7 @@ export function get(groupfolderId) {
 				const workspace = resp.data.ocs.data
 				return workspace
 			} else {
-				throw new GetGroupfolderError('Impossible to get the groupfolder. May be an error network ?')
+				return {} // might happen on empty workspaces
 			}
 		})
 		.catch((error) => {

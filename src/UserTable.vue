@@ -64,13 +64,13 @@
 											: t('workspace', 'Remove admin rights')
 									}}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.group === undefined"
+								<NcActionButton v-if="($route.params.group === undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space)"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.group !== undefined"
+								<NcActionButton v-if="(($route.params.group !== undefined) && !$store.getters.isSpaceAddedGroup($route.params.space, $route.params.group)) && (!$store.getters.isFromAddedGroups(user, $route.params.space) || ($store.getters.GEGroup($route.params.space) === $route.params.group))"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
