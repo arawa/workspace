@@ -76,3 +76,9 @@
 .user-counter {
 	margin-right: 5px;
 }
+
+.icon-added-group, .icon-added-group-dark {
+	background-image: url('../img/added_group_black.svg');
+	min-width: 42px;
+	min-height: 42px;
+}
