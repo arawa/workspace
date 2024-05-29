@@ -31,14 +31,20 @@
 			{{ $store.getters.spaceUserCount(spaceName) }}
 		</NcCounterBubble>
 		<NcAppNavigationCaption
-			title="Workspace Groups" />
+			:title="t('workspace', 'Workspace groups')" />
 		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
+			v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
 			:key="group.gid"
 			:group="group"
 			:space-name="spaceName" />
 		<NcAppNavigationCaption
-			title="Connected Groups" />
+			:title="t('workspace', 'Added groups')" />
+		<GroupMenuItem
+			v-for="group in sortedGroups(Object.values(space.addedGroups ?? []), spaceName)"
+			:key="group.gid"
+			:group="group"
+			:space-name="spaceName"
+			:added-group="true" />
 	</NcAppNavigationItem>
 </template>
 
@@ -77,9 +83,7 @@ export default {
 	},
 	beforeMount() {
 		// console.debug(this.space.groups.types)
-		// const groupnames = 
 		// const workspaceGroups = this.space.groups.filter((groupname))
-
 		// this.workspaceGroups.push()
 	},
 	methods: {

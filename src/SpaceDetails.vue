@@ -49,7 +49,7 @@
 							@click="toggleShowSelectUsersModal" />
 						<NcActionButton v-show="!createGroup"
 							icon="icon-group"
-							:title="t('workspace', 'Create group')"
+							:title="t('workspace', 'Create a workspace group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
 						<NcActionInput v-show="createGroup"
@@ -60,8 +60,9 @@
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</NcActionInput>
-						<NcActionButton name="Connect a group"
-							icon="icon-group"
+						<NcActionButton
+							:name="t('workspace', 'Add a group')"
+							icon="icon-added-group"
 							class="no-bold"
 							:close-after-click="true"
 							@click="toggleShowConnectedGroups" />

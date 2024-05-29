@@ -31,7 +31,13 @@ export const getters = {
 	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
-		return state.spaces[name].groups[gid] ? state.spaces[name].groups[gid].displayName : '[' + gid + ']'
+		if (state.spaces[name].groups[gid]) {
+			return state.spaces[name].groups[gid].displayName
+		}
+		if (state.spaces[name].addedGroups[gid]) {
+			return state.spaces[name].addedGroups[gid].displayName
+		}
+		return '[' + gid + ']'
 	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
@@ -46,6 +52,17 @@ export const getters = {
 	// Tests wheter a user if General manager of a space
 	isSpaceAdmin: state => (user, spaceName) => {
 		return user.groups.includes(ManagerGroup.getGid(state.spaces[spaceName]))
+	},
+	// Test whether a user if from and added group from the space
+	isFromAddedGroups: state => (user, spaceName) => {
+		const addedGroups = Object.keys(state.spaces[spaceName].addedGroups)
+		const hasAddedGroups = user.groups.filter((group) => addedGroups.includes(group))
+		return hasAddedGroups.length > 0
+	},
+	// Test if group is from space added groups
+	isSpaceAddedGroup: state => (spaceName, groupName) => {
+		const space = state.spaces[spaceName]
+		return space.addedGroups[groupName]
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
@@ -66,8 +83,11 @@ export const getters = {
 	},
 	// Returns the number of users in a space
 	spaceUserCount: state => name => {
+		if (state.spaces[name] === undefined) {
+			return 0
+		}
 		const users = state.spaces[name].users
-		if (users.length === 0) {
+		if (users === undefined || users.length === 0) {
 			return 0
 		} else {
 			return Object.keys(users).length

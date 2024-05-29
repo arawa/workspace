@@ -81,7 +81,7 @@ class ConnectedGroupsService {
 	 * @param string $spaceGid
 	 * @return array|null
 	 */
-	public function getConnectedGroupsToSpace(string $spaceGid): ?array {
+	public function getConnectedGroupsToSpaceGroup(string $spaceGid): ?array {
 		if (!isset(self::$LINKED_SPACE_GROUPS[$spaceGid])) {
 			return null;
 		}
@@ -96,7 +96,7 @@ class ConnectedGroupsService {
 	 * @param string $gid
 	 * @return bool
 	 */
-	public function hasConnectedgroups(string $gid) : bool {
+	public function hasConnectedGroups(string $gid) : bool {
 		return isset(self::$LINKED_SPACE_GROUPS[$gid]);
 	}
 }

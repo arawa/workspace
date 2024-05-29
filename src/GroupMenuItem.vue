@@ -27,7 +27,11 @@ export default {
 		spaceName: {
 			type: String,
 			required: true,
-
+		},
+		addedGroup: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 }
