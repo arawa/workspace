@@ -24,7 +24,7 @@
 	<div>
 		<div class="header">
 			<div class="group-name">
-				<div class="icon-group" />
+				<div :class="isAddedGroup ? 'icon-added-group' : 'icon-group'" />
 				<span class="titles-for-space">
 					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
