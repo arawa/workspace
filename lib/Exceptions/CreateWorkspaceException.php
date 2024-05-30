@@ -22,7 +22,7 @@
  *
  */
 
-namespace OCA\Workspace;
+namespace OCA\Workspace\Exceptions;
 
 class CreateWorkspaceException extends \Exception {
 	public function __construct($message, $code = 0) {
