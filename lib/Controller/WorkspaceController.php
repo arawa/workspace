@@ -25,11 +25,14 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\BadRequestException;
-use OCA\Workspace\CreateGroupException;
-use OCA\Workspace\CreateWorkspaceException;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\CreateGroupException;
+use OCA\Workspace\Exceptions\CreateWorkspaceException;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -49,7 +52,9 @@ use Psr\Log\LoggerInterface;
 class WorkspaceController extends Controller {
 	public function __construct(
 		IRequest $request,
+		private GroupfolderHelper $folderHelper,
 		private IGroupManager $groupManager,
+		private RootFolder $rootFolder,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
@@ -91,8 +96,13 @@ class WorkspaceController extends Controller {
 			throw new BadRequestException('spaceName must be provided');
 		}
 
-		$this->workspaceCheck->containSpecialChar($spaceName);
-		$this->workspaceCheck->isExist($spaceName);
+		if($this->workspaceCheck->containSpecialChar($spaceName)) {
+			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
+		}
+		
+		if ($this->workspaceCheck->isExist($spaceName)) {
+			throw new WorkspaceNameExistException("The $spaceName space name already exist", Http::STATUS_CONFLICT);
+		}
 
 		$spaceName = $this->deleteBlankSpaceName($spaceName);
 
@@ -174,16 +184,34 @@ class WorkspaceController extends Controller {
 	 */
 	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
+		$spaces = [];
+		foreach ($workspaces as $workspace) {
+			$space = array_merge(
+				$this->folderHelper->getFolder(
+					$workspace['groupfolder_id'],
+					$this->rootFolder->getRootFolderStorageId()
+				),
+				$workspace
+			);
+
+			$gids = array_keys($space['groups']);
+			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+	
+			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['users'] = $this->workspaceService->addUsersInfo($space);
+	
+			$spaces[] = $space;
+		}
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
-			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
-				return $this->userService->isSpaceManagerOfSpace($workspace);
+			$filteredWorkspaces = array_values(array_filter($spaces, function ($space) {
+				return $this->userService->isSpaceManagerOfSpace($space);
 			}));
-			$workspaces = $filteredWorkspaces;
+			$spaces = $filteredWorkspaces;
 		}
 
-		return new JSONResponse($workspaces);
+		return new JSONResponse($spaces);
 	}
 
 	/**
@@ -274,7 +302,9 @@ class WorkspaceController extends Controller {
 			$workspace = json_decode($workspace, true);
 		}
 
-		$this->workspaceCheck->containSpecialChar($newSpaceName);
+		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
+			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
+		}
 
 		if ($newSpaceName === false ||
 			$newSpaceName === null ||

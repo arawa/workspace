@@ -24,12 +24,13 @@
 
 namespace OCA\Workspace\Service\Workspace;
 
-use OCA\Workspace\BadRequestException;
+use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\WorkspaceNameExistException;
-use OCP\AppFramework\Http;
 
 class WorkspaceCheckService {
+
+	public const CHARACTERS_SPECIAL = "[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]";
+	
 	public function __construct(private SpaceService $spaceService) {
 	}
 
@@ -39,24 +40,37 @@ class WorkspaceCheckService {
 	 * @param string $spacename
 	 * @throws BadRequestException
 	 */
-	public function containSpecialChar(string $spacename): void {
-		if (preg_match('/[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]/', $spacename)) {
-			throw new BadRequestException('Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) - % \ ^ = / & * ]');
+	public function containSpecialChar(string $spacename): bool {
+		if (preg_match(sprintf("/%s/", self::CHARACTERS_SPECIAL), $spacename)) {
+			return true;
 		}
 
-		return;
+		return false;
 	}
 
 
 	/**
 	 * Check if the space name exist in groupfolders or workspace
-	 * @throws WorkspaceNameExistException
 	 */
-	public function isExist(string $spacename): void {
+	public function isExist(string $spacename): bool {
 		if ($this->spaceService->checkSpaceNameExist($spacename)) {
-			throw new WorkspaceNameExistException('The ' . $spacename . ' space name already exist', Http::STATUS_CONFLICT);
+			return true;
 		}
 
-		return;
+		return false;
+	}
+
+	public function spacenamesIsDuplicated(array $spaces): bool {
+		$workspaceNames = [];
+
+		foreach ($spaces as $space) {
+			$workspaceNames[] = $space['workspace_name'];
+		}
+
+		$workspaceNamesDiff = array_values(
+			array_diff_assoc($workspaceNames, array_unique($workspaceNames))
+		);
+
+		return !empty($workspaceNamesDiff);
 	}
 }
