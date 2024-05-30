@@ -23,7 +23,7 @@
  *
  */
 
-namespace OCA\Workspace;
+namespace OCA\Workspace\Exceptions;
 
 use OCP\AppFramework\Http;
 
