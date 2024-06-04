@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 
+- Update the changelog for stable3.2 ( [#1006](https://github.com/arawa/workspace/pull/1006) )
 - Update to 3.2.0 and compatible with NC29 ( [#1005](https://github.com/arawa/workspace/pull/1005) )
 - Create occ command to import and create workspace - backport version ( [#1003](https://github.com/arawa/workspace/pull/1003) )
 
