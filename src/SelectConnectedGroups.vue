@@ -133,6 +133,10 @@ export default {
 	justify-content: center;
 }
 
+.content-group-list-empty h2 {
+	font-size: 26px;
+}
+
 .btn-add-groups {
 	margin-top: 8px;
 }
