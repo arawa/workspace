@@ -174,7 +174,7 @@ export default {
 
 .group-name {
 	margin-left: 8px;
-	margin-top: -40px;
+	margin-top: -28px;
 }
 
 </style>
