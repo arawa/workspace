@@ -24,33 +24,58 @@
 
 namespace OCA\Workspace\Service\Group;
 
+use OCA\Workspace\Db\ConnectedGroup;
+use OCA\Workspace\Db\ConnectedGroupMapper;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
+use OCP\IGroup;
 use OCP\IGroupManager;
 
 class ConnectedGroupsService {
-
-	private static $LINKED_SPACE_GROUPS = [
-		'SPACE-U-2' => ['Scientists', 'Chemists']
-	];
 
 	private static $LINKED_GROUPS_IN = [
 
 	];
 
-	public function __construct(private IGroupManager $groupManager) {
+	public function __construct(
+		private IGroupManager $groupManager,
+		private ConnectedGroupMapper $mapper,
+		private SpaceMapper $spaceMapper
+	) {
 		$this->init();
 	}
 
 	private function init(): void {
-		foreach (self::$LINKED_SPACE_GROUPS as $gid => $linked_gids) {
+		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
+
+		if (is_null($linkedSpaceGroups))
+			return;
+
+		foreach ($linkedSpaceGroups as $gid => $linked_gids) {
 			foreach($linked_gids as $gidIn) {
 				if (!isset(self::$LINKED_GROUPS_IN[$gidIn])) {
-					self::$LINKED_GROUPS_IN[$gidIn] = [ $gid];
+					self::$LINKED_GROUPS_IN[$gidIn] = [ $gid ];
 					continue;
 				}
-				self::$LINKED_GROUPS_IN[$gidIn][] = [ $gid];
+				self::$LINKED_GROUPS_IN[$gidIn][] = [ $gid ];
 			}
 		}
 	}
+
+	private function initLinkedSpaceGroups(): ?array {
+		$connectedGroups = $this->mapper->findAll();
+
+		if (empty($connectedGroups))
+			return null;
+
+		$data = [];
+		foreach($connectedGroups as $connectedGroup) {
+			$data['SPACE-U-' . $connectedGroup->getSpaceId()][] = $connectedGroup->getGid();
+		}
+		
+		return $data;
+	}
+
 
 	/**
 	 * @param string $gid
@@ -58,9 +83,11 @@ class ConnectedGroupsService {
 	 * @return bool
 	 */
 	public static function isConnectedToWorkspace(string $gid, array $spaceGids) : bool {
+		$linkedSpaceGroups = self::initLinkedSpaceGroups();
+
 		foreach ($spaceGids as $spaceGid) {
-			if (isset(self::$LINKED_SPACE_GROUPS[$spaceGid])) {
-				return in_array($gid, self::$LINKED_SPACE_GROUPS[$spaceGid]);
+			if (isset($linkedSpaceGroups[$spaceGid])) {
+				return in_array($gid, $linkedSpaceGroups[$spaceGid]);
 			}
 		}
 		return false;
@@ -81,12 +108,14 @@ class ConnectedGroupsService {
 	 * @param string $spaceGid
 	 * @return array|null
 	 */
-	public function getConnectedGroupsToSpaceGroup(string $spaceGid): ?array {
-		if (!isset(self::$LINKED_SPACE_GROUPS[$spaceGid])) {
+	public function getConnectedGroupsToSpace(string $spaceGid): ?array {
+		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
+
+		if (!isset($linkedSpaceGroups[$spaceGid])) {
 			return null;
 		}
 		$groups = [];
-		foreach (self::$LINKED_SPACE_GROUPS[$spaceGid] as $gid) {
+		foreach ($linkedSpaceGroups[$spaceGid] as $gid) {
 			$groups[] = $this->groupManager->get($gid);
 		}
 		return $groups;
@@ -94,9 +123,36 @@ class ConnectedGroupsService {
 
 	/**
 	 * @param string $gid
+	 * @param ?string $gidUserGroup - Specify the gid user group
 	 * @return bool
 	 */
-	public function hasConnectedGroups(string $gid) : bool {
-		return isset(self::$LINKED_SPACE_GROUPS[$gid]);
+	public function hasConnectedgroups(string $gid, ?string $gidUserGroup = null) : bool {
+		
+		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
+
+		if (is_null($linkedSpaceGroups))
+			return false;
+
+		if (!is_null($gidUserGroup)) {
+			$values = $linkedSpaceGroups[$gidUserGroup];
+			if (!is_null($values))
+				return in_array($gid, $values);	
+			return false;
+		}
+		
+		$i = array_keys($linkedSpaceGroups)[0];
+		$values = array_values($linkedSpaceGroups[$i]);
+		return in_array($gid, $values);
+	}
+
+	public function add(IGroup $group, Space $space): bool {
+
+		$connectedGroup = new ConnectedGroup();
+		$connectedGroup->setSpaceId($space->getSpaceId());
+		$connectedGroup->setGid($group->getGid());
+
+		$this->mapper->insert($connectedGroup);
+
+		return true;
 	}
 }
