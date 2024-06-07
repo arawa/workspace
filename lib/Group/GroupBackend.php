@@ -49,7 +49,8 @@ class GroupBackend extends ABackend implements GroupInterface {
 	 * Checks whether the user is member of a group or not.
 	 */
 	public function inGroup($uid, $gid) {
-		return true;
+		// not backend responsability
+		return false;
 	}
 
 	/**
