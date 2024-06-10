@@ -34,8 +34,8 @@ export const getters = {
 		if (state.spaces[name].groups[gid]) {
 			return state.spaces[name].groups[gid].displayName
 		}
-		if (state.spaces[name].addedGroups[gid]) {
-			return state.spaces[name].addedGroups[gid].displayName
+		if (state.spaces[name].added_groups[gid]) {
+			return state.spaces[name].added_groups[gid].displayName
 		}
 		return '[' + gid + ']'
 	},
@@ -55,14 +55,14 @@ export const getters = {
 	},
 	// Test whether a user if from and added group from the space
 	isFromAddedGroups: state => (user, spaceName) => {
-		const addedGroups = Object.keys(state.spaces[spaceName].addedGroups)
+		const addedGroups = Object.keys(state.spaces[spaceName].added_groups)
 		const hasAddedGroups = user.groups.filter((group) => addedGroups.includes(group))
 		return hasAddedGroups.length > 0
 	},
 	// Test if group is from space added groups
 	isSpaceAddedGroup: state => (spaceName, groupName) => {
 		const space = state.spaces[spaceName]
-		return space.addedGroups[groupName]
+		return space.added_groups[groupName]
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
