@@ -212,7 +212,7 @@ class WorkspaceService {
 		}
 
 		$workspace['groups'] = GroupFormatter::formatGroups($groups);
-		$workspace['addedGroups'] = GroupFormatter::formatGroups($addedGroups);
+		$workspace['added_groups'] = GroupFormatter::formatGroups($addedGroups);
 
 		return $workspace;
 	}

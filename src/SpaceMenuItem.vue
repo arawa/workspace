@@ -40,7 +40,7 @@
 		<NcAppNavigationCaption
 			:title="t('workspace', 'Added groups')" />
 		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.addedGroups ?? []), spaceName)"
+			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
 			:group="group"
 			:space-name="spaceName"
