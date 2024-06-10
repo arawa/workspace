@@ -27,7 +27,7 @@
 		:title="spaceName"
 		:to="{path: `/workspace/${spaceName}`}">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-		<NcCounterBubble slot="counter" class="user-counter counter-bullet">
+		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.spaceUserCount(spaceName) }}
 		</NcCounterBubble>
 		<div>
