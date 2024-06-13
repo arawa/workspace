@@ -376,7 +376,7 @@ export default {
 
 .space-name {
 	margin-left: 8px;
-	margin-top: -25px;
+	margin-top: -28px;
 }
 
 .no-bold button p strong{

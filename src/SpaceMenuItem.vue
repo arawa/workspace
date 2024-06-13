@@ -21,7 +21,7 @@
 <template>
 	<NcAppNavigationItem
 		:key="space.id"
-		:class="$route.params.space === spaceName ? 'space-selected' : ''"
+		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
 		:allow-collapse="true"
 		:open="$route.params.space === spaceName"
 		:title="spaceName"
