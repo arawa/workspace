@@ -30,6 +30,7 @@
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.spaceUserCount(spaceName) }}
 		</NcCounterBubble>
+		<MenuItemSelector />
 		<NcAppNavigationCaption
 			:title="t('workspace', 'Workspace groups')" />
 		<GroupMenuItem
@@ -51,6 +52,7 @@
 <script>
 import { getLocale } from '@nextcloud/l10n'
 import GroupMenuItem from './GroupMenuItem.vue'
+import MenuItemSelector from './MenuItemSelector.vue'
 import NcAppNavigationCaption from '@nextcloud/vue/dist/Components/NcAppNavigationCaption.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
@@ -60,6 +62,7 @@ export default {
 	name: 'SpaceMenuItem',
 	components: {
 		GroupMenuItem,
+		MenuItemSelector,
 		NcAppNavigationCaption,
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
@@ -80,11 +83,6 @@ export default {
 			workspaceGroups: [],
 			connectedGroups: [],
 		}
-	},
-	beforeMount() {
-		// console.debug(this.space.groups.types)
-		// const workspaceGroups = this.space.groups.filter((groupname))
-		// this.workspaceGroups.push()
 	},
 	methods: {
 		// sorts groups alphabetically
