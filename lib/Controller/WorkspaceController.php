@@ -182,11 +182,11 @@ class WorkspaceController extends Controller {
 				$groups[] = $group;
 			}
 
-			$gids = array_keys($space['groups']);
+			$gids = array_keys($space['groups'] ?? []);
 			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
 	
 			$addedGroups = [];
-			foreach(array_keys($workspace['groups']) as $gid) {
+			foreach($gids as $gid) {
 				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
 				if ($addedToGroup !== null) {
 					$addedGroups = array_merge($addedGroups, $addedToGroup);
