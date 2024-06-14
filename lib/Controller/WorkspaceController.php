@@ -25,29 +25,30 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\CreateGroupException;
-use OCA\Workspace\Exceptions\CreateWorkspaceException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
-use OCA\Workspace\Service\WorkspaceService;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
 use Psr\Log\LoggerInterface;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\CreateGroupException;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Exceptions\CreateWorkspaceException;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class WorkspaceController extends Controller {
 	public function __construct(
@@ -60,6 +61,7 @@ class WorkspaceController extends Controller {
 		private SpaceMapper $spaceMapper,
 		private SpaceService $spaceService,
 		private UserService $userService,
+		private ConnectedGroupsService $connectedGroups,
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
@@ -197,7 +199,16 @@ class WorkspaceController extends Controller {
 			$gids = array_keys($space['groups']);
 			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
 	
+			$addedGroups = [];
+			foreach(array_keys($workspace['groups']) as $gid) {
+				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+				if ($addedToGroup !== null) {
+					$addedGroups = array_merge($addedGroups, $addedToGroup);
+				}
+			}
+
 			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['added_groups'] = GroupFormatter::formatGroups($addedGroups);
 			$space['users'] = $this->workspaceService->addUsersInfo($space);
 	
 			$spaces[] = $space;
