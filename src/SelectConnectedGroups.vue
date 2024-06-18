@@ -1,7 +1,7 @@
 <template>
 	<div class="container-select-groups">
 		<header class="header-select-groups">
-			<h1>{{t('workspace', 'Add a group')}}</h1>
+			<h1>{{ t('workspace', 'Add a group') }}</h1>
 		</header>
 
 		<div class="body-select-groups">
@@ -11,20 +11,38 @@
 				label="displayName"
 				limit="10"
 				:options="groupsSelectable"
+				:placeholder="t('workspace', 'Start typing text to search for groups')"
 				@search="lookupGroups"
 				@close="groupsSelectable=[]" />
 		</div>
+		<div class="content-group-list">
+			<div v-if="groupsSelected.length !== 0"
+				class="select-group-list">
+				<p>test</p>
+			</div>
+			<NcEmptyContent v-else
+				class="content-group-list-empty"
+				:title="t('workspace', 'No group selected')" />
+		</div>
+		<NcButton type="secondary"
+			class="btn-add-groups">
+			{{ t('workspace', 'Add') }}
+		</NcButton>
 	</div>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import { generateUrl } from '@nextcloud/router'
 
 export default {
 	name: 'SelectConnectedGroups',
 	components: {
+		NcButton,
+		NcEmptyContent,
 		NcSelect,
 	},
 	data() {
@@ -40,6 +58,7 @@ export default {
 					},
 				},
 			],
+			groupsSelected: [],
 		}
 	},
 	methods: {
@@ -71,11 +90,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container-select-groups {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
 	justify-content: center;
 	align-items: center;
 }
@@ -83,8 +101,10 @@ export default {
 .header-select-groups {
 	display: flex;
 	align-items: start;
-	width: 100%;
 	padding: 10px;
+	font-weight: bold;
+	align-self: start;
+	margin-left: 16px;
 }
 
 .header-select-groups h1 {
@@ -97,7 +117,27 @@ export default {
 }
 
 .searchbar-groups {
-	width: 400px;
+	width: 500px;
 }
 
+.content-group-list {
+	width: 80%;
+	height: 332px;
+	padding: 8px;
+}
+
+.content-group-list-empty {
+	width: 100%;
+	height: 100%;
+	margin: 0px 0px !important;
+	justify-content: center;
+}
+
+.content-group-list-empty h2 {
+	font-size: 26px;
+}
+
+.btn-add-groups {
+	margin-top: 8px;
+}
 </style>
