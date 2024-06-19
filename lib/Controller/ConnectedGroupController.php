@@ -23,7 +23,6 @@ class ConnectedGroupController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      *
      * @return Response
      */
@@ -41,7 +40,6 @@ class ConnectedGroupController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      *
      * @return Response
      */
@@ -59,7 +57,6 @@ class ConnectedGroupController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      *
      * @return Response
      */
