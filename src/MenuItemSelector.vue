@@ -61,24 +61,24 @@ export default {
 
 <style>
 .app-navigation-entry.selected-background{
-	position:absolute;
-	background-color:var(--color-primary);
+	position: absolute;
+	background-color: var(--color-primary);
 	opacity: 15%;
 	z-index: -100;
 }
 
 .app-navigation-entry.space-first-background{
-	top:0;
+	top: 0;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
 .app-navigation-entry.space-middle-background{
-	top:0;
-	bottom:0;
-	border-radius:0;
+	top: 0;
+	bottom: 0;
+	border-radius: 0;
 }
 .app-navigation-entry.space-last-background{
-	bottom:0;
+	bottom: 0;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 }
