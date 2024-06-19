@@ -57,7 +57,7 @@ class ConnectedGroupMapper extends QBMapper {
             ->select('*')
             ->from($this->getTableName())
             ->where(
-                $qb->expr()->eq('space_id', $qb->createNamedParameter($id, $qb::PARAM_INT))
+                $qb->expr()->eq('id', $qb->createNamedParameter($id, $qb::PARAM_INT))
             )
         ;
 
