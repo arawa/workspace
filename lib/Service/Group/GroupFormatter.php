@@ -47,16 +47,10 @@ class GroupFormatter {
                 $backendnames
             );
 
-            $isLdap = false;
-            if (in_array('LDAP', $backendnames)) {
-                $isLdap = true;
-            }
-
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
-				'types' => $group->getBackendNames(),
-				'is_ldap' => $isLdap
+                'types' => $group->getBackendNames(),
 			];
 		}
 
