@@ -39,17 +39,18 @@ class GroupFormatter {
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
 
-		foreach ($groups as $group) {
+        foreach ($groups as $group) {
 
-			$backendnames = array_map(
-				fn ($backendname) => strtoupper($backendname),
-				$group->getBackendNames()
-			);
-			
-			$isLdap = false;
-			if (in_array('LDAP', $backendnames)) {
-				$isLdap = true;
-			}
+            $backendnames = $group->getBackendNames();
+            $backendnames = array_map(
+                fn($backendname) => strtoupper($backendname),
+                $backendnames
+            );
+
+            $isLdap = false;
+            if (in_array('LDAP', $backendnames)) {
+                $isLdap = true;
+            }
 
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
