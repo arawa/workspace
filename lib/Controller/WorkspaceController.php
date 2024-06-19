@@ -198,8 +198,21 @@ class WorkspaceController extends Controller {
 			): $workspace;
 
 			$gids = array_keys($space['groups'] ?? []);
-			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
-	
+			$groups = [];
+
+			foreach ($gids as $gid) {
+				$group = $this->groupManager->get($gid);
+				if (is_null($group)) {
+					$this->logger->warning(
+						"Be careful, the $gid group is not exist in the oc_groups table."
+						. " But, it's present in the oc_group_folders_groups table."
+						.  "It necessary to recreate it with the occ command."
+					);
+					continue;
+				}
+				$groups[] = $group;
+			}
+
 			$addedGroups = [];
 			foreach($gids as $gid) {
 				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);

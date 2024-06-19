@@ -108,7 +108,7 @@ class ConnectedGroupsService {
 	 * @param string $spaceGid
 	 * @return array|null
 	 */
-	public function getConnectedGroupsToSpace(string $spaceGid): ?array {
+	public function getConnectedGroupsToSpaceGroup(string $spaceGid): ?array {
 		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
 
 		if (!isset($linkedSpaceGroups[$spaceGid])) {
