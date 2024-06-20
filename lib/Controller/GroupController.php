@@ -25,26 +25,26 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\AppFramework\Http;
-use Psr\Log\LoggerInterface;
-use OCP\AppFramework\Controller;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
-use OCP\IRequest;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
-use OCA\Workspace\Service\Group\GroupsWorkspaceService;
-use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\Collaboration\Collaborators\ISearch;
+use OCP\IGroupManager;
+use OCP\IRequest;
+use OCP\IUserManager;
 use OCP\Share\IShare;
+use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
 	private const DEFAULT = [
@@ -56,13 +56,13 @@ class GroupController extends Controller {
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
-        private ISearch $collaboratorSearch,
+		private ISearch $collaboratorSearch,
 		private LoggerInterface $logger,
 		private UserFormatter $userFormatter,
 		private UserService $userService,
 		private UserWorkspace $userWorkspace,
-        private GroupMembersOnlyChecker $groupMembersOnlyChecker,
-        private ShareMembersOnlyFilter $shareMembersOnlyFilter
+		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
+		private ShareMembersOnlyFilter $shareMembersOnlyFilter
 	) {
 	}
 
@@ -422,47 +422,47 @@ class GroupController extends Controller {
 		], Http::STATUS_OK);
 	}
 
-    /**
-     * @NoAdminRequired
-     * 
-     * @param string $pattern The pattern to search
-     * @param bool $ignoreSpaces (not require) Ignore the workspace groups
-     */
-    public function search(string $pattern, ?bool $ignoreSpaces = null): JSONResponse {
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param string $pattern The pattern to search
+	 * @param bool $ignoreSpaces (not require) Ignore the workspace groups
+	 */
+	public function search(string $pattern, ?bool $ignoreSpaces = null): JSONResponse {
 
-        $groups = $this->collaboratorSearch->search(
-            $pattern,
-            [
-                IShare::TYPE_GROUP
-            ],
-            false,
-            200,
-            0
-        );
-        
-        $groups = array_map(
-            fn ($group) => $group['value']['shareWith'],
-            $groups[0]['groups']
-        );
+		$groups = $this->collaboratorSearch->search(
+			$pattern,
+			[
+				IShare::TYPE_GROUP
+			],
+			false,
+			200,
+			0
+		);
+		
+		$groups = array_map(
+			fn ($group) => $group['value']['shareWith'],
+			$groups[0]['groups']
+		);
 
-        $groups = array_map(fn ($group) => $this->groupManager->get($group), $groups);
+		$groups = array_map(fn ($group) => $this->groupManager->get($group), $groups);
 
 		if (!is_null($ignoreSpaces) && (bool)$ignoreSpaces) {
 			$groups = array_filter($groups, function ($group) {
 				$gid = $group->getGID();
 
 				return !str_starts_with($gid, WorkspaceManagerGroup::getPrefix())
-                    && !str_starts_with($gid, UserGroup::getPrefix())
-                    && !str_starts_with($gid, 'SPACE-G')
+					&& !str_starts_with($gid, UserGroup::getPrefix())
+					&& !str_starts_with($gid, 'SPACE-G')
 					&& $gid !== ManagersWorkspace::GENERAL_MANAGER
-                    && $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
+					&& $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
 			});
-        }
+		}
 
-        $groupsFormatted = GroupFormatter::formatGroups($groups);
+		$groupsFormatted = GroupFormatter::formatGroups($groups);
 
-        uksort($groupsFormatted, 'strcasecmp');
+		uksort($groupsFormatted, 'strcasecmp');
 
-        return new JSONResponse($groupsFormatted);
-    }
+		return new JSONResponse($groupsFormatted);
+	}
 }
