@@ -200,7 +200,7 @@ class WorkspaceService {
 			return $workspace;
 		}
 		$groups = array_map(
-			fn($gid) => $this->groupManager->get($gid),
+			fn ($gid) => $this->groupManager->get($gid),
 			array_keys($workspace['groups'])
 		);
 		$addedGroups = [];
