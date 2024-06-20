@@ -45,32 +45,20 @@ Before using Workspace, you must configure the app, following these important st
 - Limit the Workspace app to specific groups : in your "application management" administrator interface, limit the application to the following groups: "GeneralManager" and "WorkspacesManagers".
 
 - Configure Groupfolders for Workspace:
-    - until Nextcloud 24 : in "Settings" > "Group folders" > "Group folder admin delegation" section, add the groups "GeneralManager" and "WorkspacesManagers".
-    - from Nextcloud 25 : in "Settings" > "Group folders" > "Group folder admin delegation" section, add the group "GeneralManager" to the **first** field, and the group "WorkspacesManagers" to the **second** field
+    - In "Settings" > "Group folders" > "Group folder admin delegation" section, add the group "GeneralManager" to the **first** field, and the group "WorkspacesManagers" to the **second** field
 
-Since Workspace 2.0.0 for Nextcloud 25, our app is fully compatible with the standard Group folders app (since 13.1.0), available on [Nextcloud app store](https://apps.nextcloud.com/apps/groupfolders/).
-
-**Caution** if you are using a major version 24 of Nextcloud or earlier : to use our app, you need to install [our forked Groupfolders app](https://github.com/arawa/groupfolders), release [v9.2.1](https://github.com/arawa/groupfolders/releases/download/v9.2.1/groupfolders-9.2.1.tar.gz).
+If you are using a major version of Nextcloud lower than Nextcloud 25, please follow the instructions provided on [GitHub](https://github.com/arawa/workspace). 
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
-For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide).
-
-# Upgrade guideline
-
-This section is very important to resolve rare bugs.
-We try hard to do resolve major bugs and to have a better user experience.
-
-## v3.0.4
-
-For this version, you should refresh your browser from the Workspace app with `Ctrl, Shift + R`.
+For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X).
 
     ]]></description>
 
     <documentation>
         <admin>https://github.com/arawa/workspace/blob/main/README.md#installation</admin>
         <developer>https://github.com/arawa/workspace/blob/main/README.md#development-and-build</developer>
-        <user>https://github.com/arawa/workspace/tree/main/docs/user-guide</user>
+        <user>https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X</user>
     </documentation>
 
     <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-details.png</screenshot>
