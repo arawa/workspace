@@ -75,6 +75,7 @@ export default {
 							color: space.color_code,
 							groupfolderId: space.groupfolder_id,
 							groups: space.groups,
+							added_groups: space.added_groups ?? [],
 							id: space.id,
 							isOpen: false,
 							name: space.name,
