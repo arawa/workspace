@@ -62,12 +62,12 @@ class Version3000Date20240530101437 extends SimpleMigrationStep {
 			'length' => 6
 		]);
 
-        $table->addColumn('space_id', 'bigint', [
+		$table->addColumn('space_id', 'bigint', [
 			'notnull' => true,
 			'length' => 6
 		]);
 
-        $table->addColumn('gid', 'string', [
+		$table->addColumn('gid', 'string', [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 64
@@ -78,12 +78,12 @@ class Version3000Date20240530101437 extends SimpleMigrationStep {
 		]);
 
 		$table->addForeignKeyConstraint(
-            $schema->getTable('work_spaces'),
-            ['space_id'],
-            ['space_id'],
+			$schema->getTable('work_spaces'),
+			['space_id'],
+			['space_id'],
 			[],
-            'fk_gi_sn_wscg'
-        );
+			'fk_gi_sn_wscg'
+		);
 
 		return $schema;
 	}

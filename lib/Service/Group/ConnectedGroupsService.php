@@ -48,8 +48,9 @@ class ConnectedGroupsService {
 	private function init(): void {
 		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
 
-		if (is_null($linkedSpaceGroups))
+		if (is_null($linkedSpaceGroups)) {
 			return;
+		}
 
 		foreach ($linkedSpaceGroups as $gid => $linked_gids) {
 			foreach($linked_gids as $gidIn) {
@@ -65,8 +66,9 @@ class ConnectedGroupsService {
 	private function initLinkedSpaceGroups(): ?array {
 		$connectedGroups = $this->mapper->findAll();
 
-		if (empty($connectedGroups))
+		if (empty($connectedGroups)) {
 			return null;
+		}
 
 		$data = [];
 		foreach($connectedGroups as $connectedGroup) {
@@ -130,13 +132,15 @@ class ConnectedGroupsService {
 		
 		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
 
-		if (is_null($linkedSpaceGroups))
+		if (is_null($linkedSpaceGroups)) {
 			return false;
+		}
 
 		if (!is_null($gidUserGroup)) {
 			$values = $linkedSpaceGroups[$gidUserGroup];
-			if (!is_null($values))
-				return in_array($gid, $values);	
+			if (!is_null($values)) {
+				return in_array($gid, $values);
+			}
 			return false;
 		}
 		
