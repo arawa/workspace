@@ -25,9 +25,8 @@
 
 namespace OCA\Workspace\Db;
 
-use OCP\IDBConnection;
 use OCP\AppFramework\Db\QBMapper;
-use OCA\Workspace\Db\ConnectedGroup;
+use OCP\IDBConnection;
 
 class ConnectedGroupMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -54,12 +53,12 @@ class ConnectedGroupMapper extends QBMapper {
 	public function find(int $id): ConnectedGroup {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
-            ->select('*')
-            ->from($this->getTableName())
-            ->where(
-                $qb->expr()->eq('id', $qb->createNamedParameter($id, $qb::PARAM_INT))
-            )
-        ;
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, $qb::PARAM_INT))
+			)
+		;
 
 		return $this->findEntity($query);
 	}
@@ -67,25 +66,25 @@ class ConnectedGroupMapper extends QBMapper {
 	/**
 	 * @return ConnectedGroup[]
 	 */
-	public function findAll(int $spaceId = null, $limit = null, $offset = null): array {
+	public function findAll(?int $spaceId = null, $limit = null, $offset = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb
-            ->select('*')
-            ->from($this->getTableName())
-        ;
+			->select('*')
+			->from($this->getTableName())
+		;
 
-        if (!is_null($spaceId)) {
-            $qb
+		if (!is_null($spaceId)) {
+			$qb
 				->where('space_id = :spaceId')
-            	->setParameter('spaceId', $spaceId)
-            ;
-        }
+				->setParameter('spaceId', $spaceId)
+			;
+		}
 
-        $qb
-            ->setMaxResults($limit)
-            ->setFirstResult($offset)
-        ;
+		$qb
+			->setMaxResults($limit)
+			->setFirstResult($offset)
+		;
 
 		return $this->findEntities($qb);
 	}

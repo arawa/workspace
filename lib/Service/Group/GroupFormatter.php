@@ -39,18 +39,18 @@ class GroupFormatter {
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
 
-        foreach ($groups as $group) {
+		foreach ($groups as $group) {
 
-            $backendnames = $group->getBackendNames();
-            $backendnames = array_map(
-                fn($backendname) => strtoupper($backendname),
-                $backendnames
-            );
+			$backendnames = $group->getBackendNames();
+			$backendnames = array_map(
+				fn ($backendname) => strtoupper($backendname),
+				$backendnames
+			);
 
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
-                'types' => $group->getBackendNames(),
+				'types' => $group->getBackendNames(),
 			];
 		}
 
