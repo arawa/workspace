@@ -15,6 +15,7 @@
 	"The group already exists.": "Le groupe existe déjà.",
 	"Delete user" : "Supprimer de l'espace de travail",
 	"Group name": "Nom du groupe",
+	"remove group from selection": "retirer le groupe de la sélection",
 	"Space name": "Nom de l'espace de travail",
 	"Groups": "Groupes",
 	"Make administrator" : "Assigner en tant que G.E.",
