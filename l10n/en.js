@@ -24,6 +24,7 @@ OC.L10N.register(
 		'return to home': 'return to home',
 		'Email': 'Emails',
 		'Groups': 'Groups',
+		'remove group from selection': 'remove group from selection',
 		'No group selected': 'No group selected',
 		'Duplication of groups': 'Duplication of groups',
 		'The group already exists.': 'The group already exists.',
