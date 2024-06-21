@@ -25,6 +25,10 @@
 
     <summary>Create Groupfolders with delegated management</summary>
 
+    <types>
+	<dav />
+    </types>
+
     <description><![CDATA[
 # Description
 
