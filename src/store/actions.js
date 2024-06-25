@@ -77,6 +77,7 @@ export default {
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
+		const spaceId = space.id
 		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
 		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
@@ -93,6 +94,7 @@ export default {
 		axios.post(generateUrl('/apps/workspace/api/group'),
 			{
 				data: {
+					spaceId,
 					gid,
 					displayName,
 				},
@@ -109,7 +111,8 @@ export default {
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: e, group: gid })
+				const message = (e.response && e.response.data && e.response.data.msg) ?? e.message
+				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: message, group: gid })
 				showNotificationError('Network error', text, 4000)
 			})
 	},
