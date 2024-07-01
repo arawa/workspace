@@ -3,7 +3,7 @@
 /**
  * @copyright Copyright (c) 2017 Arawa
  *
- * @author 2022 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,38 +22,34 @@
  *
  */
 
-namespace OCA\Workspace\Service\Group;
+namespace OCA\Workspace\Db;
 
-use OCP\IGroup;
+use JsonSerializable;
 
-class GroupFormatter {
+use OCP\AppFramework\Db\Entity;
+
+class ConnectedGroup extends Entity implements JsonSerializable {
+
 	/**
-	 * @param IGroup[] $groups
-	 * @return array [
-	 *  'gid' => string,
-	 *  'displayName' => string,
-	 *  'types' => string[],
-	 *  'is_ldap' => boolean
-	 * ]
+	 * @var integer
 	 */
-	public static function formatGroups(array $groups): array {
-		$groupsFormat = [];
+	protected $spaceId;
 
-		foreach ($groups as $group) {
+	/**
+	 * @var string
+	 */
+	protected $gid;
 
-			$backendnames = $group->getBackendNames();
-			$backendnames = array_map(
-				fn ($backendname) => strtoupper($backendname),
-				$backendnames
-			);
+	public function __construct() {
+		$this->addType('space_id', 'integer');
+		$this->addType('gid', 'string');
+	}
 
-			$groupsFormat[$group->getGID()] = [
-				'gid' => $group->getGID(),
-				'displayName' => $group->getDisplayName(),
-				'types' => $group->getBackendNames(),
-			];
-		}
-
-		return $groupsFormat;
+	public function jsonSerialize(): array {
+		return [
+			'id' => (int)$this->getId(),
+			'space_id' => (int)$this->getSpaceId(),
+			'gid' => $this->getGid(),
+		];
 	}
 }
