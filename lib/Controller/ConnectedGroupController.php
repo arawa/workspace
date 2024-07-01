@@ -78,7 +78,7 @@ class ConnectedGroupController extends Controller {
 
 		$userGroup = $this->manager->get('SPACE-U-' . $space->getSpaceId());
 
-		if ($this->connectedGroupsService->hasConnectedgroups($group->getGID(), $userGroup->getGID())) {
+		if ($this->connectedGroupsService->hasConnectedGroups($group->getGID(), $userGroup->getGID())) {
 			return new JSONResponse([
 				'message' => 'Alreaydy exist',
 				'data' => null

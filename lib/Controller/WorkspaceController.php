@@ -186,6 +186,9 @@ class WorkspaceController extends Controller {
 			$groups = [];
 
 			foreach ($gids as $gid) {
+				if (!preg_match('/^SPACE-/', $gid)) {
+					continue;
+				}
 				$group = $this->groupManager->get($gid);
 				if (is_null($group)) {
 					$this->logger->warning(
