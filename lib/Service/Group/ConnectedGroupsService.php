@@ -25,7 +25,7 @@
 namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\Db\ConnectedGroup;
-use OCA\Workspace\Db\ConnectedGroupMapper;
+use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCP\IGroup;
@@ -33,59 +33,50 @@ use OCP\IGroupManager;
 
 class ConnectedGroupsService {
 
-	private static $LINKED_GROUPS_IN = [
 
-	];
+	private ?array $linkedSpaceGroups = null;
+	private array $linkedGroupsWSGroups = [];
 
 	public function __construct(
 		private IGroupManager $groupManager,
-		private ConnectedGroupMapper $mapper,
+		private GroupFoldersGroupsMapper $mapper,
 		private SpaceMapper $spaceMapper
 	) {
-		$this->init();
 	}
 
-	private function init(): void {
-		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
-
-		if (is_null($linkedSpaceGroups)) {
-			return;
+	private function getLinkedSpaceGroups(): array {
+		if ($this->linkedSpaceGroups === null) {
+			$this->initLinkedSpaceGroups();
 		}
-
-		foreach ($linkedSpaceGroups as $gid => $linked_gids) {
-			foreach($linked_gids as $gidIn) {
-				if (!isset(self::$LINKED_GROUPS_IN[$gidIn])) {
-					self::$LINKED_GROUPS_IN[$gidIn] = [ $gid ];
-					continue;
-				}
-				self::$LINKED_GROUPS_IN[$gidIn][] = [ $gid ];
-			}
-		}
+		return $this->linkedSpaceGroups;
 	}
 
-	private function initLinkedSpaceGroups(): ?array {
-		$connectedGroups = $this->mapper->findAll();
+	private function initLinkedSpaceGroups(): void {
+		$connectedGroups = $this->mapper->findAllAddedGroups();
 
 		if (empty($connectedGroups)) {
-			return null;
+			$this->linkedSpaceGroups = [];
+			return;
 		}
 
 		$data = [];
 		foreach($connectedGroups as $connectedGroup) {
-			$data['SPACE-U-' . $connectedGroup->getSpaceId()][] = $connectedGroup->getGid();
+			$gid = 'SPACE-U-' . $connectedGroup->getSpaceId();
+			$linked_gid = $connectedGroup->getGid();
+			$data[$gid][] = $linked_gid;
+			$this->linkedGroupsWSGroups[$linked_gid][] = $gid;
 		}
 		
-		return $data;
+		$this->linkedSpaceGroups = $data;
 	}
-
 
 	/**
 	 * @param string $gid
 	 * @param array $spaceGids
 	 * @return bool
 	 */
-	public static function isConnectedToWorkspace(string $gid, array $spaceGids) : bool {
-		$linkedSpaceGroups = self::initLinkedSpaceGroups();
+	public function isConnectedToWorkspace(string $gid, array $spaceGids) : bool {
+		$linkedSpaceGroups = $this->getLinkedSpaceGroups();
 
 		foreach ($spaceGids as $spaceGid) {
 			if (isset($linkedSpaceGroups[$spaceGid])) {
@@ -100,8 +91,11 @@ class ConnectedGroupsService {
 	 * @return array|null
 	 */
 	public function getConnectedSpaceToGroupIds(string $gid): ?array {
-		if (isset(self::$LINKED_GROUPS_IN[$gid])) {
-			return self::$LINKED_GROUPS_IN[$gid];
+		if ($this->linkedSpaceGroups === null) {
+			$this->initLinkedSpaceGroups();
+		}
+		if (isset($this->linkedGroupsWSGroups[$gid])) {
+			return $this->linkedGroupsWSGroups[$gid];
 		}
 		return null;
 	}
@@ -111,7 +105,7 @@ class ConnectedGroupsService {
 	 * @return array|null
 	 */
 	public function getConnectedGroupsToSpaceGroup(string $spaceGid): ?array {
-		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
+		$linkedSpaceGroups = $this->getLinkedSpaceGroups();
 
 		if (!isset($linkedSpaceGroups[$spaceGid])) {
 			return null;
@@ -128,11 +122,11 @@ class ConnectedGroupsService {
 	 * @param ?string $gidUserGroup - Specify the gid user group
 	 * @return bool
 	 */
-	public function hasConnectedgroups(string $gid, ?string $gidUserGroup = null) : bool {
+	public function hasConnectedGroups(string $gid, ?string $gidUserGroup = null) : bool {
 		
-		$linkedSpaceGroups = $this->initLinkedSpaceGroups();
+		$linkedSpaceGroups = $this->getLinkedSpaceGroups();
 
-		if (is_null($linkedSpaceGroups)) {
+		if (empty($linkedSpaceGroups)) {
 			return false;
 		}
 
@@ -143,20 +137,18 @@ class ConnectedGroupsService {
 			}
 			return false;
 		}
-		
-		$i = array_keys($linkedSpaceGroups)[0];
-		$values = array_values($linkedSpaceGroups[$i]);
-		return in_array($gid, $values);
+
+		return isset($linkedSpaceGroups[$gid]);
 	}
 
 	public function add(IGroup $group, Space $space): bool {
+		/*
+				$connectedGroup = new ConnectedGroup();
+				$connectedGroup->setSpaceId($space->getSpaceId());
+				$connectedGroup->setGid($group->getGid());
 
-		$connectedGroup = new ConnectedGroup();
-		$connectedGroup->setSpaceId($space->getSpaceId());
-		$connectedGroup->setGid($group->getGid());
-
-		$this->mapper->insert($connectedGroup);
-
+				$this->mapper->insert($connectedGroup);
+		*/
 		return true;
 	}
 }
