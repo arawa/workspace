@@ -72,7 +72,7 @@ class FileCSVController extends Controller {
 		private IUserSession $userSession,
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
-        private ValuesValidator $valuesValidator
+		private ValuesValidator $valuesValidator
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -135,7 +135,7 @@ class FileCSVController extends Controller {
 					$this->translate->t($errorMessage),
 				);
 			}
-            
+			
 			$usersFormatted = $this->csvParser->parser($fileUploader);
 			
 			$uids = array_map(fn ($user) => $user->uid, $usersFormatted);
@@ -181,31 +181,31 @@ class FileCSVController extends Controller {
 				);
 			}
 
-            if (!$this->valuesValidator->validateRoles($fileUploader)) {
+			if (!$this->valuesValidator->validateRoles($fileUploader)) {
 
-                $usersBadRole = array_filter(
-                    $usersFormatted,
-                    fn ($user) => !in_array($user->role, Values::ROLES)
-                );
+				$usersBadRole = array_filter(
+					$usersFormatted,
+					fn ($user) => !in_array($user->role, Values::ROLES)
+				);
 
-                $message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
-                $message .= '- "wm" : To define the user as a workspace manager.<br>';
-                $message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
-                $message .= sprintf('Check the role for these users :<br>%s',
-                    implode(
-                        '<br>',
-                        array_map(
-                            fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
-                            $usersBadRole
-                        )
-                    )
-                );
+				$message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
+				$message .= '- "wm" : To define the user as a workspace manager.<br>';
+				$message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
+				$message .= sprintf('Check the role for these users :<br>%s',
+					implode(
+						'<br>',
+						array_map(
+							fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
+							$usersBadRole
+						)
+					)
+				);
 
-                throw new InvalidCsvFormatException(
-                    $this->translate->t('Error in the role value'),
-                    $this->translate->t($message)
-                );
-            }
+				throw new InvalidCsvFormatException(
+					$this->translate->t('Error in the role value'),
+					$this->translate->t($message)
+				);
+			}
 	
 			$data = [];
 			foreach($usersFormatted as $user) {
@@ -290,7 +290,7 @@ class FileCSVController extends Controller {
 				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 
-                $message = "The content of your file is invalid. "
+				$message = "The content of your file is invalid. "
 				. "Header does not contain the desired values. "
 				. "Two columns are required, with the following header names and values:<br>"
 				."- \"user\": the user's username or e-mail address<br>"
@@ -358,26 +358,26 @@ class FileCSVController extends Controller {
 				);
 			}
 	
-            if (!$this->valuesValidator->validateRoles($nextcloudFile)) {
+			if (!$this->valuesValidator->validateRoles($nextcloudFile)) {
 
-                $usersBadRole = array_filter(
-                    $names,
-                    fn ($user) => !in_array($user->role, Values::ROLES)
-                );
+				$usersBadRole = array_filter(
+					$names,
+					fn ($user) => !in_array($user->role, Values::ROLES)
+				);
 
-                $message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
-                $message .= '- "wm" : To define the user as a workspace manager.<br>';
-                $message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
-                $message .= sprintf('Check the role for these users :<br>%s',
-                    implode(
-                        '<br>',
-                        array_map(
-                            fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
-                            $usersBadRole
-                        )
-                    )
-                );
-            }
+				$message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
+				$message .= '- "wm" : To define the user as a workspace manager.<br>';
+				$message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
+				$message .= sprintf('Check the role for these users :<br>%s',
+					implode(
+						'<br>',
+						array_map(
+							fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
+							$usersBadRole
+						)
+					)
+				);
+			}
 
 			$data = [];
 			foreach($names as $user) {
