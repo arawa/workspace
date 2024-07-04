@@ -34,12 +34,16 @@ use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
+use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\Collaboration\Collaborators\ISearch;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\Share\IShare;
 use Psr\Log\LoggerInterface;
 
 class GroupController extends Controller {
@@ -51,11 +55,14 @@ class GroupController extends Controller {
 	public function __construct(
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
-		private LoggerInterface $logger,
 		private IUserManager $userManager,
+		private ISearch $collaboratorSearch,
+		private LoggerInterface $logger,
 		private UserFormatter $userFormatter,
 		private UserService $userService,
-		private UserWorkspace $userWorkspace
+		private UserWorkspace $userWorkspace,
+		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
+		private ShareMembersOnlyFilter $shareMembersOnlyFilter
 	) {
 	}
 
@@ -413,5 +420,49 @@ class GroupController extends Controller {
 			'groups' => $groups,
 			'users' => (object)$users
 		], Http::STATUS_OK);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param string $pattern The pattern to search
+	 * @param bool $ignoreSpaces (not require) Ignore the workspace groups
+	 */
+	public function search(string $pattern, ?bool $ignoreSpaces = null): JSONResponse {
+
+		$groups = $this->collaboratorSearch->search(
+			$pattern,
+			[
+				IShare::TYPE_GROUP
+			],
+			false,
+			200,
+			0
+		);
+		
+		$groups = array_map(
+			fn ($group) => $group['value']['shareWith'],
+			$groups[0]['groups']
+		);
+
+		$groups = array_map(fn ($group) => $this->groupManager->get($group), $groups);
+
+		if (!is_null($ignoreSpaces) && (bool)$ignoreSpaces) {
+			$groups = array_filter($groups, function ($group) {
+				$gid = $group->getGID();
+
+				return !str_starts_with($gid, WorkspaceManagerGroup::getPrefix())
+					&& !str_starts_with($gid, UserGroup::getPrefix())
+					&& !str_starts_with($gid, 'SPACE-G')
+					&& $gid !== ManagersWorkspace::GENERAL_MANAGER
+					&& $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
+			});
+		}
+
+		$groupsFormatted = GroupFormatter::formatGroups($groups);
+
+		uksort($groupsFormatted, 'strcasecmp');
+
+		return new JSONResponse($groupsFormatted);
 	}
 }

@@ -49,7 +49,7 @@
 							@click="toggleShowSelectUsersModal" />
 						<NcActionButton v-show="!createGroup"
 							icon="icon-group"
-							:title="t('workspace', 'Create group')"
+							:title="t('workspace', 'Create a workspace group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
 						<NcActionInput v-show="createGroup"
@@ -60,6 +60,12 @@
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</NcActionInput>
+						<NcActionButton
+							:name="t('workspace', 'Add a group')"
+							icon="icon-added-group"
+							class="no-bold"
+							:close-after-click="true"
+							@click="toggleShowConnectedGroups" />
 					</NcActions>
 				</div>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
@@ -87,6 +93,10 @@
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
+		<NcModal v-if="showSelectConnectedGroups"
+			@close="toggleShowConnectedGroups">
+			<SelectConnectedGroups />
+		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
 			style="min-heigth: 8rem;"
 			size="small"
@@ -106,6 +116,7 @@ import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
@@ -121,6 +132,7 @@ export default {
 		NcModal,
 		NcMultiselect,
 		SelectUsers,
+		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
 	},
@@ -130,6 +142,7 @@ export default {
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
+			showSelectConnectedGroups: false,
 			isESR: false,
 		}
 	},
@@ -324,6 +337,9 @@ export default {
 		},
 		toggleShowDelWorkspaceModal() {
 			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
+		},
+		toggleShowConnectedGroups() {
+			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space

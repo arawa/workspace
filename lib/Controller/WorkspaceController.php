@@ -33,6 +33,7 @@ use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -60,6 +61,7 @@ class WorkspaceController extends Controller {
 		private SpaceMapper $spaceMapper,
 		private SpaceService $spaceService,
 		private UserService $userService,
+		private ConnectedGroupsService $connectedGroups,
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
@@ -186,18 +188,28 @@ class WorkspaceController extends Controller {
 		$workspaces = $this->workspaceService->getAll();
 		$spaces = [];
 		foreach ($workspaces as $workspace) {
-			$space = array_merge(
-				$this->folderHelper->getFolder(
-					$workspace['groupfolder_id'],
-					$this->rootFolder->getRootFolderStorageId()
-				),
-				$workspace
+			$folderInfo = $this->folderHelper->getFolder(
+				$workspace['groupfolder_id'],
+				$this->rootFolder->getRootFolderStorageId()
 			);
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			): $workspace;
 
-			$gids = array_keys($space['groups']);
+			$gids = array_keys($space['groups'] ?? []);
 			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
 	
+			$addedGroups = [];
+			foreach($gids as $gid) {
+				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+				if ($addedToGroup !== null) {
+					$addedGroups = array_merge($addedGroups, $addedToGroup);
+				}
+			}
+
 			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['added_groups'] = GroupFormatter::formatGroups($addedGroups);
 			$space['users'] = $this->workspaceService->addUsersInfo($space);
 	
 			$spaces[] = $space;
