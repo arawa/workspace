@@ -137,13 +137,13 @@ class WorkspaceController extends Controller {
 		]);
 	}
 
-  /**
-   *
-   * Deletes the workspace, and the corresponding groupfolder and groups
-   *
-   * @param array $workspace
-   *
-   */
+	/**
+	 *
+	 * Deletes the workspace, and the corresponding groupfolder and groups
+	 *
+	 * @param array $workspace
+	 *
+	 */
 	#[NoAdminRequired]
 	#[SpaceAdminRequired]
 	public function destroy(array $workspace): JSONResponse {

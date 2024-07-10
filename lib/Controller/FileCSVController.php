@@ -61,8 +61,8 @@ class FileCSVController extends Controller {
 	/**
 	 * Returns formatted list of existing users of the instance.
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function import(): JSONResponse {
 		$params = $this->request->getParams();
 		$spaceObj = $params['space'];
@@ -119,8 +119,8 @@ class FileCSVController extends Controller {
 	/**
 	 * Returns formatted list of existing users of the instance.
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function getFromFiles():JSONResponse {
 		$params = $this->request->getParams();
 		$path = $params['path'];
