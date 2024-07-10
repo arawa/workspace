@@ -291,8 +291,8 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
-    #[NoAdminRequired]
-    #[SpaceAdminRequired]
+	#[NoAdminRequired]
+	#[SpaceAdminRequired]
 	public function removeUser(
 		IRequest $request,
 		array|string $space,
