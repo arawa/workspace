@@ -175,7 +175,7 @@ class FileCSVController extends Controller {
 				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('Error'),
+					$this->translate->t('Error: unknown users'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
@@ -188,22 +188,25 @@ class FileCSVController extends Controller {
 					fn ($user) => !in_array($user->role, Values::ROLES)
 				);
 
-				$message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
-				$message .= '- "wm" : To define the user as a workspace manager.<br>';
-				$message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
-				$message .= sprintf('Check the role for these users :<br>%s',
-					implode(
-						'<br>',
-						array_map(
-							fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
-							$usersBadRole
-						)
+				$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
+				. '- "wm": to define the user as a workspace manager.<br>'
+				. '- "u" or "user": to define the user as a simple user.<br><br>'
+				. 'Check the role for these users:<br>%2$s';
+
+				$usersBadRoleStringify = implode(
+					'<br>',
+					array_map(
+						fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
+						$usersBadRole
 					)
 				);
 
 				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in the role value'),
-					$this->translate->t($message)
+					$this->translate->t('Error: unknown role'),
+					$this->translate->t($message, [
+						implode(', ', Values::ROLES),
+						$usersBadRoleStringify
+					])
 				);
 			}
 	
@@ -352,7 +355,7 @@ class FileCSVController extends Controller {
 				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
 				$errorMessage .= $usersUnknown;
 				throw new UserDoesntExistException(
-					$this->translate->t('Error'),
+					$this->translate->t('Error: unknown users'),
 					$errorMessage,
 					Http::STATUS_FORBIDDEN
 				);
@@ -365,17 +368,25 @@ class FileCSVController extends Controller {
 					fn ($user) => !in_array($user->role, Values::ROLES)
 				);
 
-				$message = sprintf('Only the following values are allowed : <b>%s</b><br><br>', implode(', ', Values::ROLES));
-				$message .= '- "wm" : To define the user as a workspace manager.<br>';
-				$message .= '- "u" or "user" : To define the user as a simple user.<br><br>';
-				$message .= sprintf('Check the role for these users :<br>%s',
-					implode(
-						'<br>',
-						array_map(
-							fn ($user) => "- <b>$user->uid</b> has the <b>$user->role</b> role",
-							$usersBadRole
-						)
+				$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
+				. '- "wm": to define the user as a workspace manager.<br>'
+				. '- "u" or "user": to define the user as a simple user.<br><br>'
+				. 'Check the role for these users:<br>%2$s';
+
+				$usersBadRoleStringify = implode(
+					'<br>',
+					array_map(
+						fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
+						$usersBadRole
 					)
+				);
+
+				throw new InvalidCsvFormatException(
+					$this->translate->t('Error: unknown role'),
+					$this->translate->t($message, [
+						implode(', ', Values::ROLES),
+						$usersBadRoleStringify
+					])
 				);
 			}
 
