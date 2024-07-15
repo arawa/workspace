@@ -4,6 +4,10 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 use OCA\Workspace\Files\BasicStreamInterface;
 use OCA\Workspace\Files\Csv\CsvReader;
+<<<<<<< HEAD
+=======
+use OCA\Workspace\Files\BasicStreamInterface;
+>>>>>>> f819151 (refactor(Files): Rename an interface and create a new)
 
 class ValuesValidator {
 	public function validateRoles(BasicStreamInterface $file): bool {
