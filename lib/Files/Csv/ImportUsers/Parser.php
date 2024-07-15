@@ -4,7 +4,7 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 use OCA\Workspace\Files\Csv\CsvParserInterface;
 use OCA\Workspace\Files\Csv\CsvReader;
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 use OCA\Workspace\Users\Formatter\UserImportedFormatter;
 
 class Parser implements CsvParserInterface {
@@ -12,7 +12,7 @@ class Parser implements CsvParserInterface {
 	/**
 	 * @return UserImportedFormatter[]
 	 */
-	public function parser(ManagerConnectionFileInterface $file): array {
+	public function parser(BasicStreamInterface $file): array {
 		$users = [];
 
 		$csvReader = new CsvReader($file);

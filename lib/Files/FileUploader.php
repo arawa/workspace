@@ -2,7 +2,7 @@
 
 namespace OCA\Workspace\Files;
 
-class FileUploader implements ManagerConnectionFileInterface {
+class FileUploader implements FileInterface {
 	private $resource;
 
 	public function __construct(private string $path) {

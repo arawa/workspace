@@ -2,7 +2,7 @@
 
 namespace OCA\Workspace\Files\Csv;
 
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
 /**
  * Use CscReader to read without consuming too much memory.
@@ -10,7 +10,7 @@ use OCA\Workspace\Files\ManagerConnectionFileInterface;
 class CsvReader {
 	public readonly array $headers;
 
-	public function __construct(private ManagerConnectionFileInterface $file) {
+	public function __construct(private BasicStreamInterface $file) {
 		$handle = $file->open();
 		$this->headers = fgetcsv($handle, 1000, Separator::COMMA);
 		$file->close();

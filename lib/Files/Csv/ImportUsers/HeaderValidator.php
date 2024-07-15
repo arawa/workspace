@@ -3,10 +3,10 @@
 namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 use OCA\Workspace\Files\Csv\CsvValidatorInterface;
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
 class HeaderValidator implements CsvValidatorInterface {
-	public function validate(ManagerConnectionFileInterface $file): bool {
+	public function validate(BasicStreamInterface $file): bool {
 		$res = false;
 		if (($handle = $file->open()) !== false) {
 			$tableHeader = fgetcsv($handle, 1000, ",");

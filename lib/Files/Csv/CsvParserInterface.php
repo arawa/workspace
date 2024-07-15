@@ -2,8 +2,8 @@
 
 namespace OCA\Workspace\Files\Csv;
 
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
 interface CsvParserInterface {
-	public function parser(ManagerConnectionFileInterface $file): array;
+	public function parser(BasicStreamInterface $file): array;
 }

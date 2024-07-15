@@ -3,10 +3,10 @@
 namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 use OCA\Workspace\Files\Csv\CsvReader;
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
 class ValuesValidator {
-	public function validateRoles(ManagerConnectionFileInterface $file): bool {
+	public function validateRoles(BasicStreamInterface $file): bool {
 		$res = true;
 		
 		$csvReader = new CsvReader($file);

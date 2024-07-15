@@ -2,8 +2,8 @@
 
 namespace OCA\Workspace\Files\Csv;
 
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
 interface CsvValidatorInterface {
-	public function validate(ManagerConnectionFileInterface $file): bool;
+	public function validate(BasicStreamInterface $file): bool;
 }

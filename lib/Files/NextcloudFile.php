@@ -4,7 +4,7 @@ namespace OCA\Workspace\Files;
 
 use OCP\Files\Storage\IStorage;
 
-class NextcloudFile implements ManagerConnectionFileInterface {
+class NextcloudFile implements FileInterface {
 	private $resource;
 		
 	public function __construct(private string $path, private IStorage $store) {
