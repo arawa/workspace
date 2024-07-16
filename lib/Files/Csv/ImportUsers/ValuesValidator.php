@@ -2,8 +2,8 @@
 
 namespace OCA\Workspace\Files\Csv\ImportUsers;
 
-use OCA\Workspace\Files\Csv\CsvReader;
 use OCA\Workspace\Files\BasicStreamInterface;
+use OCA\Workspace\Files\Csv\CsvReader;
 
 class ValuesValidator {
 	public function validateRoles(BasicStreamInterface $file): bool {

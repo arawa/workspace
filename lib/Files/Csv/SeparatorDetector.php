@@ -24,7 +24,7 @@ class SeparatorDetector {
 
 		$file->close();
 
-		$isComma = 
+		$isComma =
 			(strpos($firstLine, Separator::COMMA) !== false)
 			&& ($totalCount === $commasCount)
 		;

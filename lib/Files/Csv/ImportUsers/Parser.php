@@ -2,9 +2,9 @@
 
 namespace OCA\Workspace\Files\Csv\ImportUsers;
 
+use OCA\Workspace\Files\BasicStreamInterface;
 use OCA\Workspace\Files\Csv\CsvParserInterface;
 use OCA\Workspace\Files\Csv\CsvReader;
-use OCA\Workspace\Files\BasicStreamInterface;
 use OCA\Workspace\Users\Formatter\UserImportedFormatter;
 
 class Parser implements CsvParserInterface {

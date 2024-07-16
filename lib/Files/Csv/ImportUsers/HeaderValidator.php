@@ -2,8 +2,8 @@
 
 namespace OCA\Workspace\Files\Csv\ImportUsers;
 
-use OCA\Workspace\Files\Csv\CsvValidatorInterface;
 use OCA\Workspace\Files\BasicStreamInterface;
+use OCA\Workspace\Files\Csv\CsvValidatorInterface;
 
 class HeaderValidator implements CsvValidatorInterface {
 	public function validate(BasicStreamInterface $file): bool {
