@@ -90,7 +90,7 @@ describe('transferUsersToUserGroup method', () => {
 						'SPACE-U-1',
 						'dev',
 					],
-					role: 'admin',
+					role: 'wm',
 				},
 				bob: {
 					uid: 'bob',
@@ -102,7 +102,7 @@ describe('transferUsersToUserGroup method', () => {
 						'SPACE-U-1',
 						'dev',
 					],
-					role: 'admin',
+					role: 'wm',
 				},
 				jane: {
 					uid: 'jane',
@@ -114,7 +114,7 @@ describe('transferUsersToUserGroup method', () => {
 						'SPACE-U-1',
 						'dev',
 					],
-					role: 'admin',
+					role: 'wm',
 				},
 				user2: {
 					uid: 'user2',

@@ -78,7 +78,7 @@ describe('AddUsersTabs component tests', () => {
 				email: 'admin@acme.org',
 				subtitle: 'admin@acme.org',
 				groups: [],
-				role: 'admin',
+				role: 'wm',
 			},
 		]
 
@@ -119,7 +119,7 @@ describe('AddUsersTabs component tests', () => {
 					email: 'admin@acme.org',
 					subtitle: 'admin@acme.org',
 					groups: [],
-					role: 'admin',
+					role: 'wm',
 				},
 			]
 
