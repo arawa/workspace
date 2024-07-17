@@ -75,7 +75,7 @@ OC.L10N.register(
 		'There are no users in this space/group yet': 'Il n\'y a pas encore d\'utilisateur dans cet espace de travail',
 		'Start typing to lookup users': 'Commencez à saisir du texte pour rechercher des utilisateurs',
 		'remove users from selection': 'retirer l\'utilisateur de la sélection',
-		'Start typing text to search for groups': 'Commencez à saisir du texte pour rechercher des utilisateurs',
+		'Start typing text to search for groups': 'Commencez à saisir du texte pour rechercher des groupes',
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Duplicate space name': 'Erreur - Duplication de nom de l\'espace de travail',
 		'Error - This workspace name already exists': 'Erreur - Ce nom d\'espace de travail existe déjà',
