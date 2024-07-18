@@ -63,7 +63,7 @@ OC.L10N.register(
 		'Role': 'Role',
 		'The %s email address is duplicated in your instance. Impossible to know which users choice or maybe is an error.': 'The %s email address is duplicated in your instance. Impossible to know which users choice or maybe is an error.',
 		'Add users': 'Add users',
-		'S.A.': 'W.M.',
+		'WM': 'WM',
 		'Set quota': 'Set quota',
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',

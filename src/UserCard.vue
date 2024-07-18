@@ -34,7 +34,7 @@
 					class="role-toggle"
 					:checked="isWorkspaceManager(user.role)"
 					@update:checked="toggleUserRole(user)">
-					{{ t('workspace', 'S.A.') }}
+					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<NcActions>
