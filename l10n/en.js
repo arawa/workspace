@@ -42,7 +42,7 @@ OC.L10N.register(
 		'Delete group': 'Delete group',
 		'Role': 'Role',
 		'Add users': 'Add users',
-		'S.A.': 'W.M.',
+		'WM': 'WM',
 		'Set quota': 'Set quota',
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',
