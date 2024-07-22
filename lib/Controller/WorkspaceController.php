@@ -32,9 +32,9 @@ use OCA\Workspace\Exceptions\CreateGroupException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\Workspace\WorkspaceGroupsInfo;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\SpaceService;
@@ -64,6 +64,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+		private WorkspaceGroupsInfo $groupInfo,
 		public $AppName
 	) {
 		parent::__construct($AppName, $request);
@@ -271,17 +272,18 @@ class WorkspaceController extends Controller {
 
 		$user = $this->userManager->get($userId);
 		$GEgroup = $this->groupManager->get(WorkspaceManagerGroup::get($space['id']));
+		$workspacesManagersGroupname = $this->groupInfo->getWorkspacesManagersGroup();
 		if ($GEgroup->inGroup($user)) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
 				$this->userService->removeGEFromWM($user, $space);
 			}
 			// Changing a user's role from admin to user
 			$GEgroup->removeUser($user);
-			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group if needed.');
+			$this->logger->debug('Removing a user from a GE group. Removing it from the ' . $workspacesManagersGroupname . ' group if needed.');
 		} else {
 			// Changing a user's role from user to admin
 			$this->groupManager->get(WorkspaceManagerGroup::get($space['id']))->addUser($user);
-			$this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS)->addUser($user);
+			$this->groupManager->get($workspacesManagersGroupname)->addUser($user);
 		}
 
 		return new JSONResponse();

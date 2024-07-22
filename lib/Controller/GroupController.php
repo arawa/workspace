@@ -25,10 +25,10 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Group\Workspace\WorkspaceGroupsInfo;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
@@ -55,7 +55,8 @@ class GroupController extends Controller {
 		private IUserManager $userManager,
 		private UserFormatter $userFormatter,
 		private UserService $userService,
-		private UserWorkspace $userWorkspace
+		private UserWorkspace $userWorkspace,
+		private WorkspaceGroupsInfo $groupInfo,
 	) {
 	}
 
@@ -205,12 +206,13 @@ class GroupController extends Controller {
 
 		// Adds the user to the application manager group when we are adding a workspace manager
 		if ($gid === WorkspaceManagerGroup::get($spaceId)) {
-			$workspaceUsersGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
+			$workspacesManagersGroupname = $this->groupInfo->getWorkspacesManagersGroup();
+			$workspaceUsersGroup = $this->groupManager->get($workspacesManagersGroupname);
 			if (!is_null($workspaceUsersGroup)) {
 				$workspaceUsersGroup->addUser($NCUser);
 			} else {
 				$NCGroup->removeUser($NCUser);
-				return new JSONResponse(['Generar error: Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist'],
+				return new JSONResponse(['Generar error: Group ' . $workspacesManagersGroupname . ' does not exist'],
 					Http::STATUS_EXPECTATION_FAILED);
 			}
 		}
@@ -405,7 +407,7 @@ class GroupController extends Controller {
 		$this->groupsWorkspace
 			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
 		$this->groupsWorkspace
-			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS));
+			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get($this->groupInfo->getWorkspacesManagersGroup()));
 
 		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
 

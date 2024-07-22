@@ -25,7 +25,7 @@
 
 namespace OCA\Workspace\Migration;
 
-use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Group\Workspace\WorkspaceGroupsInfo;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -33,7 +33,8 @@ use Psr\Log\LoggerInterface;
 
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(private IGroupManager $groupManager,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger,
+		private WorkspaceGroupsInfo $groupInfo) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 
@@ -42,19 +43,22 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 	}
 
 	public function run(IOutput $output): void {
+		$workspacesManagersGroupname = $this->groupInfo->getWorkspacesManagersGroup();
+		$generalManagerGroupname = $this->groupInfo->getGeneralManagerGroup();
+
 		// The group already exists when we upgrade the app
-		if (!$this->groupManager->groupExists(ManagersWorkspace::WORKSPACES_MANAGERS)) {
-			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist. Let\'s create it.');
-			$this->groupManager->createGroup(ManagersWorkspace::WORKSPACES_MANAGERS);
+		if (!$this->groupManager->groupExists($workspacesManagersGroupname)) {
+			$this->logger->debug('Group ' . $workspacesManagersGroupname . ' does not exist. Let\'s create it.');
+			$this->groupManager->createGroup($workspacesManagersGroupname);
 		} else {
-			$this->logger->debug('Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' already exists. No need to create it.');
+			$this->logger->debug('Group ' . $workspacesManagersGroupname . ' already exists. No need to create it.');
 		}
 
-		if (!$this->groupManager->groupExists(ManagersWorkspace::GENERAL_MANAGER)) {
-			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' does not exist. Let\'s create it.');
-			$this->groupManager->createGroup(ManagersWorkspace::GENERAL_MANAGER);
+		if (!$this->groupManager->groupExists($generalManagerGroupname)) {
+			$this->logger->debug('Group ' . $generalManagerGroupname . ' does not exist. Let\'s create it.');
+			$this->groupManager->createGroup($generalManagerGroupname);
 		} else {
-			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
+			$this->logger->debug('Group ' . $generalManagerGroupname . ' already exists. No need to create it.');
 		}
 	}
 }

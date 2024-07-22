@@ -97,6 +97,7 @@ For this version, you should refresh your browser from the Workspace app with `C
             <step>OCA\Workspace\Migration\FixMigrationToV300</step>
         </pre-migration>
 	    <install>
+		    <step>OCA\Workspace\Migration\RegisterGroupsStep</step>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
 	    </install>
     </repair-steps>
