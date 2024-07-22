@@ -91,13 +91,13 @@ class UserServiceTest extends TestCase {
 	 */
 	public function testIsUserGeneralAdmin(): void {
 		// Let's say user is in General manager group
-		$this->groupInfo->expects($this->once())
+		$this->groupInfo->expects($this->any())
 			->method('getGeneralManagerGroup')
 			->willReturn('GeneralManager');
 
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), 'GeneralManager')
+			->with($this->user->getUID(), $this->groupInfo->getGeneralManagerGroup())
 			->willReturn(true);
 
 		$this->userSession->expects($this->once())
@@ -123,20 +123,19 @@ class UserServiceTest extends TestCase {
 	 * when user is not a general manager
 	 */
 	public function testIsNotUserGeneralAdmin(): void {
-		// Let's say user is in General manager group
+		$this->groupInfo->expects($this->any())
+		->method('getGeneralManagerGroup')
+		->willReturn('GeneralManager');
+
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), 'GeneralManager')
+			->with($this->user->getUID(), $this->groupInfo->getGeneralManagerGroup())
 			->willReturn(false);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->with()
 			->willReturn($this->user);
-
-		$this->groupInfo->expects($this->once())
-			->method('getGeneralManagerGroup')
-			->willReturn('GeneralManager');
 
 		// Instantiates our service
 		$userService = new UserService(
