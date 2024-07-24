@@ -141,6 +141,10 @@ class ConnectedGroupsService {
 		return isset($linkedSpaceGroups[$gid]);
 	}
 
+	/**
+	* @deprecated don't use this function
+	* @todo delete this function
+	*/
 	public function add(IGroup $group, Space $space): bool {
 		/*
 				$connectedGroup = new ConnectedGroup();
