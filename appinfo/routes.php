@@ -94,6 +94,16 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'connectedGroup#addGroup',
+			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'connectedGroup#removeGroup',
+			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'workspace#findAll',
 			'url' => '/spaces',
 			'verb' => 'GET'
