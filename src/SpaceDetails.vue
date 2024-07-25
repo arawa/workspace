@@ -95,7 +95,7 @@
 		</NcModal>
 		<NcModal v-if="showSelectConnectedGroups"
 			@close="toggleShowConnectedGroups">
-			<SelectConnectedGroups />
+			<SelectConnectedGroups @close="toggleShowConnectedGroups"/>
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
 			style="min-heigth: 8rem;"
@@ -339,7 +339,9 @@ export default {
 			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
 		},
 		toggleShowConnectedGroups() {
+			console.debug('before', this.showSelectConnectedGroups)
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
+			console.debug('after', this.showSelectConnectedGroups)
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
