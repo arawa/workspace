@@ -124,7 +124,11 @@ export default {
 				})
 		},
 		validate() {
-			console.debug('To add these groups to the workspace', this.groupsSelected)
+			this.$emit('close')
+			// todo: Call api
+			this.groupsSelected.forEach(group => {
+				console.debug(group.gid)
+			})
 		},
 	},
 }
