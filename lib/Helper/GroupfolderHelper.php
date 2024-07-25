@@ -81,6 +81,14 @@ class GroupfolderHelper {
 		}
 	}
 
+	public function removeApplicableGroup(int $id, string $group): void {
+		try {
+			$this->folderManager->removeApplicableGroup($id, $group);
+		} catch (\Exception $e) {
+			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeApplicableGroup from FolderManager.');
+		}
+	}
+
 	public function setManageACL(int $folderId, string $type, string $id, bool $manageAcl): void {
 		try {
 			$this->folderManager->setManageACL($folderId, $type, $id, $manageAcl);

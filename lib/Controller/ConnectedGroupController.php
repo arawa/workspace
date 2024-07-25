@@ -2,111 +2,132 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Db\ConnectedGroupMapper;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Group\User\UserGroup;
+use OCA\Workspace\Helper\GroupfolderHelper;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
 use OCP\IGroupManager;
-use OCP\IRequest;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IUser;
 
 class ConnectedGroupController extends Controller {
-	public function __construct(
-		private IGroupManager $manager,
-		private ConnectedGroupMapper $mapper,
-		private SpaceMapper $spaceMapper,
-		private ConnectedGroupsService $connectedGroupsService
-	) {
-	}
+    public function __construct(
+        private GroupfolderHelper $folderHelper,
+        private IGroupManager $groupManager,
+        private SpaceMapper $spaceMapper,
+        private UserGroup $userGroup
+    )
+    {
+    }
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 * @return Response
+	 * @param IUser[] $users
 	 */
-	public function getConnectedGroups(IRequest $request): Response {
-		$gidParam = $request->getParam('gid', null);
-
-		if (!is_null($gidParam)) {
-			$connectedGroups = $this->mapper->findByGid($gidParam);
-			return new JSONResponse($connectedGroups);
+	private function getUsers(array $users) {
+		foreach ($users as $user) {
+			yield $user;
 		}
-
-		$connectedGroups = $this->mapper->findAll();
-		return new JSONResponse($connectedGroups);
 	}
 
-	/**
+    /**
+	 * Undocumented function
 	 * @NoAdminRequired
-	 *
-	 * @return Response
+	 * @NoCSRFRequired
+	 * 
+	 * @param int $spaceId
+	 * @param string $gid
 	 */
-	public function getConnectedGroupsFromSpaceId(int $spaceId): Response {
-		$space = $this->spaceMapper->find($spaceId);
+	public function addGroup(int $spaceId, string $gid): JSONResponse {
 
-		if (is_null($space)) {
-			throw new \Exception("The space with the $spaceId id is not exist.");
-		}
-
-		
-		$connectedGroups = $this->mapper->findAll(spaceId: $space->getSpaceId());
-
-		return new JSONResponse($connectedGroups);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @return Response
-	 */
-	public function addConnectedGroup(?int $spaceId, ?string $groupname): Response {
-		if (is_null($spaceId) || is_null($groupname)) {
-			return new JSONResponse([ 'message' => 'You must define a value for the spaceId and groupname parameters.']);
-		}
-
-		$group = $this->manager->get($groupname);
-		$space = $this->spaceMapper->find($spaceId);
-
-		if (is_null($group)) {
-			throw new \Exception("The $groupname is not exist.");
-		}
-
-		if (is_null($space)) {
-			throw new \Exception("The space with the $spaceId id is not exist.");
-		}
-
-		$userGroup = $this->manager->get('SPACE-U-' . $space->getSpaceId());
-
-		if ($this->connectedGroupsService->hasConnectedGroups($group->getGID(), $userGroup->getGID())) {
-			return new JSONResponse([
-				'message' => 'Alreaydy exist',
-				'data' => null
-			]);
-		}
-
-		$added = $this->connectedGroupsService->add($group, $space);
-
-		$spacename = $space->getSpaceName();
-		if (!$added) {
-			throw new \Exception(
-				sprintf("The %s group didn't add in the %s workspace", [
-					$group->getGid(),
-					$spacename
-				])
+		if(!$this->groupManager->groupExists($gid)) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not exist.", $gid),
+				],
+				Http::STATUS_NOT_FOUND
 			);
 		}
 
+		$group = $this->groupManager->get($gid);
+
+		if (str_starts_with($group->getGID(), 'SPACE-')) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not authorized to add.", $gid),
+				],
+				Http::STATUS_NOT_FOUND
+			);		
+		}
+		
+		$space = $this->spaceMapper->find($spaceId);		
+
+		$workspaceUserGroup = UserGroup::GID_PREFIX . $space->getSpaceId();
+
+		if (!$this->groupManager->groupExists($workspaceUserGroup)) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not exist.", $workspaceUserGroup),
+				],
+				Http::STATUS_NOT_FOUND
+			);	
+		}
+		
+		$this->folderHelper->addApplicableGroup(
+			$space->getGroupfolderId(),
+			$group->getGid(),
+		);
+
 		return new JSONResponse([
-			'message' =>
-				vsprintf(
-					'The %s is added in the %s workspace',
-					[
-						$group->getGid(),
-						$spacename,
-					]
-				),
-			'data' => []
+			'message' => sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName())
+		]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function removeGroup(int $spaceId, string $gid) {
+		if(!$this->groupManager->groupExists($gid)) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not exist.", $gid),
+				],
+				Http::STATUS_NOT_FOUND
+			);
+		}
+
+		$group = $this->groupManager->get($gid);
+
+		if (str_starts_with($group->getGID(), 'SPACE-')) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not authorized to remove.", $gid),
+				],
+				Http::STATUS_NOT_FOUND
+			);		
+		}
+		
+		$space = $this->spaceMapper->find($spaceId);		
+
+		$userGid = UserGroup::GID_PREFIX . $space->getSpaceId();
+
+		if (!$this->groupManager->groupExists($userGid)) {
+			return new JSONResponse(
+				[
+					sprintf("The %s group is not exist.", $userGid),
+				],
+				Http::STATUS_NOT_FOUND
+			);	
+		}
+
+		$this->folderHelper->removeApplicableGroup(
+			$space->getGroupfolderId(),
+			$group->getGID()
+		);
+
+		return new JSONResponse([
+			'message' => sprintf("The %s group is removed to the %s workspace.", $group->getGID(), $space->getSpaceName())
 		]);
 	}
 }
