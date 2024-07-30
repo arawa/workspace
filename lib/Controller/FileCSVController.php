@@ -99,8 +99,8 @@ class FileCSVController extends Controller {
 			}
 	
 			$fileUploader = new FileUploader($file['tmp_name']);
-	
-			if (!SeparatorDetector::isComma($fileUploader)) {
+				
+			if (!SeparatorDetector::isComma($fileUploader) || !SeparatorDetector::isCommaForAllFile($fileUploader)) {
 				throw new InvalidSeparatorCsvException(
 					$this->translate->t('Invalid separator for CSV file'),
 					$this->translate->t('Your CSV file must use a comma (",") as separator'),
@@ -273,12 +273,10 @@ class FileCSVController extends Controller {
 					$this->translate->t('The file must be in <b>CSV format</b>.'),
 				);
 			}
+		
+			$nextcloudFile = new NextcloudFile($file);
 	
-			$fullPath = $file->getInternalPath();
-	
-			$nextcloudFile = new NextcloudFile($fullPath, $file->getStorage());
-	
-			if (!SeparatorDetector::isComma($nextcloudFile)) {
+			if (!SeparatorDetector::isComma($nextcloudFile) || !SeparatorDetector::isCommaForAllFile($nextcloudFile)) {
 				throw new InvalidSeparatorCsvException(
 					$this->translate->t('Invalid separator for CSV file'),
 					$this->translate->t('Your CSV file must use a comma (",") as separator'),

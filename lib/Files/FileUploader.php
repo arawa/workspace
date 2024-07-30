@@ -29,4 +29,9 @@ class FileUploader implements FileInterface {
 	public function getPath(): string {
 		return $this->path;
 	}
+
+	public function getSize(): false|int|float
+	{
+		return filesize($this->path);
+	}
 }

@@ -2,12 +2,12 @@
 
 namespace OCA\Workspace\Files;
 
-use OCP\Files\Storage\IStorage;
+use OCP\Files\Node;
 
 class NextcloudFile implements FileInterface {
 	private $resource;
 		
-	public function __construct(private string $path, private IStorage $store) {
+	public function __construct(private Node $file) {
 	}
 
 	/**
@@ -15,7 +15,8 @@ class NextcloudFile implements FileInterface {
 	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
-		$this->resource = $this->store->fopen($this->path, "r");
+		$store = $this->file->getStorage();
+		$this->resource = $store->fopen($this->file->getInternalPath(), "r");
 
 		if (!$this->resource) {
 			throw new \Exception('Something went wrong. Couldn\'t open the file.');
@@ -29,6 +30,12 @@ class NextcloudFile implements FileInterface {
 	}
 
 	public function getPath(): string {
-		return $this->path;
+		return $this->file->getInternalPath();
+	}
+
+	public function getSize(): false|int|float
+	{
+		$store = $this->file->getStorage();
+		return $store->filesize($this->file->getInternalPath());
 	}
 }
