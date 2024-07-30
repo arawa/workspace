@@ -23,4 +23,9 @@ class LocalFile implements ManagerConnectionFileInterface {
 	public function getPath(): string {
 		return $this->path;
 	}
+
+	public function getSize(): false|int|float
+	{
+		return filesize($this->path);
+	}
 }
