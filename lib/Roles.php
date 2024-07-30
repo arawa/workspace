@@ -25,6 +25,6 @@
 namespace OCA\Workspace;
 
 class Roles {
-	public const Admin = 'admin';
+	public const Admin = 'wm';
 	public const User = 'user';
 }

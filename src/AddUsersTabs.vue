@@ -220,7 +220,7 @@ export default {
 		toggleUserRole(user) {
 			this.allSelectedUsers = this.allSelectedUsers.map(u => {
 				if (u.name === user.name) {
-					u.role = u.role === 'user' ? 'admin' : 'user'
+					u.role = u.role === 'user' ? 'wm' : 'user'
 					return u
 				} else {
 					return u
