@@ -10,4 +10,6 @@ class Header {
 	public const ROLE = [
 		"role",
 	];
+
+	public const FIELDS_REQUIRED = [ 'user', 'role' ];
 }

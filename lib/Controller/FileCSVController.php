@@ -37,6 +37,7 @@ use OCA\Workspace\Files\Csv\ImportUsers\Parser;
 use OCA\Workspace\Files\Csv\ImportUsers\Values;
 use OCA\Workspace\Files\Csv\ImportUsers\ValuesValidator;
 use OCA\Workspace\Files\Csv\SeparatorDetector;
+use OCA\Workspace\Files\Csv\StructureValidator;
 use OCA\Workspace\Files\FileUploader;
 use OCA\Workspace\Files\NextcloudFile;
 use OCA\Workspace\Notifications\ToastMessager;
@@ -101,6 +102,14 @@ class FileCSVController extends Controller {
 			$fileUploader = new FileUploader($file['tmp_name']);
 				
 			if (!SeparatorDetector::isComma($fileUploader) || !SeparatorDetector::isCommaForAllFile($fileUploader)) {
+				throw new InvalidSeparatorCsvException(
+					$this->translate->t('Invalid separator for CSV file'),
+					$this->translate->t('Your CSV file must use a comma (",") as separator'),
+				);
+			}
+
+			if (!StructureValidator::checkCommaAllLines($fileUploader))
+			{
 				throw new InvalidSeparatorCsvException(
 					$this->translate->t('Invalid separator for CSV file'),
 					$this->translate->t('Your CSV file must use a comma (",") as separator'),
@@ -277,6 +286,14 @@ class FileCSVController extends Controller {
 			$nextcloudFile = new NextcloudFile($file);
 	
 			if (!SeparatorDetector::isComma($nextcloudFile) || !SeparatorDetector::isCommaForAllFile($nextcloudFile)) {
+				throw new InvalidSeparatorCsvException(
+					$this->translate->t('Invalid separator for CSV file'),
+					$this->translate->t('Your CSV file must use a comma (",") as separator'),
+				);
+			}
+
+			if (!StructureValidator::checkCommaAllLines($nextcloudFile))
+			{
 				throw new InvalidSeparatorCsvException(
 					$this->translate->t('Invalid separator for CSV file'),
 					$this->translate->t('Your CSV file must use a comma (",") as separator'),
