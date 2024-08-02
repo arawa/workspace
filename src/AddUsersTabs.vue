@@ -253,6 +253,10 @@ section.app-sidebar__tab--active {
 	overflow: visible !important;
 }
 
+.select-users-wrapper :deep(.app-sidebar-tabs) {
+	margin-top: -20px !important;
+}
+
 // Change the height of the modal container
 // to make space for the NcNoteCard
 .modal-container {
@@ -344,7 +348,7 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-	top: 120px;
+	top: 100px;
 	right: 54px;
 	z-index: 9999;
 }
