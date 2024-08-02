@@ -61,12 +61,10 @@ export default {
 				.then(async (path, title) => {
 					console.debug(`path ${path} selected for sharing, title ${title}`)
 					const space = this.$store.state.spaces[this.$route.params.space]
-					const spaceString = JSON.stringify(space)
 					const bodyFormData = new FormData()
 					bodyFormData.append('path', path)
-					bodyFormData.append('space', spaceString)
 					try {
-						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData })
+						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData, spaceId: space.id })
 						let usersToDisplay = this.filterAlreadyPresentUsers(users)
 						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
 						// this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]

@@ -38,11 +38,13 @@ use OCA\Workspace\Files\Csv\ImportUsers\Values;
 use OCA\Workspace\Files\Csv\ImportUsers\ValuesValidator;
 use OCA\Workspace\Files\Csv\SeparatorDetector;
 use OCA\Workspace\Files\Csv\StructureValidator;
+use OCA\Workspace\Files\FileInterface;
 use OCA\Workspace\Files\FileUploader;
 use OCA\Workspace\Files\NextcloudFile;
 use OCA\Workspace\Notifications\ToastMessager;
 use OCA\Workspace\Response\ErrorResponseFormatter;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\Users\UserFormatter;
 use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
@@ -71,6 +73,7 @@ class FileCSVController extends Controller {
 		private HeaderValidator $headerValidator,
 		private Parser $csvParser,
 		private IUserSession $userSession,
+		private SpaceManager $spaceManager,
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
 		private ValuesValidator $valuesValidator
@@ -80,16 +83,173 @@ class FileCSVController extends Controller {
 	}
 
 	/**
+	 * It's a common process to get data when we import a csv file from
+	 * local or Files or anything.
+	 *
+	 * @param FileInterface $file
+	 * @param array $space represents a workspace in array
+	 * @return array
+	 */
+	private function importProcess(FileInterface $file, array $space): array
+	{
+		if (!SeparatorDetector::isComma($file) || !SeparatorDetector::isCommaForAllFile($file)) {
+			throw new InvalidSeparatorCsvException(
+				$this->translate->t('Invalid separator for CSV file'),
+				$this->translate->t('Your CSV file must use a comma (",") as separator'),
+			);
+		}
+
+		if (!StructureValidator::checkCommaAllLines($file))
+		{
+			throw new InvalidSeparatorCsvException(
+				$this->translate->t('Invalid separator for CSV file'),
+				$this->translate->t('Your CSV file must use a comma (",") as separator'),
+			);
+		}
+
+		if (!$this->headerValidator->validate($file)) {
+
+			$displaynamesBold = array_map(fn ($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
+			$rolesBold = array_map(fn ($role) => "<b>$role</b>", Header::ROLE);
+
+			$separatorOr = $this->translate->t('or');
+			$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
+			$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
+
+			$message = "The content of your file is invalid. "
+			. "Header does not contain the desired values. "
+			. "Two columns are required, with the following header names and values:<br>"
+			."- \"user\": the user's username or e-mail address<br>"
+			. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
+
+			$errorMessage = $this->translate->t(
+				$message,
+				[
+					$displaynamesBoldStringify,
+					$rolesBoldStringify
+				]
+			);
+
+			throw new InvalidCsvFormatException(
+				$this->translate->t('Error in CSV file content'),
+				$this->translate->t($errorMessage),
+			);
+		}
+
+		$names = $this->csvParser->parser($file);
+	
+		$usernames = array_map(fn ($user) => $user->uid, $names);
+
+		$uids = array_map(fn ($user) => $user->uid, $names);
+
+		$emails = array_values(
+			array_filter(
+				$uids,
+				fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+			)
+		);
+
+		$usernames = array_values(
+			array_diff($uids, $emails)
+		);
+
+		if (!$this->userChecker->checkUsersExist($usernames)
+		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
+
+			$usernamesUnknown = array_filter(
+				$usernames,
+				function ($name) {
+					return !$this->userChecker->checkUserExist($name);
+				}
+			);
+
+			$emailsUnknown = array_filter(
+				$emails,
+				fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+			);
+
+			$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+
+			$usersUnknown = array_map(
+				fn ($name) => "- $name",
+				$usersUnknown
+			);
+
+			$usersUnknown = implode("<br>", $usersUnknown);
+			$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
+			$errorMessage .= $usersUnknown;
+
+			throw new UserDoesntExistException(
+				$this->translate->t('Error: unknown users'),
+				$errorMessage,
+				Http::STATUS_FORBIDDEN
+			);
+		}
+
+		if (!$this->valuesValidator->validateRoles($file)) {
+
+			$usersBadRole = array_filter(
+				$names,
+				fn ($user) => !in_array($user->role, Values::ROLES)
+			);
+
+			$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
+			. '- "wm": to define the user as a workspace manager.<br>'
+			. '- "u" or "user": to define the user as a simple user.<br><br>'
+			. 'Check the role for these users:<br>%2$s';
+
+			$usersBadRoleStringify = implode(
+				'<br>',
+				array_map(
+					fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
+					$usersBadRole
+				)
+			);
+
+			throw new InvalidCsvFormatException(
+				$this->translate->t('Error: unknown role'),
+				$this->translate->t($message, [
+					implode(', ', Values::ROLES),
+					$usersBadRoleStringify
+				])
+			);
+		}
+
+		$data = [];
+		foreach($names as $user) {
+			$uid = $user->uid;
+
+			if ($this->userChecker->checkUserExistByEmail($uid)) {
+				$uid = $this->userManager->getByEmail($user->uid)[0];
+			} else {
+				$uid = $this->userManager->get($user->uid);
+			}
+
+			$data[] = [
+				'user' => $uid,
+				'role' => $user->role
+			];
+		}
+
+		$data = array_map(
+			fn ($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+			$data
+		);
+
+		return $data;
+	}
+	
+	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
+	 * 
+	 * @param int $spaceId is the spaceId from workspace
+	 * 
 	 * Returns formatted list of existing users of the instance.
-	 *
 	 */
-	public function import(): JSONResponse {
+	public function import(?int $spaceId = null): JSONResponse {
 		try {
-			$params = $this->request->getParams();
-			$spaceObj = $params['space'];
-			$space = json_decode($spaceObj, true);
+			$space = $this->spaceManager->get($spaceId);
 			$file = $this->request->getUploadedFile('file');
 	
 			if ($this->csvCheckMimeType->checkOnArray($file)) {
@@ -100,147 +260,11 @@ class FileCSVController extends Controller {
 			}
 	
 			$fileUploader = new FileUploader($file['tmp_name']);
-				
-			if (!SeparatorDetector::isComma($fileUploader) || !SeparatorDetector::isCommaForAllFile($fileUploader)) {
-				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for CSV file'),
-					$this->translate->t('Your CSV file must use a comma (",") as separator'),
-				);
-			}
 
-			if (!StructureValidator::checkCommaAllLines($fileUploader))
-			{
-				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for CSV file'),
-					$this->translate->t('Your CSV file must use a comma (",") as separator'),
-				);
-			}
-	
-			if (!$this->headerValidator->validate($fileUploader)) {
+			$data = $this->importProcess($fileUploader, $space);
 
-				$displaynamesBold = array_map(fn ($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
-				$rolesBold = array_map(fn ($role) => "<b>$role</b>", Header::ROLE);
-	
-				$separatorOr = $this->translate->t('or');
-				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
-				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
-	
-				$message = "The content of your file is invalid. "
-				. "Header does not contain the desired values. "
-				. "Two columns are required, with the following header names and values:<br>"
-				."- \"user\": the user's username or e-mail address<br>"
-				. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
-	
-				$errorMessage = $this->translate->t(
-					$message,
-					[
-						$displaynamesBoldStringify,
-						$rolesBoldStringify
-					]
-				);
-
-				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in CSV file content'),
-					$this->translate->t($errorMessage),
-				);
-			}
-			
-			$usersFormatted = $this->csvParser->parser($fileUploader);
-			
-			$uids = array_map(fn ($user) => $user->uid, $usersFormatted);
-
-			$emails = array_values(
-				array_filter(
-					$uids,
-					fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
-				)
-			);
-
-			$usernames = array_values(
-				array_diff($uids, $emails)
-			);
-
-			if (!$this->userChecker->checkUsersExist($usernames)
-				|| !$this->userChecker->checkUsersExistByEmail($emails)) {
-				$usernamesUnknown = array_filter(
-					$usernames,
-					function ($name) {
-						return !$this->userChecker->checkUserExist($name);
-					}
-				);
-
-				$emailsUnknown = array_filter(
-					$emails,
-					fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
-				);
-
-				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
-
-				$usersUnknown = array_map(
-					fn ($name) => "- $name",
-					$usersUnknown
-				);
-				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
-				$errorMessage .= $usersUnknown;
-				throw new UserDoesntExistException(
-					$this->translate->t('Error: unknown users'),
-					$errorMessage,
-					Http::STATUS_FORBIDDEN
-				);
-			}
-
-			if (!$this->valuesValidator->validateRoles($fileUploader)) {
-
-				$usersBadRole = array_filter(
-					$usersFormatted,
-					fn ($user) => !in_array($user->role, Values::ROLES)
-				);
-
-				$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
-				. '- "wm": to define the user as a workspace manager.<br>'
-				. '- "u" or "user": to define the user as a simple user.<br><br>'
-				. 'Check the role for these users:<br>%2$s';
-
-				$usersBadRoleStringify = implode(
-					'<br>',
-					array_map(
-						fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
-						$usersBadRole
-					)
-				);
-
-				throw new InvalidCsvFormatException(
-					$this->translate->t('Error: unknown role'),
-					$this->translate->t($message, [
-						implode(', ', Values::ROLES),
-						$usersBadRoleStringify
-					])
-				);
-			}
-	
-			$data = [];
-			foreach($usersFormatted as $user) {
-				$uid = $user->uid;
-
-				if ($this->userChecker->checkUserExistByEmail($uid)) {
-					$uid = $this->userManager->getByEmail($user->uid)[0];
-				} else {
-					$uid = $this->userManager->get($user->uid);
-				}
-
-				$data[] = [
-					'user' => $uid,
-					'role' => $user->role
-				];
-			}
-	
-			$data = array_map(
-				fn ($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-				$data
-			);
-	
 			return new JSONResponse($data);
+
 		} catch(AbstractNotificationException $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
@@ -266,15 +290,15 @@ class FileCSVController extends Controller {
 	 * Returns formatted list of existing users of the instance.
 	 *
 	 */
-	public function getFromFiles():JSONResponse {
+	public function getFromFiles(?int $spaceId = null):JSONResponse {
 		try {
 			$params = $this->request->getParams();
 			$path = $params['path'];
-			$spaceObj = $params['space'];
-			$space = json_decode($spaceObj, true);
 			$uid = $this->currentUser->getUID();
 			$folder = $this->rootFolder->getUserFolder($uid);
 			$file = $folder->get($path);
+
+			$space = $this->spaceManager->get($spaceId);
 	
 			if ($this->csvCheckMimeType->checkOnNode($file)) {
 				throw new BadMimeType(
@@ -284,148 +308,9 @@ class FileCSVController extends Controller {
 			}
 		
 			$nextcloudFile = new NextcloudFile($file);
-	
-			if (!SeparatorDetector::isComma($nextcloudFile) || !SeparatorDetector::isCommaForAllFile($nextcloudFile)) {
-				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for CSV file'),
-					$this->translate->t('Your CSV file must use a comma (",") as separator'),
-				);
-			}
 
-			if (!StructureValidator::checkCommaAllLines($nextcloudFile))
-			{
-				throw new InvalidSeparatorCsvException(
-					$this->translate->t('Invalid separator for CSV file'),
-					$this->translate->t('Your CSV file must use a comma (",") as separator'),
-				);
-			}
-	
-			if (!$this->headerValidator->validate($nextcloudFile)) {
-				$displaynamesBold = array_map(fn ($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
-				$rolesBold = array_map(fn ($role) => "<b>$role</b>", Header::ROLE);
-	
-				$separatorOr = $this->translate->t('or');
-				$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
-				$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
+			$data = $this->importProcess($nextcloudFile, $space);
 
-				$message = "The content of your file is invalid. "
-				. "Header does not contain the desired values. "
-				. "Two columns are required, with the following header names and values:<br>"
-				."- \"user\": the user's username or e-mail address<br>"
-				. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
-	
-				$errorMessage = $this->translate->t(
-					$message,
-					[
-						$displaynamesBoldStringify,
-						$rolesBoldStringify
-					]
-				);
-
-				throw new InvalidCsvFormatException(
-					$this->translate->t('Error in CSV file content'),
-					$this->translate->t($errorMessage),
-				);
-			}
-
-			$names = $this->csvParser->parser($nextcloudFile);
-	
-			$usernames = array_map(fn ($user) => $user->uid, $names);
-
-			$uids = array_map(fn ($user) => $user->uid, $names);
-
-			$emails = array_values(
-				array_filter(
-					$uids,
-					fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
-				)
-			);
-
-			$usernames = array_values(
-				array_diff($uids, $emails)
-			);
-
-			if (!$this->userChecker->checkUsersExist($usernames)
-			|| !$this->userChecker->checkUsersExistByEmail($emails)) {
-
-				$usernamesUnknown = array_filter(
-					$usernames,
-					function ($name) {
-						return !$this->userChecker->checkUserExist($name);
-					}
-				);
-
-				$emailsUnknown = array_filter(
-					$emails,
-					fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
-				);
-
-				$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
-
-				$usersUnknown = array_map(
-					fn ($name) => "- $name",
-					$usersUnknown
-				);
-				$usersUnknown = implode("<br>", $usersUnknown);
-				$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
-				$errorMessage .= $usersUnknown;
-				throw new UserDoesntExistException(
-					$this->translate->t('Error: unknown users'),
-					$errorMessage,
-					Http::STATUS_FORBIDDEN
-				);
-			}
-	
-			if (!$this->valuesValidator->validateRoles($nextcloudFile)) {
-
-				$usersBadRole = array_filter(
-					$names,
-					fn ($user) => !in_array($user->role, Values::ROLES)
-				);
-
-				$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
-				. '- "wm": to define the user as a workspace manager.<br>'
-				. '- "u" or "user": to define the user as a simple user.<br><br>'
-				. 'Check the role for these users:<br>%2$s';
-
-				$usersBadRoleStringify = implode(
-					'<br>',
-					array_map(
-						fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
-						$usersBadRole
-					)
-				);
-
-				throw new InvalidCsvFormatException(
-					$this->translate->t('Error: unknown role'),
-					$this->translate->t($message, [
-						implode(', ', Values::ROLES),
-						$usersBadRoleStringify
-					])
-				);
-			}
-
-			$data = [];
-			foreach($names as $user) {
-				$uid = $user->uid;
-
-				if ($this->userChecker->checkUserExistByEmail($uid)) {
-					$uid = $this->userManager->getByEmail($user->uid)[0];
-				} else {
-					$uid = $this->userManager->get($user->uid);
-				}
-
-				$data[] = [
-					'user' => $uid,
-					'role' => $user->role
-				];
-			}
-	
-			$data = array_map(
-				fn ($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-				$data
-			);
-	
 			return new JSONResponse($data);
 		} catch(AbstractNotificationException $exception) {
 			return new JSONResponse(

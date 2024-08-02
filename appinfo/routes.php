@@ -125,12 +125,12 @@ return [
 		],
 		[
 			'name' => 'fileCSV#import',
-			'url' => '/file/csv/import-data',
+			'url' => '/space/{spaceId}/import-users/local',
 			'verb' => 'POST',
 		],
 		[
 			'name' => 'fileCSV#getFromFiles',
-			'url' => '/file/csv/import-from-files',
+			'url' => '/space/{spaceId}/import-users/files',
 			'verb' => 'POST',
 		],
 		[

@@ -122,6 +122,26 @@ class SpaceManager {
 		];
 	}
 
+	public function get(int $spaceId): array {
+		$space = $this->spaceMapper->find($spaceId);
+		$groupfolder = $this->folderHelper->getFolder(
+			$space->getGroupfolderId(),
+			$this->rootFolder->getRootFolderStorageId()
+		);
+
+		return [
+			'name' => $space->getSpaceName(),
+			'id_space' => $space->getId(),
+			'folder_id' => $space->getGroupfolderId(),
+			'color' => $space->getColorCode(),
+			'groups' => $groupfolder['groups'],
+			'quota' => $groupfolder['quota'],
+			'size' => $groupfolder['size'],
+			'acl' => $groupfolder['acl'],
+			'manage' => $groupfolder['manage']
+		];
+	}
+
 	/**
 	 * @param string $spaceName it's the space name
 	 * @return string whithout the blank to start and end of the space name

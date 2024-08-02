@@ -66,12 +66,11 @@ export default {
 				const bodyFormData = new FormData()
 				const file = event.target.files[0]
 				const space = this.$store.state.spaces[this.$route.params.space]
-				const spaceObj = JSON.stringify(space)
 				bodyFormData.append('file', file)
-				bodyFormData.append('space', spaceObj)
 				try {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
 						formData: bodyFormData,
+						spaceId: space.id
 					})
 					let usersToDisplay = this.filterAlreadyPresentUsers(users)
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
