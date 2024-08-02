@@ -23,7 +23,7 @@
 import { PREFIX_MANAGER } from '../../constants.js'
 
 /**
- * @param {object} space
+ * @param {object} space present the space entity
  * @return {string}
  */
 function getGid(space) {
