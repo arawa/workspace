@@ -143,11 +143,11 @@ export default {
 		},
 		csvTemplateMarkdown() {
 			return `> **user, role**
-				pierre.quiroul, user
-				awang, wm
-				radjiv.velasquez, user
-				christine.dupont@free.fr
-				jdoe@aol.com`
+				pierre.quiroul,user
+				awang,wm
+				radjiv.velasquez,u
+				christine.dupont@nextcloud.fr,wm
+				jdoe@nextcloud.com`
 		},
 		onImportTab() {
 			let cssClass = 'onImportTab'
