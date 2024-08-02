@@ -147,11 +147,7 @@ export default {
 				awang,wm
 				radjiv.velasquez,u
 				christine.dupont@nextcloud.fr,wm
-<<<<<<< HEAD
 				jdoe@nextcloud.com,user`
-=======
-				jdoe@nextcloud.com`
->>>>>>> 7e5db18 (chore(vue): Changes example content for csv file)
 		},
 		onImportTab() {
 			let cssClass = 'onImportTab'
@@ -258,11 +254,7 @@ section.app-sidebar__tab--active {
 }
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
-<<<<<<< HEAD
 	margin-top: -10px !important;
-=======
-	margin-top: -20px !important;
->>>>>>> 5766ab3 (style(vue): Adjust the height of tabs relative to title)
 }
 
 // Change the height of the modal container
@@ -356,11 +348,7 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-<<<<<<< HEAD
 	top: 108px;
-=======
-	top: 100px;
->>>>>>> 5766ab3 (style(vue): Adjust the height of tabs relative to title)
 	right: 54px;
 	z-index: 9999;
 }
