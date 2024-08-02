@@ -147,7 +147,11 @@ export default {
 				awang,wm
 				radjiv.velasquez,u
 				christine.dupont@nextcloud.fr,wm
+<<<<<<< HEAD
 				jdoe@nextcloud.com,user`
+=======
+				jdoe@nextcloud.com`
+>>>>>>> 7e5db18 (chore(vue): Changes example content for csv file)
 		},
 		onImportTab() {
 			let cssClass = 'onImportTab'
