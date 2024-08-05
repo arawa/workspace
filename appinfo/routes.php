@@ -39,6 +39,21 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'connectedGroup#addConnectedGroup',
+			'url' => '/spaces/{spaceId}/connected-group',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'connectedGroup#getConnectedGroupsFromSpaceId',
+			'url' => '/spaces/{spaceId}/connected-group',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'connectedGroup#getConnectedGroups',
+			'url' => '/connected-group',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'workspace#addGroupsInfo',
 			'url' => '/api/workspace/formatGroups',
 			'verb' => 'POST'
