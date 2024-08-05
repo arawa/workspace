@@ -339,9 +339,7 @@ export default {
 			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
 		},
 		toggleShowConnectedGroups() {
-			console.debug('before', this.showSelectConnectedGroups)
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
-			console.debug('after', this.showSelectConnectedGroups)
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
