@@ -139,7 +139,7 @@ class WorkspaceController extends Controller {
 	 * Deletes the workspace, and the corresponding groupfolder and groups
 	 *
 	 * @NoAdminRequired
-	 * @SpaceAdminRequired
+	 * @GeneralManagerRequired
 	 * @param array $workspace
 	 *
 	 */
