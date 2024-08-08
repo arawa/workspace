@@ -9,10 +9,12 @@ use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use Psr\Log\LoggerInterface;
 
 class ConnectedGroupController extends Controller {
     public function __construct(
         private GroupfolderHelper $folderHelper,
+		private LoggerInterface $logger,
         private IGroupManager $groupManager,
         private SpaceMapper $spaceMapper,
         private UserGroup $userGroup
@@ -33,9 +35,13 @@ class ConnectedGroupController extends Controller {
 	public function addGroup(int $spaceId, string $gid): JSONResponse {
 
 		if(!$this->groupManager->groupExists($gid)) {
+			$message = sprintf("The group %s does not exist", $gid);
+
+			$this->logger->error($message);
+
 			return new JSONResponse(
 				[
-					'message' => sprintf("The %s group is not exist.", $gid),
+					'message' => $message,
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
@@ -45,9 +51,13 @@ class ConnectedGroupController extends Controller {
 		$group = $this->groupManager->get($gid);
 
 		if (str_starts_with($group->getGID(), 'SPACE-')) {
+			$message = sprintf("The group %s cannot be added, as it is already a workspace group", $gid);
+
+			$this->logger->error($message);
+
 			return new JSONResponse(
 				[
-					'message' => sprintf("The %s group is not authorized to add.", $gid),
+					'message' => $message,
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
@@ -60,6 +70,10 @@ class ConnectedGroupController extends Controller {
 			$space->getGroupfolderId(),
 			$group->getGid(),
 		);
+
+		$message = sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName());
+
+		$this->logger->info($message);
 
 		return new JSONResponse([
 			'message' => sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName()),
@@ -75,9 +89,13 @@ class ConnectedGroupController extends Controller {
 	 */
 	public function removeGroup(int $spaceId, string $gid) {
 		if(!$this->groupManager->groupExists($gid)) {
+			$message = sprintf("The group %s does not exist", $gid);
+
+			$this->logger->error($message);
+			
 			return new JSONResponse(
 				[
-					'message' => sprintf("The %s group is not exist.", $gid),
+					'message' => $message,
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
@@ -87,9 +105,14 @@ class ConnectedGroupController extends Controller {
 		$group = $this->groupManager->get($gid);
 
 		if (str_starts_with($group->getGID(), 'SPACE-')) {
+			
+			$message = sprintf("The %s group is not authorized to remove.", $gid);
+
+			$this->logger->error($message);
+			
 			return new JSONResponse(
 				[
-					'message' => sprintf("The %s group is not authorized to remove.", $gid),
+					'message' => $message,
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
@@ -103,8 +126,12 @@ class ConnectedGroupController extends Controller {
 			$group->getGID()
 		);
 
+		$message = sprintf("The group %s is removed from the workspace %s", $group->getGID(), $space->getSpaceName());
+	
+		$this->logger->info($message);
+		
 		return new JSONResponse([
-			'message' => sprintf("The %s group is removed to the %s workspace.", $group->getGID(), $space->getSpaceName()),
+			'message' => sprintf("The group %s is removed from the workspace %s", $group->getGID(), $space->getSpaceName()),
 			'success' => true
 		]);
 	}
