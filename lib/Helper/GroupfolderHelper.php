@@ -81,6 +81,21 @@ class GroupfolderHelper {
 		}
 	}
 
+	/**
+	 * Remove a group from a groupfolder.
+	 *
+	 * @param integer $id is the folderId of the groupfolder.
+	 * @param string $gid correspond to the gid of group already present in groupfolder.
+	 * @return void
+	 */
+	public function removeApplicableGroup(int $id, string $gid): void {
+		try {
+			$this->folderManager->removeApplicableGroup($id, $gid);
+		} catch (\Exception $e) {
+			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeApplicableGroup from FolderManager.');
+		}
+	}
+
 	public function setManageACL(int $folderId, string $type, string $id, bool $manageAcl): void {
 		try {
 			$this->folderManager->setManageACL($folderId, $type, $id, $manageAcl);
