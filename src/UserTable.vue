@@ -22,7 +22,7 @@
 
 <template>
 	<div>
-		<table v-if="users.length" class="table-space-detail">
+		<table v-if="users.length > 0" class="table-space-detail">
 			<thead>
 				<tr class="workspace-tr">
 					<th class="workspace-th" />
@@ -82,28 +82,39 @@
 				</tr>
 			</tbody>
 		</table>
-		<NcEmptyContent v-else>
-			{{ t('workspace', 'No users') }}
-			<template #desc>
-				{{ t('workspace', 'There are no users in this space/group yet') }}
+		<NcEmptyContent v-else
+			title="No users"
+			:description="t('workspace', 'There are no users in this space/group yet')">
+			<template #icon>
+				<Account />
+			</template>
+			<template #action>
+				<NcButton type="secondary" @click="alert">
+					Add users
+				</NcButton>
 			</template>
 		</NcEmptyContent>
+		<!-- </NcEmptyContent> -->
 	</div>
 </template>
 
 <script>
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
+import Account from 'vue-material-design-icons/Account'
 
 export default {
 	name: 'UserTable',
 	components: {
+		Account,
 		NcAvatar,
 		NcActions,
 		NcActionButton,
+		NcButton,
 		NcEmptyContent,
 	},
 	data() {
@@ -164,6 +175,9 @@ export default {
 				user,
 			})
 		},
+		alert() {
+			alert('test')
+		}
 	},
 }
 </script>
