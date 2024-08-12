@@ -9,7 +9,7 @@
 				class="searchbar-groups"
 				track-by="gid"
 				label="displayName"
-				limit="10"
+				:limit="10"
 				:options="groupsSelectable"
 				:placeholder="t('workspace', 'Start typing text to search for groups')"
 				@option:selected="addGroupToBatch"
