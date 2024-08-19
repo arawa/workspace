@@ -37,6 +37,7 @@ use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
+use OCP\IGroupManager;
 
 class SpaceManager {
 	public function __construct(
@@ -45,6 +46,7 @@ class SpaceManager {
 		private WorkspaceCheckService $workspaceCheck,
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
+		private IGroupManager $groupManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private ColorCode $colorCode,
 	) {
@@ -129,18 +131,31 @@ class SpaceManager {
 
 	public function get(int $spaceId): array {
 
-		$space = $this->spaceMapper->find($spaceId)->jsonSerialize();
-		$workspace = array_merge(
-			$this->folderHelper->getFolder($space['groupfolder_id'], $this->rootFolder->getRootFolderStorageId()),
-			$space
-		);
+		$space = $this->spaceMapper->find($spaceId);		
+		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
 
-		return $workspace;
+		$groupSpaceManager = $this->groupManager->get('SPACE-GE-' . $space->getSpaceId());
+		$groupSpaceUser = $this->groupManager->get('SPACE-U-' . $space->getSpaceId());
+
+		return [
+			'name' => $space->getSpaceName(),
+			'id_space' => $space->getId(),
+			'folder_id' => $space->getGroupfolderId(),
+			'color' => $space->getColorCode(),
+			'groups' => GroupFormatter::formatGroups([
+				$groupSpaceManager,
+				$groupSpaceUser
+			]),
+			'quota' => $groupfolder['quota'],
+			'size' => $groupfolder['size'],
+			'acl' => $groupfolder['acl'],
+			'manage' => $groupfolder['manage']
+		];
 	}
 
-	public function attachGroup(int $folderId, string $gid): void {
+    public function attachGroup(int $folderId, string $gid): void {
 		$this->folderHelper->addApplicableGroup($folderId, $gid);
-	}
+    }
 
 	/**
 	 * @param string $spaceName it's the space name
