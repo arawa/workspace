@@ -5,6 +5,8 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
 use OCP\AppFramework\Http;
@@ -17,7 +19,9 @@ class ConnectedGroupController extends Controller {
 		private LoggerInterface $logger,
         private IGroupManager $groupManager,
         private SpaceMapper $spaceMapper,
-        private UserGroup $userGroup
+		private SpaceManager $spaceManager,
+        private UserGroup $userGroup,
+		private UserService $userService,
     )
     {
     }
@@ -71,13 +75,32 @@ class ConnectedGroupController extends Controller {
 			$group->getGid(),
 		);
 
+		$users = [];
+
+		foreach ($group->getUsers() as $user) {
+			$users[$user->getUID()] = $this->userService->formatUser(
+				$user,
+				$this->spaceManager->get($spaceId),
+				'user'
+			);
+		};
+		
+		foreach ($users as &$user) {
+			if (array_key_exists('groups', $user)) {
+				array_push($user['groups'], $group->getGID());
+				array_push($user['groups'], 'SPACE-U-' . $space->getSpaceId());
+			}
+		}
+
+
 		$message = sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName());
 
 		$this->logger->info($message);
 
 		return new JSONResponse([
 			'message' => sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName()),
-			'success' => true
+			'success' => true,
+			'users' => $users
 		]);
 	}
 
