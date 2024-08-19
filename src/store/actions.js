@@ -296,6 +296,22 @@ export default {
 	updateSpace(context, { space }) {
 		context.commit('updateSpace', space)
 	},
+	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
+		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
+		.then(resp => {
+			context.commit('addConnectedGroupToWorkspace', { name, group })
+			const users = resp.data.users
+			for (const user in users) {
+				context.commit('addUserToWorkspace', { name, user: users[user] })				
+			}
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Error to add connected group', error)
+		})
+
+		return result
+	},
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
 		const oldQuota = context.getters.quota(name)
