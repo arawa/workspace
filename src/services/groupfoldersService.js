@@ -306,6 +306,7 @@ export function rename(workspace, newSpaceName) {
 		{
 			workspace,
 			newSpaceName,
+			spaceId: workspace.id
 		})
 		.then(resp => {
 			// If space is updated...
