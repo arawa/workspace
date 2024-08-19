@@ -95,7 +95,7 @@
 		</NcModal>
 		<NcModal v-if="showSelectConnectedGroups"
 			@close="toggleShowConnectedGroups">
-			<SelectConnectedGroups />
+			<SelectConnectedGroups @close="toggleShowConnectedGroups"/>
 		</NcModal>
 		<NcModal v-if="showDelWorkspaceModal"
 			style="min-heigth: 8rem;"
