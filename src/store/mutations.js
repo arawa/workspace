@@ -142,6 +142,15 @@ export default {
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
+	removeAddedGroupFromSpace(state, { name, gid }) {
+		const space = state.spaces[name]
+		// Deletes the group from the space's groups attribute
+		delete space.added_groups[gid]
+		// Saves the space back in the store
+		delete state.spaces[space.name]
+		VueSet(state.spaces, name, space)
+		sortSpaces(state)
+	},
 	// Removes a user from a group
 	// TODO: We might need to update the user's groups property too here
 	removeUserFromGroup(state, { name, gid, user }) {

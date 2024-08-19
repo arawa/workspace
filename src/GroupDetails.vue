@@ -29,8 +29,8 @@
 					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
 				</span>
 			</div>
-			<div v-if="!isAddedGroup" class="group-actions">
-				<div>
+			<div class="group-actions">
+				<div v-if="!isAddedGroup">
 					<NcActions default-icon="icon-add">
 						<NcActionButton icon="icon-add"
 							:close-after-click="true"
@@ -40,7 +40,7 @@
 					</NcActions>
 				</div>
 				<NcActions ref="ncAction">
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group) && !isAddedGroup"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
@@ -53,10 +53,15 @@
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group) && !isAddedGroup"
 						icon="icon-delete"
 						@click="deleteGroup">
 						{{ t('workspace', 'Delete group') }}
+					</NcActionButton>
+					<NcActionButton v-if="isAddedGroup"
+						icon="icon-delete"
+						@click="removeConnectedGroup">
+						{{ t('workspace', 'Remove the connected group') }}
 					</NcActionButton>
 				</NcActions>
 			</div>
@@ -113,6 +118,22 @@ export default {
 			this.$store.dispatch('deleteGroup', {
 				name: this.$route.params.space,
 				gid: this.$route.params.group,
+			})
+		},
+		removeConnectedGroup() {
+			const space = this.$store.state.spaces[this.$route.params.space]
+			const gid = this.$route.params.group
+
+			this.$store.dispatch('removeConnectedGroup', {
+				spaceId: space.id,
+				gid,
+				name: space.name
+			})
+
+			Object.keys(space.users).forEach(key => {
+				if (space.users[key].groups.includes(gid)) {
+				this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
+				}
 			})
 		},
 		onRenameGroup(e) {

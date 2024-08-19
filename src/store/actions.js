@@ -296,6 +296,23 @@ export default {
 	updateSpace(context, { space }) {
 		context.commit('updateSpace', space)
 	},
+	removeConnectedGroup(context, { spaceId, gid, name }) {
+		axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${gid}`))
+			.then((resp) => {
+			})
+			.catch((e) => {
+				console.error(e)
+			})
+		
+		context.commit('removeAddedGroupFromSpace', { name, gid })
+
+		// Naviagte back to home
+		router.push({
+			path: '/',
+		})
+
+		
+	},
 	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
 		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
 		.then(resp => {
