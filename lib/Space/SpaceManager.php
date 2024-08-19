@@ -134,9 +134,23 @@ class SpaceManager {
 		$space = $this->spaceMapper->find($spaceId);		
 		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
 
-        $workspace = array_merge($space->jsonSerialize(), $groupfolder);
+		$groupSpaceManager = $this->groupManager->get('SPACE-GE-' . $space->getSpaceId());
+		$groupSpaceUser = $this->groupManager->get('SPACE-U-' . $space->getSpaceId());
 
-		return $workspace;
+		return [
+			'name' => $space->getSpaceName(),
+			'id_space' => $space->getId(),
+			'folder_id' => $space->getGroupfolderId(),
+			'color' => $space->getColorCode(),
+			'groups' => GroupFormatter::formatGroups([
+				$groupSpaceManager,
+				$groupSpaceUser
+			]),
+			'quota' => $groupfolder['quota'],
+			'size' => $groupfolder['size'],
+			'acl' => $groupfolder['acl'],
+			'manage' => $groupfolder['manage']
+		];
 	}
 
     public function attachGroup(int $folderId, string $gid): void {
