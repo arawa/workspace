@@ -427,8 +427,9 @@ class GroupController extends Controller {
 	 *
 	 * @param string $pattern The pattern to search
 	 * @param bool $ignoreSpaces (not require) Ignore the workspace groups
+	 * @param array<string> $groupsPresents are groups already present
 	 */
-	public function search(string $pattern, ?bool $ignoreSpaces = null): JSONResponse {
+	public function search(string $pattern, ?bool $ignoreSpaces = null, array $groupsPresents = []): JSONResponse {
 
 		$groups = $this->collaboratorSearch->search(
 			$pattern,
@@ -458,6 +459,8 @@ class GroupController extends Controller {
 					&& $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
 			});
 		}
+
+		$groups = array_filter($groups, fn ($group) => !in_array($group->getGID(), $groupsPresents));
 
 		$groupsFormatted = GroupFormatter::formatGroups($groups);
 
