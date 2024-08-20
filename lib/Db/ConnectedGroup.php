@@ -47,7 +47,6 @@ class ConnectedGroup extends Entity implements JsonSerializable {
 
 	public function jsonSerialize(): array {
 		return [
-			'id' => (int)$this->getId(),
 			'space_id' => (int)$this->getSpaceId(),
 			'gid' => $this->getGid(),
 		];

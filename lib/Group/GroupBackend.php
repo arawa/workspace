@@ -24,11 +24,12 @@ namespace OCA\Workspace\Group;
 
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCP\Group\Backend\ABackend;
+use OCP\Group\Backend\INamedBackend;
 use OCP\GroupInterface;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 
-class GroupBackend extends ABackend implements GroupInterface {
+class GroupBackend extends ABackend implements GroupInterface, INamedBackend {
 
 	private bool $avoidRecurse_users;
 	private bool $avoidRecurse_groups;
@@ -145,4 +146,8 @@ class GroupBackend extends ABackend implements GroupInterface {
 		return $users;
 	}
 
+	public function getBackendName(): string
+	{
+		return 'WorkspaceGroupBackend';
+	}
 };
