@@ -59,7 +59,6 @@ class Application extends App implements IBootstrap {
 
 		$context->registerService(IsGeneralManagerMiddleware::class, function ($c) {
 			return new IsGeneralManagerMiddleware(
-				$c->query(IRequest::class),
 				$c->query(UserService::class)
 			);
 		});
