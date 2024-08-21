@@ -309,7 +309,7 @@ export default {
 
 		// Naviagte back to home
 		router.push({
-			path: '/',
+			path: `/workspace/${name}`,
 		})
 
 		
