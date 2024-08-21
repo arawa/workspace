@@ -12,6 +12,9 @@
 				:limit="10"
 				:options="groupsSelectable"
 				:placeholder="t('workspace', 'Start typing text to search for groups')"
+				:loading="loadingGroups"
+				:appendToBody="false"
+				:userSelect="true"
 				@option:selected="addGroupToBatch"
 				@search="lookupGroups"
 				@close="groupsSelectable=[]" />
@@ -73,17 +76,8 @@ export default {
 	},
 	data() {
 		return {
-			groupsSelectable: [
-				{
-					title: 'Groups select',
-					props: {
-						inputId: 1,
-						multiple: false,
-						closeOnSelect: true,
-						options: [],
-					},
-				},
-			],
+			loadingGroups: false,
+			groupsSelectable: [],
 			groupsSelected: [],
 		}
 	},
@@ -101,6 +95,7 @@ export default {
 				return
 			}
 
+			this.loadingGroups = true
 			axios.get(generateUrl('/apps/workspace/groups'), {
 				params: {
 					pattern: term,
@@ -113,7 +108,7 @@ export default {
 					for (const key in response.data) {
 						groups.push(response.data[key])
 					}
-					
+
 					const groupnames = this.groupsSelected.map((group) => group.displayName)
 					groups = groups.filter((group) => !groupnames.includes(group.displayName))
 
@@ -121,6 +116,9 @@ export default {
 				})
 				.catch(reason => {
 					console.error(reason.message)
+				})
+				.finally(() => {
+				  this.loadingGroups = false
 				})
 		},
 		validate() {
