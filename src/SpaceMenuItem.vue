@@ -24,7 +24,7 @@
 		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
 		:allow-collapse="true"
 		:open="$route.params.space === spaceName"
-		:title="spaceName"
+		:name="spaceName"
 		:to="{path: `/workspace/${spaceName}`}">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
@@ -32,14 +32,47 @@
 		</NcCounterBubble>
 		<MenuItemSelector />
 		<NcAppNavigationCaption
-			:title="t('workspace', 'Workspace groups')" />
+			ref="navigationGroup"
+			:title="t('workspace', 'Workspace groups')">
+			<template #actionsTriggerIcon>
+				<Plus :title="t('workspace', 'Create a workspace group')" :size="20" />
+			</template>
+			<template #actions>
+				<NcActionText :class="'space-text'">
+					{{ t('workspace', 'Create a workspace group') }}
+				</NcActionText>
+				<NcActionInput v-show="true"
+					ref="createGroupInput"
+					:class="'ws-modal-action'"
+					icon="icon-group"
+					:close-after-click="true"
+					:show-trailing-button="true"
+					@submit="onNewWorkspaceGroup">
+					{{ t('workspace', 'Group name') }}
+				</NcActionInput>
+			</template>
+		</NcAppNavigationCaption>
+
 		<GroupMenuItem
 			v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
 			:key="group.gid"
 			:group="group"
 			:space-name="spaceName" />
 		<NcAppNavigationCaption
-			:title="t('workspace', 'Added groups')" />
+			:title="t('workspace', 'Added groups')">
+			<template #actions>
+				<NcActionButton @click="toggleAddGroupModal">
+					<template #icon>
+						<Plus :size="20" />
+					</template>
+					{{ t('workspace', 'Add a group')}}
+				</NcActionButton>
+			</template>
+		</NcAppNavigationCaption>
+		<NcModal v-if="isAddGroupModalOpen"
+			@close="toggleAddGroupModal">
+			<SelectConnectedGroups @close="toggleAddGroupModal" />
+		</NcModal>
 		<GroupMenuItem
 			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
@@ -53,20 +86,32 @@
 import { getLocale } from '@nextcloud/l10n'
 import GroupMenuItem from './GroupMenuItem.vue'
 import MenuItemSelector from './MenuItemSelector.vue'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
+import NcActionText from '@nextcloud/vue/dist/Components/NcActionText.js'
 import NcAppNavigationCaption from '@nextcloud/vue/dist/Components/NcAppNavigationCaption.js'
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import Plus from 'vue-material-design-icons/Plus.vue'
+import SelectConnectedGroups from './SelectConnectedGroups.vue'
 
 export default {
 	name: 'SpaceMenuItem',
 	components: {
 		GroupMenuItem,
 		MenuItemSelector,
+		NcActionButton,
+		NcActionInput,
+		NcActionText,
 		NcAppNavigationCaption,
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
 		NcCounterBubble,
+		NcModal,
+		Plus,
+		SelectConnectedGroups,
 	},
 	props: {
 		space: {
@@ -82,6 +127,9 @@ export default {
 		return {
 			workspaceGroups: [],
 			connectedGroups: [],
+
+			// Added groups
+			isAddGroupModalOpen: false,
 		}
 	},
 	methods: {
@@ -122,9 +170,33 @@ export default {
 
 			return groups
 		},
+
+		toggleAddGroupModal() {
+			this.isAddGroupModalOpen = !this.isAddGroupModalOpen
+		},
+
+		onNewWorkspaceGroup(e) {
+			// Hide and clean popup menu
+			this.$refs.navigationGroup.$children.find((child) => child.$options.name === 'NcActions').opened = false
+			this.$refs.navigationGroup.$emit('update')
+
+			// Don't accept empty names
+			const gid = e.target[0].value
+			if (!gid) {
+				return
+			}
+			// Creates group
+			this.$store.dispatch('createGroup', { name: this.spaceName, gid })
+		},
 	},
 }
 </script>
 
 <style>
+.action.space-text {
+	padding-left: 44px;
+}
+.action.ws-modal-action.active {
+	background-color: transparent !important;
+}
 </style>
