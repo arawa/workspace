@@ -2,7 +2,7 @@
 	<NcAppNavigationItem
 		:icon="addedGroup ? 'icon-added-group' : 'icon-group'"
 		:to="{path: `/group/${spaceName}/${group.gid}`}"
-		:title="group.displayName">
+		:name="group.displayName">
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.groupUserCount( spaceName, group.gid) }}
 		</NcCounterBubble>
