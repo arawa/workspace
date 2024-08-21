@@ -26,13 +26,12 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Middleware;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Http\JSONResponse;
-use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Middleware\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Middleware;
 
 class IsGeneralManagerMiddleware extends Middleware {
 
