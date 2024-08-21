@@ -25,18 +25,18 @@
 
 namespace OCA\Workspace\Middleware;
 
+use OCA\Workspace\Middleware\Attribute\SpaceAdminRequired;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 
 class IsSpaceAdminMiddleware extends Middleware {
+
 	public function __construct(
-		private IControllerMethodReflector $reflector,
 		private IRequest $request,
 		private UserService $userService,
 		private SpaceService $spaceService
@@ -44,7 +44,9 @@ class IsSpaceAdminMiddleware extends Middleware {
 	}
 
 	public function beforeController($controller, $methodName): void {
-		if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
+		$reflectionMethod = new \ReflectionMethod($controller, $methodName);
+		$hasAttribute = !empty($reflectionMethod->getAttributes(SpaceAdminRequired::class));
+		if ($hasAttribute) {
 			$spaceId = $this->request->getParam('spaceId');
 			$space = $this->spaceService->find($spaceId);
 			if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize()) && !$this->userService->isUserGeneralAdmin()) {
@@ -61,6 +63,13 @@ class IsSpaceAdminMiddleware extends Middleware {
 			], Http::STATUS_FORBIDDEN);
 		}
 
-		return new JSONResponse([]);
+		return new JSONResponse([
+			'message' => 'Impossible to catch the exception from the ' . $this::class,
+			'exception' => [
+				'class' => $exception::class,
+				'message' => $exception->getMessage(),
+				'trace' => $exception->getTrace()
+			]
+		]);
 	}
 }
