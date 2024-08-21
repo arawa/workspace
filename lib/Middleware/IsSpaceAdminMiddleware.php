@@ -63,6 +63,13 @@ class IsSpaceAdminMiddleware extends Middleware {
 			], Http::STATUS_FORBIDDEN);
 		}
 
-		return new JSONResponse([]);
+		return new JSONResponse([
+			'message' => 'Impossible to catch the exception from the ' . $this::class,
+			'exception' => [
+				'class' => $exception::class,
+				'message' => $exception->getMessage(),
+				'trace' => $exception->getTrace()
+			]
+		]);
 	}
 }

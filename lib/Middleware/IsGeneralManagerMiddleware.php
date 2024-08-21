@@ -26,12 +26,13 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Middleware;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Middleware\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
-use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Middleware;
 
 class IsGeneralManagerMiddleware extends Middleware {
 
@@ -59,5 +60,14 @@ class IsGeneralManagerMiddleware extends Middleware {
 				'msg' => 'You are not allowed to perform this action'
 			], Http::STATUS_FORBIDDEN);
 		}
+
+		return new JSONResponse([
+			'message' => 'Impossible to catch the exception from the ' . $this::class,
+			'exception' => [
+				'class' => $exception::class,
+				'message' => $exception->getMessage(),
+				'trace' => $exception->getTrace()
+			]
+		]);
 	}
 }
