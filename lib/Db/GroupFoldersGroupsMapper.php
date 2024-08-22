@@ -62,9 +62,9 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			)
 			->where('group_id not like :managerGroup')
 			->andWhere('group_id not like :userGroup')
-            ->setParameter('managerGroup', 'SPACE-GE%')
-            ->setParameter('userGroup', 'SPACE-U%')
-        ;
+			->setParameter('managerGroup', 'SPACE-GE%')
+			->setParameter('userGroup', 'SPACE-U%')
+		;
 
 		return $qb->executeQuery()->fetchAll();
 	}
