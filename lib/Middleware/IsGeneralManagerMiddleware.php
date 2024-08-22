@@ -52,12 +52,14 @@ class IsGeneralManagerMiddleware extends Middleware {
 		return;
 	}
 
-	public function afterException($controller, $methodName, Exception $exception): void {
+	public function afterException($controller, $methodName, Exception $exception): JSONResponse {
 		if ($exception instanceof AccessDeniedException) {
 			return new JSONResponse([
 				'status' => 'forbidden',
 				'msg' => 'You are not allowed to perform this action'
 			], Http::STATUS_FORBIDDEN);
 		}
+
+        return new JSONResponse([]);
 	}
 }
