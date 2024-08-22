@@ -60,6 +60,6 @@ class IsGeneralManagerMiddleware extends Middleware {
 			], Http::STATUS_FORBIDDEN);
 		}
 
-        return new JSONResponse([]);
+		return new JSONResponse([]);
 	}
 }
