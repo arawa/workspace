@@ -96,6 +96,7 @@ export default {
 					gid,
 					displayName,
 				},
+				spaceId: space.id
 			})
 			.then((resp) => {
 				addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)

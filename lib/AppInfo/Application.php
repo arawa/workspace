@@ -28,12 +28,14 @@ use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
 
 	public function __construct(array $urlParams = []) {
@@ -67,5 +69,11 @@ class Application extends App {
 
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
+		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
+
+		$context->registerCapability(Capabilities::class);
+	}
+
+	public function boot(IBootContext $context): void {
 	}
 }
