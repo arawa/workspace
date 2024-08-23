@@ -147,7 +147,7 @@ export default {
 				awang,wm
 				radjiv.velasquez,u
 				christine.dupont@nextcloud.fr,wm
-				jdoe@nextcloud.com`
+				jdoe@nextcloud.com,user`
 		},
 		onImportTab() {
 			let cssClass = 'onImportTab'
@@ -254,7 +254,7 @@ section.app-sidebar__tab--active {
 }
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
-	margin-top: -20px !important;
+	margin-top: -10px !important;
 }
 
 // Change the height of the modal container
@@ -348,7 +348,7 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-	top: 100px;
+	top: 108px;
 	right: 54px;
 	z-index: 9999;
 }
