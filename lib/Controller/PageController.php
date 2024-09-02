@@ -25,15 +25,30 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCP\Util;
+use OCP\IGroupManager;
+use Psr\Log\LoggerInterface;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
-use OCP\AppFramework\Controller;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Util;
+use OCP\AppFramework\Services\IInitialState;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 
 class PageController extends Controller {
 	public function __construct(
-		private UserService $userService
+        private GroupfolderHelper $folderHelper,
+        private RootFolder $rootFolder,
+        private IGroupManager $groupManager,
+        private IInitialState $initialState,
+		private UserService $userService,
+        private LoggerInterface $logger,
+        private ConnectedGroupsService $connectedGroups,
+        private WorkspaceService $workspaceService
 	) {
 	}
 
@@ -47,6 +62,61 @@ class PageController extends Controller {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
+		$workspaces = $this->workspaceService->getAll();
+		$spaces = [];
+		foreach ($workspaces as $workspace) {
+			$folderInfo = $this->folderHelper->getFolder(
+				$workspace['groupfolder_id'],
+				$this->rootFolder->getRootFolderStorageId()
+			);
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			): $workspace;
+
+			$gids = array_keys($space['groups'] ?? []);
+			$groups = [];
+
+			$gids = array_filter($gids, fn($gid) => str_starts_with($gid, 'SPACE-'));
+
+			foreach ($gids as $gid) {
+				$group = $this->groupManager->get($gid);
+				if (is_null($group)) {
+					$this->logger->warning(
+						"Be careful, the $gid group is not exist in the oc_groups table."
+						. " But, it's present in the oc_group_folders_groups table."
+						.  "It necessary to recreate it with the occ command."
+					);
+					continue;
+				}
+				$groups[] = $group;
+			}
+
+			$addedGroups = [];
+			foreach($gids as $gid) {
+				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+				if ($addedToGroup !== null) {
+					$addedGroups = array_merge($addedGroups, $addedToGroup);
+				}
+			}
+
+			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['added_groups'] = GroupFormatter::formatGroups($addedGroups);
+			$space['users'] = $this->workspaceService->addUsersInfo($space);
+	
+			$spaces[] = $space;
+		}
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$this->logger->debug('Filtering workspaces');
+			$filteredWorkspaces = array_values(array_filter($spaces, function ($space) {
+				return $this->userService->isSpaceManagerOfSpace($space);
+			}));
+			$spaces = $filteredWorkspaces;
+		}
+
+        $this->initialState->provideInitialState('init-workspaces', $spaces);
+
 		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => $this->userService->canAccessApp() ]); 	// templates/index.php
 	}
 }
