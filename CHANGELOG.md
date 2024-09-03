@@ -25,6 +25,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.2.1] - 2024-09-03
+
+### Added
+
+- Added capability to get the release of the workspace ( [#1047](https://github.com/arawa/workspace/pull/1047) )
+
+### Changed
+
+- Updated user docs appstore side ( [#1039](https://github.com/arawa/workspace/pull/1039) )
+- Bimped the version to 3.2.1 ( [#1050](https://github.com/arawa/workspace/pull/1050) )
+
+### Fixed
+
+- Fixed response format to JSONResponse ( [#1048](https://github.com/arawa/workspace/pull/1048) )
+
 ## [3.2.0] - 2024-06-04
 
 ### Added
@@ -257,7 +272,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.2.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.2.1...main
+[3.2.1]: https://github.com/arawa/workspace/compare/v3.2.0...3.2.1
 [3.2.0]: https://github.com/arawa/workspace/compare/v3.1.0...3.2.0
 [3.1.0]: https://github.com/arawa/workspace/compare/v3.0.6...3.1.0
 [3.0.6]: https://github.com/arawa/workspace/compare/v3.0.5...3.0.6
