@@ -17,6 +17,10 @@ This app is a Nextcloud extension of the Groupfolders app.
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
+## Documentation
+
+For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X).
+
 ## Installation
 ### Requirements
 
@@ -141,12 +145,3 @@ sudo -u nginx /usr/local/bin/composer run test
 Please, read the [security.txt](.well-known/security.txt).
 
 If you want to report us a security issue. Please, read our [security-policy.md](.well-known/security-policy.md) file.
-
-## Upgrade guideline
-
-This section is very important to resolve rare bugs.
-We try hard to do resolve major bugs and to have a better user experience.
-
-### v3.0.4
-
-For this version, you should refresh your browser from the Workspace app with `Ctrl, Shift + R`.
