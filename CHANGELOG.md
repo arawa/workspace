@@ -33,8 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated user docs appstore side ( [#1039](https://github.com/arawa/workspace/pull/1039) )
-- Bimped the version to 3.2.1 ( [#1050](https://github.com/arawa/workspace/pull/1050) )
+- Updated link to user documentation in the Nextcloud app store ( [#1039](https://github.com/arawa/workspace/pull/1039) )
+- Bumped the version to 3.2.1 ( [#1050](https://github.com/arawa/workspace/pull/1050) )
+- Update documentation and remove upgrade guideline section ( ([#1052](https://github.com/arawa/workspace/pull/1052)) )
 
 ### Fixed
 
