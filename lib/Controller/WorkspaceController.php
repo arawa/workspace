@@ -200,7 +200,7 @@ class WorkspaceController extends Controller {
 			$gids = array_keys($space['groups'] ?? []);
 			$groups = [];
 
-			$gids = array_filter($gids, fn($gid) => str_starts_with($gid, 'SPACE-'));
+			$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
 
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
