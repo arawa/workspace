@@ -24,7 +24,7 @@ OC.L10N.register(
 		'Settings': 'Paramètres',
 		'This group already exists. Please, change the name': 'Ce groupe existe déjà. Changez le nom, s\'il vous plaît.',
 		'Groups': 'Groupes',
-		'Make administrator': "Assigner en tant que G.E.",
+		'Make administrator': "Assigner en tant que WM",
 		'New space': 'Créer un espace de travail',
 		'No users selected': 'Aucun utilisateur selectionné',
 		'Error': 'Erreur',
@@ -54,7 +54,7 @@ OC.L10N.register(
 		'The name space must be defined.': 'Le nom de l\'espace de travail doit être défini.',
 		'Error to rename space': 'Erreur pour renommer l\'espace de travail',
 		'The space name already exist. We cannot rename with this name.': 'Le nom de l\'espace de travail existe déjà. Vous ne pouvez pas le renommer avec ce nom.',
-		'Remove admin rights': "Retirer les droits de G.E.",
+		'Remove admin rights': "Retirer les droits de WM",
 		'Remove user from selection': "Retirer l'utilisateur de la sélection",
 		'Rename space': "Renommer l'espace de travail",
 		'Rename group': 'Renommer le groupe',
@@ -89,6 +89,7 @@ OC.L10N.register(
 		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Format de fichier est invalide. L\'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}',
 		'Something went wrong. Couldn\'t open a file.': 'Quelque chose s\'est mal passé. Impossible d\'ouvrir un fichier.',
 		'Add users from csv file': 'Ajouter à partir du fichier csv',
-		'Import csv from Files': 'Importer csv à partir de Files'
+		'Import csv from Files': 'Importer csv à partir de Files',
+		'View Profile': 'Voir le profil'
 	},
 "nplurals=2; plural=(n > 1)");

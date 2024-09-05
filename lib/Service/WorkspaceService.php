@@ -180,7 +180,9 @@ class WorkspaceService {
 		$group = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				if (!isset($users[$user->getUID()])) {
+					$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				}
 			};
 		}
 

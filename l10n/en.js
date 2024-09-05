@@ -17,7 +17,7 @@ OC.L10N.register(
 		'Create group': 'Create group',
 		'Add a group': 'Add a group',
 		'Delete space': 'Delete Workspace',
-		'Delete user': 'Remove user',
+		'Delete user': 'Remove from workspace',
 		'Error 403': 'Error 403',
 		'This group already exists. Please, change the name': 'This group already exists. Please, change the name',
 		'You aren\'t allowed to access into this application !': 'You aren\'t allowed to access into this application !',
@@ -28,7 +28,7 @@ OC.L10N.register(
 		'No group selected': 'No group selected',
 		'Duplication of groups': 'Duplication of groups',
 		'The group already exists.': 'The group already exists.',
-		'Make administrator': 'Assign as Workspace manager',
+		'Make administrator': 'Assign as WM',
 		'Error to rename space': 'Error to rename space',
 		'The space name already exist. We cannot rename with this name.': 'The space name already exist. We cannot rename with this name.',
 		'New space': 'Create a Workspace',
@@ -38,7 +38,7 @@ OC.L10N.register(
 		'Select groupfolders to convert in workspace': 'Select groupfolders to convert in workspace',
 		'Convert in spaces': 'Convert in spaces',
 		'The name space must be defined.': 'The name space must be defined.',
-		'Remove admin rights': 'Remove workspace manager rights',
+		'Remove admin rights': 'Remove WM rights',
 		'Remove user from selection': 'Remove user from selection',
 		'There is a problem to add group to groupfolder. The group is deleted.': 'There is a problem to add group to groupfolder. The group is deleted.',
 		'Rename space': 'Rename Workspace',
@@ -87,6 +87,7 @@ OC.L10N.register(
 		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}',
 		'Something went wrong. Couldn\'t open a file.': 'Quelque chose s\'est mal passé. Impossible d\'ouvrir un fichier.',
 		'Add users from csv file': 'Ajouter à partir du fichier csv',
-		'Import csv from Files': 'Importer csv à partir de Files'
+		'Import csv from Files': 'Importer csv à partir de Files',
+		'View Profile': 'View Profile'
 	},
 "nplurals=2; plural=(n > 1)");

@@ -13,12 +13,12 @@
 	"Delete space" : "Supprimer l'espace de travail",
 	"Duplication of groups": "Duplication des groupes",
 	"The group already exists.": "Le groupe existe déjà.",
-	"Delete user" : "Supprimer de l'espace de travail",
+	"Delete user" : "Retirer de l'espace de travail",
 	"Group name": "Nom du groupe",
 	"remove group from selection": "retirer le groupe de la sélection",
 	"Space name": "Nom de l'espace de travail",
 	"Groups": "Groupes",
-	"Make administrator" : "Assigner en tant que G.E.",
+	"Make administrator" : "Assigner en tant que WM",
 	"New space" : "Créer un espace de travail",
 	"Settings": "Paramètres",
 	"This group already exists. Please, change the name": "Ce groupe existe déjà. Changez le nom, s'il vous plaît.",
@@ -29,7 +29,7 @@
 	"Select groupfolders to convert in workspace": "Selectionner les dossiers du groupe à convertir en espace projet",
 	"Convert in spaces": "Convertir en espace projet",
 	"No username matches your current entry.": "Aucun nom d'utilisateur ne correspond à votre saisie actuelle",
-	"Remove admin rights": "Retirer les droits de G.E.",
+	"Remove admin rights": "Retirer les droits de WM",
 	"There is a problem to add group to groupfolder. The group is deleted.": "Il y a un problème pour ajouter le groupe au dossier du groupe. Le groupe est supprimé.",
 	"The groupfolder with this name : {spaceName} already exist": "Le groupefolder avec ce nom : {spaceName} existe déjà",
 	"Error": "Erreur",
@@ -60,7 +60,7 @@
 	"Rename group": "Renommer le groupe",
 	"Delete group": "Supprimer le groupe",
 	"Role": "Rôle",
-	"S.A.": "G.E.",
+	"S.A.": "WM",
 	"Set quota": "Définir un quota",
 	"Space administrators" : "Gestionnaires d'espace de travail",
 	"Users" : "Utilisateurs",
@@ -83,7 +83,8 @@
 	"Invalid file format. Table header doesn't contain any of the following values:<br> {values}": "Format de fichier est invalide. L'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}",
 	"Something went wrong. Couldn't open a file.": "Quelque chose s'est mal passé. Impossible d'ouvrir un fichier.",
 	"Add users from csv file": "Ajouter à partir du fichier csv",
-	"Import csv from Files": "Importer csv à partir de Files"
+	"Import csv from Files": "Importer csv à partir de Files",
+	"View Profile": "Voir le profil"
 },
 "pluralForm" : "nplurals=2; plural=(n > 1);"
 }
