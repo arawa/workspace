@@ -23,7 +23,7 @@
 	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
 		<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 			icon="icon-add"
-			:name="t('workspace', 'New space')"
+			:title="t('workspace', 'New space')"
 			@new-item="createSpace" />
 		<NcAppNavigationItem
 			:name="t('workspace', 'All spaces')"
