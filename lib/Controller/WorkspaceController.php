@@ -186,15 +186,16 @@ class WorkspaceController extends Controller {
 		$workspaces = $this->workspaceService->getAll();
 		$spaces = [];
 		foreach ($workspaces as $workspace) {
-			$space = array_merge(
-				$this->folderHelper->getFolder(
-					$workspace['groupfolder_id'],
-					$this->rootFolder->getRootFolderStorageId()
-				),
-				$workspace
+			$folderInfo = $this->folderHelper->getFolder(
+				$workspace['groupfolder_id'],
+				$this->rootFolder->getRootFolderStorageId()
 			);
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			) : $workspace;
 
-			$gids = array_keys($space['groups']);
+			$gids = array_keys($space['groups'] ?? []);
 			$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
 	
 			$space['groups'] = GroupFormatter::formatGroups($groups);
