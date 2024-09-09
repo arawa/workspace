@@ -54,24 +54,36 @@
 					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
-								<NcActionButton v-if="$route.params.group === undefined"
-									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
+								<NcActionButton v-if="user.profile !== undefined"
+									icon="icon-user"
+									:close-after-click="true"
+									@click="viewProfile(user)">
+									{{ t('workspace', 'View profile') }}
+								</NcActionButton>
+								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
-									{{
-										!$store.getters.isSpaceAdmin(user, $route.params.space) ?
-											t('workspace', 'Make administrator')
-											: t('workspace', 'Remove admin rights')
-									}}
+									<template #icon>
+										<Close :size="20" />
+									</template>
+									{{ t('workspace', 'Remove admin rights')}}
 								</NcActionButton>
-								<NcActionButton v-if="($route.params.group === undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space)"
+								<NcActionButton v-else
+									:close-after-click="true"
+									@click="toggleUserRole(user)">
+									<template #icon>
+										<AccountCog :size="20" />
+									</template>
+									{{ t('workspace', 'Make administrator')}}
+								</NcActionButton>
+								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="(($route.params.group !== undefined) && !$store.getters.isSpaceAddedGroup($route.params.space, $route.params.group)) && (!$store.getters.isFromAddedGroups(user, $route.params.space) || ($store.getters.GEGroup($route.params.space) === $route.params.group))"
-									icon="icon-delete"
+								<NcActionButton v-if="($route.params.group !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
 									{{ t('workspace', 'Remove from group') }}
@@ -97,6 +109,8 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
+import AccountCog from 'vue-material-design-icons/AccountCog.vue'
+import Close from 'vue-material-design-icons/Close.vue'
 
 export default {
 	name: 'UserTable',
@@ -105,6 +119,8 @@ export default {
 		NcActions,
 		NcActionButton,
 		NcEmptyContent,
+		AccountCog,
+		Close,
 	},
 	data() {
 		return {
@@ -164,6 +180,9 @@ export default {
 				user,
 			})
 		},
+		viewProfile(user) {
+		  window.location.href = user.profile
+		}
 	},
 }
 </script>

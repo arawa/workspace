@@ -29,6 +29,7 @@ use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
@@ -39,6 +40,7 @@ class UserService {
 		private IUserSession $userSession,
 		private LoggerInterface $logger,
 		private ConnectedGroupsService $connectedGroups,
+		private IURLGenerator $urlGenerator,
 	) {
 	}
 
@@ -75,7 +77,8 @@ class UserService {
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
-			'role' => $role
+			'role' => $role,
+			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}
 
