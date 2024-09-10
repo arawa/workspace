@@ -29,8 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Backport: Merge information from a groupfolder if one exists by @zak39 in https://github.com/arawa/workspace/pull/1056
-- Backport: Ignore nonexistent groups when listing workspaces by @zak39 in https://github.com/arawa/workspace/pull/1058
+- Backport: when listing workspaces, ignore group folders when they no longer exist ( [#1056](https://github.com/arawa/workspace/pull/1056) )
+- Backport: when listing workspaces, ignore user groups that no longer exist ( [#1058](https://github.com/arawa/workspace/pull/1058) )
 
 ## [3.2.1] - 2024-09-03
 
