@@ -301,7 +301,8 @@ export default {
 			.then((resp) => {
 			})
 			.catch((e) => {
-				console.error(e)
+				console.error('Error to remove connected group', e.message)
+        console.error(e)
 			})
 		
 		context.commit('removeAddedGroupFromSpace', { name, gid })
@@ -324,7 +325,8 @@ export default {
 			return resp.data
 		})
 		.catch(error => {
-			console.error('Error to add connected group', error)
+			console.error('Error to add connected group', error.message)
+      console.error(error)
 		})
 
 		return result
