@@ -129,22 +129,24 @@ class SpaceManager {
 		$space = $this->spaceMapper->find($spaceId);		
 		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
 
-		$groupSpaceManager = $this->groupManager->get('SPACE-GE-' . $space->getSpaceId());
-		$groupSpaceUser = $this->groupManager->get('SPACE-U-' . $space->getSpaceId());
+        $workspace = array_merge($space->jsonSerialize(), $groupfolder);
 
 		return [
 			'name' => $space->getSpaceName(),
 			'id_space' => $space->getId(),
 			'folder_id' => $space->getGroupfolderId(),
 			'color' => $space->getColorCode(),
-			'groups' => GroupFormatter::formatGroups([
-				$groupSpaceManager,
-				$groupSpaceUser
-			]),
-			'quota' => $groupfolder['quota'],
-			'size' => $groupfolder['size'],
-			'acl' => $groupfolder['acl'],
-			'manage' => $groupfolder['manage']
+			'groups' => GroupFormatter::formatGroups(
+                array_map(
+                        fn ($gid) => $this->groupManager->get($gid),
+                        array_keys($workspace['groups']
+                    )
+                )
+			),
+			'quota' => $workspace['quota'],
+			'size' => $workspace['size'],
+			'acl' => $workspace['acl'],
+			'manage' => $workspace['manage']
 		];
 	}
 

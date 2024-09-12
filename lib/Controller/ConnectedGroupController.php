@@ -3,9 +3,11 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\IGroupManager;
@@ -17,11 +19,13 @@ class ConnectedGroupController extends Controller {
     public function __construct(
         private GroupfolderHelper $folderHelper,
 		private LoggerInterface $logger,
+        private RootFolder $rootFolder,
         private IGroupManager $groupManager,
         private SpaceMapper $spaceMapper,
 		private SpaceManager $spaceManager,
         private UserGroup $userGroup,
 		private UserService $userService,
+        private WorkspaceService $workspaceService
     )
     {
     }
@@ -68,14 +72,13 @@ class ConnectedGroupController extends Controller {
 			);		
 		}
 		
-		$space = $this->spaceMapper->find($spaceId);		
-		
+		$space = $this->spaceMapper->find($spaceId);	
+
 		$this->folderHelper->addApplicableGroup(
 			$space->getGroupfolderId(),
 			$group->getGid(),
 		);
 
-		$users = [];
 
 		foreach ($group->getUsers() as $user) {
 			$users[$user->getUID()] = $this->userService->formatUser(
@@ -84,14 +87,12 @@ class ConnectedGroupController extends Controller {
 				'user'
 			);
 		};
-		
+
 		foreach ($users as &$user) {
 			if (array_key_exists('groups', $user)) {
-				array_push($user['groups'], $group->getGID());
 				array_push($user['groups'], 'SPACE-U-' . $space->getSpaceId());
 			}
-		}
-
+        }
 
 		$message = sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName());
 
