@@ -60,8 +60,8 @@
 					</NcActionButton>
 					<NcActionButton v-if="isAddedGroup"
 						icon="icon-delete"
-						@click="removeConnectedGroup">
-						{{ t('workspace', 'Remove the connected group') }}
+						@click="toggleRemoveConnectedGroupModal">
+						{{ t('workspace', 'Remove connected group') }}
 					</NcActionButton>
 				</NcActions>
 			</div>
@@ -71,11 +71,16 @@
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
 		</NcModal>
+    <AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
+      :message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: this.$route.params.group, spacename: this.$route.params.space })"
+      @cancel="closeConnectedGroupModal"
+      @remove-group="removeConnectedGroup" />
 	</div>
 </template>
 
 <script>
 import { PREFIX_MANAGER, PREFIX_USER } from './constants.js'
+import AlertRemoveGroup from './AlertRemoveGroup.vue'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
@@ -87,6 +92,7 @@ import UserTable from './UserTable.vue'
 export default {
 	name: 'GroupDetails',
 	components: {
+    AlertRemoveGroup,
 		NcActions,
 		NcActionButton,
 		NcActionInput,
@@ -98,6 +104,7 @@ export default {
 		return {
 			showRenameGroupInput: false, // true to display 'Rename Group' NcActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
+			showRemoveConnectedGroupModal: false,
 		}
 	},
 	computed: {
@@ -120,6 +127,12 @@ export default {
 				gid: this.$route.params.group,
 			})
 		},
+		toggleRemoveConnectedGroupModal() {
+			this.showRemoveConnectedGroupModal = !this.showRemoveConnectedGroupModal
+		},
+		closeConnectedGroupModal() {
+			this.showRemoveConnectedGroupModal = false
+		},
 		removeConnectedGroup() {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const gid = this.$route.params.group
@@ -135,6 +148,8 @@ export default {
 				this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
 				}
 			})
+
+			this.toggleRemoveConnectedGroupModal()
 		},
 		onRenameGroup(e) {
 			// Hides NcActionInput
