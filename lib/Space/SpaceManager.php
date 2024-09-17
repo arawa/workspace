@@ -36,6 +36,7 @@ use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
+use OCP\IGroupManager;
 
 class SpaceManager {
 	public function __construct(
@@ -44,6 +45,7 @@ class SpaceManager {
 		private WorkspaceCheckService $workspaceCheck,
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
+		private IGroupManager $groupManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 	) {
 	}
@@ -119,6 +121,32 @@ class SpaceManager {
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
 			'manage' => $groupfolder['manage']
+		];
+	}
+
+	public function get(int $spaceId): array {
+
+		$space = $this->spaceMapper->find($spaceId);		
+		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
+
+        $workspace = array_merge($space->jsonSerialize(), $groupfolder);
+
+		return [
+			'name' => $space->getSpaceName(),
+			'id_space' => $space->getId(),
+			'folder_id' => $space->getGroupfolderId(),
+			'color' => $space->getColorCode(),
+			'groups' => GroupFormatter::formatGroups(
+                array_map(
+                        fn ($gid) => $this->groupManager->get($gid),
+                        array_keys($workspace['groups']
+                    )
+                )
+			),
+			'quota' => $workspace['quota'],
+			'size' => $workspace['size'],
+			'acl' => $workspace['acl'],
+			'manage' => $workspace['manage']
 		];
 	}
 

@@ -119,6 +119,12 @@ export default {
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
+	addConnectedGroupToWorkspace(state, { name, group }) {
+		const space = state.spaces[name]
+		space.added_groups[group.gid] = { displayName: group.displayName, gid: group.gid }
+		VueSet(state.spaces, name, space)
+		sortSpaces(state)
+	},
 	// Removes a group from a space
 	removeGroupFromSpace(state, { name, gid }) {
 		const space = state.spaces[name]
@@ -131,6 +137,15 @@ export default {
 				space.users[key].groups.splice(index, 1)
 			}
 		})
+		// Saves the space back in the store
+		delete state.spaces[space.name]
+		VueSet(state.spaces, name, space)
+		sortSpaces(state)
+	},
+	removeAddedGroupFromSpace(state, { name, gid }) {
+		const space = state.spaces[name]
+		// Deletes the group from the space's groups attribute
+		delete space.added_groups[gid]
 		// Saves the space back in the store
 		delete state.spaces[space.name]
 		VueSet(state.spaces, name, space)
