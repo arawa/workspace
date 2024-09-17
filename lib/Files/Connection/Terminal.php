@@ -2,9 +2,9 @@
 
 namespace OCA\Workspace\Files\Connection;
 
-use OCA\Workspace\Files\ManagerConnectionFileInterface;
+use OCA\Workspace\Files\BasicStreamInterface;
 
-class Terminal implements ManagerConnectionFileInterface {
+class Terminal implements BasicStreamInterface {
 	private $stream;
 
 	public function __construct() {
