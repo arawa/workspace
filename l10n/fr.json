@@ -17,6 +17,7 @@
 	"Group name": "Nom du groupe",
 	"Remove conntected group": "Retirer le groupe",
 	"Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace": "Attention, après le retrait du groupe {groupname}, ses utilisateurs perdront l'accès à l'espace de travail {spacename}",
+	"Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace": "Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l'accès à l'espace de travail {spacename}",
 	"remove group from selection": "retirer le groupe de la sélection",
 	"Space name": "Nom de l'espace de travail",
 	"Confirm": "Confirmer",
