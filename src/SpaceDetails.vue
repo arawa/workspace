@@ -21,7 +21,15 @@
 -->
 
 <template>
-	<div>
+  <div v-if="$store.state.noUsers">
+    <NcEmptyContent
+      :title="t('workspace', 'No users')">
+      <template #description>
+        {{ t('workspace', 'There are no users in this space/group yet') }}
+      </template>
+    </NcEmptyContent>
+  </div>
+	<div v-else-if="!$store.state.loadingUsersWaitting">
 		<div class="header">
 			<div class="space-name">
 				<NcColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
@@ -121,11 +129,13 @@ import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
 		NcActions,
+    NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
@@ -152,6 +162,10 @@ export default {
 			return this.$route.params.space
 		},
 	},
+  mounted() {
+    const space = this.$store.state.spaces[this.$route.params.space]
+    this.$store.dispatch('loadUsers', { space })
+  },
 	created() {
 		const version = navigator.userAgent.split('Firefox/')[1]
 		if (parseInt(version) < 91) {
