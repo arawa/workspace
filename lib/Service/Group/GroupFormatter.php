@@ -51,6 +51,7 @@ class GroupFormatter {
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
+                'usersCount' => $group->count(),
 			];
 		}
 
