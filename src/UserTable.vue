@@ -111,6 +111,7 @@ import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
 import Close from 'vue-material-design-icons/Close.vue'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
 
 export default {
 	name: 'UserTable',
@@ -189,10 +190,30 @@ export default {
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
+			const gid = this.$route.params.group
 			this.$store.dispatch('removeUserFromWorkspace', {
 				name: this.$route.params.space,
 				gid: UserGroup.getGid(space),
 				user,
+			})
+			this.$store.dispatch('decrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: UserGroup.getGid(space)
+			})
+			if (user.role === 'admin') {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: ManagerGroup.getGid(space)
+				})
+			}
+			if (gid !== undefined && gid.startsWith('SPACE-G-')) {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid
+				})
+			}
+			this.$store.dispatch('decrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
 			})
 		},
 		// Makes user an admin or a simple user
@@ -204,11 +225,32 @@ export default {
 		},
 		// Removes a user from a group
 		removeFromGroup(user) {
+			const gid = this.$route.params.group
+			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				gid: this.$route.params.group,
+				gid,
 				user,
 			})
+			this.$store.dispatch('decrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid
+			})
+			if (gid.startsWith('SPACE-GE')) {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: ManagerGroup.getGid(space)
+				})
+			}
+			if (gid.startsWith('SPACE-U')) {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: UserGroup.getGid(space)
+				})
+				this.$store.dispatch('decrementSpaceUserCount', {
+					spaceName: this.$route.params.space,
+				})
+			}
 		},
 		viewProfile(user) {
 		  window.location.href = user.profile
