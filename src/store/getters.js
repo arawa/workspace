@@ -39,6 +39,12 @@ export const getters = {
 		}
 		return '[' + gid + ']'
 	},
+  getGroupUserCount: state => (gid) => {
+    return state.spaces[spaceName].groups[gid].usersCount
+  },
+  getSpaceUserCount: state => (name) => {
+    return state.spaces[name].userCount
+  },
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
 		const users = state.spaces[spaceName].users
@@ -86,9 +92,12 @@ export const getters = {
 		if (state.spaces[name] === undefined) {
 			return 0
 		}
+		if (state.spaces[name].userCount !== undefined && state.spaces[name].userCount > 0) {
+			return state.spaces[name].userCount;
+		}
 		const users = state.spaces[name].users
 		if (users === undefined || users.length === 0) {
-			return 0
+			return -1
 		} else {
 			return Object.keys(users).length
 		}
