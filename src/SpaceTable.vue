@@ -64,6 +64,7 @@
 <script>
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import { getUsers } from './services/spaceService.js'
 
 export default {
 	name: 'SpaceTable',
@@ -94,6 +95,9 @@ export default {
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})
+
+      const space = this.$store.state.spaces[this.$route.params.space]
+      this.$store.dispatch('loadUsers', { space })
 		},
 	},
 }
