@@ -178,6 +178,11 @@ return [
 			'verb' => 'PATCH',
 		],
 		[
+			'name' => 'workspace#getUsers',
+			'url' => '/spaces/{spaceId}/users',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'group#removeUserFromWorkspace',
 			'url' => '/spaces/{spaceId}/users/{user}/groups',
 			'verb' => 'PATCH',
