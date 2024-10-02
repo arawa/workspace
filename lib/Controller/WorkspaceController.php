@@ -39,6 +39,7 @@ use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
@@ -65,6 +66,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
+        private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		public $AppName
 	) {
@@ -202,6 +204,7 @@ class WorkspaceController extends Controller {
 
 			$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
 
+            $space['users'] = [];
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
 				if (is_null($group)) {
@@ -213,6 +216,16 @@ class WorkspaceController extends Controller {
 					continue;
 				}
 				$groups[] = $group;
+
+                if (str_starts_with($gid, 'SPACE-U-')) {
+                	$space['userCount'] = $group->count();
+                }
+
+                if (str_starts_with($gid, 'SPACE-GE')) {
+                    $users = $group->getUsers();
+                    $space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
+                }
+
 			}
 
 			$addedGroups = [];
@@ -225,8 +238,7 @@ class WorkspaceController extends Controller {
 
 			$space['groups'] = GroupFormatter::formatGroups($groups);
 			$space['added_groups'] = GroupFormatter::formatGroups($addedGroups);
-			$space['users'] = $this->workspaceService->addUsersInfo($space);
-	
+
 			$spaces[] = $space;
 		}
 		// We only want to return those workspaces for which the connected user is a manager
@@ -241,6 +253,21 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
+    /**
+     * @NoAdminRequired
+     */
+    public function getUsers(int $spaceId): JSONResponse {
+
+        $space = $this->spaceMapper->find($spaceId);
+
+        $groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		
+        $workspace = array_merge($space->jsonSerialize(), $groupfolder);
+        $users = $this->workspaceService->addUsersInfo($workspace);     
+
+        return new JSONResponse($users);
+    }
+    
 	/**
 	 * @NoAdminRequired
 	 * @param string|array $workspace
