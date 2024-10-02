@@ -24,12 +24,13 @@ namespace OCA\Workspace\Group;
 
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCP\Group\Backend\ABackend;
+use OCP\Group\Backend\ICountUsersBackend;
 use OCP\Group\Backend\INamedBackend;
 use OCP\GroupInterface;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 
-class GroupBackend extends ABackend implements GroupInterface, INamedBackend {
+class GroupBackend extends ABackend implements GroupInterface, INamedBackend, ICountUsersBackend {
 
 	private bool $avoidRecurse_users;
 	private bool $avoidRecurse_groups;
@@ -149,5 +150,30 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend {
 	public function getBackendName(): string
 	{
 		return 'WorkspaceGroupBackend';
+	}
+
+
+	public function countUsersInGroup(string $gid, string $search = ''): int
+	{
+
+		$users = $this->usersInGroup($gid);
+		if (!is_array($users)) {
+			return 0;
+		}
+
+		// get database users first
+		$group = $this->groupManager->get($gid);
+		$this->avoidRecurse_users = true;
+		$usersDb = $group->getUsers();
+		$this->avoidRecurse_users = false;
+
+		$nbUsers = 0;
+		foreach($users as $userId) {
+			if (!isset($usersDb[$userId])) {
+				$usersDb[$userId] = true;
+				$nbUsers ++;
+			}
+		}
+		return $nbUsers;
 	}
 };
