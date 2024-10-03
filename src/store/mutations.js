@@ -88,6 +88,7 @@ export default {
 		space.groups[gid] = {
 			gid,
 			displayName,
+			usersCount: 0,
 		}
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
@@ -96,6 +97,41 @@ export default {
 	addSpace(state, space) {
 		state.spaces[space.name] = space
 		sortSpaces(state)
+	},
+	UPDATE_USERS(state, { space, users }) {
+		space.users = users
+	  VueSet(state.spaces, space.name, space)
+	},
+	SET_LOADING_USERS_WAITTING(state, { activated }) {
+		state.loadingUsersWaitting = activated
+	},
+	SET_NO_USERS(state, { activated }) {
+		state.noUsers = activated
+	},
+	INCREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount++
+		VueSet(state.spaces, spaceName, space)
+	},
+	INCREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+		const space = state.spaces[spaceName]
+		space.userCount++
+		VueSet(state.spaces, spaceName, space)
+	},
+	DECREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount--
+		VueSet(state.spaces, spaceName, space)
+	},
+	DECREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+		const space = state.spaces[spaceName]
+		space.userCount--
+		VueSet(state.spaces, spaceName, space)
+	},
+	CHANGE_USER_ROLE(state, { spaceName, user, role }) {
+		const space = state.spaces[spaceName]
+		space.users[user.uid].role = role
+		VueSet(state.spaces, spaceName, space)
 	},
 	// Adds a user to a group
 	addUserToGroup(state, { name, gid, user }) {
