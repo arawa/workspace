@@ -262,7 +262,7 @@ class WorkspaceController extends Controller {
 
         $groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 		
-        $workspace = array_merge($space->jsonSerialize(), $groupfolder);
+        $workspace = array_merge($groupfolder, $space->jsonSerialize());
         $users = $this->workspaceService->addUsersInfo($workspace);     
 
         return new JSONResponse($users);
