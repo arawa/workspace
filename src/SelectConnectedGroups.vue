@@ -1,57 +1,60 @@
 <template>
-	<div class="container-select-groups">
-		<header class="header-select-groups">
-			<h1>{{ t('workspace', 'Add a group') }}</h1>
-		</header>
+  <NcModal class="modal-connected-groups"
+    @close="close()">
+    <div class="container-select-groups">
+      <header class="header-select-groups">
+        <h1>{{ t('workspace', 'Add a group') }}</h1>
+      </header>
 
-		<div class="body-select-groups">
-			<NcSelect
-				class="searchbar-groups"
-				track-by="gid"
-				label="displayName"
-				:limit="10"
-				:options="groupsSelectable"
-				:placeholder="t('workspace', 'Start typing text to search for groups')"
-				:loading="loadingGroups"
-				:appendToBody="false"
-				:userSelect="true"
-				@option:selected="addGroupToBatch"
-				@search="lookupGroups"
-				@close="groupsSelectable=[]" />
-		</div>
-		<div class="content-group-list">
-			<div v-if="groupsSelected.length !== 0"
-				class="select-group-list">
-				<div class="group-item"
-					v-for="group in groupsSelected">
-					<div class="group-avatar">
-						<NcAvatar
-							:display-name="group.displayName"
-							:is-no-user="true" />
-						<div class="groupname">
-							<span>{{ group.displayName }}</span>
-						</div>
-					</div>
-					<div>
-						<NcActions>
-							<NcActionButton icon="icon-delete"
-								@click="removeGroupFromBatch(group)">
-								{{ t('workspace', 'remove group from selection') }}
-							</NcActionButton>
-						</NcActions>
-					</div>
-				</div>
-			</div>
-			<NcEmptyContent v-else
-				class="content-group-list-empty"
-				:title="t('workspace', 'No group selected')" />
-		</div>
-		<NcButton type="secondary"
-			@click="validate"
-			class="btn-add-groups">
-			{{ t('workspace', 'Add') }}
-		</NcButton>
-	</div>
+      <div class="body-select-groups">
+        <NcSelect
+          class="searchbar-groups"
+          track-by="gid"
+          label="displayName"
+          :limit="10"
+          :options="groupsSelectable"
+          :placeholder="t('workspace', 'Start typing text to search for groups')"
+          :loading="loadingGroups"
+          :appendToBody="false"
+          :userSelect="true"
+          @option:selected="addGroupToBatch"
+          @search="lookupGroups"
+          @close="groupsSelectable=[]" />
+      </div>
+      <div class="content-group-list">
+        <div v-if="groupsSelected.length !== 0"
+          class="select-group-list">
+          <div class="group-item"
+            v-for="group in groupsSelected">
+            <div class="group-avatar">
+              <NcAvatar
+                :display-name="group.displayName"
+                :is-no-user="true" />
+              <div class="groupname">
+                <span>{{ group.displayName }}</span>
+              </div>
+            </div>
+            <div>
+              <NcActions>
+                <NcActionButton icon="icon-delete"
+                  @click="removeGroupFromBatch(group)">
+                  {{ t('workspace', 'remove group from selection') }}
+                </NcActionButton>
+              </NcActions>
+            </div>
+          </div>
+        </div>
+        <NcEmptyContent v-else
+          class="content-group-list-empty"
+          :title="t('workspace', 'No group selected')" />
+      </div>
+      <NcButton type="secondary"
+        class="btn-add-groups"
+        @click="validate">
+        {{ t('workspace', 'Add') }}
+      </NcButton>
+    </div>
+  </NcModal>
 </template>
 
 <script>
@@ -60,6 +63,7 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import { generateUrl } from '@nextcloud/router'
@@ -72,6 +76,7 @@ export default {
 		NcAvatar,
 		NcButton,
 		NcEmptyContent,
+    NcModal,
 		NcSelect,
 	},
 	data() {
@@ -137,21 +142,29 @@ export default {
 				})
 			})
 		},
+    close() {
+      this.$emit('close')
+    }
 	},
 }
 </script>
 
 <style scoped>
+
+.modal-connected-groups :deep(.modal-wrapper .modal-container) {
+  min-height: 640px !important;
+}
+
 .container-select-groups {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+  height: 51vh;
 }
 
 .header-select-groups {
 	display: flex;
-	align-items: start;
 	padding: 10px;
 	font-weight: bold;
 	align-self: start;
@@ -160,7 +173,8 @@ export default {
 
 .header-select-groups h1 {
 	margin: 10px;
-	font-size: 24px;
+  margin-bottom: 16px;
+	font-size: 20px;
 }
 
 .body-select-groups {
@@ -171,10 +185,15 @@ export default {
 	width: 500px;
 }
 
+.searchbar-groups :deep(.vs__dropdown-toggle) {
+  border: 2px solid var(--color-border-dark);
+}
+
 .content-group-list {
 	width: 80%;
-	height: 332px;
+	height: 400px;
 	padding: 8px;
+  margin-top: 16px;
 }
 
 .content-group-list-empty {
@@ -189,7 +208,7 @@ export default {
 }
 
 .btn-add-groups {
-	margin-top: 8px;
+	margin: 8px 0 8px 0;
 }
 
 .groupname {
