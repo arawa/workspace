@@ -101,10 +101,7 @@
 			@close="toggleShowSelectUsersModal">
 			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
 		</NcModal>
-		<NcModal v-if="showSelectConnectedGroups"
-			@close="toggleShowConnectedGroups">
-			<SelectConnectedGroups @close="toggleShowConnectedGroups"/>
-		</NcModal>
+    <SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
 		<NcModal v-if="showDelWorkspaceModal"
 			style="min-heigth: 8rem;"
 			size="small"
