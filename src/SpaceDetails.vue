@@ -97,10 +97,9 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
-		</NcModal>
+		<SelectUsers v-if="showSelectUsersModal"
+      @close="toggleShowSelectUsersModal"
+      :space-name="$route.params.space" />
     <SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
 		<NcModal v-if="showDelWorkspaceModal"
 			style="min-heigth: 8rem;"
