@@ -62,10 +62,7 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.group" :editable="!isAddedGroup" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
-		</NcModal>
+    <SelectUsers v-if="showSelectUsersModal" :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
 	</div>
 </template>
 
