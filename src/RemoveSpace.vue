@@ -20,31 +20,38 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-	<div class="modal__content">
-		<h2>
-			{{ t('workspace', 'Are you sure you want to delete the {space} workspace ?', { space }) }}
-		</h2>
-		<div class="remove-space-actions">
-			<NcButton
-				type="secondary"
-				@click="handleCancel()">
-				{{ t('workspace', 'Cancel') }}
-			</NcButton>
-			<NcButton
-				type="error"
-				@click="handleDelete()">
-				{{ t('workspace', 'Delete space') }}
-			</NcButton>
-		</div>
-	</div>
+  <NcModal class="remove-modal"
+			size="small"
+			@close="close()">
+      <div class="modal__content">
+        <h2>
+          {{ t('workspace', 'Are you sure you want to delete the {space} workspace ?', { space }) }}
+        </h2>
+        <div class="remove-space-actions">
+          <NcButton
+            type="secondary"
+            @click="handleCancel()">
+            {{ t('workspace', 'Cancel') }}
+          </NcButton>
+          <NcButton
+            type="error"
+            @click="handleDelete()">
+            {{ t('workspace', 'Delete space') }}
+          </NcButton>
+        </div>
+      </div>
+  </NcModal>
 </template>
 
 <script>
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+
 export default {
 	name: 'RemoveSpace',
 	components: {
 		NcButton,
+    NcModal,
 	},
 	props: {
 		spaceName: { type: String, default: '' },
@@ -61,24 +68,35 @@ export default {
 		handleDelete() {
 			this.$emit('handle-delete')
 		},
+    close() {
+      this.$emit('close')
+    },
 	},
 }
 </script>
-<style>
-.modal__content {
+<style scoped>
+.remove-modal :deep(.modal-wrapper .modal-container .modal__content) {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-  width: 600px !important;
+  width: 600px;
+  height: 100%;
 }
-.modal-container {
+
+.remove-modal :deep(.modal-wrapper .modal-container) {
+  height: 200px;
   min-width: 600px;
 }
-.modal__content h2 {
+
+.remove-modal :deep(.modal-wrapper .modal-container .modal__content h2) {
 	font-weight: bold;
 	font-size: 16px;
 	text-align: center;
+}
+
+.remove-modal {
+  min-height: 8rem;
 }
 .remove-space-actions {
 	margin-top: 1.5rem;
