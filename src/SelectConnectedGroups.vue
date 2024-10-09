@@ -3,9 +3,10 @@
     @close="close()">
     <div class="container-select-groups">
       <header class="header-select-groups">
-        <h1>{{ t('workspace', 'Add a group') }}</h1>
+        <h1>
+          {{ t('workspace', 'Add a group') }}
+        </h1>
       </header>
-
       <div class="body-select-groups">
         <NcSelect
           class="searchbar-groups"
@@ -24,8 +25,8 @@
       <div class="content-group-list">
         <div v-if="groupsSelected.length !== 0"
           class="select-group-list">
-          <div class="group-item"
-            v-for="group in groupsSelected">
+          <div v-for="group in groupsSelected"
+            class="group-item">
             <div class="group-avatar">
               <NcAvatar
                 :display-name="group.displayName"
@@ -152,7 +153,7 @@ export default {
 <style scoped>
 
 .modal-connected-groups :deep(.modal-wrapper .modal-container) {
-  min-height: 640px !important;
+  min-height: auto;
 }
 
 .container-select-groups {
@@ -160,7 +161,6 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-  height: 51vh;
 }
 
 .header-select-groups {
@@ -208,7 +208,7 @@ export default {
 }
 
 .btn-add-groups {
-	margin: 8px 0 8px 0;
+	margin: 24px 0 24px 0;
 }
 
 .groupname {
