@@ -101,12 +101,7 @@
       @close="toggleShowSelectUsersModal"
       :space-name="$route.params.space" />
     <SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
-		<NcModal v-if="showDelWorkspaceModal"
-			style="min-heigth: 8rem;"
-			size="small"
-			@close="toggleShowDelWorkspaceModal">
-			<RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
-		</NcModal>
+    <RemoveSpace v-if="showDelWorkspaceModal" :space-name="$route.params.space" @close="toggleShowDelWorkspaceModal" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 	</div>
 </template>
 
@@ -118,7 +113,6 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
@@ -135,7 +129,6 @@ export default {
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
-		NcModal,
 		NcMultiselect,
 		SelectUsers,
 		SelectConnectedGroups,
