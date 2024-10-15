@@ -57,7 +57,7 @@ class SpaceManager {
 		}
 
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
-			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
+			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
 		}
 		
 		if ($this->workspaceCheck->isExist($spacename)) {
@@ -120,6 +120,21 @@ class SpaceManager {
 			'acl' => $groupfolder['acl'],
 			'manage' => $groupfolder['manage']
 		];
+	}
+
+	public function get(int $spaceId): array {
+
+		$space = $this->spaceMapper->find($spaceId)->jsonSerialize();
+		$workspace = array_merge(
+			$this->folderHelper->getFolder($space['groupfolder_id'], $this->rootFolder->getRootFolderStorageId()),
+			$space
+		);
+
+		return $workspace;
+	}
+
+	public function attachGroup(int $folderId, string $gid): void {
+		$this->folderHelper->addApplicableGroup($folderId, $gid);
 	}
 
 	/**

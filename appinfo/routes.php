@@ -105,6 +105,11 @@ return [
 			'verb' => 'POST',
 		],
 		[
+			'name' => 'group#attachGroupToSpace',
+			'url' => '/spaces/{spaceId}/group-attach',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'group#delete',
 			'url' => '/api/group/{gid}',
 			'verb' => 'DELETE',
