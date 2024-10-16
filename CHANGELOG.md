@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Backport: create api attach group to workspace ( [#1067](https://github.com/arawa/workspace/pull/1067) )
+- Create release 3.2.3 ( [#1069](https://github.com/arawa/workspace/pull/1069) )
+
 
 ## [3.2.2] - 2024-09-10
 
