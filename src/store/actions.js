@@ -21,7 +21,7 @@
  *
  */
 
-import { addGroupToGroupfolder } from '../services/groupfoldersService.js'
+import { addGroupToWorkspace } from '../services/spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
@@ -99,7 +99,7 @@ export default {
 				spaceId: space.id
 			})
 			.then((resp) => {
-				addGroupToGroupfolder(space.groupfolderId, resp.data.group.gid)
+				addGroupToWorkspace(space.id, resp.data.group.gid)
 				// Navigates to the g roup's details page
 				context.state.spaces[name].isOpen = true
 				router.push({

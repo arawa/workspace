@@ -34,6 +34,7 @@ use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -52,10 +53,11 @@ class GroupController extends Controller {
 		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
+		private SpaceManager $spaceManager,
 		private IUserManager $userManager,
 		private UserFormatter $userFormatter,
 		private UserService $userService,
-		private UserWorkspace $userWorkspace
+		private UserWorkspace $userWorkspace,
 	) {
 	}
 
@@ -67,9 +69,9 @@ class GroupController extends Controller {
 	 * NB: This function could probably be abused by space managers to create arbitrary group. But, do we really care?
 	 *
 	 * @var array $data [
-	 *      "gid" => 'Space01',
-	 *      "displayName" => 'Space01'
-	 * ]
+	 *            "gid" => 'Space01',
+	 *            "displayName" => 'Space01'
+	 *            ]
 	 * @var string $spaceId for Middleware
 	 *
 	 */
@@ -237,7 +239,7 @@ class GroupController extends Controller {
 	public function removeUserFromWorkspace(
 		array|string $space,
 		string $gid,
-		string $user
+		string $user,
 	): JSONResponse {
 		if (gettype($space) === 'string') {
 			$space = json_decode($space, true);
@@ -367,6 +369,19 @@ class GroupController extends Controller {
 			'user' => $NcUser->getUID(),
 			'groups' => $groupnames
 		]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @GeneralManagerRequired
+	 */
+	public function attachGroupToSpace(int $spaceId, string $gid) {
+		$workspace = $this->spaceManager->get($spaceId);
+		$this->spaceManager->attachGroup($workspace['groupfolder_id'], $gid);
+
+		return new JSONResponse([
+			'message' => sprintf('The %s group is attached to the %s workspace (i.e groupfolder)', $gid, $workspace['name']),
+		], Http::STATUS_ACCEPTED);
 	}
 
 	/**

@@ -26,6 +26,7 @@ import { PREFIX_MANAGER, PREFIX_USER } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
 import showNotificationError from './Notifications/NotificationError.js'
+import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
@@ -100,4 +101,27 @@ export function isSpaceManagers(group) {
 export function isSpaceUsers(group) {
 	const SPACE_USER_REGEX = new RegExp('^' + PREFIX_USER)
 	return SPACE_USER_REGEX.test(group)
+}
+
+/**
+ * @param {number} spaceId of a workspace
+ * @param {string} gid it's an id (string format) of a group
+ * @return {Promise}
+ * @throws {AddGroupToGroupfolderError}
+ */
+export function addGroupToWorkspace(spaceId, gid) {
+	return axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/group-attach`), {
+		gid,
+	})
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			showNotificationError(
+				'Error groups',
+				`Impossible to attach the ${error} group to workspace. May be a problem with the connection ?`,
+				5000)
+			console.error('Impossible to attach the group to workspace. May be a problem with the connection ?', gid, error)
+			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
+		})
 }
