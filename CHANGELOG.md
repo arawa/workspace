@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.2.3] - 2024-10-16
+
+### Added
+
+- Backport: create api attach group to workspace ( [#1067](https://github.com/arawa/workspace/pull/1067) )
+
 ## [3.2.2] - 2024-09-10
 
 ### Fixed
