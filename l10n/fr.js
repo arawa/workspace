@@ -61,7 +61,7 @@ OC.L10N.register(
 		'Delete group': 'Supprimer le groupe',
 		'No group selected': 'Aucun groupe selectionné',
 		'Role': 'Rôle',
-		'S.A.': 'WM',
+		'S.A.': 'GE',
 		'Error 403': 'Erreur 403',
 		'You aren\'t allowed to access into this application !': 'Vous n\'êtes pas autorisé à être dans cette application !',
 		'return to home': 'retourner à l\'accueil',
