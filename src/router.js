@@ -50,7 +50,7 @@ export default new Router({
 					component: SpaceDetails,
 				},
 				{
-					path: 'group/:space/:group',
+					path: 'group/:space/:slug',
 					component: GroupDetails,
 				},
 				{

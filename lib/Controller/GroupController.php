@@ -105,6 +105,7 @@ class GroupController extends Controller {
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName(),
                 'usersCount' => 0,
+                'slug' => urlencode(urlencode($NCGroup->getGID()))
 			]
 		]);
 	}

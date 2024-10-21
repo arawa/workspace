@@ -52,6 +52,7 @@ class GroupFormatter {
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
                 'usersCount' => $group->count(),
+                'slug' => urlencode(urlencode($group->getGID()))
 			];
 		}
 
