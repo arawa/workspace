@@ -56,7 +56,7 @@ OC.L10N.register(
 		'Rename group': 'Renommer le groupe',
 		'Delete group': 'Supprimer le groupe',
 		'Role': 'Rôle',
-		'S.A.': 'G.E.',
+		'S.A.': 'GE',
 		'Error 403': 'Erreur 403',
 		'You aren\'t allowed to access into this application !': 'Vous n\'êtes pas autorisé à être dans cette application !',
 		'return to home': 'retourner à l\'accueil',
