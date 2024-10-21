@@ -117,7 +117,7 @@ export default {
 				// Navigates to the g roup's details page
 				context.state.spaces[name].isOpen = true
 				router.push({
-					path: `/group/${name}/${gid}`,
+					path: `/group/${name}/${resp.data.group.slug}`,
 				})
 				// eslint-disable-next-line no-console
 				console.log('Group ' + gid + ' created')
