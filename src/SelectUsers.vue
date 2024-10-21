@@ -63,6 +63,7 @@
                 class="role-toggle"
                 type="checkbox"
                 :checked="user.role === 'admin'"
+                :disabled="$store.getters.isMember($route.params.space, user)"
                 @update:checked="toggleUserRole(user)">
                 {{ t('workspace', 'S.A.') }}
               </NcCheckboxRadioSwitch>
