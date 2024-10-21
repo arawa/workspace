@@ -53,7 +53,7 @@
 				<div v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
-					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'">
+					:class="$store.getters.isMember($route.params.space, user) || !decodeURIComponent(decodeURIComponent($route.params.slug)) ? '' : 'user-not-member'">
 					<div>
 						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
 						<NcAvatar :display-name="user.name" :user="user.uid" />
@@ -62,7 +62,7 @@
 						</div>
 					</div>
 					<div class="user-entry-actions">
-						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
+						<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
 							<input type="checkbox"
 								class="role-toggle"
 								:checked="user.role === 'admin'"
@@ -79,7 +79,7 @@
 				</div>
 			</div>
 		</div>
-		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
+		<NcNoteCard v-if="decodeURIComponent(decodeURIComponent($route.params.slug)) && addingUsersToWorkspace"
 			type="warning">
 			<p>
 				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
@@ -166,11 +166,11 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.allSelectedUsers.forEach(user => {
 				let gid = ''
-				if (this.$route.params.group !== undefined) {
+				if (decodeURIComponent(this.$route.params.slug) !== undefined) {
 					// Adding a user to a workspace 'subgroup
 					this.$store.dispatch('addUserToGroup', {
 						name: this.$route.params.space,
-						gid: this.$route.params.group,
+						gid: decodeURIComponent(this.$route.params.slug),
 						user,
 					})
 					if (user.role === 'admin') {
@@ -252,14 +252,14 @@ export default {
 		// When adding users to a space, show only those users who are not already member of the space
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
-			if (this.$route.params.group === undefined) {
+			if (decodeURIComponent(this.$route.params.slug) === undefined) {
 				const space = this.$store.state.spaces[this.$route.params.space]
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)
 			} else {
 				users = recvUsers.filter(user => {
-					return (!(user.groups.includes(this.$route.params.group)))
+					return (!(user.groups.includes(decodeURIComponent(this.$route.params.slug))))
 				})
 			}
 			// Filters user that are already selected
