@@ -82,7 +82,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="($route.params.group !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+								<NcActionButton v-if="(decodeURIComponent(decodeURIComponent($route.params.slug)) !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
@@ -133,8 +133,8 @@ export default {
 		users() {
 			let result = []
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const group = this.$route.params.group
-			if (this.$route.params.group !== undefined) {
+			const group = decodeURIComponent(this.$route.params.slug)
+			if (decodeURIComponent(this.$route.params.slug) !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
@@ -176,7 +176,7 @@ export default {
 		removeFromGroup(user) {
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				gid: this.$route.params.group,
+				gid: decodeURIComponent(this.$route.params.slug),
 				user,
 			})
 		},
