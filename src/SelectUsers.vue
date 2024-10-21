@@ -66,6 +66,7 @@
 							<input type="checkbox"
 								class="role-toggle"
 								:checked="user.role === 'admin'"
+                :disabled="$store.getters.isMember($route.params.space, user)"
 								@change="toggleUserRole(user)">
 							<label>{{ t('workspace', 'S.A.') }}</label>
 						</div>
