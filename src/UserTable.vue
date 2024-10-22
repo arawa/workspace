@@ -50,7 +50,7 @@
 						</div>
 					</td>
 					<td class="workspace-td"> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
-					<td class="workspace-td"> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
+					<td class="workspace-td"> {{ sortGroups(user.groups) }} </td>
 					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
@@ -140,6 +140,34 @@ export default {
 		},
 	},
 	methods: {
+    sortGroups(groups) {
+      const spacename = this.$route.params.space
+      const groupsSorted = this.sortedGroups([...groups], spacename)
+      return groupsSorted.map(group => this.$store.getters.groupName(spacename, group)).join(', ')
+    },
+    sortedGroups(groups, spacename) {
+      groups.sort((groupCurrent, groupNext) => {
+        // Makes sure the GE- group is first in the list
+        // These tests must happen before the tests for the U- group
+        const GEGroup = this.$store.getters.GEGroup(spacename)
+        if (groupCurrent === GEGroup) {
+          return -1
+        }
+        if (groupNext === GEGroup) {
+          return 1
+        }
+        // Makes sure the U- group is second in the list
+        // These tests must be done after the tests for the GE- group
+        const UGroup = this.$store.getters.UGroup(spacename)
+        if (groupCurrent === UGroup) {
+          return -1
+        }
+        if (groupNext === UGroup) {
+          return 1
+        }
+      })
+      return groups
+    },
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
