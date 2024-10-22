@@ -121,6 +121,8 @@ import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
+import BadCreateError from './Errors/BadCreateError.js'
 
 export default {
 	name: 'SpaceDetails',
@@ -200,6 +202,15 @@ export default {
 			const newSpaceName = e.target[0].value
 
 			await checkGroupfolderNameExist(newSpaceName)
+
+			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
+
+			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(newSpaceName)) {
+				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
+				throw new BadCreateError(
+					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
+				)
+			}
 
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
