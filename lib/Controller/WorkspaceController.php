@@ -144,11 +144,10 @@ class WorkspaceController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-     * @param int $spaceId
 	 * @param array $workspace
 	 *
 	 */
-	public function destroy(int $spaceId, array $workspace): JSONResponse {
+	public function destroy(array $workspace): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
 		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
 		foreach ($GEGroup->getUsers() as $user) {

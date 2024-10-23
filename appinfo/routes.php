@@ -110,7 +110,7 @@ return [
 		],
 		[
 			'name' => 'workspace#destroy',
-			'url' => '/spaces/{spaceId}',
+			'url' => '/api/delete/space',
 			'verb' => 'DELETE'
 		],
 		[
