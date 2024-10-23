@@ -165,6 +165,8 @@ export default {
 				if (groupNext === UGroup) {
 					return 1
 				}
+
+				return -1
 			})
 			return groups
 		},
