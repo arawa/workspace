@@ -21,12 +21,12 @@
 -->
 <template>
 	<NcAppContent>
-    <NcAppContentDetails>
-      <div class="workspace-content">
-          <LoadingUsers v-if="$store.state.loadingUsersWaitting" :load-users="true" />
-          <LoadingUsers v-if="$store.state.loading" />
-          <router-view v-else />
-      </div>
+		<NcAppContentDetails>
+			<div class="workspace-content">
+					<LoadingUsers v-if="$store.state.loadingUsersWaitting" :load-users="true" />
+					<LoadingUsers v-if="$store.state.loading" />
+					<router-view v-else />
+			</div>
 		</NcAppContentDetails>
 	</NcAppContent>
 	<!-- <NcModal
@@ -49,7 +49,7 @@ export default {
 	components: {
 		NcAppContent,
 		NcAppContentDetails,
-    LoadingUsers,
+		LoadingUsers,
 	},
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {

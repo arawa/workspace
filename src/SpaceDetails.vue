@@ -21,14 +21,14 @@
 -->
 
 <template>
-  <div v-if="$store.state.noUsers">
-    <NcEmptyContent
-      :title="t('workspace', 'No users')">
-      <template #description>
-        {{ t('workspace', 'There are no users in this space/group yet') }}
-      </template>
-    </NcEmptyContent>
-  </div>
+	<div v-if="$store.state.noUsers">
+		<NcEmptyContent
+			:title="t('workspace', 'No users')">
+			<template #description>
+				{{ t('workspace', 'There are no users in this space/group yet') }}
+			</template>
+		</NcEmptyContent>
+	</div>
 	<div v-else-if="!$store.state.loadingUsersWaitting">
 		<div class="header">
 			<div class="space-name">
@@ -135,7 +135,7 @@ export default {
 	name: 'SpaceDetails',
 	components: {
 		NcActions,
-    NcEmptyContent,
+		NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
@@ -162,10 +162,10 @@ export default {
 			return this.$route.params.space
 		},
 	},
-  mounted() {
-    const space = this.$store.state.spaces[this.$route.params.space]
-    this.$store.dispatch('loadUsers', { space })
-  },
+	mounted() {
+		const space = this.$store.state.spaces[this.$route.params.space]
+		this.$store.dispatch('loadUsers', { space })
+	},
 	created() {
 		const version = navigator.userAgent.split('Firefox/')[1]
 		if (parseInt(version) < 91) {
