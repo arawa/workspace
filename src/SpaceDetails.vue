@@ -98,10 +98,10 @@
 		</div>
 		<UserTable :space-name="$route.params.space" />
 		<SelectUsers v-if="showSelectUsersModal"
-      @close="toggleShowSelectUsersModal"
-      :space-name="$route.params.space" />
-    <SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
-    <RemoveSpace v-if="showDelWorkspaceModal" :space-name="$route.params.space" @close="toggleShowDelWorkspaceModal" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+			@close="toggleShowSelectUsersModal"
+			:space-name="$route.params.space" />
+		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
+		<RemoveSpace v-if="showDelWorkspaceModal" :space-name="$route.params.space" @close="toggleShowDelWorkspaceModal" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 	</div>
 </template>
 
