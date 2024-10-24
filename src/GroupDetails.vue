@@ -21,7 +21,7 @@
 -->
 
 <template>
-	<div>
+	<div v-if="!$store.state.loadingUsersWaitting">
 		<div class="header">
 			<div class="group-name">
 				<div :class="isAddedGroup ? 'icon-added-group' : 'icon-group'" />
@@ -118,6 +118,10 @@ export default {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, this.$route.params.group)
 		},
 	},
+  mounted() {
+    const space = this.$store.state.spaces[this.$route.params.space]
+    this.$store.dispatch('loadUsers', { space })
+  },
 	methods: {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups

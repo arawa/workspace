@@ -22,12 +22,10 @@
 <template>
 	<NcAppContent>
 		<NcAppContentDetails>
-			<div
-				v-if="$store.state.loading">
-				<NcLoadingIcon :size="64" appearance="dark" name="Loading on light background" />
-			</div>
-			<div v-else class="workspace-content">
-				<router-view />
+			<div class="workspace-content">
+					<LoadingUsers v-if="$store.state.loadingUsersWaitting" :load-users="true" />
+					<LoadingUsers v-if="$store.state.loading" />
+					<router-view v-else />
 			</div>
 		</NcAppContentDetails>
 	</NcAppContent>
@@ -44,13 +42,14 @@ import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import LoadingUsers from './LoadingUsers.vue'
+
 export default {
 	name: 'WorkspaceContent',
 	components: {
 		NcAppContent,
 		NcAppContentDetails,
-		NcLoadingIcon,
+		LoadingUsers,
 	},
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
@@ -81,6 +80,7 @@ export default {
 							name: space.name,
 							quota,
 							users: space.users,
+							userCount: space.userCount,
 						})
 					})
 

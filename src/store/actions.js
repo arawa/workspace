@@ -29,6 +29,7 @@ import showNotificationError from '../services/Notifications/NotificationError.j
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
+import { getUsers } from '../services/spaceService.js'
 
 export default {
 	// Adds a user to a group
@@ -72,6 +73,18 @@ export default {
 			const text = t('workspace', 'A network error occured while trying to add user {user_name} to workspaces.<br>The error is: {error}', { user_name: user.name, error: e })
 			showNotificationError('Network error', text, 4000)
 		})
+	},
+	incrementGroupUserCount(context, { spaceName, gid }) {
+		context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName, gid })
+	},
+	incrementSpaceUserCount(context, { spaceName }) {
+		context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName })
+	},
+	decrementGroupUserCount(context, { spaceName, gid }) {
+		context.commit('DECREMENT_GROUP_USER_COUNT', { spaceName, gid })
+	},
+	decrementSpaceUserCount(context, { spaceName }) {
+		context.commit('DECREMENT_SPACE_USER_COUNT', { spaceName })
 	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, gid }) {
@@ -255,8 +268,26 @@ export default {
 		const space = context.state.spaces[name]
 		if (context.getters.isSpaceAdmin(user, name)) {
 			user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
+			context.commit('DECREMENT_GROUP_USER_COUNT', {
+				spaceName: space.name,
+				gid: ManagerGroup.getGid(space)
+			})
+			context.commit('CHANGE_USER_ROLE', {
+				spaceName: space.name,
+				user,
+				role: 'user',
+			})
 		} else {
 			user.groups.push(ManagerGroup.getGid(space))
+			context.commit('INCREMENT_GROUP_USER_COUNT', {
+				spaceName: space.name,
+				gid: ManagerGroup.getGid(space)
+			})
+			context.commit('CHANGE_USER_ROLE', {
+				spaceName: space.name,
+				user,
+				role: 'admin',
+			})
 		}
 		const spaceId = space.id
 		const userId = user.uid
@@ -398,5 +429,38 @@ export default {
 			data: formData,
 		})
 		return resp.data
+	},
+	loadUsers(context, { space }) {
+		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+		context.commit('SET_NO_USERS', ({ activated: false }))
+
+		
+		if (Object.keys(space.users).length === space.userCount) {
+			return
+		}
+
+		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: true }))
+
+		getUsers(space.id)
+			.then(users => {
+				if (Object.keys(users).length === 0) {
+					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_NO_USERS', ({ activated: true }))
+					return
+				}
+
+				if (Object.keys(users).length > 0) {
+					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_NO_USERS', ({ activated: false }))
+					context.commit('UPDATE_USERS', {
+						space,
+						users
+					})
+				}
+			})
+			.catch(error => {
+				console.error(`Impossible to get users for the workspace.`)
+				console.error(error)
+			})
 	},
 }
