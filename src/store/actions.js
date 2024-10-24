@@ -296,6 +296,41 @@ export default {
 	updateSpace(context, { space }) {
 		context.commit('updateSpace', space)
 	},
+	removeConnectedGroup(context, { spaceId, gid, name }) {
+		axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${gid}`))
+			.then((resp) => {
+			})
+			.catch((e) => {
+				console.error('Error to remove connected group', e.message)
+        console.error(e)
+			})
+		
+		context.commit('removeAddedGroupFromSpace', { name, gid })
+
+		// Naviagte back to home
+		router.push({
+			path: `/workspace/${name}`,
+		})
+
+		
+	},
+	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
+		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
+		.then(resp => {
+			context.commit('addConnectedGroupToWorkspace', { name, group })
+			const users = resp.data.users
+			for (const user in users) {
+				context.commit('addUserToWorkspace', { name, user: users[user] })				
+			}
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Error to add connected group', error.message)
+      console.error(error)
+		})
+
+		return result
+	},
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
 		const oldQuota = context.getters.quota(name)
