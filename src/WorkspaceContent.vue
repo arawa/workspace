@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import { loadState  } from '@nextcloud/initial-state'
+
 export default {
 	name: 'WorkspaceContent',
 	components: {
@@ -53,47 +53,38 @@ export default {
 		NcLoadingIcon,
 	},
 	created() {
-		if (Object.entries(this.$store.state.spaces).length === 0) {
-			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spaces'))
-				.then(resp => {
-					// Checks for application errors
-					if (resp.status !== 200) {
-						const text = t('workspace', 'An error occured while trying to retrieve workspaces.<br>The error is: {error}', { error: resp.statusText })
-						showNotificationError('Error', text, 4000)
-						this.$store.state.loading = false
-						return
-					}
+    this.$store.state.loading = true
 
-					resp.data.forEach(space => {
-						let quota = this.convertQuotaForFrontend(space.quota)
-						if (quota === 'unlimited') {
-							quota = t('workspace', 'unlimited')
-						}
+    const spaces = loadState('workspace', 'init-workspaces', null)
 
-						this.$store.commit('addSpace', {
-							color: space.color_code,
-							groupfolderId: space.groupfolder_id,
-							groups: space.groups,
-							added_groups: space.added_groups ?? [],
-							id: space.id,
-							isOpen: false,
-							name: space.name,
-							quota,
-							users: space.users,
-						})
-					})
+    if (spaces === null) {
+      console.error('Problem to load spaces with initial states')
+      const text = t('workspace', 'A network error occured while trying to retrieve workspaces.<br>The error is: {error}', { error: 'Problem to load spaces with initial states' })
+      showNotificationError('Network error', text, 5000)
+      this.$store.state.loading = false
+      return
+    }
 
-					this.$store.state.loading = false
+    spaces.forEach(space => {
+      let quota = this.convertQuotaForFrontend(space.quota)
+      if (quota === 'unlimited') {
+        quota = t('workspace', 'unlimited')
+      }
 
-				})
-				.catch((e) => {
-					console.error('Problem to load spaces only', e)
-					const text = t('workspace', 'A network error occured while trying to retrieve workspaces.<br>The error is: {error}', { error: e })
-					showNotificationError('Network error', text, 5000)
-					this.$store.state.loading = false
-				})
-		}
+      this.$store.commit('addSpace', {
+        color: space.color_code,
+        groupfolderId: space.groupfolder_id,
+        groups: space.groups,
+        added_groups: space.added_groups ?? [],
+        id: space.id,
+        isOpen: false,
+        name: space.name,
+        quota,
+        users: space.users,
+      })
+
+      this.$store.state.loading = false
+    })
 	},
 	methods: {
 		// Shows a space quota in a user-friendly way
