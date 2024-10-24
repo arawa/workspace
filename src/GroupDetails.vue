@@ -67,10 +67,7 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.group" :editable="!isAddedGroup" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
-		</NcModal>
+    <SelectUsers v-if="showSelectUsersModal" :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
     <AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
       :message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: this.$route.params.group, spacename: this.$route.params.space })"
       @cancel="closeConnectedGroupModal"
