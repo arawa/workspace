@@ -1,7 +1,7 @@
 <template>
 	<NcAppNavigationItem
 		:icon="addedGroup ? 'icon-added-group' : 'icon-group'"
-		:to="{path: `/group/${spaceName}/${group.gid}`}"
+		:to="{path: `/group/${spaceName}/${group.slug}`}"
 		:name="group.displayName">
 		<NcCounterBubble slot="counter" class="user-counter">
       {{ count }}
@@ -19,6 +19,9 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 	},
+  beforeMount() {
+    console.debug('Voici le groupe', this.group)
+  },
 	props: {
 		group: {
 			type: Object,

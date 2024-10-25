@@ -26,7 +26,7 @@
 			<div class="group-name">
 				<div :class="isAddedGroup ? 'icon-added-group' : 'icon-group'" />
 				<span class="titles-for-space">
-					{{ $store.getters.groupName($route.params.space, $route.params.group) }}
+					{{ $store.getters.groupName($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug))) }}
 				</span>
 			</div>
 			<div class="group-actions">
@@ -40,20 +40,20 @@
 					</NcActions>
 				</div>
 				<NcActions ref="ncAction">
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group) && !isAddedGroup"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)) && !isAddedGroup)"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</NcActionButton>
-					<NcActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+					<NcActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
 						v-show="showRenameGroupInput"
 						ref="renameGroupInput"
 						icon="icon-group"
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group) && !isAddedGroup"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)) && !isAddedGroup)"
 						icon="icon-delete"
 						@click="toggleRemoveGroupModal">
 						{{ t('workspace', 'Delete group') }}
@@ -66,14 +66,14 @@
 				</NcActions>
 			</div>
 		</div>
-		<UserTable :space-name="$route.params.group" :editable="!isAddedGroup" />
-    <SelectUsers v-if="showSelectUsersModal" :space-name="$route.params.group" @close="toggleShowSelectUsersModal" />
+		<UserTable :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
+    <SelectUsers v-if="showSelectUsersModal" :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" @close="toggleShowSelectUsersModal" />
     <AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
-      :message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: this.$route.params.group, spacename: this.$route.params.space })"
+      :message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
       @cancel="closeConnectedGroupModal"
       @remove-group="removeConnectedGroup" />
     <AlertRemoveGroup v-if="showRemoveGroupModal"
-      :message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: this.$route.params.group, spacename: this.$route.params.space })"
+      :message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
       @cancel="closeRemoveGroupModal"
       @remove-group="deleteGroup" />
 	</div>
@@ -112,7 +112,7 @@ export default {
 	computed: {
 		// The title to display at the top of the page
 		isAddedGroup() {
-			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, this.$route.params.group)
+			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
 	},
   mounted() {
@@ -123,14 +123,14 @@ export default {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
 			const space = this.$store.state.spaces[this.$route.params.space]
-			if (this.$route.params.group === PREFIX_MANAGER + space.id
-			|| this.$route.params.group === UserGroup.getGid(space)) {
+			if (decodeURIComponent(this.$route.params.slug) === PREFIX_MANAGER + space.id
+			|| decodeURIComponent(this.$route.params.slug) === UserGroup.getGid(space)) {
 				// TODO Inform user
 				return
 			}
 			this.$store.dispatch('deleteGroup', {
 				name: this.$route.params.space,
-				gid: this.$route.params.group,
+				gid: decodeURIComponent(this.$route.params.slug),
 			})
 		},
 		toggleRemoveConnectedGroupModal() {
@@ -147,7 +147,7 @@ export default {
     },
 		removeConnectedGroup() {
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const gid = this.$route.params.group
+			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
 			this.$store.dispatch('removeConnectedGroup', {
 				spaceId: space.id,
@@ -176,7 +176,7 @@ export default {
 			}
 
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const groupSpace = space.groups[this.$route.params.group]
+			const groupSpace = space.groups[decodeURIComponent(this.$route.params.slug)]
 
 			group = ''.concat('G-', group, '-', space.name)
 			group = groupSpace.displayName.replace(groupSpace.displayName, group)
@@ -193,7 +193,7 @@ export default {
 			// Renames group
 			this.$store.dispatch('renameGroup', {
 				name: this.$route.params.space,
-				gid: this.$route.params.group,
+				gid: decodeURIComponent(this.$route.params.slug),
 				newGroupName: group,
 			})
 		},

@@ -23,7 +23,7 @@
 <template>
 	<div>
     <div>
-      <table class="table-space-detail">
+      <table v-if="users.length" class="table-space-detail">
         <thead>
           <tr class="workspace-tr">
             <th class="workspace-th" />
@@ -83,7 +83,7 @@
                     @click="deleteUser(user)">
                     {{ t('workspace', 'Delete user') }}
                   </NcActionButton>
-                  <NcActionButton v-if="($route.params.group !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, $route.params.group)"
+                  <NcActionButton v-if="(decodeURIComponent(decodeURIComponent($route.params.slug)) !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
                     icon="icon-close"
                     :close-after-click="true"
                     @click="removeFromGroup(user)">
@@ -95,6 +95,12 @@
           </tr>
         </tbody>
       </table>
+      <NcEmptyContent v-else>
+			{{ t('workspace', 'No users') }}
+			<template #desc>
+				{{ t('workspace', 'There are no users in this space/group yet') }}
+			</template>
+		</NcEmptyContent>
     </div>
 	</div>
 </template>
@@ -130,8 +136,8 @@ export default {
 		users() {
 			let result = []
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const group = this.$route.params.group
-			if (this.$route.params.group !== undefined) {
+			const group = decodeURIComponent(this.$route.params.slug)
+			if (this.$route.params.slug !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
@@ -156,7 +162,7 @@ export default {
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const gid = this.$route.params.group
+			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 			this.$store.dispatch('removeUserFromWorkspace', {
 				name: this.$route.params.space,
 				gid: UserGroup.getGid(space),
@@ -191,7 +197,7 @@ export default {
 		},
 		// Removes a user from a group
 		removeFromGroup(user) {
-			const gid = this.$route.params.group
+			const gid = decodeURIComponent(this.$route.params.slug)
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
