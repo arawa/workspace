@@ -1,23 +1,23 @@
 <!--
-  @copyright Copyright (c) 2017 Arawa
+	@copyright Copyright (c) 2017 Arawa
 
-  @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
-  @author 2021 Cyrille Bollu <cyrille@bollu.be>
+	@author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
+	@author 2021 Cyrille Bollu <cyrille@bollu.be>
 
-  @license GNU AGPL version 3 or any later version
+	@license GNU AGPL version 3 or any later version
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as
-  published by the Free Software Foundation, either version 3 of the
-  License, or (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
@@ -50,7 +50,7 @@
 						</div>
 					</td>
 					<td class="workspace-td"> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
-					<td class="workspace-td"> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
+					<td class="workspace-td"> {{ sortGroups(user.groups) }} </td>
 					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
@@ -140,6 +140,36 @@ export default {
 		},
 	},
 	methods: {
+		sortGroups(groups) {
+			const spacename = this.$route.params.space
+			const groupsSorted = this.sortedGroups([...groups], spacename)
+			return groupsSorted.map(group => this.$store.getters.groupName(spacename, group)).join(', ')
+		},
+		sortedGroups(groups, spacename) {
+			groups.sort((groupCurrent, groupNext) => {
+				// Makes sure the GE- group is first in the list
+				// These tests must happen before the tests for the U- group
+				const GEGroup = this.$store.getters.GEGroup(spacename)
+				if (groupCurrent === GEGroup) {
+					return -1
+				}
+				if (groupNext === GEGroup) {
+					return 1
+				}
+				// Makes sure the U- group is second in the list
+				// These tests must be done after the tests for the GE- group
+				const UGroup = this.$store.getters.UGroup(spacename)
+				if (groupCurrent === UGroup) {
+					return -1
+				}
+				if (groupNext === UGroup) {
+					return 1
+				}
+
+				return -1
+			})
+			return groups
+		},
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
@@ -187,11 +217,11 @@ export default {
 }
 
 .user-admin:hover {
-  background-color: #f5f5f5 !important;
+	background-color: #f5f5f5 !important;
 }
 
 .user-simple:hover {
-  background-color: #f5f5f5 !important;
+	background-color: #f5f5f5 !important;
 }
 
 .user-name {
