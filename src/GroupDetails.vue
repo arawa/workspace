@@ -147,7 +147,7 @@ export default {
     },
 		removeConnectedGroup() {
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const gid = this.$route.params.group
+			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
 			this.$store.dispatch('removeConnectedGroup', {
 				spaceId: space.id,

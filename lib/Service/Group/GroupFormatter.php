@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Service\Group;
 
+use OCA\Workspace\Service\Slugger;
 use OCP\IGroup;
 
 class GroupFormatter {
@@ -52,7 +53,7 @@ class GroupFormatter {
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
                 'usersCount' => $group->count(),
-                'slug' => urlencode(urlencode($group->getGID()))
+                'slug' => Slugger::slugger($group->getGID())
 			];
 		}
 
