@@ -31,6 +31,7 @@ use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Slugger;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -103,7 +104,7 @@ class GroupController extends Controller {
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName(),
                 'usersCount' => 0,
-                'slug' => urlencode(urlencode($NCGroup->getGID()))
+                'slug' => Slugger::slugger($NCGroup->getGID())
 			]
 		]);
 	}

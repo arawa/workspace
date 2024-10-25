@@ -137,7 +137,7 @@ export default {
 			let result = []
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const group = decodeURIComponent(this.$route.params.slug)
-			if (decodeURIComponent(this.$route.params.slug) !== undefined) {
+			if (this.$route.params.slug !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
@@ -162,7 +162,7 @@ export default {
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const gid = this.$route.params.group
+			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 			this.$store.dispatch('removeUserFromWorkspace', {
 				name: this.$route.params.space,
 				gid: UserGroup.getGid(space),
