@@ -86,6 +86,12 @@ export default {
 	decrementSpaceUserCount(context, { spaceName }) {
 		context.commit('DECREMENT_SPACE_USER_COUNT', { spaceName })
 	},
+  substractionSpaceUserCount(context, { spaceName, usersCount }) {
+    context.commit('SUBSTRACTION_SPACE_USER_COUNT', { spaceName, usersCount})
+  },
+  substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
+    context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount})
+  },
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
@@ -347,12 +353,16 @@ export default {
 		
 	},
 	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
+		const space = context.state.spaces[name]
 		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
 		.then(resp => {
-			context.commit('addConnectedGroupToWorkspace', { name, group })
+			context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
 			const users = resp.data.users
 			for (const user in users) {
-				context.commit('addUserToWorkspace', { name, user: users[user] })				
+				context.commit('addUserToWorkspace', { name, user: users[user] })
+        context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
+        context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
+        context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
 			}
 			return resp.data
 		})

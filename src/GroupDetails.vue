@@ -149,6 +149,17 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
+      this.$store.dispatch('substractionSpaceUserCount', {
+        spaceName: space.name,
+        usersCount: space.added_groups[gid].usersCount
+      })
+
+      this.$store.dispatch('substractionGroupUserCount', {
+        spaceName: space.name,
+        gid: UserGroup.getGid(space),
+        usersCount: space.added_groups[gid].usersCount
+      })
+      
 			this.$store.dispatch('removeConnectedGroup', {
 				spaceId: space.id,
 				gid,

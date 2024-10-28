@@ -6,6 +6,7 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\Slugger;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
@@ -101,7 +102,8 @@ class ConnectedGroupController extends Controller {
 		return new JSONResponse([
 			'message' => sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName()),
 			'success' => true,
-			'users' => $users
+			'users' => $users,
+            'slug' => Slugger::slugger($gid),
 		]);
 	}
 

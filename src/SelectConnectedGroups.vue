@@ -135,6 +135,7 @@ export default {
 			this.$emit('close')
 			// todo: Call api
 			this.groupsSelected.forEach(group => {
+        console.log('selectConnectedGroups - validate - group', group)
 				const space = this.$store.state.spaces[this.$route.params.space]
 				this.$store.dispatch('addConnectedGroupToWorkspace', {
 					spaceId: space.id ,

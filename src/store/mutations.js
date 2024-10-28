@@ -113,6 +113,11 @@ export default {
 		space.groups[gid].usersCount++
 		VueSet(state.spaces, spaceName, space)
 	},
+  INCREMENT_ADDED_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.added_groups[gid].usersCount++
+		VueSet(state.spaces, spaceName, space)
+	},
 	INCREMENT_SPACE_USER_COUNT(state, { spaceName }) {
 		const space = state.spaces[spaceName]
 		space.userCount++
@@ -128,6 +133,16 @@ export default {
 		space.userCount--
 		VueSet(state.spaces, spaceName, space)
 	},
+  SUBSTRACTION_SPACE_USER_COUNT(state, { spaceName, usersCount }) {
+    const space = state.spaces[spaceName]
+    space.userCount -= usersCount
+    VueSet(state.spaces, spaceName, space)
+  },
+  SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {
+    const space = state.spaces[spaceName]
+    space.groups[gid].usersCount -= usersCount
+    VueSet(state.spaces, spaceName, space)
+  },
 	CHANGE_USER_ROLE(state, { spaceName, user, role }) {
 		const space = state.spaces[spaceName]
 		space.users[user.uid].role = role
@@ -155,9 +170,9 @@ export default {
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
-	addConnectedGroupToWorkspace(state, { name, group }) {
+	addConnectedGroupToWorkspace(state, { name, group, slug }) {
 		const space = state.spaces[name]
-		space.added_groups[group.gid] = { displayName: group.displayName, gid: group.gid }
+		space.added_groups[group.gid] = { displayName: group.displayName, gid: group.gid, slug, usersCount: 0 }
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},

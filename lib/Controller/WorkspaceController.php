@@ -222,7 +222,7 @@ class WorkspaceController extends Controller {
 			}
 
 			$space['groups'] = GroupFormatter::formatGroups($groups);
-			$space['added_groups'] = GroupFormatter::formatGroups($addedGroups);
+			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
 			$spaces[] = $space;
 		}
