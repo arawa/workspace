@@ -15,7 +15,7 @@ OC.L10N.register(
 		'Cancel': 'Annuler',
 		'remove group from selection': 'retirer le groupe de la sélection',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': "Attention, les utilisateurs surlignés en rouge ne sont pas encore membres de l'espace. Ils seront ajoutés automatiquement à ce dernier.",
-		'Create group': 'Créer un groupe',
+		'Create a workspace group': 'Créer un groupe workspace',
 		'Duplication of groups': 'Duplication des groupes',
 		'The group already exists.': 'Le groupe existe déjà.',
 		'Delete space': "Supprimer l'espace de travail",
