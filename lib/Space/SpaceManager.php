@@ -136,23 +136,7 @@ class SpaceManager {
 
         $workspace = array_merge($space->jsonSerialize(), $groupfolder);
 
-		return [
-			'name' => $space->getSpaceName(),
-			'id_space' => $space->getId(),
-			'folder_id' => $space->getGroupfolderId(),
-			'color' => $space->getColorCode(),
-			'groups' => GroupFormatter::formatGroups(
-                array_map(
-                        fn ($gid) => $this->groupManager->get($gid),
-                        array_keys($workspace['groups']
-                    )
-                )
-			),
-			'quota' => $workspace['quota'],
-			'size' => $workspace['size'],
-			'acl' => $workspace['acl'],
-			'manage' => $workspace['manage']
-		];
+		return $workspace;
 	}
 
     public function attachGroup(int $folderId, string $gid): void {
