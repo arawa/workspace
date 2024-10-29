@@ -27,7 +27,6 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminUserGroup;
-use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
@@ -42,6 +41,7 @@ use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -94,11 +94,11 @@ class WorkspaceController extends Controller {
 		$workspace = $this->spaceManager->create($spaceName);
 
 		return new JSONResponse(
-			array_merge(
-				$workspace,
-				[ 'statuscode' => Http::STATUS_CREATED ]
+				array_merge(
+					$workspace,
+					[ 'statuscode' => Http::STATUS_CREATED ]
+				)
 			)
-		)
 		;
 	}
 
