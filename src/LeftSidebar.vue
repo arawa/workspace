@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import { createGroupfolder, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
+import { createGroupfolder, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import { createSpace, deleteBlankSpacename } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
@@ -94,27 +94,14 @@ export default {
 
 			await checkGroupfolderNameExist(name)
 
-			const groupfolderId = await createGroupfolder(name)
-
-			await enableAcl(groupfolderId.data.id)
-
-			const workspace = await createSpace(name, groupfolderId.data.id)
-
-			const GROUPS_WORKSPACE = Object.keys(workspace.groups)
-			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
-			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
-
-			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
-			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
-
-			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid)
+      const workspace = await createSpace(name)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,
 				groups: workspace.groups,
 				isOpen: false,
 				id: workspace.id_space,
-				groupfolderId: groupfolderId.data.id,
+				groupfolderId: workspace.folder_id,
 				name,
 				quota: t('workspace', 'unlimited'),
 				users: {},

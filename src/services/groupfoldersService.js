@@ -237,6 +237,8 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
  * @param {string} spaceName it's the name space to create
  * @return {Promise}
  * @throws {CreateGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function createGroupfolder(spaceName) {
 	return axios.post(generateUrl('/apps/groupfolders/folders'),

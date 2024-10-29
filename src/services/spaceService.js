@@ -34,11 +34,10 @@ import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfo
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
-export function createSpace(spaceName, folderId, vueInstance = undefined) {
+export function createSpace(spaceName, vueInstance = undefined) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
 			spaceName,
-			folderId,
 		})
 		.then(resp => {
 			if (typeof (resp.data) !== 'object') {
