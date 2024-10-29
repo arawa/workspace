@@ -40,7 +40,7 @@
 					</NcActions>
 				</div>
 				<NcActions ref="ncAction">
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)) && !isAddedGroup)"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug))) && !isAddedGroup"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
 						@click="toggleShowRenameGroupInput">
@@ -53,7 +53,7 @@
 						@submit="onRenameGroup">
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
-					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)) && !isAddedGroup)"
+					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug))) && !isAddedGroup"
 						icon="icon-delete"
 						@click="toggleRemoveGroupModal">
 						{{ t('workspace', 'Delete group') }}

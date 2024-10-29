@@ -68,7 +68,8 @@ export const getters = {
 	// Test if group is from space added groups
 	isSpaceAddedGroup: state => (spaceName, groupName) => {
 		const space = state.spaces[spaceName]
-		return space.added_groups[groupName]
+    const gids = Object.keys(space.added_groups)
+		return gids.includes(groupName)
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
