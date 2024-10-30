@@ -69,8 +69,8 @@ class WorkspaceController extends Controller {
 		private UserGroup $userGroup,
         private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
-		private SpaceManager $spaceManager,
-		public $AppName,
+        private SpaceManager $spaceManager,
+		public $AppName
 	) {
 		parent::__construct($AppName, $request);
 	}
