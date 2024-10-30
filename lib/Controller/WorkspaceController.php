@@ -41,6 +41,7 @@ use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -64,6 +65,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+        private SpaceManager $spaceManager,
 		public $AppName
 	) {
 		parent::__construct($AppName, $request);
@@ -140,12 +142,15 @@ class WorkspaceController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @GeneralManagerRequired
-	 * @param array $workspace
+	 * @param int $spaceId
 	 *
 	 */
-	public function destroy(array $workspace): JSONResponse {
+	public function destroy(int $spaceId): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
+        $space = $this->spaceManager->get($spaceId);
+        $folderId = $space['groupfolder_id'];
+    
+		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($spaceId));
 		foreach ($GEGroup->getUsers() as $user) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
 				$this->userService->removeGEFromWM($user);
@@ -155,10 +160,12 @@ class WorkspaceController extends Controller {
 		// Removes all workspaces groups
 		$groups = [];
 		$this->logger->debug('Removing workspaces groups.');
-		foreach (array_keys($workspace['groups']) as $group) {
+		foreach (array_keys($space['groups']) as $group) {
 			$groups[] = $group;
 			$this->groupManager->get($group)->delete();
 		}
+
+        $this->folderHelper->removeFolder($folderId);
 
 		return new JSONResponse([
 			'http' => [
@@ -166,10 +173,10 @@ class WorkspaceController extends Controller {
 				'message' => 'The space is deleted.'
 			],
 			'data' => [
-				'name' => $workspace['name'],
+				'name' => $space['name'],
 				'groups' => $groups,
-				'space_id' => $workspace['id'],
-				'groupfolder_id' => $workspace['groupfolderId'],
+				'space_id' => $space['id'],
+				'groupfolder_id' => $space['groupfolderId'],
 				'state' => 'delete'
 			]
 		]);

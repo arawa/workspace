@@ -96,4 +96,12 @@ class GroupfolderHelper {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setFolderQuota from FolderManager.');
 		}
 	}
+
+    public function removeFolder(int $folderId): void {
+        try {
+            $this->folderManager->removeFolder($folderId);
+        } catch (\Exception $e) {
+            throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeFolder from FolderManager.');
+        }
+    }
 }
