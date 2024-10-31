@@ -70,7 +70,7 @@ class WorkspaceController extends Controller {
         private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
-		public $AppName,
+		public $AppName
 	) {
 		parent::__construct($AppName, $request);
 	}
