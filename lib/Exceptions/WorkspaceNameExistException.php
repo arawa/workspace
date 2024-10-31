@@ -24,8 +24,10 @@
 
 namespace OCA\Workspace\Exceptions;
 
-class WorkspaceNameExistException extends \Exception {
-	public function __construct($message, $code = 0) {
-		parent::__construct($message, $code);
+use OCP\AppFramework\Http;
+
+class WorkspaceNameExistException extends AbstractNotification {
+	public function __construct($title, $message, $code = Http::STATUS_CONFLICT) {
+		parent::__construct($title, $message, $code);
 	}
 }

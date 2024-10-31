@@ -81,7 +81,6 @@ export default {
 				showNotificationError('Error', 'Please specify a name.', 3000)
 				return
 			}
-			name = deleteBlankSpacename(name)
 
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 
@@ -92,9 +91,7 @@ export default {
 				)
 			}
 
-			await checkGroupfolderNameExist(name)
-
-      const workspace = await createSpace(name)
+      const workspace = await createSpace(name, this)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,
