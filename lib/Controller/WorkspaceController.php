@@ -28,9 +28,6 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\CreateGroupException;
-use OCA\Workspace\Exceptions\CreateWorkspaceException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -66,7 +63,7 @@ class WorkspaceController extends Controller {
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
-		public $AppName
+		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -90,11 +87,11 @@ class WorkspaceController extends Controller {
 		$workspace = $this->spaceManager->create($spaceName);
 
 		return new JSONResponse(
-				array_merge(
-					$workspace,
-					[ 'statuscode' => Http::STATUS_CREATED ]
-				)
+			array_merge(
+				$workspace,
+				[ 'statuscode' => Http::STATUS_CREATED ]
 			)
+		)
 		;
 	}
 
@@ -170,7 +167,7 @@ class WorkspaceController extends Controller {
 					$this->logger->warning(
 						"Be careful, the $gid group is not exist in the oc_groups table."
 						. " But, it's present in the oc_group_folders_groups table."
-						.  'It necessary to recreate it with the occ command.'
+						. 'It necessary to recreate it with the occ command.'
 					);
 					continue;
 				}

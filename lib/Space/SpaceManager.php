@@ -62,9 +62,9 @@ class SpaceManager {
 		
 		if ($this->workspaceCheck->isExist($spacename)) {
 			throw new WorkspaceNameExistException(
-                title: 'Error - Duplicate space name',
-                message: "This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist."
-            );
+				title: 'Error - Duplicate space name',
+				message: "This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist."
+			);
 		}
 
 		$spacename = $this->deleteBlankSpaceName($spacename);
