@@ -70,7 +70,7 @@ class WorkspaceController extends Controller {
         private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
-		public $AppName
+		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -94,11 +94,11 @@ class WorkspaceController extends Controller {
 		$workspace = $this->spaceManager->create($spaceName);
 
 		return new JSONResponse(
-				array_merge(
-					$workspace,
-					[ 'statuscode' => Http::STATUS_CREATED ]
-				)
+			array_merge(
+				$workspace,
+				[ 'statuscode' => Http::STATUS_CREATED ]
 			)
+		)
 		;
 	}
 
