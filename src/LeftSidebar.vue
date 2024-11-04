@@ -56,8 +56,7 @@
 </template>
 
 <script>
-import { createGroupfolder, checkGroupfolderNameExist } from './services/groupfoldersService.js'
-import { createSpace, deleteBlankSpacename } from './services/spaceService.js'
+import { createSpace } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
@@ -91,7 +90,7 @@ export default {
 				)
 			}
 
-      const workspace = await createSpace(name, this)
+			const workspace = await createSpace(name, this)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,
