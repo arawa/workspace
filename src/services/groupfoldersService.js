@@ -109,6 +109,8 @@ export function formatUsers(space) {
  * @param {string} spaceName it's the name of space to check
  * @return {boolean}
  * @throws {CheckGroupfolderNameExistError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export async function checkGroupfolderNameExist(spaceName) {
 	const duplicateExists = await getAll()
@@ -137,6 +139,8 @@ export async function checkGroupfolderNameExist(spaceName) {
  * @param {number} folderId from a groupfolder
  * @return {Promise}
  * @throws {EnableAclGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function enableAcl(folderId) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
@@ -162,6 +166,8 @@ export function enableAcl(folderId) {
  * @param {string} gid it's an id (string format) of a group
  * @return {Promise}
  * @throws {AddGroupToGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function addGroupToGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
@@ -186,6 +192,8 @@ export function addGroupToGroupfolder(folderId, gid) {
  * @param {string} gid it's an id (string format) of a group
  * @return {Promise}
  * @throws {AddGroupToManageACLForGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function addGroupToManageACLForGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
