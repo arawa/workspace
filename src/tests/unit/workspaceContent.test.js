@@ -118,17 +118,17 @@ describe('Creating spaces with different entries', () => {
 						gid: 'SPACE-U-421',
 					},
 				},
-        quota: -3,
-        size: 0,
-        acl: true,
-        manage: [
-          {
-            type: "group",
-            id: "SPACE-GE-421",
-            displayname: "WM-Sri_Lanka"
-          }
-        ],
-        statuscode: 201
+				quota: -3,
+				size: 0,
+				acl: true,
+				manage: [
+					{
+						type: 'group',
+						id: 'SPACE-GE-421',
+						displayname: 'WM-Sri_Lanka'
+					}
+				],
+				statuscode: 201
 			},
 		})
 
