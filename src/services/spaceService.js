@@ -132,7 +132,7 @@ export function addGroupToWorkspace(spaceId, gid) {
  */
 export function removeWorkspace(spaceId) {
 	const result = axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}`))
-		.then(resp => {    
+		.then(resp => {
 			console.info(`The workspace with the ${spaceId} id, is deleted.`)
 			return resp.data
 		})
