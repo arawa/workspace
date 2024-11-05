@@ -133,34 +133,34 @@ export default {
 				await addGroupToGroupfolder(space.folder_id, spaceManagerGID)
 				await addGroupToGroupfolder(space.folder_id, spaceUserGID)
 
-				const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
-				const groupstransferoUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
+				// const groupfolder = await get(groupfoldersSelected[mountPoint].id, this)
+				// const groupstransferoUserGroup = await transferUsersToUserGroup(space.id_space, groupfolder)
 
-				await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
+				// await addGroupToManageACLForGroupfolder(space.folder_id, spaceManagerGID, this)
 
-				const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
-				await GidGroupsFromACL.forEach(gid => {
-					removeGroupToManageACLForGroupfolder(space.folder_id, gid)
-				})
+				// const GidGroupsFromACL = groupfoldersSelected[mountPoint].manage.map(group => group.id)
+				// await GidGroupsFromACL.forEach(gid => {
+				// 	removeGroupToManageACLForGroupfolder(space.folder_id, gid)
+				// })
 
-				// Define the quota
-				let quota = ''
-				if (groupfoldersSelected[mountPoint].quota === '-3') {
-					quota = t('workspace', 'unlimited')
-				} else {
-					quota = groupfoldersSelected[mountPoint].quota
-				}
+				// // Define the quota
+				// let quota = ''
+				// if (groupfoldersSelected[mountPoint].quota === '-3') {
+				// 	quota = t('workspace', 'unlimited')
+				// } else {
+				// 	quota = groupfoldersSelected[mountPoint].quota
+				// }
 
-				this.$store.commit('addSpace', {
-					color: space.color,
-					groups: groupstransferoUserGroup.groups,
-					isOpen: false,
-					id: space.id_space,
-					groupfolderId: space.folder_id,
-					name: space.name,
-					quota,
-					users: groupstransferoUserGroup.users,
-				})
+				// this.$store.commit('addSpace', {
+				// 	color: space.color,
+				// 	groups: groupstransferoUserGroup.groups,
+				// 	isOpen: false,
+				// 	id: space.id_space,
+				// 	groupfolderId: space.folder_id,
+				// 	name: space.name,
+				// 	quota,
+				// 	users: groupstransferoUserGroup.users,
+				// })
 
 			}
 		},
