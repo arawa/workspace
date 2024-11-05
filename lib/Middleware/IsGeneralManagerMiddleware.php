@@ -34,7 +34,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IRequest;
-use PHPUnit\Util\Json;
 
 class IsGeneralManagerMiddleware extends Middleware {
 	public function __construct(
