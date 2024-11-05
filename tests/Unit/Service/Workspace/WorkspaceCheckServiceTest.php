@@ -32,163 +32,163 @@ use PHPUnit\Framework\TestCase;
 
 class WorkspaceCheckServiceTest extends TestCase {
 
-    private \PHPUnit\Framework\MockObject\MockObject&SpaceService $spaceService;
-    private WorkspaceCheckService $workspaceCheckService;
-    
-    public function setUp(): void {
-        parent::setUp();
+	private \PHPUnit\Framework\MockObject\MockObject&SpaceService $spaceService;
+	private WorkspaceCheckService $workspaceCheckService;
+	
+	public function setUp(): void {
+		parent::setUp();
 
-        $this->spaceService = $this->createMock(SpaceService::class);
-        $this->workspaceCheckService = new WorkspaceCheckService($this->spaceService);
-    }
-    
-    public function testCheckSpacenameWithoutSpecialCharacter(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01');
+		$this->spaceService = $this->createMock(SpaceService::class);
+		$this->workspaceCheckService = new WorkspaceCheckService($this->spaceService);
+	}
+	
+	public function testCheckSpacenameWithoutSpecialCharacter(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01');
 
-        $this->assertFalse($result);
-    }
+		$this->assertFalse($result);
+	}
 
-    public function testCheckSpacenameWithAtSymbol(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Esp@ce01');
+	public function testCheckSpacenameWithAtSymbol(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Esp@ce01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithPipe(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace|01');
+	public function testCheckSpacenameWithPipe(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace|01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithTild(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace~01');
+	public function testCheckSpacenameWithTild(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace~01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithPercent(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Es%pace01');
+	public function testCheckSpacenameWithPercent(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Es%pace01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithSlash(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01/Group');
+	public function testCheckSpacenameWithSlash(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01/Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithBackSlash(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01\Group');
+	public function testCheckSpacenameWithBackSlash(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01\Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithAmpersand(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01&Group');
+	public function testCheckSpacenameWithAmpersand(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01&Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithEmbraces(): void {
-        $embraceOpened = $this->workspaceCheckService->containSpecialChar('Espace01>Group');
-        $embraceClosed = $this->workspaceCheckService->containSpecialChar('Espace01<Group');
-        $embraces = $this->workspaceCheckService->containSpecialChar('Espace01<Group>');
+	public function testCheckSpacenameWithEmbraces(): void {
+		$embraceOpened = $this->workspaceCheckService->containSpecialChar('Espace01>Group');
+		$embraceClosed = $this->workspaceCheckService->containSpecialChar('Espace01<Group');
+		$embraces = $this->workspaceCheckService->containSpecialChar('Espace01<Group>');
 
-        $this->assertTrue($embraceOpened);
-        $this->assertTrue($embraceClosed);
-        $this->assertTrue($embraces);
-    }    
+		$this->assertTrue($embraceOpened);
+		$this->assertTrue($embraceClosed);
+		$this->assertTrue($embraces);
+	}
 
-    public function testCheckSpacenameWithSemiColon(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01;Group');
+	public function testCheckSpacenameWithSemiColon(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01;Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithComma(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01,Group');
+	public function testCheckSpacenameWithComma(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01,Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithDot(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace.01');
+	public function testCheckSpacenameWithDot(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace.01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithColon(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01:Group');
+	public function testCheckSpacenameWithColon(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01:Group');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithExclamationMark(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01!');
+	public function testCheckSpacenameWithExclamationMark(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01!');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithQuestionMark(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace01?');
+	public function testCheckSpacenameWithQuestionMark(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace01?');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithApostrophe(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace\'01');
+	public function testCheckSpacenameWithApostrophe(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace\'01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithSharp(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace#01');
+	public function testCheckSpacenameWithSharp(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace#01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithPlus(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace+01');
+	public function testCheckSpacenameWithPlus(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace+01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithBrackets(): void {
-        $bracketOpened = $this->workspaceCheckService->containSpecialChar('Espace(01');
-        $bracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01)');
-        $brackets = $this->workspaceCheckService->containSpecialChar('Espace(01)');
+	public function testCheckSpacenameWithBrackets(): void {
+		$bracketOpened = $this->workspaceCheckService->containSpecialChar('Espace(01');
+		$bracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01)');
+		$brackets = $this->workspaceCheckService->containSpecialChar('Espace(01)');
 
-        $this->assertTrue($bracketOpened);
-        $this->assertTrue($bracketClosed);
-        $this->assertTrue($brackets);
-    }
+		$this->assertTrue($bracketOpened);
+		$this->assertTrue($bracketClosed);
+		$this->assertTrue($brackets);
+	}
 
-    public function testCheckSpacenameWithCircumflexAccent(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace^01');
+	public function testCheckSpacenameWithCircumflexAccent(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace^01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithEqual(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace=01');
+	public function testCheckSpacenameWithEqual(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace=01');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithAsterisk(): void {
-        $result = $this->workspaceCheckService->containSpecialChar('Espace*');
+	public function testCheckSpacenameWithAsterisk(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace*');
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 
-    public function testCheckSpacenameWithSquareBrackets(): void {
-        $squareBracketOpened = $this->workspaceCheckService->containSpecialChar('Espace[01');
-        $squareBracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01]');
-        $squareBrackets = $this->workspaceCheckService->containSpecialChar('Espace[01]');
+	public function testCheckSpacenameWithSquareBrackets(): void {
+		$squareBracketOpened = $this->workspaceCheckService->containSpecialChar('Espace[01');
+		$squareBracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01]');
+		$squareBrackets = $this->workspaceCheckService->containSpecialChar('Espace[01]');
 
-        $this->assertTrue($squareBracketOpened);
-        $this->assertTrue($squareBracketClosed);
-        $this->assertTrue($squareBrackets);
-    }
+		$this->assertTrue($squareBracketOpened);
+		$this->assertTrue($squareBracketClosed);
+		$this->assertTrue($squareBrackets);
+	}
 }

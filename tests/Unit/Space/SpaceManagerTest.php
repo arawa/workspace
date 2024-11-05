@@ -26,20 +26,20 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
-use OCP\IGroup;
-use PHPUnit\Framework\TestCase;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Service\ColorCode;
-use OCA\Workspace\Space\SpaceManager;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use PHPUnit\Framework\MockObject\MockObject;
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\IGroup;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class SpaceManagerTest extends TestCase {
 
@@ -96,8 +96,7 @@ class SpaceManagerTest extends TestCase {
 		);
 	}
 
-	public function testArrayAfterCreatedTheEspace01Workspace(): void
-	{
+	public function testArrayAfterCreatedTheEspace01Workspace(): void {
 		$this->folderHelper
 			->expects($this->once())
 			->method('createFolder')
@@ -107,8 +106,8 @@ class SpaceManagerTest extends TestCase {
 
 		$this->rootFolder->
 			expects($this->once())
-			->method('getRootFolderStorageId')
-			->willReturn(1)
+				->method('getRootFolderStorageId')
+				->willReturn(1)
 		;
 
 		$this->folderHelper
@@ -119,30 +118,30 @@ class SpaceManagerTest extends TestCase {
 				'id' => 1,
 				'mount_point' => 'Espace01',
 				'groups' => [
-				  'SPACE-GE-1' => 31,
-				  'SPACE-U-1' => 31,
+					'SPACE-GE-1' => 31,
+					'SPACE-U-1' => 31,
 				],
 				'quota' => -3,
 				'size' => 0,
 				'acl' => true,
 				'manage' => [
-				  0 => [
+					0 => [
 						'type' => 'group',
 						'id' => 'SPACE-GE-1',
 						'displayname' => 'WM-Espace01',
 					],
 				],
 				'group_details' => [
-				  'SPACE-GE-1' => [
-					'displayName' => 'SPACE-GE-1',
-					'permissions' => 31,
-					'type' => 'group',
+					'SPACE-GE-1' => [
+						'displayName' => 'SPACE-GE-1',
+						'permissions' => 31,
+						'type' => 'group',
 					],
-				  'SPACE-U-1' => [
-					'displayName' => 'SPACE-U-1',
-					'permissions' => 31,
-					'type' => 'group',
-				  ],
+					'SPACE-U-1' => [
+						'displayName' => 'SPACE-U-1',
+						'permissions' => 31,
+						'type' => 'group',
+					],
 				],
 			])
 		;
@@ -154,7 +153,7 @@ class SpaceManagerTest extends TestCase {
 			->willReturn('SPACE-GE-1')
 		;
 		$workspaceManagerGroupMock
-			->expects($this->once())           
+			->expects($this->once())
 			->method('getDisplayName')
 			->willReturn('WM-Espace01')
 		;
@@ -192,7 +191,7 @@ class SpaceManagerTest extends TestCase {
 		$space = $this->spaceManager->create('Espace01');
 
 		$this->assertEquals(
-			$space, 
+			$space,
 			[
 				'name' => 'Espace01',
 				'id_space' => null,
@@ -222,16 +221,14 @@ class SpaceManagerTest extends TestCase {
 		);
 	}
 
-	public function testBlankException(): void
-	{
+	public function testBlankException(): void {
 		$this->expectException(BadRequestException::class);
 		$this->expectExceptionMessage('spaceName must be provided');
 
 		$this->spaceManager->create('');
 	}
 
-	public function testContainSpecialCharInTheWorkspaceName(): void
-	{
+	public function testContainSpecialCharInTheWorkspaceName(): void {
 		$this->expectException(BadRequestException::class);
 		$this->expectExceptionMessage('Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
 

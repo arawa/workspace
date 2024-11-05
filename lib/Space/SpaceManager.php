@@ -46,7 +46,7 @@ class SpaceManager {
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
-        private ColorCode $colorCode,
+		private ColorCode $colorCode,
 	) {
 	}
 	

@@ -26,7 +26,7 @@ namespace OCA\Workspace\Exceptions;
 
 abstract class AbstractNotification extends \Exception {
 	public function __construct(
-        string $message,
+		string $message,
 		int $code,
 		protected string $title = 'Error',
 	) {

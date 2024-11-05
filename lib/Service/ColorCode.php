@@ -25,9 +25,8 @@
 namespace OCA\Workspace\Service;
 
 class ColorCode {
-    public function generate(): string
-    {
-        // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
-        return '#' . substr(md5(mt_rand()), 0, 6);
-    }
+	public function generate(): string {
+		// mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+		return '#' . substr(md5(mt_rand()), 0, 6);
+	}
 }
