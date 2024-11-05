@@ -31,6 +31,7 @@ use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
@@ -45,6 +46,7 @@ class SpaceManager {
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+        private ColorCode $colorCode,
 	) {
 	}
 	
@@ -74,7 +76,7 @@ class SpaceManager {
 		$space = new Space();
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
-		$space->setColorCode('#' . substr(md5(mt_rand()), 0, 6));  // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+		$space->setColorCode($this->colorCode->generate());
 		$this->spaceMapper->insert($space);
 
 
