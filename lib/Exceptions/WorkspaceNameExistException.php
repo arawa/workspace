@@ -28,6 +28,6 @@ use OCP\AppFramework\Http;
 
 class WorkspaceNameExistException extends AbstractNotification {
 	public function __construct($title, $message, $code = Http::STATUS_CONFLICT) {
-		parent::__construct($title, $message, $code);
+		parent::__construct(title: $title, message: $message, code: $code);
 	}
 }
