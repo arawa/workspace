@@ -20,7 +20,7 @@
  *
  */
 
-import { getAll, get, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
+import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 
 jest.mock('axios')
