@@ -65,8 +65,8 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
-        private SpaceManager $spaceManager,
-		public $AppName
+		private SpaceManager $spaceManager,
+		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -147,9 +147,9 @@ class WorkspaceController extends Controller {
 	 */
 	public function destroy(int $spaceId): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-        $space = $this->spaceManager->get($spaceId);
-        $folderId = $space['groupfolder_id'];
-    
+		$space = $this->spaceManager->get($spaceId);
+		$folderId = $space['groupfolder_id'];
+	
 		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($spaceId));
 		foreach ($GEGroup->getUsers() as $user) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
@@ -165,7 +165,7 @@ class WorkspaceController extends Controller {
 			$this->groupManager->get($group)->delete();
 		}
 
-        $this->folderHelper->removeFolder($folderId);
+		$this->folderHelper->removeFolder($folderId);
 
 		return new JSONResponse([
 			'http' => [
@@ -213,7 +213,7 @@ class WorkspaceController extends Controller {
 					$this->logger->warning(
 						"Be careful, the $gid group is not exist in the oc_groups table."
 						. " But, it's present in the oc_group_folders_groups table."
-						.  'It necessary to recreate it with the occ command.'
+						. 'It necessary to recreate it with the occ command.'
 					);
 					continue;
 				}
