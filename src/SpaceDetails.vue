@@ -108,7 +108,7 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import { rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
 import { removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
