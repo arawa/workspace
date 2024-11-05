@@ -55,7 +55,7 @@
 
 <script>
 
-import { get, getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { getAll, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
 import { createSpace, isSpaceManagers, isSpaceUsers, transferUsersToUserGroup } from './services/spaceService.js'
 
 export default {

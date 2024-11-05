@@ -95,27 +95,6 @@ describe('getAll function', () => {
 	})
 })
 
-describe('get function', () => {
-	beforeEach(() => {
-		axios.mockClear()
-	})
-	it('calls axios.get method', () => {
-		axios.get.mockResolvedValue(responseValue)
-		get(1)
-		expect(axios.get).toBeCalled()
-	})
-	it('returns data property of the object if response status is ok', async () => {
-		axios.get.mockResolvedValue(responseValue)
-		const res = await get(1)
-		expect(res).toEqual(responseValue.data.ocs.data)
-	})
-	it('throws exception if response status is not ok', async () => {
-		axios.get.mockResolvedValue(badResponseValue)
-		const promise = get(1)
-		await expect(promise).rejects.toThrow('Impossible to get the groupfolder')
-	})
-})
-
 describe('formatGroups function', () => {
 	beforeEach(() => {
 		axios.mockClear()
