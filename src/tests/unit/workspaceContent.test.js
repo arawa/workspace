@@ -101,10 +101,10 @@ describe('Creating spaces with different entries', () => {
 		expect(mockCreateSpace).toHaveBeenCalled()
 	})
 
-	it('Create "Sri_Lanka"', async () => {
+	it('Create the workspace "Sri_Lanka"', async () => {
 		axios.post.mockResolvedValue({
 			data: {
-				space_name: 'Sri_Lanka',
+				name: 'Sri_Lanka',
 				id_space: 421,
 				folder_id: 809,
 				color: '#b7752e',
@@ -118,10 +118,17 @@ describe('Creating spaces with different entries', () => {
 						gid: 'SPACE-U-421',
 					},
 				},
-				statuscode: 201,
-				acl: {
-					state: true,
-				},
+        quota: -3,
+        size: 0,
+        acl: true,
+        manage: [
+          {
+            type: "group",
+            id: "SPACE-GE-421",
+            displayname: "WM-Sri_Lanka"
+          }
+        ],
+        statuscode: 201
 			},
 		})
 
