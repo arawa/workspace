@@ -32,6 +32,8 @@ use OCA\Workspace\Exceptions\CreateGroupException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
@@ -53,6 +55,8 @@ use Psr\Log\LoggerInterface;
 class WorkspaceController extends Controller {
 	public function __construct(
 		IRequest $request,
+        private AdminGroup $adminGroup,
+        private AdminUserGroup $adminUserGroup,
 		private GroupfolderHelper $folderHelper,
 		private IGroupManager $groupManager,
 		private RootFolder $rootFolder,
@@ -147,17 +151,14 @@ class WorkspaceController extends Controller {
 	 */
 	public function destroy(int $spaceId): JSONResponse {
 		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		$space = $this->spaceManager->get($spaceId);
-		$folderId = $space['groupfolder_id'];
-	
-		$GEGroup = $this->groupManager->get(WorkspaceManagerGroup::get($spaceId));
-		foreach ($GEGroup->getUsers() as $user) {
+		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->userService->removeGEFromWM($user);
+				$this->adminUserGroup->removeUser($user);
 			}
 		}
 
 		// Removes all workspaces groups
+        $space = $this->spaceManager->get($spaceId);
 		$groups = [];
 		$this->logger->debug('Removing workspaces groups.');
 		foreach (array_keys($space['groups']) as $group) {
@@ -165,7 +166,7 @@ class WorkspaceController extends Controller {
 			$this->groupManager->get($group)->delete();
 		}
 
-		$this->folderHelper->removeFolder($folderId);
+        $this->spaceManager->remove($spaceId);
 
 		return new JSONResponse([
 			'http' => [
