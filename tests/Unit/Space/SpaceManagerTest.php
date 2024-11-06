@@ -43,34 +43,19 @@ use PHPUnit\Framework\TestCase;
 
 class SpaceManagerTest extends TestCase {
 
-	/**
-	 * @var \PHPUnit\Framework\MockObject\MockObject&GroupfolderHelper
-	 */
-	private GroupfolderHelper $folderHelper;
+	private MockObject&GroupfolderHelper $folderHelper;
 
 	private MockObject&RootFolder $rootFolder;
 
-	/**
-	 * @var \PHPUnit\Framework\MockObject\MockObject&WorkspaceCheckService
-	 */
-	private WorkspaceCheckService $workspaceCheck;
+	private MockObject&WorkspaceCheckService $workspaceCheck;
 
-	/**
-	 * @var \PHPUnit\Framework\MockObject\MockObject&UserGroup
-	 */
-	private UserGroup $userGroup;
+	private MockObject&UserGroup $userGroup;
 
-	/**
-	 * @var \PHPUnit\Framework\MockObject\MockObject&SpaceMapper
-	 */
-	private SpaceMapper $spaceMapper;
+	private MockObject&SpaceMapper $spaceMapper;
 
-	/**
-	 * @var \PHPUnit\Framework\MockObject\MockObject&WorkspaceManagerGroup
-	 */
-	private WorkspaceManagerGroup $workspaceManagerGroup;
+	private MockObject&WorkspaceManagerGroup $workspaceManagerGroup;
 
-	private \PHPUnit\Framework\MockObject\MockObject&ColorCode $colorCode;
+	private MockObject&ColorCode $colorCode;
 
 	private SpaceManager $spaceManager;
 
