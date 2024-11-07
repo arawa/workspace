@@ -37,9 +37,9 @@ class AdminUserGroup {
 	public const GID = 'WorkspacesManagers';
 
 	public function __construct(
-        private IGroupManager $groupManager,
-        private LoggerInterface $logger,
-    ) {
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	public function addUser(IUser $user): bool {
@@ -54,9 +54,9 @@ class AdminUserGroup {
 		return true;
 	}
 
-    public function removeUser(IUser $user): void {
+	public function removeUser(IUser $user): void {
 		$this->logger->debug('The ' . $user->getUID() . 'User is not manager of any other workspace, removing it from the ' . self::GID . ' group.');
 		$workspaceUserGroup = $this->groupManager->get(self::GID);
 		$workspaceUserGroup->removeUser($user);
-    }
+	}
 }

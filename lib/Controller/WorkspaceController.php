@@ -55,8 +55,8 @@ use Psr\Log\LoggerInterface;
 class WorkspaceController extends Controller {
 	public function __construct(
 		IRequest $request,
-        private AdminGroup $adminGroup,
-        private AdminUserGroup $adminUserGroup,
+		private AdminGroup $adminGroup,
+		private AdminUserGroup $adminUserGroup,
 		private GroupfolderHelper $folderHelper,
 		private IGroupManager $groupManager,
 		private RootFolder $rootFolder,
@@ -158,7 +158,7 @@ class WorkspaceController extends Controller {
 		}
 
 		// Removes all workspaces groups
-        $space = $this->spaceManager->get($spaceId);
+		$space = $this->spaceManager->get($spaceId);
 		$groups = [];
 		$this->logger->debug('Removing workspaces groups.');
 		foreach (array_keys($space['groups']) as $group) {
@@ -166,7 +166,7 @@ class WorkspaceController extends Controller {
 			$this->groupManager->get($group)->delete();
 		}
 
-        $this->spaceManager->remove($spaceId);
+		$this->spaceManager->remove($spaceId);
 
 		return new JSONResponse([
 			'http' => [

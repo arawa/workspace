@@ -36,8 +36,8 @@ class AdminGroup {
 
 	public function __construct(private AdminUserGroup $adminUserGroup,
 		private AdminGroupManager $adminGroupManager,
-        private LoggerInterface $logger,
-        private IGroupManager $groupManager) {
+		private LoggerInterface $logger,
+		private IGroupManager $groupManager) {
 	}
 
 	public function addUser(IUser $user, string $gid): bool {
@@ -48,11 +48,11 @@ class AdminGroup {
 		return true;
 	}
 
-    /**
-     * @return IUser[]
-     */
-    public function getUsers(int $spaceId): array {
+	/**
+	 * @return IUser[]
+	 */
+	public function getUsers(int $spaceId): array {
 		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
-        return $group->getUsers();
-    }
+		return $group->getUsers();
+	}
 }
