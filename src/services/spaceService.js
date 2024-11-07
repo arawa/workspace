@@ -173,7 +173,14 @@ export function renameSpace(spaceId, newSpaceName) {
 			return respFormat
 		})
 		.catch(error => {
-			console.error('Problem to rename the space', error)
+      if ('response' in error && 'data' in error.response) {
+				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+        throw new Error(error.response.data.message)
+			} else {
+				showNotificationError('Error to rename a workspace', error.message, 5000)
+        console.error('Problem to rename the space', error)
+        throw new Error(error.message)
+			}
 		})
 
 	return respFormatFinal

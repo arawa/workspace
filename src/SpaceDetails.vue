@@ -186,8 +186,6 @@ export default {
 
 			const newSpaceName = e.target[0].value
 
-			await checkGroupfolderNameExist(newSpaceName)
-
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
