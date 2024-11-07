@@ -102,8 +102,8 @@ class GroupfolderHelper {
 			$this->folderManager->removeFolder($folderId);
 		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeFolder from FolderManager.');
-        }
-    }
+		}
+	}
 
 	public function renameFolder(int $folderId, string $newMountPoint):void {
 		try {
