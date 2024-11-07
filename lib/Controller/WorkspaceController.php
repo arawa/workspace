@@ -67,7 +67,7 @@ class WorkspaceController extends Controller {
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
-		public $AppName,
+		public $AppName
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -275,16 +275,12 @@ class WorkspaceController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * @param array|string $workspace
+	 * @param int $spaceId
 	 * @param string $newSpaceName
 	 *
-	 * @todo Manage errors
 	 */
-	public function renameSpace(array|string $workspace,
+	public function renameSpace(int $spaceId,
 		string $newSpaceName): JSONResponse {
-		if (gettype($workspace) === 'string') {
-			$workspace = json_decode($workspace, true);
-		}
 
 		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
 			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
@@ -299,12 +295,11 @@ class WorkspaceController extends Controller {
 
 		$spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
-		$spaceRenamed = $this->spaceService->updateSpaceName($newSpaceName, (int)$workspace['id']);
-
-		// TODO Handle API call failure (revert space rename and inform user)
+		$this->spaceManager->rename($spaceId, $spaceName);
+		
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
-			'space' => $spaceRenamed,
+			'space' => $spaceName,
 		]);
 	}
 }

@@ -108,8 +108,7 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
-import { removeWorkspace } from './services/spaceService.js'
+import { renameSpace, removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
@@ -187,18 +186,16 @@ export default {
 
 			const newSpaceName = e.target[0].value
 
-			await checkGroupfolderNameExist(newSpaceName)
-
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName)
+			let responseRename = await renameSpace(this.$store.state.spaces[oldSpaceName].id, newSpaceName)
 			responseRename = responseRename.data
 
 			if (responseRename.statuscode === 204) {
 				const space = { ...this.$store.state.spaces[oldSpaceName] }
 				space.name = responseRename.space
-				space.groups = responseRename.groups
+
 				this.$store.dispatch('updateSpace', {
 					space,
 				})

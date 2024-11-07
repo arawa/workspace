@@ -143,3 +143,45 @@ export function removeWorkspace(spaceId) {
 		})
 	return result
 }
+
+export function renameSpace(spaceId, newSpaceName) {
+	const respFormat = {
+		data: {},
+	}
+	respFormat.data.statuscode = 500
+	respFormat.data.message = 'Rename the space is impossible.'
+
+	newSpaceName = deleteBlankSpacename(newSpaceName)
+
+	const respFormatFinal = axios.patch(generateUrl(`/apps/workspace/spaces/${spaceId}`),
+		{
+			newSpaceName,
+		})
+		.then(resp => {
+			if (resp.data.statuscode === 400) {
+				respFormat.data.statuscode = 400
+				respFormat.data.space = null
+				return respFormat
+			}
+
+			if (resp.data.statuscode === 204) {
+				respFormat.data.statuscode = 204
+				respFormat.data.space = newSpaceName
+				return respFormat
+			}
+
+			return respFormat
+		})
+		.catch(error => {
+			if ('response' in error && 'data' in error.response) {
+				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+				throw new Error(error.response.data.message)
+			} else {
+				showNotificationError('Error to rename a workspace', error.message, 5000)
+				console.error('Problem to rename the space', error)
+				throw new Error(error.message)
+			}
+		})
+
+	return respFormatFinal
+}

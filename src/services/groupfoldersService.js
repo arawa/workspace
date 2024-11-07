@@ -279,6 +279,7 @@ export function destroy(workspace) {
  * @param {object} workspace it's the object relative to workspace
  * @param {string} newSpaceName it's the new name for the workspace
  * @return {Promise}
+ * @deprecated
  */
 export function rename(workspace, newSpaceName) {
 	// Response format to return
