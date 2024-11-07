@@ -24,7 +24,9 @@
 
 namespace OCA\Workspace\Group\Admin;
 
+use OCP\IGroupManager;
 use OCP\IUser;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class represents a Workspace Manager (GE-) group.
@@ -33,7 +35,9 @@ class AdminGroup {
 	public const GID_PREFIX = 'SPACE-GE-';
 
 	public function __construct(private AdminUserGroup $adminUserGroup,
-		private AdminGroupManager $adminGroupManager) {
+		private AdminGroupManager $adminGroupManager,
+		private LoggerInterface $logger,
+		private IGroupManager $groupManager) {
 	}
 
 	public function addUser(IUser $user, string $gid): bool {
@@ -42,5 +46,13 @@ class AdminGroup {
 		$this->adminUserGroup->addUser($user);
 
 		return true;
+	}
+
+	/**
+	 * @return IUser[]
+	 */
+	public function getUsers(int $spaceId): array {
+		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
+		return $group->getUsers();
 	}
 }

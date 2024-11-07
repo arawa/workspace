@@ -150,4 +150,10 @@ class SpaceManager {
 	private function deleteBlankSpaceName(string $spaceName): string {
 		return trim($spaceName);
 	}
+
+	public function remove(string $spaceId): void {
+		$space = $this->get($spaceId);
+		$folderId = $space['groupfolder_id'];
+		$this->folderHelper->removeFolder($folderId);
+	}
 }

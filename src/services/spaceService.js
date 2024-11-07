@@ -127,3 +127,19 @@ export function addGroupToWorkspace(spaceId, gid) {
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
 }
+
+/**
+ * @param {integer} spaceId it's the id relative to workspace
+ * @return {Promise}
+ */
+export function removeWorkspace(spaceId) {
+	const result = axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}`))
+		.then(resp => {
+			console.info(`The workspace with the ${spaceId} id, is deleted.`)
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Error to delete a workspace. May be a problem network ?', error)
+		})
+	return result
+}

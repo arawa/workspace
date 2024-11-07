@@ -26,6 +26,7 @@ namespace OCA\Workspace\Group\Admin;
 
 use OCP\IGroupManager;
 use OCP\IUser;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class gathers all users from the
@@ -35,7 +36,10 @@ use OCP\IUser;
 class AdminUserGroup {
 	public const GID = 'WorkspacesManagers';
 
-	public function __construct(private IGroupManager $groupManager) {
+	public function __construct(
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	public function addUser(IUser $user): bool {
@@ -48,5 +52,11 @@ class AdminUserGroup {
 		$group->addUser($user);
 
 		return true;
+	}
+
+	public function removeUser(IUser $user): void {
+		$this->logger->debug('The ' . $user->getUID() . 'User is not manager of any other workspace, removing it from the ' . self::GID . ' group.');
+		$workspaceUserGroup = $this->groupManager->get(self::GID);
+		$workspaceUserGroup->removeUser($user);
 	}
 }

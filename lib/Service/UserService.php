@@ -160,6 +160,10 @@ class UserService {
 	 *
 	 * @param IUser $user
 	 * @return void
+	 *
+	 * @deprecated
+	 *
+	 * @uses OCA\Workspace\Group\Admin\AdminUserGroup::removeUser
 	 */
 	public function removeGEFromWM(IUser $user): void {
 		$this->logger->debug('User is not manager of any other workspace, removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');

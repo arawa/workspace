@@ -30,7 +30,6 @@ import BadGetError from '../Errors/BadGetError.js'
 import CheckGroupfolderNameExistError from '../Errors/Groupfolders/CheckGroupfolderNameError.js'
 import CreateGroupfolderError from '../Errors/Groupfolders/BadCreateError.js'
 import EnableAclGroupfolderError from '../Errors/Groupfolders/EnableAclGroupfolderError.js'
-import GetGroupfolderError from '../Errors/Groupfolders/GetGroupfolderError.js'
 import showNotificationError from './Notifications/NotificationError.js'
 import RemoveGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/RemoveGroupToManageACLForGroupfolderError.js'
 
@@ -49,28 +48,6 @@ export function getAll() {
 			throw new BadGetError('Error to get all spaces', error.reason)
 		})
 	return data
-}
-
-/**
- *
- * @param {number} groupfolderId it's the id of a groupfolder
- * @return {Promise}
- * @throws {GetGroupfolderError}
- */
-export function get(groupfolderId) {
-	return axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
-		.then(resp => {
-			if (resp.data.ocs.meta.status === 'ok') {
-				const workspace = resp.data.ocs.data
-				return workspace
-			} else {
-				throw new GetGroupfolderError('Impossible to get the groupfolder. May be an error network ?')
-			}
-		})
-		.catch((error) => {
-			showNotificationError('Error to get the groupfolder', error.message, 5000)
-			throw new Error(error.message)
-		})
 }
 
 /**
@@ -267,6 +244,7 @@ export function createGroupfolder(spaceName) {
 
 /**
  * @param {object} workspace it's an object relative to workspace
+ * @deprecated
  * @return {Promise}
  */
 export function destroy(workspace) {

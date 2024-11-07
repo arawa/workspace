@@ -108,7 +108,8 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import { rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import { removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
@@ -148,12 +149,12 @@ export default {
 	methods: {
 		// Deletes a space
 		deleteSpace() {
-			const space = this.$route.params.space
-			destroy(this.$store.state.spaces[space])
+			const space = this.$store.state.spaces[this.$route.params.space]
+			removeWorkspace(space.id)
 				.then(resp => {
 					if (resp.http.statuscode === 200) {
 						this.$store.dispatch('removeSpace', {
-							space: this.$store.state.spaces[space],
+							space,
 						})
 						this.$router.push({
 							path: '/',
