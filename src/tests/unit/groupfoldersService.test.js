@@ -149,6 +149,9 @@ describe('formatUsers function', () => {
 	})
 })
 
+/**
+ * @deprecated
+ */
 describe('checkGroupfolderNameExist function', () => {
 	beforeEach(() => {
 		axios.mockClear()
@@ -166,6 +169,9 @@ describe('checkGroupfolderNameExist function', () => {
 	})
 })
 
+/**
+ * @deprecated
+ */
 describe('enableAcl function', () => {
 	beforeEach(() => {
 		axios.mockClear()
@@ -182,6 +188,9 @@ describe('enableAcl function', () => {
 	})
 })
 
+/**
+ * @deprecated
+ */
 describe('addGroupToGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
@@ -207,6 +216,9 @@ describe('addGroupToGroupfolder', () => {
 	})
 })
 
+/**
+ * @deprecated
+ */
 describe('addGroupToManageACLForGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()
@@ -265,6 +277,9 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 	})
 })
 
+/**
+ * @deprecated
+ */
 describe('createGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()

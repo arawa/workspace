@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2017 Arawa
+ * @copyright Copyright (c) 2024 Arawa
  *
- * @author 2022 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,10 +24,16 @@
 
 namespace OCA\Workspace\Exceptions;
 
-use OCP\AppFramework\Http;
+abstract class AbstractNotification extends \Exception {
+	public function __construct(
+		string $message,
+		int $code,
+		protected string $title = 'Error',
+	) {
+		parent::__construct($message, $code);
+	}
 
-class WorkspaceNameExistException extends AbstractNotification {
-	public function __construct($title, $message, $code = Http::STATUS_CONFLICT) {
-		parent::__construct(title: $title, message: $message, code: $code);
+	public function getTitle(): string {
+		return $this->title;
 	}
 }

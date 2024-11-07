@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
+use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http;
@@ -38,7 +39,7 @@ class IsGeneralManagerMiddleware extends Middleware {
 	public function __construct(
 		private IControllerMethodReflector $reflector,
 		private IRequest $request,
-		private UserService $userService
+		private UserService $userService,
 	) {
 	}
 
@@ -59,5 +60,19 @@ class IsGeneralManagerMiddleware extends Middleware {
 				'msg' => 'You are not allowed to perform this action'
 			], Http::STATUS_FORBIDDEN);
 		}
+
+		if ($exception instanceof AbstractNotification) {
+			return new JSONResponse([
+				'title' => $exception->getTitle(),
+				'statuscode' => $exception->getCode(),
+				'message' => $exception->getMessage()
+			], $exception->getCode());
+		}
+
+		return new JSONResponse([
+			'statuscode' => $exception->getCode(),
+			'message' => $exception->getMessage(),
+			'trace' => $exception->getTrace()
+		], $exception->getCode());
 	}
 }

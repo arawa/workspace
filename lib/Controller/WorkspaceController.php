@@ -28,9 +28,6 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\CreateGroupException;
-use OCA\Workspace\Exceptions\CreateWorkspaceException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -41,6 +38,7 @@ use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -64,7 +62,8 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
-		public $AppName
+		private SpaceManager $spaceManager,
+		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -82,56 +81,18 @@ class WorkspaceController extends Controller {
 	 * @NoAdminRequired
 	 * @GeneralManagerRequired
 	 * @param string $spaceName
-	 * @param int $folderId
-	 * @throws BadRequestException
-	 * @throws CreateWorkspaceException
-	 * @throws CreateGroupException
 	 */
-	public function createWorkspace(string $spaceName,
-		int $folderId): JSONResponse {
-		if ($spaceName === false ||
-			$spaceName === null ||
-			$spaceName === ''
-		) {
-			throw new BadRequestException('spaceName must be provided');
-		}
+	public function createWorkspace(string $spaceName): JSONResponse {
 
-		if ($this->workspaceCheck->containSpecialChar($spaceName)) {
-			throw new BadRequestException('Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
-		}
-		
-		if ($this->workspaceCheck->isExist($spaceName)) {
-			throw new WorkspaceNameExistException("The $spaceName space name already exist", Http::STATUS_CONFLICT);
-		}
+		$workspace = $this->spaceManager->create($spaceName);
 
-		$spaceName = $this->deleteBlankSpaceName($spaceName);
-
-		$space = new Space();
-		$space->setSpaceName($spaceName);
-		$space->setGroupfolderId($folderId);
-		$space->setColorCode('#' . substr(md5(mt_rand()), 0, 6)); // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
-		$this->spaceMapper->insert($space);
-
-		if (is_null($space)) {
-			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
-		}
-
-		// #2 create groups
-		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
-		$newSpaceUsersGroup = $this->userGroup->create($space);
-
-		// #3 Returns result
-		return new JSONResponse([
-			'name' => $space->getSpaceName(),
-			'id_space' => $space->getId(),
-			'folder_id' => $space->getGroupfolderId(),
-			'color' => $space->getColorCode(),
-			'groups' => GroupFormatter::formatGroups([
-				$newSpaceManagerGroup,
-				$newSpaceUsersGroup
-			]),
-			'statuscode' => Http::STATUS_CREATED,
-		]);
+		return new JSONResponse(
+			array_merge(
+				$workspace,
+				[ 'statuscode' => Http::STATUS_CREATED ]
+			)
+		)
+		;
 	}
 
 	/**
@@ -206,7 +167,7 @@ class WorkspaceController extends Controller {
 					$this->logger->warning(
 						"Be careful, the $gid group is not exist in the oc_groups table."
 						. " But, it's present in the oc_group_folders_groups table."
-						.  'It necessary to recreate it with the occ command.'
+						. 'It necessary to recreate it with the occ command.'
 					);
 					continue;
 				}
