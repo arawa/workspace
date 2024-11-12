@@ -106,9 +106,6 @@ export default {
 			return
 		}
 
-		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, gid, displayName })
-
 		// Creates group in backend
 		axios.post(generateUrl('/apps/workspace/api/group'),
 			{
@@ -121,6 +118,13 @@ export default {
 			})
 			.then((resp) => {
 				addGroupToWorkspace(space.id, resp.data.group.gid)
+				// Creates group in frontend
+				context.commit('addGroupToSpace', {
+					name,
+					gid,
+					displayName,
+					slug: resp.data.group.slug
+				})
 				// Navigates to the g roup's details page
 				context.state.spaces[name].isOpen = true
 				router.push({
@@ -360,6 +364,7 @@ export default {
 			const users = resp.data.users
 			for (const user in users) {
 				context.commit('addUserToWorkspace', { name, user: users[user] })
+				context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
         context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
         context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
         context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
