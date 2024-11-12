@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Group\User;
 
+use OCP\IGroupManager;
 use OCP\IUser;
 
 /**
@@ -32,7 +33,9 @@ use OCP\IUser;
 class UserGroup {
 	public const GID_PREFIX = 'SPACE-U-';
 
-	public function __construct(private UserGroupManager $userGroupManager) {
+	public function __construct(private UserGroupManager $userGroupManager,
+		private IGroupManager $groupManager,
+	) {
 	}
 
 	public function addUser(IUser $user, string $gid): bool {
@@ -40,5 +43,10 @@ class UserGroup {
 		$group->addUser($user);
 
 		return true;
+	}
+
+	public function count(int $spaceId): int {
+		$usersGroup = $this->groupManager->get($this::GID_PREFIX . $spaceId);
+		return $usersGroup->count();
 	}
 }

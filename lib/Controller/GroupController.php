@@ -34,10 +34,10 @@ use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Slugger;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
-use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
 use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -105,8 +105,8 @@ class GroupController extends Controller {
 			'group' => [
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName(),
-                'usersCount' => 0,
-                'slug' => Slugger::slugger($NCGroup->getGID())
+				'usersCount' => 0,
+				'slug' => Slugger::slugger($NCGroup->getGID())
 			]
 		]);
 	}

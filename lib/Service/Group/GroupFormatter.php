@@ -52,8 +52,8 @@ class GroupFormatter {
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
-                'usersCount' => $group->count(),
-                'slug' => Slugger::slugger($group->getGID())
+				'usersCount' => $group->count(),
+				'slug' => Slugger::slugger($group->getGID())
 			];
 		}
 

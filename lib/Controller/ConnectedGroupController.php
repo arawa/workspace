@@ -11,33 +11,32 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
-use OCP\IGroupManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
 class ConnectedGroupController extends Controller {
-    public function __construct(
-        private GroupfolderHelper $folderHelper,
+	public function __construct(
+		private GroupfolderHelper $folderHelper,
 		private LoggerInterface $logger,
-        private RootFolder $rootFolder,
-        private IGroupManager $groupManager,
-        private SpaceMapper $spaceMapper,
+		private RootFolder $rootFolder,
+		private IGroupManager $groupManager,
+		private SpaceMapper $spaceMapper,
 		private SpaceManager $spaceManager,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 		private UserService $userService,
-        private WorkspaceService $workspaceService
-    )
-    {
-    }
+		private WorkspaceService $workspaceService
+	) {
+	}
 
-    /**
-	 * 
+	/**
+	 *
 	 * Add a group connected to a workspace/groupfolder.
-	 * 
+	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * 
+	 *
 	 * @param int $spaceId
 	 * @param string $gid
 	 */
@@ -70,10 +69,10 @@ class ConnectedGroupController extends Controller {
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
-			);		
+			);
 		}
 		
-		$space = $this->spaceMapper->find($spaceId);	
+		$space = $this->spaceMapper->find($spaceId);
 
 		$this->folderHelper->addApplicableGroup(
 			$space->getGroupfolderId(),
@@ -93,7 +92,7 @@ class ConnectedGroupController extends Controller {
 			if (array_key_exists('groups', $user)) {
 				array_push($user['groups'], 'SPACE-U-' . $space->getSpaceId());
 			}
-        }
+		}
 
 		$message = sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName());
 
@@ -103,13 +102,13 @@ class ConnectedGroupController extends Controller {
 			'message' => sprintf("The %s group is added to the %s workspace.", $group->getGID(), $space->getSpaceName()),
 			'success' => true,
 			'users' => $users,
-            'slug' => Slugger::slugger($gid),
+			'slug' => Slugger::slugger($gid),
 		]);
 	}
 
 	/**
 	 * Remove a group connected to a workspace/groupfolder.
-	 * 
+	 *
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
@@ -142,10 +141,10 @@ class ConnectedGroupController extends Controller {
 					'success' => false
 				],
 				Http::STATUS_NOT_FOUND
-			);		
+			);
 		}
 		
-		$space = $this->spaceMapper->find($spaceId);		
+		$space = $this->spaceMapper->find($spaceId);
 
 		$this->folderHelper->removeApplicableGroup(
 			$space->getGroupfolderId(),

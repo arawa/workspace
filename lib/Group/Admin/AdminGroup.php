@@ -24,6 +24,8 @@
 
 namespace OCA\Workspace\Group\Admin;
 
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Service\User\UserFormatter;
 use OCP\IGroupManager;
 use OCP\IUser;
 use Psr\Log\LoggerInterface;
@@ -37,6 +39,7 @@ class AdminGroup {
 	public function __construct(private AdminUserGroup $adminUserGroup,
 		private AdminGroupManager $adminGroupManager,
 		private LoggerInterface $logger,
+		private UserFormatter $userFormatter,
 		private IGroupManager $groupManager) {
 	}
 
@@ -54,5 +57,10 @@ class AdminGroup {
 	public function getUsers(int $spaceId): array {
 		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
 		return $group->getUsers();
+	}
+
+	public function getUsersFormatted(mixed $folderInfo, Space $space): array {
+		$users = $this->getUsers($space->getSpaceId());
+		return $this->userFormatter->formatUsers($users, $folderInfo, (string)$space->getSpaceId());
 	}
 }

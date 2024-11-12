@@ -25,12 +25,11 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminUserGroup;
-use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -42,6 +41,7 @@ use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -67,7 +67,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
-        private UserFormatter $userFormatter,
+		private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
 		public $AppName
@@ -112,20 +112,10 @@ class WorkspaceController extends Controller {
 	 *
 	 */
 	public function destroy(int $spaceId): JSONResponse {
-		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
-			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->adminUserGroup->removeUser($user);
-			}
-		}
-
-		// Removes all workspaces groups
 		$space = $this->spaceManager->get($spaceId);
 		$groups = [];
-		$this->logger->debug('Removing workspaces groups.');
 		foreach (array_keys($space['groups']) as $group) {
 			$groups[] = $group;
-			$this->groupManager->get($group)->delete();
 		}
 
 		$this->spaceManager->remove($spaceId);
@@ -189,7 +179,7 @@ class WorkspaceController extends Controller {
 
 			$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
 
-            $space['users'] = [];
+			$space['users'] = [];
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
 				if (is_null($group)) {
@@ -202,14 +192,14 @@ class WorkspaceController extends Controller {
 				}
 				$groups[] = $group;
 
-                if (str_starts_with($gid, 'SPACE-U-')) {
-                	$space['userCount'] = $group->count();
-                }
+				if (str_starts_with($gid, 'SPACE-U-')) {
+					$space['userCount'] = $group->count();
+				}
 
-                if (str_starts_with($gid, 'SPACE-GE')) {
-                    $users = $group->getUsers();
-                    $space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
-                }
+				if (str_starts_with($gid, 'SPACE-GE')) {
+					$users = $group->getUsers();
+					$space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
+				}
 
 			}
 
@@ -238,21 +228,21 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
-    /**
-     * @NoAdminRequired
-     */
-    public function getUsers(int $spaceId): JSONResponse {
+	/**
+	 * @NoAdminRequired
+	 */
+	public function getUsers(int $spaceId): JSONResponse {
 
-        $space = $this->spaceMapper->find($spaceId);
+		$space = $this->spaceMapper->find($spaceId);
 
-        $groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 		
-        $workspace = array_merge($groupfolder, $space->jsonSerialize());
-        $users = $this->workspaceService->addUsersInfo($workspace);     
+		$workspace = array_merge($groupfolder, $space->jsonSerialize());
+		$users = $this->workspaceService->addUsersInfo($workspace);
 
-        return new JSONResponse($users);
-    }
-    
+		return new JSONResponse($users);
+	}
+	
 	/**
 	 * @NoAdminRequired
 	 * @param string|array $workspace
