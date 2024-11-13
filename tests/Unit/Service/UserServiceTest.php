@@ -33,9 +33,9 @@ use OCP\IGroupManager;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class UserServiceTest extends TestCase {
 	private MockObject&IGroupManager $groupManager;
