@@ -373,7 +373,7 @@ class GroupController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @GeneralManagerRequired
+	 * @SpaceAdminRequired
 	 */
 	public function attachGroupToSpace(int $spaceId, string $gid) {
 		$workspace = $this->spaceManager->get($spaceId);
