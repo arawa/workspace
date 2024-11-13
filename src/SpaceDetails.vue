@@ -120,8 +120,6 @@ import UserTable from './UserTable.vue'
 import { renameSpace, removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
-import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import BadCreateError from './Errors/BadCreateError.js'
 
 export default {
 	name: 'SpaceDetails',

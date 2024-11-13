@@ -80,14 +80,13 @@
 			:key="group.gid"
 			:group="group"
 			:space-name="spaceName"
-	  	:count="group.usersCount"
+			:count="group.usersCount"
 			:added-group="true" />
 	</NcAppNavigationItem>
 </template>
 
 <script>
 import { getLocale } from '@nextcloud/l10n'
-import { getUsers } from './services/spaceService.js'
 import GroupMenuItem from './GroupMenuItem.vue'
 import MenuItemSelector from './MenuItemSelector.vue'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'

@@ -64,7 +64,6 @@
 <script>
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
-import { getUsers } from './services/spaceService.js'
 
 export default {
 	name: 'SpaceTable',

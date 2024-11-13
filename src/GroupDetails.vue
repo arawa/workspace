@@ -67,15 +67,15 @@
 			</div>
 		</div>
 		<UserTable :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
-    <SelectUsers v-if="showSelectUsersModal" :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" @close="toggleShowSelectUsersModal" />
-    <AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
-      :message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
-      @cancel="closeConnectedGroupModal"
-      @remove-group="removeConnectedGroup" />
-    <AlertRemoveGroup v-if="showRemoveGroupModal"
-      :message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
-      @cancel="closeRemoveGroupModal"
-      @remove-group="deleteGroup" />
+		<SelectUsers v-if="showSelectUsersModal" :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" @close="toggleShowSelectUsersModal" />
+		<AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
+			:message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
+			@cancel="closeConnectedGroupModal"
+			@remove-group="removeConnectedGroup" />
+		<AlertRemoveGroup v-if="showRemoveGroupModal"
+			:message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
+			@cancel="closeRemoveGroupModal"
+			@remove-group="deleteGroup" />
 	</div>
 </template>
 
@@ -85,7 +85,6 @@ import AlertRemoveGroup from './AlertRemoveGroup.vue'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
@@ -93,11 +92,10 @@ import UserTable from './UserTable.vue'
 export default {
 	name: 'GroupDetails',
 	components: {
-    AlertRemoveGroup,
+		AlertRemoveGroup,
 		NcActions,
 		NcActionButton,
 		NcActionInput,
-		NcModal,
 		SelectUsers,
 		UserTable,
 	},
@@ -115,10 +113,10 @@ export default {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
 	},
-  mounted() {
-    const space = this.$store.state.spaces[this.$route.params.space]
-    this.$store.dispatch('loadUsers', { space })
-  },
+	mounted() {
+		const space = this.$store.state.spaces[this.$route.params.space]
+		this.$store.dispatch('loadUsers', { space })
+	},
 	methods: {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
@@ -136,30 +134,30 @@ export default {
 		toggleRemoveConnectedGroupModal() {
 			this.showRemoveConnectedGroupModal = !this.showRemoveConnectedGroupModal
 		},
-    toggleRemoveGroupModal() {
+		toggleRemoveGroupModal() {
 			this.showRemoveGroupModal = !this.showRemoveGroupModal
-    },
+		},
 		closeConnectedGroupModal() {
 			this.showRemoveConnectedGroupModal = false
 		},
-    closeRemoveGroupModal() {
-      this.showRemoveGroupModal = false
-    },
+		closeRemoveGroupModal() {
+			this.showRemoveGroupModal = false
+		},
 		removeConnectedGroup() {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
-      this.$store.dispatch('substractionSpaceUserCount', {
-        spaceName: space.name,
-        usersCount: space.added_groups[gid].usersCount
-      })
+			this.$store.dispatch('substractionSpaceUserCount', {
+				spaceName: space.name,
+				usersCount: space.added_groups[gid].usersCount
+			})
 
-      this.$store.dispatch('substractionGroupUserCount', {
-        spaceName: space.name,
-        gid: UserGroup.getGid(space),
-        usersCount: space.added_groups[gid].usersCount
-      })
-      
+			this.$store.dispatch('substractionGroupUserCount', {
+				spaceName: space.name,
+				gid: UserGroup.getGid(space),
+				usersCount: space.added_groups[gid].usersCount
+			})
+
 			this.$store.dispatch('removeConnectedGroup', {
 				spaceId: space.id,
 				gid,
@@ -168,7 +166,7 @@ export default {
 
 			Object.keys(space.users).forEach(key => {
 				if (space.users[key].groups.includes(gid)) {
-				this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
+					this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
 				}
 			})
 

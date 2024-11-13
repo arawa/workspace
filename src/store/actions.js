@@ -21,7 +21,7 @@
  *
  */
 
-import { addGroupToWorkspace } from '../services/spaceService.js'
+import { getUsers, addGroupToWorkspace } from '../services/spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
@@ -29,7 +29,6 @@ import showNotificationError from '../services/Notifications/NotificationError.j
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
-import { getUsers } from '../services/spaceService.js'
 
 export default {
 	// Adds a user to a group
@@ -86,12 +85,12 @@ export default {
 	decrementSpaceUserCount(context, { spaceName }) {
 		context.commit('DECREMENT_SPACE_USER_COUNT', { spaceName })
 	},
-  substractionSpaceUserCount(context, { spaceName, usersCount }) {
-    context.commit('SUBSTRACTION_SPACE_USER_COUNT', { spaceName, usersCount})
-  },
-  substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
-    context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount})
-  },
+	substractionSpaceUserCount(context, { spaceName, usersCount }) {
+		context.commit('SUBSTRACTION_SPACE_USER_COUNT', { spaceName, usersCount })
+	},
+	substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
+		context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount })
+	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
@@ -344,37 +343,35 @@ export default {
 			})
 			.catch((e) => {
 				console.error('Error to remove connected group', e.message)
-        console.error(e)
+				console.error(e)
 			})
-		
+
 		context.commit('removeAddedGroupFromSpace', { name, gid })
 
 		// Naviagte back to home
 		router.push({
 			path: `/workspace/${name}`,
 		})
-
-		
 	},
 	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
 		const space = context.state.spaces[name]
 		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
-		.then(resp => {
-			context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
-			const users = resp.data.users
-			for (const user in users) {
-				context.commit('addUserToWorkspace', { name, user: users[user] })
-				context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
-        context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
-        context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
-        context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
-			}
-			return resp.data
-		})
-		.catch(error => {
-			console.error('Error to add connected group', error.message)
-      console.error(error)
-		})
+			.then(resp => {
+				context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
+				const users = resp.data.users
+				for (const user in users) {
+					context.commit('addUserToWorkspace', { name, user: users[user] })
+					context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
+					context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
+					context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
+					context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
+				}
+				return resp.data
+			})
+			.catch(error => {
+				console.error('Error to add connected group', error.message)
+				console.error(error)
+			})
 
 		return result
 	},
@@ -450,7 +447,6 @@ export default {
 		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
 		context.commit('SET_NO_USERS', ({ activated: false }))
 
-		
 		if (Object.keys(space.users).length === space.userCount) {
 			return
 		}
@@ -475,7 +471,7 @@ export default {
 				}
 			})
 			.catch(error => {
-				console.error(`Impossible to get users for the workspace.`)
+				console.error('Impossible to get users for the workspace.')
 				console.error(error)
 			})
 	},

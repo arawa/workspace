@@ -287,8 +287,9 @@ describe('destroy', () => {
 	it('calls axios.delete method with proper parameters', async () => {
 		axios.delete.mockResolvedValue(responseValue)
 		await destroy('foobar')
+		const workspace = { workspace: { id: 1 } }
 		const spaceId = workspace.id
-		
+
 		expect(axios.delete).toHaveBeenCalledWith(`/apps/workspace/space/${spaceId}`, {
 			data: { workspace: 'foobar' },
 		})

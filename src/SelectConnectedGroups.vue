@@ -1,61 +1,62 @@
 <template>
-  <NcModal class="modal-connected-groups"
-    @close="close()">
-    <div class="container-select-groups">
-      <header class="header-select-groups">
-        <h1>
-          {{ t('workspace', 'Add a group') }}
-        </h1>
-      </header>
-      <div class="body-select-groups">
-        <NcSelect
-          class="searchbar-groups"
-          track-by="gid"
-          label="displayName"
-          :limit="10"
-          :options="groupsSelectable"
-          :placeholder="t('workspace', 'Start typing text to search for groups')"
-          :loading="loadingGroups"
-          :appendToBody="false"
-          :userSelect="true"
-          @option:selected="addGroupToBatch"
-          @search="lookupGroups"
-          @close="groupsSelectable=[]" />
-      </div>
-      <div class="content-group-list">
-        <div v-if="groupsSelected.length !== 0"
-          class="select-group-list">
-          <div v-for="group in groupsSelected"
-            class="group-item">
-            <div class="group-avatar">
-              <NcAvatar
-                :display-name="group.displayName"
-                :is-no-user="true" />
-              <div class="groupname">
-                <span>{{ group.displayName }}</span>
-              </div>
-            </div>
-            <div>
-              <NcActions>
-                <NcActionButton icon="icon-delete"
-                  @click="removeGroupFromBatch(group)">
-                  {{ t('workspace', 'remove group from selection') }}
-                </NcActionButton>
-              </NcActions>
-            </div>
-          </div>
-        </div>
-        <NcEmptyContent v-else
-          class="content-group-list-empty"
-          :title="t('workspace', 'No group selected')" />
-      </div>
-      <NcButton type="secondary"
-        class="btn-add-groups"
-        @click="validate">
-        {{ t('workspace', 'Add') }}
-      </NcButton>
-    </div>
-  </NcModal>
+	<NcModal class="modal-connected-groups"
+		@close="close()">
+		<div class="container-select-groups">
+			<header class="header-select-groups">
+				<h1>
+					{{ t('workspace', 'Add a group') }}
+				</h1>
+			</header>
+			<div class="body-select-groups">
+				<NcSelect
+					class="searchbar-groups"
+					track-by="gid"
+					label="displayName"
+					:limit="10"
+					:options="groupsSelectable"
+					:placeholder="t('workspace', 'Start typing text to search for groups')"
+					:loading="loadingGroups"
+					:appendToBody="false"
+					:userSelect="true"
+					@option:selected="addGroupToBatch"
+					@search="lookupGroups"
+					@close="groupsSelectable=[]" />
+			</div>
+			<div class="content-group-list">
+				<div v-if="groupsSelected.length !== 0"
+					class="select-group-list">
+					<div v-for="group in groupsSelected"
+						:key="group.gid"
+						class="group-item">
+						<div class="group-avatar">
+							<NcAvatar
+								:display-name="group.displayName"
+								:is-no-user="true" />
+							<div class="groupname">
+								<span>{{ group.displayName }}</span>
+							</div>
+						</div>
+						<div>
+							<NcActions>
+								<NcActionButton icon="icon-delete"
+									@click="removeGroupFromBatch(group)">
+									{{ t('workspace', 'remove group from selection') }}
+								</NcActionButton>
+							</NcActions>
+						</div>
+					</div>
+				</div>
+				<NcEmptyContent v-else
+					class="content-group-list-empty"
+					:title="t('workspace', 'No group selected')" />
+			</div>
+			<NcButton type="secondary"
+				class="btn-add-groups"
+				@click="validate">
+				{{ t('workspace', 'Add') }}
+			</NcButton>
+		</div>
+	</NcModal>
 </template>
 
 <script>
@@ -77,7 +78,7 @@ export default {
 		NcAvatar,
 		NcButton,
 		NcEmptyContent,
-    NcModal,
+		NcModal,
 		NcSelect,
 	},
 	data() {
@@ -128,25 +129,25 @@ export default {
 					console.error(reason.message)
 				})
 				.finally(() => {
-				  this.loadingGroups = false
+					this.loadingGroups = false
 				})
 		},
 		validate() {
 			this.$emit('close')
 			// todo: Call api
 			this.groupsSelected.forEach(group => {
-        console.log('selectConnectedGroups - validate - group', group)
+				console.info('selectConnectedGroups - validate - group', group)
 				const space = this.$store.state.spaces[this.$route.params.space]
 				this.$store.dispatch('addConnectedGroupToWorkspace', {
-					spaceId: space.id ,
+					spaceId: space.id,
 					group,
 					name: this.$route.params.space,
 				})
 			})
 		},
-    close() {
-      this.$emit('close')
-    }
+		close() {
+			this.$emit('close')
+		}
 	},
 }
 </script>
@@ -154,7 +155,7 @@ export default {
 <style scoped>
 
 .modal-connected-groups :deep(.modal-wrapper .modal-container) {
-  min-height: auto;
+	min-height: auto;
 }
 
 .container-select-groups {
@@ -174,7 +175,7 @@ export default {
 
 .header-select-groups h1 {
 	margin: 10px;
-  margin-bottom: 16px;
+	margin-bottom: 16px;
 	font-size: 20px;
 }
 
@@ -187,14 +188,14 @@ export default {
 }
 
 .searchbar-groups :deep(.vs__dropdown-toggle) {
-  border: 2px solid var(--color-border-dark);
+	border: 2px solid var(--color-border-dark);
 }
 
 .content-group-list {
 	width: 80%;
 	height: 400px;
 	padding: 8px;
-  margin-top: 16px;
+	margin-top: 16px;
 }
 
 .content-group-list-empty {

@@ -59,14 +59,14 @@ export function createSpace(spaceName, vueInstance = undefined) {
 }
 
 export function getUsers(spaceId) {
-  const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
-    .then(resp => {
-      return resp.data
-    })
-    .catch(error => {
-      console.error('Impossible to get users from a workspace.', error)
-    })
-  return result
+	const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Impossible to get users from a workspace.', error)
+		})
+	return result
 }
 
 /**

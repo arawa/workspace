@@ -89,7 +89,7 @@ export default {
 			gid,
 			displayName,
 			usersCount: 0,
-      slug
+			slug
 		}
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
@@ -101,7 +101,7 @@ export default {
 	},
 	UPDATE_USERS(state, { space, users }) {
 		space.users = users
-	  VueSet(state.spaces, space.name, space)
+		VueSet(state.spaces, space.name, space)
 	},
 	SET_LOADING_USERS_WAITTING(state, { activated }) {
 		state.loadingUsersWaitting = activated
@@ -114,7 +114,7 @@ export default {
 		space.groups[gid].usersCount++
 		VueSet(state.spaces, spaceName, space)
 	},
-  INCREMENT_ADDED_GROUP_USER_COUNT(state, { spaceName, gid }) {
+	INCREMENT_ADDED_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
 		space.added_groups[gid].usersCount++
 		VueSet(state.spaces, spaceName, space)
@@ -134,16 +134,16 @@ export default {
 		space.userCount--
 		VueSet(state.spaces, spaceName, space)
 	},
-  SUBSTRACTION_SPACE_USER_COUNT(state, { spaceName, usersCount }) {
-    const space = state.spaces[spaceName]
-    space.userCount -= usersCount
-    VueSet(state.spaces, spaceName, space)
-  },
-  SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {
-    const space = state.spaces[spaceName]
-    space.groups[gid].usersCount -= usersCount
-    VueSet(state.spaces, spaceName, space)
-  },
+	SUBSTRACTION_SPACE_USER_COUNT(state, { spaceName, usersCount }) {
+		const space = state.spaces[spaceName]
+		space.userCount -= usersCount
+		VueSet(state.spaces, spaceName, space)
+	},
+	SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount -= usersCount
+		VueSet(state.spaces, spaceName, space)
+	},
 	CHANGE_USER_ROLE(state, { spaceName, user, role }) {
 		const space = state.spaces[spaceName]
 		space.users[user.uid].role = role

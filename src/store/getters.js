@@ -39,12 +39,12 @@ export const getters = {
 		}
 		return '[' + gid + ']'
 	},
-  getGroupUserCount: state => (gid) => {
-    return state.spaces[spaceName].groups[gid].usersCount
-  },
-  getSpaceUserCount: state => (name) => {
-    return state.spaces[name].userCount
-  },
+	getGroupUserCount: state => (spaceName, gid) => {
+		return state.spaces[spaceName].groups[gid].usersCount
+	},
+	getSpaceUserCount: state => (name) => {
+		return state.spaces[name].userCount
+	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
 		const users = state.spaces[spaceName].users
@@ -68,7 +68,7 @@ export const getters = {
 	// Test if group is from space added groups
 	isSpaceAddedGroup: state => (spaceName, groupName) => {
 		const space = state.spaces[spaceName]
-    const gids = Object.keys(space.added_groups)
+		const gids = Object.keys(space.added_groups)
 		return gids.includes(groupName)
 	},
 	// Tests wheter a group is the GE or U group of a space
@@ -94,7 +94,7 @@ export const getters = {
 			return 0
 		}
 		if (state.spaces[name].userCount !== undefined && state.spaces[name].userCount > 0) {
-			return state.spaces[name].userCount;
+			return state.spaces[name].userCount
 		}
 		const users = state.spaces[name].users
 		if (users === undefined || users.length === 0) {

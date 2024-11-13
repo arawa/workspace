@@ -1,30 +1,30 @@
 <template>
-  <NcModal
-    size="small">
-    <div class="container-modal-remove">
-      <NcNoteCard type="warning">
-        <p>{{ message }}</p>
-      </NcNoteCard>
-      <div class="container-buttons-remove">
-        <NcButton
-          aria-label="cancel"
-          type="secondary"
-          @click="cancel()" >
-          <template>
-            {{ t('workspace', 'Cancel') }}
-          </template>
-        </NcButton>
-        <NcButton
-          aria-label="confirm"
-          type="primary"
-          @click="removeGroup()" >
-          <template>
-            {{ t('workspace', 'Confirm') }}
-          </template>
-        </NcButton>
-      </div>
-    </div>
-  </NcModal>
+	<NcModal
+		size="small">
+		<div class="container-modal-remove">
+			<NcNoteCard type="warning">
+				<p>{{ message }}</p>
+			</NcNoteCard>
+			<div class="container-buttons-remove">
+				<NcButton
+					aria-label="cancel"
+					type="secondary"
+					@click="cancel()" >
+					<template>
+						{{ t('workspace', 'Cancel') }}
+					</template>
+				</NcButton>
+				<NcButton
+					aria-label="confirm"
+					type="primary"
+					@click="removeGroup()" >
+					<template>
+						{{ t('workspace', 'Confirm') }}
+					</template>
+				</NcButton>
+			</div>
+		</div>
+	</NcModal>
 </template>
 
 <script>
@@ -33,39 +33,39 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 export default {
-  name: 'AlertRemoveGroup',
-  components: {
-    NcButton,
-    NcNoteCard,
-    NcModal
-  },
-  props: {
-    message: {
-      type: String,
-      required: true,
-    },
-  },
-  methods: {
-    cancel() {
-      this.$emit('cancel')
-    },
-    removeGroup() {
-      this.$emit('remove-group')
-    }
-  }
+	name: 'AlertRemoveGroup',
+	components: {
+		NcButton,
+		NcNoteCard,
+		NcModal
+	},
+	props: {
+		message: {
+			type: String,
+			required: true,
+		},
+	},
+	methods: {
+		cancel() {
+			this.$emit('cancel')
+		},
+		removeGroup() {
+			this.$emit('remove-group')
+		}
+	}
 }
 </script>
 
 <style scoped>
 .container-buttons-remove {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 24px;
 }
 
 .container-modal-remove {
-  padding: 24px;
-  margin-top: 20px;
+	padding: 24px;
+	margin-top: 20px;
 }
 
 </style>

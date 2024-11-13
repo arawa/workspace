@@ -21,79 +21,79 @@
 -->
 
 <template>
-  <NcModal class="modal-select-users"
-    @close="close()">
-    <div class="select-users-wrapper">
-      <header class="header-modal">
-        <h1 class="title-add-users-modal">
-          {{ t('workspace', 'Add users') }}
-        </h1>
-      </header>
-      <div class="body-select-users">
-        <NcSelect class="searchbar-users"
-          label="name"
-          track-by="uid"
-          :custom-label="displayForSearching"
-          :loading="isLookingUpUsers"
-          :multiple="false"
-          :options="selectableUsers"
-          :placeholder="t('workspace', 'Start typing to lookup users')"
-          :tag-width="50"
-          :user-select="true"
-          @option:selected="addUserToBatch"
-          @search="lookupUsers"
-          @close="selectableUsers=[]" />
-      </div>
-      <div class="content-users-list">
-        <div v-if="allSelectedUsers.length !== 0"
-          class="select-user-list">
-          <div v-for="user in allSelectedUsers"
-            :key="user.name"
-            class="user-item"
-            :class="$store.getters.isMember($route.params.space, user) || !$route.params.slug ? '' : 'user-not-member'">
-            <div>
-              <div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-              <NcAvatar :display-name="user.name" :user="user.uid" />
-              <div class="username">
-                <span>{{ user.name }}</span>
-              </div>
-            </div>
-            <div>
-              <NcCheckboxRadioSwitch v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.slug)"
-                class="role-toggle"
-                type="checkbox"
-                :checked="user.role === 'admin'"
-                :disabled="$store.getters.isMember($route.params.space, user)"
-                @update:checked="toggleUserRole(user)">
-                {{ t('workspace', 'S.A.') }}
-              </NcCheckboxRadioSwitch>
-              <NcActions>
-                <NcActionButton icon="icon-delete"
-                  @click="removeUserFromBatch(user)">
-                  {{ t('workspace', 'remove users from selection') }}
-                </NcActionButton>
-              </NcActions>
-            </div>
-          </div>
-        </div>
-        <NcEmptyContent v-else
-          class="content-user-list-empty"
-          :title="t('workspace', 'No users selected')" />
-      </div>
-      <NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
-        class="note-card"
-        type="warning">
-        <p>
-          {{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
-        </p>
-      </NcNoteCard>
-      <NcButton type="secondary"
-        class="btn-add-users"
-        @click="addUsersToWorkspaceOrGroup()">
-          {{ t('workspace', 'Add users') }}
-      </NcButton>
-    </div>
-  </NcModal>
+	<NcModal class="modal-select-users"
+		@close="close()">
+		<div class="select-users-wrapper">
+			<header class="header-modal">
+				<h1 class="title-add-users-modal">
+					{{ t('workspace', 'Add users') }}
+				</h1>
+			</header>
+			<div class="body-select-users">
+				<NcSelect class="searchbar-users"
+					label="name"
+					track-by="uid"
+					:custom-label="displayForSearching"
+					:loading="isLookingUpUsers"
+					:multiple="false"
+					:options="selectableUsers"
+					:placeholder="t('workspace', 'Start typing to lookup users')"
+					:tag-width="50"
+					:user-select="true"
+					@option:selected="addUserToBatch"
+					@search="lookupUsers"
+					@close="selectableUsers=[]" />
+			</div>
+			<div class="content-users-list">
+				<div v-if="allSelectedUsers.length !== 0"
+					class="select-user-list">
+					<div v-for="user in allSelectedUsers"
+						:key="user.name"
+						class="user-item"
+						:class="$store.getters.isMember($route.params.space, user) || !$route.params.slug ? '' : 'user-not-member'">
+						<div>
+							<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
+							<NcAvatar :display-name="user.name" :user="user.uid" />
+							<div class="username">
+								<span>{{ user.name }}</span>
+							</div>
+						</div>
+						<div>
+							<NcCheckboxRadioSwitch v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.slug)"
+								class="role-toggle"
+								type="checkbox"
+								:checked="user.role === 'admin'"
+								:disabled="$store.getters.isMember($route.params.space, user)"
+								@update:checked="toggleUserRole(user)">
+								{{ t('workspace', 'S.A.') }}
+							</NcCheckboxRadioSwitch>
+							<NcActions>
+								<NcActionButton icon="icon-delete"
+									@click="removeUserFromBatch(user)">
+									{{ t('workspace', 'remove users from selection') }}
+								</NcActionButton>
+							</NcActions>
+						</div>
+					</div>
+				</div>
+				<NcEmptyContent v-else
+					class="content-user-list-empty"
+					:title="t('workspace', 'No users selected')" />
+			</div>
+			<NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
+				class="note-card"
+				type="warning">
+				<p>
+					{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+				</p>
+			</NcNoteCard>
+			<NcButton type="secondary"
+				class="btn-add-users"
+				@click="addUsersToWorkspaceOrGroup()">
+					{{ t('workspace', 'Add users') }}
+			</NcButton>
+		</div>
+	</NcModal>
 </template>
 
 <script>
@@ -126,11 +126,11 @@ export default {
 		NcAvatar,
 		NcActions,
 		NcActionButton,
-    NcCheckboxRadioSwitch,
-    NcButton,
+		NcCheckboxRadioSwitch,
+		NcButton,
 		NcNoteCard,
-    NcEmptyContent,
-    NcModal,
+		NcEmptyContent,
+		NcModal,
 		NcSelect,
 	},
 	data() {
@@ -174,7 +174,6 @@ export default {
 					}
 					if (Object.keys(space.users).includes(user.uid) && decodeURIComponent(this.$route.params.slug).startsWith('SPACE-G-')) {
 						this.addExistingUserFromSubgroup(user)
-						return
 					} else {
 						this.addNewUserFromSubgroup(user, space)
 					}
@@ -290,9 +289,9 @@ export default {
 				spaceName: this.$route.params.space,
 			})
 		},
-    close() {
-      this.$emit('close')
-    },
+		close() {
+			this.$emit('close')
+		},
 		displayForSearching({ name, email, uid }) {
 			return `${name} - ${email} - ${uid}`
 		},
@@ -449,11 +448,11 @@ export default {
 }
 
 .modal-select-users :deep(.modal-wrapper .modal-container) {
-  min-height: auto;
+	min-height: auto;
 }
 
 .body-select-users {
-  display: flex;
+	display: flex;
 }
 
 .is-member {
@@ -473,7 +472,7 @@ export default {
 
 .header-modal h1 {
 	margin: 10px;
-  margin-bottom: 16px;
+	margin-bottom: 16px;
 	font-size: 20px;
 }
 
@@ -482,14 +481,14 @@ export default {
 }
 
 .searchbar-groups :deep(.vs__dropdown-toggle) {
-  border: 2px solid var(--color-border-dark);
+	border: 2px solid var(--color-border-dark);
 }
 
 .content-users-list {
 	width: 90%;
 	height: 400px;
 	padding: 8px;
-  margin-top: 16px;
+	margin-top: 16px;
 }
 
 .select-user-list {
@@ -538,7 +537,7 @@ export default {
 }
 
 .searchbar-users :deep(.vs__dropdown-toggle) {
-  border: 2px solid var(--color-border-dark);
+	border: 2px solid var(--color-border-dark);
 }
 
 .username {
