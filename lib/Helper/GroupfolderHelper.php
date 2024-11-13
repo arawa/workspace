@@ -127,12 +127,4 @@ class GroupfolderHelper {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the renameFolder from FolderManager.');
 		}
 	}
-
-	public function renameFolder(int $folderId, string $newMountPoint):void {
-		try {
-			$this->folderManager->renameFolder($folderId, $newMountPoint);
-		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the renameFolder from FolderManager.');
-		}
-	}
 }
