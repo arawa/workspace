@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Backport: Allow the Workspace Manager to attach a group to a workspace ( [#1085](https://github.com/arawa/workspace/pull/1085) )
-
+- Create the 3.2.4 release ( [#1086](https://github.com/arawa/workspace/pull/1086) )
 
 ## [3.2.3] - 2024-10-16
 
