@@ -38,6 +38,8 @@
 					:multiple="false"
 					:options="selectableUsers"
 					:placeholder="t('workspace', 'Start typing to lookup users')"
+					:appendToBody="false"
+					:userSelect="true"
 					:tag-width="50"
 					:user-select="true"
 					@option:selected="addUserToBatch"
