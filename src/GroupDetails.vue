@@ -88,6 +88,7 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import SelectUsers from './SelectUsers.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
 
 export default {
 	name: 'GroupDetails',
@@ -165,6 +166,15 @@ export default {
 			})
 
 			Object.keys(space.users).forEach(key => {
+
+        if (space.users[key].groups.includes(ManagerGroup.getGid(space)) && space.users[key].groups.includes(gid)) {
+          console.debug('space.users[key]', space.users[key])
+					this.$store.dispatch('decrementGroupUserCount', {
+						spaceName: this.$route.params.space,
+						gid: ManagerGroup.getGid(space)
+					})
+				}
+
 				if (space.users[key].groups.includes(gid)) {
 					this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
 				}
