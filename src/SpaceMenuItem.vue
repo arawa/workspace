@@ -71,10 +71,7 @@
 				</NcActionButton>
 			</template>
 		</NcAppNavigationCaption>
-		<NcModal v-if="isAddGroupModalOpen"
-			@close="toggleAddGroupModal">
-			<SelectConnectedGroups @close="toggleAddGroupModal" />
-		</NcModal>
+    <SelectConnectedGroups v-if="isAddGroupModalOpen" @close="toggleAddGroupModal" />
 		<GroupMenuItem
 			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
@@ -96,7 +93,6 @@ import NcAppNavigationCaption from '@nextcloud/vue/dist/Components/NcAppNavigati
 import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import Plus from 'vue-material-design-icons/Plus.vue'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 
@@ -112,7 +108,6 @@ export default {
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
 		NcCounterBubble,
-		NcModal,
 		Plus,
 		SelectConnectedGroups,
 	},
