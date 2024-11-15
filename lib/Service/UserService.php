@@ -151,7 +151,7 @@ class UserService {
 			fn ($group) => str_starts_with($group->getGID(), 'SPACE-GE')
 		);
 
-		$canRemove = count($allManagersGroups) > 0 && count($allManagersGroups) <= 1 ? true : false;
+		$canRemove = count($allManagersGroups) >= 0 && count($allManagersGroups) <= 1 ? true : false;
 
 		if (!$canRemove) {
 			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');

@@ -43,13 +43,18 @@ class AdminGroup {
 		private IGroupManager $groupManager) {
 	}
 
-	public function addUser(IUser $user, string $gid): bool {
-		$group = $this->adminGroupManager->get($gid);
+	public function addUser(IUser $user, int $spaceId): bool {
+		$group = $this->adminGroupManager->get(self::GID_PREFIX . $spaceId);
 		$group->addUser($user);
 		$this->adminUserGroup->addUser($user);
 
 		return true;
 	}
+
+	public function removeUser(IUser $user, int $spaceId): void {
+		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
+		$group->removeUser($user);
+    }
 
 	/**
 	 * @return IUser[]

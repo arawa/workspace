@@ -4,6 +4,8 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Slugger;
@@ -22,6 +24,8 @@ class ConnectedGroupController extends Controller {
 		private LoggerInterface $logger,
 		private RootFolder $rootFolder,
 		private IGroupManager $groupManager,
+		private AdminGroup $adminGroup,
+		private AdminUserGroup $adminUserGroup,
 		private SpaceMapper $spaceMapper,
 		private SpaceManager $spaceManager,
 		private UserGroup $userGroup,
@@ -143,8 +147,26 @@ class ConnectedGroupController extends Controller {
 				Http::STATUS_NOT_FOUND
 			);
 		}
-		
+
 		$space = $this->spaceMapper->find($spaceId);
+        $users = $group->getUsers();
+
+        $users = array_filter(
+            $users,
+            function($user) use ($space) {
+                $groups = $this->groupManager->getUserGroups($user);
+                $gids = array_map(fn($group) => $group->getGID(), $groups);
+                return in_array(AdminGroup::GID_PREFIX . $space->getSpaceId(), $gids);
+            }
+        );
+        
+		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
+            $this->adminGroup->removeUser($user, $spaceId);
+			if ($this->userService->canRemoveWorkspaceManagers($user)) {
+				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group in ' . $space->getSpaceName());
+				$this->adminUserGroup->removeUser($user);
+			}
+		}
 
 		$this->folderHelper->removeApplicableGroup(
 			$space->getGroupfolderId(),
