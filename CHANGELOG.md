@@ -25,6 +25,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.2.5] - 2024-11-18
+
+### Added
+
+- Add warning about compatibility with groupfolders for Nextcloud AppStore ( [#1090](https://github.com/arawa/workspace/pull/1090) )
+- Backport: warning message about compatibility groupfolders/1089/stable3.2 ( [#1091](https://github.com/arawa/workspace/pull/1091) )
+- Create release 3.2.5 ( [#1092](https://github.com/arawa/workspace/pull/1092) )
+
 ## [3.2.4] - 2024-11-14
 
 ### Fixed
