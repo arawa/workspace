@@ -38,6 +38,17 @@ Workspace allows managers to :
 
 It is necessary to install the Group Folders app for the Workspace app to work.
 
+## ⚠️ Warning
+
+We found an incompatibility with the latest release of Groupfolders.
+
+These are the compatible versions until we address those issues:
+
+| Workspace | GroupFolders |
+| :---: | :---: |
+| all versions | 16.0.0 to 16.0.9 |
+| all versions | 17.0.0 to 17.0.3 |
+
 # App configuration
 
 Before using Workspace, you must configure the app, following these important steps:
