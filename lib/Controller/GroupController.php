@@ -450,7 +450,7 @@ class GroupController extends Controller {
 	 */
 	public function search(string $pattern, ?bool $ignoreSpaces = null, array $groupsPresents = []): JSONResponse {
 
-		$groups = $this->collaboratorSearch->search(
+		[$groups] = $this->collaboratorSearch->search(
 			$pattern,
 			[
 				IShare::TYPE_GROUP
@@ -460,10 +460,17 @@ class GroupController extends Controller {
 			0
 		);
 		
-		$groups = array_map(
+		$groupsSearching = array_map(
 			fn ($group) => $group['value']['shareWith'],
-			$groups[0]['groups']
+			$groups['groups']
 		);
+
+		$groupsExact = [];
+		if (!empty($groups['exact']['groups'])) {
+			$groupsExact[] = $groups['exact']['groups'][0]['value']['shareWith'];
+		}
+
+		$groups = array_merge($groupsSearching, $groupsExact);
 
 		$groups = array_map(fn ($group) => $this->groupManager->get($group), $groups);
 
