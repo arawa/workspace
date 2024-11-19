@@ -105,6 +105,7 @@ class GroupController extends Controller {
 			'group' => [
 				'gid' => $NCGroup->getGID(),
 				'displayName' => $NCGroup->getDisplayName(),
+				'types' => $NCGroup->getBackendNames(),
 				'usersCount' => 0,
 				'slug' => Slugger::slugger($NCGroup->getGID())
 			]

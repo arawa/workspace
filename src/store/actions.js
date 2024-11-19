@@ -122,6 +122,7 @@ export default {
 					name,
 					gid,
 					displayName,
+          types: resp.data.group.types,
 					slug: resp.data.group.slug
 				})
 				// Navigates to the g roup's details page
