@@ -65,7 +65,7 @@ class GroupController extends Controller {
 		private UserService $userService,
 		private UserWorkspace $userWorkspace,
 		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
-		private ShareMembersOnlyFilter $shareMembersOnlyFilter
+		private ShareMembersOnlyFilter $shareMembersOnlyFilter,
 	) {
 	}
 
