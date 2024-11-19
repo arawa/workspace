@@ -21,89 +21,81 @@
 -->
 
 <template>
-	<div class="select-users-wrapper">
-		<div class="header-modal">
-			<h1 class="title-add-users-modal">
-				{{ t('workspace', 'Add users') }}
-			</h1>
-		</div>
-		<NcMultiselect class="select-users-input"
-			label="name"
-			:custom-label="displayForSearching"
-			track-by="uid"
-			:loading="isLookingUpUsers"
-			:multiple="false"
-			:options="selectableUsers"
-			:placeholder="t('workspace', 'Start typing to lookup users')"
-			:tag-width="50"
-			:user-select="true"
-			@change="addUserToBatch"
-			@close="selectableUsers=[]"
-			@search-change="lookupUsers">
-			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
-		</NcMultiselect>
-		<div class="select-users-list">
-			<div v-if="allSelectedUsers.length === 0"
-				class="select-users-list-empty">
-				<span>
-					{{ t('workspace', 'No users selected') }}
-				</span>
+	<NcModal class="modal-select-users"
+		@close="close()">
+		<div class="select-users-wrapper">
+			<header class="header-modal">
+				<h1 class="title-add-users-modal">
+					{{ t('workspace', 'Add users') }}
+				</h1>
+			</header>
+			<div class="body-select-users">
+				<NcSelect class="searchbar-users"
+					label="name"
+					track-by="uid"
+					:custom-label="displayForSearching"
+					:loading="isLookingUpUsers"
+					:multiple="false"
+					:options="selectableUsers"
+					:placeholder="t('workspace', 'Start typing to lookup users')"
+					:appendToBody="false"
+					:userSelect="true"
+					:tag-width="50"
+					:user-select="true"
+					@option:selected="addUserToBatch"
+					@search="lookupUsers"
+					@close="selectableUsers=[]" />
 			</div>
-			<div v-else>
-				<div v-for="user in allSelectedUsers"
-					:key="user.name"
-					class="user-entry"
-					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'">
-					<div>
-						<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-						<NcAvatar :display-name="user.name" :user="user.uid" />
-						<div class="user-name">
-							<span> {{ user.name }} </span>
+			<div class="content-users-list">
+				<div v-if="allSelectedUsers.length !== 0"
+					class="select-user-list">
+					<div v-for="user in allSelectedUsers"
+						:key="user.name"
+						class="user-item"
+						:class="$store.getters.isMember($route.params.space, user) || !$route.params.slug ? '' : 'user-not-member'">
+						<div>
+							<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
+							<NcAvatar :display-name="user.name" :user="user.uid" />
+							<div class="username">
+								<span>{{ user.name }}</span>
+							</div>
 						</div>
-					</div>
-					<div class="user-entry-actions">
-						<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
-							<input type="checkbox"
+						<div>
+							<NcCheckboxRadioSwitch v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.slug)"
 								class="role-toggle"
+								type="checkbox"
 								:checked="user.role === 'admin'"
-								@change="toggleUserRole(user)">
-							<label>{{ t('workspace', 'S.A.') }}</label>
+								:disabled="$store.getters.isMember($route.params.space, user)"
+								@update:checked="toggleUserRole(user)">
+								{{ t('workspace', 'S.A.') }}
+							</NcCheckboxRadioSwitch>
+							<NcActions>
+								<NcActionButton icon="icon-delete"
+									@click="removeUserFromBatch(user)">
+									{{ t('workspace', 'remove users from selection') }}
+								</NcActionButton>
+							</NcActions>
 						</div>
-						<NcActions>
-							<NcActionButton icon="icon-delete"
-								@click="removeUserFromBatch(user)">
-								{{ t('workspace', 'remove users from selection') }}
-							</NcActionButton>
-						</NcActions>
 					</div>
 				</div>
+				<NcEmptyContent v-else
+					class="content-user-list-empty"
+					:title="t('workspace', 'No users selected')" />
 			</div>
+			<NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
+				class="note-card"
+				type="warning">
+				<p>
+					{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+				</p>
+			</NcNoteCard>
+			<NcButton type="secondary"
+				class="btn-add-users"
+				@click="addUsersToWorkspaceOrGroup()">
+					{{ t('workspace', 'Add users') }}
+			</NcButton>
 		</div>
-		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
-			type="warning">
-			<p>
-				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
-			</p>
-		</NcNoteCard>
-		<div class="add-users-wrapper">
-			<button @click="addUsersToWorkspaceOrGroup()">
-				{{ t('workspace', 'Add users') }}
-			</button>
-		</div>
-		<!-- <div class="select-users-actions">
-			<button class="icon-upload" @click="uploadNewFile()">
-				<span>{{ t('workspace', 'Add users from csv file') }}</span>
-			</button>
-			<input ref="filesAttachment"
-				type="file"
-				style="display: none;"
-				multiple
-				@change="handleUploadFile">
-			<button class="icon-folder" style="padding: 8px 32px;" @click="shareCsvFromFiles()">
-				<span>{{ t('workspace', 'Import csv from Files') }}</span>
-			</button>
-		</div> -->
-	</div>
+	</NcModal>
 </template>
 
 <script>
@@ -111,8 +103,12 @@ import axios from '@nextcloud/axios'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import { generateUrl } from '@nextcloud/router'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
@@ -132,8 +128,12 @@ export default {
 		NcAvatar,
 		NcActions,
 		NcActionButton,
+		NcCheckboxRadioSwitch,
+		NcButton,
 		NcNoteCard,
-		NcMultiselect,
+		NcEmptyContent,
+		NcModal,
+		NcSelect,
 	},
 	data() {
 		return {
@@ -165,35 +165,134 @@ export default {
 			this.$emit('close')
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.allSelectedUsers.forEach(user => {
-				let gid = ''
-				if (this.$route.params.group !== undefined) {
-					// Adding a user to a workspace 'subgroup
-					this.$store.dispatch('addUserToGroup', {
-						name: this.$route.params.space,
-						gid: this.$route.params.group,
-						user,
-					})
-					if (user.role === 'admin') {
-						this.$store.dispatch('addUserToGroup', {
-							name: this.$route.params.space,
-							gid: ManagerGroup.getGid(space),
-							user,
-						})
+				if (this.$route.params.slug !== undefined) {
+					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-U')) {
+						this.addUserFromUserGroup(user)
+						return
+					}
+					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-GE')) {
+						this.addUserFromManagerGroup(user, space)
+						return
+					}
+					if (Object.keys(space.users).includes(user.uid) && decodeURIComponent(this.$route.params.slug).startsWith('SPACE-G-')) {
+						this.addExistingUserFromSubgroup(user)
+					} else {
+						this.addNewUserFromSubgroup(user, space)
 					}
 				} else {
-					// Adding a user to the workspace
-					if (user.role === 'admin') {
-						gid = ManagerGroup.getGid(space)
-					} else {
-						gid = UserGroup.getGid(space)
-					}
-					this.$store.dispatch('addUserToGroup', {
-						name: this.$route.params.space,
-						gid,
-						user,
-					})
+					this.addUserFromWorkspace(user, space)
 				}
 			})
+		},
+		addUserFromWorkspace(user, space) {
+			let gid = ''
+			if (user.role === 'admin') {
+				gid = ManagerGroup.getGid(space)
+			} else {
+				gid = UserGroup.getGid(space)
+			}
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid,
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			if (user.role === 'admin') {
+				this.$store.dispatch('incrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: UserGroup.getGid(space)
+				})
+			}
+		},
+		addExistingUserFromSubgroup(user) {
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+		},
+		addNewUserFromSubgroup(user, space) {
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: UserGroup.getGid(space)
+			})
+			if (user.role === 'admin') {
+				this.$store.dispatch('addUserToGroup', {
+					name: this.$route.params.space,
+					gid: ManagerGroup.getGid(space),
+					user,
+				})
+				this.$store.dispatch('incrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: ManagerGroup.getGid(space)
+				})
+			}
+		},
+		addUserFromManagerGroup(user, space) {
+			const usersBackup = [...Object.keys(space.users)]
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			if (usersBackup.includes(user.uid)) {
+				return
+			}
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: UserGroup.getGid(space),
+				user,
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: UserGroup.getGid(space)
+			})
+		},
+		addUserFromUserGroup(user) {
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+		},
+		close() {
+			this.$emit('close')
 		},
 		displayForSearching({ name, email, uid }) {
 			return `${name} - ${email} - ${uid}`
@@ -252,14 +351,14 @@ export default {
 		// When adding users to a space, show only those users who are not already member of the space
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
-			if (this.$route.params.group === undefined) {
+			if (this.$route.params.slug === undefined) {
 				const space = this.$store.state.spaces[this.$route.params.space]
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)
 			} else {
 				users = recvUsers.filter(user => {
-					return (!(user.groups.includes(this.$route.params.group)))
+					return (!(user.groups.includes(decodeURIComponent(this.$route.params.slug))))
 				})
 			}
 			// Filters user that are already selected
@@ -340,7 +439,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .icon-member {
 	position: relative;
 	left: 10px;
@@ -350,6 +449,14 @@ export default {
 	height: 20px;
 }
 
+.modal-select-users :deep(.modal-wrapper .modal-container) {
+	min-height: auto;
+}
+
+.body-select-users {
+	display: flex;
+}
+
 .is-member {
 	background-image: url('../img/member.png');
 	background-repeat: no-repeat;
@@ -357,96 +464,90 @@ export default {
 	background-size: contain;
 }
 
-.modal-container {
-	display: flex !important;
-	min-height: 520px !important;
-	max-height: 520px !important;
-	width: 640px !important;
-}
-
-.multiselect__tags {
-	border-color: #dbdbdb !important;
-	margin-bottom: 5px;
-}
-
-.select-users-actions {
-	display: flex;
-	margin-top: 10px;
-	width: 93%;
-	justify-content: space-around;
-}
-.select-users-actions button {
-	display: flex;
-	flex-direction: column;
-	background-position: 10px center;
-}
-.select-users-actions button, .add-users-wrapper button {
-	width: fit-content;
-}
-
 .header-modal {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	width: 100%;
-	justify-content: space-between;
-}
-
-.title-add-users-modal {
-	position: relative;
-	left: 20px;
+	padding: 10px;
 	font-weight: bold;
-	font-size: 18px;
-}
-
-.select-users-input {
 	align-self: start;
-	width: 80%;
-	margin-left: auto !important;
-	margin-right: auto !important;
-	margin-top: 14px !important;
+	margin-left: 16px;
 }
 
-.select-users-list {
-	flex-grow: 1;
-	margin-top: 5px;
-	border-style: solid;
-	border-width: 1px;
-	border-color: transparent;
-	width: 82%;
+.header-modal h1 {
+	margin: 10px;
+	margin-bottom: 16px;
+	font-size: 20px;
+}
+
+.searchbar-groups {
+	width: 500px;
+}
+
+.searchbar-groups :deep(.vs__dropdown-toggle) {
+	border: 2px solid var(--color-border-dark);
+}
+
+.content-users-list {
+	width: 90%;
+	height: 400px;
+	padding: 8px;
+	margin-top: 16px;
+}
+
+.select-user-list {
+	display: flex;
+	flex-direction: column;
 	overflow: scroll;
-}
-
-.select-users-list-empty {
-	text-align: center;
-	line-height: 300px;
-	width: 100%;
+	height: 100%;
 }
 
 .select-users-wrapper {
 	display: flex;
-	flex-grow: 1;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-	margin: 10px;
-	max-width: 600px;
 }
 
-.user-entry {
+.user-item {
+	display: flex;
 	justify-content: space-between;
-	padding-left: 5px;
 }
 
-.user-entry,
-.user-entry div {
+.user-item,
+.user-item div {
 	align-items: center;
 	display: flex;
 	flex-flow: row;
 }
 
-.user-name {
-	margin-left: 10px;
-	max-width: 440px;
+.content-user-list-empty {
+	width: 100%;
+	height: 100%;
+	margin: 0px 0px !important;
+	justify-content: center;
+}
+
+.content-user-list-empty h2 {
+	font-size: 26px;
+}
+
+.btn-add-users {
+	margin: 24px 0 24px 0;
+}
+
+.searchbar-users {
+	width: 500px;
+}
+
+.searchbar-users :deep(.vs__dropdown-toggle) {
+	border: 2px solid var(--color-border-dark);
+}
+
+.username {
+	margin-left: 14px;
+}
+
+.note-card {
+	width: 500px;
 }
 
 .user-not-member {

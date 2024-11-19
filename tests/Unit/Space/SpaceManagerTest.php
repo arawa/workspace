@@ -31,15 +31,26 @@ use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\AddedGroups\AddedGroups;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
+use OCA\Workspace\Group\SubGroups\SubGroup;
+use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
 use OCP\IGroup;
+use OCP\IGroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class SpaceManagerTest extends TestCase {
 
@@ -57,6 +68,26 @@ class SpaceManagerTest extends TestCase {
 
 	private MockObject&ColorCode $colorCode;
 
+	private MockObject&AdminGroup $adminGroup;
+
+	private MockObject&AdminUserGroup $adminUserGroup;
+
+	private MockObject&AddedGroups $addedGroups;
+
+	private MockObject&SubGroup $subGroup;
+
+	private MockObject&UserWorkspaceGroup $userWorkspaceGroup;
+
+	private MockObject&ConnectedGroupsService $conntectedGroupService;
+
+	private MockObject&UserFormatter $userFormatter;
+
+	private MockObject&UserService $userService;
+
+	private MockObject&IGroupManager $groupManager;
+
+	private MockObject&LoggerInterface $logger;
+
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
@@ -69,13 +100,34 @@ class SpaceManagerTest extends TestCase {
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
 		$this->colorCode = $this->createMock(ColorCode::class);
+		$this->adminGroup = $this->createMock(AdminGroup::class);
+		$this->adminUserGroup = $this->createMock(AdminUserGroup::class);
+		$this->addedGroups = $this->createMock(AddedGroups::class);
+		$this->subGroup = $this->createMock(SubGroup::class);
+		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
+		$this->conntectedGroupService = $this->createMock(ConnectedGroupsService::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->userFormatter = $this->createMock(UserFormatter::class);
+		$this->userService = $this->createMock(UserService::class);
+		$this->groupManager = $this->createMock(IGroupManager::class);
+
 
 		$this->spaceManager = new SpaceManager(
 			$this->folderHelper,
 			$this->rootFolder,
 			$this->workspaceCheck,
 			$this->userGroup,
+			$this->adminGroup,
+			$this->adminUserGroup,
+			$this->addedGroups,
+			$this->subGroup,
+			$this->userWorkspaceGroup,
 			$this->spaceMapper,
+			$this->conntectedGroupService,
+			$this->logger,
+			$this->userFormatter,
+			$this->userService,
+			$this->groupManager,
 			$this->workspaceManagerGroup,
 			$this->colorCode
 		);
@@ -143,12 +195,24 @@ class SpaceManagerTest extends TestCase {
 			->willReturn('WM-Espace01')
 		;
 
+		$workspaceManagerGroupMock
+			->expects($this->once())
+			->method('count')
+			->willReturn(0)
+		;
+
 		$userGroupMock = $this->createMock(IGroup::class);
 		$userGroupMock
 			->expects($this->any())
 			->method('getGID')
 			->willReturn('SPACE-U-1')
 		;
+		$userGroupMock
+			->expects($this->once())
+			->method('count')
+			->willReturn(0)
+		;
+
 		$userGroupMock
 			->expects($this->any())
 			->method('getDisplayName')
@@ -186,10 +250,16 @@ class SpaceManagerTest extends TestCase {
 					'SPACE-GE-1' => [
 						'gid' => 'SPACE-GE-1',
 						'displayName' => 'WM-Espace01',
+						'types' => [],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
 					],
 					'SPACE-U-1' => [
 						'gid' => 'SPACE-U-1',
 						'displayName' => 'U-Espace01',
+						'types' => [],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
 					],
 				],
 				'quota' => -3,
@@ -202,6 +272,7 @@ class SpaceManagerTest extends TestCase {
 						'displayname' => 'WM-Espace01',
 					],
 				],
+				'userCount' => 0,
 			]
 		);
 	}
@@ -243,6 +314,7 @@ class SpaceManagerTest extends TestCase {
 			$this->assertInstanceOf(AbstractNotification::class, $e);
 			$this->assertEquals('Error - Duplicate space name', $e->getTitle());
 			$this->assertEquals("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist.", $e->getMessage());
+			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
 	}

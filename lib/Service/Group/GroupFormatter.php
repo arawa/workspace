@@ -24,19 +24,36 @@
 
 namespace OCA\Workspace\Service\Group;
 
+use OCA\Workspace\Service\Slugger;
 use OCP\IGroup;
 
 class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
+	 * @return array [
+	 *  'gid' => string,
+	 *  'displayName' => string,
+	 *  'types' => string[],
+	 *  'is_ldap' => boolean
+	 * ]
 	 */
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];
 
 		foreach ($groups as $group) {
+
+			$backendnames = $group->getBackendNames();
+			$backendnames = array_map(
+				fn ($backendname) => strtoupper($backendname),
+				$backendnames
+			);
+
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
-				'displayName' => $group->getDisplayName()
+				'displayName' => $group->getDisplayName(),
+				'types' => $group->getBackendNames(),
+				'usersCount' => $group->count(),
+				'slug' => Slugger::slugger($group->getGID())
 			];
 		}
 

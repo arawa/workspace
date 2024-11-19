@@ -83,7 +83,7 @@ describe('SelectUsers component tests', () => {
 		]
 
 		wrappedSelectUsers.vm.$route.params.space = 'foobar'
-		wrappedSelectUsers.vm.$route.params.group = 'subgroup-42'
+		wrappedSelectUsers.vm.$route.params.slug = 'subgroup-42'
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'subgroup-42')
@@ -102,7 +102,7 @@ describe('SelectUsers component tests', () => {
 			},
 		]
 
-		wrappedSelectUsers.vm.$route.params.group = undefined
+		wrappedSelectUsers.vm.$route.params.slug = undefined
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-U-42')
@@ -123,7 +123,7 @@ describe('SelectUsers component tests', () => {
 				},
 			]
 
-			wrappedSelectUsers.vm.$route.params.group = undefined
+			wrappedSelectUsers.vm.$route.params.slug = undefined
 
 			wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
 			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')

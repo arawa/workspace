@@ -26,7 +26,7 @@
 			:title="t('workspace', 'New space')"
 			@new-item="createSpace" />
 		<NcAppNavigationItem
-			:title="t('workspace', 'All spaces')"
+			:name="t('workspace', 'All spaces')"
 			:to="{path: '/'}"
 			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 		<template #list>
@@ -101,6 +101,7 @@ export default {
 				name,
 				quota: t('workspace', 'unlimited'),
 				users: {},
+        userCount: workspace.userCount
 			})
 			this.$router.push({
 				path: `/workspace/${name}`,

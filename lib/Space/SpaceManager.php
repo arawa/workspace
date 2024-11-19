@@ -30,13 +30,23 @@ use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Group\AddedGroups\AddedGroups;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
+use OCA\Workspace\Group\SubGroups\SubGroup;
+use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
+use OCP\IGroupManager;
+use Psr\Log\LoggerInterface;
 
 class SpaceManager {
 	public function __construct(
@@ -44,7 +54,17 @@ class SpaceManager {
 		private RootFolder $rootFolder,
 		private WorkspaceCheckService $workspaceCheck,
 		private UserGroup $userGroup,
+		private AdminGroup $adminGroup,
+		private AdminUserGroup $adminUserGroup,
+		private AddedGroups $addedGroups,
+		private SubGroup $subGroup,
+		private UserWorkspaceGroup $userWorkspaceGroup,
 		private SpaceMapper $spaceMapper,
+		private ConnectedGroupsService $connectedGroupsService,
+		private LoggerInterface $logger,
+		private UserFormatter $userFormatter,
+		private UserService $userService,
+		private IGroupManager $groupManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private ColorCode $colorCode,
 	) {
@@ -123,17 +143,36 @@ class SpaceManager {
 			'quota' => $groupfolder['quota'],
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
-			'manage' => $groupfolder['manage']
+			'manage' => $groupfolder['manage'],
+            'userCount' => 0
 		];
 	}
 
 	public function get(int $spaceId): array {
 
-		$space = $this->spaceMapper->find($spaceId)->jsonSerialize();
-		$workspace = array_merge(
-			$this->folderHelper->getFolder($space['groupfolder_id'], $this->rootFolder->getRootFolderStorageId()),
-			$space
+		$space = $this->spaceMapper->find($spaceId);
+		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
+
+		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
+
+		$folderInfo = $this->folderHelper->getFolder(
+			$workspace['groupfolder_id'],
+			$this->rootFolder->getRootFolderStorageId()
 		);
+		$workspace = ($folderInfo !== false) ? array_merge(
+			$folderInfo,
+			$workspace
+		) : $workspace;
+		
+		$gids = array_keys($workspace['groups'] ?? []);
+
+		$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
+
+		$workspace['userCount'] = $this->userWorkspaceGroup->count($space->getSpaceId());
+
+		$workspace['users'] = $this->adminGroup->getUsersFormatted($folderInfo, $space);
+		$workspace['groups'] = $this->subGroup->getGroupsFormatted($gids);
+		$workspace['added_groups'] = (object)$this->addedGroups->getGroupsFormatted($gids);
 
 		return $workspace;
 	}
@@ -153,6 +192,21 @@ class SpaceManager {
 
 	public function remove(string $spaceId): void {
 		$space = $this->get($spaceId);
+
+		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
+			if ($this->userService->canRemoveWorkspaceManagers($user)) {
+				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group in ' . $space['name']);
+				$this->adminUserGroup->removeUser($user);
+			}
+		}
+
+		$groups = [];
+		$this->logger->debug('Removing workspace groups.');
+		foreach (array_keys($space['groups']) as $group) {
+			$groups[] = $group;
+			$this->groupManager->get($group)->delete();
+		}
+
 		$folderId = $space['groupfolder_id'];
 		$this->folderHelper->removeFolder($folderId);
 	}

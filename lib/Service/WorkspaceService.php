@@ -26,6 +26,8 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
@@ -46,7 +48,8 @@ class WorkspaceService {
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
 		private ShareMembersOnlyFilter $shareMembersFilter,
-		private GroupMembersOnlyChecker $memberGroupOnlyChecker
+		private GroupMembersOnlyChecker $memberGroupOnlyChecker,
+		private ConnectedGroupsService $connectedGroups,
 	) {
 	}
 
@@ -177,7 +180,9 @@ class WorkspaceService {
 		$group = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				if (isset($users[$user->getUID()])) {
+					$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				}
 			};
 		}
 
@@ -193,15 +198,23 @@ class WorkspaceService {
 	 *
 	 */
 	public function addGroupsInfo(array|string $workspace): array {
-		$groups = [];
-		foreach (array_keys($workspace['groups']) as $gid) {
-			$NCGroup = $this->groupManager->get($gid);
-			$groups[$gid] = [
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName()
-			];
+		if (!isset($workspace['groups'])) {
+			return $workspace;
 		}
-		$workspace['groups'] = $groups;
+		$groups = array_map(
+			fn ($gid) => $this->groupManager->get($gid),
+			array_keys($workspace['groups'])
+		);
+		$addedGroups = [];
+		foreach(array_keys($workspace['groups']) as $gid) {
+			$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+			if ($addedToGroup !== null) {
+				$addedGroups = array_merge($addedGroups, $addedToGroup);
+			}
+		}
+
+		$workspace['groups'] = GroupFormatter::formatGroups($groups);
+		$workspace['added_groups'] = GroupFormatter::formatGroups($addedGroups);
 
 		return $workspace;
 	}

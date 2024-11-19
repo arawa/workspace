@@ -1,10 +1,11 @@
+<?php
+
 /**
  * @copyright Copyright (c) 2017 Arawa
  *
- * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
- * @license AGPL-3.0-or-later
+ * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,26 +22,33 @@
  *
  */
 
-import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
-import actions from './actions.js'
-import { getters } from './getters.js'
-import mutations from './mutations.js'
+namespace OCA\Workspace\Db;
 
-Vue.use(Vuex)
-Vue.config.devtools = true // Debug mode
+use JsonSerializable;
 
-const store = new Store({
-	state: {
-		loading: true,
-		noUsers: false,
-		loadingUsersWaitting: false,
-		spaces: {},
-		groupfolders: {},
-	},
-	mutations,
-	actions,
-	getters,
-})
+use OCP\AppFramework\Db\Entity;
 
-export default store
+class ConnectedGroup extends Entity implements JsonSerializable {
+
+	/**
+	 * @var integer
+	 */
+	protected $spaceId;
+
+	/**
+	 * @var string
+	 */
+	protected $gid;
+
+	public function __construct() {
+		$this->addType('space_id', 'integer');
+		$this->addType('gid', 'string');
+	}
+
+	public function jsonSerialize(): array {
+		return [
+			'space_id' => (int)$this->getSpaceId(),
+			'gid' => $this->getGid(),
+		];
+	}
+}

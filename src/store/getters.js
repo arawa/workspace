@@ -31,7 +31,19 @@ export const getters = {
 	},
 	// Returns the name of a group
 	groupName: state => (name, gid) => {
-		return state.spaces[name].groups[gid].displayName
+		if (state.spaces[name].groups[gid]) {
+			return state.spaces[name].groups[gid].displayName
+		}
+		if (state.spaces[name].added_groups[gid]) {
+			return state.spaces[name].added_groups[gid].displayName
+		}
+		return '[' + gid + ']'
+	},
+	getGroupUserCount: state => (spaceName, gid) => {
+		return state.spaces[spaceName].groups[gid].usersCount
+	},
+	getSpaceUserCount: state => (name) => {
+		return state.spaces[name].userCount
 	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
@@ -46,6 +58,18 @@ export const getters = {
 	// Tests wheter a user if General manager of a space
 	isSpaceAdmin: state => (user, spaceName) => {
 		return user.groups.includes(ManagerGroup.getGid(state.spaces[spaceName]))
+	},
+	// Test whether a user if from and added group from the space
+	isFromAddedGroups: state => (user, spaceName) => {
+		const addedGroups = Object.keys(state.spaces[spaceName].added_groups)
+		const hasAddedGroups = user.groups.filter((group) => addedGroups.includes(group))
+		return hasAddedGroups.length > 0
+	},
+	// Test if group is from space added groups
+	isSpaceAddedGroup: state => (spaceName, groupName) => {
+		const space = state.spaces[spaceName]
+		const gids = Object.keys(space.added_groups)
+		return gids.includes(groupName)
 	},
 	// Tests wheter a group is the GE or U group of a space
 	isGEorUGroup: (state, getters) => (spaceName, gid) => {
@@ -66,9 +90,15 @@ export const getters = {
 	},
 	// Returns the number of users in a space
 	spaceUserCount: state => name => {
-		const users = state.spaces[name].users
-		if (users.length === 0) {
+		if (state.spaces[name] === undefined) {
 			return 0
+		}
+		if (state.spaces[name].userCount !== undefined && state.spaces[name].userCount > 0) {
+			return state.spaces[name].userCount
+		}
+		const users = state.spaces[name].users
+		if (users === undefined || users.length === 0) {
+			return -1
 		} else {
 			return Object.keys(users).length
 		}

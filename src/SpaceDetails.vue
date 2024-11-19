@@ -21,7 +21,15 @@
 -->
 
 <template>
-	<div>
+	<div v-if="$store.state.noUsers">
+		<NcEmptyContent
+			:title="t('workspace', 'No users')">
+			<template #description>
+				{{ t('workspace', 'There are no users in this space/group yet') }}
+			</template>
+		</NcEmptyContent>
+	</div>
+	<div v-else-if="!$store.state.loadingUsersWaitting">
 		<div class="header">
 			<div class="space-name">
 				<NcColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
@@ -49,7 +57,7 @@
 							@click="toggleShowSelectUsersModal" />
 						<NcActionButton v-show="!createGroup"
 							icon="icon-group"
-							:title="t('workspace', 'Create group')"
+							:title="t('workspace', 'Create a workspace group')"
 							class="no-bold"
 							@click="toggleCreateGroup" />
 						<NcActionInput v-show="createGroup"
@@ -60,6 +68,12 @@
 							@submit="onNewGroup">
 							{{ t('workspace', 'Group name') }}
 						</NcActionInput>
+						<NcActionButton
+							:name="t('workspace', 'Add a group')"
+							icon="icon-added-group"
+							class="no-bold"
+							:close-after-click="true"
+							@click="toggleShowConnectedGroups" />
 					</NcActions>
 				</div>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
@@ -83,16 +97,11 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<SelectUsers :space-name="$route.params.space" @close="toggleShowSelectUsersModal" />
-		</NcModal>
-		<NcModal v-if="showDelWorkspaceModal"
-			style="min-heigth: 8rem;"
-			size="small"
-			@close="toggleShowDelWorkspaceModal">
-			<RemoveSpace :space-name="$route.params.space" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
-		</NcModal>
+		<SelectUsers v-if="showSelectUsersModal"
+			@close="toggleShowSelectUsersModal"
+			:space-name="$route.params.space" />
+		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
+		<RemoveSpace v-if="showDelWorkspaceModal" :space-name="$route.params.space" @close="toggleShowDelWorkspaceModal" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
 	</div>
 </template>
 
@@ -104,23 +113,25 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectUsers from './SelectUsers.vue'
+import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { renameSpace, removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
 		NcActions,
+		NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
-		NcModal,
 		NcMultiselect,
 		SelectUsers,
+		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
 	},
@@ -130,6 +141,7 @@ export default {
 			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
+			showSelectConnectedGroups: false,
 			isESR: false,
 		}
 	},
@@ -138,6 +150,10 @@ export default {
 		title() {
 			return this.$route.params.space
 		},
+	},
+	mounted() {
+		const space = this.$store.state.spaces[this.$route.params.space]
+		this.$store.dispatch('loadUsers', { space })
 	},
 	created() {
 		const version = navigator.userAgent.split('Firefox/')[1]
@@ -322,6 +338,9 @@ export default {
 		},
 		toggleShowDelWorkspaceModal() {
 			this.showDelWorkspaceModal = !this.showDelWorkspaceModal
+		},
+		toggleShowConnectedGroups() {
+			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space

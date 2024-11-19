@@ -25,27 +25,31 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\WorkspaceService;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class UserServiceTest extends TestCase {
-	private IGroupManager $groupManager;
-	private IUser $user;
-	private IUserSession $userSession;
-	private LoggerInterface $logger;
-	private WorkspaceService $workspaceService;
+	private MockObject&IGroupManager $groupManager;
+	private MockObject&IUser $user;
+	private MockObject&IUserSession $userSession;
+	private MockObject&LoggerInterface $logger;
+	private MockObject&ConnectedGroupsService $connectedGroupService;
+	private MockObject&IURLGenerator $urlGenerator;
 
 	public function setUp(): void {
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->workspaceService = $this->createMock(WorkspaceService::class);
+		$this->connectedGroupService = $this->createMock(ConnectedGroupsService::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -55,7 +59,7 @@ class UserServiceTest extends TestCase {
 			->willReturn($this->user);
 	}
 
-	private function createTestUser($id, $name, $email): IUser {
+	private function createTestUser($id, $name, $email): MockObject&IUser {
 		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
@@ -69,7 +73,7 @@ class UserServiceTest extends TestCase {
 		return $mockUser;
 	}
 
-	private function createTestGroup($id, $name, $users): IGroup {
+	private function createTestGroup($id, $name, $users): MockObject&IGroup {
 		$mockGroup = $this->createMock(IGroup::class);
 		$mockGroup->expects($this->any())
 			->method('getGID')
@@ -103,7 +107,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -131,7 +137,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -160,7 +168,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
@@ -199,7 +209,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -228,7 +240,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([
@@ -262,7 +276,9 @@ class UserServiceTest extends TestCase {
 		$userService = new UserService(
 			$this->groupManager,
 			$this->userSession,
-			$this->logger);
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([
