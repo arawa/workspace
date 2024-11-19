@@ -143,7 +143,8 @@ class SpaceManager {
 			'quota' => $groupfolder['quota'],
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
-			'manage' => $groupfolder['manage']
+			'manage' => $groupfolder['manage'],
+            'userCount' => 0
 		];
 	}
 

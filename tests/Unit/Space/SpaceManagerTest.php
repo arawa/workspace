@@ -272,6 +272,7 @@ class SpaceManagerTest extends TestCase {
 						'displayname' => 'WM-Espace01',
 					],
 				],
+				'userCount' => 0,
 			]
 		);
 	}
