@@ -83,7 +83,7 @@
                     @click="deleteUser(user)">
                     {{ t('workspace', 'Delete user') }}
                   </NcActionButton>
-                  <NcActionButton v-if="(decodeURIComponent(decodeURIComponent($route.params.slug)) !== undefined) && !$store.getters.isFromAddedGroups(user, $route.params.space) && !$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
+                  <NcActionButton v-if="(decodeURIComponent(decodeURIComponent($route.params.slug)) !== undefined) && !$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
                     icon="icon-close"
                     :close-after-click="true"
                     @click="removeFromGroup(user)">
