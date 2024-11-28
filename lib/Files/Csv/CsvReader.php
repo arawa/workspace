@@ -12,7 +12,10 @@ class CsvReader {
 
 	public function __construct(private BasicStreamInterface $file) {
 		$handle = $file->open();
-		$this->headers = fgetcsv($handle, 1000, Separator::COMMA);
+		$headers = fgetcsv($handle, 1000, Separator::COMMA);
+		$this->headers = array_map(function($header) {
+			return preg_replace('/[\x00-\x1F\x7F\x{200B}-\x{200D}\x{FEFF}]/u', '', trim($header));
+		}, $headers);
 		$file->close();
 	}
 
