@@ -23,7 +23,7 @@ OC.L10N.register(
 		'Error 403': 'Error 403',
 		'Import a .csv file': 'Import a .csv file',
 		'Error in the table header': 'Error in the table header',
-		'The content of your file is invalid. Header does not contain the desired values. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)': 'The content of your file is invalid. Header does not contain the desired values. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)',
+		'The content of your file is invalid. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)': 'The content of your file is invalid. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)',
 		'This group already exists. Please, change the name': 'This group already exists. Please, change the name',
 		'You aren\'t allowed to access into this application !': 'You aren\'t allowed to access into this application !',
 		'Error in CSV file content': 'Error in CSV file content',

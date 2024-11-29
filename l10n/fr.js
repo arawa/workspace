@@ -7,7 +7,7 @@ OC.L10N.register(
 		'All spaces': 'Tous les espaces de travail',
 		'Administrators': 'Gestionnaires généraux',
 		'admin': "Gestionnaire d'espace",
-		'The content of your file is invalid. Header does not contain the desired values. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)': 'Le contenu de votre fichier est invalide. L\'en-tête ne contient pas les valeurs souhaitées.<br>Deux colonnes sont requises, avec les noms d\'en-têtes et valeurs suivantes :<br>- "user" : le nom d\'utilisateur ou l\'adresse e-mail de l\'utilisateur<br>- "role" : le rôle de l\'utilisateur "u" ou "user" pour un utilisateur et "wm" pour un gestionnaire d\'espace)',
+		'The content of your file is invalid. Two columns are required, with the following header names and values:<br>- "user": the user\'s username or e-mail address<br>- "role": the user\'s role ("u" or "user" for a user and "wm" for a workspace manager)': 'Le contenu de votre fichier est invalide. L\'en-tête ne contient pas les valeurs souhaitées.<br>Deux colonnes sont requises, avec les noms d\'en-têtes et valeurs suivantes :<br>- "user" : le nom d\'utilisateur ou l\'adresse e-mail de l\'utilisateur<br>- "role" : le rôle de l\'utilisateur ("u" ou "user" pour un utilisateur et "wm" pour un gestionnaire d\'espace)',
 		'Group name': 'Nom du groupe',
 		'Space name': 'Nom de l\'espace de travail',
 		'Cancel': 'Annuler',

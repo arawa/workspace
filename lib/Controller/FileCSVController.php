@@ -118,7 +118,6 @@ class FileCSVController extends Controller {
 			$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 
 			$message = "The content of your file is invalid. "
-			. "Header does not contain the desired values. "
 			. "Two columns are required, with the following header names and values:<br>"
 			."- \"user\": the user's username or e-mail address<br>"
 			. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
