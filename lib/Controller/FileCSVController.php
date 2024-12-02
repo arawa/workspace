@@ -55,7 +55,6 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCA\Workspace\Users\UserFormatter;
 
 /**
  * @todo rename to import csv users : ImportCsvUsersUploaderController

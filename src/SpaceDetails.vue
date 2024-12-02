@@ -106,7 +106,7 @@ import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { destroy, rename, checkGroupfolderNameExist } from './services/groupfoldersService.js'
+import { renameSpace, removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 
@@ -147,12 +147,12 @@ export default {
 	methods: {
 		// Deletes a space
 		deleteSpace() {
-			const space = this.$route.params.space
-			destroy(this.$store.state.spaces[space])
+			const space = this.$store.state.spaces[this.$route.params.space]
+			removeWorkspace(space.id)
 				.then(resp => {
 					if (resp.http.statuscode === 200) {
 						this.$store.dispatch('removeSpace', {
-							space: this.$store.state.spaces[space],
+							space,
 						})
 						this.$router.push({
 							path: '/',
@@ -185,18 +185,16 @@ export default {
 
 			const newSpaceName = e.target[0].value
 
-			await checkGroupfolderNameExist(newSpaceName)
-
 			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
 			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
 			const oldSpaceName = this.$route.params.space
-			let responseRename = await rename(this.$store.state.spaces[oldSpaceName], newSpaceName)
+			let responseRename = await renameSpace(this.$store.state.spaces[oldSpaceName].id, newSpaceName)
 			responseRename = responseRename.data
 
 			if (responseRename.statuscode === 204) {
 				const space = { ...this.$store.state.spaces[oldSpaceName] }
 				space.name = responseRename.space
-				space.groups = responseRename.groups
+
 				this.$store.dispatch('updateSpace', {
 					space,
 				})
@@ -375,7 +373,7 @@ export default {
 
 .space-name {
 	margin-left: 8px;
-	margin-top: -25px;
+	margin-top: -28px;
 }
 
 .no-bold button p strong{
@@ -389,8 +387,4 @@ export default {
 	min-height: 12rem !important;
 }
 
-.modal-container {
-	min-height: 660px !important;
-	max-height: 660px !important;
-}
 </style>

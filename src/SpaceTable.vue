@@ -25,7 +25,7 @@
 		<div class="header" />
 		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
-				<tr>
+				<tr class="workspace-tr">
 					<th />
 					<th class="workspace-th">
 						{{ t('workspace', 'Workspace name') }}
@@ -42,7 +42,7 @@
 				:key="name"
 				class="workspace-tr"
 				@click="openSpace(name)">
-				<td style="width: 50px;">
+				<td style="width: 50px;" class="workspace-td">
 					<span class="color-dot-home" :style="{background: space.color}" />
 				</td>
 				<td class="workspace-td">

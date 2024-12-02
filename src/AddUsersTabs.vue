@@ -163,22 +163,6 @@ export default {
 				return this.$store.getters.isMember(this.$route.params.space, user)
 			})
 		},
-		csvTemplateMarkdown() {
-			return `> user, role
-				user1, wm,
-				user2, user,
-				user3, user,
-				user4, wm,
-				user5, u`
-		},
-		onImportTab() {
-			let cssClass = 'onImportTab'
-
-			if (this.importTab) {
-				cssClass = ''
-			}
-			return cssClass
-		},
 	},
 	methods: {
 		closeSidebar() {
