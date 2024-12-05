@@ -36,7 +36,7 @@ OC.L10N.register(
 		'Delete group': 'Smazat skupinu',
 		'Role': 'Role',
 		'Add users': 'Přidat uživatele',
-		'S.A.': 'S.P.P',
+		'WM': 'S.P.P',
 		'Set quota': 'Nastavit kvótu',
 		'Space administrators': 'Správce prac. prostoru',
 		'Users': 'Uživatelé',
