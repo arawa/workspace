@@ -52,7 +52,7 @@ describe('Vuex store tests', () => {
 								'GE-test-space',
 								'yolo-1234',
 							],
-							role: 'admin',
+							role: 'wm',
 						},
 					],
 				},
