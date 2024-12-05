@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Init 3.3.0 by @zak39 in [#1097](https://github.com/arawa/workspace/pull/1097)
 - Update the CHANGELOG for the RELEASE 3.3.0 by @zak39 in [#1098](https://github.com/arawa/workspace/pull/1098)
+- Add links to compare between v3.3.0 and the main branch and 3.2.5 by @zak39 in [#1099](https://github.com/arawa/workspace/pull/1099)
 
 ## [3.2.5] - 2024-11-18
 
