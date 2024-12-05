@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Misc
 
 - Init 3.3.0 by @zak39 in [#1097](https://github.com/arawa/workspace/pull/1097)
+- Update the CHANGELOG for the RELEASE 3.3.0 by @zak39 in [#1098](https://github.com/arawa/workspace/pull/1098)
 
 ## [3.2.5] - 2024-11-18
 
