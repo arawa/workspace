@@ -25,6 +25,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.3.0] - 2024-12-05
+
+### Added
+
+- Backport: Implement user import from CSV in Workspace by @zak39 in [#1096](https://github.com/arawa/workspace/pull/1096)
+
+### Misc
+
+- Init 3.3.0 by @zak39 in [#1097](https://github.com/arawa/workspace/pull/1097)
+
 ## [3.2.5] - 2024-11-18
 
 ### Added
@@ -303,7 +313,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.2.5...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.0...main
+[3.0.0]: https://github.com/arawa/workspace/compare/v3.2.5...3.0.0
 [3.2.5]: https://github.com/arawa/workspace/compare/v3.2.4...3.2.5
 [3.2.4]: https://github.com/arawa/workspace/compare/v3.2.3...3.2.4
 [3.2.3]: https://github.com/arawa/workspace/compare/v3.2.2...3.2.3
