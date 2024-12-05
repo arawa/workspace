@@ -90,8 +90,7 @@ class FileCSVController extends Controller {
 	 * @param array $space represents a workspace in array
 	 * @return array
 	 */
-	private function importProcess(FileInterface $file, array $space): array
-	{
+	private function importProcess(FileInterface $file, array $space): array {
 		if (!SeparatorDetector::isComma($file) || !SeparatorDetector::isCommaForAllFile($file)) {
 			throw new InvalidSeparatorCsvException(
 				$this->translate->t('Invalid separator for CSV file'),
@@ -99,8 +98,7 @@ class FileCSVController extends Controller {
 			);
 		}
 
-		if (!StructureValidator::checkCommaAllLines($file))
-		{
+		if (!StructureValidator::checkCommaAllLines($file)) {
 			throw new InvalidSeparatorCsvException(
 				$this->translate->t('Invalid separator for CSV file'),
 				$this->translate->t('Your CSV file must use a comma (",") as separator'),
@@ -241,9 +239,9 @@ class FileCSVController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
-	 * 
+	 *
 	 * @param int $spaceId is the spaceId from workspace
-	 * 
+	 *
 	 * Returns formatted list of existing users of the instance.
 	 */
 	public function import(?int $spaceId = null): JSONResponse {

@@ -7,7 +7,7 @@ use OCA\Workspace\Files\Csv\CsvHeaderExtractorInterface;
 class HeaderExtractor implements CsvHeaderExtractorInterface {
 	public static function getIndex(array $haystack, array $needles): int|bool {
 		$index = null;
-		$needles = array_map(function($needle) {
+		$needles = array_map(function ($needle) {
 			return preg_replace('/[\x00-\x1F\x7F\x{200B}-\x{200D}\x{FEFF}]/u', '', trim($needle));
 		}, $needles);
 		foreach($haystack as $key => $value) {

@@ -5,7 +5,7 @@ namespace OCA\Workspace\Files;
 class FileUploader implements FileInterface {
 	private $resource;
 
-    private string|false $lineEnding;
+	private string|false $lineEnding;
 
 	public function __construct(private string $path) {
 	}
@@ -15,8 +15,8 @@ class FileUploader implements FileInterface {
 	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
-        $this->lineEnding = ini_get("auto_detect_line_endings");
-        ini_set("auto_detect_line_endings", true);
+		$this->lineEnding = ini_get("auto_detect_line_endings");
+		ini_set("auto_detect_line_endings", true);
 		$this->resource = fopen($this->path, "r");
 
 		if (!$this->resource) {
@@ -27,7 +27,7 @@ class FileUploader implements FileInterface {
 	}
 
 	public function close(): bool {
-        ini_set("auto_detect_line_endings", $this->lineEnding);
+		ini_set("auto_detect_line_endings", $this->lineEnding);
 		return fclose($this->resource);
 	}
 
@@ -35,8 +35,7 @@ class FileUploader implements FileInterface {
 		return $this->path;
 	}
 
-	public function getSize(): false|int|float
-	{
+	public function getSize(): false|int|float {
 		return filesize($this->path);
 	}
 }
