@@ -126,16 +126,16 @@ return [
 			'url' => '/api/group/addUser/{spaceId}',
 			'verb' => 'POST',
 		],
-		// [
-		// 	'name' => 'fileCSV#import',
-		// 	'url' => '/file/csv/import-data',
-		// 	'verb' => 'POST',
-		// ],
-		// [
-		// 	'name' => 'fileCSV#getFromFiles',
-		// 	'url' => '/file/csv/import-from-files',
-		// 	'verb' => 'POST',
-		// ],
+		[
+			'name' => 'fileCSV#import',
+			'url' => '/space/{spaceId}/import-users/local',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'fileCSV#getFromFiles',
+			'url' => '/space/{spaceId}/import-users/files',
+			'verb' => 'POST',
+		],
 		[
 			'name' => 'space#updateColorCode',
 			'url' => '/workspaces/{spaceId}/color',
