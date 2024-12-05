@@ -23,12 +23,12 @@
 
 namespace OCA\Workspace\Service\Group;
 
-use OCA\Workspace\CreateGroupException;
-use OCA\Workspace\Db\Space;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
+use OCP\AppFramework\Services\IAppConfig;
+use OCA\Workspace\Exceptions\CreateGroupException;
 
 class UserGroup extends GroupsWorkspace {
 	private IGroupManager $groupManager;

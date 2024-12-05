@@ -49,8 +49,8 @@ class SpaceService {
 	 * @deprecated
 	 * @see WorkspaceController->destroy().
 	 */
-	public function delete(int $id): mixed {
-		return $this->spaceMapper->deleteSpace($id);
+	public function delete(int $id): void {
+		$this->spaceMapper->deleteSpace($id);
 	}
 
 	/**

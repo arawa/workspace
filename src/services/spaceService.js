@@ -34,11 +34,10 @@ import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfo
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
-export function createSpace(spaceName, folderId, vueInstance = undefined) {
+export function createSpace(spaceName, vueInstance = undefined) {
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
 			spaceName,
-			folderId,
 		})
 		.then(resp => {
 			if (typeof (resp.data) !== 'object') {
@@ -48,9 +47,12 @@ export function createSpace(spaceName, folderId, vueInstance = undefined) {
 			return resp.data
 		})
 		.catch(error => {
-			if (typeof (vueInstance) !== 'undefined') {
+			if ('response' in error && 'data' in error.response) {
+				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+			} else {
 				showNotificationError('Error to create a workspace', error.message, 5000)
 			}
+
 			throw new BadCreateError(error)
 		})
 	return result
@@ -124,4 +126,62 @@ export function addGroupToWorkspace(spaceId, gid) {
 			console.error('Impossible to attach the group to workspace. May be a problem with the connection ?', gid, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
+}
+
+/**
+ * @param {integer} spaceId it's the id relative to workspace
+ * @return {Promise}
+ */
+export function removeWorkspace(spaceId) {
+	const result = axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}`))
+		.then(resp => {
+			console.info(`The workspace with the ${spaceId} id, is deleted.`)
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Error to delete a workspace. May be a problem network ?', error)
+		})
+	return result
+}
+
+export function renameSpace(spaceId, newSpaceName) {
+	const respFormat = {
+		data: {},
+	}
+	respFormat.data.statuscode = 500
+	respFormat.data.message = 'Rename the space is impossible.'
+
+	newSpaceName = deleteBlankSpacename(newSpaceName)
+
+	const respFormatFinal = axios.patch(generateUrl(`/apps/workspace/spaces/${spaceId}`),
+		{
+			newSpaceName,
+		})
+		.then(resp => {
+			if (resp.data.statuscode === 400) {
+				respFormat.data.statuscode = 400
+				respFormat.data.space = null
+				return respFormat
+			}
+
+			if (resp.data.statuscode === 204) {
+				respFormat.data.statuscode = 204
+				respFormat.data.space = newSpaceName
+				return respFormat
+			}
+
+			return respFormat
+		})
+		.catch(error => {
+			if ('response' in error && 'data' in error.response) {
+				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+				throw new Error(error.response.data.message)
+			} else {
+				showNotificationError('Error to rename a workspace', error.message, 5000)
+				console.error('Problem to rename the space', error)
+				throw new Error(error.message)
+			}
+		})
+
+	return respFormatFinal
 }

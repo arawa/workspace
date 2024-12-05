@@ -44,9 +44,6 @@ class UserService {
 	 *
 	 * Given a IUser, returns an array containing all the user information
 	 * needed for the frontend
-     * 
-     * @deprecated 3.1.0|4.0.0
-     * @uses OCA\Workspace\Users\UserFormatter
 	 *
 	 * @deprecated 3.1.0|4.0.0
 	 * @uses OCA\Workspace\Users\UserFormatter
@@ -65,6 +62,15 @@ class UserService {
 
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
+
+		if (!isset($space['groups'])) {
+			throw new \Exception('The "groups" key is not presetn');
+		}
+
+		if (!is_array($space['groups'])) {
+			throw new \Exception('The "groups" key is not an array');
+		}
+
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
 			if (in_array($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
@@ -156,6 +162,10 @@ class UserService {
 	 *
 	 * @param IUser $user
 	 * @return void
+	 *
+	 * @deprecated
+	 *
+	 * @uses OCA\Workspace\Group\Admin\AdminUserGroup::removeUser
 	 */
 	public function removeGEFromWM(IUser $user): void {
 		$this->logger->debug('User is not manager of any other workspace, removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');

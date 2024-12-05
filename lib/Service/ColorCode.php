@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2017 Arawa
+ * @copyright Copyright (c) 2024 Arawa
  *
- * @author 2022 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,12 +22,11 @@
  *
  */
 
-namespace OCA\Workspace\Exceptions;
+namespace OCA\Workspace\Service;
 
-use OCP\AppFramework\Http;
-
-class WorkspaceNameExistException extends AbstractNotification {
-	public function __construct($title, $message, $code = Http::STATUS_CONFLICT) {
-		parent::__construct(title: $title, message: $message, code: $code);
+class ColorCode {
+	public function generate(): string {
+		// mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+		return '#' . substr(md5(mt_rand()), 0, 6);
 	}
 }

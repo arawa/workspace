@@ -30,7 +30,6 @@ import BadGetError from '../Errors/BadGetError.js'
 import CheckGroupfolderNameExistError from '../Errors/Groupfolders/CheckGroupfolderNameError.js'
 import CreateGroupfolderError from '../Errors/Groupfolders/BadCreateError.js'
 import EnableAclGroupfolderError from '../Errors/Groupfolders/EnableAclGroupfolderError.js'
-import GetGroupfolderError from '../Errors/Groupfolders/GetGroupfolderError.js'
 import showNotificationError from './Notifications/NotificationError.js'
 import RemoveGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/RemoveGroupToManageACLForGroupfolderError.js'
 
@@ -49,28 +48,6 @@ export function getAll() {
 			throw new BadGetError('Error to get all spaces', error.reason)
 		})
 	return data
-}
-
-/**
- *
- * @param {number} groupfolderId it's the id of a groupfolder
- * @return {Promise}
- * @throws {GetGroupfolderError}
- */
-export function get(groupfolderId) {
-	return axios.get(generateUrl(`/apps/groupfolders/folders/${groupfolderId}`))
-		.then(resp => {
-			if (resp.data.ocs.meta.status === 'ok') {
-				const workspace = resp.data.ocs.data
-				return workspace
-			} else {
-				throw new GetGroupfolderError('Impossible to get the groupfolder. May be an error network ?')
-			}
-		})
-		.catch((error) => {
-			showNotificationError('Error to get the groupfolder', error.message, 5000)
-			throw new Error(error.message)
-		})
 }
 
 /**
@@ -109,6 +86,8 @@ export function formatUsers(space) {
  * @param {string} spaceName it's the name of space to check
  * @return {boolean}
  * @throws {CheckGroupfolderNameExistError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export async function checkGroupfolderNameExist(spaceName) {
 	const duplicateExists = await getAll()
@@ -137,6 +116,8 @@ export async function checkGroupfolderNameExist(spaceName) {
  * @param {number} folderId from a groupfolder
  * @return {Promise}
  * @throws {EnableAclGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function enableAcl(folderId) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/acl`),
@@ -162,6 +143,8 @@ export function enableAcl(folderId) {
  * @param {string} gid it's an id (string format) of a group
  * @return {Promise}
  * @throws {AddGroupToGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function addGroupToGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/groups`),
@@ -186,6 +169,8 @@ export function addGroupToGroupfolder(folderId, gid) {
  * @param {string} gid it's an id (string format) of a group
  * @return {Promise}
  * @throws {AddGroupToManageACLForGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function addGroupToManageACLForGroupfolder(folderId, gid) {
 	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
@@ -237,6 +222,8 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
  * @param {string} spaceName it's the name space to create
  * @return {Promise}
  * @throws {CreateGroupfolderError}
+ * @deprecated
+ * @use createSpace from spaceService
  */
 export function createGroupfolder(spaceName) {
 	return axios.post(generateUrl('/apps/groupfolders/folders'),
@@ -257,6 +244,7 @@ export function createGroupfolder(spaceName) {
 
 /**
  * @param {object} workspace it's an object relative to workspace
+ * @deprecated
  * @return {Promise}
  */
 export function destroy(workspace) {
@@ -291,6 +279,7 @@ export function destroy(workspace) {
  * @param {object} workspace it's the object relative to workspace
  * @param {string} newSpaceName it's the new name for the workspace
  * @return {Promise}
+ * @deprecated
  */
 export function rename(workspace, newSpaceName) {
 	// Response format to return

@@ -31,6 +31,7 @@ use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
@@ -45,6 +46,7 @@ class SpaceManager {
 		private UserGroup $userGroup,
 		private SpaceMapper $spaceMapper,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+		private ColorCode $colorCode,
 	) {
 	}
 	
@@ -61,7 +63,10 @@ class SpaceManager {
 		}
 		
 		if ($this->workspaceCheck->isExist($spacename)) {
-			throw new WorkspaceNameExistException("The $spacename space name already exist", Http::STATUS_CONFLICT);
+			throw new WorkspaceNameExistException(
+				title: 'Error - Duplicate space name',
+				message: "This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist."
+			);
 		}
 
 		$spacename = $this->deleteBlankSpaceName($spacename);
@@ -71,7 +76,7 @@ class SpaceManager {
 		$space = new Space();
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
-		$space->setColorCode('#' . substr(md5(mt_rand()), 0, 6));  // mt_rand() (MT - Mersenne Twister) is taller efficient than rand() function.
+		$space->setColorCode($this->colorCode->generate());
 		$this->spaceMapper->insert($space);
 
 
@@ -144,5 +149,29 @@ class SpaceManager {
 	 */
 	private function deleteBlankSpaceName(string $spaceName): string {
 		return trim($spaceName);
+	}
+
+	public function remove(string $spaceId): void {
+		$space = $this->get($spaceId);
+		$folderId = $space['groupfolder_id'];
+		$this->folderHelper->removeFolder($folderId);
+	}
+
+	/**
+	 * @param int $spaceId related to the id of a space.
+	 * @param string $newSpaceName related to the  new space name.
+	 */
+	public function rename(int $spaceId, string $newSpaceName): void {
+		$space = $this->get($spaceId);
+
+		if ($this->workspaceCheck->isExist($newSpaceName)) {
+			throw new WorkspaceNameExistException(
+				title: 'Error - Duplicate space name',
+				message: "This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist."
+			);
+		}
+
+		$this->folderHelper->renameFolder($space['groupfolder_id'], $newSpaceName);
+		$this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
 	}
 }

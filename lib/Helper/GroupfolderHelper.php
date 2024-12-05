@@ -60,7 +60,7 @@ class GroupfolderHelper {
 	public function getFolder(int $folderId, int $rootStorageId) {
 		try {
 			return $this->folderManager->getFolder($folderId, $rootStorageId);
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the getFolder function from FolderManager.');
 		}
 	}
@@ -68,7 +68,7 @@ class GroupfolderHelper {
 	public function setFolderAcl(int $folderId, bool $acl): void {
 		try {
 			$this->folderManager->setFolderAcl($folderId, $acl);
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setFolderAcl from FolderManager.');
 		}
 	}
@@ -94,6 +94,22 @@ class GroupfolderHelper {
 			$this->folderManager->setFolderQuota($folderId, $quota);
 		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setFolderQuota from FolderManager.');
+		}
+	}
+
+	public function removeFolder(int $folderId): void {
+		try {
+			$this->folderManager->removeFolder($folderId);
+		} catch (\Exception $e) {
+			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeFolder from FolderManager.');
+		}
+	}
+
+	public function renameFolder(int $folderId, string $newMountPoint):void {
+		try {
+			$this->folderManager->renameFolder($folderId, $newMountPoint);
+		} catch (\Exception $e) {
+			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the renameFolder from FolderManager.');
 		}
 	}
 }

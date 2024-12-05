@@ -30,31 +30,11 @@
 			:to="{path: '/'}"
 			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 		<template #list>
-			<NcAppNavigationItem
+			<SpaceMenuItem
 				v-for="(space, spaceName) in $store.state.spaces"
 				:key="space.id"
-				:class="$route.params.space === spaceName ? 'space-selected' : ''"
-				:allow-collapse="true"
-				:open="$route.params.space === spaceName"
-				:title="spaceName"
-				:to="{path: `/workspace/${spaceName}`}">
-				<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-				<NcCounterBubble slot="counter" class="user-counter">
-					{{ $store.getters.spaceUserCount(spaceName) }}
-				</NcCounterBubble>
-				<div>
-					<NcAppNavigationItem
-						v-for="group in sortedGroups(Object.values(space.groups), spaceName)"
-						:key="group.gid"
-						icon="icon-group"
-						:to="{path: `/group/${spaceName}/${group.gid}`}"
-						:title="group.displayName">
-						<NcCounterBubble slot="counter" class="user-counter">
-							{{ $store.getters.groupUserCount( spaceName, group.gid) }}
-						</NcCounterBubble>
-					</NcAppNavigationItem>
-				</div>
-			</NcAppNavigationItem>
+				:space="space"
+				:space-name="spaceName" />
 			<!-- <div id="app-settings">
 					<div id="app-settings-header">
 						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
@@ -76,25 +56,22 @@
 </template>
 
 <script>
-import { createSpace, deleteBlankSpacename, isSpaceManagers, isSpaceUsers } from './services/spaceService.js'
-import { createGroupfolder, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder } from './services/groupfoldersService.js'
+import { createSpace } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
-import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
-import NcAppNavigationIconBullet from '@nextcloud/vue/dist/Components/NcAppNavigationIconBullet.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
-import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
-import { getLocale } from '@nextcloud/l10n'
+import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import SpaceMenuItem from './SpaceMenuItem.vue'
+
 export default {
 	name: 'LeftSidebar',
 	components: {
 		NcAppNavigation,
 		NcAppNavigationNewItem,
 		NcAppNavigationItem,
-		NcAppNavigationIconBullet,
-		NcCounterBubble,
+		SpaceMenuItem,
 	},
 	methods: {
 		// Creates a new space and navigates to its details page
@@ -103,7 +80,6 @@ export default {
 				showNotificationError('Error', 'Please specify a name.', 3000)
 				return
 			}
-			name = deleteBlankSpacename(name)
 
 			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
 
@@ -114,29 +90,14 @@ export default {
 				)
 			}
 
-			await checkGroupfolderNameExist(name)
-
-			const groupfolderId = await createGroupfolder(name)
-
-			await enableAcl(groupfolderId.data.id)
-
-			const workspace = await createSpace(name, groupfolderId.data.id)
-
-			const GROUPS_WORKSPACE = Object.keys(workspace.groups)
-			const workspaceManagerGid = GROUPS_WORKSPACE.find(isSpaceManagers)
-			const workspaceUserGid = GROUPS_WORKSPACE.find(isSpaceUsers)
-
-			await addGroupToGroupfolder(workspace.folder_id, workspaceManagerGid)
-			await addGroupToGroupfolder(workspace.folder_id, workspaceUserGid)
-
-			await addGroupToManageACLForGroupfolder(workspace.folder_id, workspaceManagerGid)
+			const workspace = await createSpace(name, this)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,
 				groups: workspace.groups,
 				isOpen: false,
 				id: workspace.id_space,
-				groupfolderId: groupfolderId.data.id,
+				groupfolderId: workspace.folder_id,
 				name,
 				quota: t('workspace', 'unlimited'),
 				users: {},
@@ -145,43 +106,6 @@ export default {
 				path: `/workspace/${name}`,
 			})
 		},
-		// sorts groups alphabetically
-		sortedGroups(groups, space) {
-			groups.sort((a, b) => {
-				// Makes sure the GE- group is first in the list
-				// These tests must happen before the tests for the U- group
-				const GEGroup = this.$store.getters.GEGroup(space)
-				if (a.gid === GEGroup) {
-					return -1
-				}
-				if (b.gid === GEGroup) {
-					return 1
-				}
-				// Makes sure the U- group is second in the list
-				// These tests must be done after the tests for the GE- group
-				const UGroup = this.$store.getters.UGroup(space)
-				if (a.gid === UGroup) {
-					return -1
-				}
-				if (b.gid === UGroup) {
-					return 1
-				}
-				// Normal locale based sort
-				// Some javascript engines don't support localCompare's locales
-				// and options arguments.
-				// This is especially the case of the mocha test framework
-				try {
-					return a.displayName.localeCompare(b.displayName, getLocale(), {
-						sensitivity: 'base',
-						ignorePunctuation: true,
-					})
-				} catch (e) {
-					return a.displayName.localeCompare(b.displayName)
-				}
-			})
-
-			return groups
-		},
 	},
 }
 </script>
@@ -189,8 +113,5 @@ export default {
 <style scoped>
 .app-navigation-entry {
 	padding-right: 0px;
-}
-.user-counter {
-	margin-right: 5px;
 }
 </style>

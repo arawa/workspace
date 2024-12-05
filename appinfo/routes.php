@@ -55,7 +55,6 @@ return [
 		],
 		[
 			'name' => 'workspace#createWorkspace',
-			// TODO move this route to /api/spaces
 			'url' => '/spaces',
 			'verb' => 'POST'
 		],
@@ -85,13 +84,12 @@ return [
 		],
 		[
 			'name' => 'workspace#destroy',
-			'url' => '/api/delete/space',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'workspace#renameSpace',
-			// TODO move this route to /api/spaces
-			'url' => '/api/space/rename',
+			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
 		],
 		[

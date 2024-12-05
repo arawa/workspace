@@ -3,6 +3,7 @@
 namespace OCA\Workspace\Migration;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Upgrade\Upgrade;
 use OCA\Workspace\Upgrade\UpgradeFixV300V301;
 use OCP\AppFramework\Services\IAppConfig as ServiceIAppConfig;
@@ -37,8 +38,8 @@ class FixMigrationToV300 implements IRepairStep {
 
 		if (!$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_MANAGER_GROUP')
 			&& !$this->appConfigManager->hasKey(Application::APP_ID, 'DISPLAY_PREFIX_USER_GROUP')) {
-			$this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', 'WM-');
-			$this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', 'U-');
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_MANAGER_GROUP', GroupsWorkspace::DEFAULT_DISPLAY_PREFIX_MANAGER_GROUP);
+			$this->appConfig->setAppValue('DISPLAY_PREFIX_USER_GROUP', GroupsWorkspace::DEFAULT_DISPLAY_PREFIX_USER_GROUP);
 		}
 
 		$this->upgrade->upgrade();
