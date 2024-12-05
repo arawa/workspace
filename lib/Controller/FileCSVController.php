@@ -25,20 +25,40 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Files\Csv;
-use OCA\Workspace\Files\InternalFile;
-use OCA\Workspace\Files\LocalFile;
-use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Exceptions\Notifications\AbstractNotificationException;
+use OCA\Workspace\Exceptions\Notifications\BadMimeType;
+use OCA\Workspace\Exceptions\Notifications\InvalidCsvFormatException;
+use OCA\Workspace\Exceptions\Notifications\InvalidSeparatorCsvException;
+use OCA\Workspace\Exceptions\Notifications\UserDoesntExistException;
+use OCA\Workspace\Files\Csv\CheckMimeType;
+use OCA\Workspace\Files\Csv\ImportUsers\Header;
+use OCA\Workspace\Files\Csv\ImportUsers\HeaderValidator;
+use OCA\Workspace\Files\Csv\ImportUsers\Parser;
+use OCA\Workspace\Files\Csv\ImportUsers\Values;
+use OCA\Workspace\Files\Csv\ImportUsers\ValuesValidator;
+use OCA\Workspace\Files\Csv\SeparatorDetector;
+use OCA\Workspace\Files\Csv\StructureValidator;
+use OCA\Workspace\Files\FileInterface;
+use OCA\Workspace\Files\FileUploader;
+use OCA\Workspace\Files\NextcloudFile;
+use OCA\Workspace\Notifications\ToastMessager;
+use OCA\Workspace\Response\ErrorResponseFormatter;
 use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Users\UserFormatter;
+use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IRootFolder;
-use OCP\Files\Node;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
 
+/**
+ * @todo rename to import csv users : ImportCsvUsersUploaderController
+ */
 class FileCSVController extends Controller {
 	private $currentUser;
 	
@@ -47,72 +67,220 @@ class FileCSVController extends Controller {
 		IRequest $request,
 		private IUserManager $userManager,
 		private WorkspaceService $workspaceService,
-		private UserService $userService,
-		// private FileInfo $file,
+		private UserFormatter $userFormatter,
+		private UsersExistCheck $userChecker,
+		private CheckMimeType $csvCheckMimeType,
+		private HeaderValidator $headerValidator,
+		private Parser $csvParser,
 		private IUserSession $userSession,
+		private SpaceManager $spaceManager,
+		private IL10N $translate,
 		private IRootFolder $rootFolder,
+		private ValuesValidator $valuesValidator
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
 	}
 
 	/**
+	 * It's a common process to get data when we import a csv file from
+	 * local or Files or anything.
+	 *
+	 * @param FileInterface $file
+	 * @param array $space represents a workspace in array
+	 * @return array
+	 */
+	private function importProcess(FileInterface $file, array $space): array
+	{
+		if (!SeparatorDetector::isComma($file) || !SeparatorDetector::isCommaForAllFile($file)) {
+			throw new InvalidSeparatorCsvException(
+				$this->translate->t('Invalid separator for CSV file'),
+				$this->translate->t('Your CSV file must use a comma (",") as separator'),
+			);
+		}
+
+		if (!StructureValidator::checkCommaAllLines($file))
+		{
+			throw new InvalidSeparatorCsvException(
+				$this->translate->t('Invalid separator for CSV file'),
+				$this->translate->t('Your CSV file must use a comma (",") as separator'),
+			);
+		}
+
+		if (!$this->headerValidator->validate($file)) {
+
+			$displaynamesBold = array_map(fn ($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
+			$rolesBold = array_map(fn ($role) => "<b>$role</b>", Header::ROLE);
+
+			$separatorOr = $this->translate->t('or');
+			$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
+			$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
+
+			$message = "The content of your file is invalid. "
+			. "Two columns are required, with the following header names and values:<br>"
+			."- \"user\": the user's username or e-mail address<br>"
+			. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
+
+			$errorMessage = $this->translate->t(
+				$message,
+				[
+					$displaynamesBoldStringify,
+					$rolesBoldStringify
+				]
+			);
+
+			throw new InvalidCsvFormatException(
+				$this->translate->t('Error in CSV file content'),
+				$this->translate->t($errorMessage),
+			);
+		}
+
+		$names = $this->csvParser->parser($file);
+	
+		$usernames = array_map(fn ($user) => $user->uid, $names);
+
+		$uids = array_map(fn ($user) => $user->uid, $names);
+
+		$emails = array_values(
+			array_filter(
+				$uids,
+				fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
+			)
+		);
+
+		$usernames = array_values(
+			array_diff($uids, $emails)
+		);
+
+		if (!$this->userChecker->checkUsersExist($usernames)
+		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
+
+			$usernamesUnknown = array_filter(
+				$usernames,
+				function ($name) {
+					return !$this->userChecker->checkUserExist($name);
+				}
+			);
+
+			$emailsUnknown = array_filter(
+				$emails,
+				fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
+			);
+
+			$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
+
+			$usersUnknown = array_map(
+				fn ($name) => "- $name",
+				$usersUnknown
+			);
+
+			$usersUnknown = implode("<br>", $usersUnknown);
+			$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
+			$errorMessage .= $usersUnknown;
+
+			throw new UserDoesntExistException(
+				$this->translate->t('Error: unknown users'),
+				$errorMessage,
+				Http::STATUS_FORBIDDEN
+			);
+		}
+
+		if (!$this->valuesValidator->validateRoles($file)) {
+
+			$usersBadRole = array_filter(
+				$names,
+				fn ($user) => !in_array($user->role, Values::ROLES)
+			);
+
+			$message = 'Only the following values are allowed: <b>%1$s</b><br><br>'
+			. '- "wm": to define the user as a workspace manager.<br>'
+			. '- "u" or "user": to define the user as a simple user.<br><br>'
+			. 'Check the role for these users:<br>%2$s';
+
+			$usersBadRoleStringify = implode(
+				'<br>',
+				array_map(
+					fn ($user) => $this->translate->t('- <b>%1$s</b> has the <b>%2$s</b> role', [$user->uid, $user->role]),
+					$usersBadRole
+				)
+			);
+
+			throw new InvalidCsvFormatException(
+				$this->translate->t('Error: unknown role'),
+				$this->translate->t($message, [
+					implode(', ', Values::ROLES),
+					$usersBadRoleStringify
+				])
+			);
+		}
+
+		$data = [];
+		foreach($names as $user) {
+			$uid = $user->uid;
+
+			if ($this->userChecker->checkUserExistByEmail($uid)) {
+				$uid = $this->userManager->getByEmail($user->uid)[0];
+			} else {
+				$uid = $this->userManager->get($user->uid);
+			}
+
+			$data[] = [
+				'user' => $uid,
+				'role' => $user->role
+			];
+		}
+
+		$data = array_map(
+			fn ($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
+			$data
+		);
+
+		return $data;
+	}
+	
+	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
+	 * 
+	 * @param int $spaceId is the spaceId from workspace
+	 * 
 	 * Returns formatted list of existing users of the instance.
-	 *
 	 */
-	public function import(): JSONResponse {
-		$params = $this->request->getParams();
-		$spaceObj = $params['space'];
-		$space = json_decode($spaceObj, true);
-		$file = $this->request->getUploadedFile('file');
+	public function import(?int $spaceId = null): JSONResponse {
+		try {
+			$space = $this->spaceManager->get($spaceId);
+			$file = $this->request->getUploadedFile('file');
+	
+			if ($this->csvCheckMimeType->checkOnArray($file)) {
+				throw new BadMimeType(
+					$this->translate->t('Error in file format'),
+					$this->translate->t('The file must be in <b>CSV format</b>.'),
+				);
+			}
+	
+			$fileUploader = new FileUploader($file['tmp_name']);
 
-		if ($this->isCSVMimeType($file)) {
+			$data = $this->importProcess($fileUploader, $space);
+
+			return new JSONResponse($data);
+
+		} catch(AbstractNotificationException $exception) {
 			return new JSONResponse(
-				[
-					'Wrong file extension. Must be <b>.csv</b>.'
-				],
-				Http::STATUS_FORBIDDEN
+				ErrorResponseFormatter::format(
+					new ToastMessager($exception->getTitle(), $exception->getMessage()),
+					$exception
+				),
+				$exception->getCode()
+			);
+		} catch(\Exception $exception) {
+			return new JSONResponse(
+				ErrorResponseFormatter::format(
+					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
+					$exception
+				),
+				$exception->getCode()
 			);
 		}
-
-		$csv = new Csv();
-
-		$localFile = new LocalFile($file['tmp_name']);
-
-		if (!$csv->hasProperHeader($localFile)) {
-			return new JSONResponse(
-				[
-					'Invalid file format. Table header doesn\'t contain any of the following values:<br>',
-					[
-						...$csv::DISPLAY_NAME,
-						...$csv::ROLE
-					]
-				],
-				Http::STATUS_FORBIDDEN
-			);
-		} else {
-			new JSONResponse(
-				[
-					'Something went wrong. Couldn\'t open a file.'
-				],
-				Http::STATUS_FORBIDDEN
-			);
-		}
-
-		$names = $csv->parser($localFile);
-		
-		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);
-		});
-		
-		// get list of IUser objects
-		$users = $this->formatUsers($existingNames);
-
-		$data = $this->formatData($users, $space);
-
-		return new JSONResponse($data);
 	}
 
 	/**
@@ -121,67 +289,44 @@ class FileCSVController extends Controller {
 	 * Returns formatted list of existing users of the instance.
 	 *
 	 */
-	public function getFromFiles():JSONResponse {
-		$params = $this->request->getParams();
-		$path = $params['path'];
-		$spaceObj = $params['space'];
-		$space = json_decode($spaceObj, true);
-		$uid = $this->currentUser->getUID();
-		$folder = $this->rootFolder->getUserFolder($uid);
-		$file = $folder->get($path);
+	public function getFromFiles(?int $spaceId = null):JSONResponse {
+		try {
+			$params = $this->request->getParams();
+			$path = $params['path'];
+			$uid = $this->currentUser->getUID();
+			$folder = $this->rootFolder->getUserFolder($uid);
+			$file = $folder->get($path);
 
-		if ($this->isCSVMimeType($file)) {
-			return new JSONResponse(['Wrong file extension. Must be <b>.csv</b>.'], Http::STATUS_FORBIDDEN);
+			$space = $this->spaceManager->get($spaceId);
+	
+			if ($this->csvCheckMimeType->checkOnNode($file)) {
+				throw new BadMimeType(
+					$this->translate->t('Error in file format'),
+					$this->translate->t('The file must be in <b>CSV format</b>.'),
+				);
+			}
+		
+			$nextcloudFile = new NextcloudFile($file);
+
+			$data = $this->importProcess($nextcloudFile, $space);
+
+			return new JSONResponse($data);
+		} catch(AbstractNotificationException $exception) {
+			return new JSONResponse(
+				ErrorResponseFormatter::format(
+					new ToastMessager($exception->getTitle(), $exception->getMessage()),
+					$exception
+				),
+				$exception->getCode()
+			);
+		} catch(\Exception $exception) {
+			return new JSONResponse(
+				ErrorResponseFormatter::format(
+					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
+					$exception
+				),
+				$exception->getCode()
+			);
 		}
-
-		$fullPath = $file->getInternalPath();
-		$csv = new Csv();
-		$internalFile = new InternalFile($fullPath, $file->getStorage());
-
-		if (!$csv->hasProperHeader($internalFile)) {
-			return new JSONResponse(['Invalid file format. Table header doesn\'t contain any of the following values:<br>', [...$csv::DISPLAY_NAME, ...$csv::ROLE]], Http::STATUS_FORBIDDEN);
-		}
-
-		$names = $csv->parser($internalFile);
-
-		// filter array to leave only existing users
-		$existingNames = array_filter($names, function ($user) {
-			return $this->userManager->userExists($user['name']);
-		});
-
-		$users = $this->formatUsers($existingNames);
-
-		$data = $this->formatData($users, $space);
-
-		return new JSONResponse($data);
-	}
-
-	private function formatData(array $users, array $space): array {
-		$data = [];
-		foreach ($users as $user) {
-			$role = $user['role'] == "admin" ? "admin" : "user";
-			$data[] = $this->userService->formatUser($user['user'], $space, $role);
-		}
-
-		return $data;
-	}
-
-	private function formatUsers(array $data): array {
-		$users = [];
-		foreach($data as $user) {
-			$users[] = [
-				'user' => $this->userManager->get($user['name']),
-				'role' => $user['role']
-			];
-		}
-		return $users;
-	}
-
-	private function isCSVMimeType(Node|array $file): bool {
-		if($file instanceof Node) {
-			return $file->getMimetype() !== 'text/csv';
-		}
-
-		return $file['type'] !== 'text/csv';
 	}
 }
