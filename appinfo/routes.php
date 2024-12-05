@@ -129,6 +129,16 @@ return [
 			'verb' => 'POST',
 		],
 		[
+			'name' => 'fileCSV#import',
+			'url' => '/space/{spaceId}/import-users/local',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'fileCSV#getFromFiles',
+			'url' => '/space/{spaceId}/import-users/files',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'space#updateColorCode',
 			'url' => '/workspaces/{spaceId}/color',
 			'verb' => 'POST'

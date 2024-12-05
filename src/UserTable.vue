@@ -29,9 +29,13 @@
 					<th style="padding-left: 15px; width: 30%;">
 						{{ t('workspace', 'Users') }}
 					</th>
-					<th>{{ t('workspace', 'Role') }}</th>
-					<th>{{ t('workspace', 'Groups') }}</th>
-					<th />
+					<th class="workspace-th">
+						{{ t('workspace', 'Role') }}
+					</th>
+					<th class="workspace-th">
+						{{ t('workspace', 'Groups') }}
+					</th>
+					<th class="workspace-th" />
 				</tr>
 			</thead>
 			<tbody>
@@ -49,9 +53,13 @@
 							{{ user.email }}
 						</div>
 					</td>
-					<td> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
-					<td> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
-					<td>
+					<td class="workspace-td">
+						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }}
+					</td>
+					<td class="workspace-td">
+						{{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }}
+					</td>
+					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
 								<NcActionButton v-if="$route.params.group === undefined"

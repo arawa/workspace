@@ -137,7 +137,7 @@ class WorkspaceService {
 				$user->getUID(),
 				WorkspaceManagerGroup::get($space['id']))
 			) {
-				$role = 'admin';
+				$role = 'wm';
 			}
 			$data[] = $this->userService->formatUser($user, $space, $role);
 		}
@@ -175,7 +175,7 @@ class WorkspaceService {
 		$group = $this->groupManager->get(WorkspaceManagerGroup::get($workspace['id']));
 		if (!is_null($group)) {
 			foreach ($group->getUsers() as $user) {
-				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'admin');
+				$users[$user->getUID()] = $this->userService->formatUser($user, $workspace, 'wm');
 			};
 		}
 
