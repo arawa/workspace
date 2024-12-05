@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Init 3.3.0 by @zak39 in [#1097](https://github.com/arawa/workspace/pull/1097)
 - Update the CHANGELOG for the RELEASE 3.3.0 by @zak39 in [#1098](https://github.com/arawa/workspace/pull/1098)
+- Add links to compare between v3.3.0 and the main branch and 3.2.5 by @zak39 in [#1099](https://github.com/arawa/workspace/pull/1099)
 
 ## [3.2.5] - 2024-11-18
 
@@ -314,8 +315,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.0.0...main
-[3.0.0]: https://github.com/arawa/workspace/compare/v3.2.5...3.0.0
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.3.0...main
+[3.3.0]: https://github.com/arawa/workspace/compare/v3.2.5...3.0.0
 [3.2.5]: https://github.com/arawa/workspace/compare/v3.2.4...3.2.5
 [3.2.4]: https://github.com/arawa/workspace/compare/v3.2.3...3.2.4
 [3.2.3]: https://github.com/arawa/workspace/compare/v3.2.2...3.2.3
