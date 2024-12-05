@@ -7,7 +7,7 @@ use OCP\Files\Node;
 class NextcloudFile implements FileInterface {
 	private $resource;
 
-    private string|false $lineEnding;
+	private string|false $lineEnding;
 		
 	public function __construct(private Node $file) {
 	}
@@ -17,8 +17,8 @@ class NextcloudFile implements FileInterface {
 	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
-        $this->lineEnding = ini_get("auto_detect_line_endings");
-        ini_set("auto_detect_line_endings", true);
+		$this->lineEnding = ini_get("auto_detect_line_endings");
+		ini_set("auto_detect_line_endings", true);
 		$store = $this->file->getStorage();
 		$this->resource = $store->fopen($this->file->getInternalPath(), "r");
 
@@ -30,7 +30,7 @@ class NextcloudFile implements FileInterface {
 	}
 
 	public function close(): bool {
-        ini_set("auto_detect_line_endings", $this->lineEnding);
+		ini_set("auto_detect_line_endings", $this->lineEnding);
 		return fclose($this->resource);
 	}
 
@@ -38,8 +38,7 @@ class NextcloudFile implements FileInterface {
 		return $this->file->getInternalPath();
 	}
 
-	public function getSize(): false|int|float
-	{
+	public function getSize(): false|int|float {
 		$store = $this->file->getStorage();
 		return $store->filesize($this->file->getInternalPath());
 	}
