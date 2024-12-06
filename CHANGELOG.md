@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.3.1] - 2024-12-06
+
+### Misc
+
+- Rebuild sources to correctly build JavaScript and Vue
+
 ## [3.3.0] - 2024-12-05
 
 ### Added
@@ -315,7 +321,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.3.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v3.3.1...main
+[3.3.1]: https://github.com/arawa/workspace/compare/v3.3.0...3.0.1
 [3.3.0]: https://github.com/arawa/workspace/compare/v3.2.5...3.0.0
 [3.2.5]: https://github.com/arawa/workspace/compare/v3.2.4...3.2.5
 [3.2.4]: https://github.com/arawa/workspace/compare/v3.2.3...3.2.4
