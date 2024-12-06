@@ -27,8 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.3.1] - 2024-12-06
 
-### Misc
+### Misc
 
+- Create release 3.3.1 by @zak39 in [#1100](https://github.com/arawa/workspace/pull/1100)
 - Rebuild sources to correctly build JavaScript and Vue
 
 ## [3.3.0] - 2024-12-05
