@@ -79,7 +79,6 @@ class UserService {
 			}
 		}
 
-		// Returns a user that is valid for the frontend
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
@@ -87,6 +86,7 @@ class UserService {
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role,
+            'is_connected' => $this->connectedGroups->isUserConnectedGroup($user->getUID()),
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}

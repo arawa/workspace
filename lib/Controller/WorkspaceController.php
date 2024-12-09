@@ -201,6 +201,7 @@ class WorkspaceController extends Controller {
 					$space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
 				}
 
+                $space['users'] = (object)$space['users'];
 			}
 
 			$addedGroups = [];

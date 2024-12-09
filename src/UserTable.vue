@@ -22,86 +22,86 @@
 
 <template>
 	<div>
-    <div>
-      <table v-if="users.length" class="table-space-detail">
-        <thead>
-          <tr class="workspace-tr">
-            <th class="workspace-th" />
-            <th class="workspace-th" style="padding-left: 15px; width: 30%;">
-              {{ t('workspace', 'Users') }}
-            </th>
-            <th class="workspace-th">{{ t('workspace', 'Role') }}</th>
-            <th class="workspace-th">{{ t('workspace', 'Groups') }}</th>
-            <th class="workspace-th" />
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users"
-            :key="user.uid"
-            :class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
-            <td class="avatar workspace-td">
-              <NcAvatar :display-name="user.name" :user="user.uid" />
-            </td>
-            <td style="width: 30%;" class="workspace-td">
-              <div class="user-name">
-                {{ user.name }}
-              </div>
-              <div class="user-email">
-                {{ user.email }}
-              </div>
-            </td>
-            <td class="workspace-td"> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
-            <td class="workspace-td"> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
-            <td class="workspace-td">
-              <div class="user-actions">
-                <NcActions>
-                  <NcActionButton v-if="user.profile !== undefined"
-                    icon="icon-user"
-                    :close-after-click="true"
-                    @click="viewProfile(user)">
-                    {{ t('workspace', 'View profile') }}
-                  </NcActionButton>
-                  <NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
-                    :close-after-click="true"
-                    @click="toggleUserRole(user)">
-                    <template #icon>
-                      <Close :size="20" />
-                    </template>
-                    {{ t('workspace', 'Remove admin rights')}}
-                  </NcActionButton>
-                  <NcActionButton v-else
-                    :close-after-click="true"
-                    @click="toggleUserRole(user)">
-                    <template #icon>
-                      <AccountCog :size="20" />
-                    </template>
-                    {{ t('workspace', 'Make administrator')}}
-                  </NcActionButton>
-                  <NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
-                    icon="icon-delete"
-                    :close-after-click="true"
-                    @click="deleteUser(user)">
-                    {{ t('workspace', 'Delete user') }}
-                  </NcActionButton>
-                  <NcActionButton v-if="(decodeURIComponent(decodeURIComponent($route.params.slug)) !== undefined) && !$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
-                    icon="icon-close"
-                    :close-after-click="true"
-                    @click="removeFromGroup(user)">
-                    {{ t('workspace', 'Remove from group') }}
-                  </NcActionButton>
-                </NcActions>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <NcEmptyContent v-else>
+		<div>
+			<table v-if="users.length" class="table-space-detail">
+				<thead>
+					<tr class="workspace-tr">
+						<th class="workspace-th" />
+						<th class="workspace-th" style="padding-left: 15px; width: 30%;">
+							{{ t('workspace', 'Users') }}
+						</th>
+						<th class="workspace-th">{{ t('workspace', 'Role') }}</th>
+						<th class="workspace-th">{{ t('workspace', 'Groups') }}</th>
+						<th class="workspace-th" />
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="user in users"
+						:key="user.uid"
+						:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
+						<td class="avatar workspace-td">
+							<NcAvatar :display-name="user.name" :user="user.uid" />
+						</td>
+						<td style="width: 30%;" class="workspace-td">
+							<div class="user-name">
+								{{ user.name }}
+							</div>
+							<div class="user-email">
+								{{ user.email }}
+							</div>
+						</td>
+						<td class="workspace-td"> {{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }} </td>
+						<td class="workspace-td"> {{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }} </td>
+						<td class="workspace-td">
+							<div class="user-actions">
+								<NcActions>
+									<NcActionButton v-if="user.profile !== undefined"
+										icon="icon-user"
+										:close-after-click="true"
+										@click="viewProfile(user)">
+										{{ t('workspace', 'View profile') }}
+									</NcActionButton>
+									<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
+										:close-after-click="true"
+										@click="toggleUserRole(user)">
+										<template #icon>
+											<Close :size="20" />
+										</template>
+										{{ t('workspace', 'Remove admin rights')}}
+									</NcActionButton>
+									<NcActionButton v-else
+										:close-after-click="true"
+										@click="toggleUserRole(user)">
+										<template #icon>
+											<AccountCog :size="20" />
+										</template>
+										{{ t('workspace', 'Make administrator')}}
+									</NcActionButton>
+									<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
+										icon="icon-delete"
+										:close-after-click="true"
+										@click="deleteUser(user)">
+										{{ t('workspace', 'Delete user') }}
+									</NcActionButton>
+									<NcActionButton v-if="$route.params.slug !== undefined && (isAddedGroup === false || user.is_connected === false)"
+										icon="icon-close"
+										:close-after-click="true"
+										@click="removeFromGroup(user)">
+										{{ t('workspace', 'Remove from group') }}
+									</NcActionButton>
+								</NcActions>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<NcEmptyContent v-else>
 			{{ t('workspace', 'No users') }}
 			<template #desc>
 				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
 		</NcEmptyContent>
-    </div>
+		</div>
 	</div>
 </template>
 
@@ -156,6 +156,9 @@ export default {
 					return firstUser.name.localeCompare(secondUser.name)
 				}
 			})
+		},
+		isAddedGroup() {
+			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
 	},
 	methods: {
@@ -220,10 +223,20 @@ export default {
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
+			const name = this.$route.params.space
+			const space = this.$store.state.spaces[name]
 			this.$store.dispatch('toggleUserRole', {
-				name: this.$route.params.space,
+				name,
 				user,
 			})
+			if (user.is_connected) {
+				this.$store.commit('TOGGLE_USER_CONNECTED', { name, user })
+				this.$store.dispatch('addUserToGroup', {
+					name,
+					gid: UserGroup.getGid(space),
+					user,
+				})
+			}
 		},
 		// Removes a user from a group
 		removeFromGroup(user) {
@@ -255,7 +268,7 @@ export default {
 			}
 		},
 		viewProfile(user) {
-		  window.location.href = user.profile
+			window.location.href = user.profile
 		}
 	},
 }

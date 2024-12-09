@@ -148,15 +148,18 @@ export default {
 			const space = this.$store.state.spaces[this.$route.params.space]
 			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
+			const usersAreNotConnected = Object.values(space.users).filter((user) => user.is_connected === false && user.groups.includes(gid))
+			const usersCount = space.added_groups[gid].usersCount - usersAreNotConnected.length
+
 			this.$store.dispatch('substractionSpaceUserCount', {
 				spaceName: space.name,
-				usersCount: space.added_groups[gid].usersCount
+				usersCount
 			})
 
 			this.$store.dispatch('substractionGroupUserCount', {
 				spaceName: space.name,
 				gid: UserGroup.getGid(space),
-				usersCount: space.added_groups[gid].usersCount
+				usersCount
 			})
 
 			this.$store.dispatch('removeConnectedGroup', {
@@ -167,16 +170,12 @@ export default {
 
 			Object.keys(space.users).forEach(key => {
 
-        if (space.users[key].groups.includes(ManagerGroup.getGid(space)) && space.users[key].groups.includes(gid)) {
-          console.debug('space.users[key]', space.users[key])
-					this.$store.dispatch('decrementGroupUserCount', {
-						spaceName: this.$route.params.space,
-						gid: ManagerGroup.getGid(space)
-					})
-				}
-
 				if (space.users[key].groups.includes(gid)) {
-					this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
+					if (space.users[key].is_connected) {
+						this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
+					} else {
+						this.$store.commit('removeUserFromGroup', { name: space.name, gid, user: space.users[key] })
+					} 
 				}
 			})
 

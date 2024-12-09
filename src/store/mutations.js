@@ -266,4 +266,9 @@ export default {
 		VueSet(state.groupfolders, groupfolder.mount_point, groupfolder)
 		sortGroupfolders(state)
 	},
+  TOGGLE_USER_CONNECTED(state, { name, user }) {
+		const space = state.spaces[name]
+		space.users[user.uid].is_connected = !space.users[user.uid].is_connected
+		VueSet(state.spaces, name, space)
+  },
 }
