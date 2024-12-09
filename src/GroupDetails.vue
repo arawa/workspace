@@ -69,7 +69,7 @@
 		<UserTable :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
 		<SelectUsers v-if="showSelectUsersModal" :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" @close="toggleShowSelectUsersModal" />
 		<AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
-			:message="t('workspace', 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
+			:message="t('workspace', 'Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>nouveaux espaces</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-nouveaux espaces</b>)<br>- users who are members of <b>Groupe Workspace</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>nouveaux espaces</b>', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)) }, null, { escape: false })"
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
@@ -113,6 +113,11 @@ export default {
 		isAddedGroup() {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
+    connectedGroupMessage() {
+      const text = t('workspace', 'Warning, after removal of group :{groupname}', { groupname: '<b>aaaa</b>'})
+      console.debug('text', text)
+      return 'Warning, after removal of group :<b>aaaa</b>'
+    },
 	},
 	mounted() {
 		const space = this.$store.state.spaces[this.$route.params.space]

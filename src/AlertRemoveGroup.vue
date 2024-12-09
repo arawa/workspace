@@ -1,9 +1,9 @@
 <template>
 	<NcModal
-		size="small">
+		size="normal">
 		<div class="container-modal-remove">
 			<NcNoteCard type="warning">
-				<p>{{ message }}</p>
+				<p v-html="message"></p>
 			</NcNoteCard>
 			<div class="container-buttons-remove">
 				<NcButton
