@@ -187,8 +187,20 @@ export default {
 	width: 500px;
 }
 
-.searchbar-groups :deep(.vs__dropdown-toggle) {
-	border: 2px solid var(--color-border-dark);
+.body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+  border-width: 1px;
+  border-color: var(--color-border-dark);
+  border-bottom: rgb(0,0,0,0);
+}
+
+.body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-menu) {
+  border-width: 1px !important;
+  border-color: var(--color-border-dark) !important;
+}
+
+.body-select-groups :deep(.v-select.select .vs__dropdown-toggle) {
+  border-width: 1px;
+  border-color: var(--color-border-dark);
 }
 
 .content-group-list {
