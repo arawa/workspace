@@ -9,7 +9,7 @@ OC.L10N.register(
 		'Error': 'Chyba',
 		'Please specify a name.': 'Zadejte název.',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Upozornění – červeně označení uživatelé ještě nejsou členy tohoto pracovního prostoru. Budou automaticky přidáni.',
-		'Create group': 'Vytvořit skupinu',
+		'Create a workspace group': 'Vytvořit skupinu',
 		'Delete space': 'Smazat prac. prostor',
 		'Delete user': 'Odebrat uživatele',
 		'Error 403': 'Chyba 403',
