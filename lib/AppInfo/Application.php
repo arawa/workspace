@@ -22,6 +22,8 @@
 
 namespace OCA\Workspace\AppInfo;
 
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Group\GroupBackend;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
@@ -32,6 +34,7 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -43,6 +46,7 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
+
 		$context->registerService(WorkspaceAccessControlMiddleware::class, function ($c) {
 			return new WorkspaceAccessControlMiddleware(
 				$c->query(IURLGenerator::class),
@@ -75,6 +79,14 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-	}
+		// Unexplained BUG with autoload. Keep this line
+		$context->getAppContainer()->query(SpaceMapper::class);
 
+		$context->injectFn(function (
+			IGroupManager $groupManager,
+			GroupBackend $groupBackend,
+		) {
+			$groupManager->addBackend($groupBackend);
+		});
+	}
 }
