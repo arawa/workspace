@@ -21,7 +21,7 @@
  *
  */
 
-import { addGroupToWorkspace } from '../services/spaceService.js'
+import { getUsers, addGroupToWorkspace } from '../services/spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
@@ -73,10 +73,29 @@ export default {
 			showNotificationError('Network error', text, 4000)
 		})
 	},
+	incrementGroupUserCount(context, { spaceName, gid }) {
+		context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName, gid })
+	},
+	incrementSpaceUserCount(context, { spaceName }) {
+		context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName })
+	},
+	decrementGroupUserCount(context, { spaceName, gid }) {
+		context.commit('DECREMENT_GROUP_USER_COUNT', { spaceName, gid })
+	},
+	decrementSpaceUserCount(context, { spaceName }) {
+		context.commit('DECREMENT_SPACE_USER_COUNT', { spaceName })
+	},
+	substractionSpaceUserCount(context, { spaceName, usersCount }) {
+		context.commit('SUBSTRACTION_SPACE_USER_COUNT', { spaceName, usersCount })
+	},
+	substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
+		context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount })
+	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
 		const space = context.state.spaces[name]
+		const spaceId = space.id
 		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
 		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
@@ -86,13 +105,11 @@ export default {
 			return
 		}
 
-		// Creates group in frontend
-		context.commit('addGroupToSpace', { name, gid, displayName })
-
 		// Creates group in backend
 		axios.post(generateUrl('/apps/workspace/api/group'),
 			{
 				data: {
+					spaceId,
 					gid,
 					displayName,
 				},
@@ -100,17 +117,26 @@ export default {
 			})
 			.then((resp) => {
 				addGroupToWorkspace(space.id, resp.data.group.gid)
+				// Creates group in frontend
+				context.commit('addGroupToSpace', {
+					name,
+					gid,
+					displayName,
+          types: resp.data.group.types,
+					slug: resp.data.group.slug
+				})
 				// Navigates to the g roup's details page
 				context.state.spaces[name].isOpen = true
 				router.push({
-					path: `/group/${name}/${gid}`,
+					path: `/group/${name}/${resp.data.group.slug}`,
 				})
 				// eslint-disable-next-line no-console
 				console.log('Group ' + gid + ' created')
 			})
 			.catch((e) => {
 				context.commit('removeGroupFromSpace', { name, gid })
-				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: e, group: gid })
+				const message = (e.response && e.response.data && e.response.data.msg) ?? e.message
+				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: message, group: gid })
 				showNotificationError('Network error', text, 4000)
 			})
 	},
@@ -123,7 +149,7 @@ export default {
 
 		// Naviagte back to home
 		router.push({
-			path: '/',
+			path: `/workspace/${name}`,
 		})
 
 		// Deletes group from backend
@@ -253,8 +279,26 @@ export default {
 		const space = context.state.spaces[name]
 		if (context.getters.isSpaceAdmin(user, name)) {
 			user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
+			context.commit('DECREMENT_GROUP_USER_COUNT', {
+				spaceName: space.name,
+				gid: ManagerGroup.getGid(space)
+			})
+			context.commit('CHANGE_USER_ROLE', {
+				spaceName: space.name,
+				user,
+				role: 'user',
+			})
 		} else {
 			user.groups.push(ManagerGroup.getGid(space))
+			context.commit('INCREMENT_GROUP_USER_COUNT', {
+				spaceName: space.name,
+				gid: ManagerGroup.getGid(space)
+			})
+			context.commit('CHANGE_USER_ROLE', {
+				spaceName: space.name,
+				user,
+				role: 'admin',
+			})
 		}
 		const spaceId = space.id
 		const userId = user.uid
@@ -293,6 +337,44 @@ export default {
 	},
 	updateSpace(context, { space }) {
 		context.commit('updateSpace', space)
+	},
+	removeConnectedGroup(context, { spaceId, gid, name }) {
+		axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${gid}`))
+			.then((resp) => {
+			})
+			.catch((e) => {
+				console.error('Error to remove connected group', e.message)
+				console.error(e)
+			})
+
+		context.commit('removeAddedGroupFromSpace', { name, gid })
+
+		// Naviagte back to home
+		router.push({
+			path: `/workspace/${name}`,
+		})
+	},
+	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
+		const space = context.state.spaces[name]
+		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
+			.then(resp => {
+				context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
+				const users = resp.data.users
+				for (const user in users) {
+					context.commit('addUserToWorkspace', { name, user: users[user] })
+					context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
+					context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
+					context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
+					context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
+				}
+				return resp.data
+			})
+			.catch(error => {
+				console.error('Error to add connected group', error.message)
+				console.error(error)
+			})
+
+		return result
 	},
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
@@ -361,5 +443,37 @@ export default {
 			data: formData,
 		})
 		return resp.data
+	},
+	loadUsers(context, { space }) {
+		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+		context.commit('SET_NO_USERS', ({ activated: false }))
+
+		if (Object.keys(space.users).length === space.userCount) {
+			return
+		}
+
+		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: true }))
+
+		getUsers(space.id)
+			.then(users => {
+				if (Object.keys(users).length === 0) {
+					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_NO_USERS', ({ activated: true }))
+					return
+				}
+
+				if (Object.keys(users).length > 0) {
+					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_NO_USERS', ({ activated: false }))
+					context.commit('UPDATE_USERS', {
+						space,
+						users
+					})
+				}
+			})
+			.catch(error => {
+				console.error('Impossible to get users for the workspace.')
+				console.error(error)
+			})
 	},
 }

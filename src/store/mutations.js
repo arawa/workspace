@@ -80,7 +80,7 @@ const sortGroupfolders = (state) => {
 
 export default {
 	// Adds a group to a space
-	addGroupToSpace(state, { name, gid, displayName = undefined }) {
+	addGroupToSpace(state, { name, gid, displayName = undefined, slug }) {
 		if (displayName === undefined) {
 			displayName = gid
 		}
@@ -88,6 +88,8 @@ export default {
 		space.groups[gid] = {
 			gid,
 			displayName,
+			usersCount: 0,
+			slug
 		}
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
@@ -96,6 +98,56 @@ export default {
 	addSpace(state, space) {
 		state.spaces[space.name] = space
 		sortSpaces(state)
+	},
+	UPDATE_USERS(state, { space, users }) {
+		space.users = users
+		VueSet(state.spaces, space.name, space)
+	},
+	SET_LOADING_USERS_WAITTING(state, { activated }) {
+		state.loadingUsersWaitting = activated
+	},
+	SET_NO_USERS(state, { activated }) {
+		state.noUsers = activated
+	},
+	INCREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount++
+		VueSet(state.spaces, spaceName, space)
+	},
+	INCREMENT_ADDED_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.added_groups[gid].usersCount++
+		VueSet(state.spaces, spaceName, space)
+	},
+	INCREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+		const space = state.spaces[spaceName]
+		space.userCount++
+		VueSet(state.spaces, spaceName, space)
+	},
+	DECREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount--
+		VueSet(state.spaces, spaceName, space)
+	},
+	DECREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+		const space = state.spaces[spaceName]
+		space.userCount--
+		VueSet(state.spaces, spaceName, space)
+	},
+	SUBSTRACTION_SPACE_USER_COUNT(state, { spaceName, usersCount }) {
+		const space = state.spaces[spaceName]
+		space.userCount -= usersCount
+		VueSet(state.spaces, spaceName, space)
+	},
+	SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {
+		const space = state.spaces[spaceName]
+		space.groups[gid].usersCount -= usersCount
+		VueSet(state.spaces, spaceName, space)
+	},
+	CHANGE_USER_ROLE(state, { spaceName, user, role }) {
+		const space = state.spaces[spaceName]
+		space.users[user.uid].role = role
+		VueSet(state.spaces, spaceName, space)
 	},
 	// Adds a user to a group
 	addUserToGroup(state, { name, gid, user }) {
@@ -119,6 +171,12 @@ export default {
 		VueSet(state.spaces, name, space)
 		sortSpaces(state)
 	},
+	addConnectedGroupToWorkspace(state, { name, group, slug }) {
+		const space = state.spaces[name]
+		space.added_groups[group.gid] = { displayName: group.displayName, gid: group.gid, slug, usersCount: 0 }
+		VueSet(state.spaces, name, space)
+		sortSpaces(state)
+	},
 	// Removes a group from a space
 	removeGroupFromSpace(state, { name, gid }) {
 		const space = state.spaces[name]
@@ -131,6 +189,15 @@ export default {
 				space.users[key].groups.splice(index, 1)
 			}
 		})
+		// Saves the space back in the store
+		delete state.spaces[space.name]
+		VueSet(state.spaces, name, space)
+		sortSpaces(state)
+	},
+	removeAddedGroupFromSpace(state, { name, gid }) {
+		const space = state.spaces[name]
+		// Deletes the group from the space's groups attribute
+		delete space.added_groups[gid]
 		// Saves the space back in the store
 		delete state.spaces[space.name]
 		VueSet(state.spaces, name, space)
@@ -199,4 +266,9 @@ export default {
 		VueSet(state.groupfolders, groupfolder.mount_point, groupfolder)
 		sortGroupfolders(state)
 	},
+  TOGGLE_USER_CONNECTED(state, { name, user }) {
+		const space = state.spaces[name]
+		space.users[user.uid].is_connected = !space.users[user.uid].is_connected
+		VueSet(state.spaces, name, space)
+  },
 }
