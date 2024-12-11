@@ -25,18 +25,19 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\SpaceService;
+use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
@@ -62,12 +63,14 @@ class WorkspaceController extends Controller {
 		private SpaceMapper $spaceMapper,
 		private SpaceService $spaceService,
 		private UserService $userService,
+		private ConnectedGroupsService $connectedGroups,
 		private WorkspaceCheckService $workspaceCheck,
 		private WorkspaceService $workspaceService,
 		private UserGroup $userGroup,
+		private UserFormatter $userFormatter,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
-		public $AppName
+		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -109,20 +112,10 @@ class WorkspaceController extends Controller {
 	 *
 	 */
 	public function destroy(int $spaceId): JSONResponse {
-		$this->logger->debug('Removing GE users from the WorkspacesManagers group if needed.');
-		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
-			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->adminUserGroup->removeUser($user);
-			}
-		}
-
-		// Removes all workspaces groups
 		$space = $this->spaceManager->get($spaceId);
 		$groups = [];
-		$this->logger->debug('Removing workspaces groups.');
 		foreach (array_keys($space['groups']) as $group) {
 			$groups[] = $group;
-			$this->groupManager->get($group)->delete();
 		}
 
 		$this->spaceManager->remove($spaceId);
@@ -181,9 +174,47 @@ class WorkspaceController extends Controller {
 				$groups[] = $group;
 			}
 
+			$gids = array_keys($space['groups'] ?? []);
+			$groups = [];
+
+			$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
+
+			$space['users'] = [];
+			foreach ($gids as $gid) {
+				$group = $this->groupManager->get($gid);
+				if (is_null($group)) {
+					$this->logger->warning(
+						"Be careful, the $gid group is not exist in the oc_groups table."
+						. " But, it's present in the oc_group_folders_groups table."
+						. 'It necessary to recreate it with the occ command.'
+					);
+					continue;
+				}
+				$groups[] = $group;
+
+				if (str_starts_with($gid, 'SPACE-U-')) {
+					$space['userCount'] = $group->count();
+				}
+
+				if (str_starts_with($gid, 'SPACE-GE')) {
+					$users = $group->getUsers();
+					$space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
+				}
+
+				$space['users'] = (object)$space['users'];
+			}
+
+			$addedGroups = [];
+			foreach ($gids as $gid) {
+				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+				if ($addedToGroup !== null) {
+					$addedGroups = array_merge($addedGroups, $addedToGroup);
+				}
+			}
+
 			$space['groups'] = GroupFormatter::formatGroups($groups);
-			$space['users'] = $this->workspaceService->addUsersInfo($space);
-	
+			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+
 			$spaces[] = $space;
 		}
 		// We only want to return those workspaces for which the connected user is a manager
@@ -198,6 +229,21 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 */
+	public function getUsers(int $spaceId): JSONResponse {
+
+		$space = $this->spaceMapper->find($spaceId);
+
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		
+		$workspace = array_merge($groupfolder, $space->jsonSerialize());
+		$users = $this->workspaceService->addUsersInfo($workspace);
+
+		return new JSONResponse($users);
+	}
+	
 	/**
 	 * @NoAdminRequired
 	 * @param string|array $workspace

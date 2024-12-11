@@ -3,7 +3,7 @@
 /**
  * @copyright Copyright (c) 2017 Arawa
  *
- * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,32 +22,33 @@
  *
  */
 
-namespace OCA\Workspace\Group\User;
+namespace OCA\Workspace\Db;
 
-use OCP\IGroupManager;
-use OCP\IUser;
+use JsonSerializable;
 
-/**
- * This class represents a Workspace Manager (GE-) group.
- */
-class UserGroup {
-	public const GID_PREFIX = 'SPACE-U-';
+use OCP\AppFramework\Db\Entity;
 
-	public function __construct(
-		private UserGroupManager $userGroupManager,
-		private IGroupManager $groupManager,
-	) {
+class ConnectedGroup extends Entity implements JsonSerializable {
+
+	/**
+	 * @var integer
+	 */
+	protected $spaceId;
+
+	/**
+	 * @var string
+	 */
+	protected $gid;
+
+	public function __construct() {
+		$this->addType('space_id', 'integer');
+		$this->addType('gid', 'string');
 	}
 
-	public function addUser(IUser $user, string $gid): bool {
-		$group = $this->userGroupManager->get($gid);
-		$group->addUser($user);
-
-		return true;
-	}
-
-	public function count(int $spaceId): int {
-		$usersGroup = $this->groupManager->get($this::GID_PREFIX . $spaceId);
-		return $usersGroup->count();
+	public function jsonSerialize(): array {
+		return [
+			'space_id' => (int)$this->getSpaceId(),
+			'gid' => $this->getGid(),
+		];
 	}
 }

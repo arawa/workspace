@@ -25,11 +25,17 @@
 namespace OCA\Workspace\Service\User;
 
 use OCA\Workspace\Roles;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCP\IURLGenerator;
 use OCP\IUser;
 
 class UserFormatter {
-	public function __construct(private GroupsWorkspaceService $groupsWorkspace) {
+	public function __construct(
+		private GroupsWorkspaceService $groupsWorkspace,
+		private ConnectedGroupsService $connectedGroupsService,
+		private IURLGenerator $urlGenerator,
+	) {
 	}
 
 	/**
@@ -52,6 +58,8 @@ class UserFormatter {
 				'email' => $user->getEmailAddress(),
 				'subtitle' => $user->getEmailAddress(),
 				'groups' => $this->groupsWorkspace->getGroupsUserFromGroupfolder($user, $groupfolder, $spaceId),
+				'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID()),
+				'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 				'role' => $role
 			];
 		}
