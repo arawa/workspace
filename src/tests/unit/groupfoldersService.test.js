@@ -20,6 +20,7 @@
  *
  */
 
+import { expect } from '@jest/globals'
 import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 
@@ -285,11 +286,33 @@ describe('destroy', () => {
 		jest.resetAllMocks()
 	})
 	it('calls axios.delete method with proper parameters', async () => {
-		axios.delete.mockResolvedValue(responseValue)
-		await destroy('foobar')
-		expect(axios.delete).toHaveBeenCalledWith('/apps/workspace/api/delete/space', {
-			data: { workspace: 'foobar' },
+		const workspace = { id: 1, groupfolderId: 1 }
+		const spaceId = workspace.id
+
+		axios.delete.mockResolvedValue(
+			{
+				http: {
+					statuscode: 200,
+					message: 'The space is deleted.'
+				},
+				data: { 
+					name: 'foobar',
+					groups: ['SPACE-WM-1', 'SPACE-U-1'],
+          space_id: 1,
+          groupfolder_id: 1,
+          state: 'delete'
+				}
+			}
+		)
+		axios.delete.mockResolvedValue({ status: 200, data: { ocs: { meta: { status: 'ok' } } } })
+
+		await destroy(workspace)
+
+		expect(axios.delete).toHaveBeenCalledWith(`/apps/workspace/spaces/${spaceId}`, {
+			data: { workspace },
 		})
+
+		expect(axios.delete).toHaveBeenCalledWith(`/apps/groupfolders/folders/${workspace.groupfolderId}`)
 	})
 	it('calls axios.delete 2 times and returns resp.data value', async () => {
 		const mockAxios = axios.delete.mockImplementationOnce(() => Promise.resolve({ status: 200, ...responseValue }))
