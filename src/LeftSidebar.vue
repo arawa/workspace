@@ -95,6 +95,7 @@ export default {
 			this.$store.commit('addSpace', {
 				color: workspace.color,
 				groups: workspace.groups,
+        added_groups: workspace.added_groups,
 				isOpen: false,
 				id: workspace.id_space,
 				groupfolderId: workspace.folder_id,

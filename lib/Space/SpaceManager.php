@@ -140,6 +140,7 @@ class SpaceManager {
 				$newSpaceManagerGroup,
 				$newSpaceUsersGroup
 			]),
+            'added_groups' => (object)[],
 			'quota' => $groupfolder['quota'],
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
