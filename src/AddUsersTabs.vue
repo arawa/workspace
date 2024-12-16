@@ -172,34 +172,130 @@ export default {
 			this.$emit('close-sidebar')
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.allSelectedUsers.forEach(user => {
-				let gid = ''
-				if (this.$route.params.group !== undefined) {
-					// Adding a user to a workspace 'subgroup
-					this.$store.dispatch('addUserToGroup', {
-						name: this.$route.params.space,
-						gid: this.$route.params.group,
-						user,
-					})
-					if (this.isWorkspaceManager(user.role)) {
-						this.$store.dispatch('addUserToGroup', {
-							name: this.$route.params.space,
-							gid: ManagerGroup.getGid(space),
-							user,
-						})
+				if (this.$route.params.slug !== undefined) {
+					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-U')) {
+						this.addUserFromUserGroup(user)
+						return
+					}
+					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-GE')) {
+						this.addUserFromManagerGroup(user, space)
+						return
+					}
+					if (Object.keys(space.users).includes(user.uid) && decodeURIComponent(this.$route.params.slug).startsWith('SPACE-G-')) {
+						this.addExistingUserFromSubgroup(user)
+					} else {
+						this.addNewUserFromSubgroup(user, space)
 					}
 				} else {
-					// Adding a user to the workspace
-					if (this.isWorkspaceManager(user.role)) {
-						gid = ManagerGroup.getGid(space)
-					} else {
-						gid = UserGroup.getGid(space)
-					}
-					this.$store.dispatch('addUserToGroup', {
-						name: this.$route.params.space,
-						gid,
-						user,
-					})
+					this.addUserFromWorkspace(user, space)
 				}
+			})
+		},
+    addUserFromWorkspace(user, space) {
+			let gid = ''
+			if (user.role === 'wm') {
+				gid = ManagerGroup.getGid(space)
+			} else {
+				gid = UserGroup.getGid(space)
+			}
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid,
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			if (user.role === 'wm') {
+				this.$store.dispatch('incrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: UserGroup.getGid(space)
+				})
+			}
+		},
+		addExistingUserFromSubgroup(user) {
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+		},
+		addNewUserFromSubgroup(user, space) {
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: UserGroup.getGid(space)
+			})
+			if (user.role === 'wm') {
+				this.$store.dispatch('addUserToGroup', {
+					name: this.$route.params.space,
+					gid: ManagerGroup.getGid(space),
+					user,
+				})
+				this.$store.dispatch('incrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: ManagerGroup.getGid(space)
+				})
+			}
+		},
+		addUserFromManagerGroup(user, space) {
+			const usersBackup = [...Object.keys(space.users)]
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			if (usersBackup.includes(user.uid)) {
+				return
+			}
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: UserGroup.getGid(space),
+				user,
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: UserGroup.getGid(space)
+			})
+		},
+		addUserFromUserGroup(user) {
+			this.$store.dispatch('addUserToGroup', {
+				name: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
+				user,
+			})
+			this.$store.dispatch('incrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			})
+			this.$store.dispatch('incrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
 			})
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
