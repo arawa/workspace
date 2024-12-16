@@ -262,6 +262,7 @@ class SpaceManagerTest extends TestCase {
 						'slug' => 'SPACE-U-1'
 					],
 				],
+				'added_groups' => (object)[],
 				'quota' => -3,
 				'size' => 0,
 				'acl' => true,
