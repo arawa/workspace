@@ -59,6 +59,21 @@ export function createSpace(spaceName, vueInstance = undefined) {
 }
 
 /**
+ *
+ * @param spaceId
+ */
+export function getUsers(spaceId) {
+	const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Impossible to get users from a workspace.', error)
+		})
+	return result
+}
+
+/**
 	* @param {string} spacename it's the name of the space which will create
 	* @return {string}
 	*/
@@ -144,6 +159,11 @@ export function removeWorkspace(spaceId) {
 	return result
 }
 
+/**
+ *
+ * @param spaceId
+ * @param newSpaceName
+ */
 export function renameSpace(spaceId, newSpaceName) {
 	const respFormat = {
 		data: {},

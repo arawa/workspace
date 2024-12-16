@@ -26,7 +26,7 @@
 			:title="t('workspace', 'New space')"
 			@new-item="createSpace" />
 		<NcAppNavigationItem
-			:title="t('workspace', 'All spaces')"
+			:name="t('workspace', 'All spaces')"
 			:to="{path: '/'}"
 			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 		<template #list>
@@ -95,12 +95,14 @@ export default {
 			this.$store.commit('addSpace', {
 				color: workspace.color,
 				groups: workspace.groups,
+				added_groups: workspace.added_groups,
 				isOpen: false,
 				id: workspace.id_space,
 				groupfolderId: workspace.folder_id,
 				name,
 				quota: t('workspace', 'unlimited'),
 				users: {},
+				userCount: workspace.userCount,
 			})
 			this.$router.push({
 				path: `/workspace/${name}`,

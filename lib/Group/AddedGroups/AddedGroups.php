@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2017 Arawa
+ * @copyright Copyright (c) 2024 Arawa
  *
- * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,32 +22,31 @@
  *
  */
 
-namespace OCA\Workspace\Group\User;
+namespace OCA\Workspace\Group\AddedGroups;
 
-use OCP\IGroupManager;
-use OCP\IUser;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Group\GroupFormatter;
 
-/**
- * This class represents a Workspace Manager (GE-) group.
- */
-class UserGroup {
-	public const GID_PREFIX = 'SPACE-U-';
+class AddedGroups {
 
 	public function __construct(
-		private UserGroupManager $userGroupManager,
-		private IGroupManager $groupManager,
+		private ConnectedGroupsService $connectedGroupsService,
 	) {
 	}
 
-	public function addUser(IUser $user, string $gid): bool {
-		$group = $this->userGroupManager->get($gid);
-		$group->addUser($user);
+	public function get(array $gids): array {
+		$addedGroups = [];
+		foreach ($gids as $gid) {
+			$addedToGroup = $this->connectedGroupsService->getConnectedGroupsToSpaceGroup($gid);
+			if ($addedToGroup !== null) {
+				$addedGroups = array_merge($addedGroups, $addedToGroup);
+			}
+		}
 
-		return true;
+		return $addedGroups;
 	}
 
-	public function count(int $spaceId): int {
-		$usersGroup = $this->groupManager->get($this::GID_PREFIX . $spaceId);
-		return $usersGroup->count();
+	public function getGroupsFormatted(array $gids): array {
+		return GroupFormatter::formatGroups($this->get($gids));
 	}
 }

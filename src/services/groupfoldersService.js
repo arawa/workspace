@@ -250,7 +250,8 @@ export function createGroupfolder(spaceName) {
 export function destroy(workspace) {
 	// It's possible to send data with the DELETE verb adding `data` key word as
 	// second argument in the `delete` method.
-	const result = axios.delete(generateUrl('/apps/workspace/api/delete/space'),
+	const spaceId = workspace.id
+	const result = axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}`),
 		{
 			data: {
 				workspace,
@@ -295,7 +296,7 @@ export function rename(workspace, newSpaceName) {
 		{
 			workspace,
 			newSpaceName,
-			spaceId: workspace.id
+			spaceId: workspace.id,
 		})
 		.then(resp => {
 			// If space is updated...

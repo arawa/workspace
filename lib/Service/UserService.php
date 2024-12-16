@@ -25,9 +25,11 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\IGroupManager;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
@@ -36,7 +38,9 @@ class UserService {
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IUserSession $userSession,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
+		private ConnectedGroupsService $connectedGroups,
+		private IURLGenerator $urlGenerator,
 	) {
 	}
 
@@ -55,7 +59,8 @@ class UserService {
 	 * @return array|null
 	 *
 	 */
-	public function formatUser(IUser $user, array $space, string $role): array|null {
+
+	public function formatUser(IUser $user, array $space, string $role): ?array {
 		if (is_null($user)) {
 			return null;
 		}
@@ -72,19 +77,20 @@ class UserService {
 		}
 
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($space['groups']))) {
+			if (in_array($group->getGID(), array_keys($space['groups'])) || $this->connectedGroups->isConnectedToWorkspace($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
 		}
 
-		// Returns a user that is valid for the frontend
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
-			'role' => $role
+			'role' => $role,
+			'is_connected' => $this->connectedGroups->isUserConnectedGroup($user->getUID()),
+			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}
 
@@ -148,7 +154,7 @@ class UserService {
 			fn ($group) => str_starts_with($group->getGID(), 'SPACE-GE')
 		);
 
-		$canRemove = count($allManagersGroups) > 0 && count($allManagersGroups) <= 1 ? true : false;
+		$canRemove = count($allManagersGroups) >= 0 && count($allManagersGroups) <= 1 ? true : false;
 
 		if (!$canRemove) {
 			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');

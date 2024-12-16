@@ -39,6 +39,21 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'connectedGroup#addConnectedGroup',
+			'url' => '/spaces/{spaceId}/connected-group',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'connectedGroup#getConnectedGroupsFromSpaceId',
+			'url' => '/spaces/{spaceId}/connected-group',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'connectedGroup#getConnectedGroups',
+			'url' => '/connected-group',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'workspace#addGroupsInfo',
 			'url' => '/api/workspace/formatGroups',
 			'verb' => 'POST'
@@ -76,6 +91,16 @@ return [
 			'name' => 'space#findAll',
 			'url' => '/workspaces',
 			'verb' => 'GET'
+		],
+		[
+			'name' => 'connectedGroup#addGroup',
+			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'connectedGroup#removeGroup',
+			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
+			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'workspace#findAll',
@@ -118,6 +143,11 @@ return [
 			'verb' => 'PATCH',
 		],
 		[
+			'name' => 'group#search',
+			'url' => '/groups',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'group#addUser',
 			/**
 			 * @todo Rewrite this route
@@ -146,6 +176,11 @@ return [
 			'name' => 'group#removeUser',
 			'url' => '/api/group/delUser/{spaceId}',
 			'verb' => 'PATCH',
+		],
+		[
+			'name' => 'workspace#getUsers',
+			'url' => '/spaces/{spaceId}/users',
+			'verb' => 'GET',
 		],
 		[
 			'name' => 'group#removeUserFromWorkspace',

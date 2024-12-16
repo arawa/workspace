@@ -125,10 +125,10 @@ describe('Creating spaces with different entries', () => {
 					{
 						type: 'group',
 						id: 'SPACE-GE-421',
-						displayname: 'WM-Sri_Lanka'
-					}
+						displayname: 'WM-Sri_Lanka',
+					},
 				],
-				statuscode: 201
+				statuscode: 201,
 			},
 		})
 

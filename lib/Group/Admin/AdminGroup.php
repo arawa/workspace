@@ -24,6 +24,8 @@
 
 namespace OCA\Workspace\Group\Admin;
 
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Service\User\UserFormatter;
 use OCP\IGroupManager;
 use OCP\IUser;
 use Psr\Log\LoggerInterface;
@@ -34,18 +36,26 @@ use Psr\Log\LoggerInterface;
 class AdminGroup {
 	public const GID_PREFIX = 'SPACE-GE-';
 
-	public function __construct(private AdminUserGroup $adminUserGroup,
+	public function __construct(
+		private AdminUserGroup $adminUserGroup,
 		private AdminGroupManager $adminGroupManager,
 		private LoggerInterface $logger,
-		private IGroupManager $groupManager) {
+		private UserFormatter $userFormatter,
+		private IGroupManager $groupManager,
+	) {
 	}
 
-	public function addUser(IUser $user, string $gid): bool {
-		$group = $this->adminGroupManager->get($gid);
+	public function addUser(IUser $user, int $spaceId): bool {
+		$group = $this->adminGroupManager->get(self::GID_PREFIX . $spaceId);
 		$group->addUser($user);
 		$this->adminUserGroup->addUser($user);
 
 		return true;
+	}
+
+	public function removeUser(IUser $user, int $spaceId): void {
+		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
+		$group->removeUser($user);
 	}
 
 	/**
@@ -54,5 +64,10 @@ class AdminGroup {
 	public function getUsers(int $spaceId): array {
 		$group = $this->groupManager->get(self::GID_PREFIX . $spaceId);
 		return $group->getUsers();
+	}
+
+	public function getUsersFormatted(mixed $folderInfo, Space $space): array {
+		$users = $this->getUsers($space->getSpaceId());
+		return $this->userFormatter->formatUsers($users, $folderInfo, (string)$space->getSpaceId());
 	}
 }

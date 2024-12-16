@@ -1,10 +1,10 @@
 <template>
 	<NcAppNavigationItem
-		icon="icon-group"
-		:to="{path: `/group/${spaceName}/${group.gid}`}"
-		:title="group.displayName">
+		:icon="addedGroup ? 'icon-added-group' : 'icon-group'"
+		:to="{path: `/group/${spaceName}/${group.slug}`}"
+		:name="group.displayName">
 		<NcCounterBubble slot="counter" class="user-counter">
-			{{ $store.getters.groupUserCount( spaceName, group.gid) }}
+			{{ count }}
 		</NcCounterBubble>
 	</NcAppNavigationItem>
 </template>
@@ -27,8 +27,20 @@ export default {
 		spaceName: {
 			type: String,
 			required: true,
-
 		},
+		addedGroup: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		count: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
+	},
+	beforeMount() {
+		console.debug('Voici le groupe', this.group)
 	},
 }
 </script>

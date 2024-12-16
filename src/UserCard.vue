@@ -29,10 +29,11 @@
 			</div>
 		</div>
 		<div class="user-entry-actions">
-			<div v-if="!$store.getters.isGEorUGroup($route.params.space, $route.params.group)">
+			<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
 				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
 					:checked="isWorkspaceManager(user.role)"
+					:disabled="$store.getters.isMember($route.params.space, user)"
 					@update:checked="toggleUserRole(user)">
 					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
