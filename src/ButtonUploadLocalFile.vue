@@ -70,7 +70,7 @@ export default {
 				try {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
 						formData: bodyFormData,
-						spaceId: space.id
+						spaceId: space.id,
 					})
 					let usersToDisplay = this.filterAlreadyPresentUsers(users)
 					usersToDisplay = this.addSubtitleToUsers(usersToDisplay)

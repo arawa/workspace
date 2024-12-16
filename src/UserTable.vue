@@ -60,44 +60,44 @@
 						{{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }}
 					</td>
 					<td class="workspace-td">
-            <div class="user-actions">
-								<NcActions>
-									<NcActionButton v-if="user.profile !== undefined"
-										icon="icon-user"
-										:close-after-click="true"
-										@click="viewProfile(user)">
-										{{ t('workspace', 'View profile') }}
-									</NcActionButton>
-									<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
-										:close-after-click="true"
-										@click="toggleUserRole(user)">
-										<template #icon>
-											<Close :size="20" />
-										</template>
-										{{ t('workspace', 'Remove admin rights')}}
-									</NcActionButton>
-									<NcActionButton v-else
-										:close-after-click="true"
-										@click="toggleUserRole(user)">
-										<template #icon>
-											<AccountCog :size="20" />
-										</template>
-										{{ t('workspace', 'Make administrator')}}
-									</NcActionButton>
-									<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
-										icon="icon-delete"
-										:close-after-click="true"
-										@click="deleteUser(user)">
-										{{ t('workspace', 'Delete user') }}
-									</NcActionButton>
-									<NcActionButton v-if="$route.params.slug !== undefined && (isAddedGroup === false || user.is_connected === false)"
-										icon="icon-close"
-										:close-after-click="true"
-										@click="removeFromGroup(user)">
-										{{ t('workspace', 'Remove from group') }}
-									</NcActionButton>
-								</NcActions>
-							</div>
+						<div class="user-actions">
+							<NcActions>
+								<NcActionButton v-if="user.profile !== undefined"
+									icon="icon-user"
+									:close-after-click="true"
+									@click="viewProfile(user)">
+									{{ t('workspace', 'View profile') }}
+								</NcActionButton>
+								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
+									:close-after-click="true"
+									@click="toggleUserRole(user)">
+									<template #icon>
+										<Close :size="20" />
+									</template>
+									{{ t('workspace', 'Remove admin rights') }}
+								</NcActionButton>
+								<NcActionButton v-else
+									:close-after-click="true"
+									@click="toggleUserRole(user)">
+									<template #icon>
+										<AccountCog :size="20" />
+									</template>
+									{{ t('workspace', 'Make administrator') }}
+								</NcActionButton>
+								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
+									icon="icon-delete"
+									:close-after-click="true"
+									@click="deleteUser(user)">
+									{{ t('workspace', 'Delete user') }}
+								</NcActionButton>
+								<NcActionButton v-if="$route.params.slug !== undefined && (isAddedGroup === false || user.is_connected === false)"
+									icon="icon-close"
+									:close-after-click="true"
+									@click="removeFromGroup(user)">
+									{{ t('workspace', 'Remove from group') }}
+								</NcActionButton>
+							</NcActions>
+						</div>
 					</td>
 				</tr>
 			</tbody>
@@ -209,18 +209,18 @@ export default {
 			})
 			this.$store.dispatch('decrementGroupUserCount', {
 				spaceName: this.$route.params.space,
-				gid: UserGroup.getGid(space)
+				gid: UserGroup.getGid(space),
 			})
 			if (user.role === 'wm') {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
-					gid: ManagerGroup.getGid(space)
+					gid: ManagerGroup.getGid(space),
 				})
 			}
 			if (gid !== undefined && gid.startsWith('SPACE-G-')) {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
-					gid
+					gid,
 				})
 			}
 			this.$store.dispatch('decrementSpaceUserCount', {
@@ -255,18 +255,18 @@ export default {
 			})
 			this.$store.dispatch('decrementGroupUserCount', {
 				spaceName: this.$route.params.space,
-				gid
+				gid,
 			})
 			if (gid.startsWith('SPACE-GE')) {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
-					gid: ManagerGroup.getGid(space)
+					gid: ManagerGroup.getGid(space),
 				})
 			}
 			if (gid.startsWith('SPACE-U')) {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
-					gid: UserGroup.getGid(space)
+					gid: UserGroup.getGid(space),
 				})
 				this.$store.dispatch('decrementSpaceUserCount', {
 					spaceName: this.$route.params.space,
@@ -275,7 +275,7 @@ export default {
 		},
 		viewProfile(user) {
 			window.location.href = user.profile
-		}
+		},
 	},
 }
 </script>

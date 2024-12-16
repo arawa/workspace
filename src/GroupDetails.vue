@@ -76,7 +76,7 @@
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
-			:message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: this.$route.params.space })"
+			:message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: $route.params.space })"
 			@cancel="closeRemoveGroupModal"
 			@remove-group="deleteGroup" />
 	</div>
@@ -92,7 +92,6 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
-import ManagerGroup from './services/Groups/ManagerGroup.js'
 
 export default {
 	name: 'GroupDetails',
@@ -118,11 +117,11 @@ export default {
 		isAddedGroup() {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
-    connectedGroupMessage() {
-      const text = t('workspace', 'Warning, after removal of group :{groupname}', { groupname: '<b>aaaa</b>'})
-      console.debug('text', text)
-      return 'Warning, after removal of group :<b>aaaa</b>'
-    },
+		connectedGroupMessage() {
+			const text = t('workspace', 'Warning, after removal of group :{groupname}', { groupname: '<b>aaaa</b>' })
+			console.debug('text', text)
+			return 'Warning, after removal of group :<b>aaaa</b>'
+		},
 	},
 	mounted() {
 		const space = this.$store.state.spaces[this.$route.params.space]
@@ -163,19 +162,19 @@ export default {
 
 			this.$store.dispatch('substractionSpaceUserCount', {
 				spaceName: space.name,
-				usersCount
+				usersCount,
 			})
 
 			this.$store.dispatch('substractionGroupUserCount', {
 				spaceName: space.name,
 				gid: UserGroup.getGid(space),
-				usersCount
+				usersCount,
 			})
 
 			this.$store.dispatch('removeConnectedGroup', {
 				spaceId: space.id,
 				gid,
-				name: space.name
+				name: space.name,
 			})
 
 			Object.keys(space.users).forEach(key => {
@@ -185,7 +184,7 @@ export default {
 						this.$store.commit('removeUserFromWorkspace', { name: space.name, user: space.users[key] })
 					} else {
 						this.$store.commit('removeUserFromGroup', { name: space.name, gid, user: space.users[key] })
-					} 
+					}
 				}
 			})
 

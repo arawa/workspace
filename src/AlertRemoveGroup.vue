@@ -3,13 +3,13 @@
 		size="normal">
 		<div class="container-modal-remove">
 			<NcNoteCard type="warning">
-				<p v-html="message"></p>
+				<p v-html="message" />
 			</NcNoteCard>
 			<div class="container-buttons-remove">
 				<NcButton
 					aria-label="cancel"
 					type="secondary"
-					@click="cancel()" >
+					@click="cancel()">
 					<template>
 						{{ t('workspace', 'Cancel') }}
 					</template>
@@ -17,7 +17,7 @@
 				<NcButton
 					aria-label="confirm"
 					type="primary"
-					@click="removeGroup()" >
+					@click="removeGroup()">
 					<template>
 						{{ t('workspace', 'Confirm') }}
 					</template>
@@ -37,7 +37,7 @@ export default {
 	components: {
 		NcButton,
 		NcNoteCard,
-		NcModal
+		NcModal,
 	},
 	props: {
 		message: {
@@ -51,8 +51,8 @@ export default {
 		},
 		removeGroup() {
 			this.$emit('remove-group')
-		}
-	}
+		},
+	},
 }
 </script>
 

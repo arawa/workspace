@@ -58,6 +58,10 @@ export function createSpace(spaceName, vueInstance = undefined) {
 	return result
 }
 
+/**
+ *
+ * @param spaceId
+ */
 export function getUsers(spaceId) {
 	const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
 		.then(resp => {
@@ -155,6 +159,11 @@ export function removeWorkspace(spaceId) {
 	return result
 }
 
+/**
+ *
+ * @param spaceId
+ * @param newSpaceName
+ */
 export function renameSpace(spaceId, newSpaceName) {
 	const respFormat = {
 		data: {},

@@ -19,9 +19,6 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 	},
-	beforeMount() {
-		console.debug('Voici le groupe', this.group)
-	},
 	props: {
 		group: {
 			type: Object,
@@ -40,7 +37,10 @@ export default {
 			type: Number,
 			required: true,
 			default: 0,
-		}
+		},
+	},
+	beforeMount() {
+		console.debug('Voici le groupe', this.group)
 	},
 }
 </script>

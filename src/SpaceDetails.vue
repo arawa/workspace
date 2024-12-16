@@ -102,7 +102,11 @@
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcModal>
 		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
-		<RemoveSpace v-if="showDelWorkspaceModal" :space-name="$route.params.space" @close="toggleShowDelWorkspaceModal" @handle-cancel="toggleShowDelWorkspaceModal" @handle-delete="deleteSpace" />
+		<RemoveSpace v-if="showDelWorkspaceModal"
+			:space-name="$route.params.space"
+			@close="toggleShowDelWorkspaceModal"
+			@handle-cancel="toggleShowDelWorkspaceModal"
+			@handle-delete="deleteSpace" />
 	</div>
 </template>
 
@@ -132,7 +136,7 @@ export default {
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
-    NcModal,
+		NcModal,
 		NcMultiselect,
 		SelectConnectedGroups,
 		RemoveSpace,

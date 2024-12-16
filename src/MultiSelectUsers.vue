@@ -110,7 +110,7 @@ export default {
 		// When adding users to a space, show only those users who are not already member of the space
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
-      const group = this.$route.params.slug
+			const group = this.$route.params.slug
 			if (group === undefined) {
 				const space = this.$store.state.spaces[this.$route.params.space]
 				users = recvUsers.filter(user => {

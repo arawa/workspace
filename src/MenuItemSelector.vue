@@ -54,7 +54,7 @@ export default {
 			if (div4 !== null) {
 				div4.style.minHeight = (height / 2) + 'px'
 			}
-		}
+		},
 	},
 }
 </script>

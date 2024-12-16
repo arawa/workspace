@@ -21,25 +21,25 @@
 -->
 <template>
 	<NcModal class="remove-modal"
-			size="small"
-			@close="close()">
-			<div class="modal__content">
-				<h2>
-					{{ t('workspace', 'Are you sure you want to delete the {space} workspace ?', { space }) }}
-				</h2>
-				<div class="remove-space-actions">
-					<NcButton
-						type="secondary"
-						@click="handleCancel()">
-						{{ t('workspace', 'Cancel') }}
-					</NcButton>
-					<NcButton
-						type="error"
-						@click="handleDelete()">
-						{{ t('workspace', 'Delete space') }}
-					</NcButton>
-				</div>
+		size="small"
+		@close="close()">
+		<div class="modal__content">
+			<h2>
+				{{ t('workspace', 'Are you sure you want to delete the {space} workspace ?', { space }) }}
+			</h2>
+			<div class="remove-space-actions">
+				<NcButton
+					type="secondary"
+					@click="handleCancel()">
+					{{ t('workspace', 'Cancel') }}
+				</NcButton>
+				<NcButton
+					type="error"
+					@click="handleDelete()">
+					{{ t('workspace', 'Delete space') }}
+				</NcButton>
 			</div>
+		</div>
 	</NcModal>
 </template>
 

@@ -25,8 +25,8 @@
 		:allow-collapse="true"
 		:open="$route.params.space === spaceName"
 		:name="spaceName"
-		@click="loadUsers(spaceName)"
-		:to="{path: `/workspace/${spaceName}`}">
+		:to="{path: `/workspace/${spaceName}`}"
+		@click="loadUsers(spaceName)">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.getSpaceUserCount(spaceName) }}
@@ -67,11 +67,11 @@
 					<template #icon>
 						<Plus :size="20" />
 					</template>
-					{{ t('workspace', 'Add a group')}}
+					{{ t('workspace', 'Add a group') }}
 				</NcActionButton>
 			</template>
 		</NcAppNavigationCaption>
-    <SelectConnectedGroups v-if="isAddGroupModalOpen" @close="toggleAddGroupModal" />
+		<SelectConnectedGroups v-if="isAddGroupModalOpen" @close="toggleAddGroupModal" />
 		<GroupMenuItem
 			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
@@ -191,7 +191,7 @@ export default {
 			const space = this.$store.state.spaces[spacename]
 			this.$store.dispatch('loadUsers', { space })
 		},
-	}
+	},
 }
 </script>
 

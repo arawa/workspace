@@ -16,8 +16,8 @@
 					:options="groupsSelectable"
 					:placeholder="t('workspace', 'Start typing text to search for groups')"
 					:loading="loadingGroups"
-					:appendToBody="false"
-					:userSelect="true"
+					:append-to-body="false"
+					:user-select="true"
 					@option:selected="addGroupToBatch"
 					@search="lookupGroups"
 					@close="groupsSelectable=[]" />
@@ -110,7 +110,7 @@ export default {
 				params: {
 					pattern: term,
 					ignoreSpaces: true,
-					groupsPresents
+					groupsPresents,
 				},
 			})
 				.then(response => {
@@ -147,7 +147,7 @@ export default {
 		},
 		close() {
 			this.$emit('close')
-		}
+		},
 	},
 }
 </script>

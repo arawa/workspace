@@ -293,16 +293,16 @@ describe('destroy', () => {
 			{
 				http: {
 					statuscode: 200,
-					message: 'The space is deleted.'
+					message: 'The space is deleted.',
 				},
-				data: { 
+				data: {
 					name: 'foobar',
 					groups: ['SPACE-WM-1', 'SPACE-U-1'],
-          space_id: 1,
-          groupfolder_id: 1,
-          state: 'delete'
-				}
-			}
+					space_id: 1,
+					groupfolder_id: 1,
+					state: 'delete',
+				},
+			},
 		)
 		axios.delete.mockResolvedValue({ status: 200, data: { ocs: { meta: { status: 'ok' } } } })
 

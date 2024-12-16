@@ -113,7 +113,7 @@ export default {
 					gid,
 					displayName,
 				},
-				spaceId: space.id
+				spaceId: space.id,
 			})
 			.then((resp) => {
 				addGroupToWorkspace(space.id, resp.data.group.gid)
@@ -122,8 +122,8 @@ export default {
 					name,
 					gid,
 					displayName,
-          types: resp.data.group.types,
-					slug: resp.data.group.slug
+					types: resp.data.group.types,
+					slug: resp.data.group.slug,
 				})
 				// Navigates to the g roup's details page
 				context.state.spaces[name].isOpen = true
@@ -281,7 +281,7 @@ export default {
 			user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 			context.commit('DECREMENT_GROUP_USER_COUNT', {
 				spaceName: space.name,
-				gid: ManagerGroup.getGid(space)
+				gid: ManagerGroup.getGid(space),
 			})
 			context.commit('CHANGE_USER_ROLE', {
 				spaceName: space.name,
@@ -292,7 +292,7 @@ export default {
 			user.groups.push(ManagerGroup.getGid(space))
 			context.commit('INCREMENT_GROUP_USER_COUNT', {
 				spaceName: space.name,
-				gid: ManagerGroup.getGid(space)
+				gid: ManagerGroup.getGid(space),
 			})
 			context.commit('CHANGE_USER_ROLE', {
 				spaceName: space.name,
@@ -467,7 +467,7 @@ export default {
 					context.commit('SET_NO_USERS', ({ activated: false }))
 					context.commit('UPDATE_USERS', {
 						space,
-						users
+						users,
 					})
 				}
 			})

@@ -23,9 +23,9 @@
 	<NcAppContent>
 		<NcAppContentDetails>
 			<div class="workspace-content">
-					<LoadingUsers v-if="$store.state.loadingUsersWaitting" :load-users="true" />
-					<LoadingUsers v-if="$store.state.loading" />
-					<router-view v-else />
+				<LoadingUsers v-if="$store.state.loadingUsersWaitting" :load-users="true" />
+				<LoadingUsers v-if="$store.state.loading" />
+				<router-view v-else />
 			</div>
 		</NcAppContentDetails>
 	</NcAppContent>
