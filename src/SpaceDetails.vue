@@ -132,6 +132,7 @@ export default {
 		NcActionButton,
 		NcActionInput,
 		NcColorPicker,
+    NcModal,
 		NcMultiselect,
 		SelectConnectedGroups,
 		RemoveSpace,
