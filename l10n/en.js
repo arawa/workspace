@@ -8,7 +8,7 @@ OC.L10N.register(
 		'Add a group': 'Add a group',
 		'All spaces': 'All Workspaces',
 		'Administrators': 'General manager',
-		'admin': 'Workspace manager',
+		'wm': 'Workspace manager',
 		'Error': 'Error',
 		'Settings': 'Settings',
 		'Please specify a name.': 'Please specify a name.',

@@ -54,7 +54,7 @@
 						</div>
 					</td>
 					<td class="workspace-td">
-						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }}
+						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'wm' : 'user') }}
 					</td>
 					<td class="workspace-td">
 						{{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }}
@@ -108,7 +108,6 @@
 				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
 		</NcEmptyContent>
-		</div>
 	</div>
 </template>
 
@@ -154,11 +153,11 @@ export default {
 			}
 
 			return result.sort((firstUser, secondUser) => {
-				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'admin' : 'user'
-				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'wm' : 'user'
+				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'wm' : 'user'
 				if (roleFirstUser !== roleSecondUser) {
 					// display admins first
-					return roleFirstUser === 'admin' ? -1 : 1
+					return roleFirstUser === 'wm' ? -1 : 1
 				} else {
 					return firstUser.name.localeCompare(secondUser.name)
 				}
@@ -212,7 +211,7 @@ export default {
 				spaceName: this.$route.params.space,
 				gid: UserGroup.getGid(space)
 			})
-			if (user.role === 'admin') {
+			if (user.role === 'wm') {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
 					gid: ManagerGroup.getGid(space)

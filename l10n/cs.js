@@ -5,7 +5,7 @@ OC.L10N.register(
 		'Are you sure you want to delete the {space} workspace ?': 'Opravdu chcete prostor {space} smazat?',
 		'Add users': 'Přidat uživatele',
 		'All spaces': 'Všechny prac. prostory',
-		'admin': 'Správce prac. prostour',
+		'wm': 'Správce prac. prostour',
 		'Error': 'Chyba',
 		'Please specify a name.': 'Zadejte název.',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': 'Upozornění – červeně označení uživatelé ještě nejsou členy tohoto pracovního prostoru. Budou automaticky přidáni.',

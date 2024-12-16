@@ -297,7 +297,7 @@ export default {
 			context.commit('CHANGE_USER_ROLE', {
 				spaceName: space.name,
 				user,
-				role: 'admin',
+				role: 'wm',
 			})
 		}
 		const spaceId = space.id
