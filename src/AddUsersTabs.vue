@@ -70,13 +70,13 @@
 				<UserCard v-for="user in allSelectedUsers"
 					:key="user.name"
 					class="user-entry"
-					:class="$store.getters.isMember($route.params.space, user) || !$route.params.group ? '' : 'user-not-member'"
+					:class="$store.getters.isMember($route.params.space, user) || !$route.params.slug ? '' : 'user-not-member'"
 					:user="user"
 					@toggle-role="toggleUserRole"
 					@remove-user="removeUserFromBatch" />
 			</div>
 		</div>
-		<NcNoteCard v-if="$route.params.group && addingUsersToWorkspace"
+		<NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
 			type="warning"
 			class="note-card">
 			<p>

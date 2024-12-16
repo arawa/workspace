@@ -96,14 +96,14 @@ export default {
 		// When adding users to a space, show only those users who are not already member of the space
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
-			if (this.$route.params.group === undefined) {
+			if (this.$route.params.slug === undefined) {
 				const space = this.$store.state.spaces[this.$route.params.space]
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)
 			} else {
 				users = recvUsers.filter(user => {
-					return (!(user.groups.includes(this.$route.params.group)))
+					return (!(user.groups.includes(decodeURIComponent(decodeURIComponent(this.$route.params.slug)))))
 				})
 			}
 			// Filters user that are already selected
