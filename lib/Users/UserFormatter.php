@@ -9,10 +9,10 @@ use OCP\IUser;
 
 class UserFormatter {
 	public function __construct(
-        private IGroupManager $groupManager,
-        private ConnectedGroupsService $connectedGroupsService,
-        private IURLGenerator $urlGenerator
-    ) {
+		private IGroupManager $groupManager,
+		private ConnectedGroupsService $connectedGroupsService,
+		private IURLGenerator $urlGenerator,
+	) {
 	}
 
 	/**
