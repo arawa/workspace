@@ -25,6 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
 - Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
 
+## [3.3.2] - 2024-12-18
+
+### Misc
+
+- Create release 3.3.2 and compatible with Nc30 by @zak39 in [#1103](https://github.com/arawa/workspace/pull/1103)
+- Add information about v3.3.2 in the CHANGELOG by @zak39 in [#1104](https://github.com/arawa/workspace/pull/1104/)
+
 ## [3.3.1] - 2024-12-06
 
 ### Misc
