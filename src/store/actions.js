@@ -343,7 +343,7 @@ export default {
 			.then((resp) => {
 			})
 			.catch((e) => {
-				console.error('Error to remove connected group', e.message)
+				console.error('Error to Remove added group', e.message)
 				console.error(e)
 			})
 
@@ -361,6 +361,11 @@ export default {
 				context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
 				const users = resp.data.users
 				for (const user in users) {
+					if (users[user].is_connected === false) {
+						context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
+						context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
+						continue
+					}
 					context.commit('addUserToWorkspace', { name, user: users[user] })
 					context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
 					context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
