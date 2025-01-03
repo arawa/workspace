@@ -152,7 +152,7 @@ class SpaceManager {
 	public function get(int $spaceId): array {
 
 		$space = $this->spaceMapper->find($spaceId);
-		$groupfolder = $this->folderHelper->getFolder($space->getSpaceId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 
 		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
 
