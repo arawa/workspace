@@ -38,29 +38,31 @@
 					</th>
 				</tr>
 			</thead>
-			<tr v-for="(space,name) in $store.state.spaces"
-				:key="name"
-				class="workspace-tr"
-				@click="openSpace(name)">
-				<td style="width: 50px;" class="workspace-td">
-					<span class="color-dot-home" :style="{background: space.color}" />
-				</td>
-				<td class="workspace-td">
-					{{ name }}
-				</td>
-				<td class="workspace-td">
-					{{ space.quota }}
-				</td>
-				<td class="workspace-td">
-					<div class="admin-avatars">
-						<NcAvatar v-for="user in workspaceManagers(space)"
-							:key="user.uid"
-							:style="{ marginRight: 2 + 'px' }"
-							:display-name="user.name"
-							:user="user.uid" />
-					</div>
-				</td>
-			</tr>
+			<tbody>
+				<tr v-for="(space,name) in $store.state.spaces"
+					:key="name"
+					class="workspace-tr"
+					@click="openSpace(name)">
+					<td style="width: 50px;" class="workspace-td">
+						<span class="color-dot-home" :style="{background: space.color}" />
+					</td>
+					<td class="workspace-td">
+						{{ name }}
+					</td>
+					<td class="workspace-td">
+						{{ space.quota }}
+					</td>
+					<td class="workspace-td">
+						<div class="admin-avatars">
+							<NcAvatar v-for="user in workspaceManagers(space)"
+								:key="user.uid"
+								:style="{ marginRight: 2 + 'px' }"
+								:display-name="user.name"
+								:user="user.uid" />
+						</div>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 		<NcEmptyContent v-else>
 			<p>{{ t('workspace', 'No spaces') }}</p>
@@ -135,6 +137,10 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+}
+
+td, td div {
+  cursor: pointer;
 }
 
 </style>
