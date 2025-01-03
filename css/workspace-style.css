@@ -40,8 +40,9 @@
 	height: 52px;
 	padding: 5px;
 }
-.workspace-tr:hover {
-	background-color: var(--color-backgroud-hover) !important;
+
+tbody > .workspace-tr:hover {
+	background-color: var(--color-primary-element-light-hover) !important;
 }
 
 .header {

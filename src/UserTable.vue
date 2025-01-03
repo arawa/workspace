@@ -45,7 +45,7 @@
 					<td class="avatar workspace-td">
 						<NcAvatar :display-name="user.name" :user="user.uid" />
 					</td>
-					<td style="width: 30%;" class="workspace-td">
+					<td class="workspace-td user-info">
 						<div class="user-name">
 							{{ user.name }}
 						</div>
@@ -56,8 +56,8 @@
 					<td class="workspace-td">
 						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'wm' : 'user') }}
 					</td>
-					<td class="workspace-td">
-						{{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }}
+					<td class="workspace-td group-list">
+						{{ sortGroups(user.groups) }}
 					</td>
 					<td class="workspace-td">
 						<div class="user-actions">
@@ -175,22 +175,22 @@ export default {
 		},
 		sortedGroups(groups, spacename) {
 			groups.sort((groupCurrent, groupNext) => {
-				// Makes sure the GE- group is first in the list
-				// These tests must happen before the tests for the U- group
-				const GEGroup = this.$store.getters.GEGroup(spacename)
-				if (groupCurrent === GEGroup) {
-					return -1
-				}
-				if (groupNext === GEGroup) {
-					return 1
-				}
-				// Makes sure the U- group is second in the list
-				// These tests must be done after the tests for the GE- group
+				// Makes sure the U- group is first in the list
+				// These tests must happen before the tests for the GE- group
 				const UGroup = this.$store.getters.UGroup(spacename)
 				if (groupCurrent === UGroup) {
 					return -1
 				}
 				if (groupNext === UGroup) {
+					return 1
+				}
+				// Makes sure the GE- group is second in the list
+				// These tests must be done after the tests for the U- group
+				const GEGroup = this.$store.getters.GEGroup(spacename)
+				if (groupCurrent === GEGroup) {
+					return -1
+				}
+				if (groupNext === GEGroup) {
 					return 1
 				}
 
@@ -306,17 +306,25 @@ export default {
 	background-color: #f5f5f5 !important;
 }
 
+.user-info {
+  width: 30%;
+  padding-left: 8px;
+}
+
 .user-name {
 	font-size: large;
 }
 
 .user-email {
 	color: gray;
-	padding-left: 10px;
 }
 
 .table-space-detail {
 	width: 100%;
 	margin-top: -25px;
+}
+
+.group-list {
+  text-wrap: wrap;
 }
 </style>
