@@ -156,8 +156,8 @@ class ConnectedGroupsService {
 		return true;
 	}
 
-	public function isUserConnectedGroup(string $uid): bool {
-		$res = $this->mapper->isUserConnectedGroup($uid);
+	public function isUserConnectedGroup(string $uid, string $gid): bool {
+		$res = $this->mapper->isUserConnectedGroup($uid, $gid);
 		return empty($res);
 	}
 }

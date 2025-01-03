@@ -93,14 +93,18 @@ class GroupFoldersGroupsMapper extends QBMapper {
 		return $this->findEntities($query);
 	}
 
-	public function isUserConnectedGroup(string $uid): mixed {
+	public function isUserConnectedGroup(string $uid, string $gid): mixed {
 		$qb = $this->db->getQueryBuilder();
 
 		$query = $qb
 			->select('*')
 			->from('group_user')
 			->where('uid = :uid')
-			->setParameter('uid', $uid)
+            ->andWhere('gid = :gid')
+			->setParameters( [
+                'uid' => $uid,
+                'gid' => $gid
+            ])
 		;
 
 		$res = $query->executeQuery();
