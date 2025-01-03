@@ -136,7 +136,6 @@ export default {
 			this.$emit('close')
 			// todo: Call api
 			this.groupsSelected.forEach(group => {
-				console.info('selectConnectedGroups - validate - group', group)
 				const space = this.$store.state.spaces[this.$route.params.space]
 				this.$store.dispatch('addConnectedGroupToWorkspace', {
 					spaceId: space.id,
@@ -188,18 +187,26 @@ export default {
 }
 
 .body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
-  border-width: 1px;
+  border-width: 2px;
   border-color: var(--color-border-dark);
   border-bottom: rgb(0,0,0,0);
 }
 
+.body-select-groups:hover :deep(.v-select.select .vs__dropdown-toggle) {
+  border-color: var(--color-primary);
+}
+
+.body-select-groups:hover :deep(.v-select.select.vs--open) .vs__dropdown-menu {
+  border-color: var(--color-primary) !important;
+}
+
 .body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-menu) {
-  border-width: 1px !important;
+  border-width: 2px !important;
   border-color: var(--color-border-dark) !important;
 }
 
 .body-select-groups :deep(.v-select.select .vs__dropdown-toggle) {
-  border-width: 1px;
+  border-width: 2px;
   border-color: var(--color-border-dark);
 }
 
