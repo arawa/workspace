@@ -39,9 +39,6 @@ export default {
 			default: 0,
 		},
 	},
-	beforeMount() {
-		console.debug('Voici le groupe', this.group)
-	},
 }
 </script>
 
