@@ -98,7 +98,7 @@
 	"No spaces": "Aucun espace de travail",
 	"You have not yet created any workspace": "Vous n'avez pas encore créé d'espace de travail",
 	"unlimited": "unlimited",
-	"Workspace groups": "groupes de l'espace de travail",
+	"Workspace groups": "Groupes Workspace",
 	"Added groups": "Groupes ajoutés",
 	"View profile": "Voir le profil",
 	"Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Groupe Workspace</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>": "Attention, après le retrait du groupe <b>{groupname}</b>, les membres de ce groupe perdront l'accès à l'espace de travail <b>{spacename}</b>, à l'exception : <br><br>- des Gestionnaires d'Espaces (<b>WM-{spacename}</b>)<br>- des utilisateurs membres d'un <b>Groupe Workspace</b> (préfixé <b>G-</b>)<br>- des utilisateurs membres d'un autre Groupe Ajouté<br>- des utilisateurs ajoutés manuellement depuis l'espace de travail <b>{spacename}</b>",

@@ -102,7 +102,7 @@ OC.L10N.register(
 		'Start typing to lookup users': 'Commencez à saisir du texte pour rechercher des utilisateurs',
 		'remove users from selection': 'retirer l\'utilisateur de la sélection',
 		'Start typing text to search for groups': 'Commencez à saisir du texte pour rechercher des groupes',
-		'Workspace groups': 'groupes de l\'espace de travail',
+		'Workspace groups': 'Groupes Workspace',
 		'Added groups': 'Groupes ajoutés',
 		'Workspace name': "Nom de l'espace de travail",
 		'Error - Duplicate space name': 'Erreur - Duplication de nom de l\'espace de travail',
