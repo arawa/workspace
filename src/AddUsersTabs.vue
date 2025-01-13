@@ -172,22 +172,25 @@ export default {
 			this.$emit('close-sidebar')
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.allSelectedUsers.forEach(user => {
-				if (this.$route.params.slug !== undefined) {
-					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-U')) {
-						this.addUserFromUserGroup(user)
-						return
-					}
-					if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-GE')) {
-						this.addUserFromManagerGroup(user, space)
-						return
-					}
-					if (Object.keys(space.users).includes(user.uid) && decodeURIComponent(this.$route.params.slug).startsWith('SPACE-G-')) {
-						this.addExistingUserFromSubgroup(user)
-					} else {
-						this.addNewUserFromSubgroup(user, space)
-					}
-				} else {
+				if (this.$route.params.slug === undefined) {
 					this.addUserFromWorkspace(user, space)
+					return
+				}
+
+				if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-U')) {
+					this.addUserFromUserGroup(user)
+					return
+				}
+
+				if (decodeURIComponent(this.$route.params.slug).startsWith('SPACE-GE')) {
+					this.addUserFromManagerGroup(user, space)
+					return
+				}
+
+				if (Object.keys(space.users).includes(user.uid) && decodeURIComponent(this.$route.params.slug).startsWith('SPACE-G-')) {
+					this.addExistingUserFromSubgroup(user)
+				} else {
+					this.addNewUserFromSubgroup(user, space)
 				}
 			})
 		},
