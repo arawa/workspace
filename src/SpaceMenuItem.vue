@@ -36,7 +36,7 @@
 			ref="navigationGroup"
 			:title="t('workspace', 'Workspace groups')">
 			<template #actionsTriggerIcon>
-				<Plus :title="t('workspace', 'Create a workspace group')" :size="20" />
+				<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :title="t('workspace', 'Create a workspace group')" :size="20" />
 			</template>
 			<template #actions>
 				<NcActionText :class="'space-text'">

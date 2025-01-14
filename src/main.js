@@ -26,6 +26,7 @@ import router from './router.js'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { Tooltip } from '@nextcloud/vue'
 
 Vue.mixin({
 	methods: {
@@ -33,6 +34,8 @@ Vue.mixin({
 		n,
 	},
 })
+
+Vue.directive('tooltip', Tooltip)
 
 export default new Vue({
 	el: '#content',
