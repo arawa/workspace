@@ -223,11 +223,14 @@ export default {
 		sortSpaces(state)
 	},
 	// Renames a group
-	renameGroup(state, { name, gid, newGroupName }) {
+	renameGroup(state, { name, group }) {
 		const space = state.spaces[name]
-		space.groups[gid] = {
-			gid,
-			displayName: newGroupName,
+		space.groups[group.gid] = {
+			gid: group.gid,
+			displayName: group.displayName,
+			slug: group.slug,
+			types: group.types,
+			usersCount: group.usersCount,
 		}
 		delete state.spaces[space.name]
 		VueSet(state.spaces, name, space)

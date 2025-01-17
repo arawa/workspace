@@ -265,8 +265,10 @@ export default {
 					// eslint-disable-next-line no-console
 					console.log('Group ' + gid + ' renamed to ' + newGroupName)
 
+					const groupname = Object.keys(resp.data)
+					const group = resp.data[groupname]
 					// Creates group in frontend
-					context.commit('renameGroup', { name, gid, newGroupName })
+					context.commit('renameGroup', { name, group })
 				}
 			})
 			.catch((e) => {
