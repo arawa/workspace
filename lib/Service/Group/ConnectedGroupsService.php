@@ -30,6 +30,7 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 
 class ConnectedGroupsService {
 
@@ -39,6 +40,7 @@ class ConnectedGroupsService {
 
 	public function __construct(
 		private IGroupManager $groupManager,
+        private IUserManager $userManager,
 		private GroupFoldersGroupsMapper $mapper,
 		private SpaceMapper $spaceMapper,
 	) {
@@ -156,8 +158,17 @@ class ConnectedGroupsService {
 		return true;
 	}
 
-	public function isUserConnectedGroup(string $uid, string $gid): bool {
-		$res = $this->mapper->isUserConnectedGroup($uid, $gid);
-		return empty($res);
+	public function isUserConnectedGroup(string $uid, int $groupfolderId): bool {
+
+        $connectedGroup = $this->mapper->findAddedGroup($groupfolderId);
+
+        if ($connectedGroup === false) {
+            return false;
+        }
+        
+        $group = $this->groupManager->get($connectedGroup->getGid());
+        $user = $this->userManager->get($uid);
+        
+		return $group->inGroup($user);
 	}
 }

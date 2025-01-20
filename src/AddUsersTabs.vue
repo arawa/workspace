@@ -221,15 +221,19 @@ export default {
 			}
 		},
 		addExistingUserFromSubgroup(user) {
+			const name = this.$route.params.space
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 			})
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 				user,
 			})
+			if (user.is_connected) {
+				this.$store.commit('TOGGLE_USER_CONNECTED', { name, user })
+			}
 		},
 		addNewUserFromSubgroup(user, space) {
 			this.$store.dispatch('addUserToGroup', {

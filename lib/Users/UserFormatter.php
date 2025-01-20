@@ -36,13 +36,14 @@ class UserFormatter {
 
         $userGroup = $this->userGroup->get($space['id']);
 
+        // var_dump($space);
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
-			'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $userGroup),
+			'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $space['groupfolder_id']),
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 			'role' => $role
 		];

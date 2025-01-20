@@ -62,7 +62,7 @@ class UserFormatter {
 				'email' => $user->getEmailAddress(),
 				'subtitle' => $user->getEmailAddress(),
 				'groups' => $this->groupsWorkspace->getGroupsUserFromGroupfolder($user, $groupfolder, $spaceId),
-				'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $userGroup),
+				'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $groupfolder['id']),
 				'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 				'role' => $role
 			];

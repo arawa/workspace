@@ -145,8 +145,8 @@ class WorkspaceService {
 				$role = 'wm';
 			}
             $currentUser = $this->userService->formatUser($user, $space, $role);
-            $currentUser['is_connected'] = false;
-			$data[] = $currentUser;
+
+            $data[] = $currentUser;
 		}
 
 		return $data;

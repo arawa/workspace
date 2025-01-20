@@ -93,7 +93,7 @@ class UserService {
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role,
-			'is_connected' => $this->connectedGroups->isUserConnectedGroup($user->getUID(), $userGroup),
+			'is_connected' => $this->connectedGroups->isUserConnectedGroup($user->getUID(), $space['groupfolder_id'] ?? $space['groupfolderId']),
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}

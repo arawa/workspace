@@ -93,6 +93,38 @@ class GroupFoldersGroupsMapper extends QBMapper {
 		return $this->findEntities($query);
 	}
 
+	public function findAddedGroup($groupfolderId) : ConnectedGroup|false {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select([ 'space_id', 'group_id as gid' ])
+			->from('group_folders_groups', 'gf_groups')
+			->innerJoin(
+				'gf_groups',
+				'work_spaces',
+				'ws',
+				$qb->expr()->eq(
+					'ws.groupfolder_id',
+					'gf_groups.folder_id'
+				)
+			)
+			->where('group_id not like :wmGroup')
+			->andWhere('group_id not like :uGroup')
+			->andWhere('folder_id = :folderId')
+			->setParameters([
+				'wmGroup' => 'SPACE-G%',
+				'uGroup' => 'SPACE-U%',
+				'folderId' => $groupfolderId
+			])
+		;
+
+        $result = $query->executeQuery()->fetch();
+        if ($result === false) {
+            return false;
+        }
+
+		return $this->findEntity($query);
+	}
+
 	public function isUserConnectedGroup(string $uid, string $gid): mixed {
 		$qb = $this->db->getQueryBuilder();
 
@@ -100,11 +132,11 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			->select('*')
 			->from('group_user')
 			->where('uid = :uid')
-            ->andWhere('gid = :gid')
+			->andWhere('gid = :gid')
 			->setParameters( [
-                'uid' => $uid,
-                'gid' => $gid
-            ])
+				'uid' => $uid,
+				'gid' => $gid
+			])
 		;
 
 		$res = $query->executeQuery();
