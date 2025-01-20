@@ -368,11 +368,23 @@ export default {
 						context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
 						continue
 					}
+
+					const uid = users[user].uid
+					const usersFromSpace = Object.keys(context.state.spaces[name].users)
+
+					if (!usersFromSpace.includes(uid)) {
+						console.debug('uid', uid)
+						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
+						context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
+					} else {
+						// TODO: It's a little patch, we have to fix in the backend side.
+						users[user].is_connected = false
+					}
+
 					context.commit('addUserToWorkspace', { name, user: users[user] })
 					context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
 					context.commit('INCREMENT_ADDED_GROUP_USER_COUNT', { spaceName: name, gid: group.gid })
-					context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
-					context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
+
 				}
 				return resp.data
 			})
