@@ -206,7 +206,7 @@ export default {
 				gid: UserGroup.getGid(space),
 				user,
 			})
-			user.groups.forEach(function(gid) {
+			user.groups.forEach((gid) => {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
 					gid,
