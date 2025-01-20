@@ -61,10 +61,16 @@ For more details, please go to the [admin documentation](https://github.com/araw
         <user>https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X</user>
     </documentation>
 
-    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-details.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-home.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-add-users.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/workspace-subgroups.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-1.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-2.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-3-2.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-4.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-5.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-6.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-7.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-8.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-9.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/arawa/workspace/main/screenshots/Workspace-10.png</screenshot>
 
     <commands>
         <command>OCA\Workspace\Commands\Create</command>
