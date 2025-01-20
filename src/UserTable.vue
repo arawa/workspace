@@ -201,28 +201,17 @@ export default {
 		// Removes a user from a workspace
 		deleteUser(user) {
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 			this.$store.dispatch('removeUserFromWorkspace', {
 				name: this.$route.params.space,
 				gid: UserGroup.getGid(space),
 				user,
 			})
-			this.$store.dispatch('decrementGroupUserCount', {
-				spaceName: this.$route.params.space,
-				gid: UserGroup.getGid(space),
-			})
-			if (user.role === 'wm') {
-				this.$store.dispatch('decrementGroupUserCount', {
-					spaceName: this.$route.params.space,
-					gid: ManagerGroup.getGid(space),
-				})
-			}
-			if (gid !== undefined && gid.startsWith('SPACE-G-')) {
+			user.groups.forEach(function(gid) {
 				this.$store.dispatch('decrementGroupUserCount', {
 					spaceName: this.$route.params.space,
 					gid,
 				})
-			}
+			})
 			this.$store.dispatch('decrementSpaceUserCount', {
 				spaceName: this.$route.params.space,
 			})
@@ -307,8 +296,8 @@ export default {
 }
 
 .user-info {
-  width: 30%;
-  padding-left: 8px;
+	width: 30%;
+	padding-left: 8px;
 }
 
 .user-name {
@@ -325,6 +314,6 @@ export default {
 }
 
 .group-list {
-  text-wrap: wrap;
+	text-wrap: wrap;
 }
 </style>
