@@ -160,15 +160,21 @@ class ConnectedGroupsService {
 
 	public function isUserConnectedGroup(string $uid, int $groupfolderId): bool {
 
-		$connectedGroup = $this->mapper->findAddedGroup($groupfolderId);
+		$connectedGroups = $this->mapper->findAddedGroups($groupfolderId);
 
-		if ($connectedGroup === false) {
+		if ($connectedGroups === false) {
 			return false;
 		}
 		
-		$group = $this->groupManager->get($connectedGroup->getGid());
 		$user = $this->userManager->get($uid);
+		$groups = array_map(fn ($group) => $this->groupManager->get($group->getGid()), $connectedGroups);
+
+		foreach($groups as $group) {
+			if ($group->inGroup($user)) {
+				return true;
+			}
+		}
 		
-		return $group->inGroup($user);
+		return false;
 	}
 }
