@@ -11,7 +11,7 @@ use OCP\IUser;
 class UserFormatter {
 	public function __construct(
 		private IGroupManager $groupManager,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 		private ConnectedGroupsService $connectedGroupsService,
 		private IURLGenerator $urlGenerator,
 	) {
@@ -34,9 +34,9 @@ class UserFormatter {
 			}
 		}
 
-        $userGroup = $this->userGroup->get($space['id']);
+		$userGroup = $this->userGroup->get($space['id']);
 
-        // var_dump($space);
+		// var_dump($space);
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),

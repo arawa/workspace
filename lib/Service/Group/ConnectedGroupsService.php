@@ -40,7 +40,7 @@ class ConnectedGroupsService {
 
 	public function __construct(
 		private IGroupManager $groupManager,
-        private IUserManager $userManager,
+		private IUserManager $userManager,
 		private GroupFoldersGroupsMapper $mapper,
 		private SpaceMapper $spaceMapper,
 	) {
@@ -160,15 +160,15 @@ class ConnectedGroupsService {
 
 	public function isUserConnectedGroup(string $uid, int $groupfolderId): bool {
 
-        $connectedGroup = $this->mapper->findAddedGroup($groupfolderId);
+		$connectedGroup = $this->mapper->findAddedGroup($groupfolderId);
 
-        if ($connectedGroup === false) {
-            return false;
-        }
-        
-        $group = $this->groupManager->get($connectedGroup->getGid());
-        $user = $this->userManager->get($uid);
-        
+		if ($connectedGroup === false) {
+			return false;
+		}
+		
+		$group = $this->groupManager->get($connectedGroup->getGid());
+		$user = $this->userManager->get($uid);
+		
 		return $group->inGroup($user);
 	}
 }

@@ -185,7 +185,7 @@ class GroupController extends Controller {
 		}
 		$NCGroup->setDisplayName($newGroupName);
 
-        $group = GroupFormatter::formatGroups([$NCGroup]);
+		$group = GroupFormatter::formatGroups([$NCGroup]);
 
 		return new JSONResponse($group);
 	}

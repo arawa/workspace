@@ -36,7 +36,7 @@ class UserFormatter {
 		private GroupsWorkspaceService $groupsWorkspace,
 		private ConnectedGroupsService $connectedGroupsService,
 		private IURLGenerator $urlGenerator,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 	) {
 	}
 
@@ -46,7 +46,7 @@ class UserFormatter {
 	public function formatUsers(array $users, array $groupfolder, string $spaceId): array {
 		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
 
-        $userGroup = $this->userGroup->get($spaceId);
+		$userGroup = $this->userGroup->get($spaceId);
 
 		$usersFormatted = [];
 		foreach ($users as $user) {

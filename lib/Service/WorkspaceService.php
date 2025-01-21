@@ -144,9 +144,9 @@ class WorkspaceService {
 			) {
 				$role = 'wm';
 			}
-            $currentUser = $this->userService->formatUser($user, $space, $role);
+			$currentUser = $this->userService->formatUser($user, $space, $role);
 
-            $data[] = $currentUser;
+			$data[] = $currentUser;
 		}
 
 		return $data;

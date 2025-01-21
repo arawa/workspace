@@ -42,7 +42,7 @@ class UserService {
 		private LoggerInterface $logger,
 		private ConnectedGroupsService $connectedGroups,
 		private IURLGenerator $urlGenerator,
-        private UserGroup $userGroup,
+		private UserGroup $userGroup,
 	) {
 	}
 
@@ -84,8 +84,8 @@ class UserService {
 			}
 		}
 
-        $userGroup = $this->userGroup->get($space['id']);
-        
+		$userGroup = $this->userGroup->get($space['id']);
+		
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),

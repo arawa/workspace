@@ -117,10 +117,10 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			])
 		;
 
-        $result = $query->executeQuery()->fetch();
-        if ($result === false) {
-            return false;
-        }
+		$result = $query->executeQuery()->fetch();
+		if ($result === false) {
+			return false;
+		}
 
 		return $this->findEntity($query);
 	}
@@ -133,7 +133,7 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			->from('group_user')
 			->where('uid = :uid')
 			->andWhere('gid = :gid')
-			->setParameters( [
+			->setParameters([
 				'uid' => $uid,
 				'gid' => $gid
 			])

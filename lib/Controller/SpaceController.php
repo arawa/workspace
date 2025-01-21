@@ -36,7 +36,7 @@ class SpaceController extends Controller {
 		IRequest $request,
 		private $AppName,
 		private SpaceMapper $spaceMapper,
-		private SpaceService $spaceService
+		private SpaceService $spaceService,
 	) {
 		parent::__construct($AppName, $request);
 	}

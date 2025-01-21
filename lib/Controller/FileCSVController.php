@@ -76,7 +76,7 @@ class FileCSVController extends Controller {
 		private SpaceManager $spaceManager,
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
-		private ValuesValidator $valuesValidator
+		private ValuesValidator $valuesValidator,
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -114,9 +114,9 @@ class FileCSVController extends Controller {
 			$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
 			$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
 
-			$message = "The content of your file is invalid. "
-			. "Two columns are required, with the following header names and values:<br>"
-			."- \"user\": the user's username or e-mail address<br>"
+			$message = 'The content of your file is invalid. '
+			. 'Two columns are required, with the following header names and values:<br>'
+			. "- \"user\": the user's username or e-mail address<br>"
 			. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
 
 			$errorMessage = $this->translate->t(
@@ -172,7 +172,7 @@ class FileCSVController extends Controller {
 				$usersUnknown
 			);
 
-			$usersUnknown = implode("<br>", $usersUnknown);
+			$usersUnknown = implode('<br>', $usersUnknown);
 			$errorMessage = $this->translate->t('The users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
 			$errorMessage .= $usersUnknown;
 
@@ -213,7 +213,7 @@ class FileCSVController extends Controller {
 		}
 
 		$data = [];
-		foreach($names as $user) {
+		foreach ($names as $user) {
 			$uid = $user->uid;
 
 			if ($this->userChecker->checkUserExistByEmail($uid)) {
@@ -262,7 +262,7 @@ class FileCSVController extends Controller {
 
 			return new JSONResponse($data);
 
-		} catch(AbstractNotificationException $exception) {
+		} catch (AbstractNotificationException $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
 					new ToastMessager($exception->getTitle(), $exception->getMessage()),
@@ -270,7 +270,7 @@ class FileCSVController extends Controller {
 				),
 				$exception->getCode()
 			);
-		} catch(\Exception $exception) {
+		} catch (\Exception $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
 					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
@@ -309,7 +309,7 @@ class FileCSVController extends Controller {
 			$data = $this->importProcess($nextcloudFile, $space);
 
 			return new JSONResponse($data);
-		} catch(AbstractNotificationException $exception) {
+		} catch (AbstractNotificationException $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
 					new ToastMessager($exception->getTitle(), $exception->getMessage()),
@@ -317,7 +317,7 @@ class FileCSVController extends Controller {
 				),
 				$exception->getCode()
 			);
-		} catch(\Exception $exception) {
+		} catch (\Exception $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
 					new ToastMessager($this->translate->t('Unknown error'), $exception->getMessage()),
