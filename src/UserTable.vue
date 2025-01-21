@@ -45,7 +45,7 @@
 					<td class="avatar workspace-td">
 						<NcAvatar :display-name="user.name" :user="user.uid" />
 					</td>
-					<td style="width: 30%;" class="workspace-td">
+					<td class="workspace-td user-info">
 						<div class="user-name">
 							{{ user.name }}
 						</div>
@@ -54,32 +54,44 @@
 						</div>
 					</td>
 					<td class="workspace-td">
-						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'admin' : 'user') }}
+						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'wm' : 'user') }}
 					</td>
-					<td class="workspace-td">
-						{{ user.groups.map(group => $store.getters.groupName($route.params.space, group)).join(', ') }}
+					<td class="workspace-td group-list">
+						{{ sortGroups(user.groups) }}
 					</td>
 					<td class="workspace-td">
 						<div class="user-actions">
 							<NcActions>
-								<NcActionButton v-if="$route.params.group === undefined"
-									:icon="!$store.getters.isSpaceAdmin(user, $route.params.space) ? 'icon-user' : 'icon-close'"
+								<NcActionButton v-if="user.profile !== undefined"
+									icon="icon-user"
+									:close-after-click="true"
+									@click="viewProfile(user)">
+									{{ t('workspace', 'View profile') }}
+								</NcActionButton>
+								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
-									{{
-										!$store.getters.isSpaceAdmin(user, $route.params.space) ?
-											t('workspace', 'Make administrator')
-											: t('workspace', 'Remove admin rights')
-									}}
+									<template #icon>
+										<Close :size="20" />
+									</template>
+									{{ t('workspace', 'Remove admin rights') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.group === undefined"
+								<NcActionButton v-else
+									:close-after-click="true"
+									@click="toggleUserRole(user)">
+									<template #icon>
+										<AccountCog :size="20" />
+									</template>
+									{{ t('workspace', 'Make administrator') }}
+								</NcActionButton>
+								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.group !== undefined"
-									icon="icon-delete"
+								<NcActionButton v-if="$route.params.slug !== undefined && (isAddedGroup === false || user.is_connected === false)"
+									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
 									{{ t('workspace', 'Remove from group') }}
@@ -105,6 +117,9 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
+import AccountCog from 'vue-material-design-icons/AccountCog.vue'
+import Close from 'vue-material-design-icons/Close.vue'
+import ManagerGroup from './services/Groups/ManagerGroup.js'
 
 export default {
 	name: 'UserTable',
@@ -113,6 +128,8 @@ export default {
 		NcActions,
 		NcActionButton,
 		NcEmptyContent,
+		AccountCog,
+		Close,
 	},
 	data() {
 		return {
@@ -125,8 +142,8 @@ export default {
 		users() {
 			let result = []
 			const space = this.$store.state.spaces[this.$route.params.space]
-			const group = this.$route.params.group
-			if (this.$route.params.group !== undefined) {
+			const group = decodeURIComponent(this.$route.params.slug)
+			if (this.$route.params.slug !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)
 					.filter((user) => user.groups.includes(group))
@@ -136,15 +153,18 @@ export default {
 			}
 
 			return result.sort((firstUser, secondUser) => {
-				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'admin' : 'user'
-				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'admin' : 'user'
+				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'wm' : 'user'
+				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'wm' : 'user'
 				if (roleFirstUser !== roleSecondUser) {
 					// display admins first
-					return roleFirstUser === 'admin' ? -1 : 1
+					return roleFirstUser === 'wm' ? -1 : 1
 				} else {
 					return firstUser.name.localeCompare(secondUser.name)
 				}
 			})
+		},
+		isAddedGroup() {
+			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
 	},
 	methods: {
@@ -155,22 +175,22 @@ export default {
 		},
 		sortedGroups(groups, spacename) {
 			groups.sort((groupCurrent, groupNext) => {
-				// Makes sure the GE- group is first in the list
-				// These tests must happen before the tests for the U- group
-				const GEGroup = this.$store.getters.GEGroup(spacename)
-				if (groupCurrent === GEGroup) {
-					return -1
-				}
-				if (groupNext === GEGroup) {
-					return 1
-				}
-				// Makes sure the U- group is second in the list
-				// These tests must be done after the tests for the GE- group
+				// Makes sure the U- group is first in the list
+				// These tests must happen before the tests for the GE- group
 				const UGroup = this.$store.getters.UGroup(spacename)
 				if (groupCurrent === UGroup) {
 					return -1
 				}
 				if (groupNext === UGroup) {
+					return 1
+				}
+				// Makes sure the GE- group is second in the list
+				// These tests must be done after the tests for the U- group
+				const GEGroup = this.$store.getters.GEGroup(spacename)
+				if (groupCurrent === GEGroup) {
+					return -1
+				}
+				if (groupNext === GEGroup) {
 					return 1
 				}
 
@@ -186,21 +206,64 @@ export default {
 				gid: UserGroup.getGid(space),
 				user,
 			})
+			user.groups.forEach((gid) => {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid,
+				})
+			})
+			this.$store.dispatch('decrementSpaceUserCount', {
+				spaceName: this.$route.params.space,
+			})
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
+			const name = this.$route.params.space
+			const space = this.$store.state.spaces[name]
 			this.$store.dispatch('toggleUserRole', {
-				name: this.$route.params.space,
+				name,
 				user,
 			})
+			if (user.is_connected) {
+				this.$store.commit('TOGGLE_USER_CONNECTED', { name, user })
+				this.$store.dispatch('addUserToGroup', {
+					name,
+					gid: UserGroup.getGid(space),
+					user,
+				})
+			}
 		},
 		// Removes a user from a group
 		removeFromGroup(user) {
+			const gid = decodeURIComponent(this.$route.params.slug)
+			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('removeUserFromGroup', {
 				name: this.$route.params.space,
-				gid: this.$route.params.group,
+				gid,
 				user,
 			})
+			this.$store.dispatch('decrementGroupUserCount', {
+				spaceName: this.$route.params.space,
+				gid,
+			})
+			if (gid.startsWith('SPACE-GE')) {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: ManagerGroup.getGid(space),
+				})
+			}
+			if (gid.startsWith('SPACE-U')) {
+				this.$store.dispatch('decrementGroupUserCount', {
+					spaceName: this.$route.params.space,
+					gid: UserGroup.getGid(space),
+				})
+				this.$store.dispatch('decrementSpaceUserCount', {
+					spaceName: this.$route.params.space,
+				})
+			}
+		},
+		viewProfile(user) {
+			window.location.href = user.profile
 		},
 	},
 }
@@ -232,17 +295,25 @@ export default {
 	background-color: #f5f5f5 !important;
 }
 
+.user-info {
+	width: 30%;
+	padding-left: 8px;
+}
+
 .user-name {
 	font-size: large;
 }
 
 .user-email {
 	color: gray;
-	padding-left: 10px;
 }
 
 .table-space-detail {
 	width: 100%;
 	margin-top: -25px;
+}
+
+.group-list {
+	text-wrap: wrap;
 }
 </style>

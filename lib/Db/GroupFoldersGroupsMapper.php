@@ -32,19 +32,20 @@ class GroupFoldersGroupsMapper extends QBMapper {
 	
 	public function __construct(IDBConnection $db) {
 		$this->db = $db;
+		$this->entityClass = ConnectedGroup::class;
 	}
 	
 	/**
 	 * @return array [
-	 *      [
-	 *          'space_name' => 'Space01',
-	 *          'group_id' => 'Mars-9',
-	 *      ],
-	 *      [
-	 *          'space_name' => 'Space02',
-	 *          'group_id' => 'Moon-10',
-	 *      ],
-	 * ]
+	 *               [
+	 *               'space_name' => 'Space01',
+	 *               'group_id' => 'Mars-9',
+	 *               ],
+	 *               [
+	 *               'space_name' => 'Space02',
+	 *               'group_id' => 'Moon-10',
+	 *               ],
+	 *               ]
 	 */
 	public function getSpacenamesGroupIds() {
 		$qb = $this->db->getQueryBuilder();
@@ -64,5 +65,82 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			->andWhere('group_id not like "SPACE-U%"');
 
 		return $qb->executeQuery()->fetchAll();
+	}
+
+
+	/**
+	 * @return array<ConnectedGroup>
+	 */
+	public function findAllAddedGroups() : array {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select([ 'space_id', 'group_id as gid' ])
+			->from('group_folders_groups', 'gf_groups')
+			->innerJoin(
+				'gf_groups',
+				'work_spaces',
+				'ws',
+				$qb->expr()->eq(
+					'ws.groupfolder_id',
+					'gf_groups.folder_id'
+				)
+			)
+			->where('group_id not like :wmGroup') // G and GE
+			->andWhere('group_id not like :uGroup')
+			->setParameter('wmGroup', 'SPACE-G%')
+			->setParameter('uGroup', 'SPACE-U%');
+
+		return $this->findEntities($query);
+	}
+
+	public function findAddedGroup($groupfolderId) : ConnectedGroup|false {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select([ 'space_id', 'group_id as gid' ])
+			->from('group_folders_groups', 'gf_groups')
+			->innerJoin(
+				'gf_groups',
+				'work_spaces',
+				'ws',
+				$qb->expr()->eq(
+					'ws.groupfolder_id',
+					'gf_groups.folder_id'
+				)
+			)
+			->where('group_id not like :wmGroup')
+			->andWhere('group_id not like :uGroup')
+			->andWhere('folder_id = :folderId')
+			->setParameters([
+				'wmGroup' => 'SPACE-G%',
+				'uGroup' => 'SPACE-U%',
+				'folderId' => $groupfolderId
+			])
+		;
+
+		$result = $query->executeQuery()->fetch();
+		if ($result === false) {
+			return false;
+		}
+
+		return $this->findEntity($query);
+	}
+
+	public function isUserConnectedGroup(string $uid, string $gid): mixed {
+		$qb = $this->db->getQueryBuilder();
+
+		$query = $qb
+			->select('*')
+			->from('group_user')
+			->where('uid = :uid')
+			->andWhere('gid = :gid')
+			->setParameters([
+				'uid' => $uid,
+				'gid' => $gid
+			])
+		;
+
+		$res = $query->executeQuery();
+
+		return $res->fetch();
 	}
 }

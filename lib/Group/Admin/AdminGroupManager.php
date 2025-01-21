@@ -32,7 +32,9 @@ use OCP\IGroupManager;
  * OCA\Workspace\Group\Admin\AdminGroup.
  */
 class AdminGroupManager {
-	public function __construct(public IGroupManager $groupManager) {
+	public function __construct(
+		public IGroupManager $groupManager,
+	) {
 	}
 
 	public function get(string $gid): IGroup {

@@ -40,8 +40,9 @@
 	height: 52px;
 	padding: 5px;
 }
-.workspace-tr:hover {
-	background-color: var(--color-backgroud-hover) !important;
+
+tbody > .workspace-tr:hover {
+	background-color: var(--color-primary-element-light-hover) !important;
 }
 
 .header {
@@ -91,4 +92,10 @@
 /* force toggle visibility */
 .workspace-sidebar .icon-collapse {
 	visibility: visible !important;
+}
+
+.icon-added-group, .icon-added-group-dark {
+	background-image: url('../img/added_group_black.svg');
+	min-width: 42px;
+	min-height: 42px;
 }

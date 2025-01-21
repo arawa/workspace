@@ -1,10 +1,11 @@
+<?php
+
 /**
  * @copyright Copyright (c) 2017 Arawa
  *
- * @author 2021 Baptiste Fotia <baptiste.fotia@arawa.fr>
- * @author 2021 Cyrille Bollu <cyrille@bollu.be>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
- * @license AGPL-3.0-or-later
+ * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,29 +22,33 @@
  *
  */
 
-import Vue from 'vue'
-import router from './router.js'
-import store from './store/index.js'
-import App from './App.vue'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import { Tooltip } from '@nextcloud/vue'
+namespace OCA\Workspace\Db;
 
-Vue.mixin({
-	methods: {
-		t,
-		n,
-	},
-})
+use JsonSerializable;
 
-Vue.directive('tooltip', Tooltip)
+use OCP\AppFramework\Db\Entity;
 
-export default new Vue({
-	el: '#content',
-	data: {
-		isUserGeneralAdmin: false,
-		spaces: {},
-	},
-	router,
-	store,
-	render: (h) => h(App),
-})
+class ConnectedGroup extends Entity implements JsonSerializable {
+
+	/**
+	 * @var integer
+	 */
+	protected $spaceId;
+
+	/**
+	 * @var string
+	 */
+	protected $gid;
+
+	public function __construct() {
+		$this->addType('space_id', 'integer');
+		$this->addType('gid', 'string');
+	}
+
+	public function jsonSerialize(): array {
+		return [
+			'space_id' => (int)$this->getSpaceId(),
+			'gid' => $this->getGid(),
+		];
+	}
+}

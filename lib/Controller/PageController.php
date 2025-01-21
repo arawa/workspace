@@ -33,7 +33,7 @@ use OCP\Util;
 
 class PageController extends Controller {
 	public function __construct(
-		private UserService $userService
+		private UserService $userService,
 	) {
 	}
 

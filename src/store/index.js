@@ -33,6 +33,8 @@ Vue.config.devtools = true // Debug mode
 const store = new Store({
 	state: {
 		loading: true,
+		noUsers: false,
+		loadingUsersWaitting: false,
 		spaces: {},
 		groupfolders: {},
 	},

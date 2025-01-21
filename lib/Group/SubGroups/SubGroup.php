@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2017 Arawa
+ * @copyright Copyright (c) 2024 Arawa
  *
- * @author 2023 Baptiste Fotia <baptiste.fotia@arawa.fr>
+ * @author 2024 Baptiste Fotia <baptiste.fotia@arawa.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,32 +22,37 @@
  *
  */
 
-namespace OCA\Workspace\Group\User;
+namespace OCA\Workspace\Group\SubGroups;
 
+use OCA\Workspace\Service\Group\GroupFormatter;
 use OCP\IGroupManager;
-use OCP\IUser;
+use Psr\Log\LoggerInterface;
 
-/**
- * This class represents a Workspace Manager (GE-) group.
- */
-class UserGroup {
-	public const GID_PREFIX = 'SPACE-U-';
-
+class SubGroup {
 	public function __construct(
-		private UserGroupManager $userGroupManager,
 		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
 	) {
 	}
 
-	public function addUser(IUser $user, string $gid): bool {
-		$group = $this->userGroupManager->get($gid);
-		$group->addUser($user);
-
-		return true;
+	public function get(array $gids): array {
+		$groups = [];
+		foreach ($gids as $gid) {
+			$group = $this->groupManager->get($gid);
+			if (is_null($group)) {
+				$this->logger->warning(
+					"Be careful, the $gid group is not exist in the oc_groups table."
+					. " But, it's present in the oc_group_folders_groups table."
+					. 'It necessary to recreate it with the occ command.'
+				);
+				continue;
+			}
+			$groups[] = $group;
+		}
+		return $groups;
 	}
 
-	public function count(int $spaceId): int {
-		$usersGroup = $this->groupManager->get($this::GID_PREFIX . $spaceId);
-		return $usersGroup->count();
+	public function getGroupsFormatted(array $gids): array {
+		return GroupFormatter::formatGroups($this->get($gids));
 	}
 }
