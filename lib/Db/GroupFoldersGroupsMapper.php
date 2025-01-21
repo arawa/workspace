@@ -93,7 +93,7 @@ class GroupFoldersGroupsMapper extends QBMapper {
 		return $this->findEntities($query);
 	}
 
-	public function findAddedGroup($groupfolderId) : ConnectedGroup|false {
+	public function findAddedGroups($groupfolderId) : array|false {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
 			->select([ 'space_id', 'group_id as gid' ])
@@ -122,7 +122,7 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			return false;
 		}
 
-		return $this->findEntity($query);
+		return $this->findEntities($query);
 	}
 
 	public function isUserConnectedGroup(string $uid, string $gid): mixed {
