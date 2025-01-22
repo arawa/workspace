@@ -69,11 +69,9 @@
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
 								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
+									icon="icon-close"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
-									<template #icon>
-										<Close :size="20" />
-									</template>
 									{{ t('workspace', 'Remove admin rights') }}
 								</NcActionButton>
 								<NcActionButton v-else
@@ -118,7 +116,6 @@ import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
-import Close from 'vue-material-design-icons/Close.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 
 export default {
@@ -129,7 +126,6 @@ export default {
 		NcActionButton,
 		NcEmptyContent,
 		AccountCog,
-		Close,
 	},
 	data() {
 		return {
