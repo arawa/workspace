@@ -90,7 +90,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.slug !== undefined && (isAddedGroup === false || user.is_connected === false)"
+								<NcActionButton v-if="$route.params.slug !== undefined && isSubgoup"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
@@ -163,8 +163,8 @@ export default {
 				}
 			})
 		},
-		isAddedGroup() {
-			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
+		isSubgoup() {
+			return this.$route.params.slug.startsWith('SPACE-G-')
 		},
 	},
 	methods: {
