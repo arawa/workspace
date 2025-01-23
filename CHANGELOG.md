@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Contributors
 
-Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/smarinier), [acdmft](https://github.com/acdmft), [solracsf](https://github.com/solracsf) (les liens des profils).
+Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/smarinier), [acdmft](https://github.com/acdmft), [solracsf](https://github.com/solracsf).
 
 ## [3.3.2] - 2024-12-18
 
