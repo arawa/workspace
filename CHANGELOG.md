@@ -4,26 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.0.0] - 2025-01-23
 
-### stableX.X
+## Features
 
-## Added
+- You can now use existing user groups (LDAP/AD or local) with Workspaces by @smarinier @zak39 in ([#905](https://github.com/arawa/workspace/pull/905))
 
-- Close menu on group rename error message ([#839](https://github.com/arawa/workspace/pull/839))
-- Add an arrow from the create group ([#900](https://github.com/arawa/workspace/pull/900))
-- Create occ command to import and create workspace ( [#902](https://github.com/arawa/workspace/pull/902) )
+## Fixes and Improvements
 
-## Fixed
+- Improving the loading time of the "all workspaces" page
+- Reordering groups in the Workspace page  by @zak39 in ([#1075](https://github.com/arawa/workspace/pull/1075))
+- Correctly remove user from WorkspacesManagers group when demoting by @zak39 in ([#980](https://github.com/arawa/workspace/pull/980))
+- Hide modal window menu when there is an error message by @acdmft in ([#839](https://github.com/arawa/workspace/pull/839))
+- Ensure groups is an array before try to access them by @solracsf in ([#849](https://github.com/arawa/workspace/pull/849))
+- Fixing a bug that prevented the creation of Workspaces and Workspaces groups when being logged for too long by @zak39 in ([#1066](https://github.com/arawa/workspace/pull/1066), [#1080](https://github.com/arawa/workspace/pull/1080) , [#1081](https://github.com/arawa/workspace/pull/1081), [#1082](https://github.com/arawa/workspace/pull/1082))
+- And many others: see here
 
-- Fix/move v300 constant/stable3.0 ( [#845](https://github.com/arawa/workspace/pull/845) )
-- Repair the migration v3.0.0 and v3.0.1 ( [#843](https://github.com/arawa/workspace/pull/843/files) )
-- fix/delete-a-user-when-adding-him-to-another-group/901 ( [#907](https://github.com/arawa/workspace/pull/907) )
-- Check if an user is present in the WorkspacesManagers group before remove ( [#915](https://github.com/arawa/workspace/pull/915) )
-- Rename a workspace name from plural to singular or inversely ( [#893](https://github.com/arawa/workspace/pull/893) )
-- Display the highlight for new members from a workspace ([#888](https://github.com/arawa/workspace/pull/888))
-- Take into account the limitation of searches between members of the same group, except for specefic groups ( [#802](https://github.com/arawa/workspace/pull/802) )
-- Disable users import ( [#995](https://github.com/arawa/workspace/pull/995) )
+## Chores
+
+- Updating NPM and PHP dependencies, changelog, readme
+
+### Contributors
+
+Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/smarinier), [acdmft](https://github.com/acdmft), [solracsf](https://github.com/solracsf) (les liens des profils).
 
 ## [3.3.2] - 2024-12-18
 
@@ -329,7 +332,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v3.3.2...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.0...main
+[4.0.0]: https://github.com/arawa/workspace/compare/v3.3.2...4.0.0
 [3.3.2]: https://github.com/arawa/workspace/compare/v3.3.1...3.0.2
 [3.3.1]: https://github.com/arawa/workspace/compare/v3.3.0...3.0.1
 [3.3.0]: https://github.com/arawa/workspace/compare/v3.2.5...3.0.0
