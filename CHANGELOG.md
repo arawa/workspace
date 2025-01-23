@@ -6,11 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0] - 2025-01-23
 
-## Features
+### Features
 
 - You can now use existing user groups (LDAP/AD or local) with Workspaces by @smarinier @zak39 in ([#905](https://github.com/arawa/workspace/pull/905))
 
-## Fixes and Improvements
+### Fixes and Improvements
 
 - Improving the loading time of the "all workspaces" page
 - Reordering groups in the Workspace page  by @zak39 in ([#1075](https://github.com/arawa/workspace/pull/1075))
@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixing a bug that prevented the creation of Workspaces and Workspaces groups when being logged for too long by @zak39 in ([#1066](https://github.com/arawa/workspace/pull/1066), [#1080](https://github.com/arawa/workspace/pull/1080) , [#1081](https://github.com/arawa/workspace/pull/1081), [#1082](https://github.com/arawa/workspace/pull/1082))
 - And many others: see here
 
-## Chores
+### Chores
 
 - Updating NPM and PHP dependencies, changelog, readme
 
