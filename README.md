@@ -17,16 +17,6 @@ This app is a Nextcloud extension of the Groupfolders app.
 
 For more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).
 
-> [!WARNING]
-> We found an incompatibility with the latest release of Groupfolders.
->
-> These are the compatible versions until we address those issues:
-> 
-> | Workspace | GroupFolders |
-> | :---: | :---: |
-> | all versions | 16.0.0 to 16.0.9 |
-> | all versions | 17.0.0 to 17.0.3 |
-
 ## Documentation
 
 For more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X).
