@@ -28,8 +28,8 @@ namespace OCA\Workspace\Exceptions;
 use OCP\AppFramework\Http;
 
 class BadRequestException extends \Exception {
-	public function __construct($message) {
-		parent::__construct($message);
+	public function __construct($message, $code = HTTP::STATUS_BAD_REQUEST) {
+		parent::__construct($message, $code);
 	}
 
 	public function getStatus(): int {
