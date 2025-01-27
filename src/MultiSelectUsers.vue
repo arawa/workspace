@@ -21,7 +21,8 @@
 
 <template>
 	<div class="multiselect-area">
-		<NcMultiselect class="select-users-input"
+		<NcSelect ref="userSelectInput"
+			class="select-users-input"
 			label="name"
 			:custom-label="displayForSearching"
 			track-by="uid"
@@ -29,13 +30,13 @@
 			:multiple="false"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
-			:tag-width="50"
+			:append-to-body="false"
 			:user-select="true"
-			@change="addUserToBatch"
+			@option:selected="addUserToBatch"
 			@close="selectableUsers=[]"
-			@search-change="lookupUsers">
+			@search="lookupUsers">
 			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
-		</NcMultiselect>
+		</NcSelect>
 	</div>
 </template>
 
@@ -43,12 +44,12 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 
 export default {
 	name: 'MultiSelectUsers',
 	components: {
-		NcMultiselect,
+		NcSelect,
 	},
 	props: {
 		allSelectedUsers: {
@@ -61,6 +62,12 @@ export default {
 			isLookingUpUsers: false, // True when we are looking up users
 			selectableUsers: [], // Users matching a search term
 		}
+	},
+	mounted() {
+		const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
+		this.$nextTick(() => {
+			inputElement.focus()
+		})
 	},
 	methods: {
 		// Adds user to the batch when user selects user in the MultiSelect
@@ -137,4 +144,27 @@ export default {
 	width: 80%;
 }
 
+.multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
+	border-width: 2px;
+	border-color: var(--color-border-dark);
+	border-bottom: rgb(0,0,0,0);
+}
+
+.multiselect-area:hover :deep(.v-select.select .vs__dropdown-toggle) {
+	border-color: var(--color-primary);
+}
+
+.multiselect-area:hover :deep(.v-select.select.vs--open) .vs__dropdown-menu {
+	border-color: var(--color-primary) !important;
+}
+
+.multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-menu) {
+	border-width: 2px !important;
+	border-color: var(--color-border-dark) !important;
+}
+
+.multiselect-area :deep(.v-select.select .vs__dropdown-toggle) {
+	border-width: 2px;
+	border-color: var(--color-border-dark);
+}
 </style>
