@@ -38,13 +38,12 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcMultiselect :class="isESR ? 'quota-select-esr' : 'quota-select'"
+				<NcSelect :class="isESR ? 'quota-select-esr' : 'quota-select'"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
-					:taggable="true"
 					:value="$store.state.spaces[$route.params.space].quota"
 					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
-					@change="setSpaceQuota"
+					@input="setSpaceQuota"
 					@tag="setSpaceQuota" />
 			</div>
 			<div class="space-actions">
@@ -117,7 +116,7 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
@@ -137,7 +136,7 @@ export default {
 		NcActionInput,
 		NcColorPicker,
 		NcModal,
-		NcMultiselect,
+		NcSelect,
 		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
