@@ -25,19 +25,19 @@
 
 namespace OCA\Workspace\Tests\Unit\Service;
 
-use OCP\IUser;
+use OCA\Workspace\Db\GroupFoldersGroupsMapper;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\UserService;
 use OCP\IGroup;
-use OCP\IUserSession;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
-use Psr\Log\LoggerInterface;
-use PHPUnit\Framework\TestCase;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Group\UserGroup;
+use OCP\IUser;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
-use OCA\Workspace\Db\GroupFoldersGroupsMapper;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class UserServiceTest extends TestCase {
 	private MockObject&IGroupManager $groupManager;
