@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Service;
 
+use OCA\Workspace\Db\GroupFoldersGroupsMapper;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -43,6 +44,7 @@ class UserService {
 		private ConnectedGroupsService $connectedGroups,
 		private IURLGenerator $urlGenerator,
 		private UserGroup $userGroup,
+		private GroupFoldersGroupsMapper $groupFoldersGroupsMapper,
 	) {
 	}
 
@@ -84,8 +86,8 @@ class UserService {
 			}
 		}
 
-		$userGroup = $this->userGroup->get($space['id']);
-		
+		$isConnected = $this->connectedGroups->isUserConnectedGroup($user->getUID(), $space);
+
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
@@ -93,7 +95,7 @@ class UserService {
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role,
-			'is_connected' => $this->connectedGroups->isUserConnectedGroup($user->getUID(), $space['groupfolder_id'] ?? $space['groupfolderId']),
+			'is_connected' => $isConnected,
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}

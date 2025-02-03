@@ -93,7 +93,7 @@ class ConnectedGroupController extends Controller {
 		};
 
 		foreach ($users as &$user) {
-			if (array_key_exists('groups', $user)) {
+			if (array_key_exists('groups', $user) && $user['is_connected'] === true) {
 				array_push($user['groups'], 'SPACE-U-' . $space->getSpaceId());
 			}
 		}
