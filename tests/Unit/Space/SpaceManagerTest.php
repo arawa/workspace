@@ -195,22 +195,11 @@ class SpaceManagerTest extends TestCase {
 			->willReturn('WM-Espace01')
 		;
 
-		$workspaceManagerGroupMock
-			->expects($this->once())
-			->method('count')
-			->willReturn(0)
-		;
-
 		$userGroupMock = $this->createMock(IGroup::class);
 		$userGroupMock
 			->expects($this->any())
 			->method('getGID')
 			->willReturn('SPACE-U-1')
-		;
-		$userGroupMock
-			->expects($this->once())
-			->method('count')
-			->willReturn(0)
 		;
 
 		$userGroupMock
