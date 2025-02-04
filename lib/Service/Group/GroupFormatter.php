@@ -48,11 +48,14 @@ class GroupFormatter {
 				$backendnames
 			);
 
+            $users = $group->getUsers();
+            $users = array_filter($users, fn($user) => $user->isEnabled());
+
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
-				'usersCount' => $group->count(),
+				'usersCount' => count($users),
 				'slug' => Slugger::slugger($group->getGID())
 			];
 		}
