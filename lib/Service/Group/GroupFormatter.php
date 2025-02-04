@@ -48,8 +48,8 @@ class GroupFormatter {
 				$backendnames
 			);
 
-            $users = $group->getUsers();
-            $users = array_filter($users, fn($user) => $user->isEnabled());
+			$users = $group->getUsers();
+			$users = array_filter($users, fn ($user) => $user->isEnabled());
 
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
