@@ -22,6 +22,7 @@
 
 import { expect } from '@jest/globals'
 import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 jest.mock('axios')
@@ -192,7 +193,7 @@ describe('addGroupToGroupfolder', () => {
 	it('calls proper API path and object as a parameter', async () => {
 		axios.post.mockResolvedValue(responseValue)
 		await addGroupToGroupfolder(1, 'SPACE-U-1')
-		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/1/groups', { group: 'SPACE-U-1' })
+		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/1/groups'), { group: 'SPACE-U-1' })
 	})
 })
 
@@ -212,7 +213,7 @@ describe('addGroupToManageACLForGroupfolder', () => {
 	it('calls groupfolders API with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
 		await addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/5/manageACL', {
+		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/5/manageACL'), {
 			mappingType: 'group',
 			mappingId: 'SPACE-U-5',
 			manageAcl: true,
@@ -241,7 +242,7 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 	it('calls groupfolders API with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
 		await removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders/5/manageACL', {
+		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/5/manageACL'), {
 			mappingType: 'group',
 			mappingId: 'SPACE-U-5',
 			manageAcl: false,
@@ -267,7 +268,7 @@ describe('createGroupfolder', () => {
 	it('calls axios.post method with proper parameters', async () => {
 		axios.post.mockResolvedValue(responseValue)
 		await createGroupfolder('foobar')
-		expect(axios.post).toHaveBeenCalledWith('/apps/groupfolders/folders', {
+		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders'), {
 			mountpoint: 'foobar',
 		})
 	})
@@ -308,11 +309,11 @@ describe('destroy', () => {
 
 		await destroy(workspace)
 
-		expect(axios.delete).toHaveBeenCalledWith(`/apps/workspace/spaces/${spaceId}`, {
+		expect(axios.delete).toHaveBeenCalledWith(generateUrl(`/apps/workspace/spaces/${spaceId}`), {
 			data: { workspace },
 		})
 
-		expect(axios.delete).toHaveBeenCalledWith(`/apps/groupfolders/folders/${workspace.groupfolderId}`)
+		expect(axios.delete).toHaveBeenCalledWith(generateUrl(`/apps/groupfolders/folders/${workspace.groupfolderId}`))
 	})
 	it('calls axios.delete 2 times and returns resp.data value', async () => {
 		const mockAxios = axios.delete.mockImplementationOnce(() => Promise.resolve({ status: 200, ...responseValue }))
