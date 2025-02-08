@@ -300,7 +300,7 @@ class SpaceManagerTest extends TestCase {
 
 	public function testWorkspaceAlreadyExist(): void {
 
-		$referenceMessage = "This space or groupfolder already exists. Please, use another space name.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.";
+		$referenceMessage = "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exist, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.";
 		$this->expectException(WorkspaceNameExistException::class);
 		$this->expectExceptionMessage($referenceMessage);
 
