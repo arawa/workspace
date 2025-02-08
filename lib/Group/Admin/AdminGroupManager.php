@@ -41,7 +41,7 @@ class AdminGroupManager {
 		$group = $this->groupManager->get($gid);
 
 		if (is_null($group)) {
-			throw new \Exception("The $gid group is not exist.");
+			throw new \Exception("The $gid group does not exist.");
 		}
 
 		return $group;
