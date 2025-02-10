@@ -131,7 +131,12 @@ class Create extends Command {
 			}
 		}
 
-		$workspace = $this->spaceManager->create($spacename);
+		try {
+			$workspace = $this->spaceManager->create($spacename);
+		} catch(\OCA\Workspace\Exceptions\WorkspaceNameExistException $e) {
+			$output->writeln(sprintf('The space %s already exists', $spacename));
+			$workspace = $this->spaceManager->getByName($spacename);
+		}
 
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$userManagerName = $input->getOption('user-workspace-manager');
@@ -220,8 +225,7 @@ class Create extends Command {
 
 	private function addUserToAdminGroupManager(string $username, array $workspace): bool {
 		$user = $this->userFinder->findUser($username);
-		$groupname = AdminGroupManager::findWorkspaceManager($workspace);
-		$this->adminGroup->addUser($user, $groupname);
+		$this->adminGroup->addUser($user, (int) $workspace['id']);
 
 		return true;
 	}
