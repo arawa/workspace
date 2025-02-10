@@ -76,6 +76,11 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		$avoid = $this->avoidRecurse_groups;
 		$this->avoidRecurse_groups = true;
 		$user = $this->userManager->get($uid);
+
+		if (!$user->isEnabled()) {
+			return [];
+		}
+
 		if ($user) {
 			$groupIds = $this->groupManager->getUserGroupIds($user);
 		} else {
@@ -144,7 +149,9 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		foreach ($groups as $group) {
 			if (!is_null($group)) {
 				foreach ($group->getUsers() as $user) {
-					$users[] = $user->getUID();
+					if ($user->isEnabled()) {
+						$users[] = $user->getUID();
+					}
 				};
 			}
 		}
