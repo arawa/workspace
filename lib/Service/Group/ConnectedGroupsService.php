@@ -43,6 +43,7 @@ class ConnectedGroupsService {
 		private IUserManager $userManager,
 		private GroupFoldersGroupsMapper $mapper,
 		private SpaceMapper $spaceMapper,
+		private UserGroup $userGroup,
 	) {
 	}
 
@@ -158,8 +159,16 @@ class ConnectedGroupsService {
 		return true;
 	}
 
-	public function isUserConnectedGroup(string $uid, int $groupfolderId): bool {
+	public function isUserConnectedGroup(string $uid, array $space): bool {
 
+		$userIsInConnectedGroup = $this->isUserMemberOfConnectedGroup($uid, $space);
+		$userIsInUserGroup = $this->isUserMemberOfUserGroup($uid, $space);
+
+		return $userIsInConnectedGroup && $userIsInUserGroup;
+	}
+
+	private function isUserMemberOfConnectedGroup(string $uid, array $space): bool {
+		$groupfolderId = $space['groupfolder_id'] ?? $space['groupfolderId'];
 		$connectedGroups = $this->mapper->findAddedGroups($groupfolderId);
 
 		if ($connectedGroups === false) {
@@ -167,14 +176,19 @@ class ConnectedGroupsService {
 		}
 		
 		$user = $this->userManager->get($uid);
-		$groups = array_map(fn ($group) => $this->groupManager->get($group->getGid()), $connectedGroups);
+		$groups = array_map(fn ($group) => $this->groupManager->get($group->getGID()), $connectedGroups);
 
-		foreach($groups as $group) {
+		foreach ($groups as $group) {
 			if ($group->inGroup($user)) {
 				return true;
 			}
 		}
-		
+
 		return false;
+	}
+	
+	private function isUserMemberOfUserGroup(string $uid, array $space): bool {
+		$userGroup = $this->userGroup->get($space['id']);
+		return empty($this->mapper->isUserConnectedGroup($uid, $userGroup));
 	}
 }
