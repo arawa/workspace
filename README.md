@@ -2,7 +2,7 @@
 Create shared workspaces and delegate management of their members and groups.
 
 <p align="center">
-<img width="100%" src="./screenshots/workspace-home.png" alt="Workspace Home">
+<img width="100%" src="./screenshots/Workspace-1.png" alt="Workspace Home">
 </p>
 
 Workspace allows managers to :
