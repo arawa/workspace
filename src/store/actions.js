@@ -495,4 +495,14 @@ export default {
 				console.error(error)
 			})
 	},
+	async loadAdmins(context, space) {
+		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
+		axios.get(url)
+			.then(response => {
+				space.managers = response.data
+			})
+			.catch(error => {
+				console.error(error)
+			})
+	},
 }

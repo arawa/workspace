@@ -53,13 +53,16 @@
 						{{ space.quota }}
 					</td>
 					<td class="workspace-td">
-						<div class="admin-avatars">
+						<VueLazyComponent
+							:key="'avatar-'+name"
+							class="admin-avatars"
+							@init="initAdmins(space.id, name)">
 							<NcAvatar v-for="user in workspaceManagers(space)"
 								:key="user.uid"
 								:style="{ marginRight: 2 + 'px' }"
 								:display-name="user.name"
 								:user="user.uid" />
-						</div>
+						</VueLazyComponent>
 					</td>
 				</tr>
 			</tbody>
@@ -76,12 +79,14 @@
 <script>
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 
 export default {
 	name: 'SpaceTable',
 	components: {
 		NcAvatar,
 		NcEmptyContent,
+		VueLazyComponent,
 	},
 	methods: {
 		convertQuotaForFrontend(quota) {
@@ -99,6 +104,9 @@ export default {
 		},
 		// Returns all workspace's managers
 		workspaceManagers(space) {
+			if (space.managers) {
+				return Object.values(space.managers)
+			}
 			return Object.values(space.users).filter((u) => this.$store.getters.isSpaceAdmin(u, space.name))
 		},
 		openSpace(name) {
@@ -109,6 +117,15 @@ export default {
 
 			const space = this.$store.state.spaces[this.$route.params.space]
 			this.$store.dispatch('loadUsers', { space })
+		},
+		initAdmins(id, name) {
+			const space = this.$store.getters.getSpaceById(id)
+			if (space !== null) {
+				if (space.managers !== undefined || space.users.length > 0) {
+					return
+				}
+				this.$store.dispatch('loadAdmins', space)
+			}
 		},
 	},
 }
