@@ -299,8 +299,10 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testWorkspaceAlreadyExist(): void {
+
+		$referenceMessage = "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.";
 		$this->expectException(WorkspaceNameExistException::class);
-		$this->expectExceptionMessage("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist.");
+		$this->expectExceptionMessage($referenceMessage);
 
 		$this->workspaceCheck
 			->expects($this->once())
@@ -314,7 +316,7 @@ class SpaceManagerTest extends TestCase {
 			$this->assertInstanceOf(\Exception::class, $e);
 			$this->assertInstanceOf(AbstractNotification::class, $e);
 			$this->assertEquals('Error - Duplicate space name', $e->getTitle());
-			$this->assertEquals("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist.", $e->getMessage());
+			$this->assertEquals($referenceMessage, $e->getMessage());
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}

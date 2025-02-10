@@ -164,9 +164,9 @@ class WorkspaceController extends Controller {
 
 				if (is_null($group)) {
 					$this->logger->warning(
-						"Be careful, the $gid group is not exist in the oc_groups table."
+						"Be careful, the $gid group does not exist in the oc_groups table."
 						. " But, it's present in the oc_group_folders_groups table."
-						. 'It necessary to recreate it with the occ command.'
+						. " You should recreate it with the occ command."
 					);
 					continue;
 				}

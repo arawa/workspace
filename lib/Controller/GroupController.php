@@ -270,7 +270,7 @@ class GroupController extends Controller {
 		// Makes sure group exist
 		foreach ($gidsStringify as $gid) {
 			if (!$this->groupManager->groupExists($gid)) {
-				throw new \Exception("The $gid group is not exist");
+				throw new \Exception("The $gid group does not exist");
 			}
 		}
 
@@ -356,7 +356,7 @@ class GroupController extends Controller {
 	
 			foreach ($gidsStringify as $gid) {
 				if (!$this->groupManager->groupExists($gid)) {
-					throw new \Exception("The $gid group is not exist");
+					throw new \Exception("The $gid group does not exist");
 				}
 			}
 	
