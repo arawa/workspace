@@ -48,9 +48,7 @@
 					icon="icon-group"
 					:close-after-click="true"
 					:show-trailing-button="true"
-					@submit="onNewWorkspaceGroup">
-					{{ t('workspace', 'Group name') }}
-				</NcActionInput>
+					@submit="onNewWorkspaceGroup" />
 			</template>
 		</NcAppNavigationCaption>
 
@@ -65,9 +63,8 @@
 			<template #actions>
 				<NcActionButton @click="toggleAddGroupModal">
 					<template #icon>
-						<Plus :size="20" />
+						<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
 					</template>
-					{{ t('workspace', 'Add a group') }}
 				</NcActionButton>
 			</template>
 		</NcAppNavigationCaption>
