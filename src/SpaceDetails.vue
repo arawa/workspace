@@ -38,14 +38,16 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcMultiselect :class="isESR ? 'quota-select-esr' : 'quota-select'"
+				<NcSelect v-model="$store.state.spaces[$route.params.space].quota"
+					:class="isESR ? 'quota-select-esr' : 'quota-select'"
+					:clear-search-on-select="false"
+					:taggable="true"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
-					:taggable="true"
-					:value="$store.state.spaces[$route.params.space].quota"
+					:multiple="false"
+					:clearable="false"
 					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
-					@change="setSpaceQuota"
-					@tag="setSpaceQuota" />
+					@option:selected="setSpaceQuota" />
 			</div>
 			<div class="space-actions">
 				<div>
@@ -117,7 +119,7 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
@@ -137,7 +139,7 @@ export default {
 		NcActionInput,
 		NcColorPicker,
 		NcModal,
-		NcMultiselect,
+		NcSelect,
 		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
@@ -314,6 +316,8 @@ export default {
 		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
+			console.debug('setSpaceQuota')
+			console.debug('quota', quota)
 			if (quota === null) {
 				return
 			}
@@ -323,6 +327,8 @@ export default {
 				showNotificationError('Error', text, 3000)
 				return
 			}
+			console.debug('coucou')
+			console.debug('this.$route.params.space', this.$route.params.space)
 			this.$store.dispatch('setSpaceQuota', {
 				name: this.$route.params.space,
 				quota,
