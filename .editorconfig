@@ -7,19 +7,19 @@ end_of_line = lf
 insert_final_newline = true
 
 [lib/**.php]
-indent_style = space
+indent_style = tab
 indent_size = 4
 
 [src/**.js]
-indent_style = space
+indent_style = tab
 indent_size = 2
 
 [src/**.vue]
-indent_style = space
+indent_style = tab
 indent_size = 2
 
 [css/**.css]
-indent_style = space
+indent_style = tab
 indent_size = 2
 
 [Makefile]
