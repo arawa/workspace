@@ -25,7 +25,6 @@
 namespace OCA\Workspace\Commands;
 
 use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminGroupManager;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Group\User\UserGroupManager;
 use OCA\Workspace\Helper\GroupfolderHelper;

@@ -54,8 +54,8 @@ class SpaceMapper extends QBMapper {
 		$query = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-			$qb->expr()->eq('space_name', $qb->createNamedParameter($spacename, $qb::PARAM_STR))
-		);
+				$qb->expr()->eq('space_name', $qb->createNamedParameter($spacename, $qb::PARAM_STR))
+			);
 		return $this->findEntity($query);
 	}
 
