@@ -493,6 +493,9 @@ export default {
 			.catch(error => {
 				console.error('Impossible to get users for the workspace.')
 				console.error(error)
+				showNotificationError(t('workspace', "Can't load workspace users"))
+				context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
 	},
 }
