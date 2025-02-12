@@ -176,7 +176,7 @@ class ConnectedGroupsService {
 		}
 		
 		$user = $this->userManager->get($uid);
-		$groups = array_map(fn ($group) => $this->groupManager->get($group->getGID()), $connectedGroups);
+		$groups = array_map(fn ($group) => $this->groupManager->get($group->getGid()), $connectedGroups);
 
 		foreach ($groups as $group) {
 			if ($group->inGroup($user)) {
