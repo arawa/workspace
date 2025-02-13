@@ -498,4 +498,14 @@ export default {
 				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
 	},
+	async loadAdmins(context, space) {
+		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
+		axios.get(url)
+			.then(response => {
+				context.commit('addSpaceAdminUsers', { name: space.name, managers: response.data })
+			})
+			.catch(error => {
+				console.error(error)
+			})
+	},
 }
