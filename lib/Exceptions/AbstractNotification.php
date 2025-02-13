@@ -32,7 +32,7 @@ abstract class AbstractNotification extends \Exception {
 		 * @var integer from OCP\AppFramework\Http
 		 */
 		int $code,
-        private array $argsMessage = []
+		private array $argsMessage = [],
 	) {
 		parent::__construct($message, $code);
 	}
@@ -41,7 +41,7 @@ abstract class AbstractNotification extends \Exception {
 		return $this->title;
 	}
 
-    public function getArgsMessage(): array {
-        return $this->argsMessage;
-    }
+	public function getArgsMessage(): array {
+		return $this->argsMessage;
+	}
 }
