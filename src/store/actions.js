@@ -499,7 +499,7 @@ export default {
 		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
 		axios.get(url)
 			.then(response => {
-				space.managers = response.data
+				context.commit('addSpaceAdminUsers', {name: space.name, managers: response.data} )
 			})
 			.catch(error => {
 				console.error(error)

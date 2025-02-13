@@ -121,7 +121,7 @@ export default {
 		initAdmins(id, name) {
 			const space = this.$store.getters.getSpaceById(id)
 			if (space !== null) {
-				if (space.managers !== undefined || space.users.length > 0) {
+				if (space.managers !== null || space.users.length > 0) {
 					return
 				}
 				this.$store.dispatch('loadAdmins', space)
