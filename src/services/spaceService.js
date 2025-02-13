@@ -194,8 +194,12 @@ export function renameSpace(spaceId, newSpaceName) {
 		})
 		.catch(error => {
 			if ('response' in error && 'data' in error.response) {
-				showNotificationError(error.response.data.title, error.response.data.message, 5000)
-				throw new Error(error.response.data.message)
+				let text = error.response.data.message
+				if (error.status === 400) {
+					text = text.replace('{args}', error.response.data.args_message[0])
+				}
+				showNotificationError(error.response.data.title, error.response.data.message, 5000, error.response.data.args_message)
+				throw new Error(text)
 			} else {
 				showNotificationError('Error to rename a workspace', error.message, 5000)
 				console.error('Problem to rename the space', error)
