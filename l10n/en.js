@@ -75,6 +75,8 @@ OC.L10N.register(
 		'Space administrators': 'Workspace manager',
 		'Users': 'Users',
 		'user': 'User',
+		'Error to rename the workspace': 'Error to rename the workspace',
+		'Your Workspace name must not contain the following characters: {args}': 'Your Workspace name must not contain the following characters: {args}',
 		'Remove from group': 'Remove from group',
 		'Workspace name': 'Workspace name',
 		'No users': 'No users',
