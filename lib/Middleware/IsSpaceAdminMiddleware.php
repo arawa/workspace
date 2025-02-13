@@ -74,7 +74,7 @@ class IsSpaceAdminMiddleware extends Middleware {
 				'title' => $exception->getTitle(),
 				'statuscode' => $exception->getCode(),
 				'message' => $exception->getMessage(),
-                'args_message' => $exception->getArgsMessage()
+				'args_message' => $exception->getArgsMessage()
 			], $exception->getCode());
 		}
 
