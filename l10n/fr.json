@@ -101,6 +101,8 @@
 	"Workspace groups": "Groupes Workspace",
 	"Added groups": "Groupes ajoutés",
 	"View profile": "Voir le profil",
+	"Error to rename the workspace": "Erreur lors du renommage du workspace",
+	"Your Workspace name must not contain the following characters: {args}": "Le nom de votre Espace de travail ne doit pas contenir les caractères suivants : {args}",
 	"Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>": "Attention, après le retrait du groupe <b>{groupname}</b>, les membres de ce groupe perdront l'accès à l'espace de travail <b>{spacename}</b>, à l'exception : <br><br>- des Gestionnaires d'Espaces (<b>WM-{spacename}</b>)<br>- des utilisateurs membres d'un <b>Groupe Workspace</b> (préfixé <b>G-</b>)<br>- des utilisateurs membres d'un autre Groupe Ajouté<br>- des utilisateurs ajoutés manuellement depuis l'espace de travail <b>{spacename}</b>",
 	"You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota": "Vous devez spécifier le terme \"unlimited\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple: \"5GB\") comme quota.",
 	"There are no users in this space/group yet": "Il n'y a pas encore d'utilisateur dans cet espace de travail",
