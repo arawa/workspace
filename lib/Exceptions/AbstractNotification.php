@@ -26,9 +26,13 @@ namespace OCA\Workspace\Exceptions;
 
 abstract class AbstractNotification extends \Exception {
 	public function __construct(
+		private string $title,
 		string $message,
+		/**
+		 * @var integer from OCP\AppFramework\Http
+		 */
 		int $code,
-		protected string $title = 'Error',
+        private array $argsMessage = []
 	) {
 		parent::__construct($message, $code);
 	}
@@ -36,4 +40,8 @@ abstract class AbstractNotification extends \Exception {
 	public function getTitle(): string {
 		return $this->title;
 	}
+
+    public function getArgsMessage(): array {
+        return $this->argsMessage;
+    }
 }
