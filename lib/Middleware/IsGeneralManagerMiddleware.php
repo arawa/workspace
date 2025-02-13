@@ -65,7 +65,8 @@ class IsGeneralManagerMiddleware extends Middleware {
 			return new JSONResponse([
 				'title' => $exception->getTitle(),
 				'statuscode' => $exception->getCode(),
-				'message' => $exception->getMessage()
+				'message' => $exception->getMessage(),
+				'args_message' => $exception->getArgsMessage()
 			], $exception->getCode());
 		}
 
