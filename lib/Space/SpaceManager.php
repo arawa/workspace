@@ -75,7 +75,7 @@ class SpaceManager {
 			$spacename === null ||
 			$spacename === ''
 		) {
-			throw new BadRequestException('Error creating workspace','spaceName must be provided');
+			throw new BadRequestException('Error creating workspace', 'spaceName must be provided');
 		}
 
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
