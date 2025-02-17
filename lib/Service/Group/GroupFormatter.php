@@ -48,14 +48,19 @@ class GroupFormatter {
 				$backendnames
 			);
 
-			$users = $group->getUsers();
-			$users = array_filter($users, fn ($user) => $user->isEnabled());
+			$usersCount = $group->count();
+
+			if (!str_starts_with($group->getGID(), 'SPACE-')) {
+				$users = $group->getUsers();
+				$users = array_filter($users, fn ($user) => $user->isEnabled());
+				$usersCount = count($users);
+			}
 
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
 				'displayName' => $group->getDisplayName(),
 				'types' => $group->getBackendNames(),
-				'usersCount' => count($users),
+				'usersCount' => $usersCount,
 				'slug' => Slugger::slugger($group->getGID())
 			];
 		}
