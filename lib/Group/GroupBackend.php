@@ -77,10 +77,6 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		$this->avoidRecurse_groups = true;
 		$user = $this->userManager->get($uid);
 
-		if (!$user->isEnabled()) {
-			return [];
-		}
-
 		if ($user) {
 			$groupIds = $this->groupManager->getUserGroupIds($user);
 		} else {
@@ -93,7 +89,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		$userGroups = [];
 		foreach ($groupIds as $gid) {
 			$connectedGids = $this->connectedGroups->getConnectedSpaceToGroupIds($gid);
-			if ($connectedGids !== null) {
+			if ($connectedGids !== null && $user->isEnabled()) {
 				$userGroups = array_merge($userGroups, $connectedGids);
 			}
 		}
