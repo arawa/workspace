@@ -85,6 +85,10 @@ class ConnectedGroupController extends Controller {
 
 
 		foreach ($group->getUsers() as $user) {
+			if (!$user->isEnabled()) {
+				continue;
+			}
+
 			$users[$user->getUID()] = $this->userService->formatUser(
 				$user,
 				$this->spaceManager->get($spaceId),
