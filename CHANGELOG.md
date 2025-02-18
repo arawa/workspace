@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2025-02-18
+
+### Fix
+
+- Display an error message when special characters are used in the workspace name during renaming by @zak39 in https://github.com/arawa/workspace/pull/1125
+- Hide disabled users when adding a connected group and when displaying the group by @zak39 in https://github.com/arawa/workspace/pull/1145, https://github.com/arawa/workspace/pull/1178,  https://github.com/arawa/workspace/pull/1146, https://github.com/arawa/workspace/pull/1161
+
+### Changed
+
+- Change the translation of 'G.E' to 'WM' in the user listing when adding them by @zak39 in https://github.com/arawa/workspace/pull/1143
+- Harmonize the hover effect for the "Add a group" and "Create a workspace group" buttons by @zak39 in https://github.com/arawa/workspace/pull/1147
+- Better handle some load errors by @smarinier in https://github.com/arawa/workspace/pull/1151
+- Load manager avatars in asynchronously with workspaces by @smarinier in https://github.com/arawa/workspace/pull/1155
+- Add user as workspace manager with workspace:create command, even if the workspace already exists by @smarinier in https://github.com/arawa/workspace/pull/1150
+
+
 ## [4.0.0] - 2025-01-23
 
 ### Features
@@ -332,7 +348,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.1...main
+[4.0.1]: https://github.com/arawa/workspace/compare/v4.0.0...4.0.1
 [4.0.0]: https://github.com/arawa/workspace/compare/v3.3.2...4.0.0
 [3.3.2]: https://github.com/arawa/workspace/compare/v3.3.1...3.0.2
 [3.3.1]: https://github.com/arawa/workspace/compare/v3.3.0...3.0.1
