@@ -238,6 +238,15 @@ class WorkspaceController extends Controller {
 
 		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 		
+		if ($groupfolder === false) {
+			return new JSONResponse(
+				[
+					'message' => 'Failed loading groupfolder '.$space->getGroupfolderId(),
+					'success' => false
+				],
+				Http::STATUS_BAD_REQUEST);
+		}
+
 		$workspace = array_merge($groupfolder, $space->jsonSerialize());
 		$users = $this->workspaceService->addUsersInfo($workspace);
 
