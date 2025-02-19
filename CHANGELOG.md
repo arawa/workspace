@@ -80,6 +80,14 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 
 ## [3.2.4] - 2024-11-14
 
+### Added
+
+- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+
+### Changed
+
+- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
+
 ### Fixed
 
 - Backport: Allow the Workspace Manager to attach a group to a workspace ( [#1085](https://github.com/arawa/workspace/pull/1085) )
