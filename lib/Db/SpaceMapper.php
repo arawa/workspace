@@ -47,6 +47,19 @@ class SpaceMapper extends QBMapper {
 	}
 
 	/**
+	 * retrieve a space with its name
+	 */
+	public function findByName($spacename): Space {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('space_name', $qb->createNamedParameter($spacename, $qb::PARAM_STR))
+			);
+		return $this->findEntity($query);
+	}
+
+	/**
 	 * work
 	 * @return Space[]
 	 */
