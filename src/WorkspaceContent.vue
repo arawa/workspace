@@ -81,6 +81,7 @@ export default {
 							quota,
 							users: space.users,
 							userCount: space.userCount,
+							managers: null,
 						})
 					})
 

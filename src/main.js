@@ -27,6 +27,7 @@ import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { Tooltip } from '@nextcloud/vue'
+import VueLazyComponent from '@xunlei/vue-lazy-component'
 
 Vue.mixin({
 	methods: {
@@ -36,6 +37,7 @@ Vue.mixin({
 })
 
 Vue.directive('tooltip', Tooltip)
+Vue.use(VueLazyComponent)
 
 export default new Vue({
 	el: '#content',

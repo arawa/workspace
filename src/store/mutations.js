@@ -99,6 +99,9 @@ export default {
 		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
+	addSpaceAdminUsers(state, space) {
+		state.spaces[space.name].managers = space.managers
+	},
 	UPDATE_USERS(state, { space, users }) {
 		space.users = users
 		VueSet(state.spaces, space.name, space)

@@ -103,6 +103,7 @@ export default {
 				quota: t('workspace', 'unlimited'),
 				users: {},
 				userCount: workspace.userCount,
+				managers: null,
 			})
 			this.$router.push({
 				path: `/workspace/${name}`,
