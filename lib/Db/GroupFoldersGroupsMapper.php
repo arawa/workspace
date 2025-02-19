@@ -117,12 +117,8 @@ class GroupFoldersGroupsMapper extends QBMapper {
 			])
 		;
 
-		$result = $query->executeQuery()->fetch();
-		if ($result === false) {
-			return false;
-		}
-
-		return $this->findEntities($query);
+		$result = $this->findEntities($query);
+		return empty($result) ? false : $result;
 	}
 
 	public function isUserConnectedGroup(string $uid, string $gid): mixed {
