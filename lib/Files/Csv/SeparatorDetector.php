@@ -23,6 +23,8 @@ class SeparatorDetector {
 		$nbPipes = substr_count($lines, '|');
 		$nbSemiColons = substr_count($lines, ';');
 
+		$file->close();
+
 		if (
 			$nbPipes > 0
 			|| $nbSemiColons > 0
