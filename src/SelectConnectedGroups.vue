@@ -19,7 +19,7 @@
 					:append-to-body="false"
 					:user-select="true"
 					@option:selected="addGroupToBatch"
-					@search="lookupGroups"
+					@search="debounceLookGroups"
 					@close="groupsSelectable=[]">
 					<template #no-options>
 						<span />
@@ -73,6 +73,7 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import { generateUrl } from '@nextcloud/router'
+import debounce from 'debounce'
 
 export default {
 	name: 'SelectConnectedGroups',
@@ -101,6 +102,9 @@ export default {
 				return g.displayName !== group.displayName
 			})
 		},
+		debounceLookGroups: debounce(function(term) {
+			this.lookupGroups(term)
+		}, 500),
 		lookupGroups(term) {
 			if (term === undefined || term === '') {
 				return
