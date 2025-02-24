@@ -458,7 +458,7 @@ class GroupController extends Controller {
 				IShare::TYPE_GROUP
 			],
 			false,
-			200,
+			30,
 			0
 		);
 		
