@@ -232,6 +232,7 @@ class SpaceManagerTest extends TestCase {
 			$space,
 			[
 				'name' => 'Espace01',
+				'id' => null,
 				'id_space' => null,
 				'folder_id' => 1,
 				'color' => '#a50b1c',
