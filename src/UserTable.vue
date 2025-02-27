@@ -120,6 +120,7 @@ import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
+import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 
 export default {
 	name: 'UserTable',
@@ -129,6 +130,7 @@ export default {
 		NcActionButton,
 		NcEmptyContent,
 		AccountCog,
+		VueLazyComponent,
 	},
 	data() {
 		return {
