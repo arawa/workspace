@@ -43,7 +43,10 @@
 					:key="user.uid"
 					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
 					<td class="avatar workspace-td">
-						<NcAvatar :display-name="user.name" :user="user.uid" />
+						<VueLazyComponent
+							:key="'avatar-'+user.uid">
+							<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
+						</VueLazyComponent>
 					</td>
 					<td class="workspace-td user-info">
 						<div class="user-name">
