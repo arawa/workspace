@@ -183,6 +183,11 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'workspace#getAdmins',
+			'url' => '/space/{spaceId}/admin-users',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'group#removeUserFromWorkspace',
 			'url' => '/spaces/{spaceId}/users/{user}/groups',
 			'verb' => 'PATCH',

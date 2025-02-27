@@ -196,11 +196,6 @@ class WorkspaceController extends Controller {
 					$space['userCount'] = $group->count();
 				}
 
-				if (str_starts_with($gid, 'SPACE-GE')) {
-					$users = $group->getUsers();
-					$space['users'] = $this->userFormatter->formatUsers($users, $folderInfo, (string)$space['id']);
-				}
-
 				$space['users'] = (object)$space['users'];
 			}
 
@@ -242,6 +237,39 @@ class WorkspaceController extends Controller {
 		$users = $this->workspaceService->addUsersInfo($workspace);
 
 		return new JSONResponse($users);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function getAdmins(int $spaceId): JSONResponse {
+
+		$space = $this->spaceMapper->find($spaceId);
+
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		if ($groupfolder === false) {
+			return new JSONResponse(
+				[
+					'message' => 'Failed loading groupfolder '.$space->getGroupfolderId(),
+					'success' => false
+				],
+				Http::STATUS_BAD_REQUEST);
+		}
+
+		$adminUsers = [];
+		foreach($groupfolder['groups'] as $gid => $groupInfo) {
+			if (str_starts_with($gid, 'SPACE-GE')) {
+				$group = $this->groupManager->get($gid);
+				if ($group !== null) {
+					$users = $group->getUsers();
+					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string) $spaceId);
+				}
+				break;
+			}
+		}
+
+		return new JSONResponse($adminUsers);
 	}
 	
 	/**

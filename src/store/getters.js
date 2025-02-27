@@ -45,6 +45,9 @@ export const getters = {
 	getSpaceUserCount: state => (name) => {
 		return state.spaces[name].userCount
 	},
+	getSpaceById: state => (spaceId) => {
+		return Object.values(state.spaces).find((space) => space.id === spaceId)
+	},
 	// Returns the number of users in a group
 	groupUserCount: state => (spaceName, gid) => {
 		const users = state.spaces[spaceName].users
