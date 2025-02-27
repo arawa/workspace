@@ -115,9 +115,6 @@ export default {
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})
-
-			const space = this.$store.state.spaces[this.$route.params.space]
-			this.$store.dispatch('loadUsers', { space })
 		},
 		initAdmins(id, name) {
 			const space = this.$store.getters.getSpaceById(id)
