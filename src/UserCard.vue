@@ -23,7 +23,7 @@
 	<div class="user-card">
 		<div class="avatar">
 			<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-			<NcAvatar :display-name="user.name" :user="user.uid" />
+			<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
 			<div class="user-name">
 				<span>{{ user.name }}</span>
 			</div>

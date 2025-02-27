@@ -61,6 +61,7 @@
 								:key="user.uid"
 								:style="{ marginRight: 2 + 'px' }"
 								:display-name="user.name"
+								:show-user-status="false"
 								:user="user.uid" />
 						</VueLazyComponent>
 					</td>
@@ -157,7 +158,7 @@ export default {
 }
 
 td, td div {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 </style>
