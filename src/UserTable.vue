@@ -45,7 +45,7 @@
 					<td class="avatar workspace-td">
 						<VueLazyComponent
 							:key="'avatar-'+user.uid">
-							<NcAvatar :display-name="user.name" :user="user.uid" />
+							<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
 						</VueLazyComponent>
 					</td>
 					<td class="workspace-td user-info">
