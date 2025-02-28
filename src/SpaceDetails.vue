@@ -161,8 +161,12 @@ export default {
 		},
 	},
 	mounted() {
-		const space = this.$store.state.spaces[this.$route.params.space]
-		this.$store.dispatch('loadUsers', { space })
+		setTimeout(function() {
+			const space = this.$store.state.spaces[this.$route.params.space]
+			if (Object.keys(space.users).length === 0) {
+				this.$store.dispatch('loadUsers', { space })
+			}
+		}, 500)
 	},
 	created() {
 		const version = navigator.userAgent.split('Firefox/')[1]
