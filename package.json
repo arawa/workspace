@@ -88,6 +88,7 @@
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/vue": "^7.12.1",
     "@xunlei/vue-lazy-component": "^1.1.3",
+    "debounce": "^2.2.0",
     "ramda": "^0.29.1",
     "vue": "^2.7.13",
     "vue-material-design-icons": "^5.2.0",
