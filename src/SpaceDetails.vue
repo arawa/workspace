@@ -158,7 +158,11 @@ export default {
 			return this.$route.params.space
 		},
 	},
-	mounted() {
+	beforeMount() {
+		const space = this.$store.state.spaces[this.$route.params.space]
+		this.$store.dispatch('loadUsers', { space })
+	},
+	beforeUpdate() {
 		const space = this.$store.state.spaces[this.$route.params.space]
 		this.$store.dispatch('loadUsers', { space })
 	},
