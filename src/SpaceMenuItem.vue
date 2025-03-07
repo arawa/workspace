@@ -25,8 +25,7 @@
 		:allow-collapse="true"
 		:open="$route.params.space === spaceName"
 		:name="spaceName"
-		:to="{path: `/workspace/${spaceName}`}"
-		@click="loadUsers(spaceName)">
+		:to="{path: `/workspace/${spaceName}`}">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.getSpaceUserCount(spaceName) }}
