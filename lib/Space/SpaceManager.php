@@ -133,6 +133,7 @@ class SpaceManager {
 
 		return [
 			'name' => $space->getSpaceName(),
+			'id' => $space->getId(),
 			'id_space' => $space->getId(),
 			'folder_id' => $space->getGroupfolderId(),
 			'color' => $space->getColorCode(),
@@ -153,8 +154,12 @@ class SpaceManager {
 
 		$space = $this->spaceMapper->find($spaceId);
 		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		if ($groupfolder === false) {
+			return [];
+		}
 
 		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
+		$workspace['id'] = $space->getSpaceId();
 
 		$folderInfo = $this->folderHelper->getFolder(
 			$workspace['groupfolder_id'],
@@ -176,6 +181,14 @@ class SpaceManager {
 		$workspace['added_groups'] = (object)$this->addedGroups->getGroupsFormatted($gids);
 
 		return $workspace;
+	}
+
+	public function getByName(string $spacename): array {
+		$space = $this->spaceMapper->findByName($spacename);
+		if ($space === null) {
+			return [];
+		}
+		return $this->get($space->getSpaceId());
 	}
 
 	public function attachGroup(int $folderId, string $gid): void {
