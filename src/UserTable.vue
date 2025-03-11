@@ -121,6 +121,7 @@ import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
+import { getLocale } from '@nextcloud/l10n'
 
 export default {
 	name: 'UserTable',
@@ -172,6 +173,7 @@ export default {
 		sortGroups(groups) {
 			const spacename = this.$route.params.space
 			const groupsSorted = this.sortedGroups([...groups], spacename)
+			console.debug('groupsSorted', groupsSorted)
 			return groupsSorted.map(group => this.$store.getters.groupName(spacename, group)).join(', ')
 		},
 		sortedGroups(groups, spacename) {
@@ -195,7 +197,18 @@ export default {
 					return 1
 				}
 
-				return -1
+				// Normal locale based sort
+				// Some javascript engines don't support localCompare's locales
+				// and options arguments.
+				// This is especially the case of the mocha test framework
+				try {
+					return groupCurrent.localeCompare(groupNext, getLocale(), {
+						sensitivity: 'base',
+						ignorePunctuation: true,
+					})
+				} catch (e) {
+					return groupCurrent.localeCompare(groupNext)
+				}
 			})
 			return groups
 		},
