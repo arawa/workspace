@@ -170,12 +170,11 @@ class ConnectedGroupsService {
 	private function isUserMemberOfConnectedGroup(string $uid, array $space): bool {
 		if (isset($space['groupfolder_id'])) {
 			$groupfolderId = $space['groupfolder_id'];
-		} else
-		if (isset($space['groupfolderId'])) {
+		} elseif (isset($space['groupfolderId'])) {
 			$groupfolderId = $space['groupfolderId'];
-		}
-		else
+		} else {
 			$groupfolderId = 0;
+		}
 
 		$connectedGroups = $groupfolderId ? $this->mapper->findAddedGroups($groupfolderId) : false;
 
