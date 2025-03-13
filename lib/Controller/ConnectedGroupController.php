@@ -77,6 +77,7 @@ class ConnectedGroupController extends Controller {
 		}
 		
 		$space = $this->spaceMapper->find($spaceId);
+		$spaceArray = $this->spaceManager->get($spaceId);
 
 		$this->folderHelper->addApplicableGroup(
 			$space->getGroupfolderId(),
@@ -91,7 +92,7 @@ class ConnectedGroupController extends Controller {
 
 			$users[$user->getUID()] = $this->userService->formatUser(
 				$user,
-				$this->spaceManager->get($spaceId),
+				$spaceArray,
 				'user'
 			);
 		};

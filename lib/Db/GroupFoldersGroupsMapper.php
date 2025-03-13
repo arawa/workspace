@@ -26,6 +26,7 @@ namespace OCA\Workspace\Db;
 
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
+use PDO;
 
 class GroupFoldersGroupsMapper extends QBMapper {
 	protected $db;
@@ -124,22 +125,26 @@ class GroupFoldersGroupsMapper extends QBMapper {
 		return empty($result) ? false : $result;
 	}
 
-	public function isUserConnectedGroup(string $uid, string $gid): mixed {
+	/**
+	 * Return all userids from DB user group
+	 *
+	 * @param string $gid
+	 * @return array userids
+	 */
+	public function getStrictSpaceUserIds(string $gid): array {
+
 		$qb = $this->db->getQueryBuilder();
 
 		$query = $qb
-			->select('*')
+			->select('uid')
 			->from('group_user')
-			->where('uid = :uid')
-			->andWhere('gid = :gid')
+			->where('gid = :gid')
 			->setParameters([
-				'uid' => $uid,
 				'gid' => $gid
 			])
 		;
 
 		$res = $query->executeQuery();
-
-		return $res->fetch();
+		return $res->fetchAll(PDO::FETCH_COLUMN);
 	}
 }
