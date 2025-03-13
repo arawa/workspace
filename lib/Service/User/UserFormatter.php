@@ -47,6 +47,7 @@ class UserFormatter {
 	 */
 	public function formatUsers(array $users, array $groupfolder, string $spaceId): array {
 		$groupWorkspaceManager = $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId);
+		$spaceUserGid = UserGroup::get($spaceId);
 
 		$usersFormatted = [];
 		foreach ($users as $user) {
@@ -56,7 +57,7 @@ class UserFormatter {
 				$role = Roles::User;
 			}
 
-			$isConnected = $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $groupfolder);
+			$isStrictSpaceUser = $this->connectedGroupsService->isStrictSpaceUser($user->getUID(), $spaceUserGid);
 
 			$usersFormatted[$user->getUID()] = [
 				'uid' => $user->getUID(),
@@ -64,7 +65,7 @@ class UserFormatter {
 				'email' => $user->getEmailAddress(),
 				'subtitle' => $user->getEmailAddress(),
 				'groups' => $this->groupsWorkspace->getGroupsUserFromGroupfolder($user, $groupfolder, $spaceId),
-				'is_connected' => $isConnected,
+				'is_connected' => !$isStrictSpaceUser,
 				'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 				'role' => $role
 			];

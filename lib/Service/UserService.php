@@ -73,7 +73,7 @@ class UserService {
 		$groups = [];
 
 		if (!isset($space['groups'])) {
-			throw new \Exception('The "groups" key is not presetn');
+			throw new \Exception('The "groups" key is not present');
 		}
 
 		if (!is_array($space['groups'])) {
@@ -86,7 +86,7 @@ class UserService {
 			}
 		}
 
-		$isConnected = $this->connectedGroups->isUserConnectedGroup($user->getUID(), $space);
+		$isStrictSpaceUser = $this->connectedGroups->isStrictSpaceUser($user->getUID(), UserGroup::get($space['id']));
 
 		return [
 			'uid' => $user->getUID(),
@@ -95,7 +95,7 @@ class UserService {
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'role' => $role,
-			'is_connected' => $isConnected,
+			'is_connected' => !$isStrictSpaceUser,
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}
