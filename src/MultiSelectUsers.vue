@@ -64,10 +64,12 @@ export default {
 		}
 	},
 	mounted() {
-		const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
-		this.$nextTick(() => {
-			inputElement.focus()
-		})
+		setTimeout(() => {
+			const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
+			this.$nextTick(() => {
+				inputElement.focus()
+			})
+		}, 100)
 	},
 	methods: {
 		// Adds user to the batch when user selects user in the MultiSelect
