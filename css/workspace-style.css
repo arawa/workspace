@@ -94,6 +94,37 @@ tbody > .workspace-tr:hover {
 	visibility: visible !important;
 }
 
+:root {
+	--original-icon-added-group-white: url('../img/added_group_white.svg');
+	--original-icon-added-group-dark: url('../img/added_group_black.svg');
+}
+
+body {
+	--icon-added-group-white: var(--original-icon-added-group-white);
+	--icon-added-group-dark: var(--original-icon-added-group-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		--icon-added-group-white: var(--original-icon-added-group-dark);
+		--icon-added-group-dark: var(--original-icon-added-group-white);
+	}
+}
+
+[data-themes*=light] {
+	--icon-added-group-dark: var(--original-icon-added-group-dark);
+	--icon-added-group-white: var(--original-icon-added-group-white);
+}
+
+[data-themes*=dark] {
+	--icon-added-group-dark: var(--original-icon-added-group-white);
+	--icon-added-group-white: var(--original-icon-added-group-dark);
+}
+
+body .icon-added-group, body .icon-added-group-dark {
+	background-image: var(--icon-added-group-dark);
+}
+
 .icon-added-group, .icon-added-group-dark {
 	background-image: url('../img/added_group_black.svg');
 	min-width: 42px;
