@@ -88,10 +88,22 @@ class GroupFoldersGroupsMapper extends QBMapper {
 					'gf_groups.folder_id'
 				)
 			)
+			->innerJoin(
+				'gf_groups',
+				'groups',
+				'g',
+				$qb->expr()->eq(
+					'gf_groups.group_id',
+					'g.gid'
+				)
+			)
 			->where('group_id not like :wmGroup') // G and GE
 			->andWhere('group_id not like :uGroup')
+			->andWhere('displayname not like :displayname')
 			->setParameter('wmGroup', 'SPACE-G%')
-			->setParameter('uGroup', 'SPACE-U%');
+			->setParameter('uGroup', 'SPACE-U%')
+			->setParameter('displayname', 'G-%')
+		;
 
 		return $this->findEntities($query);
 	}
@@ -110,14 +122,25 @@ class GroupFoldersGroupsMapper extends QBMapper {
 					'gf_groups.folder_id'
 				)
 			)
+			->innerJoin(
+				'gf_groups',
+				'groups',
+				'g',
+				$qb->expr()->eq(
+					'gf_groups.group_id',
+					'g.gid'
+				)
+			)
 			->where('group_id not like :wmGroup')
 			->andWhere('group_id not like :uGroup')
 			->andWhere('folder_id = :folderId')
+			->andWhere('displayname not like :displayname')
 			->setParameters([
 				'wmGroup' => 'SPACE-G%',
 				'uGroup' => 'SPACE-U%',
 				'folderId' => $groupfolderId
 			])
+			->setParameter('displayname', 'G-%')
 		;
 
 		$result = $query->executeQuery()->fetch();
