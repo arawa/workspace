@@ -166,7 +166,7 @@ class WorkspaceController extends Controller {
 					$this->logger->warning(
 						"Be careful, the $gid group does not exist in the oc_groups table."
 						. " But, it's present in the oc_group_folders_groups table."
-						. " You should recreate it with the occ command."
+						. ' You should recreate it with the occ command.'
 					);
 					continue;
 				}
@@ -177,7 +177,7 @@ class WorkspaceController extends Controller {
 			$gids = array_keys($space['groups'] ?? []);
 			$groups = [];
 
-			$gids = array_filter($gids, function ($gid)  {
+			$gids = array_filter($gids, function ($gid) {
 				$group = $this->groupManager->get($gid);
 				return str_starts_with($group->getGID(), 'SPACE-') || str_starts_with($group->getDisplayName(), 'G-');
 			});
@@ -254,19 +254,19 @@ class WorkspaceController extends Controller {
 		if ($groupfolder === false) {
 			return new JSONResponse(
 				[
-					'message' => 'Failed loading groupfolder '.$space->getGroupfolderId(),
+					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
 					'success' => false
 				],
 				Http::STATUS_BAD_REQUEST);
 		}
 
 		$adminUsers = [];
-		foreach($groupfolder['groups'] as $gid => $groupInfo) {
+		foreach ($groupfolder['groups'] as $gid => $groupInfo) {
 			if (str_starts_with($gid, 'SPACE-GE')) {
 				$group = $this->groupManager->get($gid);
 				if ($group !== null) {
 					$users = $group->getUsers();
-					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string) $spaceId);
+					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string)$spaceId);
 				}
 				break;
 			}
