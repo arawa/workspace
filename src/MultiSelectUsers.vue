@@ -35,7 +35,9 @@
 			@option:selected="addUserToBatch"
 			@close="selectableUsers=[]"
 			@search="lookupUsers">
-			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
+			<template #no-options>
+				<span />
+			</template>
 		</NcSelect>
 	</div>
 </template>
@@ -141,7 +143,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .select-users-input {
 	width: 80%;
 }
