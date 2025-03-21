@@ -22,6 +22,7 @@ OC.L10N.register(
 		'Error in file format': 'Erreur dans le format de fichier',
 		'Error in the table header': 'Erreur dans l\'en-tête',
 		'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.': "Attention, les utilisateurs surlignés en rouge ne sont pas encore membres du workspace. Ils seront ajoutés automatiquement à ce dernier.",
+		'Workspace counting error': 'Erreur dans le comptage des workspaces',
 		'Email address doesn\'t unique': 'L\'adresse email n\'est pas unique',
 		'The %s email address is duplicated in your instance. Impossible to know which users choice or maybe is an error.': 'L\'adresse email %s est dupliquée dans votre instance. Impossible de savoir quels utilisateurs choisir ou peut-être qu\'il y a une erreur.',
 		'or': 'ou',

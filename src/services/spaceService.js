@@ -209,3 +209,17 @@ export function renameSpace(spaceId, newSpaceName) {
 
 	return respFormatFinal
 }
+
+/**
+ * @return Promise
+ */
+export function countWorkspaces() {
+	return axios.get(generateUrl('/apps/workspace/spaces/count'))
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			showNotificationError('Workspace counting error', error.response.data.message, 5000)
+			console.error('Workspace counting error', error)
+		})
+}
