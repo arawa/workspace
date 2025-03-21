@@ -198,6 +198,17 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
+    /**
+     * @NoAdminRequired
+     */
+    public function countWorkspaces(): JSONResponse {
+        $count = $this->spaceMapper->countSpaces();
+
+        return new JSONResponse([
+            'count' => $count
+        ]);
+    }
+
 	/**
 	 * @NoAdminRequired
 	 */

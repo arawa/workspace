@@ -74,6 +74,23 @@ class SpaceMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
+	public function countSpaces(): int
+	{
+		$qb = $this->db->getQueryBuilder();
+
+		$qb
+			->selectAlias($qb->createFunction('COUNT(*)'), 'count')
+			->from($this->getTableName())
+		;
+
+		$res = $qb
+			->executeQuery()
+			->fetch()
+		;
+
+		return (int)$res['count'];
+	}
+
 	/**
 	 * @deprecated
 	 * @see WorkspaceController->destroy().
