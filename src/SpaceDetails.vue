@@ -187,6 +187,7 @@ export default {
 						})
 					}
 				})
+			this.$store.dispatch('decrementCountWorkspaces')
 		},
 		onNewGroup(e) {
 			// Hides ActionInput

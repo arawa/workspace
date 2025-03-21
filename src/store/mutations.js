@@ -127,6 +127,18 @@ export default {
 		space.userCount++
 		VueSet(state.spaces, spaceName, space)
 	},
+	SET_COUNT_WORKSPACES(state, { count }) {
+		state.countWorkspaces = count
+	},
+	INCREMENT_COUNT_WORKSPACES(state) {
+		state.countWorkspaces++
+	},
+	DECREMENT_COUNT_WORKSPACES(state) {
+		if (state.countWorkspaces === 0) {
+			return
+		}
+		state.countWorkspaces--
+	},
 	DECREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
 		space.groups[gid].usersCount--
