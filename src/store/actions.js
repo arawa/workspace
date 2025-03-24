@@ -358,7 +358,9 @@ export default {
 	},
 	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
 		const space = context.state.spaces[name]
-		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${group.gid}`))
+		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups`), {
+			gid: group.gid,
+		})
 			.then(resp => {
 				context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
 				const users = resp.data.users
