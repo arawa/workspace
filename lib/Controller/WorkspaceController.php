@@ -224,16 +224,16 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
-    /**
-     * @NoAdminRequired
-     */
-    public function countWorkspaces(): JSONResponse {
-        $count = $this->spaceMapper->countSpaces();
+	/**
+	 * @NoAdminRequired
+	 */
+	public function countWorkspaces(): JSONResponse {
+		$count = $this->spaceMapper->countSpaces();
 
-        return new JSONResponse([
-            'count' => $count
-        ]);
-    }
+		return new JSONResponse([
+			'count' => $count
+		]);
+	}
 
 	/**
 	 * @NoAdminRequired
@@ -271,19 +271,19 @@ class WorkspaceController extends Controller {
 		if ($groupfolder === false) {
 			return new JSONResponse(
 				[
-					'message' => 'Failed loading groupfolder '.$space->getGroupfolderId(),
+					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
 					'success' => false
 				],
 				Http::STATUS_BAD_REQUEST);
 		}
 
 		$adminUsers = [];
-		foreach($groupfolder['groups'] as $gid => $groupInfo) {
+		foreach ($groupfolder['groups'] as $gid => $groupInfo) {
 			if (str_starts_with($gid, 'SPACE-GE')) {
 				$group = $this->groupManager->get($gid);
 				if ($group !== null) {
 					$users = $group->getUsers();
-					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string) $spaceId);
+					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string)$spaceId);
 				}
 				break;
 			}
