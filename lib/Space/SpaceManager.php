@@ -164,16 +164,29 @@ class SpaceManager {
 			$folderInfo,
 			$workspace
 		) : $workspace;
-		
+
+		$wsGroups = [];
+		$addedGroups = [];
 		$gids = array_keys($workspace['groups'] ?? []);
+		foreach ($gids as $gid) {
+			$group = $this->groupManager->get($gid);
+			if (is_null($group)) {
+				continue;
+			}
+			if (UserGroup::isWorkspaceGroup($group)) {
+				$wsGroups[] = $group;
+			} else {
+				$addedGroups[] = $group;
+			}
 
-		$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
-
-		$workspace['userCount'] = $this->userWorkspaceGroup->count($space->getSpaceId());
+			if (UserGroup::isWorkspaceUserGroupId($gid)) {
+				$workspace['userCount'] = $group->count();
+			}
+		}
 
 		$workspace['users'] = $this->adminGroup->getUsersFormatted($folderInfo, $space);
-		$workspace['groups'] = $this->subGroup->getGroupsFormatted($gids);
-		$workspace['added_groups'] = (object)$this->addedGroups->getGroupsFormatted($gids);
+		$workspace['groups'] = GroupFormatter::formatGroups($wsGroups);
+		$workspace['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
 		return $workspace;
 	}

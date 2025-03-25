@@ -50,7 +50,7 @@ class GroupFormatter {
 
 			$usersCount = $group->count();
 
-			if (!str_starts_with($group->getGID(), 'SPACE-')) {
+			if (!UserGroup::isWorkspaceGroup($group)) {
 				$users = $group->getUsers();
 				$users = array_filter($users, fn ($user) => $user->isEnabled());
 				$usersCount = count($users);
