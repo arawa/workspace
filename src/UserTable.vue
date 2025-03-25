@@ -171,7 +171,7 @@ export default {
 			}
 			// old legacy local G-
 			const groupName = this.$store.getters.groupName(this.$route.params.space, this.$route.params.slug)
-			return groupName.startsWith('G-');
+			return groupName.startsWith('G-')
 		},
 	},
 	methods: {
