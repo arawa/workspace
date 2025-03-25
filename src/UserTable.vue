@@ -165,8 +165,13 @@ export default {
 				}
 			})
 		},
-		isSubgoup() {
-			return this.$route.params.slug.startsWith('SPACE-G-')
+		isSubgroup() {
+			if (this.$route.params.slug.startsWith('SPACE-G-')) {
+				return true
+			}
+			// old legacy local G-
+			const groupName = this.$store.getters.groupName(this.$route.params.space, this.$route.params.slug)
+			return groupName.startsWith('G-')
 		},
 	},
 	methods: {
