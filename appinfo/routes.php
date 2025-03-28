@@ -94,7 +94,7 @@ return [
 		],
 		[
 			'name' => 'connectedGroup#addGroup',
-			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
+			'url' => '/spaces/{spaceId}/connected-groups',
 			'verb' => 'POST',
 		],
 		[
