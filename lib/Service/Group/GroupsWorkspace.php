@@ -33,6 +33,7 @@ abstract class GroupsWorkspace {
 	private const GID_SPACE = 'SPACE-';
 	public const DEFAULT_DISPLAY_PREFIX_MANAGER_GROUP = 'WM-';
 	public const DEFAULT_DISPLAY_PREFIX_USER_GROUP = 'U-';
+	public const LEGACY_DISPLAY_PREFIX_LOCAL_GROUP = 'G-';
 
 	protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
 	protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
@@ -51,6 +52,19 @@ abstract class GroupsWorkspace {
 
 	public static function getDisplayPrefixUserGroup(): string {
 		return self::$DISPLAY_PREFIX_USER_GROUP;
+	}
+
+	public static function isWorkspaceUserGroupId(string $gid): bool {
+		return str_starts_with($gid, self::PREFIX_GID_USERS);
+	}
+
+	public static function isWorkspaceAdminGroupId(string $gid): bool {
+		return str_starts_with($gid, self::PREFIX_GID_MANAGERS);
+	}
+
+	public static function isWorkspaceGroup(IGroup $group) {
+		return str_starts_with($group->getGID(), self::GID_SPACE)
+			|| str_starts_with($group->getDisplayName(), self::LEGACY_DISPLAY_PREFIX_LOCAL_GROUP);
 	}
 
 	/**

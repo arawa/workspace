@@ -161,9 +161,7 @@ class GroupController extends Controller {
 		int $spaceId): JSONResponse {
 		$groups = $this->groupManager->search($newGroupName);
 		$groups = array_filter($groups, function ($group) {
-			return str_starts_with($group->getGID(), 'SPACE-GE-')
-				|| str_starts_with($group->getGID(), 'SPACE-U-')
-				|| str_starts_with($group->getGID(), 'SPACE-G-');
+			return UserGroup::isWorkspaceGroup($group);
 		});
 
 		$groupsNameSearched = array_map(
@@ -324,14 +322,14 @@ class GroupController extends Controller {
 			throw new \Exception("The $NcUser->getUID() user is not present in the $group->getGID() group.");
 		}
 	
-		if ((str_starts_with($group->getGID(), 'SPACE-U'))
+		if (UserGroup::isWorkspaceUserGroupId($group->getGID())
 			&& !$cascade) {
 			throw new \Exception("You must define cascade to true as parameter in the request to remove the user from $group->getGID() group.");
 		}
 	
 		$groupnames = [];
 
-		if (str_starts_with($group->getGID(), 'SPACE-GE')) {
+		if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())) {
 			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
 				$this->userService->removeGEFromWM($NcUser);
 				$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
@@ -480,9 +478,7 @@ class GroupController extends Controller {
 			$groups = array_filter($groups, function ($group) {
 				$gid = $group->getGID();
 
-				return !str_starts_with($gid, WorkspaceManagerGroup::getPrefix())
-					&& !str_starts_with($gid, UserGroup::getPrefix())
-					&& !str_starts_with($gid, 'SPACE-G')
+				return !UserGroup::isWorkspaceGroup($group)
 					&& $gid !== ManagersWorkspace::GENERAL_MANAGER
 					&& $gid !== ManagersWorkspace::WORKSPACES_MANAGERS;
 			});
