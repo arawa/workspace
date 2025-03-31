@@ -37,6 +37,7 @@ const store = new Store({
 		loadingUsersWaitting: false,
 		spaces: {},
 		groupfolders: {},
+		countWorkspaces: 0,
 	},
 	mutations,
 	actions,
