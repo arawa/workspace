@@ -77,6 +77,7 @@ class ConnectedGroupController extends Controller {
 		}
 		
 		$space = $this->spaceMapper->find($spaceId);
+		$spaceArray = $this->spaceManager->get($spaceId);
 
 		$this->folderHelper->addApplicableGroup(
 			$space->getGroupfolderId(),
