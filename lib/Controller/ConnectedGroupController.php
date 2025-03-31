@@ -62,7 +62,7 @@ class ConnectedGroupController extends Controller {
 
 		$group = $this->groupManager->get($gid);
 
-		if (str_starts_with($group->getGID(), 'SPACE-')) {
+		if (UserGroup::isWorkspaceGroup($group)) {
 			$message = sprintf('The group %s cannot be added, as it is already a workspace group', $gid);
 
 			$this->logger->error($message);
@@ -85,6 +85,7 @@ class ConnectedGroupController extends Controller {
 		);
 
 
+		$dataSpace = $this->spaceManager->get($spaceId);
 		foreach ($group->getUsers() as $user) {
 			if (!$user->isEnabled()) {
 				continue;
@@ -92,14 +93,14 @@ class ConnectedGroupController extends Controller {
 
 			$users[$user->getUID()] = $this->userService->formatUser(
 				$user,
-				$spaceArray,
+				$dataSpace,
 				'user'
 			);
 		};
 
 		foreach ($users as &$user) {
 			if (array_key_exists('groups', $user) && $user['is_connected'] === true) {
-				array_push($user['groups'], 'SPACE-U-' . $space->getSpaceId());
+				array_push($user['groups'], UserGroup::get($space->getSpaceId()));
 			}
 		}
 
@@ -138,9 +139,9 @@ class ConnectedGroupController extends Controller {
 
 		$group = $this->groupManager->get($gid);
 
-		if (str_starts_with($group->getGID(), 'SPACE-')) {
+		if (UserGroup::isWorkspaceGroup($group)) {
 			
-			$message = sprintf('The %s group is not authorized to remove.', $gid);
+			$message = sprintf('You %s group is not authorized to be removed.', $gid);
 
 			$this->logger->error($message);
 			

@@ -156,30 +156,10 @@ class WorkspaceController extends Controller {
 			) : $workspace;
 
 			$gids = array_keys($space['groups'] ?? []);
+			$wsGroups = [];
+			$space['users'] = (object) [];
+			$addedGroups = [];
 
-			$groups = [];
-
-			foreach ($gids as $gid) {
-				$group = $this->groupManager->get($gid);
-
-				if (is_null($group)) {
-					$this->logger->warning(
-						"Be careful, the $gid group is not exist in the oc_groups table."
-						. " But, it's present in the oc_group_folders_groups table."
-						. 'It necessary to recreate it with the occ command.'
-					);
-					continue;
-				}
-
-				$groups[] = $group;
-			}
-
-			$gids = array_keys($space['groups'] ?? []);
-			$groups = [];
-
-			$gids = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-'));
-
-			$space['users'] = [];
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
 				if (is_null($group)) {
@@ -190,24 +170,18 @@ class WorkspaceController extends Controller {
 					);
 					continue;
 				}
-				$groups[] = $group;
+				if (UserGroup::isWorkspaceGroup($group)) {
+					$wsGroups[] = $group;
+				} else {
+					$addedGroups[] = $group;
+				}
 
-				if (str_starts_with($gid, 'SPACE-U-')) {
+				if (UserGroup::isWorkspaceUserGroupId($gid)) {
 					$space['userCount'] = $group->count();
 				}
-
-				$space['users'] = (object)$space['users'];
 			}
 
-			$addedGroups = [];
-			foreach ($gids as $gid) {
-				$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
-				if ($addedToGroup !== null) {
-					$addedGroups = array_merge($addedGroups, $addedToGroup);
-				}
-			}
-
-			$space['groups'] = GroupFormatter::formatGroups($groups);
+			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
 			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
 			$spaces[] = $space;
@@ -268,7 +242,7 @@ class WorkspaceController extends Controller {
 
 		$adminUsers = [];
 		foreach($groupfolder['groups'] as $gid => $groupInfo) {
-			if (str_starts_with($gid, 'SPACE-GE')) {
+			if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($gid)) {
 				$group = $this->groupManager->get($gid);
 				if ($group !== null) {
 					$users = $group->getUsers();

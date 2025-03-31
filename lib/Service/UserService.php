@@ -157,7 +157,7 @@ class UserService {
 		$groups = $this->groupManager->getUserGroups($user);
 		$allManagersGroups = array_filter(
 			$groups,
-			fn ($group) => str_starts_with($group->getGID(), 'SPACE-GE')
+			fn ($group) => WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())
 		);
 
 		$canRemove = count($allManagersGroups) >= 0 && count($allManagersGroups) <= 1 ? true : false;

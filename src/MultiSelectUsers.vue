@@ -35,7 +35,9 @@
 			@option:selected="addUserToBatch"
 			@close="selectableUsers=[]"
 			@search="lookupUsers">
-			<span slot="noOptions">{{ t('workspace', 'No username matches your current entry.') }}</span>
+			<template #no-options>
+				<span />
+			</template>
 		</NcSelect>
 	</div>
 </template>
@@ -64,10 +66,12 @@ export default {
 		}
 	},
 	mounted() {
-		const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
-		this.$nextTick(() => {
-			inputElement.focus()
-		})
+		setTimeout(() => {
+			const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
+			this.$nextTick(() => {
+				inputElement.focus()
+			})
+		}, 100)
 	},
 	methods: {
 		// Adds user to the batch when user selects user in the MultiSelect
@@ -139,7 +143,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .select-users-input {
 	width: 80%;
 }

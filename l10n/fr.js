@@ -6,7 +6,7 @@ OC.L10N.register(
 		'Add': 'Ajouter',
 		'Add users': 'Ajouter un utilisateur',
 		'Add a group': 'Ajouter un groupe',
-		'All spaces': 'Tous les workspaces',
+		'All spaces': 'Tous les Workspaces',
 		'Administrators': 'Workspaces Managers',
 		'wm': 'Workspace Manager',
 		'WM': 'WM',

@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.2] - 2025-03-18
+
+### Changed
+
+- Backport: various translation corrections in the French version of the application by @zak39 in in [#1210](https://github.com/arawa/workspace/pull/1210) and [#1189](https://github.com/arawa/workspace/pull/1189)
+- Backport: restores the display of an added group in the left menu when adding this group by @zak39 in [#1188](https://github.com/arawa/workspace/pull/1188)
+- Backport: in the group or workspace management interface, the list of groups to which each user belongs is now arranged in alphabetical order by @zak39 in [#1200](https://github.com/arawa/workspace/pull/1200)
+- The added group icon is now compatible with dark mode by @smarinier in [#1206](https://github.com/arawa/workspace/pull/1206)
+
+### Fixed
+
+- Backport: keep the focus on the user search input field when it opens, to quickly enter a search. by @zak39 in [#1205](https://github.com/arawa/workspace/pull/1205)
+- Backport: Reduce loading time when searching for added groups by @zak39 in [#1193](https://github.com/arawa/workspace/pull/1193)
+- Backport: Remove duplicate users request by @zak39 in #1196 and [#1191](https://github.com/arawa/workspace/pull/1191)
+- Backport: Repair display name changes for workspace groups and subgroups in PostgreSQL by @zak39 in [#1198](https://github.com/arawa/workspace/pull/1198)
+- When importing a .csv file, make sure it is closed after analyzing the separator type by @smarinier in [#1183](https://github.com/arawa/workspace/pull/1183)
+- Determine if a user belongs to an added group by @smarinier in [#1202](https://github.com/arawa/workspace/pull/1202)
+
 ## [4.0.1] - 2025-02-18
 
 ### Fix
@@ -348,7 +366,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.2...main
+[4.0.2]: https://github.com/arawa/workspace/compare/v4.0.1...4.0.2
 [4.0.1]: https://github.com/arawa/workspace/compare/v4.0.0...4.0.1
 [4.0.0]: https://github.com/arawa/workspace/compare/v3.3.2...4.0.0
 [3.3.2]: https://github.com/arawa/workspace/compare/v3.3.1...3.0.2

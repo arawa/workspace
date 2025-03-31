@@ -91,7 +91,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.slug !== undefined && isSubgoup"
+								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
@@ -165,8 +165,13 @@ export default {
 				}
 			})
 		},
-		isSubgoup() {
-			return this.$route.params.slug.startsWith('SPACE-G-')
+		isSubgroup() {
+			if (this.$route.params.slug.startsWith('SPACE-G-')) {
+				return true
+			}
+			// old legacy local G-
+			const groupName = this.$store.getters.groupName(this.$route.params.space, this.$route.params.slug)
+			return groupName.startsWith('G-')
 		},
 	},
 	methods: {

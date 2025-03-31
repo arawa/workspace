@@ -65,7 +65,7 @@ class ConnectedGroupsService {
 
 		$data = [];
 		foreach ($connectedGroups as $connectedGroup) {
-			$gid = 'SPACE-U-' . $connectedGroup->getSpaceId();
+			$gid = UserGroup::get($connectedGroup->getSpaceId());
 			$linked_gid = $connectedGroup->getGid();
 			$data[$gid][] = $linked_gid;
 			$this->linkedGroupsWSGroups[$linked_gid][] = $gid;
@@ -116,7 +116,10 @@ class ConnectedGroupsService {
 		}
 		$groups = [];
 		foreach ($linkedSpaceGroups[$spaceGid] as $gid) {
-			$groups[] = $this->groupManager->get($gid);
+			$group = $this->groupManager->get($gid);
+			if (!UserGroup::isWorkspaceGroup($group)) {
+				$groups[] = $group;
+			}
 		}
 		return $groups;
 	}
