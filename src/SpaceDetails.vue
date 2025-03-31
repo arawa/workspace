@@ -77,6 +77,12 @@
 							:close-after-click="true"
 							@click="toggleShowConnectedGroups" />
 					</NcActions>
+					<NcActions>
+						<NcActionButton icon="icon-rename"
+							@click="toggleShowEditWorkspaceModal">
+							{{ t('workspace', 'Edit the Workspace') }}
+						</NcActionButton>
+					</NcActions>
 				</div>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
 					<NcActionButton v-show="!renameSpace"
@@ -109,12 +115,15 @@
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
+		<EditWorkspace :show="showEditWorkspaceModal"
+			@close="toggleShowEditWorkspaceModal" />
 	</div>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import EditWorkspace from './components/Modals/EditWorkspace.vue'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
@@ -133,6 +142,7 @@ export default {
 	name: 'SpaceDetails',
 	components: {
 		AddUsersTabs,
+		EditWorkspace,
 		NcActions,
 		NcEmptyContent,
 		NcActionButton,
@@ -151,6 +161,7 @@ export default {
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
 			showSelectConnectedGroups: false,
+			showEditWorkspaceModal: false,
 			isESR: false,
 		}
 	},
@@ -358,6 +369,9 @@ export default {
 		},
 		toggleShowConnectedGroups() {
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
+		},
+		toggleShowEditWorkspaceModal() {
+			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
