@@ -125,6 +125,28 @@ export default {
 
 			return false
 		},
+		/**
+		 * @param {string} groupname the displayname from a group
+		 * @param {string} oldSpaceName the currently space name
+		 * To fix a bug from release 3.0.2
+		 */
+		replaceSpaceName(groupname, oldSpaceName) {
+			const spaceNameSplitted = groupname
+				.split('-')
+				.filter(element => element)
+
+			if (spaceNameSplitted[0] === 'WM'
+					|| spaceNameSplitted[0] === 'U') {
+				spaceNameSplitted[1] = oldSpaceName
+			}
+
+			if (spaceNameSplitted[0] === 'G') {
+				const lengthMax = spaceNameSplitted.length - 1
+				spaceNameSplitted[lengthMax] = oldSpaceName
+			}
+
+			return spaceNameSplitted.join('-')
+		},
 	},
 }
 </script>
@@ -148,7 +170,7 @@ export default {
 
 h1 {
 	font-size: 20px;
-  font-weight: bold;
+	font-weight: bold;
 }
 
 h2 {
