@@ -85,6 +85,7 @@ export default {
 						})
 					})
 
+					this.$store.dispatch('setCountWorkspaces', { count: resp.data.length })
 					this.$store.state.loading = false
 
 				})

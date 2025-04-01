@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { createSpace, countWorkspaces } from './services/spaceService.js'
+import { createSpace } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
@@ -78,15 +78,6 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 		SpaceMenuItem,
-	},
-	data() {
-		return {
-			countWorkspaces: 0,
-		}
-	},
-	async beforeCreate() {
-		const count = await countWorkspaces()
-		this.$store.dispatch('setCountWorkspaces', { count: count.count })
 	},
 	methods: {
 		// Creates a new space and navigates to its details page
