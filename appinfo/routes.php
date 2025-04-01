@@ -113,11 +113,6 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
-			'name' => 'workspace#countWorkspaces',
-			'url' => '/spaces/count',
-			'verb' => 'GET',
-		],
-		[
 			'name' => 'workspace#renameSpace',
 			'url' => '/spaces/{spaceId}',
 			'verb' => 'PATCH'
