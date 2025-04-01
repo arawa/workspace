@@ -91,15 +91,6 @@ export default {
 	substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
 		context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount })
 	},
-	setCountWorkspaces(context, { count }) {
-		context.commit('SET_COUNT_WORKSPACES', { count })
-	},
-	incrementCountWorkspaces(context) {
-		context.commit('INCREMENT_COUNT_WORKSPACES')
-	},
-	decrementCountWorkspaces(context) {
-		context.commit('DECREMENT_COUNT_WORKSPACES')
-	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { name, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
