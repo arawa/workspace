@@ -16,7 +16,6 @@
 	"Unknown error": "Erreur inconnue",
 	"Delete user" : "Retirer du Workspace",
 	"Group name": "Nom du groupe",
-	"Workspace counting error": "Erreur dans le comptage des workspaces",
 	"Remove added group": "Retirer le groupe ajouté",
 	"Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace": "Attention, après le retrait du groupe {groupname}, ses utilisateurs perdront l'accès au Workspace {spacename}",
 	"Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace": "Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l'accès au Workspace {spacename}",

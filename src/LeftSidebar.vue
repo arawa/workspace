@@ -28,11 +28,7 @@
 		<NcAppNavigationItem
 			:name="t('workspace', 'All spaces')"
 			:to="{path: '/'}"
-			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" >
-			<NcCounterBubble slot="counter">
-				{{ $store.state.countWorkspaces }}
-			</NcCounterBubble>
-		</NcAppNavigationItem>
+			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" />
 		<template #list>
 			<SpaceMenuItem
 				v-for="(space, spaceName) in $store.state.spaces"
@@ -60,13 +56,12 @@
 </template>
 
 <script>
-import { createSpace, countWorkspaces } from './services/spaceService.js'
+import { createSpace } from './services/spaceService.js'
 import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
 import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
-import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
 
@@ -76,17 +71,7 @@ export default {
 		NcAppNavigation,
 		NcAppNavigationNewItem,
 		NcAppNavigationItem,
-		NcCounterBubble,
 		SpaceMenuItem,
-	},
-	data() {
-		return {
-			countWorkspaces: 0,
-		}
-	},
-	async beforeCreate() {
-		const count = await countWorkspaces()
-		this.$store.dispatch('setCountWorkspaces', { count: count.count })
 	},
 	methods: {
 		// Creates a new space and navigates to its details page
@@ -120,7 +105,6 @@ export default {
 				userCount: workspace.userCount,
 				managers: null,
 			})
-			this.$store.dispatch('incrementCountWorkspaces')
 			this.$router.push({
 				path: `/workspace/${name}`,
 			})
