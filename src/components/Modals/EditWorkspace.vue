@@ -7,7 +7,7 @@
 		<div class="modal__container">
 			<h1>{{ t('workspace', 'Edit the Workspace') }}</h1>
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
-			<NcInputField :value.sync="spacename" :placeholder="t('workspace', 'Rename your Workspace')" type="text" />
+			<NcInputField class="input-spacename" :value.sync="spacename" :placeholder="t('workspace', 'Rename your Workspace')" type="text" />
 			<NcButton aria-label="Save"
 				class="btn-save"
 				@click="save">
@@ -176,4 +176,9 @@ h1 {
 h2 {
 	font-size: 16px;
 }
+
+.input-spacename :deep(div input) {
+  width: 70%;
+}
+
 </style>
