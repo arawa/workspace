@@ -77,19 +77,14 @@
 							:close-after-click="true"
 							@click="toggleShowConnectedGroups" />
 					</NcActions>
+					<NcActions>
+						<NcActionButton icon="icon-rename"
+							@click="toggleShowEditWorkspaceModal">
+							{{ t('workspace', 'Edit the Workspace') }}
+						</NcActionButton>
+					</NcActions>
 				</div>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
-					<NcActionButton v-show="!renameSpace"
-						icon="icon-rename"
-						:title="t('workspace', 'Rename space')"
-						class="no-bold"
-						@click="toggleRenameSpace" />
-					<NcActionInput v-show="renameSpace"
-						ref="renameSpaceInput"
-						icon="icon-rename"
-						@submit="onSpaceRename">
-						{{ t('workspace', 'Space name') }}
-					</NcActionInput>
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="toggleShowDelWorkspaceModal">
@@ -109,12 +104,15 @@
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
+		<EditWorkspace :show="showEditWorkspaceModal"
+			@close="toggleShowEditWorkspaceModal" />
 	</div>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import EditWorkspace from './components/Modals/EditWorkspace.vue'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
@@ -124,7 +122,7 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { renameSpace, removeWorkspace } from './services/spaceService.js'
+import { removeWorkspace } from './services/spaceService.js'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
@@ -133,6 +131,7 @@ export default {
 	name: 'SpaceDetails',
 	components: {
 		AddUsersTabs,
+		EditWorkspace,
 		NcActions,
 		NcEmptyContent,
 		NcActionButton,
@@ -151,6 +150,7 @@ export default {
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
 			showSelectConnectedGroups: false,
+			showEditWorkspaceModal: false,
 			isESR: false,
 		}
 	},
@@ -206,119 +206,6 @@ export default {
 			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
 		},
-		async onSpaceRename(e) {
-			// Hides ActionInput
-			this.toggleRenameSpace()
-			if (!e.target[0].value) {
-				showNotificationError('Error to rename space', 'The name space must be defined.', 3000)
-				return
-			}
-
-			const newSpaceName = e.target[0].value
-
-			// TODO: Change : the key from $root.spaces, groupnames, change the route into new spacename because
-			// the path is `https://instance-nc/apps/workspace/workspace/Aang`
-			const oldSpaceName = this.$route.params.space
-			let responseRename = await renameSpace(this.$store.state.spaces[oldSpaceName].id, newSpaceName)
-			responseRename = responseRename.data
-
-			if (responseRename.statuscode === 204) {
-				const space = { ...this.$store.state.spaces[oldSpaceName] }
-				space.name = responseRename.space
-
-				this.$store.dispatch('updateSpace', {
-					space,
-				})
-				this.$store.dispatch('removeSpace', {
-					space: this.$store.state.spaces[oldSpaceName],
-				})
-
-				const groupKeys = Object.keys(space.groups)
-				groupKeys.forEach(key => {
-					const group = space.groups[key]
-					/**
-					 * To fix a bug where the space is renamed to single
-					 * then to plural (or inversely)
-					 * This bug is present from release 3.0.2
-					 */
-					if (!this.checkSpaceNameIsEqual(group.displayName, oldSpaceName)) {
-						group.displayName = this.replaceSpaceName(group.displayName, oldSpaceName)
-					}
-					const newDisplayName = group.displayName.replace(oldSpaceName, newSpaceName)
-
-					// Renames group
-					this.$store.dispatch('renameGroup', {
-						name: newSpaceName,
-						gid: group.gid,
-						newGroupName: newDisplayName,
-					})
-				})
-
-				this.$router.push({
-					path: `/workspace/${space.name}`,
-				})
-			}
-
-			if (responseRename.statuscode === 401) {
-				// TODO: May be to print an error message temporary
-				console.error(responseRename.message)
-			}
-
-			if (responseRename.statuscode === 400) {
-				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
-				showNotificationError('Error to rename space', text, 5000)
-			}
-		},
-		/**
-		 * @param {string} groupname the displayname from a group
-		 * @param {string} oldSpaceName the currently space name
-		 * To fix a bug from release 3.0.2
-		 */
-		checkSpaceNameIsEqual(groupname, oldSpaceName) {
-			let spaceNameFiltered = ''
-
-			if (groupname.startsWith('U-')) {
-				spaceNameFiltered = groupname.replace('U-', '')
-			}
-
-			if (groupname.startsWith('WM-')) {
-				spaceNameFiltered = groupname.replace('WM-', '')
-			} else if (groupname.startsWith('GE-')) {
-				spaceNameFiltered = groupname.replace('GE-', '')
-			}
-
-			if (groupname.startsWith('G-')) {
-				spaceNameFiltered = groupname.replace('G-', '')
-			}
-
-			if (spaceNameFiltered === oldSpaceName) {
-				return true
-			}
-
-			return false
-		},
-		/**
-		 * @param {string} groupname the displayname from a group
-		 * @param {string} oldSpaceName the currently space name
-		 * To fix a bug from release 3.0.2
-		 */
-		replaceSpaceName(groupname, oldSpaceName) {
-			const spaceNameSplitted = groupname
-				.split('-')
-				.filter(element => element)
-
-			if (spaceNameSplitted[0] === 'WM'
-					|| spaceNameSplitted[0] === 'U') {
-				spaceNameSplitted[1] = oldSpaceName
-			}
-
-			if (spaceNameSplitted[0] === 'G') {
-				const lengthMax = spaceNameSplitted.length - 1
-				spaceNameSplitted[lengthMax] = oldSpaceName
-			}
-
-			return spaceNameSplitted.join('-')
-		},
 		// Sets a space's quota
 		setSpaceQuota(quota) {
 			console.debug('setSpaceQuota')
@@ -359,6 +246,9 @@ export default {
 		},
 		toggleShowConnectedGroups() {
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
+		},
+		toggleShowEditWorkspaceModal() {
+			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
 		},
 		updateColor(e) {
 			const spacename = this.$route.params.space
