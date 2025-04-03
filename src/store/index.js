@@ -34,7 +34,7 @@ const store = new Store({
 	state: {
 		loading: true,
 		noUsers: false,
-		loadingUsersWaitting: false,
+		loadingUsersWaiting: false,
 		spaces: {},
 		groupfolders: {},
 	},

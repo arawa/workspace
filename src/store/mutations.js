@@ -106,8 +106,8 @@ export default {
 		space.users = users
 		VueSet(state.spaces, space.name, space)
 	},
-	SET_LOADING_USERS_WAITTING(state, { activated }) {
-		state.loadingUsersWaitting = activated
+	SET_LOADING_USERS_WAITING(state, { activated }) {
+		state.loadingUsersWaiting = activated
 	},
 	SET_NO_USERS(state, { activated }) {
 		state.noUsers = activated
