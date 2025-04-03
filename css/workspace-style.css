@@ -130,3 +130,7 @@ body .icon-added-group, body .icon-added-group-dark {
 	min-width: 42px;
 	min-height: 42px;
 }
+
+.space-color-picker {
+	margin-right: 8px;
+}

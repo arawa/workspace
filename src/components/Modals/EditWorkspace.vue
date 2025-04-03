@@ -7,7 +7,19 @@
 		<div class="modal__container">
 			<h1>{{ t('workspace', 'Edit the Workspace') }}</h1>
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
-			<NcInputField class="input-spacename" :value.sync="spacename" :placeholder="t('workspace', 'Rename your Workspace')" type="text" />
+			<div class="content-appearance">
+				<NcColorPicker ref="colorPicker"
+					:value="color"
+					class="space-color-picker"
+					@update:value="updateColor">
+					<button class="color-dot color-picker"
+						:style="{backgroundColor: color}" />
+				</NcColorPicker>
+				<NcInputField class="input-spacename"
+					:value.sync="spacename"
+					:placeholder="t('workspace', 'Rename your Workspace')"
+					type="text" />
+			</div>
 			<NcButton aria-label="Save"
 				class="btn-save"
 				@click="save">
@@ -21,11 +33,15 @@
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 import Check from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import { renameSpace } from '../../services/spaceService.js'
+import showNotificationError from '../../services/Notifications/NotificationError.js'
 
 export default {
 	name: 'EditWorkspace',
@@ -33,6 +49,7 @@ export default {
 		Check,
 		NcButton,
 		NcModal,
+		NcColorPicker,
 		NcInputField,
 	},
 	props: {
@@ -45,7 +62,11 @@ export default {
 	data() {
 		return {
 			spacename: '',
+			color: '',
 		}
+	},
+	beforeMount() {
+		this.color = this.$store.state.spaces[this.$route.params.space].color
 	},
 	methods: {
 		close() {
@@ -55,7 +76,24 @@ export default {
 			const oldSpaceName = this.$store.state.spaces[this.$route.params.space].name
 			const space = { ...this.$store.state.spaces[oldSpaceName] }
 
-			if (oldSpaceName !== this.spacename) {
+			if (this.color !== space.color) {
+				axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[oldSpaceName].id}/color`),
+					{
+						colorCode: this.color,
+					})
+					.then(resp => {
+						this.$store.dispatch('updateColor', {
+							name: oldSpaceName,
+							colorCode: this.color,
+						})
+					})
+					.catch(err => {
+						const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
+						showNotificationError('Network error', text, 3000)
+					})
+			}
+
+			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
 				let responseRename = await renameSpace(this.$store.state.spaces[oldSpaceName].id, this.spacename)
 				responseRename = responseRename.data
 
@@ -88,9 +126,11 @@ export default {
 				}
 			}
 
-			this.$router.push({
-				path: `/workspace/${space.name}`,
-			})
+			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
+				this.$router.push({
+					path: `/workspace/${space.name}`,
+				})
+			}
 
 			this.spacename = ''
 
@@ -147,6 +187,9 @@ export default {
 
 			return spaceNameSplitted.join('-')
 		},
+		updateColor(e) {
+			this.color = e
+		},
 	},
 }
 </script>
@@ -178,7 +221,11 @@ h2 {
 }
 
 .input-spacename :deep(div input) {
-  width: 70%;
+	width: 70%;
+}
+
+.content-appearance {
+	display: flex;
 }
 
 </style>
