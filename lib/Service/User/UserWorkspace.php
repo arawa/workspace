@@ -19,7 +19,10 @@ class UserWorkspace {
 		$users = [];
 
 		foreach ($groupsName as $groupName) {
-			$users[] = $this->groupManager->get($groupName)->getUsers();
+			$o_group = $this->groupManager->get($groupName);
+			if ($o_group !== null) {
+				$users[] = $o_group->getUsers();
+			}
 		}
 
 		$usersMerged = array_merge([], ...$users);
