@@ -182,7 +182,9 @@ class UserService {
 	public function removeGEFromWM(IUser $user): void {
 		$this->logger->debug('User is not manager of any other workspace, removing it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
 		$workspaceUserGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
-		$workspaceUserGroup->removeUser($user);
+		if ($workspaceUserGroup !== null) {
+			$workspaceUserGroup->removeUser($user);
+		}
 
 		return;
 	}
