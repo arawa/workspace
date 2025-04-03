@@ -21,7 +21,7 @@
 -->
 
 <template>
-	<div v-if="!$store.state.loadingUsersWaitting">
+	<div v-if="!$store.state.loadingUsersWaiting">
 		<div class="header">
 			<div class="group-name">
 				<div :class="isAddedGroup ? 'icon-added-group' : 'icon-group'" />
