@@ -116,7 +116,7 @@ class ConnectedGroupsService {
 		$groups = [];
 		foreach ($linkedSpaceGroups[$spaceGid] as $gid) {
 			$group = $this->groupManager->get($gid);
-			if (!UserGroup::isWorkspaceGroup($group)) {
+			if (($group !== null) && !UserGroup::isWorkspaceGroup($group)) {
 				$groups[] = $group;
 			}
 		}

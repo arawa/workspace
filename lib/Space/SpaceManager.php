@@ -214,11 +214,12 @@ class SpaceManager {
 			}
 		}
 
-		$groups = [];
 		$this->logger->debug('Removing workspace groups.');
 		foreach (array_keys($space['groups']) as $group) {
-			$groups[] = $group;
-			$this->groupManager->get($group)->delete();
+			$o_group = $this->groupManager->get($group);
+			if ($o_group !== null) {
+				$o_group->delete();
+			}
 		}
 
 		$folderId = $space['groupfolder_id'];

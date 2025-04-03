@@ -41,6 +41,9 @@ class UserGroup {
 
 	public function addUser(IUser $user, string $gid): bool {
 		$group = $this->userGroupManager->get($gid);
+		if ($group === null) {
+			return false;
+		}
 		$group->addUser($user);
 
 		return true;
@@ -48,6 +51,9 @@ class UserGroup {
 
 	public function count(int $spaceId): int {
 		$usersGroup = $this->groupManager->get($this::GID_PREFIX . $spaceId);
+		if ($usersGroup === null) {
+			return 0;
+		}
 		return $usersGroup->count();
 	}
 }
