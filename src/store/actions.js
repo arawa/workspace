@@ -466,25 +466,25 @@ export default {
 		return resp.data
 	},
 	loadUsers(context, { space }) {
-		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+		context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 		context.commit('SET_NO_USERS', ({ activated: false }))
 
 		if (Object.keys(space.users).length === space.userCount) {
 			return
 		}
 
-		context.commit('SET_LOADING_USERS_WAITTING', ({ activated: true }))
+		context.commit('SET_LOADING_USERS_WAITING', ({ activated: true }))
 
 		getUsers(space.id)
 			.then(users => {
 				if (Object.keys(users).length === 0) {
-					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 					context.commit('SET_NO_USERS', ({ activated: true }))
 					return
 				}
 
 				if (Object.keys(users).length > 0) {
-					context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+					context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 					context.commit('SET_NO_USERS', ({ activated: false }))
 					context.commit('UPDATE_USERS', {
 						space,
@@ -496,7 +496,7 @@ export default {
 				console.error('Impossible to get users for the workspace.')
 				console.error(error)
 				showNotificationError(t('workspace', "Can't load workspace users"))
-				context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
+				context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
 	},

@@ -29,7 +29,7 @@
 			</template>
 		</NcEmptyContent>
 	</div>
-	<div v-else-if="!$store.state.loadingUsersWaitting">
+	<div v-else-if="!$store.state.loadingUsersWaiting">
 		<div class="header">
 			<div class="space-name">
 				<NcColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
@@ -160,11 +160,15 @@ export default {
 	},
 	beforeMount() {
 		const space = this.$store.state.spaces[this.$route.params.space]
-		this.$store.dispatch('loadUsers', { space })
+		if (!this.$store.state.noUsers) {
+			this.$store.dispatch('loadUsers', { space })
+		}
 	},
 	beforeUpdate() {
 		const space = this.$store.state.spaces[this.$route.params.space]
-		this.$store.dispatch('loadUsers', { space })
+		if (!this.$store.state.noUsers) {
+			this.$store.dispatch('loadUsers', { space })
+		}
 	},
 	created() {
 		const version = navigator.userAgent.split('Firefox/')[1]
