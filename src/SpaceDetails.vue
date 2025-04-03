@@ -32,9 +32,8 @@
 	<div v-else-if="!$store.state.loadingUsersWaitting">
 		<div class="header">
 			<div class="space-name">
-				<NcColorPicker v-model="$store.state.spaces[$route.params.space].color" class="space-color-picker" @input="updateColor">
-					<button class="color-dot color-picker" :style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
-				</NcColorPicker>
+				<div class="space-color-picker color-dot"
+					:style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
@@ -110,13 +109,10 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
 import EditWorkspace from './components/Modals/EditWorkspace.vue'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
-import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
@@ -136,7 +132,6 @@ export default {
 		NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
-		NcColorPicker,
 		NcModal,
 		NcSelect,
 		SelectConnectedGroups,
@@ -250,23 +245,6 @@ export default {
 		toggleShowEditWorkspaceModal() {
 			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
 		},
-		updateColor(e) {
-			const spacename = this.$route.params.space
-			axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[spacename].id}/color`),
-				{
-					colorCode: e,
-				})
-				.then(resp => {
-					this.$store.dispatch('updateColor', {
-						name: spacename,
-						colorCode: e,
-					})
-				})
-				.catch(err => {
-					const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
-					showNotificationError('Network error', text, 3000)
-				})
-		},
 	},
 }
 </script>
@@ -293,10 +271,6 @@ export default {
 	margin-left: 20px !important;
 	min-width: 100px;
 	max-width: 100% !important;
-}
-
-.space-color-picker {
-	margin-right: 8px;
 }
 
 .space-name {
