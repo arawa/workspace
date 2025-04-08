@@ -20,6 +20,29 @@
 					:placeholder="t('workspace', 'Rename your Workspace')"
 					type="text" />
 			</div>
+			<h2>{{ t('workspace', 'Quota') }}</h2>
+			<div class="content-quota">
+				<p>{{ t('workspace', 'Set maximum Workspace storage space') }}</p>
+				<NcSelect :value="getQuota"
+					class="quota-input"
+					:clear-search-on-select="false"
+					:taggable="true"
+					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
+					:placeholder="t('workspace', 'Set quota')"
+					:multiple="false"
+					:clearable="false"
+					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
+					@option:selected="updateQuota" />
+				<p>Vous utilisez <b>{{ getSize }}</b> sur {{ getQuota }}</p>
+				<NcProgressBar class="progress-bar"
+					size="medium"
+					:value="calculPercentSize"
+					:error="isError" />
+				<NcNoteCard v-if="isError"
+					type="warning">
+					<p>{{ t('workspace', 'Please note that the quota you have selected is less than the space currently used by your Workspace. You will no longer be able to add or modify files.') }}</p>
+				</NcNoteCard>
+			</div>
 			<NcButton aria-label="Save"
 				class="btn-save"
 				@click="save">
@@ -39,6 +62,9 @@ import Check from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import { renameSpace } from '../../services/spaceService.js'
 import showNotificationError from '../../services/Notifications/NotificationError.js'
@@ -49,8 +75,11 @@ export default {
 		Check,
 		NcButton,
 		NcModal,
+		NcNoteCard,
 		NcColorPicker,
 		NcInputField,
+		NcSelect,
+		NcProgressBar,
 	},
 	props: {
 		show: {
@@ -63,10 +92,38 @@ export default {
 		return {
 			spacename: '',
 			color: '',
+			quota: '',
+			size: '',
 		}
+	},
+	computed: {
+		calculPercentSize() {
+			const res = (this.size * 100) / this.quota
+			if (res < 100 && this.quota !== -3) {
+				return res
+			}
+			return 100
+		},
+		isError() {
+			if (this.size >= this.quota && this.quota !== -3) {
+				return true
+			}
+			return false
+		},
+		getQuota() {
+			return this.$store.getters.convertQuotaForFrontend(this.quota)
+		},
+		getSize() {
+			return this.$store.getters.convertQuotaForFrontend(this.size)
+		},
+		getQuotaMessage() {
+			return t('workspace', 'You use {size} on {quota}', { size: this.size, quota: this.quota })
+		},
 	},
 	beforeMount() {
 		this.color = this.$store.state.spaces[this.$route.params.space].color
+		this.quota = this.$store.state.spaces[this.$route.params.space].quota
+		this.size = this.$store.state.spaces[this.$route.params.space].size
 	},
 	methods: {
 		close() {
@@ -124,6 +181,13 @@ export default {
 						})
 					})
 				}
+			}
+
+			if (space.quota !== this.quota) {
+				this.$store.dispatch('setSpaceQuota', {
+					name: space.name,
+					quota: this.quota,
+				})
 			}
 
 			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
@@ -190,6 +254,21 @@ export default {
 		updateColor(e) {
 			this.color = e
 		},
+		updateQuota(quota) {
+			if (quota === null) {
+				return
+			}
+			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
+			if (!control.test(quota)) {
+				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
+				showNotificationError('Error', text, 3000)
+				return
+			}
+
+			quota = this.$store.getters.convertQuotaToByte(quota)
+
+			this.quota = quota
+		},
 	},
 }
 </script>
@@ -228,4 +307,18 @@ h2 {
 	display: flex;
 }
 
+.content-quota {
+	display: flex;
+	flex-direction: column;
+}
+
+.quota-input {
+	width: 200px;
+	margin: 16px 0 16px 0 !important;
+}
+
+.progress-bar {
+	width: 300px !important;
+	margin: 8px 0 8px 0 !important;
+}
 </style>
