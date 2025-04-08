@@ -409,21 +409,22 @@ export default {
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
 		const oldQuota = context.getters.quota(name)
+		const quotaString = context.getters.convertQuotaForFrontend(quota)
 		context.commit('setSpaceQuota', { name, quota })
 
 		// Transforms quota for backend
-		switch (quota.substr(-2).toLowerCase()) {
+		switch (quotaString.substr(-2).toLowerCase()) {
 		case 'tb':
-			quota = quota.substr(0, quota.length - 2) * 1024 ** 4
+			quota = quota * 1024 ** 4
 			break
 		case 'gb':
-			quota = quota.substr(0, quota.length - 2) * 1024 ** 3
+			quota = quota * 1024 ** 3
 			break
 		case 'mb':
-			quota = quota.substr(0, quota.length - 2) * 1024 ** 2
+			quota = quota * 1024 ** 2
 			break
 		case 'kb':
-			quota = quota.substr(0, quota.length - 2) * 1024
+			quota = quota * 1024
 			break
 		}
 		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota

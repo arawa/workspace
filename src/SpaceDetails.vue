@@ -37,16 +37,11 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcSelect v-model="$store.state.spaces[$route.params.space].quota"
+				<NcSelect v-model="getQuota"
 					:class="isESR ? 'quota-select-esr' : 'quota-select'"
-					:clear-search-on-select="false"
-					:taggable="true"
-					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
-					:placeholder="t('workspace', 'Set quota')"
+					:disabled="true"
 					:multiple="false"
-					:clearable="false"
-					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
-					@option:selected="setSpaceQuota" />
+					:clearable="false" />
 			</div>
 			<div class="space-actions">
 				<div>
@@ -119,7 +114,6 @@ import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
-import showNotificationError from './services/Notifications/NotificationError.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
@@ -153,6 +147,9 @@ export default {
 		// The title to display at the top of the page
 		title() {
 			return this.$route.params.space
+		},
+		getQuota() {
+			return this.$store.getters.convertQuotaForFrontend(this.$store.state.spaces[this.$route.params.space].quota)
 		},
 	},
 	beforeMount() {
@@ -204,26 +201,6 @@ export default {
 
 			// Creates group
 			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
-		},
-		// Sets a space's quota
-		setSpaceQuota(quota) {
-			console.debug('setSpaceQuota')
-			console.debug('quota', quota)
-			if (quota === null) {
-				return
-			}
-			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
-			if (!control.test(quota)) {
-				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
-				showNotificationError('Error', text, 3000)
-				return
-			}
-			console.debug('coucou')
-			console.debug('this.$route.params.space', this.$route.params.space)
-			this.$store.dispatch('setSpaceQuota', {
-				name: this.$route.params.space,
-				quota,
-			})
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup

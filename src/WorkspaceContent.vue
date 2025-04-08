@@ -65,11 +65,6 @@ export default {
 					}
 
 					resp.data.forEach(space => {
-						let quota = this.convertQuotaForFrontend(space.quota)
-						if (quota === 'unlimited') {
-							quota = t('workspace', 'unlimited')
-						}
-
 						this.$store.commit('addSpace', {
 							color: space.color_code,
 							groupfolderId: space.groupfolder_id,
@@ -78,7 +73,8 @@ export default {
 							id: space.id,
 							isOpen: false,
 							name: space.name,
-							quota,
+							quota: space.quota,
+							size: space.size,
 							users: space.users,
 							userCount: space.userCount,
 							managers: null,
@@ -109,10 +105,8 @@ export default {
 					quota = quota / 1024
 					i++
 				}
-				if (Number.isInteger(quota) === false) {
-					quota = quota * 1.024
-				}
-				return quota + units[i]
+
+				return Number(quota.toFixed(2)) + units[i]
 			}
 		},
 	},

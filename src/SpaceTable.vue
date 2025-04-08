@@ -50,7 +50,7 @@
 						{{ name }}
 					</td>
 					<td class="workspace-td">
-						{{ space.quota }}
+						{{ getQuota(space.quota) }}
 					</td>
 					<td class="workspace-td">
 						<VueLazyComponent
@@ -90,18 +90,8 @@ export default {
 		VueLazyComponent,
 	},
 	methods: {
-		convertQuotaForFrontend(quota) {
-			if (quota === '-3') {
-				return t('workspace', 'unlimited')
-			} else {
-				const units = ['', 'KB', 'MB', 'GB', 'TB']
-				let i = 0
-				while (quota >= 1024) {
-					quota = quota / 1024
-					i++
-				}
-				return quota + units[i]
-			}
+		getQuota(quota) {
+			return this.$store.getters.convertQuotaForFrontend(quota)
 		},
 		// Returns all workspace's managers
 		workspaceManagers(space) {
