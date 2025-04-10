@@ -56,7 +56,7 @@ class PageController extends Controller {
 			[
 				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
 				'canAccessApp' => $this->userService->canAccessApp(),
-				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false'),
+				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true',
 			]
 		);
 	}
