@@ -34,7 +34,7 @@
 			:user-select="true"
 			@option:selected="addUserToBatch"
 			@close="selectableUsers=[]"
-			@search="lookupUsers">
+			@search="debounceLookupUsers">
 			<template #no-options>
 				<span />
 			</template>
@@ -47,6 +47,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import debounce from 'debounce'
 
 export default {
 	name: 'MultiSelectUsers',
@@ -81,6 +82,9 @@ export default {
 		displayForSearching({ name, email, uid }) {
 			return `${name} - ${email} - ${uid}`
 		},
+		debounceLookupUsers: debounce(function(term) {
+			this.lookupUsers(term)
+		}, 500),
 		lookupUsers(term) {
 			// safeguard for initialisation
 			if (term === undefined || term === '') {
