@@ -117,11 +117,6 @@ export default {
 		isAddedGroup() {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
 		},
-		connectedGroupMessage() {
-			const text = t('workspace', 'Warning, after removal of group :{groupname}', { groupname: '<b>aaaa</b>' })
-			console.debug('text', text)
-			return 'Warning, after removal of group :<b>aaaa</b>'
-		},
 	},
 	mounted() {
 		const space = this.$store.state.spaces[this.$route.params.space]
