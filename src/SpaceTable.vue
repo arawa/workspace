@@ -25,7 +25,7 @@
 		<div class="header" />
 		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
-				<tr class="workspace-tr">
+				<tr class="">
 					<th />
 					<th class="workspace-th">
 						{{ t('workspace', 'Workspace name') }}
@@ -134,7 +134,6 @@ export default {
 
 .table-spaces {
 	width: 100%;
-	margin-top: -81px;
 }
 
 .main-div {

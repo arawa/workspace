@@ -44,40 +44,38 @@
 					:clearable="false" />
 			</div>
 			<div class="space-actions">
-				<div>
-					<NcActions ref="ncAction" default-icon="icon-add">
-						<NcActionButton icon="icon-user"
-							:close-after-click="true"
-							class="no-bold"
-							:title="t('workspace', 'Add users')"
-							@click="toggleShowSelectUsersModal" />
-						<NcActionButton v-show="!createGroup"
-							icon="icon-group"
-							:title="t('workspace', 'Create a workspace group')"
-							class="no-bold"
-							@click="toggleCreateGroup" />
-						<NcActionInput v-show="createGroup"
-							ref="createGroupInput"
-							icon="icon-group"
-							:close-after-click="true"
-							:show-trailing-button="true"
-							@submit="onNewGroup">
-							{{ t('workspace', 'Group name') }}
-						</NcActionInput>
-						<NcActionButton
-							:name="t('workspace', 'Add a group')"
-							icon="icon-added-group"
-							class="no-bold"
-							:close-after-click="true"
-							@click="toggleShowConnectedGroups" />
-					</NcActions>
-					<NcActions>
-						<NcActionButton icon="icon-rename"
-							@click="toggleShowEditWorkspaceModal">
-							{{ t('workspace', 'Edit the Workspace') }}
-						</NcActionButton>
-					</NcActions>
-				</div>
+        <NcActions ref="ncAction" default-icon="icon-add">
+          <NcActionButton icon="icon-user"
+            :close-after-click="true"
+            class="no-bold"
+            :title="t('workspace', 'Add users')"
+            @click="toggleShowSelectUsersModal" />
+          <NcActionButton v-show="!createGroup"
+            icon="icon-group"
+            :title="t('workspace', 'Create a workspace group')"
+            class="no-bold"
+            @click="toggleCreateGroup" />
+          <NcActionInput v-show="createGroup"
+            ref="createGroupInput"
+            icon="icon-group"
+            :close-after-click="true"
+            :show-trailing-button="true"
+            @submit="onNewGroup">
+            {{ t('workspace', 'Group name') }}
+          </NcActionInput>
+          <NcActionButton
+            :name="t('workspace', 'Add a group')"
+            icon="icon-added-group"
+            class="no-bold"
+            :close-after-click="true"
+            @click="toggleShowConnectedGroups" />
+        </NcActions>
+        <NcActions>
+          <NcActionButton icon="icon-rename"
+            @click="toggleShowEditWorkspaceModal">
+            {{ t('workspace', 'Edit the Workspace') }}
+          </NcActionButton>
+        </NcActions>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
@@ -255,8 +253,10 @@ export default {
 }
 
 .space-name {
-	margin-left: 8px;
-	margin-top: -28px;
+    width: 100%;
+    flex-grow: 1;
+    display: inline-flex;
+    align-items: center;
 }
 
 .no-bold button p strong{
