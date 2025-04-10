@@ -92,7 +92,7 @@ export const getters = {
 		return state.spaces[spaceName].quota
 	},
 	convertQuotaForFrontend: state => quota => {
-		if (quota === -3 || quota === '-3') {
+		if (quota === -3 || quota === '-3' || quota === undefined) {
 			return 'unlimited'
 		} else {
 			const units = ['', 'KB', 'MB', 'GB', 'TB']

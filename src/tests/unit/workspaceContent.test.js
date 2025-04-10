@@ -52,37 +52,37 @@ const wrappedHome = mount(WorkspaceContent, {
 describe('Home component tests', () => {
 
 	it('ConvertQuotaForFrontend: Test regular quota', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('3221225472')
+		const quota = store.getters.convertQuotaForFrontend('3221225472')
 		expect(quota).toEqual('3GB')
 	})
 
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend(-3)
+		const quota = store.getters.convertQuotaForFrontend(-3)
 		expect(quota).toEqual('unlimited')
 	})
 
 	it('Convert 10000MB to 10GB', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('10737418240')
+		const quota = store.getters.convertQuotaForFrontend('10737418240')
 		expect(quota).toEqual('10GB')
 	})
 
 	it('Convert 23GB to 23GB', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('24696061952')
+		const quota = store.getters.convertQuotaForFrontend('24696061952')
 		expect(quota).toEqual('23GB')
 	})
 
 	it('Convert -3 (int) to unlimited', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend(-3)
+		const quota = store.getters.convertQuotaForFrontend(-3)
 		expect(quota).toEqual('unlimited')
 	})
 
 	it('Convert -3 (string) to unlimited', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('-3')
+		const quota = store.getters.convertQuotaForFrontend('-3')
 		expect(quota).toEqual('unlimited')
 	})
 
 	it('Return string type', () => {
-		const quota = wrappedHome.vm.convertQuotaForFrontend('10737418240')
+		const quota = store.getters.convertQuotaForFrontend('10737418240')
 		expect(typeof (quota)).toBe('string')
 	})
 })
