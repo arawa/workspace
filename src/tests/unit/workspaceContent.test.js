@@ -51,6 +51,10 @@ const wrappedHome = mount(WorkspaceContent, {
 
 describe('Home component tests', () => {
 
+	it('WorkspaceContent.vue is mounted', () => {
+		expect(wrappedHome.exists()).toBe(true)
+	})
+
 	it('ConvertQuotaForFrontend: Test regular quota', () => {
 		const quota = store.getters.convertQuotaForFrontend('3221225472')
 		expect(quota).toEqual('3GB')
