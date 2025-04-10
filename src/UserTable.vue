@@ -24,9 +24,9 @@
 	<div>
 		<table v-if="users.length" class="table-space-detail">
 			<thead>
-				<tr class="workspace-tr">
+				<tr>
 					<th class="workspace-th" />
-					<th class="workspace-th" style="padding-left: 15px; width: 30%;">
+					<th class="workspace-th user-info">
 						{{ t('workspace', 'Users') }}
 					</th>
 					<th class="workspace-th">
@@ -329,7 +329,6 @@ export default {
 
 .table-space-detail {
 	width: 100%;
-	margin-top: -25px;
 }
 
 .group-list {
