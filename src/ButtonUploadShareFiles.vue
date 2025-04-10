@@ -59,7 +59,6 @@ export default {
 		shareCsvFromFiles() {
 			picker.pick()
 				.then(async (path, title) => {
-					console.debug(`path ${path} selected for sharing, title ${title}`)
 					const space = this.$store.state.spaces[this.$route.params.space]
 					const bodyFormData = new FormData()
 					bodyFormData.append('path', path)

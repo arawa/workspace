@@ -277,7 +277,7 @@ export default {
 .modal :deep(.modal-wrapper .modal-container) {
 	min-height: auto;
 	padding: 16px;
-  width: 700px;
+	width: 700px;
 }
 
 .modal__container {

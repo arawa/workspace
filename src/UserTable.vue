@@ -178,7 +178,6 @@ export default {
 		sortGroups(groups) {
 			const spacename = this.$route.params.space
 			const groupsSorted = this.sortedGroups([...groups], spacename)
-			console.debug('groupsSorted', groupsSorted)
 			return groupsSorted.map(group => this.$store.getters.groupName(spacename, group)).join(', ')
 		},
 		sortedGroups(groups, spacename) {
