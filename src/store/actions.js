@@ -375,7 +375,6 @@ export default {
 					const usersFromSpace = Object.keys(context.state.spaces[name].users)
 
 					if (!usersFromSpace.includes(uid)) {
-						console.debug('uid', uid)
 						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
 						context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
 					} else {
