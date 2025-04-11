@@ -93,23 +93,6 @@ export default {
 				})
 		}
 	},
-	methods: {
-		// Shows a space quota in a user-friendly way
-		convertQuotaForFrontend(quota) {
-			if (quota === -3 || quota === '-3') {
-				return 'unlimited'
-			} else {
-				const units = ['', 'KB', 'MB', 'GB', 'TB']
-				let i = 0
-				while (quota >= 1024) {
-					quota = quota / 1024
-					i++
-				}
-
-				return Number(quota.toFixed(2)) + units[i]
-			}
-		},
-	},
 }
 </script>
 
