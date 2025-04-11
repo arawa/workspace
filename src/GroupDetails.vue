@@ -248,9 +248,4 @@ export default {
 	flex-flow: row-reverse;
 }
 
-.group-name {
-	margin-left: 8px;
-	margin-top: -28px;
-}
-
 </style>
