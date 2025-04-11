@@ -23,7 +23,6 @@
 
  table-space-detail {
 	width: 100%;
-	margin-top: -25px;
 }
 .workspace-th {
 	color: grey;
@@ -46,11 +45,14 @@ tbody > .workspace-tr:hover {
 }
 
 .header {
-	height: 0px;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	margin: 40px;
+	/* Do not grow or shrink (vertically) */
+	flex: 0 0;
+	max-width: 100%;
+	/* Align with the navigation toggle icon */
+	margin-block: var(--app-navigation-padding, 4px);
+	margin-inline: calc(var(--default-clickable-area, 44px) + 2 * var(--app-navigation-padding, 4px)) var(--app-navigation-padding, 4px);
 }
 
 .color-dot {

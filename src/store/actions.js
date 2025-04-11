@@ -384,7 +384,6 @@ export default {
 					const usersFromSpace = Object.keys(context.state.spaces[name].users)
 
 					if (!usersFromSpace.includes(uid)) {
-						console.debug('uid', uid)
 						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
 						context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
 					} else {
@@ -409,25 +408,7 @@ export default {
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
 		const oldQuota = context.getters.quota(name)
-		const quotaString = context.getters.convertQuotaForFrontend(quota)
 		context.commit('setSpaceQuota', { name, quota })
-
-		// Transforms quota for backend
-		switch (quotaString.substr(-2).toLowerCase()) {
-		case 'tb':
-			quota = quota * 1024 ** 4
-			break
-		case 'gb':
-			quota = quota * 1024 ** 3
-			break
-		case 'mb':
-			quota = quota * 1024 ** 2
-			break
-		case 'kb':
-			quota = quota * 1024
-			break
-		}
-		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota
 
 		// Updates backend
 		const space = context.state.spaces[name]

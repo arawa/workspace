@@ -29,11 +29,13 @@ use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IConfig;
 use OCP\Util;
 
 class PageController extends Controller {
 	public function __construct(
 		private UserService $userService,
+		private IConfig $config,
 	) {
 	}
 
@@ -47,6 +49,15 @@ class PageController extends Controller {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
-		return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => $this->userService->canAccessApp() ]); 	// templates/index.php
+		// templates/index.php
+		return new TemplateResponse(
+			'workspace',
+			'index',
+			[
+				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
+				'canAccessApp' => $this->userService->canAccessApp(),
+				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true',
+			]
+		);
 	}
 }
