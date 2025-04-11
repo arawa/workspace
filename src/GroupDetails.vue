@@ -248,5 +248,4 @@ export default {
 	flex-flow: row-reverse;
 }
 
-
 </style>
