@@ -16,14 +16,17 @@
 						:style="{backgroundColor: color}" />
 				</NcColorPicker>
 				<NcInputField class="input-spacename"
-					:value.sync="spacename"
+					:value="getSpaceName"
 					:placeholder="t('workspace', 'Rename your Workspace')"
-					type="text" />
+					type="text"
+					@update:value="updateSpacename" />
 			</div>
 			<h2>{{ t('workspace', 'Quota') }}</h2>
 			<div class="content-quota">
-				<p>{{ t('workspace', 'Set maximum Workspace storage space') }}</p>
-				<NcSelect :value="getQuota"
+				<p class="max-contrast">
+					{{ t('workspace', 'Set maximum Workspace storage space') }}
+				</p>
+				<NcSelect :value.sync="getQuota"
 					class="quota-input"
 					:clear-search-on-select="false"
 					:taggable="true"
@@ -31,9 +34,10 @@
 					:placeholder="t('workspace', 'Set quota')"
 					:multiple="false"
 					:clearable="false"
-					:options="['1GB', '5GB', '10GB', t('workspace','unlimited')]"
+					:options="['1 GB', '5 GB', '10 GB', t('workspace','unlimited')]"
 					@option:selected="updateQuota" />
-				<p>Vous utilisez <b>{{ getSize }}</b> sur {{ getQuota }}</p>
+				<p class="max-contrast"
+					v-html="getQuotaMessage" />
 				<NcProgressBar class="progress-bar"
 					size="medium"
 					:value="calculPercentSize"
@@ -102,7 +106,12 @@ export default {
 			if (res < 100 && this.quota !== -3) {
 				return res
 			}
-			return 100
+
+			if (res >= 100) {
+				return 100
+			}
+
+			return 1
 		},
 		isError() {
 			if (this.size >= this.quota && this.quota !== -3) {
@@ -117,13 +126,17 @@ export default {
 			return this.$store.getters.convertQuotaForFrontend(this.size)
 		},
 		getQuotaMessage() {
-			return t('workspace', 'You use {size} on {quota}', { size: this.size, quota: this.quota })
+			return t('workspace', 'You use <b>{size}</b> on {quota}', { size: this.getSize, quota: this.getQuota })
+		},
+		getSpaceName() {
+			return this.$store.state.spaces[this.$route.params.space].name
 		},
 	},
 	beforeMount() {
 		this.color = this.$store.state.spaces[this.$route.params.space].color
 		this.quota = this.$store.state.spaces[this.$route.params.space].quota
 		this.size = this.$store.state.spaces[this.$route.params.space].size
+		this.spacename = this.$store.state.spaces[this.$route.params.space].name
 	},
 	methods: {
 		close() {
@@ -258,6 +271,9 @@ export default {
 			if (quota === null) {
 				return
 			}
+
+			quota = quota.replace(' ', '')
+
 			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
 				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
@@ -268,6 +284,9 @@ export default {
 			quota = this.$store.getters.convertQuotaToByte(quota)
 
 			this.quota = quota
+		},
+		updateSpacename(spacename) {
+			this.spacename = spacename
 		},
 	},
 }
@@ -298,10 +317,12 @@ h1 {
 
 h2 {
 	font-size: 16px;
+	margin-top: 24px;
+	margin-bottom: 12px;
 }
 
 .input-spacename :deep(div input) {
-	width: 70%;
+	width: 90%;
 }
 
 .content-appearance {
@@ -321,5 +342,12 @@ h2 {
 .progress-bar {
 	width: 300px !important;
 	margin: 8px 0 8px 0 !important;
+}
+.max-contrast {
+	color: var(--color-text-maxcontrast);
+}
+
+span {
+	font-weight: bold;
 }
 </style>
