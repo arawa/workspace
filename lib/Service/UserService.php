@@ -73,7 +73,7 @@ class UserService {
 		$groups = [];
 
 		if (!isset($space['groups'])) {
-			throw new \Exception('The "groups" key is not presetn');
+			throw new \Exception('The "groups" key is not present');
 		}
 
 		if (!is_array($space['groups'])) {

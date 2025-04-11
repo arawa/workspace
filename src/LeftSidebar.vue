@@ -28,7 +28,7 @@
 		<NcAppNavigationItem
 			:name="t('workspace', 'All spaces')"
 			:to="{path: '/'}"
-			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'" >
+			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'">
 			<NcCounterBubble slot="counter">
 				{{ $store.state.countWorkspaces }}
 			</NcCounterBubble>
@@ -61,8 +61,6 @@
 
 <script>
 import { createSpace } from './services/spaceService.js'
-import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
@@ -87,15 +85,6 @@ export default {
 				return
 			}
 
-			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
-
-			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
-				throw new BadCreateError(
-					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
-				)
-			}
-
 			const workspace = await createSpace(name, this)
 
 			this.$store.commit('addSpace', {
@@ -113,7 +102,7 @@ export default {
 			})
 			this.$store.dispatch('incrementCountWorkspaces')
 			this.$router.push({
-				path: `/workspace/${name}`,
+				path: `/workspace/${workspace.id_space}`,
 			})
 		},
 	},

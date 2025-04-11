@@ -65,7 +65,7 @@ export default {
 				this.isLookingUpUsers = true
 				const bodyFormData = new FormData()
 				const file = event.target.files[0]
-				const space = this.$store.state.spaces[this.$route.params.space]
+				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 				bodyFormData.append('file', file)
 				try {
 					const users = await this.$store.dispatch('addUsersFromCSV', {
@@ -97,7 +97,7 @@ export default {
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
 			if (this.$route.params.slug === undefined) {
-				const space = this.$store.state.spaces[this.$route.params.space]
+				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)
