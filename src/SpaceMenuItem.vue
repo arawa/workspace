@@ -25,7 +25,7 @@
 		:allow-collapse="true"
 		:open="$route.params.space === spaceName"
 		:name="spaceName"
-		:to="{path: `/workspace/${spaceName}`}">
+		:to="{path: getSpacePath()}">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.getSpaceUserCount(spaceName) }}
@@ -56,11 +56,14 @@
 			:key="group.gid"
 			:group="group"
 			:count="group.usersCount"
+			:space-id="space.id"
 			:space-name="spaceName" />
 		<NcAppNavigationCaption
 			:title="t('workspace', 'Added groups')">
 			<template #actions>
-				<NcActionButton @click="toggleAddGroupModal">
+				<NcActionButton
+					:aria-label="t('workspace', 'Add a group')"
+					@click="toggleAddGroupModal">
 					<template #icon>
 						<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
 					</template>
@@ -72,6 +75,7 @@
 			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
 			:group="group"
+			:space-id="space.id"
 			:space-name="spaceName"
 			:count="group.usersCount"
 			:added-group="true" />
@@ -79,6 +83,7 @@
 </template>
 
 <script>
+import { generateUrl } from '@nextcloud/router'
 import { getLocale } from '@nextcloud/l10n'
 import GroupMenuItem from './GroupMenuItem.vue'
 import MenuItemSelector from './MenuItemSelector.vue'
@@ -180,12 +185,12 @@ export default {
 				return
 			}
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.spaceName, gid })
+			this.$store.dispatch('createGroup', { space: this.space, gid })
 		},
 
-		loadUsers(spacename) {
-			const space = this.$store.state.spaces[spacename]
-			this.$store.dispatch('loadUsers', { space })
+		getSpacePath() {
+			const url = generateUrl('/workspace/{id}', { id: this.space.id })
+			return url.substr(url.indexOf('/workspace/'))
 		},
 	},
 }

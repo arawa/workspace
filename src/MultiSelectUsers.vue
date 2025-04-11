@@ -90,7 +90,7 @@ export default {
 			if (term === undefined || term === '') {
 				return
 			}
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
@@ -127,7 +127,7 @@ export default {
 			let users = []
 			const group = this.$route.params.slug
 			if (group === undefined) {
-				const space = this.$store.state.spaces[this.$route.params.space]
+				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)

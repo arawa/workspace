@@ -33,7 +33,7 @@
 		<div class="header">
 			<div class="space-name">
 				<div class="space-color-picker color-dot"
-					:style="{backgroundColor: $store.state.spaces[$route.params.space].color}" />
+					:style="{backgroundColor: $store.getters.getSpaceByNameOrId($route.params.space).color}" />
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
@@ -44,38 +44,38 @@
 					:clearable="false" />
 			</div>
 			<div class="space-actions">
-        <NcActions ref="ncAction" default-icon="icon-add">
-          <NcActionButton icon="icon-user"
-            :close-after-click="true"
-            class="no-bold"
-            :title="t('workspace', 'Add users')"
-            @click="toggleShowSelectUsersModal" />
-          <NcActionButton v-show="!createGroup"
-            icon="icon-group"
-            :title="t('workspace', 'Create a workspace group')"
-            class="no-bold"
-            @click="toggleCreateGroup" />
-          <NcActionInput v-show="createGroup"
-            ref="createGroupInput"
-            icon="icon-group"
-            :close-after-click="true"
-            :show-trailing-button="true"
-            @submit="onNewGroup">
-            {{ t('workspace', 'Group name') }}
-          </NcActionInput>
-          <NcActionButton
-            :name="t('workspace', 'Add a group')"
-            icon="icon-added-group"
-            class="no-bold"
-            :close-after-click="true"
-            @click="toggleShowConnectedGroups" />
-        </NcActions>
-        <NcActions>
-          <NcActionButton icon="icon-rename"
-            @click="toggleShowEditWorkspaceModal">
-            {{ t('workspace', 'Edit the Workspace') }}
-          </NcActionButton>
-        </NcActions>
+				<NcActions ref="ncAction" default-icon="icon-add">
+					<NcActionButton icon="icon-user"
+						:close-after-click="true"
+						class="no-bold"
+						:title="t('workspace', 'Add users')"
+						@click="toggleShowSelectUsersModal" />
+					<NcActionButton v-show="!createGroup"
+						icon="icon-group"
+						:title="t('workspace', 'Create a workspace group')"
+						class="no-bold"
+						@click="toggleCreateGroup" />
+					<NcActionInput v-show="createGroup"
+						ref="createGroupInput"
+						icon="icon-group"
+						:close-after-click="true"
+						:show-trailing-button="true"
+						@submit="onNewGroup">
+						{{ t('workspace', 'Group name') }}
+					</NcActionInput>
+					<NcActionButton
+						:name="t('workspace', 'Add a group')"
+						icon="icon-added-group"
+						class="no-bold"
+						:close-after-click="true"
+						@click="toggleShowConnectedGroups" />
+				</NcActions>
+				<NcActions>
+					<NcActionButton icon="icon-rename"
+						@click="toggleShowEditWorkspaceModal">
+						{{ t('workspace', 'Edit the Workspace') }}
+					</NcActionButton>
+				</NcActions>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
@@ -144,20 +144,20 @@ export default {
 	computed: {
 		// The title to display at the top of the page
 		title() {
-			return this.$route.params.space
+			return this.$store.getters.getSpaceByNameOrId(this.$route.params.space).name
 		},
 		getQuota() {
-			return this.$store.getters.convertQuotaForFrontend(this.$store.state.spaces[this.$route.params.space].quota)
+			return this.$store.getters.convertQuotaForFrontend(this.$store.getters.getSpaceByNameOrId(this.$route.params.space).quota)
 		},
 	},
 	beforeMount() {
-		const space = this.$store.state.spaces[this.$route.params.space]
+		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		if (!this.$store.state.noUsers) {
 			this.$store.dispatch('loadUsers', { space })
 		}
 	},
 	beforeUpdate() {
-		const space = this.$store.state.spaces[this.$route.params.space]
+		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		if (!this.$store.state.noUsers) {
 			this.$store.dispatch('loadUsers', { space })
 		}
@@ -171,7 +171,7 @@ export default {
 	methods: {
 		// Deletes a space
 		deleteSpace() {
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			removeWorkspace(space.id)
 				.then(resp => {
 					if (resp.http.statuscode === 200) {
@@ -198,7 +198,8 @@ export default {
 			}
 
 			// Creates group
-			this.$store.dispatch('createGroup', { name: this.$route.params.space, gid })
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			this.$store.dispatch('createGroup', { space, gid })
 		},
 		toggleCreateGroup() {
 			this.createGroup = !this.createGroup

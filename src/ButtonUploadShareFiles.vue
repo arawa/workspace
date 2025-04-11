@@ -59,7 +59,7 @@ export default {
 		shareCsvFromFiles() {
 			picker.pick()
 				.then(async (path, title) => {
-					const space = this.$store.state.spaces[this.$route.params.space]
+					const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 					const bodyFormData = new FormData()
 					bodyFormData.append('path', path)
 					try {
@@ -88,7 +88,7 @@ export default {
 		filterAlreadyPresentUsers(recvUsers) {
 			let users = []
 			if (this.$route.params.slug === undefined) {
-				const space = this.$store.state.spaces[this.$route.params.space]
+				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 				users = recvUsers.filter(user => {
 					return (!(user.uid in space.users))
 				}, space)

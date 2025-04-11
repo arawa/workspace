@@ -80,18 +80,17 @@ const sortGroupfolders = (state) => {
 
 export default {
 	// Adds a group to a space
-	addGroupToSpace(state, { name, gid, displayName = undefined, slug }) {
+	addGroupToSpace(state, { space, gid, displayName = undefined, slug }) {
 		if (displayName === undefined) {
 			displayName = gid
 		}
-		const space = state.spaces[name]
 		space.groups[gid] = {
 			gid,
 			displayName,
 			usersCount: 0,
 			slug,
 		}
-		VueSet(state.spaces, name, space)
+		VueSet(state.spaces, space.name, space)
 		sortSpaces(state)
 	},
 	// Adds a space to the workspaces list

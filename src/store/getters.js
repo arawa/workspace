@@ -26,31 +26,40 @@ import UserGroup from '../services/Groups/UserGroup.js'
 
 export const getters = {
 	// Returns the GE group of a workspace
-	GEGroup: state => name => {
-		return ManagerGroup.getGid(state.spaces[name])
+	GEGroup: (state, getters) => spaceNameOrId => {
+		return ManagerGroup.getGid(getters.getSpaceByNameOrId(spaceNameOrId))
 	},
 	// Returns the name of a group
-	groupName: state => (name, gid) => {
-		if (state.spaces[name].groups[gid]) {
-			return state.spaces[name].groups[gid].displayName
-		}
-		if (state.spaces[name].added_groups[gid]) {
-			return state.spaces[name].added_groups[gid].displayName
+	groupName: (state, getters) => (spaceNameOrId, gid) => {
+		const space = getters.getSpaceByNameOrId(spaceNameOrId)
+		if (space) {
+			if (space.groups[gid]) {
+				return space.groups[gid].displayName
+			}
+			if (space.added_groups[gid]) {
+				return space.added_groups[gid].displayName
+			}
 		}
 		return '[' + gid + ']'
 	},
-	getGroupUserCount: state => (spaceName, gid) => {
-		return state.spaces[spaceName].groups[gid].usersCount
+	getGroupUserCount: (state, getters) => (spaceNameOrId, gid) => {
+		return getters.getSpaceByNameOrId(spaceNameOrId).groups[gid].usersCount
 	},
-	getSpaceUserCount: state => (name) => {
-		return state.spaces[name].userCount
+	getSpaceUserCount: (state, getters) => (spaceNameOrId) => {
+		return getters.getSpaceByNameOrId(spaceNameOrId).userCount
 	},
 	getSpaceById: state => (spaceId) => {
 		return Object.values(state.spaces).find((space) => space.id === spaceId)
 	},
+	getSpaceByName: state => (spaceName) => {
+		return state.spaces[spaceName]
+	},
+	getSpaceByNameOrId: (state, getters) => spaceName => {
+		return state.spaces[spaceName] || getters.getSpaceById(Number(spaceName))
+	},
 	// Returns the number of users in a group
-	groupUserCount: state => (spaceName, gid) => {
-		const users = state.spaces[spaceName].users
+	groupUserCount: (state, getters) => (space, gid) => {
+		const users = space.users
 		if (users.length === 0) {
 			return 0
 		} else {
@@ -59,37 +68,40 @@ export const getters = {
 		}
 	},
 	// Tests wheter a user if General manager of a space
-	isSpaceAdmin: state => (user, spaceName) => {
-		return user.groups.includes(ManagerGroup.getGid(state.spaces[spaceName]))
+	isSpaceAdmin: state => (user, space) => {
+		if (!space) {
+			return false
+		}
+		return user.groups.includes(ManagerGroup.getGid(space))
 	},
 	// Test whether a user if from and added group from the space
-	isFromAddedGroups: state => (user, spaceName) => {
-		const addedGroups = Object.keys(state.spaces[spaceName].added_groups)
+	isFromAddedGroups: state => (user, space) => {
+		const addedGroups = Object.keys(space.added_groups)
 		const hasAddedGroups = user.groups.filter((group) => addedGroups.includes(group))
 		return hasAddedGroups.length > 0
 	},
 	// Test if group is from space added groups
-	isSpaceAddedGroup: state => (spaceName, groupName) => {
-		const space = state.spaces[spaceName]
+	isSpaceAddedGroup: (state, getters) => (spaceNameOrId, groupName) => {
+		const space = getters.getSpaceByNameOrId(spaceNameOrId)
 		const gids = Object.keys(space.added_groups)
 		return gids.includes(groupName)
 	},
 	// Tests wheter a group is the GE or U group of a space
-	isGEorUGroup: (state, getters) => (spaceName, gid) => {
-		return gid === getters.GEGroup(spaceName) || gid === getters.UGroup(spaceName)
+	isGEorUGroup: (state, getters) => (spaceNameOrId, gid) => {
+		return gid === getters.GEGroup(spaceNameOrId) || gid === getters.UGroup(spaceNameOrId)
 	},
 	// Tests whether a user is member of workspace
-	isMember: state => (name, user) => {
-		const users = state.spaces[name].users
+	isMember: (state, getters) => (spaceNameOrId, user) => {
+		const space = getters.getSpaceByNameOrId(spaceNameOrId)
+		if (!space) {
+			return false
+		}
+		const users = space.users
 		if (users.length === 0) {
 			return false
 		} else {
 			return (user.uid in users)
 		}
-	},
-	// Returns the quota of a space
-	quota: state => spaceName => {
-		return state.spaces[spaceName].quota
 	},
 	convertQuotaForFrontend: state => quota => {
 		if (quota === -3 || quota === '-3' || quota === undefined) {
@@ -127,14 +139,14 @@ export const getters = {
 		return state.spaces[name].name
 	},
 	// Returns the number of users in a space
-	spaceUserCount: state => name => {
-		if (state.spaces[name] === undefined) {
+	spaceUserCount: (state, getters) => space => {
+		if (space === undefined || space === null) {
 			return 0
 		}
-		if (state.spaces[name].userCount !== undefined && state.spaces[name].userCount > 0) {
-			return state.spaces[name].userCount
+		if (space.userCount !== undefined && space.userCount > 0) {
+			return space.userCount
 		}
-		const users = state.spaces[name].users
+		const users = space.users
 		if (users === undefined || users.length === 0) {
 			return -1
 		} else {
@@ -142,7 +154,7 @@ export const getters = {
 		}
 	},
 	// Returns the U- group of a workspace
-	UGroup: state => name => {
-		return UserGroup.getGid(state.spaces[name])
+	UGroup: (state, getters) => spaceNameOrId => {
+		return UserGroup.getGid(getters.getSpaceByNameOrId(spaceNameOrId))
 	},
 }
