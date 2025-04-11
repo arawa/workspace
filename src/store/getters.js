@@ -93,7 +93,7 @@ export const getters = {
 	},
 	convertQuotaForFrontend: state => quota => {
 		if (quota === -3 || quota === '-3') {
-			return 'unlimited'
+			return t('workspace', 'unlimited')
 		} else {
 			const units = ['', 'KB', 'MB', 'GB', 'TB']
 			let i = 0
@@ -101,7 +101,7 @@ export const getters = {
 				quota = quota / 1024
 				i++
 			}
-			return Number(quota.toFixed(2)) + units[i]
+			return Number(quota.toFixed(2)) + ' ' + units[i]
 		}
 	},
 	convertQuotaToByte: state => quota => {
@@ -122,6 +122,9 @@ export const getters = {
 		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota
 
 		return quota
+	},
+	getSpacename: state => name => {
+		return state.spaces[name].name
 	},
 	// Returns the number of users in a space
 	spaceUserCount: state => name => {
