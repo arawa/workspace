@@ -34,13 +34,15 @@ class UserFormatter {
 			}
 		}
 
+		$spaceUserGid = UserGroup::get($space['id']);
+
 		return [
 			'uid' => $user->getUID(),
 			'name' => $user->getDisplayName(),
 			'email' => $user->getEmailAddress(),
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
-			'is_connected' => $this->connectedGroupsService->isUserConnectedGroup($user->getUID(), $space),
+			'is_connected' => !$this->connectedGroupsService->isStrictSpaceUser($user->getUID(), $spaceUserGid),
 			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 			'role' => $role
 		];
