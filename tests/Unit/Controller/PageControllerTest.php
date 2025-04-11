@@ -29,15 +29,23 @@ use OCA\Workspace\Controller\PageController;
 
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class PageControllerTest extends TestCase {
 	private $controller;
 	private $userId = 'john';
+	private MockObject&UserService $userService;
+	private MockObject&IConfig $config;
 
 	public function setUp(): void {
+		$this->userService = $this->createMock(UserService::class);
+		$this->config = $this->createMock(IConfig::class);
+
 		$this->controller = new PageController(
-			$this->createMock(UserService::class),
+			$this->userService,
+			$this->config,
 		);
 	}
 
