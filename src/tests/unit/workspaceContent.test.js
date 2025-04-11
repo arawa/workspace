@@ -57,7 +57,7 @@ describe('Home component tests', () => {
 
 	it('ConvertQuotaForFrontend: Test regular quota', () => {
 		const quota = store.getters.convertQuotaForFrontend('3221225472')
-		expect(quota).toEqual('3GB')
+		expect(quota).toEqual('3 GB')
 	})
 
 	it('ConvertQuotaForFrontend: Test unlimited quota', () => {
@@ -67,12 +67,12 @@ describe('Home component tests', () => {
 
 	it('Convert 10000MB to 10GB', () => {
 		const quota = store.getters.convertQuotaForFrontend('10737418240')
-		expect(quota).toEqual('10GB')
+		expect(quota).toEqual('10 GB')
 	})
 
 	it('Convert 23GB to 23GB', () => {
 		const quota = store.getters.convertQuotaForFrontend('24696061952')
-		expect(quota).toEqual('23GB')
+		expect(quota).toEqual('23 GB')
 	})
 
 	it('Convert -3 (int) to unlimited', () => {
