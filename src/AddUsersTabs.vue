@@ -170,7 +170,7 @@ export default {
 		},
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close-sidebar')
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			this.allSelectedUsers.forEach(user => {
 				if (this.$route.params.slug === undefined) {
 					this.addUserFromWorkspace(user, space)
@@ -202,26 +202,27 @@ export default {
 				gid = UserGroup.getGid(space)
 			}
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid,
 				user,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid,
 			})
 			this.$store.dispatch('incrementSpaceUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 			})
 			if (user.role === 'wm') {
 				this.$store.dispatch('incrementGroupUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 					gid: UserGroup.getGid(space),
 				})
 			}
 		},
 		addExistingUserFromSubgroup(user) {
-			const name = this.$route.params.space
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const name = space.name
 			this.$store.dispatch('incrementGroupUserCount', {
 				spaceName: name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
@@ -237,29 +238,29 @@ export default {
 		},
 		addNewUserFromSubgroup(user, space) {
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 				user,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 			})
 			this.$store.dispatch('incrementSpaceUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid: UserGroup.getGid(space),
 			})
 			if (user.role === 'wm') {
 				this.$store.dispatch('addUserToGroup', {
-					name: this.$route.params.space,
+					name: space.name,
 					gid: ManagerGroup.getGid(space),
 					user,
 				})
 				this.$store.dispatch('incrementGroupUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 					gid: ManagerGroup.getGid(space),
 				})
 			}
@@ -267,42 +268,43 @@ export default {
 		addUserFromManagerGroup(user, space) {
 			const usersBackup = [...Object.keys(space.users)]
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 				user,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 			})
 			if (usersBackup.includes(user.uid)) {
 				return
 			}
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: UserGroup.getGid(space),
 				user,
 			})
 			this.$store.dispatch('incrementSpaceUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid: UserGroup.getGid(space),
 			})
 		},
 		addUserFromUserGroup(user) {
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			this.$store.dispatch('addUserToGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 				user,
 			})
 			this.$store.dispatch('incrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 			})
 			this.$store.dispatch('incrementSpaceUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 			})
 		},
 		// Adds user to the batch when user selects user in the MultiSelect

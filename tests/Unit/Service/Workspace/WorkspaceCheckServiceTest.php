@@ -51,7 +51,7 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithAtSymbol(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Esp@ce01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithPipe(): void {
@@ -63,13 +63,13 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithTild(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace~01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithPercent(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Es%pace01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithSlash(): void {
@@ -87,7 +87,7 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithAmpersand(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace01&Group');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithEmbraces(): void {
@@ -103,19 +103,19 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithSemiColon(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace01;Group');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithComma(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace01,Group');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithDot(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace.01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithColon(): void {
@@ -127,7 +127,7 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithExclamationMark(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace01!');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithQuestionMark(): void {
@@ -139,19 +139,19 @@ class WorkspaceCheckServiceTest extends TestCase {
 	public function testCheckSpacenameWithApostrophe(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace\'01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithSharp(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace#01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithPlus(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace+01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithBrackets(): void {
@@ -159,21 +159,21 @@ class WorkspaceCheckServiceTest extends TestCase {
 		$bracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01)');
 		$brackets = $this->workspaceCheckService->containSpecialChar('Espace(01)');
 
-		$this->assertTrue($bracketOpened);
-		$this->assertTrue($bracketClosed);
-		$this->assertTrue($brackets);
+		$this->assertFalse($bracketOpened);
+		$this->assertFalse($bracketClosed);
+		$this->assertFalse($brackets);
 	}
 
 	public function testCheckSpacenameWithCircumflexAccent(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace^01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithEqual(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace=01');
 
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 	public function testCheckSpacenameWithAsterisk(): void {
@@ -187,8 +187,26 @@ class WorkspaceCheckServiceTest extends TestCase {
 		$squareBracketClosed = $this->workspaceCheckService->containSpecialChar('Espace01]');
 		$squareBrackets = $this->workspaceCheckService->containSpecialChar('Espace[01]');
 
-		$this->assertTrue($squareBracketOpened);
-		$this->assertTrue($squareBracketClosed);
-		$this->assertTrue($squareBrackets);
+		$this->assertFalse($squareBracketOpened);
+		$this->assertFalse($squareBracketClosed);
+		$this->assertFalse($squareBrackets);
+	}
+
+	public function testCheckSpacenameWithLess(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace<');
+
+		$this->assertTrue($result);
+	}
+
+	public function testCheckSpacenameWithGreater(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace>');
+
+		$this->assertTrue($result);
+	}
+	
+	public function testCheckSpacenameWithSpace(): void {
+		$result = $this->workspaceCheckService->containSpecialChar('Espace 01');
+
+		$this->assertFalse($result);
 	}
 }

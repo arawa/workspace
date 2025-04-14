@@ -41,7 +41,7 @@
 			<tbody>
 				<tr v-for="user in users"
 					:key="user.uid"
-					:class="$store.getters.isSpaceAdmin(user, $route.params.space) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
+					:class="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
 					<td class="avatar workspace-td">
 						<VueLazyComponent
 							:key="'avatar-'+user.uid">
@@ -57,7 +57,7 @@
 						</div>
 					</td>
 					<td class="workspace-td">
-						{{ t('workspace', $store.getters.isSpaceAdmin(user, $route.params.space) ? 'wm' : 'user') }}
+						{{ t('workspace', $store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) ? 'wm' : 'user') }}
 					</td>
 					<td class="workspace-td group-list">
 						{{ sortGroups(user.groups) }}
@@ -71,7 +71,7 @@
 									@click="viewProfile(user)">
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
-								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $route.params.space)"
+								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space))"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
@@ -85,7 +85,7 @@
 									</template>
 									{{ t('workspace', 'Make administrator') }}
 								</NcActionButton>
-								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
+								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space))"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
@@ -143,7 +143,7 @@ export default {
 		// Returns the list of users to show in the table
 		users() {
 			let result = []
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const group = decodeURIComponent(this.$route.params.slug)
 			if (this.$route.params.slug !== undefined) {
 				// We are showing a group's users, so we have to filter the users
@@ -155,8 +155,8 @@ export default {
 			}
 
 			return result.sort((firstUser, secondUser) => {
-				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, this.$route.params.space) ? 'wm' : 'user'
-				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, this.$route.params.space) ? 'wm' : 'user'
+				const roleFirstUser = this.$store.getters.isSpaceAdmin(firstUser, space) ? 'wm' : 'user'
+				const roleSecondUser = this.$store.getters.isSpaceAdmin(secondUser, space) ? 'wm' : 'user'
 				if (roleFirstUser !== roleSecondUser) {
 					// display admins first
 					return roleFirstUser === 'wm' ? -1 : 1
@@ -176,15 +176,15 @@ export default {
 	},
 	methods: {
 		sortGroups(groups) {
-			const spacename = this.$route.params.space
-			const groupsSorted = this.sortedGroups([...groups], spacename)
-			return groupsSorted.map(group => this.$store.getters.groupName(spacename, group)).join(', ')
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const groupsSorted = this.sortedGroups([...groups], space)
+			return groupsSorted.map(group => this.$store.getters.groupName(space.name, group)).join(', ')
 		},
-		sortedGroups(groups, spacename) {
+		sortedGroups(groups, space) {
 			groups.sort((groupCurrent, groupNext) => {
 				// Makes sure the U- group is first in the list
 				// These tests must happen before the tests for the GE- group
-				const UGroup = this.$store.getters.UGroup(spacename)
+				const UGroup = this.$store.getters.UGroup(space.name)
 				if (groupCurrent === UGroup) {
 					return -1
 				}
@@ -193,7 +193,7 @@ export default {
 				}
 				// Makes sure the GE- group is second in the list
 				// These tests must be done after the tests for the U- group
-				const GEGroup = this.$store.getters.GEGroup(spacename)
+				const GEGroup = this.$store.getters.GEGroup(space.name)
 				if (groupCurrent === GEGroup) {
 					return -1
 				}
@@ -218,32 +218,32 @@ export default {
 		},
 		// Removes a user from a workspace
 		deleteUser(user) {
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			this.$store.dispatch('removeUserFromWorkspace', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: UserGroup.getGid(space),
 				user,
 			})
 			user.groups.forEach((gid) => {
 				this.$store.dispatch('decrementGroupUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 					gid,
 				})
 			})
 			this.$store.dispatch('decrementSpaceUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 			})
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
-			const name = this.$route.params.space
-			const space = this.$store.state.spaces[name]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const name = space.name
 			this.$store.dispatch('toggleUserRole', {
 				name,
 				user,
 			})
 			if (user.is_connected) {
-				this.$store.commit('TOGGLE_USER_CONNECTED', { name, user })
+				this.$store.commit('TOGGLE_USER_CONNECTED', { name: space.name, user })
 				this.$store.dispatch('addUserToGroup', {
 					name,
 					gid: UserGroup.getGid(space),
@@ -254,29 +254,29 @@ export default {
 		// Removes a user from a group
 		removeFromGroup(user) {
 			const gid = decodeURIComponent(this.$route.params.slug)
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			this.$store.dispatch('removeUserFromGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid,
 				user,
 			})
 			this.$store.dispatch('decrementGroupUserCount', {
-				spaceName: this.$route.params.space,
+				spaceName: space.name,
 				gid,
 			})
 			if (gid.startsWith('SPACE-GE')) {
 				this.$store.dispatch('decrementGroupUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 					gid: ManagerGroup.getGid(space),
 				})
 			}
 			if (gid.startsWith('SPACE-U')) {
 				this.$store.dispatch('decrementGroupUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 					gid: UserGroup.getGid(space),
 				})
 				this.$store.dispatch('decrementSpaceUserCount', {
-					spaceName: this.$route.params.space,
+					spaceName: space.name,
 				})
 			}
 		},

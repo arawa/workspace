@@ -112,7 +112,7 @@ export default {
 			}
 
 			this.loadingGroups = true
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const groupsPresents = Object.keys(space.added_groups) || []
 
 			axios.get(generateUrl('/apps/workspace/groups'), {
@@ -145,11 +145,11 @@ export default {
 			this.$emit('close')
 			// todo: Call api
 			this.groupsSelected.forEach(group => {
-				const space = this.$store.state.spaces[this.$route.params.space]
+				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 				this.$store.dispatch('addConnectedGroupToWorkspace', {
 					spaceId: space.id,
 					group,
-					name: this.$route.params.space,
+					name: space.name,
 				})
 			})
 		},

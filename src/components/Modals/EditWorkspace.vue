@@ -129,25 +129,27 @@ export default {
 			return t('workspace', 'You use <b>{size}</b> on {quota}', { size: this.getSize, quota: this.getQuota })
 		},
 		getSpaceName() {
-			return this.$store.state.spaces[this.$route.params.space].name
+			return this.$store.getters.getSpaceByNameOrId(this.$route.params.space).name
 		},
 	},
 	beforeMount() {
-		this.color = this.$store.state.spaces[this.$route.params.space].color
-		this.quota = this.$store.state.spaces[this.$route.params.space].quota
-		this.size = this.$store.state.spaces[this.$route.params.space].size
-		this.spacename = this.$store.state.spaces[this.$route.params.space].name
+		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+		this.color = space.color
+		this.quota = space.quota
+		this.size = space.size
+		this.spacename = space.name
 	},
 	methods: {
 		close() {
 			this.$emit('close')
 		},
 		async save() {
-			const oldSpaceName = this.$store.state.spaces[this.$route.params.space].name
-			const space = { ...this.$store.state.spaces[oldSpaceName] }
+			const oldSpace = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const oldSpaceName = oldSpace.name
+			const space = { ...oldSpace }
 
 			if (this.color !== space.color) {
-				axios.post(generateUrl(`/apps/workspace/workspaces/${this.$store.state.spaces[oldSpaceName].id}/color`),
+				axios.post(generateUrl(`/apps/workspace/workspaces/${oldSpace.id}/color`),
 					{
 						colorCode: this.color,
 					})
@@ -164,11 +166,11 @@ export default {
 			}
 
 			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
-				let responseRename = await renameSpace(this.$store.state.spaces[oldSpaceName].id, this.spacename)
+				let responseRename = await renameSpace(oldSpace.id, this.spacename)
 				responseRename = responseRename.data
 
 				if (responseRename.statuscode === 204) {
-					const spaceBeforeRenamed = { ...this.$store.state.spaces[oldSpaceName] }
+					const spaceBeforeRenamed = { ...oldSpace }
 					spaceBeforeRenamed.name = responseRename.space
 					space.name = responseRename.space
 
@@ -176,7 +178,7 @@ export default {
 						space: spaceBeforeRenamed,
 					})
 					this.$store.dispatch('removeSpace', {
-						space: this.$store.state.spaces[oldSpaceName],
+						space: oldSpace,
 					})
 
 					const groupKeys = Object.keys(spaceBeforeRenamed.groups)
@@ -205,7 +207,7 @@ export default {
 
 			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
 				this.$router.push({
-					path: `/workspace/${space.name}`,
+					path: `/workspace/${space.id}`,
 				})
 			}
 

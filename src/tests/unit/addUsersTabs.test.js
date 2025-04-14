@@ -86,7 +86,8 @@ describe('AddUsersTabs component tests', () => {
 		wrappedSelectUsers.vm.$route.params.slug = 'subgroup-42'
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'subgroup-42')
+		const space = wrappedSelectUsers.vm.$store.getters.getSpaceByNameOrId('foobar')
+		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount(space, 'subgroup-42')
 		expect(count).toEqual(1)
 	})
 
@@ -105,7 +106,8 @@ describe('AddUsersTabs component tests', () => {
 		wrappedSelectUsers.vm.$route.params.slug = undefined
 
 		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-U-42')
+		const space = wrappedSelectUsers.vm.$store.getters.getSpaceByNameOrId('foobar')
+		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount(space, 'SPACE-U-42')
 		expect(count).toEqual(1)
 	})
 
@@ -126,7 +128,8 @@ describe('AddUsersTabs component tests', () => {
 			wrappedSelectUsers.vm.$route.params.slug = undefined
 
 			wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount('foobar', 'SPACE-GE-42')
+			const space = wrappedSelectUsers.vm.$store.getters.getSpaceByNameOrId('foobar')
+			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount(space, 'SPACE-GE-42')
 			expect(count).toEqual(1)
 		},
 	)

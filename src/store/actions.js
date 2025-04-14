@@ -38,7 +38,7 @@ export default {
 		context.commit('addUserToGroup', { name, gid, user })
 
 		// Update backend and revert frontend changes if something fails
-		const space = context.state.spaces[name]
+		const space = context.getters.getSpaceByNameOrId(name)
 		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
 		axios.post(url, {
 			gid,
@@ -101,9 +101,8 @@ export default {
 		context.commit('DECREMENT_COUNT_WORKSPACES')
 	},
 	// Creates a group and navigates to its details page
-	createGroup(context, { name, gid }) {
+	createGroup(context, { space, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
-		const space = context.state.spaces[name]
 		const spaceId = space.id
 		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
 		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
@@ -128,16 +127,16 @@ export default {
 				addGroupToWorkspace(space.id, resp.data.group.gid)
 				// Creates group in frontend
 				context.commit('addGroupToSpace', {
-					name,
+					space,
 					gid,
 					displayName,
 					types: resp.data.group.types,
 					slug: resp.data.group.slug,
 				})
 				// Navigates to the g roup's details page
-				context.state.spaces[name].isOpen = true
+				space.isOpen = true
 				router.push({
-					path: `/group/${name}/${resp.data.group.slug}`,
+					path: `/group/${space.id}/${resp.data.group.slug}`,
 				})
 				// eslint-disable-next-line no-console
 				console.log('Group ' + gid + ' created')
@@ -151,14 +150,14 @@ export default {
 	},
 	// Deletes a group
 	deleteGroup(context, { name, gid }) {
-		const space = context.state.spaces[name]
+		const space = context.getters.getSpaceByNameOrId(name)
 
 		// Deletes group from frontend
-		context.commit('removeGroupFromSpace', { name, gid })
+		context.commit('removeGroupFromSpace', { space, gid })
 
 		// Naviagte back to home
 		router.push({
-			path: `/workspace/${name}`,
+			path: `/workspace/${space.id}`,
 		})
 
 		// Deletes group from backend
@@ -168,13 +167,13 @@ export default {
 					// eslint-disable-next-line no-console
 					console.log('Group ' + gid + ' deleted')
 				} else {
-					context.commit('addGroupToSpace', { name, gid })
+					context.commit('addGroupToSpace', { space, gid })
 					const text = t('workspace', 'An error occured while trying to delete group {group}<br>The error is: {error}', { group: gid, error: resp.statusText })
 					showNotificationError('Error', text, 3000)
 				}
 			})
 			.catch((e) => {
-				context.commit('addGroupToSpace', { name, gid })
+				context.commit('addGroupToSpace', { space, gid })
 				const text = t('workspace', 'Network error occured while trying to delete group {group}<br>The error is: {error}', { group: gid, error: e })
 				showNotificationError('Network error', text, 3000)
 			})
@@ -187,7 +186,7 @@ export default {
 	},
 	// Remove a user from a workspace
 	removeUserFromWorkspace(context, { name, gid, user }) {
-		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
+		const space = JSON.parse(JSON.stringify(context.getters.getSpaceByNameOrId(name)))
 		const backupGroups = space.users[user.uid].groups
 
 		context.commit('removeUserFromWorkspace', { name, user })
@@ -222,7 +221,7 @@ export default {
 	removeUserFromGroup(context, { name, gid, user }) {
 		// It's a deep copy to copy the object and not the reference.
 		// src: https://www.samanthaming.com/tidbits/70-3-ways-to-clone-objects/#shallow-clone-vs-deep-clone
-		const space = JSON.parse(JSON.stringify(context.state.spaces[name]))
+		const space = JSON.parse(JSON.stringify(context.getters.getSpaceByNameOrId(name)))
 		const backupGroups = space.users[user.uid].groups
 		// Update frontend
 		if (gid === UserGroup.getGid(space)) {
@@ -263,14 +262,14 @@ export default {
 	},
 	// Renames a group and navigates to its details page
 	renameGroup(context, { name, gid, newGroupName }) {
-		const space = context.state.spaces[name]
+		const space = context.getters.getSpaceByNameOrId(name)
 
 		// Creates group in backend
 		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// Navigates to the group's details page
-					context.state.spaces[name].isOpen = true
+					space.isOpen = true
 					// eslint-disable-next-line no-console
 					console.log('Group ' + gid + ' renamed to ' + newGroupName)
 
@@ -287,8 +286,8 @@ export default {
 	},
 	// Change a user's role from admin to user (or the opposite way)
 	toggleUserRole(context, { name, user }) {
-		const space = context.state.spaces[name]
-		if (context.getters.isSpaceAdmin(user, name)) {
+		const space = context.getters.getSpaceByNameOrId(name)
+		if (context.getters.isSpaceAdmin(user, space)) {
 			user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 			context.commit('DECREMENT_GROUP_USER_COUNT', {
 				spaceName: space.name,
@@ -325,7 +324,7 @@ export default {
 					console.log('Role of user ' + user.name + ' changed')
 				} else {
 					// Revert action an inform user
-					if (context.getters.isSpaceAdmin(user, name)) {
+					if (context.getters.isSpaceAdmin(user, space)) {
 						user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 					} else {
 						user.groups.push(ManagerGroup.getGid(space))
@@ -336,7 +335,7 @@ export default {
 				}
 			}).catch((e) => {
 				// Revert action an inform user
-				if (context.getters.isSpaceAdmin(user, name)) {
+				if (context.getters.isSpaceAdmin(user, space)) {
 					user.groups.splice(user.groups.indexOf(ManagerGroup.getGid(space)), 1)
 				} else {
 					user.groups.push(ManagerGroup.getGid(space))
@@ -362,11 +361,11 @@ export default {
 
 		// Naviagte back to home
 		router.push({
-			path: `/workspace/${name}`,
+			path: `/workspace/${spaceId}`,
 		})
 	},
 	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
-		const space = context.state.spaces[name]
+		const space = context.getters.getSpaceByNameOrId(name)
 		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups`), {
 			gid: group.gid,
 		})
@@ -381,7 +380,7 @@ export default {
 					}
 
 					const uid = users[user].uid
-					const usersFromSpace = Object.keys(context.state.spaces[name].users)
+					const usersFromSpace = Object.keys(space.users)
 
 					if (!usersFromSpace.includes(uid)) {
 						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
@@ -407,11 +406,11 @@ export default {
 	},
 	setSpaceQuota(context, { name, quota }) {
 		// Updates frontend
-		const oldQuota = context.getters.quota(name)
+		const space = context.getters.getSpaceByNameOrId(name)
+		const oldQuota = space.quota
 		context.commit('setSpaceQuota', { name, quota })
 
 		// Updates backend
-		const space = context.state.spaces[name]
 		const url = generateUrl(`/apps/groupfolders/folders/${space.groupfolderId}/quota`)
 		axios.post(url, { quota })
 			.then(resp => {

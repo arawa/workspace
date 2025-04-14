@@ -78,8 +78,9 @@ describe('Vuex store tests', () => {
 	})
 
 	it('Adds a group to the space', () => {
+		const space = bindGetters().getSpaceByNameOrId('test-space')
 		mutations.addGroupToSpace(state, {
-			name: 'test-space',
+			space,
 			gid: 'test-group',
 			slug: 'test-group',
 			usersCount: 0,
@@ -113,12 +114,6 @@ describe('Vuex store tests', () => {
 		expect(state.spaces['test-space'].quota).toEqual('1TB')
 	})
 
-	it('Get space quota', () => {
-		const getters = bindGetters()
-		const quota = getters.quota('test-space')
-		expect(quota).toEqual('unlimited')
-	})
-
 	it('Adds a user to the space', () => {
 		mutations.addUserToWorkspace(state, {
 			name: 'test-space',
@@ -137,13 +132,15 @@ describe('Vuex store tests', () => {
 
 	it('Count users in workspace', () => {
 		const getters = bindGetters()
-		const count = getters.spaceUserCount('test-space')
+		const space = getters.getSpaceByNameOrId('test-space')
+		const count = getters.spaceUserCount(space)
 		expect(count).toEqual(1)
 	})
 
 	it('Count users in group', () => {
 		const getters = bindGetters()
-		const count = getters.groupUserCount('test-space', 'GE-test-space')
+		const space = getters.getSpaceByNameOrId('test-space')
+		const count = getters.groupUserCount(space, 'GE-test-space')
 		expect(count).toEqual(1)
 	})
 

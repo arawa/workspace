@@ -119,20 +119,20 @@ export default {
 		},
 	},
 	mounted() {
-		const space = this.$store.state.spaces[this.$route.params.space]
+		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		this.$store.dispatch('loadUsers', { space })
 	},
 	methods: {
 		deleteGroup() {
 			// Prevents deleting GE- and U- groups
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			if (decodeURIComponent(this.$route.params.slug) === PREFIX_MANAGER + space.id
 			|| decodeURIComponent(this.$route.params.slug) === UserGroup.getGid(space)) {
 				// TODO Inform user
 				return
 			}
 			this.$store.dispatch('deleteGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: decodeURIComponent(this.$route.params.slug),
 			})
 		},
@@ -149,7 +149,7 @@ export default {
 			this.showRemoveGroupModal = false
 		},
 		removeConnectedGroup() {
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 
 			const usersAreNotConnected = Object.values(space.users).filter((user) => user.is_connected === false && user.groups.includes(gid))
@@ -197,7 +197,7 @@ export default {
 				return
 			}
 
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const groupSpace = space.groups[decodeURIComponent(this.$route.params.slug)]
 
 			group = ''.concat('G-', group, '-', space.name)
@@ -214,7 +214,7 @@ export default {
 
 			// Renames group
 			this.$store.dispatch('renameGroup', {
-				name: this.$route.params.space,
+				name: space.name,
 				gid: decodeURIComponent(this.$route.params.slug),
 				newGroupName: group,
 			})
@@ -227,6 +227,10 @@ export default {
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
+		},
+		getSpaceName(spaceId) {
+			const space = this.$store.getters.getSpaceById(spaceId)
+			return space ? space.name : ''
 		},
 	},
 }

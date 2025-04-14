@@ -40,9 +40,9 @@
 			</thead>
 			<tbody>
 				<tr v-for="(space,name) in $store.state.spaces"
-					:key="name"
+					:key="'space-item-' + space.id"
 					class="workspace-tr"
-					@click="openSpace(name)">
+					@click="openSpace(space.id)">
 					<td style="width: 50px;" class="workspace-td">
 						<span class="color-dot-home" :style="{background: space.color}" />
 					</td>
@@ -98,12 +98,12 @@ export default {
 			if (space.managers) {
 				return Object.values(space.managers)
 			}
-			return Object.values(space.users).filter((u) => this.$store.getters.isSpaceAdmin(u, space.name))
+			return Object.values(space.users).filter((u) => this.$store.getters.isSpaceAdmin(u, space))
 		},
-		openSpace(name) {
-			this.$store.state.spaces[name].isOpen = true
+		openSpace(id) {
+			this.$store.getters.getSpaceByNameOrId(id).isOpen = true
 			this.$router.push({
-				path: `/workspace/${name}`,
+				path: `/workspace/${id}`,
 			})
 		},
 		initAdmins(id, name) {
