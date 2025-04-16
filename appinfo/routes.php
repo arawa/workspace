@@ -64,6 +64,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'workspace#updateQuota',
+			'url' => '/spaces/{spaceId}/quota',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'workspace#lookupUsers',
 			'url' => '/api/autoComplete/{term}/{spaceId}',
 			'verb' => 'POST'
