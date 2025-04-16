@@ -411,7 +411,7 @@ export default {
 		context.commit('setSpaceQuota', { name, quota })
 
 		// Updates backend
-		const url = generateUrl(`/apps/groupfolders/folders/${space.groupfolderId}/quota`)
+		const url = generateUrl(`/apps/workspace/spaces/${space.id}/quota`)
 		axios.post(url, { quota })
 			.then(resp => {
 				if (resp.status !== 200) {
