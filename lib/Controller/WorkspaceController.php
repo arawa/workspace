@@ -254,7 +254,28 @@ class WorkspaceController extends Controller {
 
 		return new JSONResponse($adminUsers);
 	}
-	
+
+	/**
+	 * @NoAdminRequired
+	 * @GeneralManagerRequired
+	 * @param int $spaceId of workspace
+	 * @param int $quota in bytes
+	 */
+	public function updateQuota(int $spaceId, int $quota): JSONResponse {
+
+		if (!is_int($quota)) {
+			throw new BadRequestException('Error setting quota', 'The quota parameter is not an integer.');
+		}
+
+		$space = $this->spaceMapper->find($spaceId);
+		$this->folderHelper->setFolderQuota($space->getGroupfolderId(), $quota);
+
+		return new JSONResponse([
+			'quota' => $quota,
+			'success' => true
+		]);
+	}
+
 	/**
 	 * @NoAdminRequired
 	 * @param string|array $workspace

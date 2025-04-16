@@ -420,7 +420,7 @@ export default {
 
 		// Updates backend
 		const space = context.state.spaces[name]
-		const url = generateUrl(`/apps/groupfolders/folders/${space.groupfolderId}/quota`)
+		const url = generateUrl(`/apps/workspace/spaces/${space.id}/quota`)
 		axios.post(url, { quota })
 			.then(resp => {
 				if (resp.status !== 200) {
