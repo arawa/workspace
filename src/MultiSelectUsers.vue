@@ -100,7 +100,8 @@ export default {
 				})
 				.then((resp) => {
 					if (resp.status === 200) {
-						const usersToDisplay = this.filterAlreadyPresentUsers(resp.data)
+						const users = this.removeDuplicatedUsers(resp.data)
+						const usersToDisplay = this.filterAlreadyPresentUsers(users)
 						this.selectableUsers = this.addSubtitleToUsers(usersToDisplay)
 					} else {
 						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
@@ -113,6 +114,14 @@ export default {
 					console.error('Problem to search users', e)
 				})
 			this.isLookingUpUsers = false
+		},
+		removeDuplicatedUsers(users) {
+			const usersWithoutDuplicated = Array.from(
+				new Set(
+					users.map(user => user.uid)))
+				.map(uid => users.find(user => user.uid === uid))
+
+			return usersWithoutDuplicated
 		},
 		addSubtitleToUsers(users) {
 			return users.map(user => {
