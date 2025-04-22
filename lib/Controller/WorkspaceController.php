@@ -157,7 +157,7 @@ class WorkspaceController extends Controller {
 
 			$gids = array_keys($space['groups'] ?? []);
 			$wsGroups = [];
-			$space['users'] = (object) [];
+			$space['users'] = (object)[];
 			$addedGroups = [];
 
 			foreach ($gids as $gid) {
@@ -165,7 +165,7 @@ class WorkspaceController extends Controller {
 				if (is_null($group)) {
 					$this->logger->warning(
 						"Be careful, the $gid group does not exist in the oc_groups table."
-						. " The group is still present in the oc_group_folders_groups table."
+						. ' The group is still present in the oc_group_folders_groups table.'
 						. ' To fix this inconsistency, recreate the group using occ commands.'
 					);
 					continue;
@@ -241,7 +241,7 @@ class WorkspaceController extends Controller {
 		}
 
 		$adminUsers = [];
-		foreach($groupfolder['groups'] as $gid => $groupInfo) {
+		foreach ($groupfolder['groups'] as $gid => $groupInfo) {
 			if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($gid)) {
 				$group = $this->groupManager->get($gid);
 				if ($group !== null) {
@@ -254,7 +254,34 @@ class WorkspaceController extends Controller {
 
 		return new JSONResponse($adminUsers);
 	}
-	
+
+	/**
+	 * @NoAdminRequired
+	 * @GeneralManagerRequired
+	 * @param int $spaceId of workspace
+	 * @param int $quota in bytes
+	 */
+	public function updateQuota(int $spaceId, int $quota): JSONResponse {
+
+		$space = $this->spaceMapper->find($spaceId);
+
+		if (is_null($space)) {
+			throw new \Exception('Workspace does not exist.');
+		}
+		
+		if (!is_int($quota)) {
+			throw new BadRequestException('Error setting quota', 'The quota parameter is not an integer.');
+		}
+
+		$space = $this->spaceMapper->find($spaceId);
+		$this->folderHelper->setFolderQuota($space->getGroupfolderId(), $quota);
+
+		return new JSONResponse([
+			'quota' => $quota,
+			'success' => true
+		]);
+	}
+
 	/**
 	 * @NoAdminRequired
 	 * @param string|array $workspace
