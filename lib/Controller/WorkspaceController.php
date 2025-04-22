@@ -263,6 +263,12 @@ class WorkspaceController extends Controller {
 	 */
 	public function updateQuota(int $spaceId, int $quota): JSONResponse {
 
+        $space = $this->spaceMapper->find($spaceId);
+
+        if (is_null($space)) {
+            throw new \Exception('Workspace does not exist.');
+        }
+        
 		if (!is_int($quota)) {
 			throw new BadRequestException('Error setting quota', 'The quota parameter is not an integer.');
 		}
