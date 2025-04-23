@@ -49,6 +49,17 @@ const sortSpaces = (state) => {
 	state.spaces = sortedSpaces
 }
 
+const updateGroupUserCount = (groups, users) => {
+	Object.keys(groups).forEach(gid => {
+		groups[gid].usersCount = 0
+		Object.keys(users).forEach(uid => {
+			if (users[uid].groups.includes(gid)) {
+				groups[gid].usersCount++
+			}
+		})
+	})
+}
+
 // Function to sort groupfolders case-insensitively, and locale-based
 // It must be called every time a space is modified to keep the
 // groupfolders list sorted in the left navigation panel of the app
@@ -103,6 +114,10 @@ export default {
 	},
 	UPDATE_USERS(state, { space, users }) {
 		space.users = users
+		if (space.userCount !== Object.keys(users).length) {
+			space.userCount = Object.keys(users).length
+			updateGroupUserCount(space.groups, users)
+		}
 		VueSet(state.spaces, space.name, space)
 	},
 	SET_LOADING_USERS_WAITING(state, { activated }) {
