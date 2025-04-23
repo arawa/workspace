@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.3] - 2025-04-23
+
+### Fixed
+
+- Don't show old legacy local groups as connected groups by @smarinier in [#1220](https://github.com/arawa/workspace/pull/1220)
+- Fix infinite loading problem in user list by @smarinier in [#1232](https://github.com/arawa/workspace/pull/1232)
+- Backport: Fixing typo and wording on warning log by @zak39 in [#1247](https://github.com/arawa/workspace/pull/1247)
+- Backport: connected groups with slashes by @zak39 in [#1222](https://github.com/arawa/workspace/pull/1222)
+- Ignore inconsistencies in the groups and subgroups listing for a workspace by @smarinier in [#1231](https://github.com/arawa/workspace/pull/1231)
+- Backport: Correcting Workspace naming in fr.json by @zak39 in [#1234](https://github.com/arawa/workspace/pull/1234)
+- Backport: Remove duplicated users by @zak39 in [#1262](https://github.com/arawa/workspace/pull/1262)
+
+### Changed
+
+- Backport: Harmonize user select input with the added group select input by @zak39 in [#1217](https://github.com/arawa/workspace/pull/1217)
+- Optimize user state for users in added groups by @smarinier in [#1203](https://github.com/arawa/workspace/pull/1203)
+- Backport: Update fr.js for 2 error messages by @zak39 in [#1250](https://github.com/arawa/workspace/pull/1250)
+- Backport: Reduce user search loading time by @zak39 in [#1252](https://github.com/arawa/workspace/pull/1252)
+- Backport : Move set quota backend by @zak39 in [#1264](https://github.com/arawa/workspace/pull/1264)
+
+
 ## [4.0.2] - 2025-03-18
 
 ### Changed
@@ -366,7 +387,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.2...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.3...main
+[4.0.3]: https://github.com/arawa/workspace/compare/v4.0.2...4.0.3
 [4.0.2]: https://github.com/arawa/workspace/compare/v4.0.1...4.0.2
 [4.0.1]: https://github.com/arawa/workspace/compare/v4.0.0...4.0.1
 [4.0.0]: https://github.com/arawa/workspace/compare/v3.3.2...4.0.0
