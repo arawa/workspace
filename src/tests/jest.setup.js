@@ -28,6 +28,8 @@ global.console = {
 	debug: jest.fn(),
 }
 
+global.appName = 'workspace'
+
 global.OCA = {}
 
 jest.mock('@nextcloud/axios', () => mockAxios)
