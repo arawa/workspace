@@ -30,7 +30,6 @@ import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfo
 
 /**
 	* @param {string} spaceName it's a name for the space to create
-	* @param {number} folderId it's the id of groupfolder
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
@@ -60,7 +59,8 @@ export function createSpace(spaceName, vueInstance = undefined) {
 
 /**
  *
- * @param spaceId
+ * @param {number} spaceId id of space
+ * @return {object}
  */
 export function getUsers(spaceId) {
 	const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
@@ -69,6 +69,12 @@ export function getUsers(spaceId) {
 		})
 		.catch(error => {
 			console.error('Impossible to get users from a workspace.', error)
+			let errorMessage = t('workspace', "Can't load workspace users")
+			if (error.response && error.response.data && error.response.data.message) {
+				console.error(error.response.data.message)
+				errorMessage += ': ' + error.response.data.message
+			}
+			throw new Error(errorMessage)
 		})
 	return result
 }
@@ -144,7 +150,7 @@ export function addGroupToWorkspace(spaceId, gid) {
 }
 
 /**
- * @param {integer} spaceId it's the id relative to workspace
+ * @param {number} spaceId it's the id relative to workspace
  * @return {Promise}
  */
 export function removeWorkspace(spaceId) {
@@ -161,8 +167,9 @@ export function removeWorkspace(spaceId) {
 
 /**
  *
- * @param spaceId
- * @param newSpaceName
+ * @param {number} spaceId if of space
+ * @param {string} newSpaceName new space name
+ * @return {object}
  */
 export function renameSpace(spaceId, newSpaceName) {
 	const respFormat = {
