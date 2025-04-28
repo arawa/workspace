@@ -159,6 +159,7 @@ class WorkspaceController extends Controller {
 			$wsGroups = [];
 			$space['users'] = (object)[];
 			$addedGroups = [];
+			$usersGroupId = null;
 
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
@@ -177,12 +178,16 @@ class WorkspaceController extends Controller {
 				}
 
 				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['userCount'] = $group->count();
+					$usersGroupId = $gid;
 				}
 			}
 
 			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
 			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+
+			if ($usersGroupId !== null) {
+				$space['userCount'] = $space['groups'] [$usersGroupId]['usersCount'];
+			}
 
 			$spaces[] = $space;
 		}

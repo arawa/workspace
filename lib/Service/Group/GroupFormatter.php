@@ -48,12 +48,12 @@ class GroupFormatter {
 				$backendnames
 			);
 
-			$usersCount = $group->count();
-
 			if (!UserGroup::isWorkspaceGroup($group)) {
 				$users = $group->getUsers();
 				$users = array_filter($users, fn ($user) => $user->isEnabled());
 				$usersCount = count($users);
+			} else {
+				$usersCount = $group->count();
 			}
 
 			$groupsFormat[$group->getGID()] = [
