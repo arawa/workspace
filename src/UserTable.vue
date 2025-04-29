@@ -113,10 +113,10 @@
 </template>
 
 <script>
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'

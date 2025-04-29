@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import LeftSidebar from './LeftSidebar.vue'
 import WorkspaceContent from './WorkspaceContent.vue'
 
