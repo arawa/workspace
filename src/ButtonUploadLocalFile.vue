@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import Upload from 'vue-material-design-icons/Upload.vue'
 import showNotificationError from './services/Notifications/NotificationError.js'
 

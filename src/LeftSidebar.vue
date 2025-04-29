@@ -61,10 +61,10 @@
 
 <script>
 import { createSpace } from './services/spaceService.js'
-import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
-import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
-import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
-import NcCounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble.js'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcAppNavigationNewItem from '@nextcloud/vue/components/NcAppNavigationNewItem'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
 

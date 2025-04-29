@@ -40,8 +40,8 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
-import NcAppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails.js'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import LoadingUsers from './LoadingUsers.vue'
 
 export default {

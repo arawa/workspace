@@ -32,7 +32,7 @@
 
 <script>
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import Folder from 'vue-material-design-icons/Folder.vue'
 

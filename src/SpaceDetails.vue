@@ -103,17 +103,17 @@
 
 <script>
 import EditWorkspace from './components/Modals/EditWorkspace.vue'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActionInput from '@nextcloud/vue/components/NcActionInput'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcModal from '@nextcloud/vue/components/NcModal'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
 import AddUsersTabs from './AddUsersTabs.vue'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 export default {
 	name: 'SpaceDetails',

@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 
 export default {
