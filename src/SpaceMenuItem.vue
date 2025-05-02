@@ -33,9 +33,9 @@
 		<MenuItemSelector />
 		<NcAppNavigationCaption
 			ref="navigationGroup"
-			:title="t('workspace', 'Workspace groups')">
+			:name="t('workspace', 'Workspace groups')">
 			<template #actionsTriggerIcon>
-				<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :title="t('workspace', 'Create a workspace group')" :size="20" />
+				<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
 			</template>
 			<template #actions>
 				<NcActionText :class="'space-text'">
@@ -59,7 +59,7 @@
 			:space-id="space.id"
 			:space-name="spaceName" />
 		<NcAppNavigationCaption
-			:title="t('workspace', 'Added groups')">
+			:name="t('workspace', 'Added groups')">
 			<template #actions>
 				<NcActionButton
 					:aria-label="t('workspace', 'Add a group')"

@@ -23,12 +23,11 @@
 	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
 		<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 			icon="icon-add"
-			:title="t('workspace', 'New space')"
+			:name="t('workspace', 'New space')"
 			@new-item="createSpace" />
 		<NcAppNavigationItem
 			:name="t('workspace', 'All spaces')"
-			:to="{path: '/'}"
-			:class="$route.path === '/' ? 'space-selected' : 'all-spaces'">
+			:to="{path: '/'}">
 			<NcCounterBubble slot="counter">
 				{{ $store.state.countWorkspaces }}
 			</NcCounterBubble>

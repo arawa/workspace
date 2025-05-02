@@ -53,7 +53,7 @@
 				</div>
 				<NcEmptyContent v-else
 					class="content-group-list-empty"
-					:title="t('workspace', 'No group selected')" />
+					:name="t('workspace', 'No group selected')" />
 			</div>
 			<NcButton type="secondary"
 				class="btn-add-groups"
