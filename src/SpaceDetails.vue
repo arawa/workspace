@@ -23,7 +23,7 @@
 <template>
 	<div v-if="$store.state.noUsers">
 		<NcEmptyContent
-			:title="t('workspace', 'No users')">
+			:name="t('workspace', 'No users')">
 			<template #description>
 				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
@@ -48,11 +48,11 @@
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
 						class="no-bold"
-						:title="t('workspace', 'Add users')"
+						:name="t('workspace', 'Add users')"
 						@click="toggleShowSelectUsersModal" />
 					<NcActionButton v-show="!createGroup"
 						icon="icon-group"
-						:title="t('workspace', 'Create a workspace group')"
+						:name="t('workspace', 'Create a workspace group')"
 						class="no-bold"
 						@click="toggleCreateGroup" />
 					<NcActionInput v-show="createGroup"
