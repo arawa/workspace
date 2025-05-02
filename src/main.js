@@ -23,6 +23,7 @@
 
 import Vue from 'vue'
 import router from './router.js'
+import { linkTo } from '@nextcloud/router'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
@@ -35,6 +36,9 @@ Vue.mixin({
 		n,
 	},
 })
+
+// eslint-disable-next-line
+__webpack_public_path__ = linkTo('workspace', 'js/')
 
 Vue.directive('tooltip', Tooltip)
 Vue.use(VueLazyComponent)
