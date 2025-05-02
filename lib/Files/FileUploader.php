@@ -7,7 +7,9 @@ class FileUploader implements FileInterface {
 
 	private string|false $lineEnding;
 
-	public function __construct(private string $path) {
+	public function __construct(
+		private string $path,
+	) {
 	}
 
 	/**
@@ -15,9 +17,9 @@ class FileUploader implements FileInterface {
 	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
-		$this->lineEnding = ini_get("auto_detect_line_endings");
-		ini_set("auto_detect_line_endings", true);
-		$this->resource = fopen($this->path, "r");
+		$this->lineEnding = ini_get('auto_detect_line_endings');
+		ini_set('auto_detect_line_endings', true);
+		$this->resource = fopen($this->path, 'r');
 
 		if (!$this->resource) {
 			throw new \Exception('Something went wrong. Couldn\'t open the file.');
@@ -27,7 +29,7 @@ class FileUploader implements FileInterface {
 	}
 
 	public function close(): bool {
-		ini_set("auto_detect_line_endings", $this->lineEnding);
+		ini_set('auto_detect_line_endings', $this->lineEnding);
 		return fclose($this->resource);
 	}
 

@@ -10,7 +10,9 @@ use OCA\Workspace\Files\BasicStreamInterface;
 class CsvReader {
 	public readonly array $headers;
 
-	public function __construct(private BasicStreamInterface $file) {
+	public function __construct(
+		private BasicStreamInterface $file,
+	) {
 		$handle = $file->open();
 		$headers = fgetcsv($handle, 1000, Separator::COMMA);
 		$this->headers = array_map(function ($header) {
@@ -24,7 +26,7 @@ class CsvReader {
 		fgetcsv($handle, 1000, Separator::COMMA);
 
 		try {
-			while(($data = fgetcsv($handle, 1000, Separator::COMMA)) !== false) {
+			while (($data = fgetcsv($handle, 1000, Separator::COMMA)) !== false) {
 				yield array_combine($this->headers, $data);
 			}
 		} catch (\Exception $reason) {

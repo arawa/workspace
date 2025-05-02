@@ -36,7 +36,7 @@ use OCP\Util;
 class WorkspaceAccessControlMiddleware extends Middleware {
 	public function __construct(
 		private IURLGenerator $urlGenerator,
-		private UserService $userService
+		private UserService $userService,
 	) {
 	}
 
@@ -60,7 +60,7 @@ class WorkspaceAccessControlMiddleware extends Middleware {
 			Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 			Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 
-			return new TemplateResponse("workspace", "index", ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
+			return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
 		}
 	}
 }

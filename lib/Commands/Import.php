@@ -57,7 +57,8 @@ class Import extends Command {
 		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private WorkspaceCheckService $workspaceCheckService,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 		parent::__construct();
 	}
 
@@ -65,20 +66,20 @@ class Import extends Command {
 		$path = realpath($input->getArgument('path'));
 	  
 		if (!$this->csvCreatingWorkspaces->isCsvFile($path)) {
-			$this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
-			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . " mimetype.");
+			$this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . ' mimetype.');
+			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . ' mimetype.');
 		}
 
 		if (!$this->csvCreatingWorkspaces->hasProperHeader($path)) {
 			$this->logger->error(sprintf(
-				"No respect the glossary headers. "
-				. "Please, you must define these 2 headers : "
-				. "%s : To specify the workspace name."
+				'No respect the glossary headers. '
+				. 'Please, you must define these 2 headers : '
+				. '%s : To specify the workspace name.'
 				. "%s : To specify the user's user-id or email address."
-				. "%s : To specify the workspace quota.",
-				implode(", ", Csv::WORKSPACE_FIELD),
-				implode(", ", Csv::USER_FIELD),
-				implode(", ", Csv::QUOTA_FIELD)
+				. '%s : To specify the workspace quota.',
+				implode(', ', Csv::WORKSPACE_FIELD),
+				implode(', ', Csv::USER_FIELD),
+				implode(', ', Csv::QUOTA_FIELD)
 			));
 			throw new \Exception(
 				sprintf(
@@ -86,10 +87,10 @@ class Import extends Command {
 					. "Please, you must define these 2 headers :\n"
 					. "     - %s : To specify the workspace name.\n"
 					. "     - %s : To specify the user's user-id or email address.\n"
-					. "     - %s : To specify the workspace quota.",
-					implode(", ", Csv::WORKSPACE_FIELD),
-					implode(", ", Csv::USER_FIELD),
-					implode(", ", Csv::QUOTA_FIELD)
+					. '     - %s : To specify the workspace quota.',
+					implode(', ', Csv::WORKSPACE_FIELD),
+					implode(', ', Csv::USER_FIELD),
+					implode(', ', Csv::QUOTA_FIELD)
 				)
 			);
 		}
@@ -145,8 +146,8 @@ class Import extends Command {
 			$this->userGroup->addUser($user, $userGroupname);
 		}
 
-		$this->logger->info("workspaces import done");
-		$output->writeln("<info>workspaces import done</info>");
+		$this->logger->info('workspaces import done');
+		$output->writeln('<info>workspaces import done</info>');
 
 		return 0;
 	}
@@ -230,7 +231,7 @@ class Import extends Command {
 	
 	private function getSpacenamesDuplicated(array $dataResponse): ?string {
 		$workspacesAreNotExist = [];
-		$message = "";
+		$message = '';
 
 		foreach ($dataResponse as $data) {
 			if ($this->workspaceCheckService->isExist($data['workspace_name'])) {
@@ -251,7 +252,7 @@ class Import extends Command {
 
 	private function getUsersArentExist(array $dataResponse): ?string {
 		$usersAreNotExist = [];
-		$message = "";
+		$message = '';
 
 		foreach ($dataResponse as $data) {
 			if (!$this->userChecker->checkUserExist($data['user_uid'])) {
@@ -271,7 +272,7 @@ class Import extends Command {
 
 	private function getWorkspacesWithCharacterSpecials(array $dataResponse): ?string {
 		$spacenamesWithCharacterSpecials = [];
-		$message = "";
+		$message = '';
 
 		foreach ($dataResponse as $data) {
 			if ($this->workspaceCheckService->containSpecialChar($data['workspace_name'])) {
@@ -282,7 +283,7 @@ class Import extends Command {
 		if (!empty($spacenamesWithCharacterSpecials)) {
 			$spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
 			$message .= "The below workspace names contain special characters :\n" . implode('', $spacenamesStringify);
-			$message .= "\nPlease, make sure the Workspace names do not contain one of the following characters: " . implode(" ", str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+			$message .= "\nPlease, make sure the Workspace names do not contain one of the following characters: " . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
 			
 			return $message;
 		}

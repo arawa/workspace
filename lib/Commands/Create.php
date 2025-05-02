@@ -44,13 +44,15 @@ class Create extends Command {
 	public const OUTPUT_FORMAT_JSON_PRETTY = 'json_pretty';
 	public const OPTION_FORMAT_AVAILABLE = [ 'json' ];
 
-	public function __construct(private SpaceManager $spaceManager,
+	public function __construct(
+		private SpaceManager $spaceManager,
 		private AdminGroup $adminGroup,
 		private LoggerInterface $logger,
 		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder,
-		private GroupfolderHelper $groupfolderHelper) {
+		private GroupfolderHelper $groupfolderHelper,
+	) {
 		parent::__construct();
 	}
 
@@ -132,7 +134,7 @@ class Create extends Command {
 
 		try {
 			$workspace = $this->spaceManager->create($spacename);
-		} catch(\OCA\Workspace\Exceptions\WorkspaceNameExistException $e) {
+		} catch (\OCA\Workspace\Exceptions\WorkspaceNameExistException $e) {
 			$output->writeln(sprintf('The space %s already exists', $spacename));
 			$workspace = $this->spaceManager->getByName($spacename);
 		}
@@ -174,7 +176,7 @@ class Create extends Command {
 
 		}
 
-		$this->logger->info(sprintf("The workspace created with %s", $outputMessage));
+		$this->logger->info(sprintf('The workspace created with %s', $outputMessage));
 		$output->writeln($outputMessage);
 
 		return 0;
@@ -224,7 +226,7 @@ class Create extends Command {
 
 	private function addUserToAdminGroupManager(string $username, array $workspace): bool {
 		$user = $this->userFinder->findUser($username);
-		$this->adminGroup->addUser($user, (int) $workspace['id']);
+		$this->adminGroup->addUser($user, (int)$workspace['id']);
 
 		return true;
 	}

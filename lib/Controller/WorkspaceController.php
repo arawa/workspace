@@ -210,7 +210,7 @@ class WorkspaceController extends Controller {
 		if ($groupfolder === false) {
 			return new JSONResponse(
 				[
-					'message' => 'Failed loading groupfolder '.$space->getGroupfolderId(),
+					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
 					'success' => false
 				],
 				Http::STATUS_BAD_REQUEST);

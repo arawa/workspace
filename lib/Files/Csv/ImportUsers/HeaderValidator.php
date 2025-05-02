@@ -9,7 +9,7 @@ class HeaderValidator implements CsvValidatorInterface {
 	public function validate(BasicStreamInterface $file): bool {
 		$res = false;
 		if (($handle = $file->open()) !== false) {
-			$tableHeader = fgetcsv($handle, 1000, ",");
+			$tableHeader = fgetcsv($handle, 1000, ',');
 			$tableHeader = array_map('strtolower', $tableHeader);
 
 			$nameIndex = HeaderExtractor::getIndex(Header::DISPLAY_NAME, $tableHeader);
