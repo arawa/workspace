@@ -34,7 +34,7 @@ class UpgradeFixV300V301 extends UpgradeV300 {
 		private GroupFoldersGroupsMapper $groupfoldersGroupsMapper,
 		private IAppConfig $appConfig,
 		private IGroupManager $groupManager,
-		private SpaceMapper $spaceMapper
+		private SpaceMapper $spaceMapper,
 	) {
 		parent::__construct(
 			$groupfoldersGroupsMapper,

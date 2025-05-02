@@ -33,7 +33,7 @@ use OCP\IGroupManager;
 class SpaceService {
 	public function __construct(
 		private IGroupManager $groupManager,
-		private SpaceMapper $spaceMapper
+		private SpaceMapper $spaceMapper,
 	) {
 	}
 
