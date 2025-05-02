@@ -47,9 +47,6 @@ class PageController extends Controller {
 	 */
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
-		Util::addScript(Application::APP_ID, 'workspace-node_modules_nextcloud_dialogs_dist_chunks_index-Kg2hZgGF_mjs');
-		Util::addScript(Application::APP_ID, 'workspace-vendors-node_modules_nextcloud_dialogs_dist_chunks_FilePicker-ajWx2Snh_mjs');
-		Util::addScript(Application::APP_ID, 'workspace-vendors-node_modules_rehype-highlight_index_js');
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 	
 		// templates/index.php
