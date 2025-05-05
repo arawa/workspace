@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2025 Arawa
  *
@@ -29,7 +30,7 @@
 
 define('OC_CONSOLE', 1);
 
-require_once __DIR__.'/../../../lib/base.php';
+require_once __DIR__ . '/../../../lib/base.php';
 
 use OC\SystemConfig;
 use OCA\GroupFolders\Folder\FolderManager;
@@ -44,7 +45,7 @@ use OCP\IDBConnection;
 use OCP\IGroupManager;
 
 function exceptionHandler($exception) {
-	echo "An unhandled exception has been thrown:" . PHP_EOL;
+	echo 'An unhandled exception has been thrown:' . PHP_EOL;
 	echo $exception;
 	exit(1);
 }
@@ -56,7 +57,12 @@ class WorkSpaceChecker {
 	private array $groupFoldersGroups;
 	private array $groups;
 
-	public function __construct(private IDBConnection $dbConnection, private SpaceMapper $spaceMapper, private FolderManager $folderManager, private IGroupManager $groupManager) {
+	public function __construct(
+		private IDBConnection $dbConnection,
+		private SpaceMapper $spaceMapper,
+		private FolderManager $folderManager,
+		private IGroupManager $groupManager,
+	) {
 		$this->spaces = $spaceMapper->findAll();
 		$this->groupFolders = $folderManager->getAllFolders();
 		$this->loadGroupFoldersGroups();
@@ -66,28 +72,28 @@ class WorkSpaceChecker {
 	private function loadGroupFoldersGroups() {
 		$query = $this->dbConnection->getQueryBuilder();
 		$query->select('g.folder_id', 'g.group_id', 'g.circle_id', 'g.permissions')
-			  ->from('group_folders_groups', 'g');
+			->from('group_folders_groups', 'g');
 		$this->groupFoldersGroups = $query->executeQuery()->fetchAll();
 	}
 
 	private function loadGroups() {
 		$groups = $this->groupManager->search('');
 		$this->groups = [];
-		foreach($groups as $group) {
+		foreach ($groups as $group) {
 			$this->groups[$group->getGID()] = $group;
 		}
 	}
 
 	private static function separator() {
-		return "------------------------------------".PHP_EOL;
+		return '------------------------------------' . PHP_EOL;
 	}
 
 	public function counts() {
 		echo self::separator();
-		echo "Workspaces: " . count($this->spaces) . PHP_EOL;
-		echo "GroupFolders: " . count($this->groupFolders) . PHP_EOL;
-		echo "GroupFoldersGroups: " . count($this->groupFoldersGroups) . PHP_EOL;
-		echo "Groups: " . count($this->groups) . PHP_EOL;
+		echo 'Workspaces: ' . count($this->spaces) . PHP_EOL;
+		echo 'GroupFolders: ' . count($this->groupFolders) . PHP_EOL;
+		echo 'GroupFoldersGroups: ' . count($this->groupFoldersGroups) . PHP_EOL;
+		echo 'Groups: ' . count($this->groups) . PHP_EOL;
 	}
 
 	/**
@@ -95,11 +101,11 @@ class WorkSpaceChecker {
 	 */
 	public function checkSpaces() {
 		echo self::separator();
-		echo "Checking spaces...".PHP_EOL;
-		foreach($this->spaces as $space) {
+		echo 'Checking spaces...' . PHP_EOL;
+		foreach ($this->spaces as $space) {
 			$gfId = $space->getGroupfolderId();
 			if (!isset($this->groupFolders[$gfId])) {
-				echo "** GroupFolder $gfId not found for workspace " . $space->getSpaceId() . ' ('.$space->getSpaceName().')'. PHP_EOL;
+				echo "** GroupFolder $gfId not found for workspace " . $space->getSpaceId() . ' (' . $space->getSpaceName() . ')' . PHP_EOL;
 				continue;
 			}
 		}
@@ -110,19 +116,19 @@ class WorkSpaceChecker {
 	 */
 	public function checkGroupFolders() {
 		echo self::separator();
-		echo "Checking groupfolders...".PHP_EOL;
-		foreach($this->groupFolders as $groupFolder) {
+		echo 'Checking groupfolders...' . PHP_EOL;
+		foreach ($this->groupFolders as $groupFolder) {
 			// retreive the workspace linked to the groupfolder
 			$space = $this->findSpaceByGroupFolderId($groupFolder['id']);
 			if ($space === null) {
-				echo "** GroupFolder " . $groupFolder['id'] . ' ('.$groupFolder['mount_point'].') not found as workspace'. PHP_EOL;
+				echo '** GroupFolder ' . $groupFolder['id'] . ' (' . $groupFolder['mount_point'] . ') not found as workspace' . PHP_EOL;
 			}
 			$hasUGroup = false;
 			$hasGEGroup = false;
-			foreach($groupFolder['groups'] as $gid => $group) {
+			foreach ($groupFolder['groups'] as $gid => $group) {
 				// check if the group exists
 				if (!isset($this->groups[$gid])) {
-					echo "** Group " . $gid . ' not found for groupfolder ' . $groupFolder['id'] . ' ('.$groupFolder['mount_point'].')'. PHP_EOL;
+					echo '** Group ' . $gid . ' not found for groupfolder ' . $groupFolder['id'] . ' (' . $groupFolder['mount_point'] . ')' . PHP_EOL;
 				}
 				if (str_starts_with($gid, UserGroup::GID_PREFIX)) {
 					$hasUGroup = true;
@@ -131,12 +137,12 @@ class WorkSpaceChecker {
 				}
 			}
 			if ($space != null) {
-				$msg = " group not found for groupfolder " . $groupFolder['id'] . ' ('.$groupFolder['mount_point'].') but the workspace exists ('.$space->getSpaceName().')';
+				$msg = ' group not found for groupfolder ' . $groupFolder['id'] . ' (' . $groupFolder['mount_point'] . ') but the workspace exists (' . $space->getSpaceName() . ')';
 				if (!$hasUGroup) {
-					echo "** WS User" . $msg. PHP_EOL;
+					echo '** WS User' . $msg . PHP_EOL;
 				}
 				if (!$hasGEGroup) {
-					echo "** WS Admin" . $msg. PHP_EOL;
+					echo '** WS Admin' . $msg . PHP_EOL;
 				}
 			}
 		}
@@ -147,19 +153,19 @@ class WorkSpaceChecker {
 	 */
 	public function checkGroupFoldersGroups() {
 		echo self::separator();
-		echo "Checking groupfolders groups...".PHP_EOL;
-		foreach($this->groupFoldersGroups as $groupFolderGroup) {
+		echo 'Checking groupfolders groups...' . PHP_EOL;
+		foreach ($this->groupFoldersGroups as $groupFolderGroup) {
 			$gfId = $groupFolderGroup['folder_id'];
 			$groupId = $groupFolderGroup['group_id'];
 			if (!isset($this->groupFolders[$gfId])) {
 				$groupFolder = null;
-				$groupName = isset($this->groups[$groupId]) ? ' ('.$this->groups[$groupId]->getDisplayName().')' : '';
-				echo "** GroupFolder $gfId not found for group id " . $groupId . $groupName. PHP_EOL;
+				$groupName = isset($this->groups[$groupId]) ? ' (' . $this->groups[$groupId]->getDisplayName() . ')' : '';
+				echo "** GroupFolder $gfId not found for group id " . $groupId . $groupName . PHP_EOL;
 			} else {
 				$groupFolder = $this->groupFolders[$gfId];
 			}
 			if (!isset($this->groups[$groupId])) {
-				$groupFolderName = $groupFolder ? ' ('.$groupFolder['mount_point'].')' : '';
+				$groupFolderName = $groupFolder ? ' (' . $groupFolder['mount_point'] . ')' : '';
 				echo "** Group $groupId not found for groupfolder id " . $gfId . $groupFolderName . PHP_EOL;
 			}
 		}
@@ -170,32 +176,32 @@ class WorkSpaceChecker {
 	 */
 	public function checkGroups() {
 		echo self::separator();
-		echo "Checking groups...".PHP_EOL;
-		foreach($this->groups as $group) {
+		echo 'Checking groups...' . PHP_EOL;
+		foreach ($this->groups as $group) {
 			if (!str_starts_with($group->getGID(), 'SPACE-')) {
 				continue; // not interested in
 			}
 			$space = $this->findSpaceByGroupId($group->getGID());
 			if ($space === null) {
-				echo "** Group " . $group->getGID() . ' ('.$group->getDisplayName().') not found as workspace'. PHP_EOL;
+				echo '** Group ' . $group->getGID() . ' (' . $group->getDisplayName() . ') not found as workspace' . PHP_EOL;
 			}
 			$groupFolderId = $this->findGroupFolderIdByGroupId($group->getGID());
 			if ($groupFolderId === null) {
-				echo "** Group " . $group->getGID() . ' ('.$group->getDisplayName().') not found as group from groupfolder'. PHP_EOL;
+				echo '** Group ' . $group->getGID() . ' (' . $group->getDisplayName() . ') not found as group from groupfolder' . PHP_EOL;
 			} elseif ($space === null) {
-				echo '... but declared as group from groupfolder id '.$groupFolderId;
+				echo '... but declared as group from groupfolder id ' . $groupFolderId;
 				if (isset($this->groupFolders[$groupFolderId])) {
 					$groupFolder = $this->groupFolders[$groupFolderId];
-					echo " (".$groupFolder['mount_point'].")".PHP_EOL;
+					echo ' (' . $groupFolder['mount_point'] . ')' . PHP_EOL;
 				} else {
-					echo '... and this groupfolder doesn\'t exist'. PHP_EOL;
+					echo '... and this groupfolder doesn\'t exist' . PHP_EOL;
 				}
 			}
 		}
 	}
 
 	private function findSpaceByGroupFolderId($groupFolderId) {
-		foreach($this->spaces as $space) {
+		foreach ($this->spaces as $space) {
 			if ($space->getGroupfolderId() == $groupFolderId) {
 				return $space;
 			}
@@ -210,7 +216,7 @@ class WorkSpaceChecker {
 		}
 		$spaceId = intval(substr($groupId, $last + 1));
 
-		foreach($this->spaces as $space) {
+		foreach ($this->spaces as $space) {
 			if ($space->getSpaceId() == $spaceId) {
 				return $space;
 			}
@@ -219,7 +225,7 @@ class WorkSpaceChecker {
 	}
 
 	private function findGroupFolderIdByGroupId($groupId) {
-		foreach($this->groupFoldersGroups as $groupFolderGroup) {
+		foreach ($this->groupFoldersGroups as $groupFolderGroup) {
 			$gfId = $groupFolderGroup['folder_id'];
 			$gfGroupId = $groupFolderGroup['group_id'];
 			if ($gfGroupId == $groupId) {
@@ -231,7 +237,10 @@ class WorkSpaceChecker {
 }
 
 class MyConfig extends SystemConfig {
-	public function __construct(private SystemConfig $config, private array $params) {
+	public function __construct(
+		private SystemConfig $config,
+		private array $params,
+	) {
 	}
 
 	public function getValue($key, $default = null) {
