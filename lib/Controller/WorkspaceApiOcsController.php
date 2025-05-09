@@ -24,14 +24,112 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
+use OCP\IGroupManager;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private GroupfolderHelper $folderHelper,
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+		private RootFolder $rootFolder,
+		private SpaceManager $spaceManager,
+		private UserService $userService,
+		private WorkspaceService $workspaceService,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * @return Response<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 * 	manage: array,
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 * 	users: array,
+	 * 	userCount: int,
+	 * 	added_groups: array
+	 * }, Http::STATUS_OK>
+	 *
+	 * 200: Workspaces returned
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
+	public function findAll(): Response {
+		$workspaces = $this->workspaceService->getAll();
+		$spaces = [];
+		foreach ($workspaces as $workspace) {
+			$folderInfo = $this->folderHelper->getFolder(
+				$workspace['groupfolder_id'],
+				$this->rootFolder->getRootFolderStorageId()
+			);
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			) : $workspace;
+
+			$gids = array_keys($space['groups'] ?? []);
+			$wsGroups = [];
+			$space['users'] = (object)[];
+			$addedGroups = [];
+
+			foreach ($gids as $gid) {
+				$group = $this->groupManager->get($gid);
+				if (is_null($group)) {
+					$this->logger->warning(
+						"Be careful, the $gid group does not exist in the oc_groups table."
+						. ' The group is still present in the oc_group_folders_groups table.'
+						. ' To fix this inconsistency, recreate the group using occ commands.'
+					);
+					continue;
+				}
+				if (UserGroup::isWorkspaceGroup($group)) {
+					$wsGroups[] = $group;
+				} else {
+					$addedGroups[] = $group;
+				}
+
+				if (UserGroup::isWorkspaceUserGroupId($gid)) {
+					$space['userCount'] = $group->count();
+				}
+			}
+
+			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
+			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+
+			$spaces[] = $space;
+		}
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$this->logger->debug('Filtering workspaces');
+			$filteredWorkspaces = array_values(array_filter($spaces, function ($space) {
+				return $this->userService->isSpaceManagerOfSpace($space);
+			}));
+			$spaces = $filteredWorkspaces;
+		}
+
+		return new DataResponse($spaces, Http::STATUS_OK);
 	}
 }
