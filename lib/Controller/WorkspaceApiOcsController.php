@@ -56,6 +56,25 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
+	/**
+	 * @return Response<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 * 	manage: array,
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 * 	users: array,
+	 * 	userCount: int,
+	 * 	added_groups: array
+	 * }, Http::STATUS_OK>
+	 * 
+	 * 200: Workspaces returned
+	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
@@ -111,8 +130,6 @@ class WorkspaceApiOcsController extends OCSController {
 			$spaces = $filteredWorkspaces;
 		}
 
-		return new DataResponse([
-			$spaces
-		], Http::STATUS_OK);
+		return new DataResponse($spaces, Http::STATUS_OK);
 	}
 }
