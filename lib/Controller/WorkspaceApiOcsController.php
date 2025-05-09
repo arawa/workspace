@@ -72,7 +72,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 * 	userCount: int,
 	 * 	added_groups: array
 	 * }, Http::STATUS_OK>
-	 * 
+	 *
 	 * 200: Workspaces returned
 	 */
 	#[NoAdminRequired]
