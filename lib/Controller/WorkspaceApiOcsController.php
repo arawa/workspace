@@ -46,7 +46,7 @@ class WorkspaceApiOcsController extends OCSController {
 		IRequest $request,
 		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
-		public $appName
+		public $appName,
 	) {
 		parent::__construct($appName, $request);
 	}
