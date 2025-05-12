@@ -31,10 +31,12 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
@@ -42,8 +44,9 @@ use OCP\IRequest;
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
-		public $appName,
+		public $appName
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -78,5 +81,25 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	/*
+	* @GeneralManagerRequired
+	**/
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/spaces',
+		requirements: [ 'spacename' => '[A-Za-z0-9].*' ]
+	)]
+	public function create(string $spacename): Response {
+		try {
+			$space = $this->spaceManager->create($spacename);
+			$this->logger->info("The workspace {$spacename} is created");
+		} catch (\Exception $e) {
+			throw new OCSException($e->getMessage(), $e->getCode());
+		}
+
+		return new DataResponse($space, Http::STATUS_CREATED);
 	}
 }
