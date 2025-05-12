@@ -56,51 +56,51 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	}
 
 	public function testCreateReturnsValidDataResponse(): void {
-		$spacename = "Space01";
+		$spacename = 'Space01';
 		
 		$this->spaceManager
 			->expects($this->once())
 			->method('create')
 			->with($spacename)
 			->willReturn([
-				"name" => "Space01",
-				"id" => 1,
-				"id_space" => 1,
-				"folder_id" => 1,
-				"color" => "#413160",
-				"groups" => [
-				  "SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Space01",
-					"types" => [
-					  "Database"
+				'name' => 'Space01',
+				'id' => 1,
+				'id_space' => 1,
+				'folder_id' => 1,
+				'color' => '#413160',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'gid' => 'SPACE-GE-1',
+						'displayName' => 'WM-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
-				  ],
-				  "SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Space01",
-					"types" => [
-					  "Database"
-					],
-					"usersCount" => 0,
-					"slug" => "SPACE-U-1"
-				  ]
+					'SPACE-U-1' => [
+						'gid' => 'SPACE-U-1',
+						'displayName' => 'U-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
+					]
 				],
-				"added_groups" => [],
-				"quota" => -3,
-				"size" => 0,
-				"acl" => true,
-				"manage" => [
-				  [
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Space01"
-				  ]
+				'added_groups' => [],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Space01'
+					]
 				],
-				"userCount" => 0
-			  ]
+				'userCount' => 0
+			]
 			)
 		;
 
@@ -108,44 +108,44 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$expected = new DataResponse(
 			[
-				"name" => "Space01",
-				"id" => 1,
-				"id_space" => 1,
-				"folder_id" => 1,
-				"color" => "#413160",
-				"groups" => [
-				  "SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Space01",
-					"types" => [
-					  "Database"
+				'name' => 'Space01',
+				'id' => 1,
+				'id_space' => 1,
+				'folder_id' => 1,
+				'color' => '#413160',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'gid' => 'SPACE-GE-1',
+						'displayName' => 'WM-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
-				  ],
-				  "SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Space01",
-					"types" => [
-					  "Database"
-					],
-					"usersCount" => 0,
-					"slug" => "SPACE-U-1"
-				  ]
+					'SPACE-U-1' => [
+						'gid' => 'SPACE-U-1',
+						'displayName' => 'U-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
+					]
 				],
-				"added_groups" => [],
-				"quota" => -3,
-				"size" => 0,
-				"acl" => true,
-				"manage" => [
-				  [
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Space01"
-				  ]
+				'added_groups' => [],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Space01'
+					]
 				],
-				"userCount" => 0
-			  ],
+				'userCount' => 0
+			],
 			Http::STATUS_CREATED
 		)
 		;

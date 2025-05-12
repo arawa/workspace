@@ -25,14 +25,14 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Space\SpaceManager;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\OCSController;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\OCSController;
+use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
@@ -40,7 +40,7 @@ class WorkspaceApiOcsController extends OCSController {
 		IRequest $request,
 		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
-		public $appName
+		public $appName,
 	) {
 		parent::__construct($appName, $request);
 	}
