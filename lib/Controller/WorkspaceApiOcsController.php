@@ -33,8 +33,10 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
@@ -42,6 +44,7 @@ use OCP\IRequest;
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
 		public $appName,
 	) {
@@ -78,5 +81,39 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	/**
+	 * @GeneralManagerRequired
+	 * @param int $id of workspace to delete
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/spaces/{id}',
+		requirements: ['id' => '\d+']
+	)]
+	public function delete(int $id): Response {
+		$space = $this->spaceManager->get($id);
+		$groups = [];
+
+		foreach (array_keys($space['groups']) as $group) {
+			$groups[] = $group;
+		}
+
+		$this->spaceManager->remove($id);
+
+		$this->logger->info("The {$space['name']} workspace with id {$space['id']} is deleted");
+
+		return new DataResponse(
+			[
+				'name' => $space['name'],
+				'groups' => $groups,
+				'space_id' => $space['id'],
+				'groupfolder_id' => $space['groupfolder_id'],
+				'state' => 'delete'
+			],
+			Http::STATUS_OK
+		);
 	}
 }
