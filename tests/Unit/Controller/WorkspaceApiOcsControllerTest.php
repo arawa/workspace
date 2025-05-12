@@ -36,21 +36,25 @@ use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
+	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
-
+	
 	public function setUp(): void {
-		$this->appName = 'workspace';
 		$this->request = $this->createMock(IRequest::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
-
+		$this->appName = 'workspace';
+		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
+			$this->logger,
 			$this->spaceManager,
 			$this->appName
 		);
@@ -167,6 +171,87 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(Response::class, $actual);
 		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
+	}
+
+	public function testDeleteWorkspace(): void {
+		$id = 33;
+		
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with($id)
+			->willReturn([
+				'id' => 33,
+				'mount_point' => 'Space33',
+				'groups' => [
+					'SPACE-GE-33' => [
+						'gid' => 'SPACE-GE-33',
+						'displayName' => 'WM-Space33',
+						'types' =>
+							[
+								'Database'
+							],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-33',
+					],
+					'SPACE-U-33' => [
+						'gid' => 'SPACE-U-33',
+						'displayName' => 'U-Space33',
+						'types' =>
+							[
+								'Database'
+							],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-33',
+					],
+				],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					'type' => 'group',
+					'id' => 'SPACE-GE-33',
+					'displayname' => 'WM-Space33',
+				],
+				'groupfolder_id' => 20,
+				'name' => 'Space33',
+				'color_code' => '#0b63ec',
+				'userCount' => 0,
+				'users' => [],
+				'added_groups' => (object)[],
+			])
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('remove')
+			->with($id)
+		;
+
+		$actual = $this->controller->delete($id);
+
+		$expected = new DataResponse(
+			[
+				'name' => 'Space33',
+				'groups' => [
+					'SPACE-GE-33',
+					'SPACE-U-33'
+				],
+				'space_id' => 33,
+				'groupfolder_id' => 20,
+				'state' => 'delete'
+			],
+			Http::STATUS_OK
+		)
+		;
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
 	public function testThrowsOCSNotFoundExceptionWhenGroupfolderNotFound(): void {
