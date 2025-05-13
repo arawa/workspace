@@ -59,7 +59,8 @@ class GroupfolderHelper {
 
 	public function getFolder(int $folderId, int $rootStorageId) {
 		try {
-			return $this->folderManager->getFolder($folderId, $rootStorageId);
+			// since NC31 : getFolder returns null if the folder does not exist instead of false
+			return $this->folderManager->getFolder($folderId, $rootStorageId) ?? false;
 		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the getFolder function from FolderManager.');
 		}
