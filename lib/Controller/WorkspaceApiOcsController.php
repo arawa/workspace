@@ -24,21 +24,21 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\IRequest;
-use OCP\AppFramework\Http;
-use Psr\Log\LoggerInterface;
 use OCA\Workspace\Db\SpaceMapper;
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\OCSController;
 use OCA\Workspace\Folder\RootFolder;
-use OCP\AppFramework\Http\DataResponse;
-use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\WorkspaceService;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCSController;
 use OCP\IGroupManager;
+use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -70,7 +70,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 * 	userCount: int,
 	 * 	added_groups: array
 	 * }, Http::STATUS_OK>
-	 * 
+	 *
 	 * 200: Workspace returned
 	 */
 	#[NoAdminRequired]
