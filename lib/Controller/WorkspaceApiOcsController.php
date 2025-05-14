@@ -119,6 +119,9 @@ class WorkspaceApiOcsController extends OCSController {
 			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
 			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
+			$users = $this->workspaceService->addUsersInfo($space);
+			$space['users'] = $users;
+
 			$spaces[] = $space;
 		}
 		// We only want to return those workspaces for which the connected user is a manager
