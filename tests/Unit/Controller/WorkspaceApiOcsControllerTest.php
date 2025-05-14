@@ -325,6 +325,12 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				]
 			])
 		;
+
+		$this->workspaceService
+			->expects($this->once())
+			->method('addUsersInfo')
+			->willReturn((object)[])
+		;
 		
 		$actual = $this->controller->findAll();
 
