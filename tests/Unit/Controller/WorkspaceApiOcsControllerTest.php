@@ -31,7 +31,6 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IGroup;
@@ -215,23 +214,23 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$expected = new DataResponse(
 			[
-				"SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Espace01",
-					"types" => [
-					"Database"
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
 				],
-				"SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Espace01",
-					"types" => [
-					"Database"
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-U-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
 				]
 			],
 			Http::STATUS_OK
