@@ -24,14 +24,64 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
+use OCP\IGroupManager;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private GroupfolderHelper $folderHelper,
+		private IGroupManager $groupManager,
+		private LoggerInterface $logger,
+		private RootFolder $rootFolder,
+		private SpaceMapper $spaceMapper,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/api/v1/spaces/{id}/groups',
+		requirements: ['id' => '\d+']
+	)]
+	public function findGroupsFromWorkspace(int $id): Response {
+		
+		$space = $this->spaceMapper->find($id);
+
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		if ($groupfolder === false) {
+			$this->logger->error('Failed loading groupfolder ' . $space->getGroupfolderId());
+			return new DataResponse(
+				[
+					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
+					'success' => false
+				],
+				Http::STATUS_BAD_REQUEST
+			);
+		}
+
+		$gids = array_keys($groupfolder['groups']);
+
+		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+
+		$groupsFormatted = GroupFormatter::formatGroups($groups);
+
+		$this->logger->info("Successfully find groups from the {$id} workspace.");
+
+		return new DataResponse($groupsFormatted, Http::STATUS_OK);
 	}
 }
