@@ -186,7 +186,7 @@ class WorkspaceController extends Controller {
 			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
 			if ($usersGroupId !== null) {
-				$space['userCount'] = $space['groups'] [$usersGroupId]['usersCount'];
+				$space['userCount'] = $space['groups'][$usersGroupId]['usersCount'];
 			}
 
 			$spaces[] = $space;
