@@ -24,14 +24,75 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Service\Group\UserGroup;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCSController;
+use OCP\IGroupManager;
 use OCP\IRequest;
+use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private IGroupManager $groupManager,
+		private IUserManager $userManager,
+		private LoggerInterface $logger,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/spaces/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function removeUsersInWorkspace(int $id, array $uids): Response {
+		$types = array_unique(array_map(fn ($uid) => gettype($uid), $uids));
+		$othersStringTypes = array_values(array_filter($types, fn ($type) => $type !== 'string'));
+
+		if (!empty($othersStringTypes)) {
+			throw new OCSBadRequestException('uids params must contain a string array only');
+		}
+
+		$usersNotExist = [];
+		foreach ($uids as $uid) {
+			$user = $this->userManager->get($uid);
+			if (is_null($user)) {
+				$usersNotExist[] = $uid;
+			}
+		}
+
+		if (!empty($usersNotExist)) {
+			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
+			$this->logger->error('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+		}
+
+		$gid = UserGroup::get($id);
+
+		$userGroup = $this->groupManager->get($gid);
+
+		if (is_null($userGroup)) {
+			$this->logger->error("The group with {$gid} group doesn't exist.");
+			throw new OCSBadRequestException("The group with {$gid} group doesn't exist.");
+		}
+
+		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
+
+		foreach ($users as $user) {
+			$uid = $user->getUID();
+			$userGroup->removeUser($user);
+			$this->logger->info("The user with the uid {$uid} has been removed from the group {$gid}");
+		}
+
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 }
