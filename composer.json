@@ -18,7 +18,8 @@
         "phpunit/phpunit": "^9.5",
         "nextcloud/coding-standard": "^1.1",
         "nextcloud/ocp": "^30.0",
-        "symfony/console": "^6.3"
+        "symfony/console": "^6.3",
+        "mockery/mockery": "^1.6"
     },
     "scripts": {
 		"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",
