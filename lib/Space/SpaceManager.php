@@ -44,7 +44,9 @@ use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
@@ -66,6 +68,7 @@ class SpaceManager {
 		private UserService $userService,
 		private IGroupManager $groupManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
 	) {
 	}
@@ -150,6 +153,70 @@ class SpaceManager {
 		];
 	}
 
+	/**
+	 * @return array<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 *  manage: array<Object>
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 *  userCount: int,
+	 *  users: array<Object>
+	 *  added_groups: array<Object>
+	 * }
+	 *
+	 * It's a function for WorkspaceApiOcsController
+	 */
+	public function find(int $id): array {
+		$space = $this->spaceMapper->find($id);
+
+		if (is_null($space)) {
+			$this->logger->error("The workspace with the id {$id} is not found.");
+			throw new OCSNotFoundException("The workspace with the id {$id} is not found.");
+		}
+
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		if ($groupfolder === false || is_null($groupfolder)) {
+			$folderId = $space->getGroupfolderId();
+			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
+			throw new OCSNotFoundException("Failed loading groupfolder with the folderId {$folderId}");
+		}
+
+		$space = array_merge($groupfolder, $space->jsonSerialize());
+
+		$gids = array_keys($space['groups']) ?? [];
+		$wsGroups = [];
+		$addedGroups = [];
+
+		foreach ($gids as $gid) {
+			$group = $this->groupManager->get($gid);
+
+			if (UserGroup::isWorkspaceGroup($group)) {
+				$wsGroups[] = $group;
+			} else {
+				$addedGroups[] = $group;
+			}
+
+			if (UserGroup::isWorkspaceUserGroupId($gid)) {
+				$space['userCount'] = $group->count();
+			}
+		}
+
+		$users = $this->workspaceService->addUsersInfo($space);
+		$space['users'] = $users;
+
+		$space['groups'] = GroupFormatter::formatGroups($wsGroups);
+		$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+
+		return $space;
+	}
+	
 	public function get(int $spaceId): array {
 
 		$space = $this->spaceMapper->find($spaceId);
