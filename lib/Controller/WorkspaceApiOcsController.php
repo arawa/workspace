@@ -24,14 +24,53 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private SpaceManager $spaceManager,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * @return Response<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 *  manage: array<Object>
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 *  userCount: int,
+	 *  users: array<Object>
+	 *  added_groups: array<Object>
+	 * }, Http::STATUS_OK>
+	 *
+	 * 200: Workspace returned
+	 */
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/api/v1/space/{id}',
+		requirements: ['id' => '\d+']
+	)]
+	public function find(int $id): Response {
+		$space = $this->spaceManager->find($id);
+		return new DataResponse($space, Http::STATUS_OK);
 	}
 }
