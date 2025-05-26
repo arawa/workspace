@@ -26,51 +26,29 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
-use OCA\Workspace\Db\Space;
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IGroup;
-use OCP\IGroupManager;
+use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
-	private IGroupManager&MockObject $groupManager;
-	private GroupfolderHelper&MockObject $folderHelper;
 	private IRequest&MockObject $request;
-	private LoggerInterface&MockObject $logger;
-	private RootFolder&MockObject $rootFolder;
-	private SpaceMapper&MockObject $spaceMapper;
+	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
-	private WorkspaceService&MockObject $workspaceService;
 	
 	public function setUp(): void {
 		$this->appName = 'workspace';
-		$this->folderHelper = $this->createMock(GroupfolderHelper::class);
-		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
-		$this->rootFolder = $this->createMock(RootFolder::class);
-		$this->spaceMapper = $this->createMock(SpaceMapper::class);
-		$this->workspaceService = $this->createMock(WorkspaceService::class);
+		$this->spaceManager = $this->createMock(SpaceManager::class);
 		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
-			$this->folderHelper,
-			$this->groupManager,
-			$this->logger,
-			$this->rootFolder,
-			$this->spaceMapper,
-			$this->workspaceService,
+			$this->spaceManager,
 			$this->appName
 		);
 	}
@@ -82,129 +60,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testFindReturnsValidDataResponse(): void {
 		$spaceId = 4;
 
-		/** @var Space&MockObject */
-		$space = $this->createMock(Space::class);
-				
-		$this->spaceMapper
-			->expects($this->once())
-			->method('find')
-			->with($spaceId)
-			->willReturn($space)
-		;
-
-		$space
-			->expects($this->once())
-			->method('getGroupfolderId')
-			->willReturn(4)
-		;
-	
-		$this->rootFolder
-			->expects($this->any())
-			->method('getRootFolderStorageId')
-			->willReturn(2)
-		;
-
-		$this->folderHelper
-			->expects($this->once())
-			->method('getFolder')
-			->willReturn(
-				[
-					'id' => 4,
-					'mount_point' => 'Espace04',
-					'groups' => [
-						'SPACE-GE-4' => [
-							'displayName' => 'WM-Espace04',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-						'SPACE-U-4' => [
-							'displayName' => 'U-Espace04',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-4',
-							'displayname' => 'WM-Espace04',
-						],
-					]
-				]
-			)
-		;
-
-		
-		$space
-			->expects($this->once())
-			->method('jsonSerialize')
-			->willReturn([
-				'id' => 4,
-				'groupfolder_id' => 4,
-				'name' => 'Espace04',
-				'color_code' => '#93b250',
-			])
-		;
-		
-		$groupUser = $this->createMock(IGroup::class);
-		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
-
-		$this->groupManager
-			->expects($this->any())
-			->method('get')
-			->willReturn($groupUser, $groupWorkspaceManagerUser)
-		;
-
-		$groupUser
-			->expects($this->any())
-			->method('getGID')
-			->willReturn('SPACE-U-4')
-		;
-		$groupUser
-			->expects($this->any())
-			->method('getDisplayName')
-			->willReturn('U-Espace04')
-		;
-		$groupUser
-			->expects($this->any())
-			->method('count')
-			->willReturn(0)
-		;
-		$groupUser
-			->expects($this->any())
-			->method('getBackendNames')
-			->willReturn(['Database'])
-		;
-
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('count')
-			->willReturn(0)
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getGID')
-			->willReturn('SPACE-GE-4')
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getDisplayName')
-			->willReturn('WM-Espace04')
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getBackendNames')
-			->willReturn(['Database'])
-		;
-
-		$groupFormatter = Mockery::mock(GroupFormatter::class);
-		$groupFormatter
-			->shouldReceive('formatGroups')
-			->with([$groupUser, $groupWorkspaceManagerUser])
-			->andReturn([
+		/** @var array space mocked */
+		$space = [
+			'id' => 4,
+			'mount_point' => 'Espace04',
+			'groups' => [
 				'SPACE-GE-4' => [
 					'gid' => 'SPACE-GE-4',
 					'displayName' => 'WM-Espace04',
@@ -223,15 +83,32 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'usersCount' => 0,
 					'slug' => 'SPACE-U-4'
 				]
-			])
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-4',
+					'displayname' => 'WM-Espace04'
+				]
+			],
+			'groupfolder_id' => 4,
+			'name' => 'Espace04',
+			'color_code' => '#93b250',
+			'users' => (object)[],
+			'userCount' => 0,
+			'added_groups' => (object)[]
+		];
+				
+		$this->spaceManager
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
 		;
 
-		$this->workspaceService
-			->expects($this->once())
-			->method('addUsersInfo')
-			->willReturn((object)[])
-		;
-		
 		$actual = $this->controller->find($spaceId);
 
 		$expected = new DataResponse(
@@ -276,8 +153,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'added_groups' => (object)[]
 			],
 			Http::STATUS_OK
-		)
-		;
+		);
 
 		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
@@ -286,5 +162,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertInstanceOf(Response::class, $actual);
+		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
 	}
 }

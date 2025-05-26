@@ -26,6 +26,8 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
+use Mockery;
+use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -39,11 +41,13 @@ use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\IGroup;
@@ -54,62 +58,47 @@ use Psr\Log\LoggerInterface;
 
 class SpaceManagerTest extends TestCase {
 
-	private MockObject&GroupfolderHelper $folderHelper;
-
-	private MockObject&RootFolder $rootFolder;
-
-	private MockObject&WorkspaceCheckService $workspaceCheck;
-
-	private MockObject&UserGroup $userGroup;
-
-	private MockObject&SpaceMapper $spaceMapper;
-
-	private MockObject&WorkspaceManagerGroup $workspaceManagerGroup;
-
-	private MockObject&ColorCode $colorCode;
-
-	private MockObject&AdminGroup $adminGroup;
-
-	private MockObject&AdminUserGroup $adminUserGroup;
-
 	private MockObject&AddedGroups $addedGroups;
-
-	private MockObject&SubGroup $subGroup;
-
-	private MockObject&UserWorkspaceGroup $userWorkspaceGroup;
-
+	private MockObject&AdminGroup $adminGroup;
+	private MockObject&AdminUserGroup $adminUserGroup;
+	private MockObject&ColorCode $colorCode;
 	private MockObject&ConnectedGroupsService $conntectedGroupService;
-
-	private MockObject&UserFormatter $userFormatter;
-
-	private MockObject&UserService $userService;
-
+	private MockObject&GroupfolderHelper $folderHelper;
 	private MockObject&IGroupManager $groupManager;
-
 	private MockObject&LoggerInterface $logger;
-
+	private MockObject&RootFolder $rootFolder;
+	private MockObject&SpaceMapper $spaceMapper;
+	private MockObject&SubGroup $subGroup;
+	private MockObject&UserFormatter $userFormatter;
+	private MockObject&UserGroup $userGroup;
+	private MockObject&UserService $userService;
+	private MockObject&UserWorkspaceGroup $userWorkspaceGroup;
+	private MockObject&WorkspaceCheckService $workspaceCheck;
+	private MockObject&WorkspaceManagerGroup $workspaceManagerGroup;
+	private MockObject&WorkspaceService $workspaceService;
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->folderHelper = $this->createMock(GroupfolderHelper::class);
-		$this->rootFolder = $this->createMock(RootFolder::class);
-		$this->workspaceCheck = $this->createMock(WorkspaceCheckService::class);
-		$this->userGroup = $this->createMock(UserGroup::class);
-		$this->spaceMapper = $this->createMock(SpaceMapper::class);
-		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
-		$this->colorCode = $this->createMock(ColorCode::class);
+		$this->addedGroups = $this->createMock(AddedGroups::class);
 		$this->adminGroup = $this->createMock(AdminGroup::class);
 		$this->adminUserGroup = $this->createMock(AdminUserGroup::class);
-		$this->addedGroups = $this->createMock(AddedGroups::class);
-		$this->subGroup = $this->createMock(SubGroup::class);
-		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
+		$this->colorCode = $this->createMock(ColorCode::class);
 		$this->conntectedGroupService = $this->createMock(ConnectedGroupsService::class);
-		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->userFormatter = $this->createMock(UserFormatter::class);
-		$this->userService = $this->createMock(UserService::class);
+		$this->folderHelper = $this->createMock(GroupfolderHelper::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->rootFolder = $this->createMock(RootFolder::class);
+		$this->spaceMapper = $this->createMock(SpaceMapper::class);
+		$this->subGroup = $this->createMock(SubGroup::class);
+		$this->userFormatter = $this->createMock(UserFormatter::class);
+		$this->userGroup = $this->createMock(UserGroup::class);
+		$this->userService = $this->createMock(UserService::class);
+		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
+		$this->workspaceCheck = $this->createMock(WorkspaceCheckService::class);
+		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
+		$this->workspaceService = $this->createMock(WorkspaceService::class);
 
 
 		$this->spaceManager = new SpaceManager(
@@ -129,10 +118,211 @@ class SpaceManagerTest extends TestCase {
 			$this->userService,
 			$this->groupManager,
 			$this->workspaceManagerGroup,
+			$this->workspaceService,
 			$this->colorCode
 		);
 	}
 
+	public function testFindAWorkspaceForOcsController(): void {
+		$spaceId = 4;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+				
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getGroupfolderId')
+			->willReturn(4)
+		;
+	
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(
+				[
+					'id' => 4,
+					'mount_point' => 'Espace04',
+					'groups' => [
+						'SPACE-GE-4' => [
+							'displayName' => 'WM-Espace04',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+						'SPACE-U-4' => [
+							'displayName' => 'U-Espace04',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+					],
+					'quota' => -3,
+					'size' => 0,
+					'acl' => true,
+					'manage' => [
+						[
+							'type' => 'group',
+							'id' => 'SPACE-GE-4',
+							'displayname' => 'WM-Espace04',
+						],
+					]
+				]
+			)
+		;
+
+		
+		$space
+			->expects($this->once())
+			->method('jsonSerialize')
+			->willReturn([
+				'id' => 4,
+				'groupfolder_id' => 4,
+				'name' => 'Espace04',
+				'color_code' => '#93b250',
+			])
+		;
+		
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-U-4')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('U-Espace04')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-GE-4')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('WM-Espace04')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupFormatter = Mockery::mock(GroupFormatter::class);
+		$groupFormatter
+			->shouldReceive('formatGroups')
+			->with([$groupUser, $groupWorkspaceManagerUser])
+			->andReturn([
+				'SPACE-GE-4' => [
+					'gid' => 'SPACE-GE-4',
+					'displayName' => 'WM-Espace04',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-4'
+				],
+				'SPACE-U-4' => [
+					'gid' => 'SPACE-U-4',
+					'displayName' => 'U-Espace04',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-4'
+				]
+			])
+		;
+
+		$this->workspaceService
+			->expects($this->once())
+			->method('addUsersInfo')
+			->willReturn((object)[])
+		;
+
+		$actual = $this->spaceManager->find($spaceId);
+
+		$expected = [
+			'id' => 4,
+			'mount_point' => 'Espace04',
+			'groups' => [
+				'SPACE-GE-4' => [
+					'gid' => 'SPACE-GE-4',
+					'displayName' => 'WM-Espace04',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-4'
+				],
+				'SPACE-U-4' => [
+					'gid' => 'SPACE-U-4',
+					'displayName' => 'U-Espace04',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-4'
+				]
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-4',
+					'displayname' => 'WM-Espace04'
+				]
+			],
+			'groupfolder_id' => 4,
+			'name' => 'Espace04',
+			'color_code' => '#93b250',
+			'users' => (object)[],
+			'userCount' => 0,
+			'added_groups' => (object)[]
+		];
+
+		$this->assertEquals($expected, $actual);
+		$this->assertIsArray($actual);
+	}
+	
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {
 		$this->folderHelper
 			->expects($this->once())
