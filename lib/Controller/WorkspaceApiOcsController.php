@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -61,6 +62,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * 200: Workspace returned
 	 */
+	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'GET',
