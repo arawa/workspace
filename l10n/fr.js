@@ -40,7 +40,7 @@ OC.L10N.register(
 		'Duplication of groups': 'Duplication des groupes',
 		'Invalid separator for CSV file': 'Séparateur incorrect pour le fichier CSV',
 		'Your CSV file must use a comma (",") as separator': 'Votre fichier CSV doit utiliser une virgule (",") comme séparateur.',
-		'The group already exists.': 'Le groupe existe déjà.',
+		'The group already exists.': 'Ce nom de groupe existe déjà.',
 		'Delete space': "Supprimer le Workspace",
 		'Delete user': "Retirer du Workspace",
 		'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace': 'Attention, après le retrait du groupe {groupname}, ses utilisateurs perdront l\'accès au Workspace {spacename}',
