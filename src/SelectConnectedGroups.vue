@@ -87,6 +87,12 @@ export default {
 		NcModal,
 		NcSelect,
 	},
+	props: {
+		space: {
+			type: Object,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			loadingGroups: false,
@@ -112,7 +118,7 @@ export default {
 			}
 
 			this.loadingGroups = true
-			const space = this.$store.state.spaces[this.$route.params.space]
+			const space = this.space // this.$store.state.spaces[this.$route.params.space]
 			const groupsPresents = Object.keys(space.added_groups) || []
 
 			axios.get(generateUrl('/apps/workspace/groups'), {
@@ -145,11 +151,9 @@ export default {
 			this.$emit('close')
 			// todo: Call api
 			this.groupsSelected.forEach(group => {
-				const space = this.$store.state.spaces[this.$route.params.space]
 				this.$store.dispatch('addConnectedGroupToWorkspace', {
-					spaceId: space.id,
+					space: this.space,
 					group,
-					name: this.$route.params.space,
 				})
 			})
 		},
