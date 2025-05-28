@@ -356,14 +356,14 @@ export default {
 			path: `/workspace/${name}`,
 		})
 	},
-	addConnectedGroupToWorkspace(context, { spaceId, group, name }) {
-		const space = context.state.spaces[name]
-		const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups`), {
+	addConnectedGroupToWorkspace(context, { space, group }) {
+		const result = axios.post(generateUrl(`/apps/workspace/spaces/${space.id}/connected-groups`), {
 			gid: group.gid,
 		})
 			.then(resp => {
-				context.commit('addConnectedGroupToWorkspace', { name, group, slug: resp.data.slug })
+				context.commit('addConnectedGroupToWorkspace', { space, group, slug: resp.data.slug })
 				const users = resp.data.users
+				const name = space.name
 				for (const user in users) {
 					if (users[user].is_connected === false) {
 						context.commit('addUserToGroup', { name, gid: group.gid, user: users[user] })
@@ -372,7 +372,7 @@ export default {
 					}
 
 					const uid = users[user].uid
-					const usersFromSpace = Object.keys(context.state.spaces[name].users)
+					const usersFromSpace = Object.keys(space.users)
 
 					if (!usersFromSpace.includes(uid)) {
 						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })

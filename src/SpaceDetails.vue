@@ -101,7 +101,7 @@
 			@close="toggleShowSelectUsersModal">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcModal>
-		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
+		<SelectConnectedGroups v-if="showSelectConnectedGroups" :space="space" @close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
 			:space-name="$route.params.space"
 			@close="toggleShowDelWorkspaceModal"
