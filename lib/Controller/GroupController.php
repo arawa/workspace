@@ -486,7 +486,7 @@ class GroupController extends Controller {
 
 		$groups = array_filter($groups, fn ($group) => !in_array($group->getGID(), $groupsPresents));
 
-		$groupsFormatted = GroupFormatter::formatGroups($groups);
+		$groupsFormatted = GroupFormatter::formatGroups($groups, true);
 
 		uksort($groupsFormatted, 'strcasecmp');
 
