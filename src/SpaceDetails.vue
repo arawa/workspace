@@ -86,10 +86,12 @@
 			</div>
 		</div>
 		<UserTable :space-name="$route.params.space" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
-		</NcModal>
+		<NcDialog v-if="showSelectUsersModal"
+			:name="t('workspace', 'Add users')"
+			size="normal"
+			@update:open="toggleShowSelectUsersModal">
+			<AddUsersTabs />
+		</NcDialog>
 		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
 			:space-name="$route.params.space"
@@ -107,7 +109,7 @@ import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
-import NcModal from '@nextcloud/vue/components/NcModal'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
@@ -124,7 +126,7 @@ export default {
 		NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
-		NcModal,
+		NcDialog,
 		NcSelect,
 		SelectConnectedGroups,
 		RemoveSpace,
