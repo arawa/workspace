@@ -21,17 +21,20 @@
 -->
 <template>
 	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
-		<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
-			icon="icon-add"
-			:name="t('workspace', 'New space')"
-			@new-item="createSpace" />
-		<NcAppNavigationItem
-			:name="t('workspace', 'All spaces')"
-			:to="{path: '/'}">
-			<NcCounterBubble slot="counter">
-				{{ $store.state.countWorkspaces }}
-			</NcCounterBubble>
-		</NcAppNavigationItem>
+		<ul class="ws-navigation-header">
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				icon="icon-add"
+				:name="t('workspace', 'New space')"
+				@new-item="createSpace" />
+			<li class="ws-navigation-spacer" />
+			<NcAppNavigationItem
+				:name="t('workspace', 'All spaces')"
+				:to="{path: '/'}">
+				<NcCounterBubble slot="counter">
+					{{ $store.state.countWorkspaces }}
+				</NcCounterBubble>
+			</NcAppNavigationItem>
+		</ul>
 		<template #list>
 			<SpaceMenuItem
 				v-for="(space, spaceName) in $store.state.spaces"
@@ -112,4 +115,10 @@ export default {
 .app-navigation-entry {
 	padding-right: 0px;
 }
-</style>
+.ws-navigation-header {
+	padding: var(--app-navigation-padding);
+}
+.ws-navigation-spacer {
+	height: var(--app-navigation-padding);
+}
+	</style>

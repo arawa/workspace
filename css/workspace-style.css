@@ -92,6 +92,13 @@ tbody > .workspace-tr:hover {
 	margin-right: 30px;
 }
 
+/* hooks nc31 */
+.app-workspace .app-navigation__list {
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 0;
+}
+
 /* force toggle visibility */
 .workspace-sidebar .icon-collapse {
 	visibility: visible !important;
