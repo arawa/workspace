@@ -71,16 +71,25 @@ export default {
 	top: 0;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
+  border-top-right-radius: var(--border-radius-element, var(--border-radius-pill));
+	border-top-left-radius: var(--border-radius-element, var(--border-radius-pill));
+	width: 100%;
 }
+
 .app-navigation-entry.space-middle-background{
 	top: 0;
 	bottom: 0;
 	border-radius: 0;
+	width: 100%;
 }
+
 .app-navigation-entry.space-last-background{
 	bottom: 0;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
+  border-bottom-right-radius: var(--border-radius-element, var(--border-radius-pill));
+	border-bottom-left-radius: var(--border-radius-element, var(--border-radius-pill));
+	width: 100%;
 }
 
 </style>
