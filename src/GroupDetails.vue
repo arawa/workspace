@@ -237,10 +237,6 @@ export default {
 </script>
 
 <style>
-.icon-group {
-	min-width: 42px;
-	min-height: 42px;
-}
 
 .group-actions,
 .group-name,
