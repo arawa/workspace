@@ -24,6 +24,13 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
@@ -31,7 +38,23 @@ class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		public $appName,
+		private SpaceManager $spaceManager,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[NoAdminRequired]
+	#[WorkspaceManagerRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/groups',
+		requirements: [
+			'id' => '\d+',
+			'groupname' => '[A-Za-z-0-9].*'
+		]
+	)]
+	public function createSubGroup(int $id, string $groupname): Response {
+		$group = $this->spaceManager->createSubGroup($id, $groupname);
+		return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
 	}
 }
