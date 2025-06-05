@@ -376,6 +376,13 @@ section.app-sidebar__tab--active {
 	max-height: 900px !important;
 }
 
+// Fix : tabs implies a min-height of 256 that overlaps the user list
+.select-users-wrapper :deep(.app-sidebar-tabs__content) {
+	min-height: 60px !important;
+	height: auto !important;
+	padding-top: 20px;
+}
+
 // FIXME: Obivously we should at some point not randomly reuse the sidebar component
 // since this is not oficially supported
 .modal-container .app-sidebar {
