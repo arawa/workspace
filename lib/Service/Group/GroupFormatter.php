@@ -50,7 +50,7 @@ class GroupFormatter {
 			);
 
 			if ($shortInfo) {
-				$usersCount = 0;
+				$usersCount = null;
 			} else {
 				if (!UserGroup::isWorkspaceGroup($group)) {
 					$users = $group->getUsers();
