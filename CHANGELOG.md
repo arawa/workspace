@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.4] - 2025-05-05
+
+### Changed
+
+- Make workspace available for Nextcloud 31 by @zak39 in [#1277](https://github.com/arawa/workspace/pull/1277)
+
+### Fixed
+
+- Fix infinite loading issue for users by @smarinier in [#1269](https://github.com/arawa/workspace/pull/1269)
+- Optimize use of count users from groups by @smarinier in [#1273](https://github.com/arawa/workspace/pull/1273)
+
+### Feature
+
+- Database checker for workspace by @smarinier in [#1281](https://github.com/arawa/workspace/pull/1281)
+
 ## [4.0.3] - 2025-04-23
 
 ### Fixed
@@ -387,7 +402,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.3...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.4...main
+[4.0.4]: https://github.com/arawa/workspace/compare/v4.0.3...4.0.4
 [4.0.3]: https://github.com/arawa/workspace/compare/v4.0.2...4.0.3
 [4.0.2]: https://github.com/arawa/workspace/compare/v4.0.1...4.0.2
 [4.0.1]: https://github.com/arawa/workspace/compare/v4.0.0...4.0.1
