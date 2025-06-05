@@ -118,7 +118,7 @@ export default {
 			}
 
 			this.loadingGroups = true
-			const space = this.space // this.$store.state.spaces[this.$route.params.space]
+			const space = this.space
 			const groupsPresents = Object.keys(space.added_groups) || []
 
 			axios.get(generateUrl('/apps/workspace/groups'), {
