@@ -57,7 +57,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/spaces/{id}/users',
+		url: '/api/v1/space/{id}/users',
 		requirements: ['id' => '\d+']
 	)]
 	public function removeUsersInWorkspace(int $id, array $uids): Response {
