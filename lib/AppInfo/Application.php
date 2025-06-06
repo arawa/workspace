@@ -28,6 +28,8 @@ use OCA\Workspace\Group\GroupBackend;
 use OCA\Workspace\Middleware\GeneralManagerAccessMiddleware;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
+use OCA\Workspace\Middleware\RequireExistingSpaceMiddleware;
+use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\SpaceService;
@@ -74,6 +76,8 @@ class Application extends App implements IBootstrap {
 			);
 		});
 
+		$context->registerMiddleware(SpaceIdNumberMiddleware::class);
+		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
