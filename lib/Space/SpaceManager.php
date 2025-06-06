@@ -150,6 +150,17 @@ class SpaceManager {
 		];
 	}
 
+	public function findGroupsBySpaceId(int $id): array {
+		$space = $this->spaceMapper->find($id);
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		$gids = array_keys($groupfolder['groups']);
+		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+		$groupsFormatted = GroupFormatter::formatGroups($groups);
+
+		return $groupsFormatted;
+	}
+	
 	public function get(int $spaceId): array {
 
 		$space = $this->spaceMapper->find($spaceId);
