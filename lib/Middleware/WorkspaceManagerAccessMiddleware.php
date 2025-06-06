@@ -11,7 +11,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\OCS\OCSForbiddenException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
 
 class WorkspaceManagerAccessMiddleware extends Middleware {
@@ -39,10 +38,6 @@ class WorkspaceManagerAccessMiddleware extends Middleware {
 			$id = $this->request->getParam('id');
 
 			$space = $this->spaceService->find($id);
-
-			if (is_null($space)) {
-				throw new OCSNotFoundException("The workspace with the id {$id} is not found.");
-			}
 
 			if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize())) {
 				throw new OCSForbiddenException("You are not Workspace Manager for the workspace with the id {$id}.");
