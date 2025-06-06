@@ -24,6 +24,9 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
@@ -51,10 +54,13 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'GET',
-		url: '/api/v1/spaces/{id}/groups',
+		url: '/api/v1/space/{id}/groups',
 		requirements: ['id' => '\d+']
 	)]
 	public function findGroupsFromWorkspace(int $id): Response {
