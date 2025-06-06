@@ -30,6 +30,7 @@ use OCP\IGroup;
 class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
+	 * @param bool $shortInfo If true, will not return the users count
 	 * @return array [
 	 *               'gid' => string,
 	 *               'displayName' => string,
@@ -37,7 +38,7 @@ class GroupFormatter {
 	 *               'is_ldap' => boolean
 	 *               ]
 	 */
-	public static function formatGroups(array $groups): array {
+	public static function formatGroups(array $groups, bool $shortInfo = false): array {
 		$groupsFormat = [];
 
 		foreach ($groups as $group) {
@@ -48,12 +49,16 @@ class GroupFormatter {
 				$backendnames
 			);
 
-			if (!UserGroup::isWorkspaceGroup($group)) {
-				$users = $group->getUsers();
-				$users = array_filter($users, fn ($user) => $user->isEnabled());
-				$usersCount = count($users);
+			if ($shortInfo) {
+				$usersCount = null;
 			} else {
-				$usersCount = $group->count();
+				if (!UserGroup::isWorkspaceGroup($group)) {
+					$users = $group->getUsers();
+					$users = array_filter($users, fn ($user) => $user->isEnabled());
+					$usersCount = count($users);
+				} else {
+					$usersCount = $group->count();
+				}
 			}
 
 			$groupsFormat[$group->getGID()] = [
