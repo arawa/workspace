@@ -21,17 +21,18 @@
 
 <template>
 	<div class="select-users-wrapper">
-		<NcAppSidebar name="Ajouter des utilisateurs"
+		<NcAppSidebar
 			class="my-sidebar"
-			:title="title"
-			@update:active="toggleImportTab"
-			@close="closeSidebar">
+			@update:active="toggleImportTab">
 			<NcAppSidebarTab id="search"
 				:name="titleSearch"
 				:order="1">
 				<MultiSelectUsers class="input-select-users"
 					:all-selected-users="allSelectedUsers"
 					@change="addUserToBatch" />
+				<template #icon>
+					<span />
+				</template>
 			</NcAppSidebarTab>
 			<NcAppSidebarTab id="import"
 				:name="titleImport"
@@ -42,23 +43,25 @@
 					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
 						@push="pushUsersFromButton" />
 				</div>
+				<template #icon>
+					<div class="information-import">
+						<NcPopover>
+							<template #trigger>
+								<InformationOutline class="information-image"
+									:class="onImportTab"
+									:size="17" />
+							</template>
+							<div class="popover">
+								<p>{{ informCsvStructureMessage }}</p>
+								<br>
+								<NcRichText :use-markdown="true"
+									:text="csvTemplateMarkdown" />
+							</div>
+						</NcPopover>
+					</div>
+				</template>
 			</NcAppSidebarTab>
 		</NcAppSidebar>
-		<div class="information-import">
-			<NcPopover>
-				<template #trigger>
-					<InformationOutline class="information-image"
-						:class="onImportTab"
-						:size="17" />
-				</template>
-				<div class="popover">
-					<p>{{ informCsvStructureMessage }}</p>
-					<br>
-					<NcRichText :use-markdown="true"
-						:text="csvTemplateMarkdown" />
-				</div>
-			</NcPopover>
-		</div>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -360,12 +363,24 @@ section.app-sidebar__tab--active {
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
 	margin-top: -10px !important;
+	flex: 1 1 120px !important;
+}
+
+.select-users-wrapper :deep(header.app-sidebar-header) {
+    display: none !important;
 }
 
 // Change the height of the modal container
 // to make space for the NcNoteCard
 .modal-container {
 	max-height: 900px !important;
+}
+
+// Fix : tabs implies a min-height of 256 that overlaps the user list
+.select-users-wrapper :deep(.app-sidebar-tabs__content) {
+	min-height: 60px !important;
+	height: auto !important;
+	padding-top: 20px;
 }
 
 // FIXME: Obivously we should at some point not randomly reuse the sidebar component
@@ -453,8 +468,8 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-	top: 108px;
-	right: 54px;
+	top: 12px;
+	right: 0px;
 	z-index: 9999;
 }
 

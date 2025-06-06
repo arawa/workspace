@@ -67,10 +67,12 @@
 			</div>
 		</div>
 		<UserTable :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
-		<NcModal v-if="showSelectUsersModal"
-			@close="toggleShowSelectUsersModal">
-			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
-		</NcModal>
+		<NcDialog v-if="showSelectUsersModal"
+			:name="t('workspace', 'Add users')"
+			size="normal"
+			@update:open="toggleShowSelectUsersModal">
+			<AddUsersTabs />
+		</NcDialog>
 		<AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
 			:message="t('workspace', 'Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: $route.params.space }, null, { escape: false })"
 			@cancel="closeConnectedGroupModal"
@@ -88,7 +90,7 @@ import AlertRemoveGroup from './AlertRemoveGroup.vue'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
-import NcModal from '@nextcloud/vue/components/NcModal'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AddUsersTabs from './AddUsersTabs.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
@@ -97,7 +99,7 @@ export default {
 	name: 'GroupDetails',
 	components: {
 		AddUsersTabs,
-		NcModal,
+		NcDialog,
 		AlertRemoveGroup,
 		NcActions,
 		NcActionButton,
@@ -237,10 +239,6 @@ export default {
 </script>
 
 <style>
-.icon-group {
-	min-width: 42px;
-	min-height: 42px;
-}
 
 .group-actions,
 .group-name,

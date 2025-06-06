@@ -92,6 +92,13 @@ tbody > .workspace-tr:hover {
 	margin-right: 30px;
 }
 
+/* hooks nc31 */
+.app-workspace .app-navigation__list {
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 0;
+}
+
 /* force toggle visibility */
 .workspace-sidebar .icon-collapse {
 	visibility: visible !important;
@@ -130,8 +137,6 @@ body .icon-added-group, body .icon-added-group-dark {
 
 .icon-added-group, .icon-added-group-dark {
 	background-image: url('../img/added_group_black.svg');
-	min-width: 42px;
-	min-height: 42px;
 }
 
 .space-color-picker {
