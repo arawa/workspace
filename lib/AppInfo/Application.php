@@ -25,9 +25,13 @@ namespace OCA\Workspace\AppInfo;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Group\GroupBackend;
+use OCA\Workspace\Middleware\GeneralManagerAccessMiddleware;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
+use OCA\Workspace\Middleware\RequireExistingSpaceMiddleware;
+use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
@@ -72,9 +76,13 @@ class Application extends App implements IBootstrap {
 			);
 		});
 
+		$context->registerMiddleware(SpaceIdNumberMiddleware::class);
+		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
+		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);
+		$context->registerMiddleware(WorkspaceManagerAccessMiddleware::class);
 
 		$context->registerCapability(Capabilities::class);
 	}
