@@ -24,6 +24,9 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -48,6 +51,9 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
