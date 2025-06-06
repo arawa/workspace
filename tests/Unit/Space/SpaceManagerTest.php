@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
+use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -310,5 +311,65 @@ class SpaceManagerTest extends TestCase {
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
+	}
+
+	public function testCreateSubgroup(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupanme = 'HR';
+
+		$gid = 'SPACE-G-HR-1';
+		$groupfolderId = 42;
+		
+		$space = $this->createMock(Space::class);
+		$group = $this->createMock(IGroup::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($id)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getSpaceName')
+			->willReturn($spacename)
+		;
+
+		$space
+			->expects($this->exactly(2))
+			->method('getGroupfolderId')
+			->willReturn($groupfolderId)
+		;
+
+		$this->subGroup
+			->expects($this->once())
+			->method('create')
+			->with($groupanme, $id, $spacename)
+			->willReturn($group)
+		;
+
+		$group
+			->expects($this->exactly(2))
+			->method('getGID')
+			->willReturn($gid)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('addApplicableGroup')
+			->with($groupfolderId, $gid)
+		;
+
+		$this->logger
+			->expects($this->once())
+			->method('info')
+			->with("The subgroup {$gid} is created and attached to the groupfolder with the id {$groupfolderId}.")
+		;
+		
+		$actual = $this->spaceManager->createSubgroup($id, $groupanme);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
 	}
 }
