@@ -24,14 +24,43 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private SpaceManager $spaceManager,
+		private LoggerInterface $logger,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function removeUsersInWorkspace(int $id, array $uids): Response {
+		$this->spaceManager->removeUsersFromWorkspace($id, $uids);
+		$uidsStringify = implode(', ', $uids);
+		$this->logger->info("These users are removed from the workspace with the id {$id} : {$uidsStringify}");
+
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 }
