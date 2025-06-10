@@ -26,15 +26,10 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
-use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IGroup;
-use OCP\IGroupManager;
 use OCP\IRequest;
-use OCP\IUser;
-use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
