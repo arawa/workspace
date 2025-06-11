@@ -97,7 +97,7 @@ export default {
 				id: workspace.id_space,
 				groupfolderId: workspace.folder_id,
 				name,
-				quota: t('workspace', 'unlimited'),
+				quota: workspace.quota,
 				users: {},
 				userCount: workspace.userCount,
 				managers: null,
