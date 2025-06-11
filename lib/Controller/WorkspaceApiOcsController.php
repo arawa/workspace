@@ -113,6 +113,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * 200: Workspaces returned
 	 */
+	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
