@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -75,6 +76,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * 200: Workspaces returned
 	 */
+	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
