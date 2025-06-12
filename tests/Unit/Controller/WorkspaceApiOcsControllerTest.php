@@ -29,6 +29,7 @@ use OCA\Workspace\Controller\WorkspaceApiOcsController;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IGroup;
@@ -42,27 +43,24 @@ use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
-	private IGroupManager&MockObject $groupManager;
 	private IRequest&MockObject $request;
-	private IUserManager&MockObject $userManager;
 	private LoggerInterface&MockObject $logger;
+	private SpaceManager&MockObject $spaceManager;
 	private SpaceMapper&MockObject $spaceMapper;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
 	
 	public function setUp(): void {
 		$this->appName = 'workspace';
-		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
+		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
-		$this->userManager = $this->createMock(IUserManager::class);
 		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
-			$this->groupManager,
-			$this->userManager,
 			$this->logger,
+			$this->spaceManager,
 			$this->spaceMapper,
 			$this->appName
 		);
@@ -74,67 +72,29 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	public function testAddUsersToWorkspaceReturnsValidResponse(): void {
 		$spaceId = 1;
+		$spacename = 'Espace01';
 		$uids = ['user1', 'user2'];
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('addUsersInWorkspace')
+			->with($spaceId, $uids)
+		;
 
 		/** @var Space&MockObject */
 		$space = $this->createMock(Space::class);
-		
-		/** @var IUser&MockObject */
-		$user1 = $this->createMock(IUser::class);
-		/** @var IUser&MockObject */
-		$user2 = $this->createMock(IUser::class);
-				
-		$this->userManager
-			->expects($this->any())
-			->method('get')
-			->with(
-				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'))
-			)
-			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
-		;
-		
+
 		$this->spaceMapper
 			->expects($this->once())
 			->method('find')
 			->with($spaceId)
 			->willReturn($space)
 		;
-		
-		$groupUser = $this->createMock(IGroup::class);
-		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
-
-		$this->groupManager
-			->expects($this->any())
-			->method('get')
-			->willReturn($groupUser, $groupWorkspaceManagerUser)
-		;
-
-		$groupFormatter = Mockery::mock(UserGroup::class);
-		$groupFormatter
-			->shouldReceive('get')
-			->with($spaceId)
-			->andReturn('SPACE-U-1')
-		;
-		
-		/** @var IGroup&MockObject */
-		$userGroup = $this->createMock(IGroup::class);
-
-		$this->groupManager
-			->expects($this->once())
-			->method('get')
-			->willReturn($userGroup)
-		;
-
-		$groupUser
-			->expects($this->any())
-			->method('addUser')
-			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
-		;
 
 		$space
 			->expects($this->once())
 			->method('getSpaceName')
-			->willReturn('Espace01')
+			->willReturn($spacename)
 		;
 		
 		$actual = $this->controller->addUsersInWorkspace($spaceId, $uids);
