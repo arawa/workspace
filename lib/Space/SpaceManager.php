@@ -45,7 +45,9 @@ use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class SpaceManager {
@@ -58,6 +60,7 @@ class SpaceManager {
 		private AdminUserGroup $adminUserGroup,
 		private AddedGroups $addedGroups,
 		private SubGroup $subGroup,
+		private IUserManager $userManager,
 		private UserWorkspaceGroup $userWorkspaceGroup,
 		private SpaceMapper $spaceMapper,
 		private ConnectedGroupsService $connectedGroupsService,
@@ -215,6 +218,43 @@ class SpaceManager {
 	 */
 	private function deleteBlankSpaceName(string $spaceName): string {
 		return trim($spaceName);
+	}
+
+	public function addUsersInWorkspace(int $id, array $uids): void {
+		$types = array_unique(array_map(fn ($uid) => gettype($uid), $uids));
+		$othersStringTypes = array_values(array_filter($types, fn ($type) => $type !== 'string'));
+
+		if (!empty($othersStringTypes)) {
+			throw new OCSBadRequestException('uids params must contain a string array only');
+		}
+
+		$usersNotExist = [];
+		foreach ($uids as $uid) {
+			$user = $this->userManager->get($uid);
+			if (is_null($user)) {
+				$usersNotExist[] = $uid;
+			}
+		}
+
+		if (!empty($usersNotExist)) {
+			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
+			$this->logger->error('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+		}
+
+		$gid = UserGroup::get($id);
+		$userGroup = $this->groupManager->get($gid);
+
+		if (is_null($userGroup)) {
+			$this->logger->error("The group with {$gid} group doesn't exist.");
+			throw new OCSBadRequestException("The group with {$gid} group doesn't exist.");
+		}
+
+		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
+
+		foreach ($users as $user) {
+			$userGroup->addUser($user);
+		}
 	}
 
 	public function remove(string $spaceId): void {

@@ -26,31 +26,36 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Exceptions\AbstractNotification;
-use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Group\AddedGroups\AddedGroups;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminUserGroup;
-use OCA\Workspace\Group\SubGroups\SubGroup;
-use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\ColorCode;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\User\UserFormatter;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
-use OCA\Workspace\Space\SpaceManager;
-use OCP\AppFramework\Http;
+use Mockery;
+use OCP\IUser;
 use OCP\IGroup;
+use OCP\IUserManager;
 use OCP\IGroupManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
 use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\TestCase;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Group\SubGroups\SubGroup;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use PHPUnit\Framework\MockObject\MockObject;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Group\AddedGroups\AddedGroups;
+use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\AbstractNotification;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 
 class SpaceManagerTest extends TestCase {
 
@@ -88,6 +93,8 @@ class SpaceManagerTest extends TestCase {
 
 	private MockObject&LoggerInterface $logger;
 
+	private MockObject&IUserManager $userManager;
+
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
@@ -110,6 +117,7 @@ class SpaceManagerTest extends TestCase {
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userService = $this->createMock(UserService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 
 
 		$this->spaceManager = new SpaceManager(
@@ -121,6 +129,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminUserGroup,
 			$this->addedGroups,
 			$this->subGroup,
+			$this->userManager,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
 			$this->conntectedGroupService,
@@ -131,6 +140,10 @@ class SpaceManagerTest extends TestCase {
 			$this->workspaceManagerGroup,
 			$this->colorCode
 		);
+	}
+
+	public function tearDown(): void {
+		Mockery::close();
 	}
 
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {
@@ -310,5 +323,83 @@ class SpaceManagerTest extends TestCase {
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
+	}
+
+	public function testAddUsersInWorkspace(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2'];
+		
+		/** @var IUser&MockObject */
+		$user1 = $this->createMock(IUser::class);
+		/** @var IUser&MockObject */
+		$user2 = $this->createMock(IUser::class);
+				
+		$this->userManager
+			->expects($this->any())
+			->method('get')
+			->with(
+				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'))
+			)
+			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
+		;
+		
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupFormatter = Mockery::mock(UserGroup::class);
+		$groupFormatter
+			->shouldReceive('get')
+			->with($spaceId)
+			->andReturn('SPACE-U-1')
+		;
+		
+		/** @var IGroup&MockObject */
+		$userGroup = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->willReturn($userGroup)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('addUser')
+			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
+		;
+		
+		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
+	}
+
+	public function testAddUsersInWorkspaceThrowsExceptionForDoesntExistUsers(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2', 'user42'];
+
+		/** @var IUser&MockObject */
+		$user1 = $this->createMock(IUser::class);
+		/** @var IUser&MockObject */
+		$user2 = $this->createMock(IUser::class);
+		/** @var IUser|null */
+		$user42 = null;
+				
+		$this->userManager
+			->expects($this->any())
+			->method('get')
+			->with(
+				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'), $this->equalTo('user42'))
+			)
+			->willReturnOnConsecutiveCalls($user1, $user2, $user42)
+		;
+
+		$this->expectException(OCSBadRequestException::class);
+		$this->expectExceptionMessage("These users not exist in your Nextcoud instance : \n- user42\n");
+
+		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
 	}
 }

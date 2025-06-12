@@ -24,14 +24,48 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private LoggerInterface $logger,
+		private SpaceManager $spaceManager,
+		private SpaceMapper $spaceMapper,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[WorkspaceManagerRequired]
+	#[RequireExistingSpace]
+	#[SpaceIdNumber]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function addUsersInWorkspace(int $id, array $uids): Response {
+		$this->spaceManager->addUsersInWorkspace($id, $uids);
+		$spacename = $this->spaceMapper->find($id)->getSpaceName();
+
+		$this->logger->info("Users are added in the {$spacename} workspace with the {$id} id.");
+
+		return new DataResponse([
+			'message' => "Users are added in the {$spacename} workspace with the {$id} id."
+		], Http::STATUS_OK);
 	}
 }
