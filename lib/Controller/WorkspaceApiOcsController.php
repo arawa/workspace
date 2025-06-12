@@ -24,6 +24,9 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCP\AppFramework\Http;
@@ -50,10 +53,13 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
+	#[WorkspaceManagerRequired]
+	#[RequireExistingSpace]
+	#[SpaceIdNumber]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
-		url: '/api/v1/spaces/{id}/users',
+		url: '/api/v1/space/{id}/users',
 		requirements: ['id' => '\d+']
 	)]
 	public function addUsersInWorkspace(int $id, array $uids): Response {
