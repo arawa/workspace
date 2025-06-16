@@ -24,14 +24,74 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCSController;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private SpaceManager $spaceManager,
+		private UserService $userService,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * @return Response<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 * 	manage: array,
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 * 	users: array,
+	 * 	userCount: int,
+	 * 	added_groups: array
+	 * }, Http::STATUS_OK>
+	 *
+	 * 200: Workspaces returned
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
+	public function findAll(): Response {
+		$filterByName = $this->request->getParam('name');
+
+		$workspaces = $this->spaceManager->findAll();
+
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace);
+			}));
+			$workspaces = $filteredWorkspaces;
+		}
+
+		if (!is_null($filterByName)) {
+			$filterToLower = strtolower($filterByName);
+			$pattern = "/.*{$filterToLower}.*/";
+			
+			$workspacesFiltered = [];
+			foreach ($workspaces as $workspace) {
+				if (preg_match($pattern, strtolower($workspace['name']))) {
+					$workspacesFiltered[] = $workspace;
+				}
+			}
+
+			$workspaces = $workspacesFiltered ? $workspacesFiltered : null;
+		}
+
+		return new DataResponse($workspaces, Http::STATUS_OK);
 	}
 }
