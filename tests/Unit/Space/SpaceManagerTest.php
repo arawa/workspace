@@ -26,31 +26,34 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Exceptions\AbstractNotification;
-use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Group\AddedGroups\AddedGroups;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminUserGroup;
-use OCA\Workspace\Group\SubGroups\SubGroup;
-use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\ColorCode;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\User\UserFormatter;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
-use OCA\Workspace\Space\SpaceManager;
-use OCP\AppFramework\Http;
+use Mockery;
 use OCP\IGroup;
 use OCP\IGroupManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use OCP\AppFramework\Http;
+use OCA\Workspace\Db\Space;
 use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\TestCase;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Group\SubGroups\SubGroup;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use PHPUnit\Framework\MockObject\MockObject;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Group\AddedGroups\AddedGroups;
+use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\AbstractNotification;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 
 class SpaceManagerTest extends TestCase {
 
@@ -310,5 +313,166 @@ class SpaceManagerTest extends TestCase {
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
+	}
+
+	public function testFindGroupsBySpaceId(): void {
+		$spaceId = 1;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+				
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getGroupfolderId')
+			->willReturn(1)
+		;
+	
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(
+				[
+					'id' => 1,
+					'mount_point' => 'Espace01',
+					'groups' => [
+						'SPACE-GE-1' => [
+							'displayName' => 'WM-Espace01',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+						'SPACE-U-1' => [
+							'displayName' => 'U-Espace01',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+					],
+					'quota' => -3,
+					'size' => 0,
+					'acl' => true,
+					'manage' => [
+						[
+							'type' => 'group',
+							'id' => 'SPACE-GE-1',
+							'displayname' => 'WM-Espace01',
+						],
+					]
+				]
+			)
+		;
+		
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-U-1')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('U-Espace01')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-GE-1')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('WM-Espace01')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupFormatter = Mockery::mock(GroupFormatter::class);
+		$groupFormatter
+			->shouldReceive('formatGroups')
+			->with([$groupUser, $groupWorkspaceManagerUser])
+			->andReturn([
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+			])
+		;
+		
+		$actual = $this->spaceManager->findGroupsBySpaceId($spaceId);
+
+		$expected = [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+		];
+
+		$this->assertEquals($expected, $actual);
 	}
 }

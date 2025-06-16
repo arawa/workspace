@@ -24,14 +24,42 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Space\SpaceManager;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private LoggerInterface $logger,
+		private SpaceManager $spaceManager,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/api/v1/space/{id}/groups',
+		requirements: ['id' => '\d+'],
+	)]
+	public function findGroupsBySpaceId(int $id): Response {
+		$groups = $this->spaceManager->findGroupsBySpaceId($id);
+		$this->logger->info("Successfully find groups from the {$id} workspace.");
+
+		return new DataResponse($groups, Http::STATUS_OK);
 	}
 }
