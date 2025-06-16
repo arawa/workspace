@@ -24,6 +24,9 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -45,9 +48,11 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * @GeneralManagerRequired
 	 * @param int $id of workspace to delete
 	 */
+	#[GeneralManagerRequired]
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
