@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Space\SpaceManager;
@@ -83,9 +84,7 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse($space, Http::STATUS_OK);
 	}
 
-	/*
-	* @GeneralManagerRequired
-	**/
+	#[GeneralManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
