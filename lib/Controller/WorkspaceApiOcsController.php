@@ -36,7 +36,6 @@ use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
@@ -102,7 +101,6 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * 200: Workspaces returned
 	 */
-	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
