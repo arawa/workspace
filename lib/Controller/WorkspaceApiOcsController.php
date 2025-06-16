@@ -24,34 +24,22 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Attribute\WorkspaceManagerRequired;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Space\SpaceManager;
+use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\FrontpageRoute;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
-use OCP\IGroupManager;
-use OCP\IRequest;
-use Psr\Log\LoggerInterface;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
-		private GroupfolderHelper $folderHelper,
-		private IGroupManager $groupManager,
-		private LoggerInterface $logger,
-		private RootFolder $rootFolder,
 		private SpaceManager $spaceManager,
 		private UserService $userService,
-		private WorkspaceService $workspaceService,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
@@ -80,61 +68,32 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
-		$workspaces = $this->workspaceService->getAll();
-		$spaces = [];
-		foreach ($workspaces as $workspace) {
-			$folderInfo = $this->folderHelper->getFolder(
-				$workspace['groupfolder_id'],
-				$this->rootFolder->getRootFolderStorageId()
-			);
-			$space = ($folderInfo !== false) ? array_merge(
-				$folderInfo,
-				$workspace
-			) : $workspace;
+		$filterByName = $this->request->getParam('name');
 
-			$gids = array_keys($space['groups'] ?? []);
-			$wsGroups = [];
-			$space['users'] = (object)[];
-			$addedGroups = [];
+		$workspaces = $this->spaceManager->findAll();
 
-			foreach ($gids as $gid) {
-				$group = $this->groupManager->get($gid);
-				if (is_null($group)) {
-					$this->logger->warning(
-						"Be careful, the $gid group does not exist in the oc_groups table."
-						. ' The group is still present in the oc_group_folders_groups table.'
-						. ' To fix this inconsistency, recreate the group using occ commands.'
-					);
-					continue;
-				}
-				if (UserGroup::isWorkspaceGroup($group)) {
-					$wsGroups[] = $group;
-				} else {
-					$addedGroups[] = $group;
-				}
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace);
+			}));
+			$workspaces = $filteredWorkspaces;
+		}
 
-				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['userCount'] = $group->count();
+		if (!is_null($filterByName)) {
+			$filterToLower = strtolower($filterByName);
+			$pattern = "/.*{$filterToLower}.*/";
+			
+			$workspacesFiltered = [];
+			foreach ($workspaces as $workspace) {
+				if (preg_match($pattern, strtolower($workspace['name']))) {
+					$workspacesFiltered[] = $workspace;
 				}
 			}
 
-			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
-			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
-
-			$users = $this->workspaceService->addUsersInfo($space);
-			$space['users'] = $users;
-
-			$spaces[] = $space;
-		}
-		// We only want to return those workspaces for which the connected user is a manager
-		if (!$this->userService->isUserGeneralAdmin()) {
-			$this->logger->debug('Filtering workspaces');
-			$filteredWorkspaces = array_values(array_filter($spaces, function ($space) {
-				return $this->userService->isSpaceManagerOfSpace($space);
-			}));
-			$spaces = $filteredWorkspaces;
+			$workspaces = $workspacesFiltered ? $workspacesFiltered : null;
 		}
 
-		return new DataResponse($spaces, Http::STATUS_OK);
+		return new DataResponse($workspaces, Http::STATUS_OK);
 	}
 }
