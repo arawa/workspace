@@ -119,7 +119,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'SPACE-GE-33',
 					'SPACE-U-33'
 				],
-				'space_id' => 33,
+				'id' => 33,
 				'groupfolder_id' => 20,
 				'state' => 'delete'
 			],

@@ -75,7 +75,7 @@ class WorkspaceApiOcsController extends OCSController {
 			[
 				'name' => $space['name'],
 				'groups' => $groups,
-				'space_id' => $space['id'],
+				'id' => $space['id'],
 				'groupfolder_id' => $space['groupfolder_id'],
 				'state' => 'delete'
 			],
