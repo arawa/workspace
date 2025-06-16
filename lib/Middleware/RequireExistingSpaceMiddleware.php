@@ -3,16 +3,16 @@
 namespace OCA\Workspace\Middleware;
 
 use Exception;
-use OCP\IRequest;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Middleware;
-use OCP\AppFramework\Http\Response;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Service\SpaceService;
-use OCP\AppFramework\Http\JSONResponse;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Middleware;
+use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class RequireExistingSpaceMiddleware extends Middleware {
