@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -45,9 +46,7 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
-	/*
-	* @GeneralManagerRequired
-	**/
+	#[GeneralManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
