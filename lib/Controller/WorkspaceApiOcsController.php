@@ -33,7 +33,6 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -64,7 +63,6 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * 200: Workspaces returned
 	 */
-	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(): Response {
