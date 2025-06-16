@@ -95,7 +95,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/spaces/{id}',
+		url: '/api/v1/space/{id}',
 		requirements: ['id' => '\d+']
 	)]
 	public function delete(int $id): Response {
