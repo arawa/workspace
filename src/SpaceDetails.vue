@@ -71,7 +71,8 @@
 						@click="toggleShowConnectedGroups" />
 				</NcActions>
 				<NcActions>
-					<NcActionButton icon="icon-rename"
+					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						icon="icon-rename"
 						@click="toggleShowEditWorkspaceModal">
 						{{ t('workspace', 'Edit the Workspace') }}
 					</NcActionButton>
