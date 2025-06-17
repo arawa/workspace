@@ -25,10 +25,16 @@
 namespace OCA\Workspace\Group\SubGroups;
 
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCP\AppFramework\OCS\OCSBadRequestException;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
 class SubGroup {
+
+	public const PREFIX_GID = 'SPACE-G-';
+	public const PREFIX_DISPLAY_NAME = 'G-';
+	
 	public function __construct(
 		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
@@ -54,5 +60,22 @@ class SubGroup {
 
 	public function getGroupsFormatted(array $gids): array {
 		return GroupFormatter::formatGroups($this->get($gids));
+	}
+
+	public function create(string $groupname, int $id, string $spacename): IGroup {
+		$gid = sprintf('%s%s-%s', self::PREFIX_GID, $groupname, $id);
+		$displayName = sprintf('%s%s-%s', self::PREFIX_DISPLAY_NAME, $groupname, $spacename);
+
+		$group = $this->groupManager->get($gid);
+
+		if (!is_null($group)) {
+			$this->logger->error("The group {$groupname} already exists for this workspace.");
+			throw new OCSBadRequestException("The group {$groupname} already exists for this workspace.");
+		}
+		
+		$group = $this->groupManager->createGroup($gid);
+		$group->setDisplayName($displayName);
+
+		return $group;
 	}
 }
