@@ -46,7 +46,6 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\OCS\OCSBadRequestException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
@@ -157,16 +156,10 @@ class SpaceManager {
 	 * Create a subgroup to a workspace and attaches it in.
 	 * @param int $id is the space id.
 	 * @return IGroup is the group created.
-	 * @throws OCSNotFoundException If the space is not found.
 	 * @throws OCSBadRequestException If the group to create already exists.
 	 */
 	public function createSubgroup(int $id, string $groupname): IGroup {
 		$space = $this->spaceMapper->find($id);
-
-		if (is_null($space)) {
-			$this->logger->error("The workspace with the id {$id} was not found.");
-			throw new OCSNotFoundException("The workspace with the id {$id} was not found.");
-		}
 
 		$spacename = $space->getSpaceName();
 		$group = $this->subGroup->create($groupname, $id, $spacename);
