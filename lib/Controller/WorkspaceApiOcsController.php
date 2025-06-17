@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
@@ -44,13 +45,13 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	#[NoAdminRequired]
+	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
 		url: '/api/v1/space/{id}/groups',
 		requirements: [
 			'id' => '\d+',
-			'groupname' => '[A-Za-z-0-9].*'
 		]
 	)]
 	public function createSubGroup(int $id, string $groupname): Response {
