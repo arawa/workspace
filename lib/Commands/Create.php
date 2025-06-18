@@ -51,7 +51,7 @@ class Create extends Command {
 		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder,
-		private GroupfolderHelper $groupfolderHelper
+		private GroupfolderHelper $groupfolderHelper,
 	) {
 		parent::__construct();
 	}

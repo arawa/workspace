@@ -29,7 +29,7 @@ use OCP\IUserManager;
 
 class UserFinder {
 	public function __construct(
-		private IUserManager $userManager
+		private IUserManager $userManager,
 	) {
 	}
 

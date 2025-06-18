@@ -38,7 +38,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 	public const QUOTA_FIELD = [ 'quota' ];
 
 	public function __construct(
-		private Terminal $managerConnectionFile
+		private Terminal $managerConnectionFile,
 	) {
 		parent::__construct();
 	}

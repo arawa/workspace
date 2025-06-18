@@ -8,7 +8,7 @@ class InvalidSeparatorCsvException extends AbstractNotificationException {
 	public function __construct(
 		private string $title,
 		string $message,
-		int $code = Http::STATUS_BAD_REQUEST
+		int $code = Http::STATUS_BAD_REQUEST,
 	) {
 		parent::__construct($title, $message, $code);
 	}

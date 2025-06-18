@@ -61,7 +61,7 @@ class WorkSpaceChecker {
 		private IDBConnection $dbConnection,
 		private SpaceMapper $spaceMapper,
 		private FolderManager $folderManager,
-		private IGroupManager $groupManager
+		private IGroupManager $groupManager,
 	) {
 		$this->spaces = $spaceMapper->findAll();
 		$this->groupFolders = $folderManager->getAllFolders();
@@ -239,7 +239,7 @@ class WorkSpaceChecker {
 class MyConfig extends SystemConfig {
 	public function __construct(
 		private SystemConfig $config,
-		private array $params
+		private array $params,
 	) {
 	}
 

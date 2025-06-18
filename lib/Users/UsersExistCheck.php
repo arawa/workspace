@@ -9,7 +9,7 @@ use OCP\IUserManager;
 class UsersExistCheck {
 	public function __construct(
 		private IUserManager $userManager,
-		private IL10N $translate
+		private IL10N $translate,
 	) {
 	}
 

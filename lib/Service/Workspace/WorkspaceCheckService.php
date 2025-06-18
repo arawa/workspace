@@ -32,7 +32,7 @@ class WorkspaceCheckService {
 	public const CHARACTERS_SPECIAL = "[~<>{}|;.:,!?\'@#$+()%\\\^=\/&*\[\]]";
 	
 	public function __construct(
-		private SpaceService $spaceService
+		private SpaceService $spaceService,
 	) {
 	}
 
