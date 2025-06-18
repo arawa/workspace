@@ -29,7 +29,7 @@ use OCP\IUserManager;
 class UserPresenceChecker {
 	public function __construct(
 		private IUserManager $userManager,
-		private UserFinder $userFinder
+		private UserFinder $userFinder,
 	) {
 	}
 

@@ -11,7 +11,7 @@ class CsvReader {
 	public readonly array $headers;
 
 	public function __construct(
-		private BasicStreamInterface $file
+		private BasicStreamInterface $file,
 	) {
 		$handle = $file->open();
 		$headers = fgetcsv($handle, 1000, Separator::COMMA);

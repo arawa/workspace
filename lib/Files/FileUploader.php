@@ -8,7 +8,7 @@ class FileUploader implements FileInterface {
 	private string|false $lineEnding;
 
 	public function __construct(
-		private string $path
+		private string $path,
 	) {
 	}
 

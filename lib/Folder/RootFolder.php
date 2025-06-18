@@ -6,7 +6,7 @@ use OCP\Files\IRootFolder;
 
 class RootFolder {
 	public function __construct(
-		private IRootFolder $rootFolder
+		private IRootFolder $rootFolder,
 	) {
 	}
 

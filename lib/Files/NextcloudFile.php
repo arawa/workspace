@@ -10,7 +10,7 @@ class NextcloudFile implements FileInterface {
 	private string|false $lineEnding;
 		
 	public function __construct(
-		private Node $file
+		private Node $file,
 	) {
 	}
 

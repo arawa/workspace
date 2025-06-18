@@ -57,7 +57,7 @@ class Import extends Command {
 		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private WorkspaceCheckService $workspaceCheckService,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
 	) {
 		parent::__construct();
 	}

@@ -18,7 +18,7 @@ class FixMigrationToV300 implements IRepairStep {
 		private ServiceIAppConfig $appConfig,
 		private UpgradeFixV300V301 $upgrade,
 		private IAppConfig $appConfigManager,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
 	) {
 		$this->logger->debug('FixMigrationToV300 repair step initialised');
 
