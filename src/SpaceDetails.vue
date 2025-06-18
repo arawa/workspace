@@ -37,11 +37,11 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcSelect v-model="getQuota"
-					:class="isESR ? 'quota-select-esr' : 'quota-select'"
-					:disabled="true"
-					:multiple="false"
-					:clearable="false" />
+				<NcCounterBubble v-tooltip="{ content: getQuotaTooltip, show: true, placement: 'right' }"
+					:class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
+					type="outlined">
+					{{ getQuota }}
+				</NcCounterBubble>
 			</div>
 			<div class="space-actions">
 				<NcActions ref="ncAction" default-icon="icon-add">
@@ -108,9 +108,10 @@ import EditWorkspace from './components/Modals/EditWorkspace.vue'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
+import Tooltip from '@nextcloud/vue/directives/Tooltip'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
@@ -123,14 +124,17 @@ export default {
 		AddUsersTabs,
 		EditWorkspace,
 		NcActions,
+		NcCounterBubble,
 		NcEmptyContent,
 		NcActionButton,
 		NcActionInput,
 		NcDialog,
-		NcSelect,
 		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
+	},
+	directives: {
+		Tooltip,
 	},
 	data() {
 		return {
@@ -150,6 +154,9 @@ export default {
 		},
 		getQuota() {
 			return this.$store.getters.convertQuotaForFrontend(this.$store.getters.getSpaceByNameOrId(this.$route.params.space).quota)
+		},
+		getQuotaTooltip() {
+			return 'Quota : ' + this.getQuota
 		},
 	},
 	beforeMount() {
@@ -243,16 +250,18 @@ export default {
 	margin: 0px;
 }
 
-.quota-select {
+.quota-bubble {
 	margin-left: 20px !important;
 	min-width: 100px;
 	max-width: 100px;
+	font-size: var(--default-font-size) !important;
 }
 
-.quota-select-esr {
+.quota-bubble-esr {
 	margin-left: 20px !important;
 	min-width: 100px;
 	max-width: 100% !important;
+	font-size: var(--default-font-size) !important;
 }
 
 .space-name {
