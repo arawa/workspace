@@ -92,7 +92,7 @@
 			@update:open="toggleShowSelectUsersModal">
 			<AddUsersTabs />
 		</NcDialog>
-		<SelectConnectedGroups v-if="showSelectConnectedGroups" @close="toggleShowConnectedGroups" />
+		<SelectConnectedGroups v-if="showSelectConnectedGroups" :space="space" @close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
 			:space-name="$route.params.space"
 			@close="toggleShowDelWorkspaceModal"

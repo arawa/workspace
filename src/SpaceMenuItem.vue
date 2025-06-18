@@ -70,7 +70,7 @@
 				</NcActionButton>
 			</template>
 		</NcAppNavigationCaption>
-		<SelectConnectedGroups v-if="isAddGroupModalOpen" @close="toggleAddGroupModal" />
+		<SelectConnectedGroups v-if="isAddGroupModalOpen" :space="space" @close="toggleAddGroupModal" />
 		<GroupMenuItem
 			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 			:key="group.gid"
