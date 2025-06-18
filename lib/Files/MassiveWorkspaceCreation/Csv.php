@@ -33,11 +33,13 @@ use OCA\Workspace\Files\CsvInterface;
  */
 class Csv extends CsvAbstract implements CsvInterface {
 
-	public const WORKSPACE_FIELD = ["workspace-name", "spacename"];
-	public const USER_FIELD = ["user", "uid", "WorkspaceManager", "workspace-manager"];
+	public const WORKSPACE_FIELD = ['workspace-name', 'spacename'];
+	public const USER_FIELD = ['user', 'uid', 'WorkspaceManager', 'workspace-manager'];
 	public const QUOTA_FIELD = [ 'quota' ];
 
-	public function __construct(private Terminal $managerConnectionFile) {
+	public function __construct(
+		private Terminal $managerConnectionFile
+	) {
 		parent::__construct();
 	}
 

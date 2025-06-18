@@ -7,7 +7,10 @@ use OCP\IL10N;
 use OCP\IUserManager;
 
 class UsersExistCheck {
-	public function __construct(private IUserManager $userManager, private IL10N $translate) {
+	public function __construct(
+		private IUserManager $userManager,
+		private IL10N $translate
+	) {
 	}
 
 	/**
@@ -16,9 +19,9 @@ class UsersExistCheck {
 	 * @param String[] $users - example [ 'users1', 'users2', 'users3' ]
 	 */
 	public function checkUsersExist(array $users): bool {
-		foreach($users as $user) {
+		foreach ($users as $user) {
 			$userNotExist = $this->userManager->userExists($user);
-			if(!$userNotExist) {
+			if (!$userNotExist) {
 				return false;
 			}
 		}

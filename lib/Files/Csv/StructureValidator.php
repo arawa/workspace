@@ -10,7 +10,7 @@ class StructureValidator {
 	public static function checkCommaAllLines(FileInterface $file): bool {
 		$handle = $file->open();
 		$nbFieldsRequired = count(Header::FIELDS_REQUIRED);
-		while(($data = fgetcsv($handle, 1000, Separator::COMMA)) !== false) {
+		while (($data = fgetcsv($handle, 1000, Separator::COMMA)) !== false) {
 			if (count($data) < $nbFieldsRequired) {
 				return false;
 			}

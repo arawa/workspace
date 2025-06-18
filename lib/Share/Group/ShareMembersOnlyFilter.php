@@ -11,21 +11,21 @@ class ShareMembersOnlyFilter {
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IManager $shareManager,
-		private IUserSession $userSession
+		private IUserSession $userSession,
 	) {
 	}
 
 	/**
 	 * @param IUser[] $users
 	 * @return IUser[]
-	 * Return users with groups in common.
-	 * Except some listed in the drop-down list
-	 * (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
+	 *                 Return users with groups in common.
+	 *                 Except some listed in the drop-down list
+	 *                 (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
 	 */
 	public function excludeGroupsList(array $users): array {
 		$usersNotExclude = [];
 
-		if (method_exists($this->shareManager, "shareWithGroupMembersOnlyExcludeGroupsList")) {
+		if (method_exists($this->shareManager, 'shareWithGroupMembersOnlyExcludeGroupsList')) {
 			$excludedGroups = $this->shareManager->shareWithGroupMembersOnlyExcludeGroupsList();
 			$userSession = $this->userSession->getUser();
 			$groupsOfUserSession = $this->groupManager->getUserGroups($userSession);

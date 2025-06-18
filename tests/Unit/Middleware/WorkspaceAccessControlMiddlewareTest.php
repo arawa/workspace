@@ -40,7 +40,7 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 		// Setup UserService so that isUserGeneralAdmin will return true
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-				   ->method('isUserGeneralAdmin')
+			->method('isUserGeneralAdmin')
 			->willReturn(true);
 
 		// Instantiates our middleware
@@ -65,10 +65,10 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 		// but isSpaceManager will return true
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-				   ->method('isUserGeneralAdmin')
+			->method('isUserGeneralAdmin')
 			->willReturn(false);
 		$userService->expects($this->once())
-				   ->method('isSpaceManager')
+			->method('isSpaceManager')
 			->willReturn(true);
 
 		// Instantiates our middleware
@@ -93,10 +93,10 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 		// isSpaceManager() will return false
 		$userService = $this->createMock(UserService::class);
 		$userService->expects($this->once())
-				   ->method('isUserGeneralAdmin')
+			->method('isUserGeneralAdmin')
 			->willReturn(false);
 		$userService->expects($this->once())
-				   ->method('isSpaceManager')
+			->method('isSpaceManager')
 			->willReturn(false);
 
 		// Instantiates our middleware

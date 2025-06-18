@@ -46,7 +46,7 @@ class AdminUserGroup {
 		$group = $this->groupManager->get(self::GID);
 
 		if (is_null($group)) {
-			throw new \Exception(sprintf("Impossible to to find the %s group.", self::GID));
+			throw new \Exception(sprintf('Impossible to to find the %s group.', self::GID));
 		}
 
 		$group->addUser($user);

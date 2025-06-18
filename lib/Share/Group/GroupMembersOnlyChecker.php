@@ -10,7 +10,7 @@ class GroupMembersOnlyChecker {
 	public function __construct(
 		private IGroupManager $groupManager,
 		private IManager $shareManager,
-		private IUserSession $userSession
+		private IUserSession $userSession,
 	) {
 	}
 
@@ -22,7 +22,7 @@ class GroupMembersOnlyChecker {
 		if (
 			method_exists(
 				$this->shareManager,
-				"shareWithGroupMembersOnlyExcludeGroupsList"
+				'shareWithGroupMembersOnlyExcludeGroupsList'
 			)
 		) {
 			return $this->shareManager->shareWithGroupMembersOnly()
