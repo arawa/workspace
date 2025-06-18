@@ -6,13 +6,13 @@ use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 
 class WorkspaceChecker {
 	public function __construct(
-		private WorkspaceCheckService $workspaceCheckService
+		private WorkspaceCheckService $workspaceCheckService,
 	) {
 	}
 
 	public function checkDuplicated(array $dataResponse): bool {
 		$workspacesAreNotExist = [];
-		$message = "";
+		$message = '';
 
 		foreach ($dataResponse as $data) {
 			if ($this->workspaceCheckService->isExist($data['workspace_name'])) {

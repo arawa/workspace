@@ -47,7 +47,7 @@ abstract class CsvAbstract {
 
 	public function getIndex(array $haystack, array $needles): int|bool {
 		$index = null;
-		foreach($haystack as $key => $value) {
+		foreach ($haystack as $key => $value) {
 			$index = array_search($value, $needles);
 			if ($index !== false) {
 				return $index;

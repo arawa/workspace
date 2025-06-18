@@ -9,7 +9,9 @@ class NextcloudFile implements FileInterface {
 
 	private string|false $lineEnding;
 		
-	public function __construct(private Node $file) {
+	public function __construct(
+		private Node $file
+	) {
 	}
 
 	/**
@@ -17,10 +19,10 @@ class NextcloudFile implements FileInterface {
 	 * @throws \Exception
 	 */
 	public function open(?string $path = null) {
-		$this->lineEnding = ini_get("auto_detect_line_endings");
-		ini_set("auto_detect_line_endings", true);
+		$this->lineEnding = ini_get('auto_detect_line_endings');
+		ini_set('auto_detect_line_endings', true);
 		$store = $this->file->getStorage();
-		$this->resource = $store->fopen($this->file->getInternalPath(), "r");
+		$this->resource = $store->fopen($this->file->getInternalPath(), 'r');
 
 		if (!$this->resource) {
 			throw new \Exception('Something went wrong. Couldn\'t open the file.');
@@ -30,7 +32,7 @@ class NextcloudFile implements FileInterface {
 	}
 
 	public function close(): bool {
-		ini_set("auto_detect_line_endings", $this->lineEnding);
+		ini_set('auto_detect_line_endings', $this->lineEnding);
 		return fclose($this->resource);
 	}
 

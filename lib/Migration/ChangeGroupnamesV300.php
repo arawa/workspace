@@ -37,10 +37,12 @@ class ChangeGroupnamesV300 implements IRepairStep {
 
 	public const V300 = 300;
 
-	public function __construct(private LoggerInterface $logger,
+	public function __construct(
+		private LoggerInterface $logger,
 		private IAppConfig $appConfigManager,
 		private ServicesIAppConfig $appConfig,
-		private UpgradeV300 $upgradeV300) {
+		private UpgradeV300 $upgradeV300
+	) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
 	}
 

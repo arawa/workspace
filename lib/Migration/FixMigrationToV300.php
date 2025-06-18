@@ -14,10 +14,12 @@ use Psr\Log\LoggerInterface;
 
 class FixMigrationToV300 implements IRepairStep {
 
-	public function __construct(private ServiceIAppConfig $appConfig,
+	public function __construct(
+		private ServiceIAppConfig $appConfig,
 		private UpgradeFixV300V301 $upgrade,
 		private IAppConfig $appConfigManager,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger
+	) {
 		$this->logger->debug('FixMigrationToV300 repair step initialised');
 
 	}

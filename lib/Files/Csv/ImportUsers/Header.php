@@ -4,11 +4,11 @@ namespace OCA\Workspace\Files\Csv\ImportUsers;
 
 class Header {
 	public const DISPLAY_NAME = [
-		"user"
+		'user'
 	];
 	
 	public const ROLE = [
-		"role",
+		'role',
 	];
 
 	public const FIELDS_REQUIRED = [ 'user', 'role' ];

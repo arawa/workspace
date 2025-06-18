@@ -11,7 +11,7 @@ use OCP\IAppConfig;
 class Capabilities implements ICapability {
 	public function __construct(
 		private IAppManager $appManager,
-		private IAppConfig $appConfigManager
+		private IAppConfig $appConfigManager,
 	) {
 	}
 

@@ -39,10 +39,10 @@ class SpaceMapper extends QBMapper {
 	public function find($id): ?Space {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb->select('*')
-		   ->from($this->getTableName())
-		   ->where(
-		   	$qb->expr()->eq('space_id', $qb->createNamedParameter($id, $qb::PARAM_INT))
-		   );
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('space_id', $qb->createNamedParameter($id, $qb::PARAM_INT))
+			);
 		return $this->findEntity($query);
 	}
 
@@ -72,9 +72,9 @@ class SpaceMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
-		   ->from($this->getTableName())
-		   ->setMaxResults($limit)
-		   ->setFirstResult($offset);
+			->from($this->getTableName())
+			->setMaxResults($limit)
+			->setFirstResult($offset);
 
 		return $this->findEntities($qb);
 	}
