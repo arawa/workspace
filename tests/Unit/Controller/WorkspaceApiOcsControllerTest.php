@@ -193,11 +193,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->expects($this->once())
 			->method('get')
 			->with($spaceId)
-			->willThrowException(new \Exception("Error"));
+			->willThrowException(new \Exception('Error'));
 		;
 
 		$this->expectException(OCSException::class);
-		$this->expectExceptionMessage("Error");
+		$this->expectExceptionMessage('Error');
 
 		$this->controller->find($spaceId);
 	}

@@ -47,12 +47,12 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param int $id Represents the ID of a workspace
-	 * 
+	 *
 	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID.
 	 * @throws OCSException for all unknown errors.
-	 * 
+	 *
 	 * @return Response<{
 	 * 	id: int,
 	 * 	mount_point: string,

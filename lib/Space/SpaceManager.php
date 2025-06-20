@@ -47,7 +47,6 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
