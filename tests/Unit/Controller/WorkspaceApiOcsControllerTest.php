@@ -26,10 +26,13 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -164,5 +167,38 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(Response::class, $actual);
 		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
+	}
+
+	public function testThrowsOCSNotFoundExceptionWhenGroupfolderNotFound(): void {
+		$spaceId = 4;
+		$folderId = 4;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with($spaceId)
+			->willThrowException(new NotFoundException("Failed loading groupfolder with the folderId {$folderId}"));
+		;
+
+		$this->expectException(OCSNotFoundException::class);
+		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
+
+		$this->controller->find($spaceId);
+	}
+
+	public function testThrowsOCSExceptionWhenAnyExceptionThrown(): void {
+		$spaceId = 4;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with($spaceId)
+			->willThrowException(new \Exception("Error"));
+		;
+
+		$this->expectException(OCSException::class);
+		$this->expectExceptionMessage("Error");
+
+		$this->controller->find($spaceId);
 	}
 }

@@ -31,6 +31,7 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
@@ -329,6 +330,99 @@ class SpaceManagerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 		$this->assertIsArray($actual);
+	}
+
+
+	public function testFindAWorkspaceAndReturnNull(): void {
+		$spaceId = 4;
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn(null)
+		;
+
+		$actual = $this->spaceManager->get($spaceId);
+
+		$this->assertNull($actual);
+	}
+	
+
+	public function testThrowsNotFoundExceptionWhenGettingWorkspaceWithGroupfolderReturningFalse(): void {
+		$spaceId = 4;
+		$folderId = 4;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->any())
+			->method('getGroupfolderId')
+			->willReturn($folderId)
+		;
+	
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(false)
+		;
+	
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
+
+		$this->spaceManager->get($spaceId);
+	}
+
+	public function testThrowsNotFoundExceptionWhenGettingWorkspaceWithGroupfolderReturningNull(): void {
+		$spaceId = 4;
+		$folderId = 4;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->any())
+			->method('getGroupfolderId')
+			->willReturn($folderId)
+		;
+	
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(null)
+		;
+	
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
+
+		$this->spaceManager->get($spaceId);
 	}
 	
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {

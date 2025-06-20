@@ -25,12 +25,15 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
@@ -44,6 +47,12 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
+	 * 
+	 * @param int $id Represents the ID of a workspace
+	 * 
+	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID.
+	 * @throws OCSException for all unknown errors.
+	 * 
 	 * @return Response<{
 	 * 	id: int,
 	 * 	mount_point: string,
@@ -70,7 +79,16 @@ class WorkspaceApiOcsController extends OCSController {
 		requirements: ['id' => '\d+']
 	)]
 	public function find(int $id): Response {
-		$space = $this->spaceManager->get($id);
+		try {
+			$space = $this->spaceManager->get($id);
+		} catch (\Exception $e) {
+			if ($e instanceof NotFoundException) {
+				throw new OCSNotFoundException($e->getMessage());
+			}
+
+			throw new OCSException($e->getMessage());
+		}
+
 		return new DataResponse($space, Http::STATUS_OK);
 	}
 }
