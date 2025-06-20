@@ -16,12 +16,14 @@ use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IGroupManager&MockObject $groupManager;
 	private IRequest&MockObject $request;
 	private IUserManager&MockObject $userManager;
+	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
@@ -31,6 +33,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$this->appName = 'workspace';
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -39,6 +42,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->request,
 			$this->groupManager,
 			$this->userManager,
+			$this->logger,
 			$this->spaceManager,
 			$this->appName
 		);

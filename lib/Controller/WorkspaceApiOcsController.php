@@ -39,12 +39,14 @@ use OCP\AppFramework\OCSController;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		private IGroupManager $groupManager,
 		private IUserManager $userManager,
+		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
 		public $appName,
 	) {
@@ -98,6 +100,10 @@ class WorkspaceApiOcsController extends OCSController {
 			default:
 				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
 		}
+
+		$uids = implode(', ', $uids);
+		$this->logger->info("Users are removed from groups (not added groups) in the workspace {$id}");
+		$this->logger->info("Users are removed: {$uids}");
 
 		return new DataResponse([], Http::STATUS_OK);
 	}
