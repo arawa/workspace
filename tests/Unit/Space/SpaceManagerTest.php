@@ -125,10 +125,38 @@ class SpaceManagerTest extends TestCase {
 
 	public function testFindAWorkspaceForOcsController(): void {
 		$spaceId = 4;
+		$folderId = 4;
 
 		/** @var Space&MockObject */
 		$space = $this->createMock(Space::class);
-				
+
+		$groupfolder = [
+			'id' => 4,
+			'mount_point' => 'Espace04',
+			'groups' => [
+				'SPACE-GE-4' => [
+					'displayName' => 'WM-Espace04',
+					'permissions' => 31,
+					'type' => 'group',
+				],
+				'SPACE-U-4' => [
+					'displayName' => 'U-Espace04',
+					'permissions' => 31,
+					'type' => 'group',
+				],
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-4',
+					'displayname' => 'WM-Espace04',
+				],
+			]
+		];
+
 		$this->spaceMapper
 			->expects($this->once())
 			->method('find')
@@ -139,7 +167,13 @@ class SpaceManagerTest extends TestCase {
 		$space
 			->expects($this->once())
 			->method('getGroupfolderId')
-			->willReturn(4)
+			->willReturn($folderId)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getSpaceId')
+			->willReturn($spaceId)
 		;
 	
 		$this->rootFolder
@@ -151,34 +185,7 @@ class SpaceManagerTest extends TestCase {
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')
-			->willReturn(
-				[
-					'id' => 4,
-					'mount_point' => 'Espace04',
-					'groups' => [
-						'SPACE-GE-4' => [
-							'displayName' => 'WM-Espace04',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-						'SPACE-U-4' => [
-							'displayName' => 'U-Espace04',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-4',
-							'displayname' => 'WM-Espace04',
-						],
-					]
-				]
-			)
+			->willReturn($groupfolder)
 		;
 
 		
@@ -270,13 +277,14 @@ class SpaceManagerTest extends TestCase {
 			])
 		;
 
-		$this->workspaceService
+		$this->adminGroup
 			->expects($this->once())
-			->method('addUsersInfo')
-			->willReturn((object)[])
+			->method('getUsersFormatted')
+			->with($groupfolder, $space)
+			->willReturn([])
 		;
 
-		$actual = $this->spaceManager->find($spaceId);
+		$actual = $this->spaceManager->get($spaceId);
 
 		$expected = [
 			'id' => 4,
@@ -314,7 +322,7 @@ class SpaceManagerTest extends TestCase {
 			'groupfolder_id' => 4,
 			'name' => 'Espace04',
 			'color_code' => '#93b250',
-			'users' => (object)[],
+			'users' => [],
 			'userCount' => 0,
 			'added_groups' => (object)[]
 		];
