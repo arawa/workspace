@@ -31,6 +31,7 @@ use OCP\IGroup;
 abstract class GroupsWorkspace {
 	private const GID_SPACE_MANAGER = 'GE-';
 	private const GID_SPACE_USERS = 'U-';
+	private const GID_SPACE_SUBGROUP = 'G-';
 	private const GID_SPACE = 'SPACE-';
 	public const DEFAULT_DISPLAY_PREFIX_MANAGER_GROUP = 'WM-';
 	public const DEFAULT_DISPLAY_PREFIX_USER_GROUP = 'U-';
@@ -38,6 +39,7 @@ abstract class GroupsWorkspace {
 
 	protected const PREFIX_GID_MANAGERS = self::GID_SPACE . self::GID_SPACE_MANAGER;
 	protected const PREFIX_GID_USERS = self::GID_SPACE . self::GID_SPACE_USERS;
+	protected const PREFIX_GID_SUBGROUPS = self::GID_SPACE . self::GID_SPACE_SUBGROUP;
 
 	protected static string $DISPLAY_PREFIX_MANAGER_GROUP;
 	protected static string $DISPLAY_PREFIX_USER_GROUP;
@@ -66,6 +68,10 @@ abstract class GroupsWorkspace {
 	public static function isWorkspaceGroup(IGroup $group) {
 		return str_starts_with($group->getGID(), self::GID_SPACE)
 			|| str_starts_with($group->getDisplayName(), self::LEGACY_DISPLAY_PREFIX_LOCAL_GROUP);
+	}
+
+	public static function isWorkspaceSubGroup(string $gid) {
+		return str_starts_with($gid, self::PREFIX_GID_SUBGROUPS);
 	}
 
 	/**
