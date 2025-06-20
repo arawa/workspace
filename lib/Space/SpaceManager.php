@@ -28,6 +28,7 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
@@ -44,6 +45,7 @@ use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
@@ -66,6 +68,7 @@ class SpaceManager {
 		private UserService $userService,
 		private IGroupManager $groupManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
+		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
 	) {
 	}
@@ -149,24 +152,45 @@ class SpaceManager {
 			'userCount' => 0
 		];
 	}
-
-	public function get(int $spaceId): array {
+	
+	/**
+	 * @return array<{
+	 * 	id: int,
+	 * 	mount_point: string,
+	 * 	groups: array,
+	 * 	quota: int,
+	 * 	size: int,
+	 * 	acl: bool,
+	 *  manage: array<Object>
+	 * 	groupfolder_id: int,
+	 * 	name: string,
+	 * 	color_code: string,
+	 *  userCount: int,
+	 *  users: array<Object>
+	 *  added_groups: array<Object>
+	 * }
+	 */
+	public function get(int $spaceId): ?array {
 
 		$space = $this->spaceMapper->find($spaceId);
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
-		if ($groupfolder === false) {
-			return [];
-		}
 
+		if (is_null($space)) {
+			return null;
+		}
+		
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		if ($groupfolder === false || is_null($groupfolder)) {
+			$folderId = $space->getGroupfolderId();
+			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
+			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
+		}
+		
 		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
 		$workspace['id'] = $space->getSpaceId();
 
-		$folderInfo = $this->folderHelper->getFolder(
-			$workspace['groupfolder_id'],
-			$this->rootFolder->getRootFolderStorageId()
-		);
-		$workspace = ($folderInfo !== false) ? array_merge(
-			$folderInfo,
+		$workspace = ($groupfolder !== false) ? array_merge(
+			$groupfolder,
 			$workspace
 		) : $workspace;
 
@@ -189,7 +213,7 @@ class SpaceManager {
 			}
 		}
 
-		$workspace['users'] = $this->adminGroup->getUsersFormatted($folderInfo, $space);
+		$workspace['users'] = $this->adminGroup->getUsersFormatted($groupfolder, $space);
 		$workspace['groups'] = GroupFormatter::formatGroups($wsGroups);
 		$workspace['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
 
