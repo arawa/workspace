@@ -66,4 +66,8 @@ class Space extends Entity implements JsonSerializable {
 	public function getGroupfolderId(): int {
 		return $this->groupfolderId;
 	}
+
+	public function getSpaceId(): int {
+		return $this->spaceId;
+	}
 }
