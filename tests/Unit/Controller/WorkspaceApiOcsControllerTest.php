@@ -104,7 +104,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				
 		$this->spaceManager
 			->expects($this->once())
-			->method('find')
+			->method('get')
 			->with($spaceId)
 			->willReturn($space)
 		;

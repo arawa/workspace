@@ -70,7 +70,7 @@ class WorkspaceApiOcsController extends OCSController {
 		requirements: ['id' => '\d+']
 	)]
 	public function find(int $id): Response {
-		$space = $this->spaceManager->find($id);
+		$space = $this->spaceManager->get($id);
 		return new DataResponse($space, Http::STATUS_OK);
 	}
 }
