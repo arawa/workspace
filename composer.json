@@ -12,18 +12,20 @@
         }
     ],
     "require": {
-        "php": ">=7.4 <=8.3"
+        "php": ">=7.4 <=8.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "nextcloud/coding-standard": "^1.1",
         "nextcloud/ocp": "^30.0",
         "symfony/console": "^6.3",
-        "mockery/mockery": "^1.6"
+        "mockery/mockery": "^1.6",
+        "nextcloud/openapi-extractor": "^1.0"
     },
     "scripts": {
 		"test": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
-		"cs:fix": "php-cs-fixer fix"
+		"cs:fix": "php-cs-fixer fix",
+		"openapi": "generate-spec"
     }
 }
