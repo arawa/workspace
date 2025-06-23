@@ -14,10 +14,12 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ConnectedGroupController extends Controller {
 	public function __construct(
 		private GroupfolderHelper $folderHelper,
