@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Make workspace available for Nextcloud 31 by @zak39 in [#1277](https://github.com/arawa/workspace/pull/1277)
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Fix infinite loading issue for users by @smarinier in [#1269](https://github.com/arawa/workspace/pull/1269)
