@@ -24,6 +24,8 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Space\SpaceManager;
@@ -36,10 +38,12 @@ use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\IUserManager;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		public $appName,
 	) {
@@ -90,5 +94,25 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/workspace-manager',
+		requirements: ['id' => '\d+']
+	)]
+	public function addUserAsWorkspaceManager(int $id, string $uid): Response {
+		$user = $this->userManager->get($uid);
+
+		if (is_null($user)) {
+			throw new OCSNotFoundException("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+		}
+
+		$this->spaceManager->addUserAsWorkspaceManager($id, $uid);
+		return new DataResponse(['uid' => $uid], Http::STATUS_OK);
 	}
 }
