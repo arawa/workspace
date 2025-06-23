@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Make workspace available for Nextcloud 31 by @zak39 in [#1277](https://github.com/arawa/workspace/pull/1277)
 
+### Added
+
+- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+
+### Changed
+
+- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
+
 ### Fixed
 
 - Fix infinite loading issue for users by @smarinier in [#1269](https://github.com/arawa/workspace/pull/1269)
