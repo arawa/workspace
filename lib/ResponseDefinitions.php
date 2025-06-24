@@ -33,6 +33,22 @@ namespace OCA\Workspace;
  *		groupfolders_acl-inherit-per-user: string,
  * }
  *
+ * @psalm-type WorkspaceSpace = array{
+ *		id: int,
+ * 		mount_point: string,
+ * 		groups: list<array{}>,
+ * 		quota: int,
+ * 		size: int,
+ * 		acl: bool,
+ * 		manage: list<array{}>,
+ * 		groupfolder_id: int,
+ * 		name: string,
+ * 		color_code: string,
+ * 		userCount: int,
+ * 		users: list<array{}>,
+ * 		added_groups: list<array{}>
+ * }
+ *
  */
 class ResponseDefinitions {
 }
