@@ -30,7 +30,7 @@ use OCA\Workspace\Service\SpaceService;
 class WorkspaceCheckService {
 
 	public const CHARACTERS_SPECIAL = '/:*?"<>|\\';
-	
+
 	public function __construct(
 		private SpaceService $spaceService,
 	) {

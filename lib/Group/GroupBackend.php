@@ -110,7 +110,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	public function getGroups($search = '', $limit = -1, $offset = 0) {
 		return []; // return all virtual groups
 	}
-	
+
 	/**
 	 * check if a group exists
 	 * @param string $gid
