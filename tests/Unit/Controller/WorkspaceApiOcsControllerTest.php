@@ -43,12 +43,12 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
-	
+
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
-		
+
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->spaceManager,
@@ -104,7 +104,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'userCount' => 0,
 			'added_groups' => (object)[]
 		];
-				
+
 		$this->spaceManager
 			->expects($this->once())
 			->method('get')
