@@ -3,7 +3,7 @@
 namespace OCA\Workspace\Exceptions\Notifications;
 
 abstract class AbstractNotificationException extends \Exception {
-	
+
 	public function __construct(
 		private string $title,
 		string $message,

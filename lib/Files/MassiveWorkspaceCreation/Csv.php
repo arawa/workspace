@@ -82,7 +82,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 	}
 
 	public function hasProperHeader(string $path): bool {
-		
+
 		$res = true;
 
 		$stream = $this->managerConnectionFile->open($path);
@@ -99,7 +99,7 @@ class Csv extends CsvAbstract implements CsvInterface {
 		$res = ($workspaceField !== false)
 			&& ($uidField !== false)
 			&& ($quotaField !== false);
-		
+
 		$this->managerConnectionFile->close();
 
 		return $res;

@@ -168,7 +168,7 @@ class UserService {
 
 		return $canRemove;
 	}
-	
+
 	/**
 	 * This function removes a GE from the WorkspaceManagers group when necessary
 	 *

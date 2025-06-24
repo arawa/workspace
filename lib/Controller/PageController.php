@@ -48,7 +48,7 @@ class PageController extends Controller {
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-	
+
 		// templates/index.php
 		return new TemplateResponse(
 			'workspace',

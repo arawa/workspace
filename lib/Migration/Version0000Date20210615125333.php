@@ -81,7 +81,7 @@ class Version0000Date20210615125333 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 128,
 		]);
-		
+
 		$table->changeColumn('space_name', [
 			'notnull' => true,
 			'length' => 4000
