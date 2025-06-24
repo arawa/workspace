@@ -176,7 +176,7 @@ class SpaceManagerTest extends TestCase {
 			->method('getSpaceId')
 			->willReturn($spaceId)
 		;
-	
+
 		$this->rootFolder
 			->expects($this->any())
 			->method('getRootFolderStorageId')
@@ -189,7 +189,7 @@ class SpaceManagerTest extends TestCase {
 			->willReturn($groupfolder)
 		;
 
-		
+
 		$space
 			->expects($this->once())
 			->method('jsonSerialize')
@@ -200,7 +200,7 @@ class SpaceManagerTest extends TestCase {
 				'color_code' => '#93b250',
 			])
 		;
-		
+
 		$groupUser = $this->createMock(IGroup::class);
 		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
 
@@ -347,7 +347,7 @@ class SpaceManagerTest extends TestCase {
 
 		$this->assertNull($actual);
 	}
-	
+
 
 	public function testThrowsNotFoundExceptionWhenGettingWorkspaceWithGroupfolderReturningFalse(): void {
 		$spaceId = 4;
@@ -368,7 +368,7 @@ class SpaceManagerTest extends TestCase {
 			->method('getGroupfolderId')
 			->willReturn($folderId)
 		;
-	
+
 		$this->rootFolder
 			->expects($this->any())
 			->method('getRootFolderStorageId')
@@ -380,7 +380,7 @@ class SpaceManagerTest extends TestCase {
 			->method('getFolder')
 			->willReturn(false)
 		;
-	
+
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
 
@@ -406,7 +406,7 @@ class SpaceManagerTest extends TestCase {
 			->method('getGroupfolderId')
 			->willReturn($folderId)
 		;
-	
+
 		$this->rootFolder
 			->expects($this->any())
 			->method('getRootFolderStorageId')
@@ -418,13 +418,13 @@ class SpaceManagerTest extends TestCase {
 			->method('getFolder')
 			->willReturn(null)
 		;
-	
+
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
 
 		$this->spaceManager->get($spaceId);
 	}
-	
+
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {
 		$this->folderHelper
 			->expects($this->once())
@@ -433,8 +433,8 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(1)
 		;
 
-		$this->rootFolder->
-			expects($this->once())
+		$this->rootFolder
+			->expects($this->once())
 				->method('getRootFolderStorageId')
 				->willReturn(1)
 		;

@@ -72,11 +72,11 @@ class SpaceManager {
 		private ColorCode $colorCode,
 	) {
 	}
-	
+
 	public function create(string $spacename): array {
-		if ($spacename === false ||
-			$spacename === null ||
-			$spacename === ''
+		if ($spacename === false
+			|| $spacename === null
+			|| $spacename === ''
 		) {
 			throw new BadRequestException('Error creating workspace', 'spaceName must be provided');
 		}
@@ -84,7 +84,7 @@ class SpaceManager {
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
 			throw new BadRequestException('Error creating workspace', 'Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
 		}
-		
+
 		if ($this->workspaceCheck->isExist($spacename)) {
 			throw new WorkspaceNameExistException(
 				title: 'Error - Duplicate space name',
@@ -152,7 +152,7 @@ class SpaceManager {
 			'userCount' => 0
 		];
 	}
-	
+
 	/**
 	 * @return array<{
 	 * 	id: int,
@@ -177,7 +177,7 @@ class SpaceManager {
 		if (is_null($space)) {
 			return null;
 		}
-		
+
 		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 
 		if ($groupfolder === false || is_null($groupfolder)) {
@@ -185,7 +185,7 @@ class SpaceManager {
 			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
 			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
 		}
-		
+
 		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
 		$workspace['id'] = $space->getSpaceId();
 

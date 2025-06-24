@@ -29,7 +29,7 @@ class GeneralManagerAccessMiddleware extends Middleware {
 		if (empty($hasAttribute)) {
 			return;
 		}
-		
+
 		if ($this->userService->isUserGeneralAdmin()) {
 			return;
 		}

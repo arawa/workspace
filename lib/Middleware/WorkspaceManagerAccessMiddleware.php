@@ -33,7 +33,7 @@ class WorkspaceManagerAccessMiddleware extends Middleware {
 		if ($this->userService->isUserGeneralAdmin()) {
 			return;
 		}
-		
+
 		if ($this->userService->isSpaceManager()) {
 			$id = $this->request->getParam('id');
 
@@ -42,7 +42,7 @@ class WorkspaceManagerAccessMiddleware extends Middleware {
 			if (!$this->userService->isSpaceManagerOfSpace($space->jsonSerialize())) {
 				throw new OCSForbiddenException("You are not Workspace Manager for the workspace with the id {$id}.");
 			}
-			
+
 			return;
 		}
 

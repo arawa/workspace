@@ -25,9 +25,9 @@
 namespace OCA\Workspace\Files;
 
 abstract class CsvAbstract {
-	
+
 	private const MIME_CSV_TYPES = [ 'text/csv', 'application/csv' ];
-	
+
 	public function __construct() {
 	}
 
