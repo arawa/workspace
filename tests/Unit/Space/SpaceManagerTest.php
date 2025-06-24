@@ -53,6 +53,8 @@ use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUser;
+use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -66,6 +68,7 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&ConnectedGroupsService $conntectedGroupService;
 	private MockObject&GroupfolderHelper $folderHelper;
 	private MockObject&IGroupManager $groupManager;
+	private MockObject&IUserManager $userManager;
 	private MockObject&LoggerInterface $logger;
 	private MockObject&RootFolder $rootFolder;
 	private MockObject&SpaceMapper $spaceMapper;
@@ -95,6 +98,7 @@ class SpaceManagerTest extends TestCase {
 		$this->subGroup = $this->createMock(SubGroup::class);
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userGroup = $this->createMock(UserGroup::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->userService = $this->createMock(UserService::class);
 		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
 		$this->workspaceCheck = $this->createMock(WorkspaceCheckService::class);
@@ -118,6 +122,7 @@ class SpaceManagerTest extends TestCase {
 			$this->userFormatter,
 			$this->userService,
 			$this->groupManager,
+			$this->userManager,
 			$this->workspaceManagerGroup,
 			$this->workspaceService,
 			$this->colorCode
@@ -435,8 +440,8 @@ class SpaceManagerTest extends TestCase {
 
 		$this->rootFolder
 			->expects($this->once())
-				->method('getRootFolderStorageId')
-				->willReturn(1)
+			->method('getRootFolderStorageId')
+			->willReturn(1)
 		;
 
 		$this->folderHelper
@@ -602,5 +607,33 @@ class SpaceManagerTest extends TestCase {
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
+	}
+
+	public function testRemoveUsersFromWorkspaceManagerGroup(): void {
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+
+		/** @var MockObject&IGroup */
+		$group = $this->createMock(IGroup::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+		];
+
+		$group
+			->expects($this->exactly(3))
+			->method('inGroup')
+			->willReturn(true)
+		;
+
+		$group
+			->expects($this->exactly(3))
+			->method('removeUser')
+		;
+
+		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
 	}
 }
