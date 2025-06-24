@@ -48,6 +48,7 @@ use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\OCS\OCSBadRequestException;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
@@ -401,6 +402,18 @@ class SpaceManager {
 
 			$managerGroup->removeUser($user);
 			$userGroup->removeUser($user);
+		}
+	}
+
+	public function removeUsersFromWorkspaceManagerGroup(IGroup $group, array $users): void {
+		foreach ($users as $user) {
+			if ($group->inGroup($user)) {
+				if ($this->userService->canRemoveWorkspaceManagers($user)) {
+					$this->userService->removeGEFromWM($user);
+				}
+			}
+
+			$group->removeUser($user);
 		}
 	}
 
