@@ -891,4 +891,32 @@ class SpaceManagerTest extends TestCase {
 		$this->spaceManager->addUserAsWorkspaceManager($spaceId, $uid);
 	}
 
+	public function testRemoveUsersFromWorkspaceManagerGroup(): void {
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+
+		/** @var MockObject&IGroup */
+		$group = $this->createMock(IGroup::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+		];
+
+		$group
+			->expects($this->exactly(3))
+			->method('inGroup')
+			->willReturn(true)
+		;
+
+		$group
+			->expects($this->exactly(3))
+			->method('removeUser')
+		;
+
+		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
+	}
+
 }
