@@ -47,7 +47,9 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
+use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class SpaceManager {
@@ -67,6 +69,7 @@ class SpaceManager {
 		private UserFormatter $userFormatter,
 		private UserService $userService,
 		private IGroupManager $groupManager,
+		private IUserManager $userManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
@@ -279,5 +282,17 @@ class SpaceManager {
 
 		$this->folderHelper->renameFolder($space['groupfolder_id'], $newSpaceName);
 		$this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
+	}
+
+	public function removeUsersFromWorkspaceManagerGroup(IGroup $group, array $users): void {
+		foreach ($users as $user) {
+			if ($group->inGroup($user)) {
+				if ($this->userService->canRemoveWorkspaceManagers($user)) {
+					$this->userService->removeGEFromWM($user);
+				}
+			}
+
+			$group->removeUser($user);
+		}
 	}
 }

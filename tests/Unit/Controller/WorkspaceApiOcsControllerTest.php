@@ -27,19 +27,26 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\IGroup;
+use OCP\IGroupManager;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
+	private IGroupManager&MockObject $groupManager;
+	private IUserManager&MockObject $userManager;
 	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
@@ -47,10 +54,14 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->request = $this->createMock(IRequest::class);
+		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
+			$this->groupManager,
+			$this->userManager,
 			$this->spaceManager,
 			$this->appName
 		);
@@ -200,5 +211,46 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->expectExceptionMessage('Error');
 
 		$this->controller->find($spaceId);
+	}
+
+	public function testRemoveUserAsWorkspaceManager(): void {
+		$id = 1;
+		$uid = 'user1';
+
+		$user = $this->createMock(IUser::class);
+		/** @var IGroup&MockObject */
+		$managerGroup = $this->createMock(IGroup::class);
+
+		$managerGroupGid = "SPACE-GE-{$id}";
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$workspaceManagerGroupMock = Mockery::mock(WorkspaceManagerGroup::class);
+		$workspaceManagerGroupMock
+			->shouldReceive('get')
+			->with($id)
+			->andReturn($managerGroupGid)
+		;
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->with($managerGroupGid)
+			->willReturn($managerGroup)
+		;
+
+		$expected = new DataResponse([], Http::STATUS_OK);
+
+		/** @var DataResponse */
+		$actual = $this->controller->removeUserAsWorkspaceManager($id, $uid);
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals($expected->getStatus(), Http::STATUS_OK);
 	}
 }

@@ -24,8 +24,11 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -35,11 +38,15 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
+use OCP\IGroupManager;
 use OCP\IRequest;
+use OCP\IUserManager;
 
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private IGroupManager $groupManager,
+		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		public $appName,
 	) {
@@ -90,5 +97,30 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}/workspace-manager',
+		requirements: ['id' => '\d+']
+	)]
+	public function removeUserAsWorkspaceManager(int $id, string $uid): Response {
+		$user = $this->userManager->get($uid);
+
+		if (is_null($user)) {
+			throw new OCSNotFoundException("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+		}
+
+		$managerGid = WorkspaceManagerGroup::get($id);
+		$managerGroup = $this->groupManager->get($managerGid);
+
+
+		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($managerGroup, [$user]);
+
+		return new DataResponse([], Http::STATUS_OK);
 	}
 }
