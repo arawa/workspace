@@ -34,12 +34,15 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
+	private IUserManager&MockObject $userManager;
 	private SpaceManager&MockObject $spaceManager;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
@@ -48,9 +51,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->appName = 'workspace';
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
-
+		$this->userManager = $this->createMock(IUserManager::class);
+		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
+			$this->userManager,
 			$this->spaceManager,
 			$this->appName
 		);
@@ -200,5 +205,51 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->expectExceptionMessage('Error');
 
 		$this->controller->find($spaceId);
+	}
+
+	public function testShouldAddUserAsWorkspaceManager(): void {
+		$uid = 'user1';
+		$id = 1;
+		
+		$user = $this->createMock(IUser::class);
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('addUserAsWorkspaceManager')
+			->with($id, $uid)
+		;
+
+		$expected = new DataResponse([ 'uid' => $uid ], Http::STATUS_OK);
+
+		$actual = $this->controller->addUserAsWorkspaceManager($id, $uid);
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getStatus(), $actual->getStatus());
+	}
+
+	public function testShouldThrowOcsNotFoundWhenAddingUserAsWorkspaceManager(): void {
+		$uid = 'user1';
+		$id = 1;
+
+		$user = null;
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$this->expectException(OCSNotFoundException::class);
+		$this->expectExceptionMessage("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+
+		$this->controller->addUserAsWorkspaceManager($id, $uid);
 	}
 }
