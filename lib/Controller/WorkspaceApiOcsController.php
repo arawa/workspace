@@ -24,8 +24,13 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Params\WorkspaceEditParams;
+use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -41,6 +46,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		private SpaceManager $spaceManager,
+		private WorkspaceEditParamsValidator $editParamsValidator,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
@@ -90,5 +96,36 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[GeneralManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'PATCH',
+		url: '/api/v1/space/{id}',
+		requirements: ['id' => '\d+']
+	)]
+	public function edit(int $id, array $params): Response {
+		$toSet = array_merge(WorkspaceEditParams::DEFAULT, $params);
+
+		$this->editParamsValidator->validate($toSet);
+
+		if (!is_null($toSet['color'])) {
+			$this->spaceManager->setColor($id, $toSet['color']);
+		}
+
+		if (!is_null($toSet['name'])) {
+			$space = $this->spaceManager->get($id);
+			$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
+			$this->spaceManager->rename($id, $toSet['name']);
+		}
+
+		if (!is_null($toSet['quota'])) {
+			$this->spaceManager->setQuota($id, $toSet['quota']);
+		}
+
+		return new DataResponse($toSet, Http::STATUS_OK);
 	}
 }
