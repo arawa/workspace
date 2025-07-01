@@ -24,17 +24,19 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Attribute\WorkspaceManagerRequired;
-use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Space\SpaceManager;
+use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCSController;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\OCS\OCSException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
-use OCP\AppFramework\OCSController;
-use OCP\IRequest;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
@@ -43,6 +45,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		private SpaceManager $spaceManager,
+		private UserService $userService,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
@@ -78,5 +81,43 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	/**
+	 * Return workspaces with the possibility to filter by name
+	 * 
+	 * @param string|null $name Optional filter to return workspaces by name
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
+	 * 
+	 * 200: Succesfully retrieved workspaces
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
+	public function findAll(?string $name): Response {
+		$workspaces = $this->spaceManager->findAll();
+
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace);
+			}));
+			$workspaces = $filteredWorkspaces;
+		}
+
+		if (!is_null($name)) {
+			$filterToLower = strtolower($name);
+			$pattern = "/.*{$filterToLower}.*/";
+			
+			$workspacesFiltered = [];
+			foreach ($workspaces as $workspace) {
+				if (preg_match($pattern, strtolower($workspace['name']))) {
+					$workspacesFiltered[] = $workspace;
+				}
+			}
+
+			$workspaces = $workspacesFiltered ? $workspacesFiltered : null;
+		}
+
+		return new DataResponse($workspaces, Http::STATUS_OK);
 	}
 }
