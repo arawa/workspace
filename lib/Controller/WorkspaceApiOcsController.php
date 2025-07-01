@@ -39,7 +39,6 @@ use OCP\IRequest;
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
  */
-
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
