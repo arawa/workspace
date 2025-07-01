@@ -14,10 +14,12 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ConnectedGroupController extends Controller {
 	public function __construct(
 		private GroupfolderHelper $folderHelper,
@@ -75,7 +77,7 @@ class ConnectedGroupController extends Controller {
 				Http::STATUS_NOT_FOUND
 			);
 		}
-		
+
 		$space = $this->spaceMapper->find($spaceId);
 		$spaceArray = $this->spaceManager->get($spaceId);
 
@@ -127,7 +129,7 @@ class ConnectedGroupController extends Controller {
 			$message = sprintf('The group %s does not exist', $gid);
 
 			$this->logger->error($message);
-			
+
 			return new JSONResponse(
 				[
 					'message' => $message,
@@ -140,11 +142,11 @@ class ConnectedGroupController extends Controller {
 		$group = $this->groupManager->get($gid);
 
 		if (UserGroup::isWorkspaceGroup($group)) {
-			
+
 			$message = sprintf('You %s group is not authorized to be removed.', $gid);
 
 			$this->logger->error($message);
-			
+
 			return new JSONResponse(
 				[
 					'message' => $message,
@@ -162,9 +164,9 @@ class ConnectedGroupController extends Controller {
 		);
 
 		$message = sprintf('The group %s is removed from the workspace %s', $group->getGID(), $space->getSpaceName());
-	
+
 		$this->logger->info($message);
-		
+
 		return new JSONResponse([
 			'message' => sprintf('The group %s is removed from the workspace %s', $group->getGID(), $space->getSpaceName()),
 			'success' => true

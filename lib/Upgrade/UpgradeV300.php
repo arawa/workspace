@@ -36,7 +36,7 @@ class UpgradeV300 implements UpgradeInterface {
 	private IAppConfig $appConfig;
 	private IGroupManager $groupManager;
 	private SpaceMapper $spaceMapper;
-	
+
 	public function __construct(
 		GroupFoldersGroupsMapper $groupfoldersGroupsMapper,
 		IAppConfig $appConfig,

@@ -6,7 +6,7 @@ use OCA\Workspace\Files\Csv\ImportUsers\Header;
 use OCA\Workspace\Files\FileInterface;
 
 class StructureValidator {
-	
+
 	public static function checkCommaAllLines(FileInterface $file): bool {
 		$handle = $file->open();
 		$nbFieldsRequired = count(Header::FIELDS_REQUIRED);
