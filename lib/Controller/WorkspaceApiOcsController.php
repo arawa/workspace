@@ -84,29 +84,16 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * @return Response<{
-	 * 	id: int,
-	 * 	mount_point: string,
-	 * 	groups: array,
-	 * 	quota: int,
-	 * 	size: int,
-	 * 	acl: bool,
-	 * 	manage: array,
-	 * 	groupfolder_id: int,
-	 * 	name: string,
-	 * 	color_code: string,
-	 * 	users: array,
-	 * 	userCount: int,
-	 * 	added_groups: array
-	 * }, Http::STATUS_OK>
-	 *
-	 * 200: Workspaces returned
+	 * Return workspaces with the possibility to filter by name
+	 * 
+	 * @param string|null $name Optional filter to return workspaces by name
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
+	 * 
+	 * 200: Succesfully retrieved workspaces
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
-	public function findAll(): Response {
-		$filterByName = $this->request->getParam('name');
-
+	public function findAll(?string $name): Response {
 		$workspaces = $this->spaceManager->findAll();
 
 		// We only want to return those workspaces for which the connected user is a manager
@@ -117,8 +104,8 @@ class WorkspaceApiOcsController extends OCSController {
 			$workspaces = $filteredWorkspaces;
 		}
 
-		if (!is_null($filterByName)) {
-			$filterToLower = strtolower($filterByName);
+		if (!is_null($name)) {
+			$filterToLower = strtolower($name);
 			$pattern = "/.*{$filterToLower}.*/";
 			
 			$workspacesFiltered = [];

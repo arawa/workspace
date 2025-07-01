@@ -221,14 +221,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				]
 			]
 		;
-		
-		$this->request
-			->expects($this->once())
-			->method('getParam')
-			->with('name')
-			->willReturn(null)
-		;
-		
+		$name = null;
+
 		$this->spaceManager
 			->expects($this->once())
 			->method('findAll')
@@ -241,7 +235,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
 		
-		$actual = $this->controller->findAll();
+		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
 			$spaces,
@@ -422,6 +416,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		;
 
+		$name = "reSsoUrcE";
+
 		$spacesSearched = [
 			[
 				'id' => 3,
@@ -505,13 +501,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		];
 
-		$this->request
-			->expects($this->once())
-			->method('getParam')
-			->with('name')
-			->willReturn('reSsoUrcE')
-		;
-
 		$this->spaceManager
 			->expects($this->once())
 			->method('findAll')
@@ -524,7 +513,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
 
-		$actual = $this->controller->findAll();
+		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
 			$spacesSearched,
@@ -704,13 +693,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				]
 			]
 		;
-		
-		$this->request
-			->expects($this->once())
-			->method('getParam')
-			->with('name')
-			->willReturn(null)
-		;
+		$name = null;
 		
 		$this->spaceManager
 			->expects($this->once())
@@ -730,7 +713,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(true, false, true, false)
 		;
 		
-		$actual = $this->controller->findAll();
+		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
 			[
@@ -992,6 +975,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		;
 
+		$name = "space";
+		
 		$spacesSearched = [
 				[
 					'id' => 1,
@@ -1036,13 +1021,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		;
 		
-		$this->request
-			->expects($this->once())
-			->method('getParam')
-			->with('name')
-			->willReturn('space')
-		;
-		
 		$this->spaceManager
 			->expects($this->once())
 			->method('findAll')
@@ -1061,7 +1039,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(true, false, true, false)
 		;
 		
-		$actual = $this->controller->findAll();
+		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse($spacesSearched, Http::STATUS_OK);
 
