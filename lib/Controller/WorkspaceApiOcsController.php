@@ -36,6 +36,7 @@ use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
