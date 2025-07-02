@@ -89,7 +89,6 @@ class WorkspaceApiOcsController extends OCSController {
 	#[FrontpageRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces',
-		requirements: [ 'spacename' => '[A-Za-z0-9].*' ]
 	)]
 	public function create(string $spacename): Response {
 		try {
