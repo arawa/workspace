@@ -84,6 +84,15 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse($space, Http::STATUS_OK);
 	}
 
+	/**
+	 * Create a new workspace
+	 *
+	 * @param string $spacename Represents the workspace name
+	 * @return Response<Http::STATUS_CREATED, WorkspaceSpace>
+	 * @throws OCSException for all unknown errors
+	 *
+	 * 201: Workspace created successfully
+	 */
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
