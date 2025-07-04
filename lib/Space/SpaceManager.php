@@ -269,6 +269,7 @@ class SpaceManager {
 	 */
 	public function rename(int $spaceId, string $newSpaceName): void {
 		$space = $this->get($spaceId);
+		$newSpaceName = $this->deleteBlankSpaceName($newSpaceName);
 
 		if ($this->workspaceCheck->isExist($newSpaceName)) {
 			throw new WorkspaceNameExistException(
@@ -279,5 +280,64 @@ class SpaceManager {
 
 		$this->folderHelper->renameFolder($space['groupfolder_id'], $newSpaceName);
 		$this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
+	}
+
+	public function setQuota(int $spaceId, int $quota): void {
+		$space = $this->spaceMapper->find($spaceId);
+
+		if (is_null($space)) {
+			throw new \Exception('Workspace does not exist.');
+		}
+
+		if (!is_int($quota)) {
+			throw new BadRequestException('Error setting quota', 'The quota parameter is not an integer.');
+		}
+
+		$space = $this->spaceMapper->find($spaceId);
+		$this->folderHelper->setFolderQuota($space->getGroupfolderId(), $quota);
+	}
+
+	public function setColor(int $spaceId, string $colorCode): Space {
+		return $this->spaceMapper->updateColorCode($colorCode, $spaceId);
+	}
+
+	public function renameGroups(int $spaceId, string $oldSpacename, string $newSpacename): void {
+		$space = $this->spaceMapper->find($spaceId);
+
+		if (is_null($space)) {
+			return;
+		}
+
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		if ($groupfolder === false || is_null($groupfolder)) {
+			$folderId = $space->getGroupfolderId();
+			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
+			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
+		}
+
+		$gids = array_values(array_keys($groupfolder['groups']));
+
+		$groupsNotFound = [];
+		foreach ($gids as $gid) {
+			$group = $this->groupManager->get($gid);
+			if (is_null($group)) {
+				$groupsNotFound[] = $gid;
+			}
+		}
+
+		if (!empty($groupsNotFound)) {
+			$gidsStringify = implode(', ', $groupsNotFound);
+
+			throw new \Exception("These groups are not present in your Nextcloud instance : {$gidsStringify}");
+		}
+
+		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+		$groups = array_filter($groups, fn ($group) => !in_array('LDAP', $group->getBackendNames()));
+
+		foreach ($groups as $group) {
+			$newGroupName = str_replace($oldSpacename, $newSpacename, $group->getDisplayName());
+			$group->setDisplayName($newGroupName);
+		}
 	}
 }

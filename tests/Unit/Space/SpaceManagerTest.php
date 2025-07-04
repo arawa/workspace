@@ -435,8 +435,8 @@ class SpaceManagerTest extends TestCase {
 
 		$this->rootFolder
 			->expects($this->once())
-				->method('getRootFolderStorageId')
-				->willReturn(1)
+			->method('getRootFolderStorageId')
+			->willReturn(1)
 		;
 
 		$this->folderHelper
