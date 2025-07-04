@@ -24,6 +24,9 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Space\SpaceManager;
@@ -31,17 +34,21 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
+ * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
+		private LoggerInterface $logger,
 		private SpaceManager $spaceManager,
 		public $appName,
 	) {
@@ -78,5 +85,46 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_OK);
+	}
+
+	/**
+	 * Remove a workspace by id
+	 *
+	 * @param int $id of a workspace to delete
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceDelete, array{}>
+	 *
+	 * 200: Workspace deleted successfully
+	 */
+	#[GeneralManagerRequired]
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}',
+		requirements: ['id' => '\d+']
+	)]
+	public function delete(int $id): Response {
+		$space = $this->spaceManager->get($id);
+		$groups = [];
+
+		foreach (array_keys($space['groups']) as $group) {
+			$groups[] = $group;
+		}
+
+		$this->spaceManager->remove($id);
+
+		$this->logger->info("The {$space['name']} workspace with id {$space['id']} is deleted");
+
+		return new DataResponse(
+			[
+				'name' => $space['name'],
+				'groups' => $groups,
+				'id' => $space['id'],
+				'groupfolder_id' => $space['groupfolder_id'],
+				'state' => 'delete'
+			],
+			Http::STATUS_OK
+		);
 	}
 }
