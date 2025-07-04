@@ -49,6 +49,14 @@ namespace OCA\Workspace;
  * 		added_groups: list<array{}>
  * }
  *
+ * @psalm-type WorkspaceSpaceDelete = array{
+ * 		name: string,
+ * 		groups: list<string>,
+ * 		id: int,
+ * 		groupfolder_id: int,
+ * 		state: string
+ * }
+ *
  */
 class ResponseDefinitions {
 }
