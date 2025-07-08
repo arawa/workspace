@@ -26,7 +26,10 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
+use OCA\Workspace\Db\Space;
+use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -41,17 +44,20 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
 	private SpaceManager&MockObject $spaceManager;
+	private WorkspaceEditParamsValidator&MockObject $editValidator;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
 
 	public function setUp(): void {
 		$this->appName = 'workspace';
+		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->spaceManager,
+			$this->editValidator,
 			$this->appName
 		);
 	}
@@ -193,12 +199,158 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->expects($this->once())
 			->method('get')
 			->with($spaceId)
-			->willThrowException(new \Exception('Error'));
+			->willThrowException(new InvalidParamException('Error'));
 		;
 
 		$this->expectException(OCSException::class);
 		$this->expectExceptionMessage('Error');
 
 		$this->controller->find($spaceId);
+	}
+
+	public function testEdit(): void {
+		$id = 1;
+		$params = [
+			'name' => 'Espace02',
+			'quota' => 214748364800, // 200Gb
+			'color' => '#ACB5AC',
+		];
+
+		$space = [
+			'id' => 2,
+			'mount_point' => 'Espace02',
+			'groups' => [
+				'SPACE-GE-2' => [
+					'gid' => 'SPACE-GE-2',
+					'displayName' => 'WM-Espace02',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-2'
+				],
+				'SPACE-U-2' => [
+					'gid' => 'SPACE-U-2',
+					'displayName' => 'U-Espace02',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-2'
+				]
+			],
+			'quota' => 214748364800,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-2',
+					'displayname' => 'WM-Espace02'
+				]
+			],
+			'groupfolder_id' => 2,
+			'name' => 'Espace02',
+			'color_code' => '#ACB5AC',
+			'userCount' => 0,
+			'users' => [],
+			'added_groups' => []
+		];
+
+		$this->editValidator
+			->expects($this->once())
+			->method('validate')
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('setColor')
+			->willReturn($this->createMock(Space::class))
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with($id)
+			->willReturn($space)
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('renameGroups')
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('rename')
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('setQuota')
+		;
+
+		$expected = new DataResponse($params, Http::STATUS_OK);
+
+		/** @var DataResponse */
+		$actual = $this->controller->edit($id, $params);
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+	}
+
+	public function testEditWithNameParamInInteger(): void {
+		$id = 1;
+		$params = [
+			'name' => 42,
+		];
+
+		$this->editValidator
+			->expects($this->once())
+			->method('validate')
+			->willThrowException(new InvalidParamException('The name key must be a string'))
+		;
+
+		$this->expectException(InvalidParamException::class);
+		$this->expectExceptionMessage('The name key must be a string');
+
+		$this->controller->edit($id, $params);
+	}
+
+	public function testEditWithQuotaParamInString(): void {
+		$id = 1;
+		$params = [
+			'quota' => '42',
+		];
+
+		$this->editValidator
+			->expects($this->once())
+			->method('validate')
+			->willThrowException(new InvalidParamException('The quota key must be a integer'))
+		;
+
+		$this->expectException(InvalidParamException::class);
+		$this->expectExceptionMessage('The quota key must be a integer');
+
+		$this->controller->edit($id, $params);
+	}
+
+	public function testEditWithColorParamInInteger(): void {
+		$id = 1;
+		$params = [
+			'color' => 42,
+		];
+
+		$this->editValidator
+			->expects($this->once())
+			->method('validate')
+			->willThrowException(new InvalidParamException('The color key must be a string'))
+		;
+
+		$this->expectException(InvalidParamException::class);
+		$this->expectExceptionMessage('The color key must be a string');
+
+		$this->controller->edit($id, $params);
 	}
 }
