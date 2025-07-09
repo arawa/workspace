@@ -62,7 +62,6 @@ class SpaceManager {
 		private AdminUserGroup $adminUserGroup,
 		private AddedGroups $addedGroups,
 		private SubGroup $subGroup,
-		private IUserManager $userManager,
 		private UserWorkspaceGroup $userWorkspaceGroup,
 		private SpaceMapper $spaceMapper,
 		private ConnectedGroupsService $connectedGroupsService,
@@ -70,6 +69,7 @@ class SpaceManager {
 		private UserFormatter $userFormatter,
 		private UserService $userService,
 		private IGroupManager $groupManager,
+		private IUserManager $userManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
@@ -402,5 +402,21 @@ class SpaceManager {
 			$managerGroup->removeUser($user);
 			$userGroup->removeUser($user);
 		}
+	}
+
+	public function addUserAsWorkspaceManager(int $spaceId, string $uid): void {
+		$user = $this->userManager->get($uid);
+		$managerGid = WorkspaceManagerGroup::get($spaceId);
+		$userGid = UserGroup::get($spaceId);
+
+		$managerGroup = $this->groupManager->get($managerGid);
+		$userGroup = $this->groupManager->get($userGid);
+
+		if (!$userGroup->inGroup($user)) {
+			$userGroup->addUser($user);
+		}
+		
+		$managerGroup->addUser($user);
+		$this->adminGroup->addUser($user, $spaceId);
 	}
 }
