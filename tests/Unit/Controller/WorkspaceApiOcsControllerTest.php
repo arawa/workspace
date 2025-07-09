@@ -30,12 +30,15 @@ use OCA\Workspace\Db\Space;
 use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\IGroup;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -47,6 +50,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
 	private LoggerInterface&MockObject $logger;
+	private IGroupManager&MockObject $groupManager;
 	private IUserManager&MockObject $userManager;
 	private SpaceManager&MockObject $spaceManager;
 	private WorkspaceEditParamsValidator&MockObject $editValidator;
@@ -58,12 +62,15 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
+		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->logger,
+			$this->groupManager,
 			$this->userManager,
 			$this->spaceManager,
 			$this->editValidator,
@@ -681,5 +688,46 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 		$this->expectExceptionMessage("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
 
 		$this->controller->addUserAsWorkspaceManager($id, $uid);
+	}
+
+	public function testRemoveUserAsWorkspaceManager(): void {
+		$id = 1;
+		$uid = 'user1';
+
+		$user = $this->createMock(IUser::class);
+		/** @var IGroup&MockObject */
+		$managerGroup = $this->createMock(IGroup::class);
+
+		$managerGroupGid = "SPACE-GE-{$id}";
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$workspaceManagerGroupMock = Mockery::mock(WorkspaceManagerGroup::class);
+		$workspaceManagerGroupMock
+			->shouldReceive('get')
+			->with($id)
+			->andReturn($managerGroupGid)
+		;
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->with($managerGroupGid)
+			->willReturn($managerGroup)
+		;
+
+		$expected = new DataResponse([], Http::STATUS_OK);
+
+		/** @var DataResponse */
+		$actual = $this->controller->removeUserAsWorkspaceManager($id, $uid);
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals($expected->getStatus(), Http::STATUS_OK);
 	}
 }
