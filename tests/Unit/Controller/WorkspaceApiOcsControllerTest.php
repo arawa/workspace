@@ -39,23 +39,28 @@ use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
+	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
 	private WorkspaceEditParamsValidator&MockObject $editValidator;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
-
+	
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
 		$this->request = $this->createMock(IRequest::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
-
+		$this->appName = 'workspace';
+		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
+			$this->logger,
 			$this->spaceManager,
 			$this->editValidator,
 			$this->appName
@@ -173,6 +178,111 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(Response::class, $actual);
 		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
+	}
+
+	public function testCreateReturnsValidDataResponse(): void {
+		$spacename = 'Space01';
+		
+		$this->spaceManager
+			->expects($this->once())
+			->method('create')
+			->with($spacename)
+			->willReturn([
+				'name' => 'Space01',
+				'id' => 1,
+				'id_space' => 1,
+				'folder_id' => 1,
+				'color' => '#413160',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'gid' => 'SPACE-GE-1',
+						'displayName' => 'WM-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
+					],
+					'SPACE-U-1' => [
+						'gid' => 'SPACE-U-1',
+						'displayName' => 'U-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
+					]
+				],
+				'added_groups' => [],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Space01'
+					]
+				],
+				'userCount' => 0
+			]
+			)
+		;
+
+		$actual = $this->controller->create($spacename);
+
+		$expected = new DataResponse(
+			[
+				'name' => 'Space01',
+				'id' => 1,
+				'id_space' => 1,
+				'folder_id' => 1,
+				'color' => '#413160',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'gid' => 'SPACE-GE-1',
+						'displayName' => 'WM-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
+					],
+					'SPACE-U-1' => [
+						'gid' => 'SPACE-U-1',
+						'displayName' => 'U-Space01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
+					]
+				],
+				'added_groups' => [],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Space01'
+					]
+				],
+				'userCount' => 0
+			],
+			Http::STATUS_CREATED
+		)
+		;
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
+
 	}
 
 	public function testThrowsOCSNotFoundExceptionWhenGroupfolderNotFound(): void {
