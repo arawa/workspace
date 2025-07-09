@@ -48,6 +48,16 @@ namespace OCA\Workspace;
  * 		users: list<array{}>,
  * 		added_groups: list<array{}>
  * }
+ * 
+ * @psalm-type WorkspaceGroupInfo = array{
+ * 		gid: string,
+ * 		displayName: string,
+ * 		types: list<string>,
+ * 		usersCount: int,
+ * 		slug: string
+ * }
+ * 
+ * @psalm-type WorkspaceFindGroups = array<string, WorkspaceGroupInfo>
  *
  * @psalm-type WorkspaceSpaceDelete = array{
  * 		name: string,

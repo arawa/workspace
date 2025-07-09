@@ -46,6 +46,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
  * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
+ * @psalm-import-type WorkspaceFindGroups from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -186,5 +187,29 @@ class WorkspaceApiOcsController extends OCSController {
 			],
 			Http::STATUS_OK
 		);
+	}
+
+	/**
+	 * Returns the groups associated with a workspace.
+	 * 
+	 * @param int $id Represents the ID of the workspace.
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceFindGroups, array{}>
+	 * 
+	 * 200: Groups of the specified workspace returned successfully.
+	 */
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/api/v1/space/{id}/groups',
+		requirements: ['id' => '\d+'],
+	)]
+	public function findGroupsBySpaceId(int $id): Response {
+		$groups = $this->spaceManager->findGroupsBySpaceId($id);
+		$this->logger->info("Successfully find groups from the {$id} workspace.");
+
+		return new DataResponse($groups, Http::STATUS_OK);
 	}
 }
