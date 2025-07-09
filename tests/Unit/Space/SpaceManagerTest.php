@@ -603,4 +603,165 @@ class SpaceManagerTest extends TestCase {
 			throw $e;
 		}
 	}
+
+	public function testFindGroupsBySpaceId(): void {
+		$spaceId = 1;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getGroupfolderId')
+			->willReturn(1)
+		;
+
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(
+				[
+					'id' => 1,
+					'mount_point' => 'Espace01',
+					'groups' => [
+						'SPACE-GE-1' => [
+							'displayName' => 'WM-Espace01',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+						'SPACE-U-1' => [
+							'displayName' => 'U-Espace01',
+							'permissions' => 31,
+							'type' => 'group',
+						],
+					],
+					'quota' => -3,
+					'size' => 0,
+					'acl' => true,
+					'manage' => [
+						[
+							'type' => 'group',
+							'id' => 'SPACE-GE-1',
+							'displayname' => 'WM-Espace01',
+						],
+					]
+				]
+			)
+		;
+
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-U-1')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('U-Espace01')
+		;
+		$groupUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('count')
+			->willReturn(0)
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getGID')
+			->willReturn('SPACE-GE-1')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('WM-Espace01')
+		;
+		$groupWorkspaceManagerUser
+			->expects($this->any())
+			->method('getBackendNames')
+			->willReturn(['Database'])
+		;
+
+		$groupFormatter = Mockery::mock(GroupFormatter::class);
+		$groupFormatter
+			->shouldReceive('formatGroups')
+			->with([$groupUser, $groupWorkspaceManagerUser])
+			->andReturn([
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+			])
+		;
+
+		$actual = $this->spaceManager->findGroupsBySpaceId($spaceId);
+
+		$expected = [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+		];
+
+		$this->assertEquals($expected, $actual);
+	}
 }

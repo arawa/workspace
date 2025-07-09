@@ -365,6 +365,73 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
+public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
+		$spaceId = 1;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('findGroupsBySpaceId')
+			->with($spaceId)
+			->willReturn([
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+			])
+		;
+
+		$actual = $this->controller->findGroupsBySpaceId($spaceId);
+
+		$expected = new DataResponse(
+			[
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+			],
+			Http::STATUS_OK
+		)
+		;
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertInstanceOf(Response::class, $actual, 'The response is not extended of Response class');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'The response is not extended of Response class');
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+	}
+
 	public function testThrowsOCSNotFoundExceptionWhenGroupfolderNotFound(): void {
 		$spaceId = 4;
 		$folderId = 4;
