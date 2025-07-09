@@ -37,6 +37,8 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -45,6 +47,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	private IRequest&MockObject $request;
 	private LoggerInterface&MockObject $logger;
+	private IUserManager&MockObject $userManager;
 	private SpaceManager&MockObject $spaceManager;
 	private WorkspaceEditParamsValidator&MockObject $editValidator;
 	private string $appName;
@@ -56,10 +59,12 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->logger,
+			$this->userManager,
 			$this->spaceManager,
 			$this->editValidator,
 			$this->appName
@@ -578,6 +583,33 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
+	public function testShouldAddUserAsWorkspaceManager(): void {
+		$uid = 'user1';
+		$id = 1;
+		
+		$user = $this->createMock(IUser::class);
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('addUserAsWorkspaceManager')
+			->with($id, $uid)
+		;
+
+		$expected = new DataResponse([ 'uid' => $uid ], Http::STATUS_OK);
+
+		$actual = $this->controller->addUserAsWorkspaceManager($id, $uid);
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getStatus(), $actual->getStatus());
+	}
+
 	public function testEditWithNameParamInInteger(): void {
 		$id = 1;
 		$params = [
@@ -630,5 +662,24 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 		$this->expectExceptionMessage('The color key must be a string');
 
 		$this->controller->edit($id, $params);
+	}
+
+	public function testShouldThrowOcsNotFoundWhenAddingUserAsWorkspaceManager(): void {
+		$uid = 'user1';
+		$id = 1;
+
+		$user = null;
+
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with($uid)
+			->willReturn($user)
+		;
+
+		$this->expectException(OCSNotFoundException::class);
+		$this->expectExceptionMessage("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+
+		$this->controller->addUserAsWorkspaceManager($id, $uid);
 	}
 }

@@ -41,6 +41,7 @@ use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -52,6 +53,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
 		IRequest $request,
 		private LoggerInterface $logger,
+		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		private WorkspaceEditParamsValidator $editParamsValidator,
 		public $appName,
@@ -237,5 +239,25 @@ class WorkspaceApiOcsController extends OCSController {
 		$this->logger->info("These users are removed from the workspace with the id {$id} : {$uidsStringify}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
+	}
+
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/workspace-manager',
+		requirements: ['id' => '\d+']
+	)]
+	public function addUserAsWorkspaceManager(int $id, string $uid): Response {
+		$user = $this->userManager->get($uid);
+
+		if (is_null($user)) {
+			throw new OCSNotFoundException("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+		}
+
+		$this->spaceManager->addUserAsWorkspaceManager($id, $uid);
+		return new DataResponse(['uid' => $uid], Http::STATUS_OK);
 	}
 }
