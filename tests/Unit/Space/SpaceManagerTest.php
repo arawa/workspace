@@ -53,6 +53,8 @@ use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUser;
+use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -66,6 +68,7 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&ConnectedGroupsService $conntectedGroupService;
 	private MockObject&GroupfolderHelper $folderHelper;
 	private MockObject&IGroupManager $groupManager;
+	private MockObject&IUserManager $userManager;
 	private MockObject&LoggerInterface $logger;
 	private MockObject&RootFolder $rootFolder;
 	private MockObject&SpaceMapper $spaceMapper;
@@ -77,11 +80,13 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&WorkspaceCheckService $workspaceCheck;
 	private MockObject&WorkspaceManagerGroup $workspaceManagerGroup;
 	private MockObject&WorkspaceService $workspaceService;
+
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->addedGroups = $this->createMock(AddedGroups::class);
 		$this->addedGroups = $this->createMock(AddedGroups::class);
 		$this->adminGroup = $this->createMock(AdminGroup::class);
 		$this->adminUserGroup = $this->createMock(AdminUserGroup::class);
@@ -93,9 +98,12 @@ class SpaceManagerTest extends TestCase {
 		$this->rootFolder = $this->createMock(RootFolder::class);
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->subGroup = $this->createMock(SubGroup::class);
+		$this->subGroup = $this->createMock(SubGroup::class);
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userGroup = $this->createMock(UserGroup::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->userService = $this->createMock(UserService::class);
+		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
 		$this->userWorkspaceGroup = $this->createMock(UserWorkspaceGroup::class);
 		$this->workspaceCheck = $this->createMock(WorkspaceCheckService::class);
 		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
@@ -111,6 +119,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminUserGroup,
 			$this->addedGroups,
 			$this->subGroup,
+			$this->userManager,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
 			$this->conntectedGroupService,
@@ -764,4 +773,59 @@ class SpaceManagerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
+	public function testRemoveUsersFromWorkspace(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2'];
+
+		/** @var IUser&MockObject */
+		$user1 = $this->createMock(IUser::class);
+		/** @var IUser&MockObject */
+		$user2 = $this->createMock(IUser::class);
+				
+		$this->userManager
+			->expects($this->any())
+			->method('get')
+			->with(
+				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'))
+			)
+			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
+		;
+		
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupFormatter = Mockery::mock(UserGroup::class);
+		$groupFormatter
+			->shouldReceive('get')
+			->with($spaceId)
+			->andReturn('SPACE-U-1')
+		;
+		
+		/** @var IGroup&MockObject */
+		$userGroup = $this->createMock(IGroup::class);
+
+		/** @var IGroup&MockObject */
+		$managerGroup = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->exactly(2))
+			->method('get')
+			->willReturn($userGroup, $managerGroup)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('addUser')
+			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
+		;
+
+		$this->spaceManager->removeUsersFromWorkspace($spaceId, $uids);
+	}
+		
 }
