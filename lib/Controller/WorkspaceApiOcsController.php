@@ -212,4 +212,30 @@ class WorkspaceApiOcsController extends OCSController {
 
 		return new DataResponse($groups, Http::STATUS_OK);
 	}
+
+	/**
+	 * Remove users from a workspace
+	 * 
+	 * @param int $id Represents the OD of the workspace.
+	 * @param list<string> $uids Represents the user uids to remove to the workspace.
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>
+	 * 
+	 * 204: Confirmation for users removed from the workspace.
+	 */
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function removeUsersInWorkspace(int $id, array $uids): Response {
+		$this->spaceManager->removeUsersFromWorkspace($id, $uids);
+		$uidsStringify = implode(', ', $uids);
+		$this->logger->info("These users are removed from the workspace with the id {$id} : {$uidsStringify}");
+
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
+	}
 }

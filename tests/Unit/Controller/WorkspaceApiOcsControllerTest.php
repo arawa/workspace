@@ -448,6 +448,27 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 
 		$this->controller->find($spaceId);
 	}
+	public function testRemoveUsersToWorkspaceReturnsValidResponse(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2'];
+
+		$actual = $this->controller->removeUsersInWorkspace($spaceId, $uids);
+
+		$expected = new DataResponse(
+			[
+			],
+			Http::STATUS_NO_CONTENT
+		)
+		;
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_NO_CONTENT, $actual->getStatus());
+	}
 
 	public function testThrowsOCSExceptionWhenAnyExceptionThrown(): void {
 		$spaceId = 4;
