@@ -45,6 +45,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
+ * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -144,5 +145,46 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_CREATED);
+}
+
+	/**
+	 * Remove a workspace by id
+	 *
+	 * @param int $id of a workspace to delete
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceDelete, array{}>
+	 *
+	 * 200: Workspace deleted successfully
+	 */
+	#[GeneralManagerRequired]
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}',
+		requirements: ['id' => '\d+']
+	)]
+	public function delete(int $id): Response {
+		$space = $this->spaceManager->get($id);
+		$groups = [];
+
+		foreach (array_keys($space['groups']) as $group) {
+			$groups[] = $group;
+		}
+
+		$this->spaceManager->remove($id);
+
+		$this->logger->info("The {$space['name']} workspace with id {$space['id']} is deleted");
+
+		return new DataResponse(
+			[
+				'name' => $space['name'],
+				'groups' => $groups,
+				'id' => $space['id'],
+				'groupfolder_id' => $space['groupfolder_id'],
+				'state' => 'delete'
+			],
+			Http::STATUS_OK
+		);
 	}
 }
