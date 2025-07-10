@@ -70,7 +70,7 @@ class ConnectedGroupsService {
 			$data[$gid][] = $linked_gid;
 			$this->linkedGroupsWSGroups[$linked_gid][] = $gid;
 		}
-		
+
 		$this->linkedSpaceGroups = $data;
 	}
 
@@ -130,7 +130,7 @@ class ConnectedGroupsService {
 	 * @return bool
 	 */
 	public function hasConnectedGroups(string $gid, ?string $gidUserGroup = null) : bool {
-		
+
 		$linkedSpaceGroups = $this->getLinkedSpaceGroups();
 
 		if (empty($linkedSpaceGroups)) {
