@@ -66,6 +66,10 @@ namespace OCA\Workspace;
  * 		groupfolder_id: int,
  * 		state: string
  * }
+ * 
+ * @psalm-type WorkspaceConfirmationMessage = array{
+ * 		message: string
+ * }
  *
  */
 class ResponseDefinitions {

@@ -28,6 +28,7 @@ use OCA\Workspace\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Attribute\RequireExistingSpace;
 use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
+use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
@@ -50,6 +51,7 @@ use Psr\Log\LoggerInterface;
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
  * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
  * @psalm-import-type WorkspaceFindGroups from ResponseDefinitions
+ * @psalm-import-type WorkspaceConfirmationMessage from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -59,6 +61,7 @@ class WorkspaceApiOcsController extends OCSController {
 		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		private WorkspaceEditParamsValidator $editParamsValidator,
+		private SpaceMapper $spaceMapper,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
@@ -151,7 +154,7 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($space, Http::STATUS_CREATED);
-}
+	}
 
 	/**
 	 * Remove a workspace by id
@@ -306,5 +309,35 @@ class WorkspaceApiOcsController extends OCSController {
 		} catch(\Exception $exception) {
 			throw new OCSException($exception->getMessage(), $exception->getCode());
 		}
+	}
+
+	/**
+	 * Adds users to the workspace by id.
+	 * 
+	 * @param int $id Represents the ID of the workspace.
+	 * @param list<string> $uids Represents the user uids to add to the workspace.
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceConfirmationMessage, array{}>
+	 * 
+	 * 200: Confirmation message indicating that users have been added successfully.
+	 */
+	#[WorkspaceManagerRequired]
+	#[RequireExistingSpace]
+	#[SpaceIdNumber]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function addUsersInWorkspace(int $id, array $uids): Response {
+		$this->spaceManager->addUsersInWorkspace($id, $uids);
+		$spacename = $this->spaceMapper->find($id)->getSpaceName();
+
+		$count = count($uids);
+		$this->logger->info("{$count} users were added in the {$spacename} workspace with the {$id} id.");
+
+		return new DataResponse([
+			'message' => "{$count} users were added in the {$spacename} workspace with the {$id} id."
+		], Http::STATUS_OK);
 	}
 }
