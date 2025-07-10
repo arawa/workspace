@@ -31,6 +31,7 @@ use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -54,17 +55,18 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private IUserManager&MockObject $userManager;
 	private SpaceManager&MockObject $spaceManager;
 	private WorkspaceEditParamsValidator&MockObject $editValidator;
+	private SpaceMapper&MockObject $spaceMapper;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
 	
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
+		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
-		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->userManager = $this->createMock(IUserManager::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
+		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		
 		$this->controller = new WorkspaceApiOcsController(
@@ -74,6 +76,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->userManager,
 			$this->spaceManager,
 			$this->editValidator,
+			$this->spaceMapper,
 			$this->appName
 		);
 	}
@@ -215,7 +218,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$expected = new DataResponse([ 'gid' => 'SPACE-G-HR-1' ], Http::STATUS_CREATED);
 		$actual = $this->controller->createSubGroup($id, $groupname);
 
-    if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+    	if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
 		}
 
@@ -224,7 +227,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
-  }
+  	}
 
 	public function testCreateReturnsValidDataResponse(): void {
 		$spacename = 'Space01';
@@ -412,7 +415,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
-public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
+	public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 		$spaceId = 1;
 
 		$this->spaceManager
@@ -495,6 +498,53 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 
 		$this->controller->find($spaceId);
 	}
+	public function testAddUsersToWorkspaceReturnsValidResponse(): void {
+		$spaceId = 1;
+		$spacename = 'Espace01';
+		$uids = ['user1', 'user2'];
+		$count = count($uids);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('addUsersInWorkspace')
+			->with($spaceId, $uids)
+		;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getSpaceName')
+			->willReturn($spacename)
+		;
+		
+		$actual = $this->controller->addUsersInWorkspace($spaceId, $uids);
+
+		$expected = new DataResponse(
+			[
+				'message' => "{$count} users were added in the Espace01 workspace with the 1 id."
+			],
+			Http::STATUS_OK
+		)
+		;
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+	}
+
 	public function testRemoveUsersToWorkspaceReturnsValidResponse(): void {
 		$spaceId = 1;
 		$uids = ['user1', 'user2'];

@@ -106,6 +106,7 @@ class SpaceManagerTest extends TestCase {
 		$this->workspaceCheck = $this->createMock(WorkspaceCheckService::class);
 		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 
 		$this->spaceManager = new SpaceManager(
 			$this->folderHelper,
@@ -116,6 +117,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminUserGroup,
 			$this->addedGroups,
 			$this->subGroup,
+			$this->userManager,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
 			$this->conntectedGroupService,
@@ -123,18 +125,16 @@ class SpaceManagerTest extends TestCase {
 			$this->userFormatter,
 			$this->userService,
 			$this->groupManager,
-			$this->userManager,
 			$this->workspaceManagerGroup,
 			$this->workspaceService,
 			$this->colorCode
 		);
 	}
 
-
 	public function tearDown(): void {
 		Mockery::close();
 	}
-	
+
 	public function testFindAWorkspaceForOcsController(): void {
 		$spaceId = 4;
 		$folderId = 4;
@@ -986,6 +986,58 @@ class SpaceManagerTest extends TestCase {
 		$this->spaceManager->removeUsersFromWorkspace($spaceId, $uids);
 	}
 
+	public function testAddUsersInWorkspace(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2'];
+		
+		/** @var IUser&MockObject */
+		$user1 = $this->createMock(IUser::class);
+		/** @var IUser&MockObject */
+		$user2 = $this->createMock(IUser::class);
+				
+		$this->userManager
+			->expects($this->any())
+			->method('get')
+			->with(
+				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'))
+			)
+			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
+		;
+		
+		$groupUser = $this->createMock(IGroup::class);
+		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturn($groupUser, $groupWorkspaceManagerUser)
+		;
+
+		$groupFormatter = Mockery::mock(UserGroup::class);
+		$groupFormatter
+			->shouldReceive('get')
+			->with($spaceId)
+			->andReturn('SPACE-U-1')
+		;
+		
+		/** @var IGroup&MockObject */
+		$userGroup = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->willReturn($userGroup)
+		;
+
+		$groupUser
+			->expects($this->any())
+			->method('addUser')
+			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
+		;
+		
+		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
+	}
+		
 	public function testAddUserAsWorkspaceManager(): void {
 		$spaceId = 4;
 		$uid = 'user01';
@@ -1075,4 +1127,30 @@ class SpaceManagerTest extends TestCase {
 		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
 	}
 
+
+	public function testAddUsersInWorkspaceThrowsExceptionForDoesntExistUsers(): void {
+		$spaceId = 1;
+		$uids = ['user1', 'user2', 'user42'];
+
+		/** @var IUser&MockObject */
+		$user1 = $this->createMock(IUser::class);
+		/** @var IUser&MockObject */
+		$user2 = $this->createMock(IUser::class);
+		/** @var IUser|null */
+		$user42 = null;
+				
+		$this->userManager
+			->expects($this->any())
+			->method('get')
+			->with(
+				$this->logicalOr($this->equalTo('user1'), $this->equalTo('user2'), $this->equalTo('user42'))
+			)
+			->willReturnOnConsecutiveCalls($user1, $user2, $user42)
+		;
+
+		$this->expectException(OCSBadRequestException::class);
+		$this->expectExceptionMessage("These users not exist in your Nextcoud instance : \n- user42\n");
+
+		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
+	}
 }
