@@ -47,6 +47,7 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
@@ -154,7 +155,27 @@ class SpaceManager {
 	}
 
 	/**
-	 * @return array<{
+	 * Create a subgroup to a workspace and attaches it in.
+	 * @param int $id is the space id.
+	 * @return IGroup is the group created.
+	 */
+	public function createSubgroup(int $id, string $groupname): IGroup {
+		$space = $this->spaceMapper->find($id);
+
+		$spacename = $space->getSpaceName();
+		$group = $this->subGroup->create($groupname, $id, $spacename);
+
+		$this->folderHelper->addApplicableGroup($space->getGroupfolderId(), $group->getGID());
+
+		$gid = $group->getGID();
+
+		$this->logger->info("The subgroup {$gid} is created within the workspace {$spacename} ({$id})");
+
+		return $group;
+	}
+
+	/**
+	 *  @return array<{
 	 * 	id: int,
 	 * 	mount_point: string,
 	 * 	groups: array,

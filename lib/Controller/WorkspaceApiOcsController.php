@@ -36,6 +36,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
@@ -115,5 +116,24 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 
 		return new DataResponse($toSet, Http::STATUS_OK);
+	}
+
+	#[NoAdminRequired]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/groups',
+		requirements: [
+			'id' => '\d+',
+		]
+	)]
+	public function createSubGroup(int $id, string $groupname): Response {
+		try {
+			$group = $this->spaceManager->createSubGroup($id, $groupname);
+			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
+		} catch(\Exception $exception) {
+			throw new OCSException($exception->getMessage(), $exception->getCode());
+		}
 	}
 }
