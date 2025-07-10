@@ -51,6 +51,7 @@ use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -602,5 +603,160 @@ class SpaceManagerTest extends TestCase {
 			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
 			throw $e;
 		}
+	}
+
+	private function createSubGroup(
+		int $id,
+		int $groupfolderId,
+		string $spacename,
+		string $gid,
+		string $groupname): IGroup {
+		
+		$space = $this->createMock(Space::class);
+		$group = $this->createMock(IGroup::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($id)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getSpaceName')
+			->willReturn($spacename)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getGroupfolderId')
+			->willReturn($groupfolderId)
+		;
+
+		$this->subGroup
+			->expects($this->once())
+			->method('create')
+			->with($groupname, $id, $spacename)
+			->willReturn($group)
+		;
+
+		$group
+			->expects($this->exactly(2))
+			->method('getGID')
+			->willReturn($gid)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('addApplicableGroup')
+			->with($groupfolderId, $gid)
+		;
+
+		$this->logger
+			->expects($this->once())
+			->method('info')
+			->with("The subgroup {$gid} is created within the workspace {$spacename} ({$id})")
+		;
+
+		return $this->spaceManager->createSubgroup($id, $groupname);
+	}
+
+	public function testCreateSubgroup(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-HR-1';
+		$groupfolderId = 42;
+
+		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
+	}
+
+	public function testPreventDuplicateCreateSubgroup(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($id)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->once())
+			->method('getSpaceName')
+			->willReturn($spacename)
+		;
+
+		$this->subGroup
+			->expects($this->once())
+			->method('create')
+			->with($groupname, $id, $spacename)
+			->willThrowException(new OCSBadRequestException("The group {$groupname} already exists for this workspace."))
+		;
+
+		$this->expectException(OCSBadRequestException::class);
+		$this->expectExceptionMessage("The group {$groupname} already exists for this workspace.");
+
+		$this->spaceManager->createSubgroup($id, $groupname);
+	}
+
+	public function testCreateSubgroupWithASlash(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-/-1';
+		$groupfolderId = 42;
+		
+		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
+	}
+
+	public function testCreateSubgroupWithHooks(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-Place {42}-1';
+		$groupfolderId = 42;
+		
+		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
+	}
+
+	public function testCreateSubgroupWithBackslashes(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-Place \42\-1';
+		$groupfolderId = 42;
+		
+		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
+	}
+
+	public function testCreateSubgroupWithBrackets(): void {
+		$id = 1;
+		$spacename = 'Espace01';
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-Place (42)-1';
+		$groupfolderId = 42;
+		
+		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
+
+		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
 	}
 }
