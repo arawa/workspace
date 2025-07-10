@@ -621,11 +621,11 @@ class SpaceManagerTest extends TestCase {
 		string $spacename,
 		string $gid,
 		string $groupname): IGroup {
-		
+
 		$space = $this->createMock(Space::class);
 		$group = $this->createMock(IGroup::class);
 
-    $this->spaceMapper
+		$this->spaceMapper
 			->expects($this->once())
 			->method('find')
 			->with($id)
@@ -725,7 +725,7 @@ class SpaceManagerTest extends TestCase {
 
 		$gid = 'SPACE-G-/-1';
 		$groupfolderId = 42;
-		
+
 		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
 
 		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
@@ -738,7 +738,7 @@ class SpaceManagerTest extends TestCase {
 
 		$gid = 'SPACE-G-Place {42}-1';
 		$groupfolderId = 42;
-		
+
 		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
 
 		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
@@ -751,7 +751,7 @@ class SpaceManagerTest extends TestCase {
 
 		$gid = 'SPACE-G-Place \42\-1';
 		$groupfolderId = 42;
-		
+
 		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
 
 		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
@@ -764,7 +764,7 @@ class SpaceManagerTest extends TestCase {
 
 		$gid = 'SPACE-G-Place (42)-1';
 		$groupfolderId = 42;
-		
+
 		$actual = $this->createSubgroup($id, $groupfolderId, $spacename, $gid, $groupname);
 
 		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
@@ -908,24 +908,24 @@ class SpaceManagerTest extends TestCase {
 		$actual = $this->spaceManager->findGroupsBySpaceId($spaceId);
 
 		$expected = [
-				'SPACE-GE-1' => [
-					'gid' => 'SPACE-GE-1',
-					'displayName' => 'WM-Espace01',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-GE-1'
+			'SPACE-GE-1' => [
+				'gid' => 'SPACE-GE-1',
+				'displayName' => 'WM-Espace01',
+				'types' => [
+					'Database'
 				],
-				'SPACE-U-1' => [
-					'gid' => 'SPACE-U-1',
-					'displayName' => 'U-Espace01',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-U-1'
-				]
+				'usersCount' => 0,
+				'slug' => 'SPACE-GE-1'
+			],
+			'SPACE-U-1' => [
+				'gid' => 'SPACE-U-1',
+				'displayName' => 'U-Espace01',
+				'types' => [
+					'Database'
+				],
+				'usersCount' => 0,
+				'slug' => 'SPACE-U-1'
+			]
 		];
 
 		$this->assertEquals($expected, $actual);
@@ -939,7 +939,7 @@ class SpaceManagerTest extends TestCase {
 		$user1 = $this->createMock(IUser::class);
 		/** @var IUser&MockObject */
 		$user2 = $this->createMock(IUser::class);
-				
+
 		$this->userManager
 			->expects($this->any())
 			->method('get')
@@ -948,7 +948,7 @@ class SpaceManagerTest extends TestCase {
 			)
 			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
 		;
-		
+
 		$groupUser = $this->createMock(IGroup::class);
 		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
 
@@ -964,7 +964,7 @@ class SpaceManagerTest extends TestCase {
 			->with($spaceId)
 			->andReturn('SPACE-U-1')
 		;
-		
+
 		/** @var IGroup&MockObject */
 		$userGroup = $this->createMock(IGroup::class);
 
@@ -989,12 +989,12 @@ class SpaceManagerTest extends TestCase {
 	public function testAddUsersInWorkspace(): void {
 		$spaceId = 1;
 		$uids = ['user1', 'user2'];
-		
+
 		/** @var IUser&MockObject */
 		$user1 = $this->createMock(IUser::class);
 		/** @var IUser&MockObject */
 		$user2 = $this->createMock(IUser::class);
-				
+
 		$this->userManager
 			->expects($this->any())
 			->method('get')
@@ -1003,7 +1003,7 @@ class SpaceManagerTest extends TestCase {
 			)
 			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
 		;
-		
+
 		$groupUser = $this->createMock(IGroup::class);
 		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
 
@@ -1019,7 +1019,7 @@ class SpaceManagerTest extends TestCase {
 			->with($spaceId)
 			->andReturn('SPACE-U-1')
 		;
-		
+
 		/** @var IGroup&MockObject */
 		$userGroup = $this->createMock(IGroup::class);
 
@@ -1034,17 +1034,17 @@ class SpaceManagerTest extends TestCase {
 			->method('addUser')
 			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
 		;
-		
+
 		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
 	}
-		
+
 	public function testAddUserAsWorkspaceManager(): void {
 		$spaceId = 4;
 		$uid = 'user01';
 
 		/** @var MockObject&IUser */
 		$user = $this->createMock(IUser::class);
-		
+
 		$this->userManager
 			->expects($this->once())
 			->method('get')
@@ -1052,7 +1052,7 @@ class SpaceManagerTest extends TestCase {
 			->willReturn($user)
 		;
 
-		
+
 		$workspaceManagerGroupMock = Mockery::mock(WorkspaceManagerGroup::class);
 		$workspaceManagerGroupMock
 			->shouldReceive('get')
@@ -1138,7 +1138,7 @@ class SpaceManagerTest extends TestCase {
 		$user2 = $this->createMock(IUser::class);
 		/** @var IUser|null */
 		$user42 = null;
-				
+
 		$this->userManager
 			->expects($this->any())
 			->method('get')

@@ -80,14 +80,13 @@ class SpaceMapper extends QBMapper {
 	}
 
 	/**
-	 * @deprecated
 	 * @see WorkspaceController->destroy().
 	 */
 	public function deleteSpace(int $id): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->delete('work_spaces')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id))
+			->where($qb->expr()->eq('space_id', $qb->createNamedParameter($id))
 			)
 			->execute();
 	}

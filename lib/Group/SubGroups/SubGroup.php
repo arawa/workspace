@@ -69,7 +69,7 @@ class SubGroup {
 		$group = $this->groupManager->get($gid);
 
 		$groupsSearched = $this->groupManager->search($displayName);
-		$groupnames = array_map(fn($group) => $group->getDisplayName(), $groupsSearched);
+		$groupnames = array_map(fn ($group) => $group->getDisplayName(), $groupsSearched);
 
 		if (!is_null($group)) {
 			if (in_array($displayName, $groupnames)) {

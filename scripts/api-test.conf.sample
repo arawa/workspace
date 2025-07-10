@@ -1,0 +1,5 @@
+[api]
+nextcloud = 'https://mynextcloud.com/'
+login = 'myadminlogin'
+key = 'myapp-nextcloud-key'
+user = 'myuser'

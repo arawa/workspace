@@ -37,6 +37,7 @@ use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
@@ -72,17 +73,19 @@ class WorkspaceApiOcsController extends OCSController {
 	 *
 	 * @param int $id Represents the ID of a workspace
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
-	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID
+	 * @throws OCSNotFoundException when no workspace is associated with the given space ID
 	 * @throws OCSException for all unknown errors
 	 *
 	 * 200: Workspace returned
+	 * 404: Workspace not found
 	 *
 	 */
+	#[OpenAPI(tags: ['workspace'])]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'GET',
-		url: '/api/v1/space/{id}',
+		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
 	)]
 	public function find(int $id): DataResponse {
@@ -96,20 +99,44 @@ class WorkspaceApiOcsController extends OCSController {
 			throw new OCSException($e->getMessage());
 		}
 
+		if (empty($space)) {
+			throw new OCSNotFoundException('No workspace found with id ' . $id);
+		}
+
 		return new DataResponse($space, Http::STATUS_OK);
 	}
 
+	/**
+	 * Edit workspace name, color and quota
+	 *
+	 * @param int $id Represents the ID of a workspace
+	 * @param string|null $name Workspace name (optional)
+	 * @param string|null $color Workspace color (optional)
+	 * @param int|null $quota Workspace quota in bytes (optional, -3 means unlimited, 0 means no quota)
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
+	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID
+	 * @throws OCSException for all unknown errors
+	 *
+	 * 200: Workspace returned
+	 * 404: Workspace not found
+	 *
+	 */
+	#[OpenAPI(tags: ['workspace'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'PATCH',
-		url: '/api/v1/space/{id}',
+		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
 	)]
-	public function edit(int $id, array $params): Response {
-		$toSet = array_merge(WorkspaceEditParams::DEFAULT, $params);
+	public function edit(int $id, ?string $name, ?string $color = null, ?int $quota = null): DataResponse {
+		$toSet = array_merge(WorkspaceEditParams::DEFAULT, [
+			'name' => $name,
+			'color' => $color,
+			'quota' => $quota
+		]);
 
 		$this->editParamsValidator->validate($toSet);
 
@@ -119,8 +146,13 @@ class WorkspaceApiOcsController extends OCSController {
 
 		if (!is_null($toSet['name'])) {
 			$space = $this->spaceManager->get($id);
-			$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
-			$this->spaceManager->rename($id, $toSet['name']);
+			if (strtolower($space['name']) !== strtolower($toSet['name'])) {
+				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
+				$this->spaceManager->rename($id, $toSet['name']);
+			} else {
+				$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
+				$toSet['name'] = $space['name']; // when case is different
+			}
 		}
 
 		if (!is_null($toSet['quota'])) {
@@ -133,22 +165,25 @@ class WorkspaceApiOcsController extends OCSController {
 	/**
 	 * Create a new workspace
 	 *
-	 * @param string $spacename Represents the workspace name
-	 * @return Response<Http::STATUS_CREATED, WorkspaceSpace>
+	 * @param string $name The workspace name
+	 * @return DataResponse<Http::STATUS_CREATED, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, null, array{}>|DataResponse<Http::STATUS_CONFLICT, null, array{}>
 	 * @throws OCSException for all unknown errors
 	 *
 	 * 201: Workspace created successfully
+	 * 400: Invalid workspace name
+	 * 409: Workspace with this name already exists
 	 */
+	#[OpenAPI(tags: ['workspace'])]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces',
 	)]
-	public function create(string $spacename): Response {
+	public function create(string $name): DataResponse {
 		try {
-			$space = $this->spaceManager->create($spacename);
-			$this->logger->info("The workspace {$spacename} is created");
+			$space = $this->spaceManager->create($name);
+			$this->logger->info("The workspace {$name} is created");
 		} catch (\Exception $e) {
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
@@ -160,20 +195,22 @@ class WorkspaceApiOcsController extends OCSController {
 	 * Remove a workspace by id
 	 *
 	 * @param int $id of a workspace to delete
-	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceDelete, array{}>
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceDelete, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: Workspace deleted successfully
+	 * 404: Workspace not found
 	 */
+	#[OpenAPI(tags: ['workspace'])]
 	#[GeneralManagerRequired]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/space/{id}',
+		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
 	)]
-	public function delete(int $id): Response {
+	public function delete(int $id): DataResponse {
 		$space = $this->spaceManager->get($id);
 		$groups = [];
 
@@ -199,19 +236,20 @@ class WorkspaceApiOcsController extends OCSController {
 
 	/**
 	 * Returns the groups associated with a workspace.
-	 * 
+	 *
 	 * @param int $id Represents the ID of the workspace.
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceFindGroups, array{}>
-	 * 
+	 *
 	 * 200: Groups of the specified workspace returned successfully.
 	 */
+	#[OpenAPI(tags: ['workspace-groups'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'GET',
-		url: '/api/v1/space/{id}/groups',
+		url: '/api/v1/spaces/{id}/groups',
 		requirements: ['id' => '\d+'],
 	)]
 	public function findGroupsBySpaceId(int $id): Response {
@@ -222,21 +260,55 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * Remove users from a workspace
-	 * 
-	 * @param int $id Represents the OD of the workspace.
-	 * @param list<string> $uids Represents the user uids to remove to the workspace.
-	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>
-	 * 
-	 * 204: Confirmation for users removed from the workspace.
+	 * Adds users to the workspace by id.
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @param list<string> $uids Represents the user uids to add to the workspace.
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceConfirmationMessage, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 *
+	 * 200: Confirmation message indicating that users have been added successfully.
+	 * 404: User not found in the instance.
 	 */
+	#[OpenAPI(tags: ['workspace-users'])]
+	#[WorkspaceManagerRequired]
+	#[RequireExistingSpace]
+	#[SpaceIdNumber]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/spaces/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function addUsersInWorkspace(int $id, array $uids): Response {
+		$this->spaceManager->addUsersInWorkspace($id, $uids);
+		$spacename = $this->spaceMapper->find($id)->getSpaceName();
+
+		$count = count($uids);
+		$this->logger->info("{$count} users were added in the {$spacename} workspace with the {$id} id.");
+
+		return new DataResponse([
+			'message' => "{$count} users were added in the {$spacename} workspace with the {$id} id."
+		], Http::STATUS_OK);
+	}
+
+	/**
+	 * Remove users from a workspace
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @param list<string> $uids Represents the user uids to remove to the workspace.
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 *
+	 * 204: Confirmation for users removed from the workspace.
+	 * 404: User not found in the instance.
+	 */
+	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/space/{id}/users',
+		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
 	)]
 	public function removeUsersInWorkspace(int $id, array $uids): Response {
@@ -247,16 +319,27 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 
+	/**
+	 * Add user as a workspace manager
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @param string $uid Represents the user uid to add as a workspace manager.
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
+	 *
+	 * 200: Confirmation for users added to the workspace.
+	 * 404: User not found in the instance.
+	 */
+	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
-		url: '/api/v1/space/{id}/workspace-manager',
+		url: '/api/v1/spaces/{id}/workspace-manager',
 		requirements: ['id' => '\d+']
 	)]
-	public function addUserAsWorkspaceManager(int $id, string $uid): Response {
+	public function addUserAsWorkspaceManager(int $id, string $uid): DataResponse {
 		$user = $this->userManager->get($uid);
 
 		if (is_null($user)) {
@@ -267,16 +350,27 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse(['uid' => $uid], Http::STATUS_OK);
 	}
 
+	/**
+	 * Remove user as a workspace manager
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @param string $uid Represents the user uid to remove as a workspace manager.
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
+	 *
+	 * 200: Confirmation for users removed from the workspace.
+	 * 404: User not found in the instance.
+	 */
+	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/space/{id}/workspace-manager',
+		url: '/api/v1/spaces/{id}/workspace-manager',
 		requirements: ['id' => '\d+']
 	)]
-	public function removeUserAsWorkspaceManager(int $id, string $uid): Response {
+	public function removeUserAsWorkspaceManager(int $id, string $uid): DataResponse {
 		$user = $this->userManager->get($uid);
 
 		if (is_null($user)) {
@@ -292,52 +386,35 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse([], Http::STATUS_OK);
 	}
 
+	/**
+	 * Create a new subgroup for a workspace
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @param string $name The subgroup name
+	 * @return DataResponse<Http::STATUS_CREATED, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_CONFLICT, null, array{}>
+	 * @throws OCSException for all unknown errors
+	 *
+	 * 201: Subgroup created successfully
+	 * 409: Subgroup with this name already exists
+	 */
+	#[OpenAPI(tags: ['workspace-groups'])]
 	#[NoAdminRequired]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[FrontpageRoute(
 		verb: 'POST',
-		url: '/api/v1/space/{id}/groups',
+		url: '/api/v1/spaces/{id}/groups',
 		requirements: [
 			'id' => '\d+',
 		]
 	)]
-	public function createSubGroup(int $id, string $groupname): Response {
+	public function createSubGroup(int $id, string $name): Response {
 		try {
-			$group = $this->spaceManager->createSubGroup($id, $groupname);
+			$group = $this->spaceManager->createSubGroup($id, $name);
 			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
-		} catch(\Exception $exception) {
+		} catch (\Exception $exception) {
 			throw new OCSException($exception->getMessage(), $exception->getCode());
 		}
 	}
 
-	/**
-	 * Adds users to the workspace by id.
-	 * 
-	 * @param int $id Represents the ID of the workspace.
-	 * @param list<string> $uids Represents the user uids to add to the workspace.
-	 * @return DataResponse<Http::STATUS_OK, WorkspaceConfirmationMessage, array{}>
-	 * 
-	 * 200: Confirmation message indicating that users have been added successfully.
-	 */
-	#[WorkspaceManagerRequired]
-	#[RequireExistingSpace]
-	#[SpaceIdNumber]
-	#[NoAdminRequired]
-	#[FrontpageRoute(
-		verb: 'POST',
-		url: '/api/v1/space/{id}/users',
-		requirements: ['id' => '\d+']
-	)]
-	public function addUsersInWorkspace(int $id, array $uids): Response {
-		$this->spaceManager->addUsersInWorkspace($id, $uids);
-		$spacename = $this->spaceMapper->find($id)->getSpaceName();
-
-		$count = count($uids);
-		$this->logger->info("{$count} users were added in the {$spacename} workspace with the {$id} id.");
-
-		return new DataResponse([
-			'message' => "{$count} users were added in the {$spacename} workspace with the {$id} id."
-		], Http::STATUS_OK);
-	}
 }
