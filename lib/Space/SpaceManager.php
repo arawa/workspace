@@ -47,8 +47,10 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class SpaceManager {
@@ -68,6 +70,7 @@ class SpaceManager {
 		private UserFormatter $userFormatter,
 		private UserService $userService,
 		private IGroupManager $groupManager,
+		private IUserManager $userManager,
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
@@ -154,6 +157,17 @@ class SpaceManager {
 		];
 	}
 
+	public function findGroupsBySpaceId(int $id): array {
+		$space = $this->spaceMapper->find($id);
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+
+		$gids = array_keys($groupfolder['groups']);
+		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+		$groupsFormatted = GroupFormatter::formatGroups($groups);
+
+		return $groupsFormatted;
+	}
+	
 	/**
 	 * Create a subgroup to a workspace and attaches it in.
 	 * @param int $id is the space id.
@@ -360,5 +374,82 @@ class SpaceManager {
 			$newGroupName = str_replace($oldSpacename, $newSpacename, $group->getDisplayName());
 			$group->setDisplayName($newGroupName);
 		}
+	}
+
+	public function removeUsersFromWorkspace(int $id, array $uids): void {
+		$types = array_unique(array_map(fn ($uid) => gettype($uid), $uids));
+		$othersStringTypes = array_values(array_filter($types, fn ($type) => $type !== 'string'));
+
+		if (!empty($othersStringTypes)) {
+			throw new OCSBadRequestException('uids params must contain a string array only');
+		}
+
+		$usersNotExist = [];
+		foreach ($uids as $uid) {
+			$user = $this->userManager->get($uid);
+			if (is_null($user)) {
+				$usersNotExist[] = $uid;
+			}
+		}
+
+		if (!empty($usersNotExist)) {
+			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
+			$this->logger->error('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+		}
+
+		$gid = UserGroup::get($id);
+		$managerGid = WorkspaceManagerGroup::get($id);
+
+		$userGroup = $this->groupManager->get($gid);
+		$managerGroup = $this->groupManager->get($managerGid);
+
+		if (is_null($userGroup)) {
+			$this->logger->error("The group with {$gid} group doesn't exist.");
+			throw new OCSBadRequestException("The group with {$gid} group doesn't exist.");
+		}
+
+		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
+
+		foreach ($users as $user) {
+			$uid = $user->getUID();
+
+			if ($managerGroup->inGroup($user)) {
+				if ($this->userService->canRemoveWorkspaceManagers($user)) {
+					$this->userService->removeGEFromWM($user);
+				}
+			}
+
+			$managerGroup->removeUser($user);
+			$userGroup->removeUser($user);
+		}
+	}
+
+	public function removeUsersFromWorkspaceManagerGroup(IGroup $group, array $users): void {
+		foreach ($users as $user) {
+			if ($group->inGroup($user)) {
+				if ($this->userService->canRemoveWorkspaceManagers($user)) {
+					$this->userService->removeGEFromWM($user);
+				}
+			}
+
+			$group->removeUser($user);
+		}
+	}
+
+	public function addUserAsWorkspaceManager(int $spaceId, string $uid): void {
+		$user = $this->userManager->get($uid);
+		$managerGid = WorkspaceManagerGroup::get($spaceId);
+		$userGid = UserGroup::get($spaceId);
+
+		$managerGroup = $this->groupManager->get($managerGid);
+		$userGroup = $this->groupManager->get($userGid);
+
+		if (!$userGroup->inGroup($user)) {
+			$userGroup->addUser($user);
+		}
+		
+		$managerGroup->addUser($user);
+		$this->adminGroup->addUser($user, $spaceId);
 	}
 }
