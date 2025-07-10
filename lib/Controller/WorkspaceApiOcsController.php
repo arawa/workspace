@@ -289,4 +289,22 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse([], Http::STATUS_OK);
 	}
 
+	#[NoAdminRequired]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/groups',
+		requirements: [
+			'id' => '\d+',
+		]
+	)]
+	public function createSubGroup(int $id, string $groupname): Response {
+		try {
+			$group = $this->spaceManager->createSubGroup($id, $groupname);
+			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
+		} catch(\Exception $exception) {
+			throw new OCSException($exception->getMessage(), $exception->getCode());
+		}
+	}
 }

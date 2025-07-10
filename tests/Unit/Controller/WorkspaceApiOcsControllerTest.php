@@ -191,6 +191,41 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
 	}
 
+	public function testCreateSubGroup() {
+		$id = 1;
+		$groupname = 'HR';
+
+		$gid = 'SPACE-G-HR-1';
+
+		$group = $this->createMock(IGroup::class);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('createSubGroup')
+			->with($id, $groupname)
+			->willReturn($group)
+		;
+
+		$group
+			->expects($this->once())
+			->method('getGID')
+			->willReturn($gid)
+		;
+
+		$expected = new DataResponse([ 'gid' => 'SPACE-G-HR-1' ], Http::STATUS_CREATED);
+		$actual = $this->controller->createSubGroup($id, $groupname);
+
+    if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertInstanceOf(Response::class, $actual, 'The response is not extended of Response class');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'The response is not extended of Response class');
+		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+  }
+
 	public function testCreateReturnsValidDataResponse(): void {
 		$spacename = 'Space01';
 		
@@ -432,7 +467,7 @@ public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
 			Http::STATUS_OK
 		)
 		;
-
+ 
 		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
 		}
