@@ -27,11 +27,11 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
 use OCA\Workspace\Db\Space;
+use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -58,7 +58,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private SpaceMapper&MockObject $spaceMapper;
 	private string $appName;
 	private WorkspaceApiOcsController $controller;
-	
+
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
@@ -68,7 +68,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		
+
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->logger,
@@ -218,7 +218,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$expected = new DataResponse([ 'gid' => 'SPACE-G-HR-1' ], Http::STATUS_CREATED);
 		$actual = $this->controller->createSubGroup($id, $groupname);
 
-    	if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
 		}
 
@@ -227,11 +227,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
-  	}
+	}
 
 	public function testCreateReturnsValidDataResponse(): void {
 		$spacename = 'Space01';
-		
+
 		$this->spaceManager
 			->expects($this->once())
 			->method('create')
@@ -348,8 +348,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'SPACE-GE-33' => [
 						'gid' => 'SPACE-GE-33',
 						'displayName' => 'WM-Space33',
-						'types' =>
-							[
+						'types'
+							=> [
 								'Database'
 							],
 						'usersCount' => 0,
@@ -358,8 +358,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'SPACE-U-33' => [
 						'gid' => 'SPACE-U-33',
 						'displayName' => 'U-Space33',
-						'types' =>
-							[
+						'types'
+							=> [
 								'Database'
 							],
 						'usersCount' => 0,
@@ -470,7 +470,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			Http::STATUS_OK
 		)
 		;
- 
+
 		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
 		}
@@ -525,7 +525,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('getSpaceName')
 			->willReturn($spacename)
 		;
-		
+
 		$actual = $this->controller->addUsersInWorkspace($spaceId, $uids);
 
 		$expected = new DataResponse(
@@ -586,7 +586,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testEdit(): void {
 		$id = 1;
 		$params = [
-			'name' => 'Espace02',
+			'name' => 'Espace02 Modified',
 			'quota' => 214748364800, // 200Gb
 			'color' => '#ACB5AC',
 		];
@@ -668,7 +668,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$expected = new DataResponse($params, Http::STATUS_OK);
 
 		/** @var DataResponse */
-		$actual = $this->controller->edit($id, $params);
+		$actual = $this->controller->edit($id, $params['name'], $params['color'], $params['quota']);
 
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
@@ -678,7 +678,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testShouldAddUserAsWorkspaceManager(): void {
 		$uid = 'user1';
 		$id = 1;
-		
+
 		$user = $this->createMock(IUser::class);
 
 		$this->userManager
@@ -717,7 +717,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->expectException(InvalidParamException::class);
 		$this->expectExceptionMessage('The name key must be a string');
 
-		$this->controller->edit($id, $params);
+		$this->controller->edit($id, $params['name']);
 	}
 
 	public function testEditWithQuotaParamInString(): void {
@@ -735,7 +735,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->expectException(InvalidParamException::class);
 		$this->expectExceptionMessage('The quota key must be a integer');
 
-		$this->controller->edit($id, $params);
+		$this->controller->edit($id, null, null, $params['quota']);
 	}
 
 	public function testEditWithColorParamInInteger(): void {
@@ -753,7 +753,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->expectException(InvalidParamException::class);
 		$this->expectExceptionMessage('The color key must be a string');
 
-		$this->controller->edit($id, $params);
+		$this->controller->edit($id, null, $params['color']);
 	}
 
 	public function testShouldThrowOcsNotFoundWhenAddingUserAsWorkspaceManager(): void {

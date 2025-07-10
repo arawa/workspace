@@ -4,7 +4,6 @@ namespace OCA\Workspace\Tests\Unit\Group\SubGroups;
 
 use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Group\SubGroups\SubGroup;
-use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,7 +36,7 @@ class SubGroupTest extends TestCase {
 			->with($displayName)
 			->willReturn([])
 		;
-		
+
 		$this->groupManager
 			->expects($this->once())
 			->method('get')
@@ -70,7 +69,7 @@ class SubGroupTest extends TestCase {
 		$id = 1;
 		$spacename = 'Espace01';
 
-		$gidToSet = sprintf('%s%s-%s', SubGroup::PREFIX_GID, $groupname . "1", $id);
+		$gidToSet = sprintf('%s%s-%s', SubGroup::PREFIX_GID, $groupname . '1', $id);
 		$displayName = sprintf('%s%s-%s', SubGroup::PREFIX_DISPLAY_NAME, "$groupname", $spacename);
 
 		$existingGroup = $this->createMock(IGroup::class);
@@ -125,7 +124,7 @@ class SubGroupTest extends TestCase {
 				$this->onConsecutiveCalls($groupDuplicated)
 			)
 		;
-		
+
 		$this->groupManager
 			->expects($this->once())
 			->method('search')
@@ -141,7 +140,7 @@ class SubGroupTest extends TestCase {
 
 		$this->expectException(GroupException::class);
 		$this->expectExceptionMessage("The group with the display name $displayName already exists.");
-		
+
 		$this->subGroup->create($groupname, $id, $spacename);
 	}
 }

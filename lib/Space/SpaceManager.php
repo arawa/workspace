@@ -167,7 +167,7 @@ class SpaceManager {
 
 		return $groupsFormatted;
 	}
-	
+
 	/**
 	 * Create a subgroup to a workspace and attaches it in.
 	 * @param int $id is the space id.
@@ -331,6 +331,8 @@ class SpaceManager {
 			}
 		}
 
+		$this->spaceMapper->deleteSpace($spaceId);
+
 		$folderId = $space['groupfolder_id'];
 		$this->folderHelper->removeFolder($folderId);
 	}
@@ -485,7 +487,7 @@ class SpaceManager {
 		if (!$userGroup->inGroup($user)) {
 			$userGroup->addUser($user);
 		}
-		
+
 		$managerGroup->addUser($user);
 		$this->adminGroup->addUser($user, $spaceId);
 	}
