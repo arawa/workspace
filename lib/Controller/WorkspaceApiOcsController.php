@@ -25,11 +25,13 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Attribute\RequireExistingGroup;
 use OCA\Workspace\Attribute\RequireExistingSpace;
 use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
@@ -40,6 +42,7 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
@@ -417,4 +420,59 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 	}
 
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[RequireExistingGroup]
+	#[NoAdminRequired]
+	#[WorkspaceManagerRequired]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}/group/{gid}',
+		requirements: [
+			'id' => '\d+',
+			'gid' => '^[A-Za-z0-9\W]+'
+		]
+	)]
+	public function removeUsersFromGroup(int $id, string $gid, array $uids): Response {
+		$users = [];
+		$group = $this->groupManager->get($gid);
+
+		$usersNotFound = [];
+		foreach ($uids as $uid) {
+			$user = $this->userManager->get($uid);
+			if (is_null($user)) {
+				$usersNotFound[] = $uid;
+			}
+
+			$users[] = $user;
+		}
+
+		if (!empty($usersNotFound)) {
+			$usersNotFound = array_map(fn ($uid) => "- {$uid}", $usersNotFound);
+			$usersNotFound = implode("\n", $usersNotFound);
+			throw new OCSNotFoundException("These users not exist in your Nextcloud instance:\n{$usersNotFound}");
+		}
+
+		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
+
+		switch ($gid) {
+			case GroupsWorkspace::isWorkspaceUserGroupId($gid):
+				$space = $this->spaceManager->get($id);
+				$this->spaceManager->removeUsersFromUserGroup($space, $group, $users);
+				break;
+			case GroupsWorkspace::isWorkspaceSubGroup($gid) || GroupsWorkspace::isWorkspaceGroup($group):
+				$this->spaceManager->removeUsersFromSubGroup($group, $users);
+				break;
+			case GroupsWorkspace::isWorkspaceAdminGroupId($gid):
+				$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
+				break;
+			default:
+				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
+		}
+
+		$uids = implode(', ', $uids);
+		$this->logger->info("Users are removed from the {$gid} group (not the added groups) in the workspace {$id}");
+
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
+	}
 }
