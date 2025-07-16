@@ -48,6 +48,7 @@ use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\OCS\OCSBadRequestException;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUserManager;
@@ -462,6 +463,37 @@ class SpaceManager {
 			$managerGroup->removeUser($user);
 			$userGroup->removeUser($user);
 		}
+	}
+
+	/**
+	 * @var array<IUser> $users
+	 */
+	public function removeUsersFromSubGroup(IGroup $group, array $users): void {
+		foreach ($users as $user) {
+			$group->removeUser($user);
+		}
+	}
+
+	public function removeUsersFromUserGroup(array $space, IGroup $group, array $users): void {
+		$managerGroupGid = "SPACE-GE-{$space['id']}";
+		$managerGroup = $this->groupManager->get($managerGroupGid);
+
+		if (is_null($managerGroupGid)) {
+			throw new OCSNotFoundException("Impossible to found the group {$managerGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+		}
+
+		$gids = array_keys($space['groups']);
+		$gids = array_filter($gids, fn ($gid) => $gid !== $managerGroupGid);
+
+		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
+
+		foreach ($groups as $group) {
+			foreach ($users as $user) {
+				$group->removeUser($user);
+			}
+		}
+
+		$this->removeUsersFromWorkspaceManagerGroup($managerGroup, $users);
 	}
 
 	public function removeUsersFromWorkspaceManagerGroup(IGroup $group, array $users): void {
