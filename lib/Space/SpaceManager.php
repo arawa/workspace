@@ -523,4 +523,61 @@ class SpaceManager {
 		$managerGroup->addUser($user);
 		$this->adminGroup->addUser($user, $spaceId);
 	}
+
+	public function findAll(): ?array {
+		$workspaces = $this->workspaceService->getAll();
+
+		if (empty($workspaces)) {
+			return null;
+		}
+
+		$spaces = [];
+
+		foreach ($workspaces as $workspace) {
+			$folderInfo = $this->folderHelper->getFolder(
+				$workspace['groupfolder_id'],
+				$this->rootFolder->getRootFolderStorageId()
+			);
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			) : $workspace;
+
+			$gids = array_keys($space['groups'] ?? []);
+			$wsGroups = [];
+			$space['users'] = (object)[];
+			$addedGroups = [];
+
+			foreach ($gids as $gid) {
+				$group = $this->groupManager->get($gid);
+				if (is_null($group)) {
+					$this->logger->warning(
+						"Be careful, the $gid group does not exist in the oc_groups table."
+						. ' The group is still present in the oc_group_folders_groups table.'
+						. ' To fix this inconsistency, recreate the group using occ commands.'
+					);
+					continue;
+				}
+				if (UserGroup::isWorkspaceGroup($group)) {
+					$wsGroups[] = $group;
+				} else {
+					$addedGroups[] = $group;
+				}
+
+				if (UserGroup::isWorkspaceUserGroupId($gid)) {
+					$space['userCount'] = $group->count();
+				}
+			}
+
+			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
+			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+
+			$users = $this->workspaceService->addUsersInfo($space);
+			$space['users'] = $users;
+
+			$spaces[] = $space;
+		}
+
+		return $spaces;
+	}
 }
