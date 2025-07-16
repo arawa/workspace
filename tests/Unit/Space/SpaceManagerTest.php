@@ -1099,11 +1099,33 @@ class SpaceManagerTest extends TestCase {
 		$this->spaceManager->addUserAsWorkspaceManager($spaceId, $uid);
 	}
 
+	public function testRemoveUsersFromSubGroup(): void {
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+		
+		/** @var MockObject&IGroup */
+		$group = $this->createMock(IGroup::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+		];
+
+		$group
+			->expects($this->exactly(3))
+			->method('removeUser')
+		;
+
+		$this->spaceManager->removeUsersFromSubGroup($group, $users);
+	}
+
 	public function testRemoveUsersFromWorkspaceManagerGroup(): void {
 		$user1 = $this->createMock(IUser::class);
 		$user2 = $this->createMock(IUser::class);
 		$user3 = $this->createMock(IUser::class);
-
+		
 		/** @var MockObject&IGroup */
 		$group = $this->createMock(IGroup::class);
 
@@ -1126,7 +1148,6 @@ class SpaceManagerTest extends TestCase {
 
 		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
 	}
-
 
 	public function testAddUsersInWorkspaceThrowsExceptionForDoesntExistUsers(): void {
 		$spaceId = 1;
@@ -1152,5 +1173,145 @@ class SpaceManagerTest extends TestCase {
 		$this->expectExceptionMessage("These users not exist in your Nextcoud instance : \n- user42\n");
 
 		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
+	}
+	public function testRemoveUsersFromUserGroup(): void {
+		$managerGroupGid = 'SPACE-GE-1';
+		$userGroupGid = 'SPACE-U-1';
+		$space = [
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				],
+				'SPACE-G-HR-1' => [
+					'gid' => 'SPACE-G-HR-1',
+					'displayName' => 'G-HR-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-HR-1'
+				],
+				'SPACE-G-Admin-1' => [
+					'gid' => 'SPACE-G-Admin-1',
+					'displayName' => 'G-Admin-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-Admin-1'
+				],
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
+				]
+			],
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#5ca609',
+			'userCount' => 0,
+			'users' => [],
+			'added_groups' => []
+		];
+
+		$user01 = $this->createMock(IUser::class);
+		$user02 = $this->createMock(IUser::class);
+		$user03 = $this->createMock(IUser::class);
+		$user04 = $this->createMock(IUser::class);
+		
+		$users = [
+			$user01,
+			$user02,
+			$user03,
+			$user04,
+		];
+		
+		$managerGroup = $this->createMock(IGroup::class);
+		/** @var IGroup&MockObject */
+		$userGroup = $this->createMock(IGroup::class);
+		$hrSubgroup = $this->createMock(IGroup::class);
+		$adminSubGroup = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->exactly(4))
+			->method('get')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($managerGroupGid),
+					$this->equalTo($userGroupGid),
+					$this->equalTo('SPACE-G-HR-1'),
+					$this->equalTo('SPACE-G-Admin-1'),
+				)
+			)
+			->willReturn(
+				$managerGroup,
+				$userGroup,
+				$hrSubgroup,
+				$adminSubGroup,
+			)
+		;
+
+		$userGroup
+			->expects($this->exactly(4))
+			->method('removeUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user01),
+					$this->equalTo($user02),
+					$this->equalTo($user03),
+					$this->equalTo($user04),
+				)
+			)
+		;
+		
+		$hrSubgroup
+			->expects($this->exactly(4))
+			->method('removeUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user01),
+					$this->equalTo($user02),
+					$this->equalTo($user03),
+					$this->equalTo($user04),
+				)
+			)
+		;
+
+		$adminSubGroup
+			->expects($this->exactly(4))
+			->method('removeUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user01),
+					$this->equalTo($user02),
+					$this->equalTo($user03),
+					$this->equalTo($user04),
+				)
+			)
+		;
+
+		$this->spaceManager->removeUsersFromUserGroup($space, $userGroup, $users);
 	}
 }
