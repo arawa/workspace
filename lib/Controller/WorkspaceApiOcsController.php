@@ -34,6 +34,7 @@ use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
+use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
@@ -66,9 +67,52 @@ class WorkspaceApiOcsController extends OCSController {
 		private SpaceManager $spaceManager,
 		private WorkspaceEditParamsValidator $editParamsValidator,
 		private SpaceMapper $spaceMapper,
+		private UserService $userService,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+
+	/**
+	 * Return workspaces with the possibility to filter by name
+	 * 
+	 * @param string|null $name Optional filter to return workspaces by name
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
+	 * 
+	 * 200: Succesfully retrieved workspaces
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
+	public function findAll(?string $name): Response {
+		$workspaces = $this->spaceManager->findAll();
+
+		if (is_null($workspaces)) {
+			return new DataResponse(null, Http::STATUS_OK);
+		}
+
+		// We only want to return those workspaces for which the connected user is a manager
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
+				return $this->userService->isSpaceManagerOfSpace($workspace);
+			}));
+			$workspaces = $filteredWorkspaces;
+		}
+
+		if (!is_null($name)) {
+			$filterToLower = strtolower($name);
+			
+			$workspacesFiltered = [];
+			foreach ($workspaces as $workspace) {
+				if (strpos(strtolower($workspace['name']), $filterToLower) !== false) {
+					$workspacesFiltered[] = $workspace;
+				}
+			}
+
+			$workspaces = $workspacesFiltered ? $workspacesFiltered : null;
+		}
+
+		return new DataResponse($workspaces, Http::STATUS_OK);
 	}
 
 	/**
