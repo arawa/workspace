@@ -40,6 +40,7 @@ use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
@@ -579,5 +580,50 @@ class SpaceManager {
 		}
 
 		return $spaces;
+	}
+
+	/**
+	 * @var array<IUser> $users
+	 */
+	public function addUsersToGroup(IGroup $group, array $users): void {
+		foreach ($users as $user) {
+			$group->addUser($user);
+		}
+	}
+
+	/**
+	 * @var array<IUser> $users
+	 */
+	public function addUsersToSubGroup(array $space, IGroup $group, array $users): void {
+		$userGroupGid = "SPACE-U-{$space['id']}";
+		$userGroup = $this->groupManager->get($userGroupGid);
+		
+		if (is_null($userGroup)) {
+			throw new NotFoundException("Impossible to found the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+		}
+		
+		foreach ($users as $user) {
+			$group->addUser($user);
+			$userGroup->addUser($user);
+		}
+	}
+
+	/**
+	 * @var array<IUser> $users
+	 */
+	public function addUsersToWorkspaceManagerGroup(array $space, IGroup $group, array $users): void {
+		$userGroupGid = "SPACE-U-{$space['id']}";
+		$userGroup = $this->groupManager->get($userGroupGid);
+		$workspaceManagerGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
+
+		if (is_null($userGroup)) {
+			throw new NotFoundException("Impossible to found the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+		}
+
+		foreach ($users as $user) {
+			$group->addUser($user);
+			$workspaceManagerGroup->addUser($user);
+			$userGroup->addUser($user);
+		}
 	}
 }

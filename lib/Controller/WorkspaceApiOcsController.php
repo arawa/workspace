@@ -514,9 +514,76 @@ class WorkspaceApiOcsController extends OCSController {
 				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
 		}
 
+		// to remove
 		$uids = implode(', ', $uids);
 		$this->logger->info("Users are removed from the {$gid} group (not the added groups) in the workspace {$id}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
+	}
+
+	#[OpenAPI(tags: ['workspace-users'])]
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[RequireExistingGroup]
+	#[NoAdminRequired]
+	#[WorkspaceManagerGroup]
+	#[FrontpageRoute(
+		verb: 'POST',
+		url: '/api/v1/space/{id}/group/{gid}/users',
+		requirements: [
+			'id' => '\d+',
+			'gid' => '^[A-Za-z0-9\W]+'
+		]
+	)]
+	public function addUsersToGroup(int $id, string $gid, array $uids): Response {
+		$users = [];
+		$group = $this->groupManager->get($gid);
+		$workspace = $this->spaceManager->get($id);
+		$gids = array_keys($workspace['groups']);
+		$spacename = $workspace['name'];
+
+		if (!in_array($gid, $gids)) {
+			throw new OCSException("The {$gid} group is not belong to the {$spacename} workspace.");
+		}
+
+		$usersNotFound = [];
+		foreach ($uids as $uid) {
+			$user = $this->userManager->get($uid);
+			if (is_null($user)) {
+				$usersNotFound[] = $uid;
+				continue;
+			}
+
+			$users[] = $user;
+		}
+
+		if (!empty($usersNotFound)) {
+			$usersNotFound = array_map(fn ($uid) => "- {$uid}", $usersNotFound);
+			$usersNotFound = implode("\n", $usersNotFound);
+			throw new OCSNotFoundException("These users don't exist in your Nextcloud instance:\n{$usersNotFound}");
+		}
+
+		switch ($gid) {
+			case GroupsWorkspace::isWorkspaceUserGroupId($gid):
+				$this->spaceManager->addUsersToGroup($group, $users);
+				break;
+			case GroupsWorkspace::isWorkspaceAdminGroupId($gid):
+				$this->spaceManager->addUsersToWorkspaceManagerGroup($workspace, $group, $users);
+				break;
+			case GroupsWorkspace::isWorkspaceSubGroup($gid) || GroupsWorkspace::isWorkspaceGroup($group):
+				$this->spaceManager->addUsersToSubGroup($workspace, $group, $users);
+				break;
+			default:
+				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
+		}
+
+		$displayname = $group->getDisplayName();
+		$count = count($uids);
+
+		$this->logger->info("{$count} users were added in the {$displayname} ({$gid}) group from the {$spacename} workspace ({$id}).");
+
+		return new DataResponse([
+			'message' => "{$count} users were added in the {$displayname} ({$gid}) group from the {$spacename} workspace ({$id})."
+		], Http::STATUS_OK);
 	}
 }
