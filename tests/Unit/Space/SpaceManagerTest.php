@@ -1502,4 +1502,373 @@ class SpaceManagerTest extends TestCase {
 
 		$this->spaceManager->removeUsersFromUserGroup($space, $userGroup, $users);
 	}
+
+	public function testAddUsersToGroup(): void {
+		/** @var IGroup&MockObject */
+		$group = $this->createMock(IGroup::class);
+
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+		$user4 = $this->createMock(IUser::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+			$user4,
+		];
+
+		$group
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$this->spaceManager->addUsersToGroup($group, $users);
+	}
+
+	public function testAddUsersToSubGroup(): void {
+		/** @var IGroup&MockObject */
+		$group = $this->createMock(IGroup::class);
+
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+		$user4 = $this->createMock(IUser::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+			$user4,
+		];
+
+		$workspace = [
+			"id" => 1,
+			"mount_point" => "Espace01",
+			"groups" => [
+				"SPACE-GE-1" => [
+					"gid" => "SPACE-GE-1",
+					"displayName" => "WM-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-GE-1"
+				],
+				"SPACE-U-1" => [
+					"gid" => "SPACE-U-1",
+					"displayName" => "U-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 8,
+					"slug" => "SPACE-U-1"
+				],
+				"SPACE-G-Talk-1" => [
+					"gid" => "SPACE-G-Talk-1",
+					"displayName" => "G-Talk-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-G-Talk-1"
+				]
+			],
+			"quota" => -3,
+			"size" => 0,
+			"acl" => true,
+			"manage" => [
+				[
+					"type" => "group",
+					"id" => "SPACE-GE-1",
+					"displayname" => "WM-Espace01"
+				]
+			],
+			"groupfolder_id" => 1,
+			"name" => "Espace01",
+			"color_code" => "#ac1a8e",
+			"userCount" => 8,
+			"users" => [],
+			"added_groups" => []
+		];
+		
+		$group
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$userGroup = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->willReturn($userGroup)
+		;
+
+		$group
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$userGroup
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$this->spaceManager->addUsersToSubGroup($workspace, $group, $users);
+	}
+
+	public function testAddUsersToSubGroupWithUserGroupDoesNotExist(): void {
+		/** @var IGroup&MockObject */
+		$group = $this->createMock(IGroup::class);
+
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+		$user4 = $this->createMock(IUser::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+			$user4,
+		];
+
+		$workspace = [
+			"id" => 1,
+			"mount_point" => "Espace01",
+			"groups" => [
+				"SPACE-GE-1" => [
+					"gid" => "SPACE-GE-1",
+					"displayName" => "WM-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-GE-1"
+				],
+				"SPACE-U-1" => [
+					"gid" => "SPACE-U-1",
+					"displayName" => "U-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 8,
+					"slug" => "SPACE-U-1"
+				],
+				"SPACE-G-Talk-1" => [
+					"gid" => "SPACE-G-Talk-1",
+					"displayName" => "G-Talk-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-G-Talk-1"
+				]
+			],
+			"quota" => -3,
+			"size" => 0,
+			"acl" => true,
+			"manage" => [
+				[
+					"type" => "group",
+					"id" => "SPACE-GE-1",
+					"displayname" => "WM-Espace01"
+				]
+			],
+			"groupfolder_id" => 1,
+			"name" => "Espace01",
+			"color_code" => "#ac1a8e",
+			"userCount" => 8,
+			"users" => [],
+			"added_groups" => []
+		];
+		
+		$userGroup = null;
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->willReturn($userGroup)
+		;
+
+		$this->expectException(NotFoundException::class);
+
+		$this->spaceManager->addUsersToSubGroup($workspace, $group, $users);
+	}
+
+	public function testAddUsersToWorkspaceManagerGroup(): void {
+		/** @var IGroup&MockObject */
+		$group = $this->createMock(IGroup::class);
+
+		$user1 = $this->createMock(IUser::class);
+		$user2 = $this->createMock(IUser::class);
+		$user3 = $this->createMock(IUser::class);
+		$user4 = $this->createMock(IUser::class);
+
+		$users = [
+			$user1,
+			$user2,
+			$user3,
+			$user4,
+		];
+
+		$workspace = [
+			"id" => 1,
+			"mount_point" => "Espace01",
+			"groups" => [
+				"SPACE-GE-1" => [
+					"gid" => "SPACE-GE-1",
+					"displayName" => "WM-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-GE-1"
+				],
+				"SPACE-U-1" => [
+					"gid" => "SPACE-U-1",
+					"displayName" => "U-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 8,
+					"slug" => "SPACE-U-1"
+				],
+				"SPACE-G-Talk-1" => [
+					"gid" => "SPACE-G-Talk-1",
+					"displayName" => "G-Talk-Espace01",
+					"types" => [
+						"Database"
+					],
+					"usersCount" => 0,
+					"slug" => "SPACE-G-Talk-1"
+				]
+			],
+			"quota" => -3,
+			"size" => 0,
+			"acl" => true,
+			"manage" => [
+				[
+					"type" => "group",
+					"id" => "SPACE-GE-1",
+					"displayname" => "WM-Espace01"
+				]
+			],
+			"groupfolder_id" => 1,
+			"name" => "Espace01",
+			"color_code" => "#ac1a8e",
+			"userCount" => 8,
+			"users" => [],
+			"added_groups" => []
+		];
+		
+		$group
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$userGroup = $this->createMock(IGroup::class);
+		$workspaceManagerGroup = $this->createMock(IGroup::class);
+
+		$userGroupGid = "SPACE-U-1";
+		$workspaceManagerGid = "WorkspacesManagers";
+
+		$this->groupManager
+			->expects($this->exactly(2))
+			->method('get')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($userGroupGid),
+					$this->equalTo($workspaceManagerGid),
+				)
+			)
+			->willReturn(
+				$userGroup,
+				$workspaceManagerGroup,
+			)
+		;
+
+		$group
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$userGroup
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$workspaceManagerGroup
+			->expects($this->exactly(4))
+			->method('addUser')
+			->with(
+				$this->logicalOr(
+					$this->equalTo($user1),
+					$this->equalTo($user2),
+					$this->equalTo($user3),
+					$this->equalTo($user4),
+				)
+			)
+		;
+
+		$this->spaceManager->addUsersToWorkspaceManagerGroup($workspace, $group, $users);
+	}
 }
