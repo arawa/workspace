@@ -225,9 +225,9 @@
         "/index.php/apps/workspace/api/v1/spaces": {
             "get": {
                 "operationId": "workspace_api_ocs-find-all",
-                "summary": "Return workspaces with the possibility to filter by name",
+                "summary": "Return workspaces (optional filtering by name)",
                 "tags": [
-                    "workspace_api_ocs"
+                    "workspace"
                 ],
                 "security": [
                     {
@@ -1384,7 +1384,7 @@
                 "operationId": "workspace_api_ocs-remove-users-from-group",
                 "summary": "Remove users from a subgroup in a workspace",
                 "tags": [
-                    "workspace_api_ocs"
+                    "workspace-users"
                 ],
                 "security": [
                     {

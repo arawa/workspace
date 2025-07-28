@@ -88,8 +88,12 @@ WorkspaceApi.prototype.delete = async function(id) {
 	return await this._api('spaces/' + id, 'delete');
 };
 
-WorkspaceApi.prototype.listAll = async function() {
-	return await this._api('spaces');
+WorkspaceApi.prototype.listAll = async function(name = null) {
+	let data = null;
+	if (name !== null) {
+		data = { name: name };
+	}
+	return await this._api('spaces', 'get', data);
 };
 
 WorkspaceApi.prototype.create = async function(name) {
@@ -186,6 +190,7 @@ async function main() {
 			if (!await ask_continue()) { return; } 
 		}
 	}
+
 	// list all workspaces
 	if (options.step <= 2) {
 		console.log('Step 2: List all workspaces');
@@ -476,7 +481,22 @@ async function main() {
 			if (!await ask_continue()) { return; }
 		}
 	}
-
+	
+	// list workspaces with partial name "test"
+	if (options.step <= 30) {
+		console.log('Step 30: List all workspaces with "test" in name');
+		const res = await workspaceApi.listAll('test'); // trying to get a non-existing workspace
+		if (res === null) {
+			workspaceApi.logError('Error while getting workspaces');
+		} else {
+			Object.values(res).forEach((workspace) => {
+				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.userCount + ' - Quota : ' + workspace.quota);
+			});
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; } 
+		}
+	}
 	// Delete existing workspace
 	if (options.step <= 99 && current_workspace) {
 		console.log('Step 99: Delete Created Workspace');

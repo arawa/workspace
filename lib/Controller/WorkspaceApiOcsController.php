@@ -75,13 +75,14 @@ class WorkspaceApiOcsController extends OCSController {
 
 
 	/**
-	 * Return workspaces with the possibility to filter by name
+	 * Return workspaces (optional filtering by name)
 	 *
 	 * @param string|null $name Optional filter to return workspaces by name
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
 	 *
 	 * 200: Succesfully retrieved workspaces
 	 */
+	#[OpenAPI(tags: ['workspace'])]
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(?string $name): DataResponse {
@@ -476,6 +477,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 * 204: Users removed from subgroup successfully
 	 * 404: Subgroup with this id does not exist
 	 */
+	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[RequireExistingGroup]
