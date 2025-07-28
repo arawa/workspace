@@ -76,15 +76,15 @@ class WorkspaceApiOcsController extends OCSController {
 
 	/**
 	 * Return workspaces with the possibility to filter by name
-	 * 
+	 *
 	 * @param string|null $name Optional filter to return workspaces by name
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
-	 * 
+	 *
 	 * 200: Succesfully retrieved workspaces
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
-	public function findAll(?string $name): Response {
+	public function findAll(?string $name): DataResponse {
 		$workspaces = $this->spaceManager->findAll();
 
 		if (is_null($workspaces)) {
@@ -101,7 +101,7 @@ class WorkspaceApiOcsController extends OCSController {
 
 		if (!is_null($name)) {
 			$filterToLower = strtolower($name);
-			
+
 			$workspacesFiltered = [];
 			foreach ($workspaces as $workspace) {
 				if (strpos(strtolower($workspace['name']), $filterToLower) !== false) {
@@ -299,7 +299,7 @@ class WorkspaceApiOcsController extends OCSController {
 		url: '/api/v1/spaces/{id}/groups',
 		requirements: ['id' => '\d+'],
 	)]
-	public function findGroupsBySpaceId(int $id): Response {
+	public function findGroupsBySpaceId(int $id): DataResponse {
 		$groups = $this->spaceManager->findGroupsBySpaceId($id);
 		$this->logger->info("Successfully find groups from the {$id} workspace.");
 
@@ -326,7 +326,7 @@ class WorkspaceApiOcsController extends OCSController {
 		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
 	)]
-	public function addUsersInWorkspace(int $id, array $uids): Response {
+	public function addUsersInWorkspace(int $id, array $uids): DataResponse {
 		$this->spaceManager->addUsersInWorkspace($id, $uids);
 		$spacename = $this->spaceMapper->find($id)->getSpaceName();
 
@@ -358,7 +358,7 @@ class WorkspaceApiOcsController extends OCSController {
 		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
 	)]
-	public function removeUsersInWorkspace(int $id, array $uids): Response {
+	public function removeUsersInWorkspace(int $id, array $uids): DataResponse {
 		$this->spaceManager->removeUsersFromWorkspace($id, $uids);
 		$uidsStringify = implode(', ', $uids);
 		$this->logger->info("These users are removed from the workspace with the id {$id} : {$uidsStringify}");
@@ -455,7 +455,7 @@ class WorkspaceApiOcsController extends OCSController {
 			'id' => '\d+',
 		]
 	)]
-	public function createSubGroup(int $id, string $name): Response {
+	public function createSubGroup(int $id, string $name): DataResponse {
 		try {
 			$group = $this->spaceManager->createSubGroup($id, $name);
 			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
@@ -464,6 +464,18 @@ class WorkspaceApiOcsController extends OCSController {
 		}
 	}
 
+	/**
+	 * Remove users from a subgroup in a workspace
+	 *
+	 * @param int $id Represents the ID of the workspace
+	 * @param string $gid The subgroup id
+	 * @param list<string> $uids Represents the user uids to remove from the subgroup
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 * @throws OCSException for all unknown errors
+	 *
+	 * 204: Users removed from subgroup successfully
+	 * 404: Subgroup with this id does not exist
+	 */
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[RequireExistingGroup]
@@ -471,15 +483,18 @@ class WorkspaceApiOcsController extends OCSController {
 	#[WorkspaceManagerRequired]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/space/{id}/group/{gid}',
+		url: '/api/v1/spaces/{id}/groups/{gid}/users',
 		requirements: [
 			'id' => '\d+',
 			'gid' => '^[A-Za-z0-9\W]+'
 		]
 	)]
-	public function removeUsersFromGroup(int $id, string $gid, array $uids): Response {
+	public function removeUsersFromGroup(int $id, string $gid, array $uids): DataResponse {
 		$users = [];
 		$group = $this->groupManager->get($gid);
+		if ($group === null) {
+			throw new OCSNotFoundException("The group with the gid {$gid} does not exist.");
+		}
 
 		$usersNotFound = [];
 		foreach ($uids as $uid) {
@@ -521,6 +536,18 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 
+	/**
+	 * Add users in a subgroup in a workspace
+	 *
+	 * @param int $id Represents the ID of the workspace
+	 * @param string $gid The subgroup id
+	 * @param list<string> $uids Represents the user uids to add to the subgroup
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 * @throws OCSException for all unknown errors
+	 *
+	 * 200: Users removed from subgroup successfully
+	 * 404: Subgroup with this id does not exist
+	 */
 	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
@@ -529,7 +556,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[WorkspaceManagerGroup]
 	#[FrontpageRoute(
 		verb: 'POST',
-		url: '/api/v1/space/{id}/group/{gid}/users',
+		url: '/api/v1/spaces/{id}/groups/{gid}/users',
 		requirements: [
 			'id' => '\d+',
 			'gid' => '^[A-Za-z0-9\W]+'
@@ -537,13 +564,19 @@ class WorkspaceApiOcsController extends OCSController {
 	)]
 	public function addUsersToGroup(int $id, string $gid, array $uids): Response {
 		$users = [];
-		$group = $this->groupManager->get($gid);
 		$workspace = $this->spaceManager->get($id);
+		if ($workspace === null) {
+			throw new OCSNotFoundException("The workspace with the id {$id} does not exist.");
+		}
 		$gids = array_keys($workspace['groups']);
 		$spacename = $workspace['name'];
 
 		if (!in_array($gid, $gids)) {
 			throw new OCSException("The {$gid} group is not belong to the {$spacename} workspace.");
+		}
+		$group = $this->groupManager->get($gid);
+		if ($group === null) {
+			throw new OCSNotFoundException("The group with the gid {$gid} does not exist.");
 		}
 
 		$usersNotFound = [];

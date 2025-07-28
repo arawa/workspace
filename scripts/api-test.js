@@ -104,6 +104,10 @@ WorkspaceApi.prototype.addSubGroup = async function(id, name) {
 	return await this._api('spaces/'+id+'/groups', 'post', { name: name });
 };
 
+WorkspaceApi.prototype.removeSubGroup = async function(id, gid) {
+	return await this._api('spaces/'+id+'/groups/'+gid, 'delete');
+};
+
 WorkspaceApi.prototype.getGroups = async function(id) {
 	return await this._api('spaces/'+id+'/groups', 'get');
 };
@@ -115,6 +119,19 @@ WorkspaceApi.prototype.setWM = async function(id, uid, isWM = true) {
 WorkspaceApi.prototype.addUsers = async function(id, uids) {
 	return await this._api('spaces/'+id+'/users', 'post', { uids: uids });
 };
+
+WorkspaceApi.prototype.addUsersToGroup = async function(id, gid, uids) {
+	return await this._api('spaces/'+id+'/groups/' + gid + '/users', 'post', { uids: uids });
+};
+
+WorkspaceApi.prototype.removeUsersFromGroup = async function(id, gid, uids) {
+	return await this._api('spaces/'+id+'/groups/' + gid + '/users', 'delete', { uids: uids });
+};
+
+WorkspaceApi.prototype.getUsers = async function(id) {
+	return await this._api('spaces/'+id+'/users');
+};
+
 WorkspaceApi.prototype.removeUsers = async function(id, uids) {
 	return await this._api('spaces/'+id+'/users', 'delete', { uids: uids });
 };
@@ -141,12 +158,14 @@ async function main() {
 			login: 'admin',
 			key: 'xxx',
 			user: 'admin',
+			users: 'bob,alice' // comma separated list of users to add in the subgroup
 		},
 	});
 	config.loadFile(configPath);
 	const apiConf = config.get('api');
 
 	let current_workspace = options.id;
+	let current_subgroup = options.gid;
 	verbose = options.verbose;
 
 	// Verbose mode
@@ -172,7 +191,11 @@ async function main() {
 		console.log('Step 2: List all workspaces');
 		const res = await workspaceApi.listAll(); // trying to get a non-existing workspace
 		if (res === null) {
-			workspaceApi.logError('Error while getting workspace 9999');
+			workspaceApi.logError('Error while getting workspaces');
+		} else {
+			Object.values(res).forEach((workspace) => {
+				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.userCount + ' - Quota : ' + workspace.quota);
+			});
 		}
 		if (!options.yes) {
 			if (!await ask_continue()) { return; } 
@@ -255,6 +278,7 @@ async function main() {
 				console.log(JSON.stringify(res, null, 2));
 			} else {
 				console.log('Workspace: ' + spaceId + ' - Group ID: ' + res.gid);
+				current_subgroup = res.gid; // save the created gid
 			}
 		}
 		if (!options.yes) {
@@ -285,7 +309,7 @@ async function main() {
 		}
 	}
 
-	// Add user as in the workspace
+	// Add user in the workspace
 	if (options.step <= 8 ) {
 		console.log('Step 8: Add user in the Workspace');
 		const spaceId = current_workspace;
@@ -369,6 +393,90 @@ async function main() {
 		}
 	}
 
+	// Add users in the workspace
+	if (options.step <= 20 ) {
+		console.log('Step 20: Add users in the subgroup in the Workspace');
+		const spaceId = current_workspace;
+		const res = await workspaceApi.addUsersToGroup(spaceId, current_subgroup, apiConf.users.split(','));
+		if (res === null) {
+			workspaceApi.logError('Error while adding users in subgroup ' + current_subgroup + ' in space ' + spaceId);
+		} else {
+			if (verbose) {
+				console.log('Workspace: ' + spaceId);
+				console.log(JSON.stringify(res, null, 2));
+			} else {
+				console.log('Workspace: ' + spaceId);
+				console.log(res.message);
+			}
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; }
+		}
+	}
+
+	// get workspace users
+	if (options.step <= 21) {
+		console.log('Step 21: Get Worskpace Users');
+		const spaceId = current_workspace; // use the created workspace id or a default one
+		const res = await workspaceApi.getUsers(spaceId);
+		if (res === null) {
+			workspaceApi.logError('Error while getting workspace ' + spaceId + ' users');
+		} else {
+			if (verbose) {
+				console.log('Workspace ' + spaceId);
+				console.log(JSON.stringify(res, null, 2));
+			} else {
+				console.log('Workspace: ' + spaceId
+					+ Object.keys(res.users).length + ' users\n'
+					+ Object.keys(res.users));
+			}
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; }
+		}
+	}
+
+	// Remove users from group
+	if (options.step <= 22) {
+		console.log('Step 22: Remove Users in the subgroup in the Workspace');
+		const spaceId = current_workspace;
+		const res = await workspaceApi.removeUsersFromGroup(spaceId, current_subgroup, apiConf.users.split(','));
+		if (res === null) {
+			workspaceApi.logError('Error while removing users in subgroup ' + current_subgroup + ' in space ' + spaceId);
+		} else {
+			if (verbose) {
+				console.log('Workspace: ' + spaceId);
+				console.log(JSON.stringify(res, null, 2));
+			} else {
+				console.log('Workspace: ' + spaceId);
+				console.log(res.message);
+			}
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; }
+		}
+	}
+
+	// Delete subgroup in the workspace
+	if (options.step <= 23) {
+		console.log('Step 23: Delete subgroup "My SubGroup" in the created workspace');
+		const spaceId = current_workspace;
+		const res = await workspaceApi.removeSubGroup(spaceId, current_subgroup);
+		if (res === null) {
+			workspaceApi.logError('Error while removing subgroup ' + current_subgroup + ' in space ' + spaceId);
+		} else {
+			if (verbose) {
+				console.log('Workspace ' + spaceId);
+				console.log(JSON.stringify(res, null, 2));
+			} else {
+				console.log('Workspace: ' + spaceId + ' - Group ID: ' + current_subgroup);
+			}
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; }
+		}
+	}
+
 	// Delete existing workspace
 	if (options.step <= 99 && current_workspace) {
 		console.log('Step 99: Delete Created Workspace');
@@ -384,7 +492,7 @@ async function main() {
 			}
 		}
 		if (!options.yes && options.step == 0) {
-			if (!await ask_continue()) { return; } 
+			if (!await ask_continue()) { return; }
 		}
 	}
 
@@ -403,7 +511,7 @@ async function main() {
 			}
 		}
 		if (!options.yes) {
-			if (!await ask_continue()) { return; } 
+			if (!await ask_continue()) { return; }
 		}
 	}
 }
@@ -426,13 +534,18 @@ const options = yargs(process.argv.slice(2))
 		+ " 9 : promote user as Workspace Manager\n"
 		+ " 10 : degrade user from Workspace Manager as simple user\n"
 		+ " 11 : remove user from workspace\n"
-		+ " 99: delete workspace\n"
+		+ " 20 : add users in subgroup\n"
+		+ " 21 : list users from workspace\n"
+		+ " 22 : remove users from subgroup\n"
+		+ " 23 : remove subgroup\n"
+		+ " 99 : delete workspace\n"
 		+ " 110: create workspace with forbidden characters (will fail)\n"
 		, boolean: false, default: 0
 	})
  .options("y", {alias: "yes", describe: "Answer yes to all waiting inputs", boolean: true, default: false })
  .options("i", {alias: "id", describe: "Use this id as working workspace", boolean: false, default: 0})
- .options("v", { alias: "verbose", describe: "Verbose mode", boolean: true, default: false })
+ .options("g", {alias: "gid", describe: "Use this gid as subgroup id", boolean: false, default: 0})
+ .options("v", {alias: "verbose", describe: "Verbose mode", boolean: true, default: false })
  .help('h')
  .alias('V', 'version')
  .alias('h', 'help')
@@ -440,6 +553,9 @@ const options = yargs(process.argv.slice(2))
  .argv;
 
 if (!_exit.exited) {
-	await main();
+	main().then(() => {
+		rl.close();
+	}).catch((error) => {
+		console.error('An error occurred:', error);
+	});
 }
-rl.close();

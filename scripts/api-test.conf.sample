@@ -3,3 +3,5 @@ nextcloud = 'https://mynextcloud.com/'
 login = 'myadminlogin'
 key = 'myapp-nextcloud-key'
 user = 'myuser'
+# Subgroup added users
+users = 'bob,alice'
