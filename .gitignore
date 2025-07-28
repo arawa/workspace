@@ -3,3 +3,6 @@ vendor/
 js/*
 build/
 .php-cs-fixer.cache
+scripts/api-test.conf
+scripts/package-lock.json
+
