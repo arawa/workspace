@@ -546,7 +546,6 @@ class SpaceManager {
 
 			$gids = array_keys($space['groups'] ?? []);
 			$wsGroups = [];
-			$space['users'] = (object)[];
 			$addedGroups = [];
 
 			foreach ($gids as $gid) {
@@ -572,9 +571,6 @@ class SpaceManager {
 
 			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
 			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
-
-			$users = $this->workspaceService->addUsersInfo($space);
-			$space['users'] = $users;
 
 			$spaces[] = $space;
 		}

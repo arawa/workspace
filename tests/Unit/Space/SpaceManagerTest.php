@@ -1062,12 +1062,6 @@ class SpaceManagerTest extends TestCase {
 			])
 		;
 
-		$this->workspaceService
-			->expects($this->once())
-			->method('addUsersInfo')
-			->willReturn((object)[])
-		;
-
 		$actual = $this->spaceManager->findAll();
 
 		$expected = 
@@ -1108,7 +1102,6 @@ class SpaceManagerTest extends TestCase {
 					'groupfolder_id' => 1,
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
-					'users' => (object)[],
 					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
