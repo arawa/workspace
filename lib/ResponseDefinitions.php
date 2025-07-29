@@ -44,7 +44,7 @@ namespace OCA\Workspace;
  * 		groupfolder_id: int,
  * 		name: string,
  * 		color_code: string,
- * 		userCount: int,
+ * 		usersCount: int,
  * 		users: list<array{}>,
  * 		added_groups: list<array{}>
  * }

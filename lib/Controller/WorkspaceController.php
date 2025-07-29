@@ -177,7 +177,7 @@ class WorkspaceController extends Controller {
 				}
 
 				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['userCount'] = $group->count();
+					$space['usersCount'] = $group->count();
 				}
 			}
 

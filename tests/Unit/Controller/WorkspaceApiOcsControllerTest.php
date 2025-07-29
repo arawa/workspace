@@ -134,7 +134,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'name' => 'Espace04',
 			'color_code' => '#93b250',
 			'users' => (object)[],
-			'userCount' => 0,
+			'usersCount' => 0,
 			'added_groups' => (object)[]
 		];
 
@@ -185,7 +185,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'name' => 'Espace04',
 				'color_code' => '#93b250',
 				'users' => (object)[],
-				'userCount' => 0,
+				'usersCount' => 0,
 				'added_groups' => (object)[]
 			],
 			Http::STATUS_OK
@@ -247,7 +247,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'groupfolder_id' => 1,
 			'name' => 'Espace01',
 			'color_code' => '#5ca609',
-			'userCount' => 0,
+			'usersCount' => 0,
 			'users' => [],
 			'added_groups' => []
 		];
@@ -396,7 +396,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 						'displayname' => 'WM-Space01'
 					]
 				],
-				'userCount' => 0
+				'usersCount' => 0
 			]
 			)
 		;
@@ -441,7 +441,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 						'displayname' => 'WM-Space01'
 					]
 				],
-				'userCount' => 0
+				'usersCount' => 0
 			],
 			Http::STATUS_CREATED
 		)
@@ -497,7 +497,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
@@ -571,7 +571,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -611,7 +611,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace02',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -651,7 +651,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Human Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -691,7 +691,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Tech Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
@@ -737,7 +737,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'name' => 'Human Ressource',
 				'color_code' => '#46221f',
 				'users' => (object)[],
-				'userCount' => 0,
+				'usersCount' => 0,
 				'added_groups' => (object)[]
 			],
 			[
@@ -777,7 +777,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'name' => 'Tech Ressource',
 				'color_code' => '#46221f',
 				'users' => (object)[],
-				'userCount' => 0,
+				'usersCount' => 0,
 				'added_groups' => (object)[]
 			]
 		];
@@ -852,7 +852,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'groupfolder_id' => 20,
 				'name' => 'Space33',
 				'color_code' => '#0b63ec',
-				'userCount' => 0,
+				'usersCount' => 0,
 				'users' => [],
 				'added_groups' => (object)[],
 			])
@@ -930,7 +930,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -970,7 +970,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace02',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1010,7 +1010,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Human Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1050,7 +1050,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Tech Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
@@ -1116,7 +1116,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1156,7 +1156,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Human Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 			],
@@ -1211,7 +1211,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1251,7 +1251,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace02',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1291,7 +1291,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Human Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1331,7 +1331,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Tech Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
@@ -1377,7 +1377,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
 			]
@@ -1628,7 +1628,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'groupfolder_id' => 2,
 			'name' => 'Espace02',
 			'color_code' => '#ACB5AC',
-			'userCount' => 0,
+			'usersCount' => 0,
 			'users' => [],
 			'added_groups' => []
 		];
@@ -1926,7 +1926,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
@@ -2081,7 +2081,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
@@ -2230,7 +2230,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
@@ -2379,7 +2379,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
