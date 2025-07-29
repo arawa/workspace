@@ -28,9 +28,11 @@ use Mockery;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
@@ -51,16 +53,17 @@ use Psr\Log\LoggerInterface;
 
 class WorkspaceApiOcsControllerTest extends TestCase {
 
-	private IRequest&MockObject $request;
-	private LoggerInterface&MockObject $logger;
+	private GroupsWorkspaceService&MockObject $groupsWorkspaceService;
 	private IGroupManager&MockObject $groupManager;
+	private IRequest&MockObject $request;
 	private IUserManager&MockObject $userManager;
+	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
-	private WorkspaceEditParamsValidator&MockObject $editValidator;
 	private SpaceMapper&MockObject $spaceMapper;
-	private UserService&MockObject $userService;
 	private string $appName;
+	private UserService&MockObject $userService;
 	private WorkspaceApiOcsController $controller;
+	private WorkspaceEditParamsValidator&MockObject $editValidator;
 
 
 	private const CURRENT_USER_IS_GENERAL_MANAGER = true;
@@ -69,6 +72,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->appName = 'workspace';
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->groupsWorkspaceService = $this->createMock(GroupsWorkspaceService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
@@ -83,6 +87,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->userManager,
 			$this->spaceManager,
 			$this->editValidator,
+			$this->groupsWorkspaceService,
 			$this->spaceMapper,
 			$this->userService,
 			$this->appName
@@ -1871,6 +1876,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->controller->removeUsersFromGroup($id, $gid, $uids);
 	}
 
+
 	public function testAddUsersInSubgroup(): void {
 		$id = 1;
 		$gid = "SPACE-G-Talk-{$id}";
@@ -2553,5 +2559,64 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(DataResponse::class, $actual);
+	}
+
+	public function testRemoveGroup(): void {
+		$id = 1;
+		$gid = 'SPACE-G-HR-1';
+
+		$group = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->with($gid)
+			->willReturn($group)
+		;
+
+		$this->groupsWorkspaceService
+			->expects($this->once())
+			->method('removeGroup')
+			->with($group)
+		;
+
+		$actual = $this->controller->removeGroup($id, $gid);
+
+		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_NO_CONTENT, $actual->getStatus());
+		$this->assertInstanceOf(DataResponse::class, $actual);
+	}
+
+	public function testRemoveUserGroupThrowsException(): void {
+		$id = 1;
+		$gid = 'SPACE-U-1';
+
+		$group = $this->createMock(IGroup::class);
+
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->with($gid)
+			->willReturn($group)
+		;
+
+		$this->groupsWorkspaceService
+			->expects($this->once())
+			->method('removeGroup')
+			->with($group)
+			->willThrowException(new GroupException('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the system\'s functionality.'))
+		;
+
+		$this->expectException(OCSException::class);
+		$this->expectExceptionMessage('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the system\'s functionality.');
+
+		$this->controller->removeGroup($id, $gid);
 	}
 }
