@@ -157,6 +157,9 @@ export default {
 		title() {
 			return this.$route.params.space
 		},
+		space() {
+			return this.$store.state.spaces[this.$route.params.space]
+		},
 	},
 	beforeMount() {
 		const space = this.$store.state.spaces[this.$route.params.space]
