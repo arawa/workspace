@@ -597,11 +597,11 @@ class SpaceManager {
 	public function addUsersToSubGroup(array $space, IGroup $group, array $users): void {
 		$userGroupGid = "SPACE-U-{$space['id']}";
 		$userGroup = $this->groupManager->get($userGroupGid);
-		
+
 		if (is_null($userGroup)) {
 			throw new NotFoundException("Impossible to found the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
 		}
-		
+
 		foreach ($users as $user) {
 			$group->addUser($user);
 			$userGroup->addUser($user);
@@ -625,5 +625,34 @@ class SpaceManager {
 			$workspaceManagerGroup->addUser($user);
 			$userGroup->addUser($user);
 		}
+	}
+
+	/**
+	 * @param int $id represent the space id
+	 * @return array{
+	 *			uid: string,
+	 *			name: string,
+	 *			email: string,
+	 *			subtitle: string,
+	 *			groups: array,
+	 *			is_connected: bool,
+	 *			profile: string,
+	 *			role: string
+	 *	}
+	 */
+	public function findUsersById(int $id): array {
+		$workspace = $this->get($id);
+		$userGroupGid = $this->userGroup->get($id);
+		$group = $this->groupManager->get($userGroupGid);
+
+		if (is_null($group)) {
+			throw new NotFoundException("The user group {$userGroupGid} is not found");
+		}
+
+		$users = $group->getUsers();
+
+		$users = $this->userFormatter->formatUsers($users, $workspace, (string)$id);
+
+		return $users;
 	}
 }

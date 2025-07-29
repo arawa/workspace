@@ -32,8 +32,8 @@ use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -64,7 +64,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 
 	private const CURRENT_USER_IS_GENERAL_MANAGER = true;
-	
+
 	public function setUp(): void {
 		$this->appName = 'workspace';
 		$this->editValidator = $this->createMock(WorkspaceEditParamsValidator::class);
@@ -75,7 +75,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->userService = $this->createMock(UserService::class);
-		
+
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
 			$this->logger,
@@ -266,7 +266,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$user3 = $this->createMock(IUser::class);
 		$user4 = $this->createMock(IUser::class);
 		$user5 = $this->createMock(IUser::class);
-		
+
 		$this->userManager
 			->expects($this->any())
 			->method('get')
@@ -309,7 +309,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
-				
+
 		$actual = $this->controller->removeUsersFromGroup($id, $gid, $uids);
 
 		$this->assertEquals($expected, $actual);
@@ -458,8 +458,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	}
 
 	public function testFindAllAsGeneralManager(): void {
-		$spaces = 
-			[
+		$spaces
+			= [
 				[
 					'id' => 1,
 					'mount_point' => 'Espace01',
@@ -515,7 +515,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('isUserGeneralAdmin')
 			->willReturn(self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
-		
+
 		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
@@ -532,8 +532,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	}
 
 	public function testFindAllAsGeneralManagerWithSearchParameter(): void {
-		$spaces = 
-			[
+		$spaces
+			= [
 				[
 					'id' => 1,
 					'mount_point' => 'Espace01',
@@ -697,7 +697,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		;
 
-		$name = "reSsoUrcE";
+		$name = 'reSsoUrcE';
 
 		$spacesSearched = [
 			[
@@ -787,7 +787,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('findAll')
 			->willReturn($spaces)
 		;
-	
+
 		$this->userService
 			->expects($this->once())
 			->method('isUserGeneralAdmin')
@@ -891,8 +891,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	}
 
 	public function testFindAllAsWorkspaceManager(): void {
-		$spaces = 
-			[
+		$spaces
+			= [
 				[
 					'id' => 1,
 					'mount_point' => 'Espace01',
@@ -1056,7 +1056,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			]
 		;
 		$name = null;
-		
+
 		$this->spaceManager
 			->expects($this->once())
 			->method('findAll')
@@ -1074,7 +1074,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('isSpaceManagerOfSpace')
 			->willReturn(true, false, true, false)
 		;
-		
+
 		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
@@ -1172,8 +1172,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	}
 
 	public function testFindAllAsWorkspaceManagerWithSearchParameter(): void {
-		$spaces = 
-			[
+		$spaces
+			= [
 				[
 					'id' => 1,
 					'mount_point' => 'Espace01',
@@ -1211,7 +1211,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'usersCount' => 0,
+					'userCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1251,7 +1251,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Espace02',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'usersCount' => 0,
+					'userCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1291,7 +1291,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Human Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'usersCount' => 0,
+					'userCount' => 0,
 					'added_groups' => (object)[]
 				],
 				[
@@ -1331,58 +1331,58 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'name' => 'Tech Ressource',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'usersCount' => 0,
+					'userCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
 		;
 
-		$name = "space";
-		
+		$name = 'space';
+
 		$spacesSearched = [
-				[
-					'id' => 1,
-					'mount_point' => 'Espace01',
-					'groups' => [
-						'SPACE-GE-1' => [
-							'gid' => 'SPACE-GE-1',
-							'displayName' => 'WM-Espace01',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-GE-1'
+			[
+				'id' => 1,
+				'mount_point' => 'Espace01',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'gid' => 'SPACE-GE-1',
+						'displayName' => 'WM-Espace01',
+						'types' => [
+							'Database'
 						],
-						'SPACE-U-1' => [
-							'gid' => 'SPACE-U-1',
-							'displayName' => 'U-Espace01',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-U-1'
-						]
+						'usersCount' => 0,
+						'slug' => 'SPACE-GE-1'
 					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-1',
-							'displayname' => 'WM-Espace01'
-						]
-					],
-					'groupfolder_id' => 1,
-					'name' => 'Espace01',
-					'color_code' => '#46221f',
-					'users' => (object)[],
-					'usersCount' => 0,
-					'added_groups' => (object)[]
+					'SPACE-U-1' => [
+						'gid' => 'SPACE-U-1',
+						'displayName' => 'U-Espace01',
+						'types' => [
+							'Database'
+						],
+						'usersCount' => 0,
+						'slug' => 'SPACE-U-1'
+					]
 				],
-			]
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Espace01'
+					]
+				],
+				'groupfolder_id' => 1,
+				'name' => 'Espace01',
+				'color_code' => '#46221f',
+				'users' => (object)[],
+				'userCount' => 0,
+				'added_groups' => (object)[]
+			],
+		]
 		;
-		
+
 		$this->spaceManager
 			->expects($this->once())
 			->method('findAll')
@@ -1400,7 +1400,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('isSpaceManagerOfSpace')
 			->willReturn(true, false, true, false)
 		;
-		
+
 		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse($spacesSearched, Http::STATUS_OK);
@@ -1843,7 +1843,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$user3 = $this->createMock(IUser::class);
 		$user4 = null;
 		$user5 = $this->createMock(IUser::class);
-		
+
 		$this->userManager
 			->expects($this->any())
 			->method('get')
@@ -1864,7 +1864,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				$user5,
 			)
 		;
-		
+
 		$this->expectException(OCSNotFoundException::class);
 		$this->expectExceptionMessage("These users not exist in your Nextcloud instance:\n- user2\n- user4");
 
@@ -1882,53 +1882,53 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user4'
 		];
 		$workspace = [
-			"id" => 1,
-			"mount_point" => "Espace01",
-			"groups" => [
-				"SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Espace01",
-					"types" => [
-						"Database"
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
 				],
-				"SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 8,
-					"slug" => "SPACE-U-1"
+					'usersCount' => 8,
+					'slug' => 'SPACE-U-1'
 				],
-				"SPACE-G-Talk-1" => [
-					"gid" => "SPACE-G-Talk-1",
-					"displayName" => "G-Talk-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-G-Talk-1' => [
+					'gid' => 'SPACE-G-Talk-1',
+					'displayName' => 'G-Talk-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-G-Talk-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-Talk-1'
 				]
 			],
-			"quota" => -3,
-			"size" => 0,
-			"acl" => true,
-			"manage" => [
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
 				[
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Espace01"
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
 				]
 			],
-			"groupfolder_id" => 1,
-			"name" => "Espace01",
-			"color_code" => "#ac1a8e",
-			"usersCount" => 8,
-			"users" => [],
-			"added_groups" => []
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#ac1a8e',
+			'userCount' => 8,
+			'users' => [],
+			'added_groups' => []
 		];
 		$spacename = 'Espace01';
 
@@ -1998,7 +1998,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('addUsersToSubGroup')
 			->with($workspace, $group, $users)
 		;
-		
+
 		$group
 			->expects($this->once())
 			->method('getDisplayName')
@@ -2006,7 +2006,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$count = count($uids);
-		
+
 		$actual = $this->controller->addUsersToGroup($id, $gid, $uids);
 
 		$expected = new DataResponse(
@@ -2026,6 +2026,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
+
 	public function testAddUsersInUserGroup(): void {
 		$id = 1;
 		$gid = "SPACE-U-{$id}";
@@ -2037,53 +2038,53 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user4'
 		];
 		$workspace = [
-			"id" => 1,
-			"mount_point" => "Espace01",
-			"groups" => [
-				"SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Espace01",
-					"types" => [
-						"Database"
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
 				],
-				"SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 8,
-					"slug" => "SPACE-U-1"
+					'usersCount' => 8,
+					'slug' => 'SPACE-U-1'
 				],
-				"SPACE-G-Talk-1" => [
-					"gid" => "SPACE-G-Talk-1",
-					"displayName" => "G-Talk-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-G-Talk-1' => [
+					'gid' => 'SPACE-G-Talk-1',
+					'displayName' => 'G-Talk-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-G-Talk-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-Talk-1'
 				]
 			],
-			"quota" => -3,
-			"size" => 0,
-			"acl" => true,
-			"manage" => [
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
 				[
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Espace01"
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
 				]
 			],
-			"groupfolder_id" => 1,
-			"name" => "Espace01",
-			"color_code" => "#ac1a8e",
-			"usersCount" => 8,
-			"users" => [],
-			"added_groups" => []
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#ac1a8e',
+			'userCount' => 8,
+			'users' => [],
+			'added_groups' => []
 		];
 		$spacename = 'Espace01';
 
@@ -2147,7 +2148,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('addUsersToGroup')
 			->with($group, $users)
 		;
-		
+
 		$group
 			->expects($this->once())
 			->method('getDisplayName')
@@ -2155,7 +2156,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$count = count($uids);
-		
+
 		$actual = $this->controller->addUsersToGroup($id, $gid, $uids);
 
 		$expected = new DataResponse(
@@ -2175,6 +2176,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
+
 	public function testAddUsersInWorkspaceManagerGroup(): void {
 		$id = 1;
 		$gid = "SPACE-GE-{$id}";
@@ -2186,53 +2188,53 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user4'
 		];
 		$workspace = [
-			"id" => 1,
-			"mount_point" => "Espace01",
-			"groups" => [
-				"SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Espace01",
-					"types" => [
-						"Database"
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
 				],
-				"SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 8,
-					"slug" => "SPACE-U-1"
+					'usersCount' => 8,
+					'slug' => 'SPACE-U-1'
 				],
-				"SPACE-G-Talk-1" => [
-					"gid" => "SPACE-G-Talk-1",
-					"displayName" => "G-Talk-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-G-Talk-1' => [
+					'gid' => 'SPACE-G-Talk-1',
+					'displayName' => 'G-Talk-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-G-Talk-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-Talk-1'
 				]
 			],
-			"quota" => -3,
-			"size" => 0,
-			"acl" => true,
-			"manage" => [
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
 				[
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Espace01"
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
 				]
 			],
-			"groupfolder_id" => 1,
-			"name" => "Espace01",
-			"color_code" => "#ac1a8e",
-			"usersCount" => 8,
-			"users" => [],
-			"added_groups" => []
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#ac1a8e',
+			'userCount' => 8,
+			'users' => [],
+			'added_groups' => []
 		];
 		$spacename = 'Espace01';
 
@@ -2296,7 +2298,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('addUsersToWorkspaceManagerGroup')
 			->with($workspace, $group, $users)
 		;
-		
+
 		$group
 			->expects($this->once())
 			->method('getDisplayName')
@@ -2304,7 +2306,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$count = count($uids);
-		
+
 		$actual = $this->controller->addUsersToGroup($id, $gid, $uids);
 
 		$expected = new DataResponse(
@@ -2335,53 +2337,53 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user42'
 		];
 		$workspace = [
-			"id" => 1,
-			"mount_point" => "Espace01",
-			"groups" => [
-				"SPACE-GE-1" => [
-					"gid" => "SPACE-GE-1",
-					"displayName" => "WM-Espace01",
-					"types" => [
-						"Database"
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-GE-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
 				],
-				"SPACE-U-1" => [
-					"gid" => "SPACE-U-1",
-					"displayName" => "U-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 8,
-					"slug" => "SPACE-U-1"
+					'usersCount' => 8,
+					'slug' => 'SPACE-U-1'
 				],
-				"SPACE-G-Talk-1" => [
-					"gid" => "SPACE-G-Talk-1",
-					"displayName" => "G-Talk-Espace01",
-					"types" => [
-						"Database"
+				'SPACE-G-Talk-1' => [
+					'gid' => 'SPACE-G-Talk-1',
+					'displayName' => 'G-Talk-Espace01',
+					'types' => [
+						'Database'
 					],
-					"usersCount" => 0,
-					"slug" => "SPACE-G-Talk-1"
+					'usersCount' => 0,
+					'slug' => 'SPACE-G-Talk-1'
 				]
 			],
-			"quota" => -3,
-			"size" => 0,
-			"acl" => true,
-			"manage" => [
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
 				[
-					"type" => "group",
-					"id" => "SPACE-GE-1",
-					"displayname" => "WM-Espace01"
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
 				]
 			],
-			"groupfolder_id" => 1,
-			"name" => "Espace01",
-			"color_code" => "#ac1a8e",
-			"usersCount" => 8,
-			"users" => [],
-			"added_groups" => []
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#ac1a8e',
+			'userCount' => 8,
+			'users' => [],
+			'added_groups' => []
 		];
 		$spacename = 'Espace01';
 
@@ -2427,7 +2429,129 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$this->expectException(OCSNotFoundException::class);
 		$this->expectExceptionMessage("These users don't exist in your Nextcloud instance:\n- user42");
-		
+
 		$this->controller->addUsersToGroup($id, $gid, $uids);
+	}
+
+	public function testFindUsersById(): void {
+		$id = 1;
+		$usersFormatted = [
+			'robotunit0-1' => [
+				'uid' => 'robotunit0-1',
+				'name' => 'robotunit0-1',
+				'email' => 'robotunit0-1@planetexpress.com',
+				'subtitle' => 'robotunit0-1@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-1',
+				'role' => 'user'
+			],
+			'robotunit0-2' => [
+				'uid' => 'robotunit0-2',
+				'name' => 'robotunit0-2',
+				'email' => 'robotunit0-2@planetexpress.com',
+				'subtitle' => 'robotunit0-2@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-2',
+				'role' => 'user'
+			],
+			'robotunit0-3' => [
+				'uid' => 'robotunit0-3',
+				'name' => 'robotunit0-3',
+				'email' => 'robotunit0-3@planetexpress.com',
+				'subtitle' => 'robotunit0-3@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-3',
+				'role' => 'user'
+			],
+			'robotunit0-4' => [
+				'uid' => 'robotunit0-4',
+				'name' => 'robotunit0-4',
+				'email' => 'robotunit0-4@planetexpress.com',
+				'subtitle' => 'robotunit0-4@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-4',
+				'role' => 'user'
+			],
+			'robotunit0-5' => [
+				'uid' => 'robotunit0-5',
+				'name' => 'robotunit0-5',
+				'email' => 'robotunit0-5@planetexpress.com',
+				'subtitle' => 'robotunit0-5@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-5',
+				'role' => 'user'
+			],
+			'robotunit0-6' => [
+				'uid' => 'robotunit0-6',
+				'name' => 'robotunit0-6',
+				'email' => 'robotunit0-6@planetexpress.com',
+				'subtitle' => 'robotunit0-6@planetexpress.com',
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/robotunit0-6',
+				'role' => 'user'
+			],
+			'user1' => [
+				'uid' => 'user1',
+				'name' => 'user1',
+				'email' => null,
+				'subtitle' => null,
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/user1',
+				'role' => 'user'
+			],
+			'user2' => [
+				'uid' => 'user2',
+				'name' => 'user2',
+				'email' => null,
+				'subtitle' => null,
+				'groups' => [
+					'SPACE-U-1'
+				],
+				'is_connected' => false,
+				'profile' => 'http =>//stable30.local/index.php/u/user2',
+				'role' => 'user'
+			]
+		];
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('findUsersById')
+			->with($id)
+			->willReturn($usersFormatted)
+		;
+
+		$actual = $this->controller->findUsersById($id);
+
+		$expected = new DataResponse($usersFormatted, Http::STATUS_OK);
+
+		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
+			return;
+		}
+
+		$this->assertEquals($expected, $actual);
+		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertInstanceOf(DataResponse::class, $actual);
 	}
 }
