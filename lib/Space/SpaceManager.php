@@ -155,7 +155,7 @@ class SpaceManager {
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
 			'manage' => $groupfolder['manage'],
-			'userCount' => 0
+			'usersCount' => 0
 		];
 	}
 
@@ -202,7 +202,7 @@ class SpaceManager {
 	 * 	groupfolder_id: int,
 	 * 	name: string,
 	 * 	color_code: string,
-	 *  userCount: int,
+	 *  usersCount: int,
 	 *  users: array<Object>
 	 *  added_groups: array<Object>
 	 * }
@@ -246,7 +246,7 @@ class SpaceManager {
 			}
 
 			if (UserGroup::isWorkspaceUserGroupId($gid)) {
-				$workspace['userCount'] = $group->count();
+				$workspace['usersCount'] = $group->count();
 			}
 		}
 
@@ -566,7 +566,7 @@ class SpaceManager {
 				}
 
 				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['userCount'] = $group->count();
+					$space['usersCount'] = $group->count();
 				}
 			}
 

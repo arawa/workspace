@@ -337,7 +337,7 @@ class SpaceManagerTest extends TestCase {
 			'name' => 'Espace04',
 			'color_code' => '#93b250',
 			'users' => [],
-			'userCount' => 0,
+			'usersCount' => 0,
 			'added_groups' => (object)[]
 		];
 
@@ -569,7 +569,7 @@ class SpaceManagerTest extends TestCase {
 						'displayname' => 'WM-Espace01',
 					],
 				],
-				'userCount' => 0,
+				'usersCount' => 0,
 			]
 		);
 	}
@@ -1109,7 +1109,7 @@ class SpaceManagerTest extends TestCase {
 					'name' => 'Espace01',
 					'color_code' => '#46221f',
 					'users' => (object)[],
-					'userCount' => 0,
+					'usersCount' => 0,
 					'added_groups' => (object)[]
 				]
 			]
@@ -1419,7 +1419,7 @@ class SpaceManagerTest extends TestCase {
 			'groupfolder_id' => 1,
 			'name' => 'Espace01',
 			'color_code' => '#5ca609',
-			'userCount' => 0,
+			'usersCount' => 0,
 			'users' => [],
 			'added_groups' => []
 		];
@@ -1596,7 +1596,7 @@ class SpaceManagerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
@@ -1712,7 +1712,7 @@ class SpaceManagerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
@@ -1791,7 +1791,7 @@ class SpaceManagerTest extends TestCase {
 			"groupfolder_id" => 1,
 			"name" => "Espace01",
 			"color_code" => "#ac1a8e",
-			"userCount" => 8,
+			"usersCount" => 8,
 			"users" => [],
 			"added_groups" => []
 		];
