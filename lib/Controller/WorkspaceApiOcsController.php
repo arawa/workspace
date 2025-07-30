@@ -210,6 +210,29 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse($toSet, Http::STATUS_OK);
 	}
 
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[WorkspaceManagerRequired]
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/api/v1/spaces/{id}/users',
+		requirements: ['id' => '\d+']
+	)]
+	public function findUsersById(int $id): Response {
+		try {
+			$users = $this->spaceManager->findUsersById($id);
+		} catch (\Exception $e) {
+			if ($e instanceof NotFoundException) {
+				throw new OCSNotFoundException($e->getMessage());
+			}
+
+			throw new OCSException($e->getMessage(), $e->getCode());
+		}
+
+		return new DataResponse($users, Http::STATUS_OK);
+	}
+
 	/**
 	 * Create a new workspace
 	 *
