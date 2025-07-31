@@ -32,6 +32,7 @@ use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
+use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
 use OCA\Workspace\Service\UserService;
@@ -66,6 +67,7 @@ class WorkspaceApiOcsController extends OCSController {
 		private IUserManager $userManager,
 		private SpaceManager $spaceManager,
 		private WorkspaceEditParamsValidator $editParamsValidator,
+		private GroupsWorkspaceService $groupsWorkspaceService,
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
 		public $appName,
@@ -643,5 +645,28 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse([
 			'message' => "{$count} users were added in the {$displayname} ({$gid}) group from the {$spacename} workspace ({$id})."
 		], Http::STATUS_OK);
+	}
+
+	#[OpenAPI(tags: ['workspace-groups'])]
+	#[SpaceIdNumber]
+	#[RequireExistingSpace]
+	#[RequireExistingGroup]
+	#[NoAdminRequired]
+	#[WorkspaceManagerGroup]
+	#[FrontpageRoute(
+		verb: 'DELETE',
+		url: '/api/v1/space/{id}/subgroup/{gid}',
+		requirements: ['id' => '\d+']
+	)]
+	public function removeGroup(int $id, string $gid): Response {
+		$group = $this->groupManager->get($gid);
+
+		try {
+			$this->groupsWorkspaceService->removeGroup($group);
+		} catch (\Exception $e) {
+			throw new OCSException($e->getMessage(), $e->getCode());
+		}
+
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 }
