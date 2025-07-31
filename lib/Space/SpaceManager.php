@@ -637,7 +637,7 @@ class SpaceManager {
 	 *	}
 	 */
 	public function findUsersById(int $id): array {
-		$workspace = $this->get($id);
+		$space = $this->spaceMapper->find($id);
 		$userGroupGid = $this->userGroup->get($id);
 		$group = $this->groupManager->get($userGroupGid);
 
@@ -645,6 +645,12 @@ class SpaceManager {
 			throw new NotFoundException("The user group {$userGroupGid} is not found");
 		}
 
+		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		if ($groupfolder === false) {
+			throw new NotFoundException("The groupfolder {$space->getGroupfolderId()} is not found");
+		}
+
+		$workspace = array_merge($groupfolder, $space->jsonSerialize());
 		$users = $group->getUsers();
 
 		$users = $this->userFormatter->formatUsers($users, $workspace, (string)$id);

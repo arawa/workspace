@@ -71,6 +71,19 @@ namespace OCA\Workspace;
  * 		message: string
  * }
  *
+ * @psalm-type WorkspaceUsersList = array<string, WorkspaceUserDefinition>
+ *
+ * @psalm-type WorkspaceUserDefinition = array{
+ *		uid: string,
+ *		name: string,
+ *		email: string,
+ *		subtitle: string,
+ *		groups: list<string>,
+ *		is_connected: bool,
+ *		profile: string,
+ *		role: string
+ * }
+ *
  */
 class ResponseDefinitions {
 }
