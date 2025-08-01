@@ -26,6 +26,7 @@ namespace OCA\Workspace\Group\SubGroups;
 
 use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCP\AppFramework\Http;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
@@ -73,7 +74,7 @@ class SubGroup {
 
 		if (!is_null($group)) {
 			if (in_array($displayName, $groupnames)) {
-				throw new GroupException("The group with the display name $displayName already exists.");
+				throw new GroupException("The group with the display name $displayName already exists.", Http::STATUS_CONFLICT);
 			}
 		}
 
