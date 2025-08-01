@@ -45,7 +45,6 @@ namespace OCA\Workspace;
  * 		name: string,
  * 		color_code: string,
  * 		usersCount: int,
- * 		users: list<array{}>,
  * 		added_groups: list<array{}>
  * }
  *
@@ -69,6 +68,19 @@ namespace OCA\Workspace;
  *
  * @psalm-type WorkspaceConfirmationMessage = array{
  * 		message: string
+ * }
+ *
+ * @psalm-type WorkspaceUsersList = array<string, WorkspaceUserDefinition>
+ *
+ * @psalm-type WorkspaceUserDefinition = array{
+ *		uid: string,
+ *		name: string,
+ *		email: string,
+ *		subtitle: string,
+ *		groups: list<string>,
+ *		is_connected: bool,
+ *		profile: string,
+ *		role: string
  * }
  *
  */

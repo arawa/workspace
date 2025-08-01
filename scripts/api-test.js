@@ -199,7 +199,7 @@ async function main() {
 			workspaceApi.logError('Error while getting workspaces');
 		} else {
 			Object.values(res).forEach((workspace) => {
-				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.userCount + ' - Quota : ' + workspace.quota);
+				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.usersCount + ' - Quota : ' + workspace.quota);
 			});
 		}
 		if (!options.yes) {
@@ -432,8 +432,10 @@ async function main() {
 				console.log(JSON.stringify(res, null, 2));
 			} else {
 				console.log('Workspace: ' + spaceId
-					+ Object.keys(res.users).length + ' users\n'
-					+ Object.keys(res.users));
+					+ ' - ' + Object.keys(res).length + ' users');
+				Object.values(res).forEach((user) => {
+					console.log(' - User ID: ' + user.uid + ' - Name: ' + user.name + ' - Email : ' + user.email);
+				});
 			}
 		}
 		if (!options.yes) {
@@ -490,7 +492,7 @@ async function main() {
 			workspaceApi.logError('Error while getting workspaces');
 		} else {
 			Object.values(res).forEach((workspace) => {
-				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.userCount + ' - Quota : ' + workspace.quota);
+				console.log(' - Worspace ID: ' + workspace.id + ' - Name: ' + workspace.name + ' - Users : ' + workspace.usersCount + ' - Quota : ' + workspace.quota);
 			});
 		}
 		if (!options.yes) {

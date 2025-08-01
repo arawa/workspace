@@ -58,6 +58,8 @@ use Psr\Log\LoggerInterface;
  * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
  * @psalm-import-type WorkspaceFindGroups from ResponseDefinitions
  * @psalm-import-type WorkspaceConfirmationMessage from ResponseDefinitions
+ * @psalm-import-type WorkspaceUsersList from ResponseDefinitions
+ * @psalm-import-type WorkspaceUserDefinition from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
 	public function __construct(
@@ -212,6 +214,15 @@ class WorkspaceApiOcsController extends OCSController {
 		return new DataResponse($toSet, Http::STATUS_OK);
 	}
 
+	/**
+	 * Returns the users from a workspace.
+	 *
+	 * @param int $id Represents the ID of the workspace.
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceUsersList, array{}>
+	 *
+	 * 200: Users of the specified workspace returned successfully.
+	 */
+	#[OpenAPI(tags: ['workspace-users'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
@@ -647,6 +658,15 @@ class WorkspaceApiOcsController extends OCSController {
 		], Http::STATUS_OK);
 	}
 
+	/**
+	 * Remove a subgroup from a workspace	 *
+	 * @param int $id Id of the workspace
+	 * @param string $gid id of the subgroup to delete
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 *
+	 * 200: Subgroup deleted successfully
+	 * 404: Workspace not found
+	 */
 	#[OpenAPI(tags: ['workspace-groups'])]
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
@@ -655,7 +675,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[WorkspaceManagerGroup]
 	#[FrontpageRoute(
 		verb: 'DELETE',
-		url: '/api/v1/space/{id}/subgroup/{gid}',
+		url: '/api/v1/spaces/{id}/groups/{gid}',
 		requirements: ['id' => '\d+']
 	)]
 	public function removeGroup(int $id, string $gid): Response {
