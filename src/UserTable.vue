@@ -166,11 +166,13 @@ export default {
 			})
 		},
 		isSubgroup() {
-			if (this.$route.params.slug.startsWith('SPACE-G-')) {
+			if (decodeURIComponent(decodeURIComponent(this.$route.params.slug)).startsWith('SPACE-G-')) {
 				return true
 			}
+
 			// old legacy local G-
-			const groupName = this.$store.getters.groupName(this.$route.params.space, this.$route.params.slug)
+			const groupName = this.$store.getters.groupName(this.$route.params.space, decodeURIComponent(decodeURIComponent(this.$route.params.slug)))
+
 			return groupName.startsWith('G-')
 		},
 	},
