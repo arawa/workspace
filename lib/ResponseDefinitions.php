@@ -45,7 +45,6 @@ namespace OCA\Workspace;
  * 		name: string,
  * 		color_code: string,
  * 		usersCount: int,
- * 		users: list<array{}>,
  * 		added_groups: list<array{}>
  * }
  *
