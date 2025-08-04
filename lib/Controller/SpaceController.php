@@ -28,6 +28,7 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\SpaceService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
@@ -41,24 +42,20 @@ class SpaceController extends Controller {
 		parent::__construct($AppName, $request);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function find(int $id): DataResponse {
 		return new DataResponse($this->spaceService->find($id));
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function findAll(): DataResponse {
 		return new DataResponse($this->spaceService->findAll());
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
+	#[NoAdminRequired]
 	public function updateColorCode(string $colorCode, int $spaceId): DataResponse {
 		return new DataResponse($this->spaceService->updateColorCode($colorCode, (int)$spaceId));
 	}

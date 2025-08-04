@@ -14,6 +14,7 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
@@ -38,12 +39,12 @@ class ConnectedGroupController extends Controller {
 	 *
 	 * Add a group connected to a workspace/groupfolder.
 	 *
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * @param int $spaceId
 	 * @param string $gid
 	 */
+	#[NoAdminRequired]
 	public function addGroup(int $spaceId, string $gid): JSONResponse {
 
 		if (!$this->groupManager->groupExists($gid)) {
@@ -119,9 +120,9 @@ class ConnectedGroupController extends Controller {
 	/**
 	 * Remove a group connected to a workspace/groupfolder.
 	 *
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
+	#[NoAdminRequired]
 	public function removeGroup(int $spaceId, string $gid) {
 		if (!$this->groupManager->groupExists($gid)) {
 			$message = sprintf('The group %s does not exist', $gid);

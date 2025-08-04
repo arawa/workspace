@@ -28,6 +28,8 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\Util;
@@ -41,10 +43,9 @@ class PageController extends Controller {
 
 	/**
 	 * Application's main page
-	 *
-	 * @NoAdminRequired
-	 * @NOCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
