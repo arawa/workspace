@@ -40,6 +40,7 @@ use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Collaboration\Collaborators\ISearch;
 use OCP\IGroupManager;
@@ -70,7 +71,6 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * Creates a group
@@ -83,6 +83,7 @@ class GroupController extends Controller {
 	 * @var string $spaceId for Middleware
 	 *
 	 */
+	#[NoAdminRequired]
 	public function create(array $data = []): JSONResponse {
 
 		$data = array_merge(self::DEFAULT, $data);
@@ -113,7 +114,6 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * Deletes a group
@@ -123,6 +123,7 @@ class GroupController extends Controller {
 	 * @var int $spaceId
 	 *
 	 */
+	#[NoAdminRequired]
 	public function delete(string $gid, int $spaceId): JSONResponse {
 		$gid = urldecode(urldecode($gid));
 
@@ -147,7 +148,6 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * Renames a group
@@ -158,6 +158,7 @@ class GroupController extends Controller {
 	 * @var int $spaceId
 	 *
 	 */
+	#[NoAdminRequired]
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
@@ -191,7 +192,6 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 * Adds a user to a group.
 	 * The function automaticaly adds the user the the corresponding workspace's user group, and to the application
@@ -202,6 +202,7 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
+	#[NoAdminRequired]
 	public function addUser(string $spaceId, string $gid, string $user): JSONResponse {
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
@@ -241,7 +242,6 @@ class GroupController extends Controller {
 	/**
 	 * Remove a user from a workspace.
 	 *
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * @param array|string $space
@@ -249,6 +249,7 @@ class GroupController extends Controller {
 	 * @param string $user
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	public function removeUserFromWorkspace(
 		array|string $space,
 		string $gid,
@@ -298,7 +299,6 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * Removes a user from a group
@@ -310,6 +310,7 @@ class GroupController extends Controller {
 	 * @var string $user
 	 *
 	 */
+	#[NoAdminRequired]
 	public function removeUser(
 		IRequest $request,
 		array|string $space,
@@ -385,9 +386,9 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
+	#[NoAdminRequired]
 	public function attachGroupToSpace(int $spaceId, string $gid) {
 		$workspace = $this->spaceManager->get($spaceId);
 		$this->spaceManager->attachGroup($workspace['groupfolder_id'], $gid);
@@ -398,11 +399,11 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @GeneralManagerRequired
 	 * @param string|array $groupfolder
 	 *
 	 */
+	#[NoAdminRequired]
 	public function transferUsersToGroups(string $spaceId,
 		string|array $groupfolder): JSONResponse {
 		if (gettype($groupfolder) === 'string') {
@@ -444,12 +445,11 @@ class GroupController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $pattern The pattern to search
 	 * @param bool $ignoreSpaces (not require) Ignore the workspace groups
 	 * @param array<string> $groupsPresents are groups already present
 	 */
+	#[NoAdminRequired]
 	public function search(string $pattern, ?bool $ignoreSpaces = null, array $groupsPresents = []): JSONResponse {
 
 		[$groups] = $this->collaboratorSearch->search(

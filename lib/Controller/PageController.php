@@ -29,6 +29,8 @@ use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IUserSession;
@@ -44,10 +46,9 @@ class PageController extends Controller {
 
 	/**
 	 * Application's main page
-	 *
-	 * @NoAdminRequired
-	 * @NOCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function index($path = ''): TemplateResponse {
 		if (strpos($path, 'api/v') === 0) {
 			// avoid non existing API routes to be handled by this controller
