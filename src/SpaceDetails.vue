@@ -91,7 +91,7 @@
 			:name="t('workspace', 'Add users')"
 			size="normal"
 			@update:open="toggleShowSelectUsersModal">
-			<AddUsersTabs />
+			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
 		<SelectConnectedGroups v-if="showSelectConnectedGroups" :space="space" @close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
