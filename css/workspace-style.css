@@ -139,6 +139,10 @@ body .icon-added-group, body .icon-added-group-dark {
 	background-image: url('../img/added_group_black.svg');
 }
 
+.icon-added-group, .icon-group {
+	margin: 0 16px 0 16px;
+}
+
 .space-color-picker {
 	margin-right: 8px;
 }

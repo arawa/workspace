@@ -23,7 +23,7 @@
 		:key="space.id"
 		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
 		:allow-collapse="true"
-		:open="$route.params.space === spaceName"
+		:open="open()"
 		:name="spaceName"
 		:to="{path: getSpacePath()}">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
@@ -131,6 +131,8 @@ export default {
 			isAddGroupModalOpen: false,
 		}
 	},
+	computed: {
+	},
 	methods: {
 		// sorts groups alphabetically
 		sortedGroups(groups, space) {
@@ -191,6 +193,12 @@ export default {
 		getSpacePath() {
 			const url = generateUrl('/workspace/{id}', { id: this.space.id })
 			return url.substr(url.indexOf('/workspace/'))
+		},
+
+		open() {
+			const id = this.space.id.toString()
+			return this.$route.params.space === this.spaceName
+				|| this.$route.params.space === id
 		},
 	},
 }
