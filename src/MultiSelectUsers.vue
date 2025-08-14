@@ -23,6 +23,7 @@
 	<div class="multiselect-area">
 		<NcSelect ref="userSelectInput"
 			class="select-users-input"
+			aria-label-combobox="select users"
 			label="name"
 			:custom-label="displayForSearching"
 			track-by="uid"

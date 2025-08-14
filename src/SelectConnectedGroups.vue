@@ -1,5 +1,7 @@
 <template>
 	<NcModal class="modal-connected-groups"
+		name="select connected groups"
+		label-id="select connected groups"
 		@close="close()">
 		<div class="container-select-groups">
 			<header class="header-select-groups">
@@ -10,6 +12,7 @@
 			<div class="body-select-groups">
 				<NcSelect
 					class="searchbar-groups"
+					aria-label-combobox="searchbar groups"
 					track-by="gid"
 					label="displayName"
 					:limit="10"

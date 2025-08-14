@@ -1,5 +1,7 @@
 <template>
 	<NcModal
+		name="edit workspace"
+		label-id="edit workspace"
 		:show="show"
 		size="large"
 		class="modal"
@@ -27,6 +29,7 @@
 					{{ t('workspace', 'Set maximum Workspace storage space') }}
 				</p>
 				<NcSelect :value.sync="getQuota"
+					aria-label-combobox="set quota"
 					class="quota-input"
 					:clear-search-on-select="false"
 					:taggable="true"

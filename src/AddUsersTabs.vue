@@ -22,6 +22,7 @@
 <template>
 	<div class="select-users-wrapper">
 		<NcAppSidebar
+			name="select users"
 			class="my-sidebar"
 			@update:active="toggleImportTab">
 			<NcAppSidebarTab id="search"
@@ -46,8 +47,9 @@
 				<template #icon>
 					<div class="information-import">
 						<NcPopover>
-							<template #trigger>
-								<InformationOutline class="information-image"
+							<template #trigger="{attr}">
+								<InformationOutline v-bind="attr"
+									class="information-image"
 									:class="onImportTab"
 									:size="17" />
 							</template>
