@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
-use OCA\GroupFolders\Mount\MountProvider;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -38,6 +37,7 @@ use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -89,7 +89,7 @@ class SpaceManagerTest extends TestCase {
 
 	private MockObject&LoggerInterface $logger;
 
-	private MockObject&MountProvider $mountProvider;
+	private MockObject&MountProviderHelper $mountProviderHelper;
 
 	private SpaceManager $spaceManager;
 
@@ -113,7 +113,7 @@ class SpaceManagerTest extends TestCase {
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userService = $this->createMock(UserService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->mountProvider = $this->createMock(MountProvider::class);
+		$this->mountProviderHelper = $this->createMock(MountProviderHelper::class);
 
 
 		$this->spaceManager = new SpaceManager(
@@ -124,7 +124,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminGroup,
 			$this->adminUserGroup,
 			$this->addedGroups,
-			$this->mountProvider,
+			$this->mountProviderHelper,
 			$this->subGroup,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
