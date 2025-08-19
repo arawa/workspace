@@ -24,7 +24,6 @@
 
 namespace OCA\Workspace\Space;
 
-use OCA\GroupFolders\Mount\MountProvider;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -37,6 +36,7 @@ use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -58,7 +58,7 @@ class SpaceManager {
 		private AdminGroup $adminGroup,
 		private AdminUserGroup $adminUserGroup,
 		private AddedGroups $addedGroups,
-		private MountProvider $mountProvider,
+		private MountProviderHelper $mountProviderHelper,
 		private SubGroup $subGroup,
 		private UserWorkspaceGroup $userWorkspaceGroup,
 		private SpaceMapper $spaceMapper,
@@ -238,7 +238,7 @@ class SpaceManager {
 		}
 
 		$folderId = $space['groupfolder_id'];
-		$folder = $this->mountProvider->getFolder($folderId);
+		$folder = $this->mountProviderHelper->getFolder($folderId);
 		$folder->delete();
 		$this->folderHelper->removeFolder($folderId);
 	}
