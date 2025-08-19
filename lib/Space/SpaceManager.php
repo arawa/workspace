@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Space;
 
+use OCA\GroupFolders\Mount\MountProvider;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -36,7 +37,6 @@ use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\GroupFolders\Mount\MountProvider;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -71,11 +71,11 @@ class SpaceManager {
 		private ColorCode $colorCode,
 	) {
 	}
-	
+
 	public function create(string $spacename): array {
-		if ($spacename === false ||
-			$spacename === null ||
-			$spacename === ''
+		if ($spacename === false
+			|| $spacename === null
+			|| $spacename === ''
 		) {
 			throw new BadRequestException('Error creating workspace', 'spaceName must be provided');
 		}
@@ -83,7 +83,7 @@ class SpaceManager {
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
 			throw new BadRequestException('Error creating workspace', 'Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
 		}
-		
+
 		if ($this->workspaceCheck->isExist($spacename)) {
 			throw new WorkspaceNameExistException(
 				title: 'Error - Duplicate space name',
