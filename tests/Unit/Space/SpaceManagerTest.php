@@ -90,7 +90,7 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&LoggerInterface $logger;
 
 	private MockObject&MountProvider $mountProvider;
-	
+
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
@@ -148,8 +148,8 @@ class SpaceManagerTest extends TestCase {
 
 		$this->rootFolder
 			->expects($this->once())
-				->method('getRootFolderStorageId')
-				->willReturn(1)
+			->method('getRootFolderStorageId')
+			->willReturn(1)
 		;
 
 		$this->folderHelper
