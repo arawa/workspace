@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Workspace\Tests\Unit\Controller;
 
+use OCA\GroupFolders\Mount\MountProvider;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
@@ -88,6 +89,8 @@ class SpaceManagerTest extends TestCase {
 
 	private MockObject&LoggerInterface $logger;
 
+	private MockObject&MountProvider $mountProvider;
+	
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
@@ -110,6 +113,7 @@ class SpaceManagerTest extends TestCase {
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userService = $this->createMock(UserService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->mountProvider = $this->createMock(MountProvider::class);
 
 
 		$this->spaceManager = new SpaceManager(
@@ -120,6 +124,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminGroup,
 			$this->adminUserGroup,
 			$this->addedGroups,
+			$this->mountProvider,
 			$this->subGroup,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
@@ -141,8 +146,8 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(1)
 		;
 
-		$this->rootFolder->
-			expects($this->once())
+		$this->rootFolder
+			->expects($this->once())
 				->method('getRootFolderStorageId')
 				->willReturn(1)
 		;
