@@ -35,11 +35,11 @@ require_once __DIR__ . '/../../../lib/base.php';
 use OC\SystemConfig;
 use OCA\GroupFolders\Folder\FolderManager;
 use OCA\Workspace\Db\SpaceMapper;
-use OCP\Files\IRootFolder;
+use OCA\Workspace\Group\Admin\AdminGroup;
 
 // workspace
-use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\User\UserGroup;
+use OCP\Files\IRootFolder;
 use OCP\IDBConnection;
 
 // GroupFolders
@@ -63,8 +63,8 @@ trait InactiveGroupfolders {
 		$folderIds = array_values(array_map(fn ($groupfolder) => $groupfolder['id'], $groupfolders));
 
 		$regex = '/.*[0-9].*/';
-		$folders = array_filter($pathes, fn($path) => preg_match($regex, $path));
-		
+		$folders = array_filter($pathes, fn ($path) => preg_match($regex, $path));
+
 		$idsWithPath = array_map(fn ($id) => "{$groupfolderPath}/{$id}", $folderIds);
 
 		$foldersShadow = array_values(array_diff($folders, $idsWithPath));
@@ -81,7 +81,7 @@ class WorkSpaceChecker {
 	private array $groups;
 
 	use InactiveGroupfolders;
-	
+
 	public function __construct(
 		private IDBConnection $dbConnection,
 		private SpaceMapper $spaceMapper,
@@ -277,8 +277,7 @@ class Run {
 	public function __construct(
 		private FolderManager $folderManager,
 		private IRootFolder $rootFolder,
-	)
-	{
+	) {
 	}
 
 	use InactiveGroupfolders;
@@ -286,11 +285,11 @@ class Run {
 	public function deleteInactiveGroupfolders() {
 		$res = readline("Are you sure want to delete all inactive groupfolders? (yes/Y to confirm)\n");
 		$res = strtolower($res);
-		
+
 		if (!($res === 'yes' || $res === 'y')) {
 			return;
 		}
-		
+
 		$foldersShadow = $this->getInactiveGroupfolders();
 
 		foreach ($foldersShadow as $folderPath) {
