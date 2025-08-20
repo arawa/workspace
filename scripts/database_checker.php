@@ -35,6 +35,7 @@ require_once __DIR__ . '/../../../lib/base.php';
 use OC\SystemConfig;
 use OCA\GroupFolders\Folder\FolderManager;
 use OCA\Workspace\Db\SpaceMapper;
+use OCP\Files\IRootFolder;
 
 // workspace
 use OCA\Workspace\Group\Admin\AdminGroup;
@@ -50,6 +51,28 @@ function exceptionHandler($exception) {
 	exit(1);
 }
 
+trait InactiveGroupfolders {
+	public function getInactiveGroupfolders(): array {
+		/** @var \OCP\Files\Folder $folder */
+		$folder = $this->rootFolder->get('__groupfolders');
+		$groupfolderPath = $folder->getPath();
+		$folders = $folder->getDirectoryListing();
+		$pathes = array_map(fn ($node) => $node->getPath(), $folders);
+
+		$groupfolders = $this->folderManager->getAllFolders();
+		$folderIds = array_values(array_map(fn ($groupfolder) => $groupfolder['id'], $groupfolders));
+
+		$regex = '/.*[0-9].*/';
+		$folders = array_filter($pathes, fn($path) => preg_match($regex, $path));
+		
+		$idsWithPath = array_map(fn ($id) => "{$groupfolderPath}/{$id}", $folderIds);
+
+		$foldersShadow = array_values(array_diff($folders, $idsWithPath));
+
+		return $foldersShadow;
+	}
+}
+
 class WorkSpaceChecker {
 
 	private array $spaces;
@@ -57,11 +80,14 @@ class WorkSpaceChecker {
 	private array $groupFoldersGroups;
 	private array $groups;
 
+	use InactiveGroupfolders;
+	
 	public function __construct(
 		private IDBConnection $dbConnection,
 		private SpaceMapper $spaceMapper,
 		private FolderManager $folderManager,
 		private IGroupManager $groupManager,
+		private IRootFolder $rootFolder,
 	) {
 		$this->spaces = $spaceMapper->findAll();
 		$this->groupFolders = $folderManager->getAllFolders();
@@ -94,6 +120,7 @@ class WorkSpaceChecker {
 		echo 'GroupFolders: ' . count($this->groupFolders) . PHP_EOL;
 		echo 'GroupFoldersGroups: ' . count($this->groupFoldersGroups) . PHP_EOL;
 		echo 'Groups: ' . count($this->groups) . PHP_EOL;
+		echo 'Inactive GroupsFolders: ' . count($this->getInactiveGroupfolders()) . PHP_EOL;
 	}
 
 	/**
@@ -200,6 +227,16 @@ class WorkSpaceChecker {
 		}
 	}
 
+	public function checkInactiveGroupFoldersOnFileSystem() {
+		$foldersShadow = $this->getInactiveGroupfolders();
+		$foldersShadow = implode(PHP_EOL, $foldersShadow);
+
+		echo self::separator();
+		echo 'Checking groupfolders on the filesystem...' . PHP_EOL;
+		print($foldersShadow);
+		print(PHP_EOL);
+	}
+
 	private function findSpaceByGroupFolderId($groupFolderId) {
 		foreach ($this->spaces as $space) {
 			if ($space->getGroupfolderId() == $groupFolderId) {
@@ -236,6 +273,35 @@ class WorkSpaceChecker {
 	}
 }
 
+class Run {
+	public function __construct(
+		private FolderManager $folderManager,
+		private IRootFolder $rootFolder,
+	)
+	{
+	}
+
+	use InactiveGroupfolders;
+
+	public function deleteInactiveGroupfolders() {
+		$res = readline("Are you sure want to delete all inactive groupfolders? (yes/Y to confirm)\n");
+		$res = strtolower($res);
+		
+		if (!($res === 'yes' || $res === 'y')) {
+			return;
+		}
+		
+		$foldersShadow = $this->getInactiveGroupfolders();
+
+		foreach ($foldersShadow as $folderPath) {
+			$folder = $this->rootFolder->get($folderPath);
+			$folder->delete();
+		}
+
+		print("All inactive groupfolders are deleted\n");
+	}
+}
+
 class MyConfig extends SystemConfig {
 	public function __construct(
 		private SystemConfig $config,
@@ -254,13 +320,14 @@ class MyConfig extends SystemConfig {
 function printUsage() {
 	echo "Usage: php scripts/database_checker.php [options]\n";
 	echo "Options:\n";
-	echo "  -h, --help       Show this help\n";
-	echo "  -v, --verbose    Verbose mode\n";
-	echo "  --dbhost         Database host (localhost)\n";
-	echo "  --dbuser         Database user (root)\n";
-	echo "  --dbpassword     Database user password ()\n";
-	echo "  --dbname         Database name (default: use local nextcloud config)\n";
-	echo "  --dbtype         Database type (mysql, pgsql)\n";
+	echo "  -h, --help                                 Show this help\n";
+	echo "  -v, --verbose                              Verbose mode\n";
+	echo "  --dbhost                                   Database host (localhost)\n";
+	echo "  --dbuser                                   Database user (root)\n";
+	echo "  --dbpassword                               Database user password ()\n";
+	echo "  --dbname                                   Database name (default: use local nextcloud config)\n";
+	echo "  --dbtype                                   Database type (mysql, pgsql)\n";
+	echo "  -dig, --delete-inactive-groupfolders       Remove inactive Groupfolders from the filesystem\n";
 }
 
 $verbose = false;
@@ -302,6 +369,11 @@ if ($argc > 1) {
 				break;
 			case '--dbtype':
 				$dbConfig['dbtype'] = $argv[++$i];
+				break;
+			case '-dig':
+			case '--delete-inactive-groupfolders':
+				$run = OC::$server->get(Run::class);
+				$run->deleteInactiveGroupfolders();
 				break;
 			default:
 				echo "Unkown argument $i: " . $argv[$i] . "\n";
@@ -358,3 +430,4 @@ $wsCheccker->checkSpaces();
 $wsCheccker->checkGroupFolders();
 $wsCheccker->checkGroupFoldersGroups();
 $wsCheccker->checkGroups();
+$wsCheccker->checkInactiveGroupFoldersOnFileSystem();
