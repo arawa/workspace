@@ -197,8 +197,7 @@ export default {
 
 		open() {
 			const id = this.space.id.toString()
-			return this.$route.params.space === this.spaceName
-				|| this.$route.params.space === id
+			return this.$route.params.space === id
 		},
 	},
 }
