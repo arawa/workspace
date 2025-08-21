@@ -124,6 +124,8 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function delete(string $gid, int $spaceId): JSONResponse {
+		$gid = urldecode(urldecode($gid));
+		
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);

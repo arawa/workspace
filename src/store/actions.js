@@ -151,9 +151,10 @@ export default {
 	// Deletes a group
 	deleteGroup(context, { name, gid }) {
 		const space = context.getters.getSpaceByNameOrId(name)
+		const gidEncoded = encodeURIComponent(encodeURIComponent(gid))
 
 		// Deletes group from frontend
-		context.commit('removeGroupFromSpace', { space, gid })
+		context.commit('removeGroupFromSpace', { name, gid })
 
 		// Naviagte back to home
 		router.push({
@@ -161,7 +162,7 @@ export default {
 		})
 
 		// Deletes group from backend
-		axios.delete(generateUrl(`/apps/workspace/api/group/${gid}`), { data: { spaceId: space.id } })
+		axios.delete(generateUrl(`/apps/workspace/api/group/${gidEncoded}`), { data: { spaceId: space.id } })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// eslint-disable-next-line no-console
