@@ -33,7 +33,7 @@
 				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
 					:checked="isWorkspaceManager(user.role)"
-					:disabled="$store.getters.isMember($route.params.space, user)"
+					:disabled="disabled"
 					@update:checked="toggleUserRole(user)">
 					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
@@ -62,11 +62,19 @@ export default {
 		NcActionButton,
 		NcCheckboxRadioSwitch,
 	},
+	data() {
+		return {
+			disabled: false
+		}
+	},
 	props: {
 		user: {
 			type: Object,
 			default: () => {},
 		},
+	},
+	beforeMount() {
+		this.disabled = this.isWorkspaceManager(this.user.role)
 	},
 	methods: {
 		toggleUserRole(user) {
