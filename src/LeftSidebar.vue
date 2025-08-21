@@ -23,6 +23,7 @@
 	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
 		<ul class="ws-navigation-header">
 			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+				class="input-new-item"
 				icon="icon-add"
 				:name="t('workspace', 'New space')"
 				@new-item="createSpace" />
@@ -112,6 +113,22 @@ export default {
 </script>
 
 <style scoped>
+.input-new-item :deep(.app-navigation-entry-button) {
+	align-items: center;
+}
+
+.input-new-item :deep(.button-vue--icon-only) {
+	height: 20px;
+}
+
+.input-new-item :deep(.app-navigation-input-confirm form) {
+	align-items: center;
+}
+
+.input-new-item :deep(.app-navigation-entry-button .app-navigation-entry-icon) {
+	margin-right: 4px;
+}
+
 .app-navigation-entry {
 	padding-right: 0px;
 }
