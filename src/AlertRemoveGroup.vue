@@ -1,5 +1,7 @@
 <template>
 	<NcModal
+		name="alert remove group"
+		label-id="alert remove group"
 		size="normal">
 		<div class="container-modal-remove">
 			<NcNoteCard type="warning">
