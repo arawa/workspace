@@ -62,7 +62,7 @@ trait InactiveGroupfolders {
 		$groupfolders = $this->folderManager->getAllFolders();
 		$folderIds = array_values(array_map(fn ($groupfolder) => $groupfolder['id'], $groupfolders));
 
-		$regex = '/.*[0-9].*/';
+		$regex = '/.*[0-9]+/';
 		$folders = array_filter($pathes, fn ($path) => preg_match($regex, $path));
 
 		$idsWithPath = array_map(fn ($id) => "{$groupfolderPath}/{$id}", $folderIds);
@@ -232,7 +232,7 @@ class WorkSpaceChecker {
 		$foldersShadow = implode(PHP_EOL, $foldersShadow);
 
 		echo self::separator();
-		echo 'Checking groupfolders on the filesystem...' . PHP_EOL;
+		echo 'Looking for inactive groupfolders on the filesystem' . PHP_EOL;
 		print($foldersShadow);
 		print(PHP_EOL);
 	}
