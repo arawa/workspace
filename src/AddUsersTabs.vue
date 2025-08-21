@@ -237,6 +237,17 @@ export default {
 				gid: decodeURIComponent(decodeURIComponent(this.$route.params.slug)),
 				user,
 			})
+			if (user.role === 'wm') {
+				this.$store.dispatch('addUserToGroup', {
+					name: space.name,
+					gid: ManagerGroup.getGid(space),
+					user,
+				})
+				this.$store.dispatch('incrementGroupUserCount', {
+					spaceName: space.name,
+					gid: ManagerGroup.getGid(space),
+				})
+			}
 			if (user.is_connected) {
 				this.$store.commit('TOGGLE_USER_CONNECTED', { name, user })
 			}
