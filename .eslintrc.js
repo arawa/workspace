@@ -31,5 +31,6 @@ module.exports = {
 		// https://eslint.vuejs.org/rules/first-attribute-linebreak.html
 		'vue/first-attribute-linebreak': 'off',
 		'vue/multi-word-component-names': 'off',
+		'import/namespace': 'off',
 	},
 }
