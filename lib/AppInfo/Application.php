@@ -28,6 +28,7 @@ use OCA\Workspace\Group\GroupBackend;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
@@ -77,17 +78,23 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 
 		$context->registerCapability(Capabilities::class);
+
+		$context->registerService(GroupBackend::class, function ($c) {
+			return new GroupBackend(
+				$c->query(IGroupManager::class),
+				$c->query(UserService::class),
+				$c->query(SpaceMapper::class),
+				$c->query(SpaceService::class),
+				$c->query(ConnectedGroupsService::class)
+			);
+			return $groupBackend;
+		});
+
+		\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
 	}
 
 	public function boot(IBootContext $context): void {
 		// Unexplained BUG with autoload. Keep this line
 		$context->getAppContainer()->query(SpaceMapper::class);
-
-		$context->injectFn(function (
-			IGroupManager $groupManager,
-			GroupBackend $groupBackend,
-		) {
-			$groupManager->addBackend($groupBackend);
-		});
 	}
 }
