@@ -78,7 +78,7 @@
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
-			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: $store.getters.getSpaceByNameOrId($route.params.space).name })"
+			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace', { groupname: getDisplaynameGroup, spacename: getSpaceName })"
 			@cancel="closeRemoveGroupModal"
 			@remove-group="deleteGroup" />
 	</div>
@@ -118,6 +118,14 @@ export default {
 		// The title to display at the top of the page
 		isAddedGroup() {
 			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
+		},
+		getDisplaynameGroup() {
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
+			return space.groups[gid].displayName
+		},
+		getSpaceName() {
+			return this.$store.getters.getSpaceByNameOrId(this.$route.params.space).name
 		},
 	},
 	mounted() {
