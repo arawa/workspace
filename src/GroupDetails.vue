@@ -78,7 +78,7 @@
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
-			:message="t('workspace', 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès à l\'espace de travail {spacename}', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: $route.params.space })"
+			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: $store.getters.getSpaceByNameOrId($route.params.space).name })"
 			@cancel="closeRemoveGroupModal"
 			@remove-group="deleteGroup" />
 	</div>

@@ -44,7 +44,7 @@ OC.L10N.register(
 		'Delete space': "Supprimer le Workspace",
 		'Delete user': "Retirer du Workspace",
 		'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace': 'Attention, après le retrait du groupe {groupname}, ses utilisateurs perdront l\'accès au Workspace {spacename}',
-		'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace': 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès au workspace {spacename}',
+		'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace': 'Attention, après la suppression du groupe {groupname}, ses utilisateurs conserveront l\'accès au Workspace {spacename}',
 		'Confirm': 'Confirmer',
 		'Email': 'Email',
 		'User doesn\'t exist': 'Des utilisateurs n\'existent pas',
