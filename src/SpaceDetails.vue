@@ -99,7 +99,8 @@
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
-		<EditWorkspace :show="showEditWorkspaceModal"
+		<EditWorkspace v-if="showEditWorkspaceModal"
+			:space="$store.getters.getSpaceByNameOrId($route.params.space)"
 			@close="toggleShowEditWorkspaceModal" />
 	</div>
 </template>

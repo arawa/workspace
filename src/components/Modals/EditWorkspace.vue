@@ -2,7 +2,6 @@
 	<NcModal
 		name="edit workspace"
 		label-id="edit workspace"
-		:show="show"
 		size="large"
 		class="modal"
 		@close="close">
@@ -89,18 +88,17 @@ export default {
 		NcProgressBar,
 	},
 	props: {
-		show: {
-			type: Boolean,
+		space: {
+			type: Object,
 			required: true,
-			default: false,
 		},
 	},
 	data() {
 		return {
-			spacename: '',
-			color: '',
-			quota: '',
-			size: '',
+			spacename: undefined,
+			color: undefined,
+			quota: undefined,
+			size: undefined,
 		}
 	},
 	computed: {
@@ -132,15 +130,15 @@ export default {
 			return t('workspace', 'You use <b>{size}</b> on {quota}', { size: this.getSize, quota: this.getQuota })
 		},
 		getSpaceName() {
-			return this.$store.getters.getSpaceByNameOrId(this.$route.params.space).name
+			return this.spacename
 		},
 	},
 	beforeMount() {
-		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-		this.color = space.color
-		this.quota = space.quota
-		this.size = space.size
-		this.spacename = space.name
+		console.debug('beforeMount EditWorkspace')
+		this.color = this.space.color
+		this.quota = this.space.quota
+		this.size = this.space.size
+		this.spacename = this.space.name
 	},
 	methods: {
 		close() {
@@ -213,8 +211,6 @@ export default {
 					path: `/workspace/${space.id}`,
 				})
 			}
-
-			this.spacename = ''
 
 			this.$emit('close')
 
