@@ -238,10 +238,6 @@ export default {
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
 		},
-		getSpaceName(spaceId) {
-			const space = this.$store.getters.getSpaceById(spaceId)
-			return space ? space.name : ''
-		},
 	},
 }
 </script>
