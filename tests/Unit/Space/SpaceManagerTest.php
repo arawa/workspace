@@ -282,7 +282,7 @@ class SpaceManagerTest extends TestCase {
 
 	public function testContainSpecialCharInTheWorkspaceName(): void {
 		$this->expectException(BadRequestException::class);
-		$this->expectExceptionMessage('Your Workspace name must not contain the following characters: ' . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)));
+		$this->expectExceptionMessage('Your Workspace name must not contain the following characters: {specialChars}');
 
 		$this->workspaceCheck
 			->expects($this->once())
