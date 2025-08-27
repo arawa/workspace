@@ -31,6 +31,7 @@ export default {
 		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
 		this.$root.$data.canAccessApp = document.getElementById('canAccessApp').value
 		this.$root.$data.aclInheritPerUser = document.getElementById('aclInheritPerUser').value
+		this.$root.$data.userSession = document.getElementById('userSession').value
 		const aclInheritPerUser = document.getElementById('aclInheritPerUser').value
 		// eslint-disable-next-line no-console
 		aclInheritPerUser ? console.log('workspace: h1') : console.log('workspace: h2')
