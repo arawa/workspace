@@ -22,22 +22,41 @@
 
 import { showError } from '@nextcloud/dialogs'
 
+const TOAST_DEFAULT_TIMEOUT = 7000
+
 /**
  *
  * @param {string} title error notification title
  * @param {string} text error notification text
- * @param {number | undefined} duration in milliseconds, 7 seconds by default, -1 for permanent notification
- * @param {Array | undefined} argsMessage in milliseconds, 7 seconds by default, -1 for permanent notification
+ * @param {number} duration in milliseconds, 7 seconds by default, -1 for permanent notification
  */
-export default function showNotificationError(title, text, duration = undefined, argsMessage = undefined) {
-	title = t('workspace', title)
-
-	text = t('workspace', text)
-	if (argsMessage) {
-		text = t('workspace', text, { args: argsMessage[0] })
-	}
-
+function showNotificaiton(title, text, duration) {
 	const message = `<div style="max-width: 36rem;"><p style="font-weight: bold;display: block;">${title}</p><p>${text}</p></div>`
 	const options = duration ? { isHTML: true, timeout: duration } : { isHTML: true }
 	showError(message, options)
+}
+
+/**
+ *
+ * @param {string} title error notification title
+ * @param {string} text error notification text
+ * @param {number} duration in milliseconds, 7 seconds by default, -1 for permanent notification
+ */
+export default function showNotificationError(title, text, duration = TOAST_DEFAULT_TIMEOUT) {
+	title = t('workspace', title)
+	text = t('workspace', text)
+	showNotificaiton(title, text, duration)
+}
+
+/**
+ *
+ * @param {string} title error notification title
+ * @param {string} text error notification text
+ * @param {number} duration in milliseconds, 7 seconds by default, -1 for permanent notification
+ * @param {object} options is an object with variables to complete the error message
+ */
+export function showCreatingWorkspaceNotification(title, text, duration = TOAST_DEFAULT_TIMEOUT, options) {
+	title = t('workspace', title)
+	text = t('workspace', text, { specialChars: options.specialChars })
+	showNotificaiton(title, text, duration)
 }
