@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Events\UserRemovedFromGroupEvent;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
@@ -42,6 +43,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Collaboration\Collaborators\ISearch;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -66,6 +68,7 @@ class GroupController extends Controller {
 		private UserWorkspace $userWorkspace,
 		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
 		private ShareMembersOnlyFilter $shareMembersOnlyFilter,
+		private IEventDispatcher $dispatch,
 	) {
 	}
 
@@ -287,6 +290,10 @@ class GroupController extends Controller {
 
 		foreach ($groups as $group) {
 			$group->removeUser($NcUser);
+			if (str_starts_with($group->getGID(), 'SPACE-U-')) {
+				$this->logger->info('[Workspace] Dispatch UserRemovedFromGroupEvent event');
+				$this->dispatch->dispatchTyped(new UserRemovedFromGroupEvent($NcUser, $group));
+			}
 			$groupnames[] = $group->getGID();
 		}
 
@@ -329,6 +336,11 @@ class GroupController extends Controller {
 			throw new \Exception("You must define cascade to true as parameter in the request to remove the user from $group->getGID() group.");
 		}
 	
+		if (str_starts_with($group->getGID(), 'SPACE-U-')) {
+			$this->logger->info('[Workspace] Dispatch UserRemovedFromGroupEvent event');
+			$this->dispatch->dispatchTyped(new UserRemovedFromGroupEvent($NcUser, $group));
+		}
+		
 		$groupnames = [];
 
 		if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())) {
