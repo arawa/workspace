@@ -37,6 +37,7 @@ use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -88,6 +89,8 @@ class SpaceManagerTest extends TestCase {
 
 	private MockObject&LoggerInterface $logger;
 
+	private MockObject&MountProviderHelper $mountProviderHelper;
+
 	private SpaceManager $spaceManager;
 
 	public function setUp(): void {
@@ -110,6 +113,7 @@ class SpaceManagerTest extends TestCase {
 		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userService = $this->createMock(UserService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->mountProviderHelper = $this->createMock(MountProviderHelper::class);
 
 
 		$this->spaceManager = new SpaceManager(
@@ -120,6 +124,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminGroup,
 			$this->adminUserGroup,
 			$this->addedGroups,
+			$this->mountProviderHelper,
 			$this->subGroup,
 			$this->userWorkspaceGroup,
 			$this->spaceMapper,
@@ -141,10 +146,10 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(1)
 		;
 
-		$this->rootFolder->
-			expects($this->once())
-				->method('getRootFolderStorageId')
-				->willReturn(1)
+		$this->rootFolder
+			->expects($this->once())
+			->method('getRootFolderStorageId')
+			->willReturn(1)
 		;
 
 		$this->folderHelper
