@@ -26,10 +26,10 @@
 namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\PageController;
-
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,14 +38,17 @@ class PageControllerTest extends TestCase {
 	private $userId = 'john';
 	private MockObject&UserService $userService;
 	private MockObject&IConfig $config;
+	private MockObject&IUserSession $session;
 
 	public function setUp(): void {
 		$this->userService = $this->createMock(UserService::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->session = $this->createMock(IUserSession::class);
 
 		$this->controller = new PageController(
 			$this->userService,
 			$this->config,
+			$this->session,
 		);
 	}
 
