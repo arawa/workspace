@@ -30,7 +30,7 @@ abstract class AbstractNotification extends \Exception {
 	 * @param string $message A description of the error notification.
 	 * @param int $code The HTTP status code from OCP\AppFramework\Http.
 	 * @param array $argsMessage An associative array containing additional variables.
-	 * 	Example: [ 'spacename' => 'Space01' ]
+	 *                           Example: [ 'spacename' => 'Space01' ]
 	 */
 	public function __construct(
 		private string $title,
