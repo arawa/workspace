@@ -45,25 +45,26 @@
 						@push="pushUsersFromButton" />
 				</div>
 				<template #icon>
-					<div class="information-import">
-						<NcPopover>
-							<template #trigger="{attr}">
-								<InformationOutline v-bind="attr"
-									class="information-image"
-									:class="onImportTab"
-									:size="17" />
-							</template>
-							<div class="popover">
-								<p>{{ informCsvStructureMessage }}</p>
-								<br>
-								<NcRichText :use-markdown="true"
-									:text="csvTemplateMarkdown" />
-							</div>
-						</NcPopover>
-					</div>
+					<span />
 				</template>
 			</NcAppSidebarTab>
 		</NcAppSidebar>
+		<div class="information-import">
+			<NcPopover>
+				<template #trigger="{attr}">
+					<InformationOutline v-bind="attr"
+						class="information-image"
+						:class="onImportTab"
+						:size="17" />
+				</template>
+				<div class="popover">
+					<p>{{ informCsvStructureMessage }}</p>
+					<br>
+					<NcRichText :use-markdown="true"
+						:text="csvTemplateMarkdown" />
+				</div>
+			</NcPopover>
+		</div>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -481,8 +482,8 @@ section.app-sidebar__tab--active {
 
 .information-import {
 	position: absolute;
-	top: 12px;
-	right: 0px;
+	top: 56px;
+	right: 54px;
 	z-index: 9999;
 }
 
