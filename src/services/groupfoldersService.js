@@ -237,7 +237,7 @@ export function createGroupfolder(spaceName) {
 			return resp.data.ocs
 		})
 		.catch(error => {
-			showNotificationError('Error - Creating space', error.message, 5000)
+			showNotificationError('Error creating workspace', error.message, 5000)
 			throw new CreateGroupfolderError('Network error - the error is: ' + error.message)
 		})
 }
