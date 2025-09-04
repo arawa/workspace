@@ -78,6 +78,7 @@
     "jsdom": "^24.0.0",
     "jsdom-global": "^3.0.2",
     "prettier": "^2.7.1",
+    "regenerator-runtime": "^0.14.1",
     "vue-template-compiler": "^2.7.13",
     "webpack-node-externals": "^3.0.0"
   },
