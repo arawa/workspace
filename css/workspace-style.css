@@ -99,6 +99,10 @@ tbody > .workspace-tr:hover {
 	flex-basis: 0;
 }
 
+.app-workspace .app-navigation-entry__children {
+	padding: 0 !important;
+}
+
 /* force toggle visibility */
 .workspace-sidebar .icon-collapse {
 	visibility: visible !important;
