@@ -30,12 +30,14 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
+use OCP\IUserSession;
 use OCP\Util;
 
 class PageController extends Controller {
 	public function __construct(
 		private UserService $userService,
 		private IConfig $config,
+		private IUserSession $session,
 	) {
 	}
 
@@ -54,6 +56,7 @@ class PageController extends Controller {
 			'workspace',
 			'index',
 			[
+				'userSession' => $this->session->getUser()?->getUID(),
 				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
 				'canAccessApp' => $this->userService->canAccessApp(),
 				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true',

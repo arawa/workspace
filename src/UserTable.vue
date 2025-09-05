@@ -85,7 +85,7 @@
 									</template>
 									{{ t('workspace', 'Make administrator') }}
 								</NcActionButton>
-								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space))"
+								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
@@ -181,6 +181,9 @@ export default {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const groupsSorted = this.sortedGroups([...groups], space)
 			return groupsSorted.map(group => this.$store.getters.groupName(space.name, group)).join(', ')
+		},
+		isCurrentUserWorkspaceManager(user) {
+			return this.$root.$data.isUserGeneralAdmin === 'false' && (this.$root.$data.userSession === user.name)
 		},
 		sortedGroups(groups, space) {
 			groups.sort((groupCurrent, groupNext) => {
