@@ -1129,41 +1129,103 @@ class SpaceManagerTest extends TestCase {
 			->willReturnOnConsecutiveCalls($user1, $user2, $user1, $user2)
 		;
 
-		$groupUser = $this->createMock(IGroup::class);
-		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
-
-		$this->groupManager
-			->expects($this->any())
-			->method('get')
-			->willReturn($groupUser, $groupWorkspaceManagerUser)
-		;
-
-		$groupFormatter = Mockery::mock(UserGroup::class);
-		$groupFormatter
-			->shouldReceive('get')
-			->with($spaceId)
-			->andReturn('SPACE-U-1')
-		;
-
 		/** @var IGroup&MockObject */
 		$userGroup = $this->createMock(IGroup::class);
-
 		/** @var IGroup&MockObject */
 		$managerGroup = $this->createMock(IGroup::class);
 
-		$this->groupManager
+		$user1
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('user1')
+		;
+
+		$user2
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('user2')
+		;
+
+		$managerGroup
 			->expects($this->exactly(2))
-			->method('get')
-			->willReturn($userGroup, $managerGroup)
+			->method('inGroup')
+			->with(
+				$this->logicalOr($user1, $user2)
+			)
+			->willReturnOnConsecutiveCalls(false, false)
 		;
 
-		$groupUser
+		$this->groupManager
 			->expects($this->any())
-			->method('addUser')
-			->with($this->logicalOr($this->equalTo($user1), $this->equalTo($user2)))
+			->method('get')
+			->willReturnCallback(function ($gid) use ($userGroup, $managerGroup) {
+				if ($gid === 'SPACE-U-1') {
+					return $userGroup;
+				}
+				if ($gid === 'SPACE-GE-1') {
+					return $managerGroup;
+				}
+			})
 		;
 
-		$this->spaceManager->removeUsersFromWorkspace($spaceId, $uids);
+		$userGroup
+			->expects($this->any())
+			->method('removeUser')
+			->with(
+				$this->logicalOr($user1, $user2)
+			)
+		;
+
+		$managerGroup
+			->expects($this->any())
+			->method('removeUser')
+			->with(
+				$this->logicalOr($user1, $user2)
+			)
+		;
+
+		/** 
+		 * @var MockObject&SpaceManager
+		 * 
+		 * Mock only the get method. 
+		 */
+		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
+			->setConstructorArgs([
+				$this->folderHelper,
+				$this->rootFolder,
+				$this->workspaceCheck,
+				$this->userGroup,
+				$this->adminGroup,
+				$this->adminUserGroup,
+				$this->addedGroups,
+				$this->subGroup,
+				$this->userManager,
+				$this->userWorkspaceGroup,
+				$this->spaceMapper,
+				$this->conntectedGroupService,
+				$this->logger,
+				$this->userFormatter,
+				$this->userService,
+				$this->groupManager,
+				$this->workspaceManagerGroup,
+				$this->workspaceService,
+				$this->colorCode
+			])
+			->onlyMethods(['get'])
+			->getMock()
+		;
+
+		$spaceManagerPartial->expects($this->once())
+			->method('get')
+			->willReturn([
+				// other data...
+				'groups' => [
+					'SPACE-U-1' => [],
+					'SPACE-GE-1' => [],
+			]])
+		;
+
+		$spaceManagerPartial->removeUsersFromWorkspace($spaceId, $uids);
 	}
 
 	public function testAddUsersInWorkspace(): void {
