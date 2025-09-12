@@ -93,7 +93,9 @@
 			@update:open="toggleShowSelectUsersModal">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
-		<SelectConnectedGroups v-if="showSelectConnectedGroups" :space="space" @close="toggleShowConnectedGroups" />
+		<SelectConnectedGroups v-if="showSelectConnectedGroups"
+			:space="space"
+			@close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
 			:space-name="$route.params.space"
 			@close="toggleShowDelWorkspaceModal"
@@ -147,6 +149,7 @@ export default {
 			showSelectConnectedGroups: false,
 			showEditWorkspaceModal: false,
 			isESR: false,
+			space: undefined,
 		}
 	},
 	computed: {
@@ -162,15 +165,15 @@ export default {
 		},
 	},
 	beforeMount() {
-		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		if (!this.$store.state.noUsers) {
-			this.$store.dispatch('loadUsers', { space })
+			this.$store.dispatch('loadUsers', { space: this.space })
 		}
 	},
 	beforeUpdate() {
-		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		if (!this.$store.state.noUsers) {
-			this.$store.dispatch('loadUsers', { space })
+			this.$store.dispatch('loadUsers', { space: this.space })
 		}
 	},
 	created() {
