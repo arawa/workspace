@@ -24,7 +24,11 @@
 	<div v-if="!$store.state.loadingUsersWaiting">
 		<div class="header">
 			<div class="group-name">
-				<div :class="isAddedGroup ? 'icon-added-group' : 'icon-group'" />
+				<div>
+					<NcIconSvgWrapper v-if="isAddedGroup && isDarkTheme" :svg="AddedGroupWhite" />
+					<NcIconSvgWrapper v-else-if="isAddedGroup && (isDarkTheme === false)" :svg="AddedGroupBlack" />
+					<NcIconSvgWrapper v-else :path="mdiAccountMultiple" />
+				</div>
 				<span class="titles-for-space">
 					{{ $store.getters.groupName($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug))) }}
 				</span>
@@ -94,6 +98,11 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import AddUsersTabs from './AddUsersTabs.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 import UserTable from './UserTable.vue'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import { mdiAccountMultiple } from '@mdi/js'
+import AddedGroupBlack from '../img/added_group_black.svg?raw'
+import AddedGroupWhite from '../img/added_group_white.svg?raw'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 
 export default {
 	name: 'GroupDetails',
@@ -105,6 +114,7 @@ export default {
 		NcActionButton,
 		NcActionInput,
 		UserTable,
+		NcIconSvgWrapper,
 	},
 	data() {
 		return {
@@ -112,6 +122,10 @@ export default {
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showRemoveConnectedGroupModal: false,
 			showRemoveGroupModal: false,
+			isDarkTheme: useIsDarkTheme(),
+			mdiAccountMultiple,
+			AddedGroupBlack,
+			AddedGroupWhite,
 		}
 	},
 	computed: {
