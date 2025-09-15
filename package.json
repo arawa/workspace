@@ -59,6 +59,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@mdi/js": "^7.4.47",
     "@nextcloud/babel-config": "^1.2.0",
     "@nextcloud/browserslist-config": "^3.0.1",
     "@nextcloud/eslint-config": "^8.4.2",
@@ -70,6 +71,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^29.5.0",
     "core-js": "^3.36.1",
+    "esbuild-loader": "^4.3.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
