@@ -24,7 +24,6 @@
 const { merge } = require('webpack-merge')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 
-module.exports = webpackConfig
 module.exports = merge(webpackConfig, {
 	module: {
 		rules: [
@@ -33,6 +32,6 @@ module.exports = merge(webpackConfig, {
 				resourceQuery: /raw/,
 				type: 'asset/source',
 			},
-		],
-	},
+		]
+	}
 })
