@@ -72,7 +72,14 @@
 						:name="t('workspace', 'Add a group')"
 						class="no-bold"
 						:close-after-click="true"
-						@click="toggleShowConnectedGroups" />
+						@click="toggleShowConnectedGroups">
+						<template #icon>
+							<NcIconSvgWrapper v-if="isDarkTheme"
+								:svg="AddedGroupWhite" />
+							<NcIconSvgWrapper v-else
+								:svg="AddedGroupBlack" />
+						</template>
+					</NcActionButton>
 				</NcActions>
 				<NcActions>
 					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
@@ -125,6 +132,9 @@ import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import { mdiAccountMultiple } from '@mdi/js'
+import AddedGroupBlack from '../img/added_group_black.svg?raw'
+import AddedGroupWhite from '../img/added_group_white.svg?raw'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 
 export default {
 	name: 'SpaceDetails',
@@ -155,6 +165,10 @@ export default {
 			showEditWorkspaceModal: false,
 			isESR: false,
 			mdiAccountMultiple,
+			AddedGroupBlack,
+			AddedGroupWhite,
+			iconUrl: undefined,
+			isDarkTheme: useIsDarkTheme(),
 		}
 	},
 	computed: {
