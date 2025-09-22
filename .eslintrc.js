@@ -32,5 +32,10 @@ module.exports = {
 		'vue/first-attribute-linebreak': 'off',
 		'vue/multi-word-component-names': 'off',
 		'import/namespace': 'off',
+		'import/no-unresolved': ['error', {
+			// Ignore Webpack query parameters, not supported by eslint-plugin-import
+			// https://github.com/import-js/eslint-plugin-import/issues/2562
+			ignore: ['\\?raw$'],
+		}],
 	},
 }
