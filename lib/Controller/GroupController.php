@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Events\UserRemovedFromGroupEvent;
 use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
@@ -43,7 +42,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Collaboration\Collaborators\ISearch;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -68,7 +66,6 @@ class GroupController extends Controller {
 		private UserWorkspace $userWorkspace,
 		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
 		private ShareMembersOnlyFilter $shareMembersOnlyFilter,
-		private IEventDispatcher $dispatch,
 	) {
 	}
 
@@ -128,7 +125,7 @@ class GroupController extends Controller {
 	 */
 	public function delete(string $gid, int $spaceId): JSONResponse {
 		$gid = urldecode(urldecode($gid));
-
+		
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
 			return new JSONResponse(['You may only delete workspace groups of this space (ie: group\'s name does not end by the workspace\'s ID)'], Http::STATUS_FORBIDDEN);
@@ -180,7 +177,7 @@ class GroupController extends Controller {
 				Http::STATUS_CONFLICT
 			);
 		}
-
+		
 		// Rename group
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
@@ -290,10 +287,6 @@ class GroupController extends Controller {
 
 		foreach ($groups as $group) {
 			$group->removeUser($NcUser);
-			if (str_starts_with($group->getGID(), 'SPACE-U-')) {
-				$this->logger->info('[Workspace] Dispatch UserRemovedFromGroupEvent event');
-				$this->dispatch->dispatchTyped(new UserRemovedFromGroupEvent($NcUser, $group));
-			}
 			$groupnames[] = $group->getGID();
 		}
 
@@ -323,24 +316,19 @@ class GroupController extends Controller {
 		string $gid,
 		string $user): JSONResponse {
 		$cascade = $request->getParam('cascade', false);
-
+		
 		$NcUser = $this->userManager->get($user);
 		$group = $this->groupManager->get($gid);
-
+	
 		if (!$this->groupManager->isInGroup($NcUser->getUID(), $group->getGID())) {
 			throw new \Exception("The $NcUser->getUID() user is not present in the $group->getGID() group.");
 		}
-
+	
 		if (UserGroup::isWorkspaceUserGroupId($group->getGID())
 			&& !$cascade) {
 			throw new \Exception("You must define cascade to true as parameter in the request to remove the user from $group->getGID() group.");
 		}
-
-		if (str_starts_with($group->getGID(), 'SPACE-U-')) {
-			$this->logger->info('[Workspace] Dispatch UserRemovedFromGroupEvent event');
-			$this->dispatch->dispatchTyped(new UserRemovedFromGroupEvent($NcUser, $group));
-		}
-
+	
 		$groupnames = [];
 
 		if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())) {
@@ -353,42 +341,42 @@ class GroupController extends Controller {
 
 		$group->removeUser($NcUser);
 		$groupnames[] = $group->getGID();
-
+	
 		if ($cascade) {
 			if (gettype($space) === 'string') {
 				$space = json_decode($space, true);
 			}
-
+	
 			$gidsStringify = array_keys($space['groups']);
-
+	
 			$gidsStringify = array_filter(
 				$gidsStringify,
 				fn ($gid) => $this->groupManager->isInGroup($NcUser->getUID(), $gid)
 			);
-
+	
 			foreach ($gidsStringify as $gid) {
 				if (!$this->groupManager->groupExists($gid)) {
 					throw new \Exception("The $gid group does not exist");
 				}
 			}
-
+	
 			$groups = array_map(
 				fn ($gid) => $this->groupManager->get($gid),
 				$gidsStringify
 			);
-
+	
 			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
 				$this->userService->removeGEFromWM($NcUser);
 				$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
 				$groupnames[] = $workspacesManagersGroup->getGID();
 			}
-
+	
 			foreach ($groups as $group) {
 				$group->removeUser($NcUser);
 				$groupnames[] = $group->getGID();
 			}
 		}
-
+	
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
 			'user' => $NcUser->getUID(),
@@ -473,7 +461,7 @@ class GroupController extends Controller {
 			30,
 			0
 		);
-
+		
 		$groupsSearching = array_map(
 			fn ($group) => $group['value']['shareWith'],
 			$groups['groups']
