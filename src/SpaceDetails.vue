@@ -51,24 +51,35 @@
 						:name="t('workspace', 'Add users')"
 						@click="toggleShowSelectUsersModal" />
 					<NcActionButton v-show="!createGroup"
-						icon="icon-group"
 						:name="t('workspace', 'Create a workspace group')"
 						class="no-bold"
-						@click="toggleCreateGroup" />
+						@click="toggleCreateGroup">
+						<template #icon>
+							<NcIconSvgWrapper name="icon-group" :path="mdiAccountMultiple" />
+						</template>
+					</NcActionButton>
 					<NcActionInput v-show="createGroup"
 						ref="createGroupInput"
-						icon="icon-group"
 						:close-after-click="true"
 						:show-trailing-button="true"
 						@submit="onNewGroup">
+						<template #icon>
+							<NcIconSvgWrapper name="icon-group" :path="mdiAccountMultiple" />
+						</template>
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
 					<NcActionButton
 						:name="t('workspace', 'Add a group')"
-						icon="icon-added-group"
 						class="no-bold"
 						:close-after-click="true"
-						@click="toggleShowConnectedGroups" />
+						@click="toggleShowConnectedGroups">
+						<template #icon>
+							<NcIconSvgWrapper v-if="isDarkTheme"
+								:svg="AddedGroupWhite" />
+							<NcIconSvgWrapper v-else
+								:svg="AddedGroupBlack" />
+						</template>
+					</NcActionButton>
 				</NcActions>
 				<NcActions>
 					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
@@ -121,6 +132,11 @@ import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import { mdiAccountMultiple } from '@mdi/js'
+import AddedGroupBlack from '../img/added_group_black.svg?raw'
+import AddedGroupWhite from '../img/added_group_white.svg?raw'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 
 export default {
 	name: 'SpaceDetails',
@@ -136,6 +152,7 @@ export default {
 		SelectConnectedGroups,
 		RemoveSpace,
 		UserTable,
+		NcIconSvgWrapper,
 	},
 	directives: {
 		Tooltip,
@@ -150,6 +167,11 @@ export default {
 			showEditWorkspaceModal: false,
 			isESR: false,
 			space: undefined,
+			mdiAccountMultiple,
+			AddedGroupBlack,
+			AddedGroupWhite,
+			iconUrl: undefined,
+			isDarkTheme: useIsDarkTheme(),
 		}
 	},
 	computed: {
