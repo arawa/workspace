@@ -112,7 +112,8 @@
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|less)$": "identity-obj-proxy",
       "^uuid$": "<rootDir>/node_modules/uuid/dist/index.js",
-      "^@vue/test-utils": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js"
+      "^@vue/test-utils": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js",
+      "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js"
     },
     "snapshotSerializers": [
       "<rootDir>/node_modules/jest-serializer-vue"
