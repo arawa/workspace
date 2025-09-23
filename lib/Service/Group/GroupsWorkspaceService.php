@@ -32,6 +32,8 @@ use OCP\IUser;
 class GroupsWorkspaceService {
 	public function __construct(
 		private IGroupManager $groupManager,
+		private WorkspaceManagerGroup $workspaceManagerGroup,
+		private UserGroup $userGroup,
 	) {
 	}
 
@@ -97,5 +99,23 @@ class GroupsWorkspaceService {
 		foreach ($users as $user) {
 			$group->addUser($user);
 		}
+	}
+
+	public function removeGroup(IGroup $group): void {
+		$gid = $group->getGID();
+
+		if (str_starts_with($this->userGroup->getPrefix(), $gid) || str_starts_with($this->workspaceManagerGroup->getPrefix(), $gid)) {
+			throw new GroupException("You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the system's functionality.");
+		}
+
+		if ($gid === ManagersWorkspace::GENERAL_MANAGER) {
+			throw new GroupException('You cannot remove the GeneralManager group.');
+		}
+
+		if ($gid === ManagersWorkspace::WORKSPACES_MANAGERS) {
+			throw new GroupException('You cannot remove the WorkspacesManagers group.');
+		}
+
+		$group->delete();
 	}
 }
