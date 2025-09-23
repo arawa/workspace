@@ -96,6 +96,10 @@ test: composer
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.xml
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml
 
+.PHONY: openapi
+openapi:
+	composer openapi
+
 ######################################################
 #
 # Everything from here relates to building a valid app
