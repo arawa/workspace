@@ -27,7 +27,7 @@ class WorkspaceChecker {
 
 			return $message;
 		}
-		
+
 		return null;
 	}
 }

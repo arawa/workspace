@@ -34,14 +34,14 @@ class WorkspaceCheckServiceTest extends TestCase {
 
 	private \PHPUnit\Framework\MockObject\MockObject&SpaceService $spaceService;
 	private WorkspaceCheckService $workspaceCheckService;
-	
+
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->spaceService = $this->createMock(SpaceService::class);
 		$this->workspaceCheckService = new WorkspaceCheckService($this->spaceService);
 	}
-	
+
 	public function testCheckSpacenameWithoutSpecialCharacter(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace01');
 
@@ -203,7 +203,7 @@ class WorkspaceCheckServiceTest extends TestCase {
 
 		$this->assertTrue($result);
 	}
-	
+
 	public function testCheckSpacenameWithSpace(): void {
 		$result = $this->workspaceCheckService->containSpecialChar('Espace 01');
 
