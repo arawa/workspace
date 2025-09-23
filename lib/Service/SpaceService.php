@@ -41,7 +41,7 @@ class SpaceService {
 		return $this->spaceMapper->findAll();
 	}
 
-	public function find($id): Space {
+	public function find($id): ?Space {
 		return $this->spaceMapper->find($id);
 	}
 
