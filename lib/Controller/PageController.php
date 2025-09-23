@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -47,10 +48,16 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NOCSRFRequired
 	 */
-	public function index(): TemplateResponse {
+	public function index($path = ''): TemplateResponse {
+		if (strpos($path, 'api/v') === 0) {
+			// avoid non existing API routes to be handled by this controller
+			// (because of catchall route)
+			throw new NotFoundException('Not found');
+		}
+
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
-	
+
 		// templates/index.php
 		return new TemplateResponse(
 			'workspace',
