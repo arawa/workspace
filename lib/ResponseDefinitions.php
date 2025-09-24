@@ -58,14 +58,6 @@ namespace OCA\Workspace;
  *
  * @psalm-type WorkspaceFindGroups = array<string, WorkspaceGroupInfo>
  *
- * @psalm-type WorkspaceSpaceDelete = array{
- * 		name: string,
- * 		groups: list<string>,
- * 		id: int,
- * 		groupfolder_id: int,
- * 		state: string
- * }
- *
  * @psalm-type WorkspaceConfirmationMessage = array{
  * 		message: string
  * }

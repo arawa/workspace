@@ -125,7 +125,6 @@
                     "name",
                     "color_code",
                     "usersCount",
-                    "users",
                     "added_groups"
                 ],
                 "properties": {
@@ -173,49 +172,11 @@
                         "type": "integer",
                         "format": "int64"
                     },
-                    "users": {
-                        "type": "array",
-                        "items": {
-                            "type": "object"
-                        }
-                    },
                     "added_groups": {
                         "type": "array",
                         "items": {
                             "type": "object"
                         }
-                    }
-                }
-            },
-            "SpaceDelete": {
-                "type": "object",
-                "required": [
-                    "name",
-                    "groups",
-                    "id",
-                    "groupfolder_id",
-                    "state"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "groups": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "id": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "groupfolder_id": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "state": {
-                        "type": "string"
                     }
                 }
             },
@@ -270,7 +231,7 @@
         }
     },
     "paths": {
-        "/index.php/apps/workspace/api/v1/spaces": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces": {
             "get": {
                 "operationId": "workspace_api_ocs-find-all",
                 "summary": "Return workspaces (optional filtering by name)",
@@ -478,7 +439,7 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}": {
             "get": {
                 "operationId": "workspace_api_ocs-find",
                 "summary": "Returns a workspace by its ID",
@@ -740,35 +701,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Workspace deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "$ref": "#/components/schemas/SpaceDelete"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Workspace deleted successfully"
                     },
                     "404": {
                         "description": "Workspace not found",
@@ -803,10 +737,10 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}/users": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}/users": {
             "get": {
                 "operationId": "workspace_api_ocs-find-users-by-id",
-                "summary": "Returns the users from a workspace.",
+                "summary": "Returns the users from a workspace",
                 "tags": [
                     "workspace-users"
                 ],
@@ -822,7 +756,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -875,7 +809,7 @@
             },
             "post": {
                 "operationId": "workspace_api_ocs-add-users-in-workspace",
-                "summary": "Adds users to the workspace by id.",
+                "summary": "Adds users to the workspace by id",
                 "tags": [
                     "workspace-users"
                 ],
@@ -899,7 +833,7 @@
                                 "properties": {
                                     "uids": {
                                         "type": "array",
-                                        "description": "Represents the user uids to add to the workspace.",
+                                        "description": "Represents the user uids to add to the workspace",
                                         "items": {
                                             "type": "string"
                                         }
@@ -913,7 +847,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1012,7 +946,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1022,7 +956,7 @@
                     {
                         "name": "uids[]",
                         "in": "query",
-                        "description": "Represents the user uids to remove to the workspace.",
+                        "description": "Represents the user uids to remove to the workspace",
                         "required": true,
                         "schema": {
                             "type": "array",
@@ -1079,10 +1013,10 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}/groups": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}/groups": {
             "get": {
                 "operationId": "workspace_api_ocs-find-groups-by-space-id",
-                "summary": "Returns the groups associated with a workspace.",
+                "summary": "Returns the groups associated with a workspace",
                 "tags": [
                     "workspace-groups"
                 ],
@@ -1098,7 +1032,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1186,7 +1120,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1268,7 +1202,7 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}/workspace-manager": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}/workspace-manager": {
             "post": {
                 "operationId": "workspace_api_ocs-add-user-as-workspace-manager",
                 "summary": "Add user as a workspace manager",
@@ -1295,7 +1229,7 @@
                                 "properties": {
                                     "uid": {
                                         "type": "string",
-                                        "description": "Represents the user uid to add as a workspace manager."
+                                        "description": "Represents the user uid to add as a workspace manager"
                                     }
                                 }
                             }
@@ -1306,7 +1240,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1405,7 +1339,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Represents the ID of the workspace.",
+                        "description": "Represents the ID of the workspace",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1415,7 +1349,7 @@
                     {
                         "name": "uid",
                         "in": "query",
-                        "description": "Represents the user uid to remove as a workspace manager.",
+                        "description": "Represents the user uid to remove as a workspace manager",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1433,35 +1367,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Confirmation for users removed from the workspace.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Confirmation for user removed as a workspace manager."
                     },
                     "404": {
                         "description": "User not found in the instance.",
@@ -1496,7 +1403,7 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}/groups/{gid}/users": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}/groups/{gid}/users": {
             "delete": {
                 "operationId": "workspace_api_ocs-remove-users-from-group",
                 "summary": "Remove users from a subgroup in a workspace",
@@ -1661,7 +1568,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Users removed from subgroup successfully",
+                        "description": "Users added in subgroup successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1723,10 +1630,10 @@
                 }
             }
         },
-        "/index.php/apps/workspace/api/v1/spaces/{id}/groups/{gid}": {
+        "/ocs/v2.php/apps/workspace/api/v1/spaces/{id}/groups/{gid}": {
             "delete": {
                 "operationId": "workspace_api_ocs-remove-group",
-                "summary": "Remove a subgroup from a workspace *",
+                "summary": "Remove a subgroup from a workspace",
                 "tags": [
                     "workspace-groups"
                 ],
@@ -1770,35 +1677,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Subgroup deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Subgroup deleted successfully"
                     },
                     "404": {
                         "description": "Workspace not found",
