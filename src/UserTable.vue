@@ -64,20 +64,20 @@
 					</td>
 					<td class="workspace-td">
 						<div class="user-actions">
-							<NcActions>
+							<NcActions :force-menu="true">
 								<NcActionButton v-if="user.profile !== undefined"
 									icon="icon-user"
 									:close-after-click="true"
 									@click="viewProfile(user)">
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
-								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space))"
+								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{ t('workspace', 'Remove admin rights') }}
 								</NcActionButton>
-								<NcActionButton v-else
+								<NcActionButton v-else-if="!$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									<template #icon>
@@ -91,7 +91,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup"
+								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
