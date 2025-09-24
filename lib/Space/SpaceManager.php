@@ -304,8 +304,8 @@ class SpaceManager {
 
 		if (!empty($usersNotExist)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
-			$this->logger->error('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
-			throw new OCSBadRequestException('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+			$this->logger->error('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 		}
 
 		$gid = UserGroup::get($id);
@@ -447,8 +447,8 @@ class SpaceManager {
 
 		if (!empty($usersNotExist)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
-			$this->logger->error('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
-			throw new OCSBadRequestException('These users not exist in your Nextcoud instance : ' . PHP_EOL . $formattedUsers);
+			$this->logger->error('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);

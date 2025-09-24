@@ -1417,7 +1417,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$this->expectException(OCSBadRequestException::class);
-		$this->expectExceptionMessage("These users not exist in your Nextcoud instance : \n- user42\n");
+		$this->expectExceptionMessage("These users not exist in your Nextcloud instance : \n- user42\n");
 
 		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
 	}
