@@ -39,7 +39,7 @@ use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
@@ -55,7 +55,6 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
- * @psalm-import-type WorkspaceSpaceDelete from ResponseDefinitions
  * @psalm-import-type WorkspaceFindGroups from ResponseDefinitions
  * @psalm-import-type WorkspaceConfirmationMessage from ResponseDefinitions
  * @psalm-import-type WorkspaceUsersList from ResponseDefinitions
@@ -77,7 +76,6 @@ class WorkspaceApiOcsController extends OCSController {
 		parent::__construct($appName, $request);
 	}
 
-
 	/**
 	 * Return workspaces (optional filtering by name)
 	 *
@@ -88,7 +86,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 */
 	#[OpenAPI(tags: ['workspace'])]
 	#[NoAdminRequired]
-	#[FrontpageRoute(verb: 'GET', url: '/api/v1/spaces')]
+	#[ApiRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(?string $name): DataResponse {
 		$workspaces = $this->spaceManager->findAll();
 
@@ -135,7 +133,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[OpenAPI(tags: ['workspace'])]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'GET',
 		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
@@ -178,7 +176,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'PATCH',
 		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
@@ -215,9 +213,9 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * Returns the users from a workspace.
+	 * Returns the users from a workspace
 	 *
-	 * @param int $id Represents the ID of the workspace.
+	 * @param int $id Represents the ID of the workspace
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceUsersList, array{}>
 	 *
 	 * 200: Users of the specified workspace returned successfully.
@@ -227,7 +225,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'GET',
 		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
@@ -260,10 +258,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[OpenAPI(tags: ['workspace'])]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
-		verb: 'POST',
-		url: '/api/v1/spaces',
-	)]
+	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
 		try {
 			$space = $this->spaceManager->create($name);
@@ -279,9 +274,9 @@ class WorkspaceApiOcsController extends OCSController {
 	 * Remove a workspace by id
 	 *
 	 * @param int $id of a workspace to delete
-	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceDelete, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
-	 * 200: Workspace deleted successfully
+	 * 204: Workspace deleted successfully
 	 * 404: Workspace not found
 	 */
 	#[OpenAPI(tags: ['workspace'])]
@@ -289,7 +284,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'DELETE',
 		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
@@ -306,22 +301,13 @@ class WorkspaceApiOcsController extends OCSController {
 
 		$this->logger->info("The {$space['name']} workspace with id {$space['id']} is deleted");
 
-		return new DataResponse(
-			[
-				'name' => $space['name'],
-				'groups' => $groups,
-				'id' => $space['id'],
-				'groupfolder_id' => $space['groupfolder_id'],
-				'state' => 'delete'
-			],
-			Http::STATUS_OK
-		);
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 
 	/**
-	 * Returns the groups associated with a workspace.
+	 * Returns the groups associated with a workspace
 	 *
-	 * @param int $id Represents the ID of the workspace.
+	 * @param int $id Represents the ID of the workspace
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceFindGroups, array{}>
 	 *
 	 * 200: Groups of the specified workspace returned successfully.
@@ -331,7 +317,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'GET',
 		url: '/api/v1/spaces/{id}/groups',
 		requirements: ['id' => '\d+'],
@@ -344,10 +330,10 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * Adds users to the workspace by id.
+	 * Adds users to the workspace by id
 	 *
-	 * @param int $id Represents the ID of the workspace.
-	 * @param list<string> $uids Represents the user uids to add to the workspace.
+	 * @param int $id Represents the ID of the workspace
+	 * @param list<string> $uids Represents the user uids to add to the workspace
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceConfirmationMessage, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: Confirmation message indicating that users have been added successfully.
@@ -358,7 +344,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[SpaceIdNumber]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
@@ -378,8 +364,8 @@ class WorkspaceApiOcsController extends OCSController {
 	/**
 	 * Remove users from a workspace
 	 *
-	 * @param int $id Represents the ID of the workspace.
-	 * @param list<string> $uids Represents the user uids to remove to the workspace.
+	 * @param int $id Represents the ID of the workspace
+	 * @param list<string> $uids Represents the user uids to remove to the workspace
 	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 204: Confirmation for users removed from the workspace.
@@ -390,7 +376,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'DELETE',
 		url: '/api/v1/spaces/{id}/users',
 		requirements: ['id' => '\d+']
@@ -406,8 +392,8 @@ class WorkspaceApiOcsController extends OCSController {
 	/**
 	 * Add user as a workspace manager
 	 *
-	 * @param int $id Represents the ID of the workspace.
-	 * @param string $uid Represents the user uid to add as a workspace manager.
+	 * @param int $id Represents the ID of the workspace
+	 * @param string $uid Represents the user uid to add as a workspace manager
 	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
 	 *
 	 * 200: Confirmation for users added to the workspace.
@@ -418,7 +404,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces/{id}/workspace-manager',
 		requirements: ['id' => '\d+']
@@ -437,11 +423,11 @@ class WorkspaceApiOcsController extends OCSController {
 	/**
 	 * Remove user as a workspace manager
 	 *
-	 * @param int $id Represents the ID of the workspace.
-	 * @param string $uid Represents the user uid to remove as a workspace manager.
-	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
+	 * @param int $id Represents the ID of the workspace
+	 * @param string $uid Represents the user uid to remove as a workspace manager
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{}, array{}>
 	 *
-	 * 200: Confirmation for users removed from the workspace.
+	 * 204: Confirmation for user removed as a workspace manager.
 	 * 404: User not found in the instance.
 	 */
 	#[OpenAPI(tags: ['workspace-users'])]
@@ -449,7 +435,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
 	#[NoAdminRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'DELETE',
 		url: '/api/v1/spaces/{id}/workspace-manager',
 		requirements: ['id' => '\d+']
@@ -467,13 +453,13 @@ class WorkspaceApiOcsController extends OCSController {
 
 		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($managerGroup, [$user]);
 
-		return new DataResponse([], Http::STATUS_OK);
+		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
 
 	/**
 	 * Create a new subgroup for a workspace
 	 *
-	 * @param int $id Represents the ID of the workspace.
+	 * @param int $id Represents the ID of the workspace
 	 * @param string $name The subgroup name
 	 * @return DataResponse<Http::STATUS_CREATED, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_CONFLICT, null, array{}>
 	 * @throws OCSException for all unknown errors
@@ -485,7 +471,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[RequireExistingSpace]
 	#[WorkspaceManagerRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces/{id}/groups',
 		requirements: [
@@ -519,7 +505,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingGroup]
 	#[NoAdminRequired]
 	#[WorkspaceManagerRequired]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'DELETE',
 		url: '/api/v1/spaces/{id}/groups/{gid}/users',
 		requirements: [
@@ -583,7 +569,7 @@ class WorkspaceApiOcsController extends OCSController {
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 * @throws OCSException for all unknown errors
 	 *
-	 * 200: Users removed from subgroup successfully
+	 * 200: Users added in subgroup successfully
 	 * 404: Subgroup with this id does not exist
 	 */
 	#[OpenAPI(tags: ['workspace-users'])]
@@ -592,7 +578,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingGroup]
 	#[NoAdminRequired]
 	#[WorkspaceManagerGroup]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'POST',
 		url: '/api/v1/spaces/{id}/groups/{gid}/users',
 		requirements: [
@@ -659,12 +645,12 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * Remove a subgroup from a workspace	 *
+	 * Remove a subgroup from a workspace
 	 * @param int $id Id of the workspace
 	 * @param string $gid id of the subgroup to delete
-	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 * @return DataResponse<Http::STATUS_NO_CONTENT, array{}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
-	 * 200: Subgroup deleted successfully
+	 * 204: Subgroup deleted successfully
 	 * 404: Workspace not found
 	 */
 	#[OpenAPI(tags: ['workspace-groups'])]
@@ -673,7 +659,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingGroup]
 	#[NoAdminRequired]
 	#[WorkspaceManagerGroup]
-	#[FrontpageRoute(
+	#[ApiRoute(
 		verb: 'DELETE',
 		url: '/api/v1/spaces/{id}/groups/{gid}',
 		requirements: ['id' => '\d+']

@@ -29,7 +29,7 @@ const rl = readline.createInterface({ input: process.stdin, output: process.stdo
 const _exit = process.exit;
 var verbose = false;
 
-const worskpace_api = 'index.php/apps/workspace/api/v1/'
+const worskpace_api = 'ocs/v2.php/apps/workspace/api/v1/'
 
 function WorkspaceApi(nextcloud, login, key) {
 	this.login = login
@@ -59,6 +59,18 @@ WorkspaceApi.prototype._api = async function(route, method = 'get', data = null)
         const response = await axios(request);
         return response.data.ocs ? response.data.ocs.data : response.data;
 	} catch (error) {
+		if (verbose) {
+			console.error('Request error catch: ' + method.toUpperCase() + ' ' + url);
+			if (data) {
+				console.error('Data: ' + JSON.stringify(data, null, 2));
+			}
+			if (error.response) {
+				console.error('Status: ' + error.response.status);
+				console.error('Data: ' + JSON.stringify(error.response.data, null, 2));
+			} else {
+				console.error('Error message: ' + error.message);
+			}
+		}
 		this._error = error;
         return null;
     }
@@ -536,6 +548,27 @@ async function main() {
 			if (!await ask_continue()) { return; }
 		}
 	}
+
+	// Remove user from Workspace Manager failure
+	if (options.step <= 120 ) {
+		console.log('Step 120: Remove user from Workspace Manager');
+		const spaceId = 9999; // non existing workspace
+		const res = await workspaceApi.removeUsers(spaceId, [ apiConf.user ]);
+		if (res === null) {
+			workspaceApi.logError('Error while removing user ' + apiConf.user + ' from space ' + spaceId);
+		} else {
+			if (verbose) {
+				console.log('Workspace: ' + spaceId);
+				console.log(JSON.stringify(res, null, 2));
+			} else {
+				console.log('Workspace: ' + spaceId);
+				console.log('User: ' + apiConf.user + ' was removed');
+			}
+		}
+		if (!options.yes) {
+			if (!await ask_continue()) { return; }
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -562,6 +595,7 @@ const options = yargs(process.argv.slice(2))
 		+ " 23 : remove subgroup\n"
 		+ " 99 : delete workspace\n"
 		+ " 110: create workspace with forbidden characters (will fail)\n"
+		+ " 120: remove workspace user for non existing workspace (will fail)\n"
 		, boolean: false, default: 0
 	})
  .options("y", {alias: "yes", describe: "Answer yes to all waiting inputs", boolean: true, default: false })

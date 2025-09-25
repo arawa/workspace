@@ -870,20 +870,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$actual = $this->controller->delete($id);
 
-		$expected = new DataResponse(
-			[
-				'name' => 'Space33',
-				'groups' => [
-					'SPACE-GE-33',
-					'SPACE-U-33'
-				],
-				'id' => 33,
-				'groupfolder_id' => 20,
-				'state' => 'delete'
-			],
-			Http::STATUS_OK
-		)
-		;
+		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
 
 		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
 			return;
@@ -891,7 +878,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
-		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals(Http::STATUS_NO_CONTENT, $actual->getStatus());
 	}
 
 	public function testFindAllAsWorkspaceManager(): void {
@@ -1812,14 +1799,14 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn($managerGroup)
 		;
 
-		$expected = new DataResponse([], Http::STATUS_OK);
+		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
 
 		/** @var DataResponse */
 		$actual = $this->controller->removeUserAsWorkspaceManager($id, $uid);
 
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
-		$this->assertEquals($expected->getStatus(), Http::STATUS_OK);
+		$this->assertEquals($expected->getStatus(), Http::STATUS_NO_CONTENT);
 	}
 
 	public function testRemoveUserFromGroupWithUsersAreNull(): void {
