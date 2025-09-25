@@ -49,6 +49,7 @@ use OCA\Workspace\Users\UserFormatter;
 use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
@@ -282,11 +283,11 @@ class FileCSVController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 * Returns formatted list of existing users of the instance.
 	 *
 	 */
+	#[NoAdminRequired]
 	public function getFromFiles(?int $spaceId = null):JSONResponse {
 		try {
 			$params = $this->request->getParams();
