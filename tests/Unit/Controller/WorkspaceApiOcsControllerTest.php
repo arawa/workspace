@@ -47,6 +47,7 @@ use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -57,6 +58,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private IGroupManager&MockObject $groupManager;
 	private IRequest&MockObject $request;
 	private IUserManager&MockObject $userManager;
+	private IUserSession&MockObject $session;
 	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
 	private SpaceMapper&MockObject $spaceMapper;
@@ -75,6 +77,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->groupsWorkspaceService = $this->createMock(GroupsWorkspaceService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->request = $this->createMock(IRequest::class);
+		$this->session = $this->createMock(IUserSession::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -85,6 +88,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->logger,
 			$this->groupManager,
 			$this->userManager,
+			$this->session,
 			$this->spaceManager,
 			$this->editValidator,
 			$this->groupsWorkspaceService,
@@ -216,6 +220,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user4',
 			'user5',
 		];
+		$uid = 'jane';
 		$space = [
 			'id' => 1,
 			'mount_point' => 'Espace01',
@@ -313,6 +318,19 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('removeUsersFromUserGroup')
 		;
 
+		$user = $this->createMock(IUser::class);
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
+		;
+
 		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
 
 		$actual = $this->controller->removeUsersFromGroup($id, $gid, $uids);
@@ -325,6 +343,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testCreateSubGroup() {
 		$id = 1;
 		$groupname = 'HR';
+		$uid = 'user1';
 
 		$gid = 'SPACE-G-HR-1';
 
@@ -338,9 +357,23 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$group
-			->expects($this->once())
+			->expects($this->any())
 			->method('getGID')
 			->willReturn($gid)
+		;
+
+		$user = $this->createMock(IUser::class);
+
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
 		;
 
 		$expected = new DataResponse([ 'gid' => 'SPACE-G-HR-1' ], Http::STATUS_CREATED);
@@ -815,6 +848,9 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	public function testDeleteWorkspace(): void {
 		$id = 33;
+		$uid = 'user1';
+
+		$user = $this->createMock(IUser::class);
 
 		$this->spaceManager
 			->expects($this->once())
@@ -862,6 +898,18 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			])
 		;
 
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
+		;
+		
 		$this->spaceManager
 			->expects($this->once())
 			->method('remove')
@@ -1552,7 +1600,22 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 	public function testRemoveUsersToWorkspaceReturnsValidResponse(): void {
 		$spaceId = 1;
+		$uid = 'admin';
 		$uids = ['user1', 'user2'];
+
+		$user = $this->createMock(IUser::class);
+
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
+		;
 
 		$actual = $this->controller->removeUsersInWorkspace($spaceId, $uids);
 
@@ -1784,6 +1847,9 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testRemoveUserAsWorkspaceManager(): void {
 		$id = 1;
 		$uid = 'user1';
+		$uidAuthorAction = 'alice';
+
+		$userAuthorAction = $this->createMock(IUser::class);
 
 		$user = $this->createMock(IUser::class);
 		/** @var IGroup&MockObject */
@@ -1810,6 +1876,18 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('get')
 			->with($managerGroupGid)
 			->willReturn($managerGroup)
+		;
+
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($userAuthorAction)
+		;
+
+		$userAuthorAction
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uidAuthorAction)
 		;
 
 		$expected = new DataResponse([], Http::STATUS_OK);
@@ -2563,6 +2641,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testRemoveGroup(): void {
 		$id = 1;
 		$gid = 'SPACE-G-HR-1';
+		$uid = 'user1';
 
 		$group = $this->createMock(IGroup::class);
 
@@ -2579,6 +2658,19 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->with($group)
 		;
 
+		$user = $this->createMock(IUser::class);
+		$this->session
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
+		;
+		
 		$actual = $this->controller->removeGroup($id, $gid);
 
 		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);
