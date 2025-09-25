@@ -29,8 +29,10 @@ import showNotificationError from '../services/Notifications/NotificationError.j
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
+import { alreadyExistsGroupName, alreadyExistsGroupId } from '../services/Groups/functions.js'
 
 export default {
+
 	// Adds a user to a group
 	// The backend takes care of adding the user to the U- group, and Workspace Managers group if needed.
 	addUserToGroup(context, { name, gid, user }) {
@@ -105,20 +107,25 @@ export default {
 		// Groups must be postfixed with the ID of the space they belong
 		const spaceId = space.id
 		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
-		gid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
+		let newGid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
-		const groups = Object.keys(space.groups)
-		if (groups.includes(gid)) {
+		if (alreadyExistsGroupName(space, displayName)) {
 			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
 			return
 		}
 
+		let incGid = 0
+		while (alreadyExistsGroupId(space, newGid)) {
+			// If the group already exists, we generate a new gid
+			incGid++
+			newGid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}${incGid}-${space.id}`
+		}
 		// Creates group in backend
 		axios.post(generateUrl('/apps/workspace/api/group'),
 			{
 				data: {
 					spaceId,
-					gid,
+					gid: newGid,
 					displayName,
 				},
 				spaceId: space.id,
@@ -128,7 +135,7 @@ export default {
 				// Creates group in frontend
 				context.commit('addGroupToSpace', {
 					space,
-					gid,
+					gid: newGid,
 					displayName,
 					types: resp.data.group.types,
 					slug: resp.data.group.slug,
@@ -139,13 +146,13 @@ export default {
 					path: `/group/${space.id}/${resp.data.group.slug}`,
 				})
 				// eslint-disable-next-line no-console
-				console.log('Group ' + gid + ' created')
+				console.log('Group ' + newGid + ' created')
 			})
 			.catch((e) => {
-				context.commit('removeGroupFromSpace', { name, gid })
+				context.commit('removeGroupFromSpace', { name, newGid })
 				const message = (e.response && e.response.data && e.response.data.msg) ?? e.message
-				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: message, group: gid })
-				showNotificationError('Network error', text, 4000)
+				const text = t('workspace', 'A network error occured while trying to create group {group}<br>The error is: {error}', { error: message, group: newGid })
+				showNotificationError('Error', text, 4000)
 			})
 	},
 	// Deletes a group
@@ -265,6 +272,11 @@ export default {
 	renameGroup(context, { name, gid, newGroupName }) {
 		const space = context.getters.getSpaceByNameOrId(name)
 
+		if (alreadyExistsGroupName(space, newGroupName)) {
+			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
+			return
+		}
+
 		// Creates group in backend
 		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
 			.then((resp) => {
@@ -282,7 +294,7 @@ export default {
 			})
 			.catch((e) => {
 				console.error(e)
-				showNotificationError('Error', e.response.data, 4000)
+				showNotificationError(t('Error'), e.response.data, 4000)
 			})
 	},
 	// Change a user's role from admin to user (or the opposite way)
