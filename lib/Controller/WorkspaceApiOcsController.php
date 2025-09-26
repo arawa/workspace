@@ -350,7 +350,12 @@ class WorkspaceApiOcsController extends OCSController {
 		requirements: ['id' => '\d+']
 	)]
 	public function addUsersInWorkspace(int $id, array $uids): DataResponse {
-		$this->spaceManager->addUsersInWorkspace($id, $uids);
+		try {
+			$this->spaceManager->addUsersInWorkspace($id, $uids);
+		} catch (\Exception $e) {
+			throw new OCSException($e->getMessage(), $e->getCode());
+		}
+
 		$spacename = $this->spaceMapper->find($id)->getSpaceName();
 
 		$count = count($uids);

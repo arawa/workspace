@@ -291,7 +291,7 @@ class SpaceManager {
 		$othersStringTypes = array_values(array_filter($types, fn ($type) => $type !== 'string'));
 
 		if (!empty($othersStringTypes)) {
-			throw new OCSBadRequestException('uids params must contain a string array only');
+			throw new BadRequestException('Error in parameters', 'uids params must contain a string array only');
 		}
 
 		$usersNotExist = [];
@@ -305,7 +305,7 @@ class SpaceManager {
 		if (!empty($usersNotExist)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
 			$this->logger->error('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
-			throw new OCSBadRequestException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			throw new NotFoundException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 		}
 
 		$gid = UserGroup::get($id);
@@ -313,7 +313,7 @@ class SpaceManager {
 
 		if (is_null($userGroup)) {
 			$this->logger->error("The group with {$gid} group doesn't exist.");
-			throw new OCSBadRequestException("The group with {$gid} group doesn't exist.");
+			throw new NotFoundException("The group with {$gid} group doesn't exist.");
 		}
 
 		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
