@@ -9,6 +9,9 @@ use OCP\Capabilities\ICapability;
 use OCP\IAppConfig;
 use OCP\IConfig;
 
+/**
+ * @psalm-import-type WorkspaceCapabilities from ResponseDefinitions
+ */
 class Capabilities implements ICapability {
 	public function __construct(
 		private IAppManager $appManager,
@@ -17,6 +20,11 @@ class Capabilities implements ICapability {
 	) {
 	}
 
+	/**
+	 * @return array{
+	 *      workspace: WorkspaceCapabilities,
+	 * }|list<empty>
+	 */
 	public function getCapabilities(): array {
 		return [
 			Application::APP_ID => [

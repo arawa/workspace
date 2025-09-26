@@ -43,7 +43,7 @@ class SpaceMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('space_id', $qb->createNamedParameter($id, $qb::PARAM_INT))
 			);
-		
+
 		try {
 			return $this->findEntity($query);
 		} catch (\Exception $e) {
@@ -80,14 +80,13 @@ class SpaceMapper extends QBMapper {
 	}
 
 	/**
-	 * @deprecated
 	 * @see WorkspaceController->destroy().
 	 */
 	public function deleteSpace(int $id): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->delete('work_spaces')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id))
+			->where($qb->expr()->eq('space_id', $qb->createNamedParameter($id))
 			)
 			->execute();
 	}
@@ -114,7 +113,7 @@ class SpaceMapper extends QBMapper {
 			->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
 
 		$qb->execute();
-		
+
 		return $this->find($spaceId);
 	}
 

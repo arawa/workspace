@@ -30,12 +30,12 @@ use PDO;
 
 class GroupFoldersGroupsMapper extends QBMapper {
 	protected $db;
-	
+
 	public function __construct(IDBConnection $db) {
 		$this->db = $db;
 		$this->entityClass = ConnectedGroup::class;
 	}
-	
+
 	/**
 	 * @return array [
 	 *               [
