@@ -338,7 +338,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$group
-			->expects($this->once())
+			->expects($this->any())
 			->method('getGID')
 			->willReturn($gid)
 		;
@@ -861,7 +861,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'added_groups' => (object)[],
 			])
 		;
-
+		
 		$this->spaceManager
 			->expects($this->once())
 			->method('remove')
@@ -2565,7 +2565,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->method('removeGroup')
 			->with($group)
 		;
-
+	
 		$actual = $this->controller->removeGroup($id, $gid);
 
 		$expected = new DataResponse([], Http::STATUS_NO_CONTENT);

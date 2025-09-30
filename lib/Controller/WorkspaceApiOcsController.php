@@ -389,7 +389,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function removeUsersInWorkspace(int $id, array $uids): DataResponse {
 		$this->spaceManager->removeUsersFromWorkspace($id, $uids);
 		$uidsStringify = implode(', ', $uids);
-		$this->logger->info("These users are removed from the workspace with the id {$id} : {$uidsStringify}");
+		$this->logger->info("These users are removed from the workspace with the id {$id}: {$uidsStringify}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
@@ -455,6 +455,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$managerGid = WorkspaceManagerGroup::get($id);
 		$managerGroup = $this->groupManager->get($managerGid);
 
+		$this->logger->info("The user with UID {$uid} has been removed from the Workspace Manager role on workspace {$id}");
 
 		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($managerGroup, [$user]);
 
@@ -486,6 +487,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function createSubGroup(int $id, string $name): DataResponse {
 		try {
 			$group = $this->spaceManager->createSubGroup($id, $name);
+			$this->logger->info("The group {$group->getGID()} was created for workspace {$id}");
 			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
 		} catch (\Exception $exception) {
 			throw new OCSException($exception->getMessage(), $exception->getCode());
@@ -560,7 +562,7 @@ class WorkspaceApiOcsController extends OCSController {
 
 		// to remove
 		$uids = implode(', ', $uids);
-		$this->logger->info("Users are removed from the {$gid} group (not the added groups) in the workspace {$id}");
+		$this->logger->info("Users were removed from group {$gid} (not from the added groups) in workspace {$id}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
@@ -677,6 +679,8 @@ class WorkspaceApiOcsController extends OCSController {
 		} catch (\Exception $e) {
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
+
+		$this->logger->info("The group {$gid} was removed from workspace {$id}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
