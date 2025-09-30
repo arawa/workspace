@@ -24,11 +24,18 @@
 
 namespace OCA\Workspace\Group\SubGroups;
 
+use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCP\AppFramework\Http;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
 class SubGroup {
+
+	public const PREFIX_GID = 'SPACE-G-';
+	public const PREFIX_DISPLAY_NAME = 'G-';
+
 	public function __construct(
 		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
@@ -54,5 +61,36 @@ class SubGroup {
 
 	public function getGroupsFormatted(array $gids): array {
 		return GroupFormatter::formatGroups($this->get($gids));
+	}
+
+	public function create(string $groupname, int $id, string $spacename): IGroup {
+		$gid = sprintf('%s%s-%s', self::PREFIX_GID, $groupname, $id);
+		$displayName = sprintf('%s%s-%s', self::PREFIX_DISPLAY_NAME, $groupname, $spacename);
+
+		$group = $this->groupManager->get($gid);
+
+		$groupsSearched = $this->groupManager->search($displayName);
+		$groupnames = array_map(fn ($group) => $group->getDisplayName(), $groupsSearched);
+
+		if (!is_null($group)) {
+			if (in_array($displayName, $groupnames)) {
+				throw new GroupException("The group with the display name $displayName already exists.", Http::STATUS_CONFLICT);
+			}
+		}
+
+		$count = 1;
+		while (!is_null($group)) {
+			$gid = sprintf('%s%s-%s', self::PREFIX_GID, "$groupname$count", $id);
+			$group = $this->groupManager->get($gid);
+			if (is_null($group)) {
+				break;
+			}
+			$count++;
+		}
+
+		$group = $this->groupManager->createGroup($gid);
+		$group->setDisplayName($displayName);
+
+		return $group;
 	}
 }

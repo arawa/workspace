@@ -177,7 +177,7 @@ class WorkspaceController extends Controller {
 				}
 
 				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['userCount'] = $group->count();
+					$space['usersCount'] = $group->count();
 				}
 			}
 
@@ -206,7 +206,7 @@ class WorkspaceController extends Controller {
 		$space = $this->spaceMapper->find($spaceId);
 
 		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
-		
+
 		if ($groupfolder === false) {
 			return new JSONResponse(
 				[
@@ -268,7 +268,7 @@ class WorkspaceController extends Controller {
 		if (is_null($space)) {
 			throw new \Exception('Workspace does not exist.');
 		}
-		
+
 		if (!is_int($quota)) {
 			throw new BadRequestException('Error setting quota', 'The quota parameter is not an integer.');
 		}
@@ -370,9 +370,9 @@ class WorkspaceController extends Controller {
 			throw new BadRequestException('Error to rename the workspace', 'Your Workspace name must not contain the following characters: {args}', argsMessage: [implode(' ', array_unique(str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)))]);
 		}
 
-		if ($newSpaceName === false ||
-			$newSpaceName === null ||
-			$newSpaceName === ''
+		if ($newSpaceName === false
+			|| $newSpaceName === null
+			|| $newSpaceName === ''
 		) {
 			throw new BadRequestException('Error to rename the workspace', 'newSpaceName must be provided');
 		}
@@ -380,7 +380,7 @@ class WorkspaceController extends Controller {
 		$spaceName = $this->deleteBlankSpaceName($newSpaceName);
 
 		$this->spaceManager->rename($spaceId, $spaceName);
-		
+
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
 			'space' => $spaceName,

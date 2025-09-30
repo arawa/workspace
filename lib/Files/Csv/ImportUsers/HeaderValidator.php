@@ -17,7 +17,7 @@ class HeaderValidator implements CsvValidatorInterface {
 
 			$res = ($nameIndex !== false) && ($roleIndex !== false);
 		}
-		
+
 		$file->close();
 
 		return $res;
