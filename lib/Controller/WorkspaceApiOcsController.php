@@ -25,6 +25,7 @@
 namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Attribute\NoSpecialChar;
 use OCA\Workspace\Attribute\RequireExistingGroup;
 use OCA\Workspace\Attribute\RequireExistingSpace;
 use OCA\Workspace\Attribute\SpaceIdNumber;
@@ -176,6 +177,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[RequireExistingSpace]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
+	#[NoSpecialChar]
 	#[ApiRoute(
 		verb: 'PATCH',
 		url: '/api/v1/spaces/{id}',
@@ -258,6 +260,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[OpenAPI(tags: ['workspace'])]
 	#[GeneralManagerRequired]
 	#[NoAdminRequired]
+	#[NoSpecialChar]
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
 		try {
