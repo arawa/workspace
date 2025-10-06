@@ -21,15 +21,7 @@
 -->
 
 <template>
-	<div v-if="$store.state.noUsers">
-		<NcEmptyContent
-			:name="t('workspace', 'No users')">
-			<template #description>
-				{{ t('workspace', 'There are no users in this space/group yet') }}
-			</template>
-		</NcEmptyContent>
-	</div>
-	<div v-else-if="!$store.state.loadingUsersWaiting">
+	<div v-if="!$store.state.loadingUsersWaiting">
 		<div class="header">
 			<div class="space-name">
 				<div class="space-color-picker color-dot"
@@ -97,7 +89,14 @@
 				</NcActions>
 			</div>
 		</div>
-		<UserTable :space-name="$route.params.space" />
+		<NcEmptyContent v-if="$store.state.noUsers"
+			:name="t('workspace', 'No users')">
+			<template #description>
+				{{ t('workspace', 'There are no users in this space/group yet') }}
+			</template>
+		</NcEmptyContent>
+		<UserTable v-else
+			:space-name="$route.params.space" />
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
@@ -194,8 +193,10 @@ export default {
 	},
 	beforeUpdate() {
 		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-		if (!this.$store.state.noUsers) {
+		if (Object.keys(this.space.users).length === 0) {
 			this.$store.dispatch('loadUsers', { space: this.space })
+		} else {
+			this.$store.dispatch('setNoUsers', { activated: false })
 		}
 	},
 	created() {

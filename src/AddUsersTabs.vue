@@ -199,6 +199,7 @@ export default {
 					this.addNewUserFromSubgroup(user, space)
 				}
 			})
+			this.$store.dispatch('setNoUsers', { activated: false })
 		},
 		addUserFromWorkspace(user, space) {
 			let gid = ''
