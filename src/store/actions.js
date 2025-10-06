@@ -470,8 +470,10 @@ export default {
 	},
 	loadUsers(context, { space }) {
 		context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
+		context.commit('SET_NO_USERS', ({ activated: false }))
 
 		if (Object.keys(space.users).length === space.userCount) {
+			context.commit('SET_NO_USERS', ({ activated: true }))
 			return
 		}
 
@@ -493,6 +495,9 @@ export default {
 				context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
+	},
+	setNoUsers(context, { activated }) {
+		context.commit('SET_NO_USERS', ({ activated }))
 	},
 	async loadAdmins(context, space) {
 		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
