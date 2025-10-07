@@ -357,16 +357,6 @@ class SpaceManager {
 		$space = $this->get($spaceId);
 		$newSpaceName = $this->deleteBlankSpaceName($newSpaceName);
 
-		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
-			throw new BadRequestException(
-				title: 'Error creating workspace',
-				message: 'Your Workspace name must not contain the following characters: {specialChars}',
-				argsMessage: [
-					'specialChars' => implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL))
-				]
-			);
-		}
-
 		if ($this->workspaceCheck->isExist($newSpaceName)) {
 			throw new WorkspaceNameExistException(
 				title: 'Error - Duplicate space name',
