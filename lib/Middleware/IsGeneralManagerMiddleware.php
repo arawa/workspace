@@ -44,13 +44,13 @@ class IsGeneralManagerMiddleware extends Middleware {
 	}
 
 	public function beforeController($controller, $methodName): void {
-		if ($this->reflector->hasAnnotation('GeneralManagerRequired')) {
-			if (!$this->userService->isUserGeneralAdmin()) {
-				throw new AccessDeniedException();
-			}
+		if (!$this->reflector->hasAnnotation('GeneralManagerRequired')) {
+			return;
 		}
-
-		return;
+		
+		if (!$this->userService->isUserGeneralAdmin()) {
+			throw new AccessDeniedException();
+		}
 	}
 
 	public function afterException($controller, $methodName, Exception $exception): JSONResponse {

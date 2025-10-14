@@ -8,6 +8,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -40,6 +41,10 @@ class RequireExistingGroupMiddleware extends Middleware {
 	}
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
+		if (!$exception instanceof OCSException) {
+			throw $exception;
+		}
+		
 		return new JSONResponse([
 			'message' => $exception->getMessage()
 		], $exception->getCode());
