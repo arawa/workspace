@@ -30,6 +30,7 @@ use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
 use OCA\Workspace\Group\Admin\AdminGroup;
@@ -90,13 +91,7 @@ class SpaceManager {
 		}
 
 		if ($this->workspaceCheck->containSpecialChar($spacename)) {
-			throw new BadRequestException(
-				title: 'Error creating workspace',
-				message: 'Your Workspace name must not contain the following characters: {specialChars}',
-				argsMessage: [
-					'specialChars' => implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL))
-				]
-			);
+			throw new WorkspaceNameSpecialCharException();
 		}
 
 		if ($this->workspaceCheck->isExist($spacename)) {
