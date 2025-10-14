@@ -10,6 +10,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSForbiddenException;
 use OCP\IRequest;
 
@@ -29,7 +30,7 @@ class WorkspaceManagerAccessMiddleware extends Middleware {
 		if (empty($hasAttribute)) {
 			return;
 		}
-
+		
 		if ($this->userService->isUserGeneralAdmin()) {
 			return;
 		}
@@ -50,6 +51,10 @@ class WorkspaceManagerAccessMiddleware extends Middleware {
 	}
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
+		if (!$exception instanceof OCSException) {
+			throw $exception;
+		}
+
 		return new JSONResponse([
 			'message' => $exception->getMessage()
 		], $exception->getCode());

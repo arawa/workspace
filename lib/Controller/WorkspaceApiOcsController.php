@@ -31,12 +31,14 @@ use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -190,23 +192,39 @@ class WorkspaceApiOcsController extends OCSController {
 
 		$this->editParamsValidator->validate($toSet);
 
-		if (!is_null($toSet['color'])) {
-			$this->spaceManager->setColor($id, $toSet['color']);
-		}
-
-		if (!is_null($toSet['name'])) {
-			$space = $this->spaceManager->get($id);
-			if (strtolower($space['name']) !== strtolower($toSet['name'])) {
-				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
-				$this->spaceManager->rename($id, $toSet['name']);
-			} else {
-				$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
-				$toSet['name'] = $space['name']; // when case is different
+		try {
+			if (!is_null($toSet['color'])) {
+				$this->spaceManager->setColor($id, $toSet['color']);
 			}
-		}
+	
+			if (!is_null($toSet['name'])) {
+				$space = $this->spaceManager->get($id);
+				if (strtolower($space['name']) !== strtolower($toSet['name'])) {
+					$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
+					$this->spaceManager->rename($id, $toSet['name']);
+				} else {
+					$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
+					$toSet['name'] = $space['name']; // when case is different
+				}
+			}
+	
+			if (!is_null($toSet['quota'])) {
+				$this->spaceManager->setQuota($id, $toSet['quota']);
+			}			
+		} catch (\Exception $e) {
+			if ($e instanceof NotFoundException) {
+				throw new OCSNotFoundException($e->getMessage());
+			}
 
-		if (!is_null($toSet['quota'])) {
-			$this->spaceManager->setQuota($id, $toSet['quota']);
+			if ($e instanceof WorkspaceNameSpecialCharException) {
+				$specialChars = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+				throw new OCSException(
+					message: "Your Workspace name must not contain the following characters: {$specialChars}",
+					code: $e->getCode()
+				);
+			}
+			
+			throw new OCSException($e->getMessage(), $e->getCode());
 		}
 
 		return new DataResponse($toSet, Http::STATUS_OK);
@@ -264,6 +282,14 @@ class WorkspaceApiOcsController extends OCSController {
 			$space = $this->spaceManager->create($name);
 			$this->logger->info("The workspace {$name} is created");
 		} catch (\Exception $e) {
+			if ($e instanceof WorkspaceNameSpecialCharException) {
+				$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+				throw new OCSException(
+					message: "Your Workspace name must not contain the following characters: {$specialCharsReadable}",
+					code: $e->getCode()
+				);
+			}
+			
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
 
