@@ -277,7 +277,6 @@ class WorkspaceApiOcsController extends OCSController {
 
 			if ($e instanceof SpacenameExistException) {
 				throw new OCSException("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.");
-				throw new OCSException("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn\'t exist.");
 			}
 			
 			throw new OCSException($e->getMessage(), $e->getCode());
