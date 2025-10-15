@@ -29,7 +29,8 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
+use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
@@ -95,10 +96,7 @@ class SpaceManager {
 		}
 
 		if ($this->workspaceCheck->isExist($spacename)) {
-			throw new WorkspaceNameExistException(
-				title: 'Error - Duplicate space name',
-				message: "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist."
-			);
+			throw new SpacenameExistException();
 		}
 
 		$spacename = $this->deleteBlankSpaceName($spacename);

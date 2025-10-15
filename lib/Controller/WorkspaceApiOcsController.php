@@ -31,6 +31,7 @@ use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
@@ -272,6 +273,11 @@ class WorkspaceApiOcsController extends OCSController {
 					message: "Your Workspace name must not contain the following characters: {$specialCharsReadable}",
 					code: $e->getCode()
 				);
+			}
+
+			if ($e instanceof SpacenameExistException) {
+				throw new OCSException("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.");
+				throw new OCSException("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn\'t exist.");
 			}
 			
 			throw new OCSException($e->getMessage(), $e->getCode());

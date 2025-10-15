@@ -32,7 +32,7 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Exceptions\WorkspaceNameExistException;
+use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
 use OCA\Workspace\Group\Admin\AdminGroup;

@@ -56,6 +56,6 @@ OC.L10N.register(
 		'You have not yet created any workspace': 'Zatím jste nevytvořili žádný prac. prostor',
 		'unlimited': 'neomezené',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Jako kvótu je možné zadat pouze „neomezené“ nebo číslo následované „TB“, „GB“, „MB“ nebo „KB“ (příklad: „5GB“).',
-		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'Tento prostor nebo skupinová složka už existuje. Zadejte jiný prostor.\nPokud exituje např. prostor „toto“, není možné vytvořit prostor „tOTo“.\nOvěřte, že skupinová složka neexistuje.',
+		'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.': 'Tento prostor nebo skupinová složka už existuje. Zadejte jiný prostor.\nPokud exituje např. prostor „toto“, není možné vytvořit prostor „tOTo“.\nOvěřte, že skupinová složka neexistuje.',
 	},
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

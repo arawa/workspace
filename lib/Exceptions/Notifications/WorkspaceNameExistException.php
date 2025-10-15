@@ -22,9 +22,10 @@
  *
  */
 
-namespace OCA\Workspace\Exceptions;
+namespace OCA\Workspace\Exceptions\Notifications;
 
 use OCP\AppFramework\Http;
+use OCA\Workspace\Exceptions\AbstractNotification;
 
 class WorkspaceNameExistException extends AbstractNotification {
 	public function __construct($title, $message, $code = Http::STATUS_CONFLICT) {
