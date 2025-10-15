@@ -46,10 +46,16 @@ export function createSpace(spaceName, vueInstance = undefined) {
 			return resp.data
 		})
 		.catch(error => {
-			if ('response' in error && 'data' in error.response) {
+			switch (error.status) {
+			case 400:
 				showCreatingWorkspaceNotification(error.response.data.title, error.response.data.message, 5000, error.response.data.args_message)
-			} else {
+				break
+			case 409:
+				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+				break
+			default:
 				showNotificationError('Error to create a workspace', error.message, 5000)
+				break
 			}
 
 			throw new BadCreateError(error)

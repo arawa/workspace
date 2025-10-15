@@ -121,7 +121,7 @@ OC.L10N.register(
 		'You have not yet created any workspace': 'Vous n\'avez pas encore créé de Workspace',
 		'unlimited': 'illimité',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
-		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'Ce Workspace ou Dossier de groupe (Group folder) existe déjà. Saisissez un autre nom pour votre Workspace, s\'il vous plaît.\nPar exemple, si le Workspace "resssources humaines" existe, vous ne pouvez pas créer le Workspace "Ressources Humaines".\nAssurez-vous que le Group folder n\'existe pas.',
+		'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.': 'Ce Workspace ou Dossier de groupe (Group folder) existe déjà. Saisissez un autre nom pour votre Workspace, s\'il vous plaît.\nPar exemple, si le Workspace "resssources humaines" existe, vous ne pouvez pas créer le Workspace "Ressources Humaines".\nAssurez-vous que le Group folder n\'existe pas.',
 		'The file must be in <b>CSV format</b>.': 'Le fichier doit être au <b>format CSV</b>.',
 		'Invalid file format. Table header doesn\'t contain any of the following values:<br> {values}': 'Format de fichier est invalide. L\'en-tête du tableau ne contient aucune des valeurs suivantes :<br> {values}',
 		'Something went wrong. Couldn\'t open the file.': 'Quelque chose s\'est mal passé. Impossible d\'ouvrir le fichier.',

@@ -25,31 +25,33 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
-use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminUserGroup;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
-use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\SpaceService;
-use OCA\Workspace\Service\User\UserFormatter;
-use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
-use OCA\Workspace\Service\WorkspaceService;
-use OCA\Workspace\Space\SpaceManager;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IGroupManager;
+use OCP\AppFramework\Http;
 use Psr\Log\LoggerInterface;
+use OCP\AppFramework\Controller;
+use OCA\Workspace\Db\SpaceMapper;
+use OCA\Workspace\Folder\RootFolder;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\Service\UserService;
+use OCA\Workspace\Service\SpaceService;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Workspace\Group\Admin\AdminGroup;
+use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Service\WorkspaceService;
+use OCA\Workspace\Group\Admin\AdminUserGroup;
+use OCA\Workspace\Service\User\UserFormatter;
+use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCA\Workspace\Exceptions\SpacenameExistException;
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
+use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
+use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
 
 class WorkspaceController extends Controller {
 	public function __construct(
@@ -100,6 +102,13 @@ class WorkspaceController extends Controller {
 					title: 'Error creating workspace',
 					message: 'Your Workspace name must not contain the following characters: {specialChars}',
 					argsMessage: [ 'specialChars' => $specialChars ]
+				);
+			}
+
+			if ($e instanceof SpacenameExistException) {
+				throw new WorkspaceNameExistException(
+					title: 'Error - Duplicate space name',
+					message: "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist."
 				);
 			}
 		}
