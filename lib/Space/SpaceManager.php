@@ -350,11 +350,12 @@ class SpaceManager {
 		$space = $this->get($spaceId);
 		$newSpaceName = $this->deleteBlankSpaceName($newSpaceName);
 
+		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
+			throw new WorkspaceNameSpecialCharException();
+		}
+
 		if ($this->workspaceCheck->isExist($newSpaceName)) {
-			throw new WorkspaceNameExistException(
-				title: 'Error - Duplicate space name',
-				message: "This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist."
-			);
+			throw new SpacenameExistException();
 		}
 
 		$this->folderHelper->renameFolder($space['groupfolder_id'], $newSpaceName);
