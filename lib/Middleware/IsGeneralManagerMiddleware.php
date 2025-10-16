@@ -47,7 +47,7 @@ class IsGeneralManagerMiddleware extends Middleware {
 		if (!$this->reflector->hasAnnotation('GeneralManagerRequired')) {
 			return;
 		}
-		
+
 		if (!$this->userService->isUserGeneralAdmin()) {
 			throw new AccessDeniedException();
 		}
