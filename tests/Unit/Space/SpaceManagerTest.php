@@ -29,10 +29,10 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use Mockery;
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
+use OCA\Workspace\Exceptions\SpacenameExistException;
+use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\AddedGroups\AddedGroups;
 use OCA\Workspace\Group\Admin\AdminGroup;
@@ -586,8 +586,7 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testContainSpecialCharInTheWorkspaceName(): void {
-		$this->expectException(BadRequestException::class);
-		$this->expectExceptionMessage('Your Workspace name must not contain the following characters: {specialChars}');
+		$this->expectException(WorkspaceNameSpecialCharException::class);
 
 		$this->workspaceCheck
 			->expects($this->once())
@@ -599,10 +598,8 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testWorkspaceAlreadyExist(): void {
-
-		$referenceMessage = "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.";
-		$this->expectException(WorkspaceNameExistException::class);
-		$this->expectExceptionMessage($referenceMessage);
+		$this->expectException(SpacenameExistException::class);
+		$this->expectExceptionCode(Http::STATUS_CONFLICT);
 
 		$this->workspaceCheck
 			->expects($this->once())
@@ -610,16 +607,7 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(true)
 		;
 
-		try {
-			$this->spaceManager->create('Espace01');
-		} catch (\Exception|AbstractNotification $e) {
-			$this->assertInstanceOf(\Exception::class, $e);
-			$this->assertInstanceOf(AbstractNotification::class, $e);
-			$this->assertEquals('Error - Duplicate space name', $e->getTitle());
-			$this->assertEquals($referenceMessage, $e->getMessage());
-			$this->assertEquals(Http::STATUS_CONFLICT, $e->getCode());
-			throw $e;
-		}
+		$this->spaceManager->create('Espace01');
 	}
 
 	private function createSubGroup(
