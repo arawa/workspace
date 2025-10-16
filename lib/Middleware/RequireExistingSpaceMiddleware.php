@@ -56,7 +56,7 @@ class RequireExistingSpaceMiddleware extends Middleware {
 		if (!$exception instanceof OCSException) {
 			throw $exception;
 		}
-		
+
 		return new JSONResponse([
 			'message' => $exception->getMessage()
 		], $exception->getCode());

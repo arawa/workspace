@@ -197,7 +197,7 @@ class WorkspaceApiOcsController extends OCSController {
 			if (!is_null($toSet['color'])) {
 				$this->spaceManager->setColor($id, $toSet['color']);
 			}
-	
+
 			if (!is_null($toSet['name'])) {
 				$space = $this->spaceManager->get($id);
 				if (strtolower($space['name']) !== strtolower($toSet['name'])) {
@@ -208,10 +208,10 @@ class WorkspaceApiOcsController extends OCSController {
 					$toSet['name'] = $space['name']; // when case is different
 				}
 			}
-	
+
 			if (!is_null($toSet['quota'])) {
 				$this->spaceManager->setQuota($id, $toSet['quota']);
-			}			
+			}
 		} catch (\Exception $e) {
 			if ($e instanceof NotFoundException) {
 				throw new OCSNotFoundException($e->getMessage());
@@ -228,7 +228,7 @@ class WorkspaceApiOcsController extends OCSController {
 			if ($e instanceof SpacenameExistException) {
 				throw new OCSException("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.");
 			}
-			
+
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
 
@@ -298,7 +298,7 @@ class WorkspaceApiOcsController extends OCSController {
 			if ($e instanceof SpacenameExistException) {
 				throw new OCSException("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.");
 			}
-			
+
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
 
