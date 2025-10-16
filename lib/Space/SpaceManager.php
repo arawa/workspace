@@ -29,7 +29,6 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Exceptions\CreateWorkspaceException;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
 use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Folder\RootFolder;
