@@ -214,12 +214,12 @@ export default {
 						this.$store.dispatch('removeSpace', {
 							space,
 						})
+						this.$store.dispatch('decrementCountWorkspaces')
 						this.$router.push({
 							path: '/',
 						})
 					}
 				})
-			this.$store.dispatch('decrementCountWorkspaces')
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
