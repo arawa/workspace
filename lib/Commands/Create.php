@@ -134,7 +134,7 @@ class Create extends Command {
 
 		try {
 			$workspace = $this->spaceManager->create($spacename);
-		} catch (\OCA\Workspace\Exceptions\WorkspaceNameExistException $e) {
+		} catch (\OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException $e) {
 			$output->writeln(sprintf('The space %s already exists', $spacename));
 			$workspace = $this->spaceManager->getByName($spacename);
 		}
