@@ -105,9 +105,7 @@ export async function checkGroupfolderNameExist(spaceName) {
 
 	if (duplicateExists) {
 		showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
-		throw new CheckGroupfolderNameExistError('This space or groupfolder already exist. Please, input another space.'
-		+ '\nIf "toto" space exist, you cannot create the "tOTo" space.'
-		+ '\nMake sure you the groupfolder doesn\'t exist.', 5000)
+		throw new CheckGroupfolderNameExistError('This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
 	}
 	return false
 }
