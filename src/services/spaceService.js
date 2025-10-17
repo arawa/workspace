@@ -215,7 +215,6 @@ export function renameSpace(spaceId, newSpaceName) {
 				break
 			default:
 				showNotificationError('Error to create a workspace', error.message, 5000)
-				console.error('Problem to rename the space', error)
 				break
 			}
 		})
