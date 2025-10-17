@@ -238,6 +238,9 @@ export default {
 			this.$store.dispatch('decrementSpaceUserCount', {
 				spaceName: space.name,
 			})
+			if (Object.keys(space.users).length === 0) {
+				this.$store.dispatch('setNoUsers', { activated: true })
+			}
 		},
 		// Makes user an admin or a simple user
 		toggleUserRole(user) {
