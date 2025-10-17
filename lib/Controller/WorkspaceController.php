@@ -44,6 +44,7 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -85,10 +86,10 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @GeneralManagerRequired
 	 * @param string $spaceName
 	 */
+	#[NoAdminRequired]
 	public function createWorkspace(string $spaceName): JSONResponse {
 
 		$workspace = $this->spaceManager->create($spaceName);
@@ -106,11 +107,11 @@ class WorkspaceController extends Controller {
 	 *
 	 * Deletes the workspace, and the corresponding groupfolder and groups
 	 *
-	 * @NoAdminRequired
 	 * @GeneralManagerRequired
 	 * @param int $spaceId
 	 *
 	 */
+	#[NoAdminRequired]
 	public function destroy(int $spaceId): JSONResponse {
 		$space = $this->spaceManager->get($spaceId);
 		$groups = [];
@@ -136,12 +137,9 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 *
 	 * Returns a list of all the workspaces that the connected user may use.
-	 *
-	 * @NoAdminRequired
-	 *
 	 */
+	#[NoAdminRequired]
 	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
 		$spaces = [];
@@ -198,9 +196,7 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($spaces);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function getUsers(int $spaceId): JSONResponse {
 
 		$space = $this->spaceMapper->find($spaceId);
@@ -222,9 +218,7 @@ class WorkspaceController extends Controller {
 		return new JSONResponse($users);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function getAdmins(int $spaceId): JSONResponse {
 
 		$space = $this->spaceMapper->find($spaceId);
@@ -256,11 +250,11 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @GeneralManagerRequired
 	 * @param int $spaceId of workspace
 	 * @param int $quota in bytes
 	 */
+	#[NoAdminRequired]
 	public function updateQuota(int $spaceId, int $quota): JSONResponse {
 
 		$space = $this->spaceMapper->find($spaceId);
@@ -283,17 +277,17 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string|array $workspace
 	 */
+	#[NoAdminRequired]
 	public function addGroupsInfo(string|array $workspace): JSONResponse {
 		return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param string|array $workspace
 	 */
+	#[NoAdminRequired]
 	public function addUsersInfo(string|array $workspace): JSONResponse {
 		if (gettype($workspace) === 'string') {
 			$workspace = json_decode($workspace, true);
@@ -304,12 +298,12 @@ class WorkspaceController extends Controller {
 	/**
 	 * Returns a list of users whose name matches $term
 	 *
-	 * @NoAdminRequired
 	 * @param string $term
 	 * @param string $spaceId
 	 * @param string|array $space
 	 *
 	 */
+	#[NoAdminRequired]
 	public function lookupUsers(string $term,
 		string $spaceId,
 		string|array $space): JSONResponse {
@@ -324,13 +318,13 @@ class WorkspaceController extends Controller {
 	 *
 	 * Change a user's role in a workspace
 	 *
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 *
 	 * @param array|string $space
 	 * @param string $userId
 	 *
 	 */
+	#[NoAdminRequired]
 	public function changeUserRole(array|string $space,
 		string $userId): JSONResponse {
 		if (gettype($space) === 'string') {
@@ -357,12 +351,12 @@ class WorkspaceController extends Controller {
 
 	/**
 	 *
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 * @param int $spaceId
 	 * @param string $newSpaceName
 	 *
 	 */
+	#[NoAdminRequired]
 	public function renameSpace(int $spaceId,
 		string $newSpaceName): JSONResponse {
 
