@@ -90,6 +90,7 @@
 			</div>
 		</div>
 		<NcEmptyContent v-if="$store.state.noUsers"
+			class="empty-content"
 			:name="t('workspace', 'No users')">
 			<template #description>
 				{{ t('workspace', 'There are no users in this space/group yet') }}
