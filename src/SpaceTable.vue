@@ -68,9 +68,12 @@
 				</tr>
 			</tbody>
 		</table>
-		<NcEmptyContent v-else>
-			<p>{{ t('workspace', 'No spaces') }}</p>
-			<template #desc>
+		<NcEmptyContent v-else
+			:name="t('workspace', 'No spaces')">
+			<template #icon>
+				<NcIconSvgWrapper name="folders-off" :path="mdiFolderOff" />
+			</template>
+			<template #description>
 				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
 		</NcEmptyContent>
@@ -81,13 +84,21 @@
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
+import { mdiFolderOff } from '@mdi/js'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 
 export default {
 	name: 'SpaceTable',
 	components: {
 		NcAvatar,
 		NcEmptyContent,
+		NcIconSvgWrapper,
 		VueLazyComponent,
+	},
+	data() {
+		return {
+			mdiFolderOff,
+		}
 	},
 	methods: {
 		getQuota(quota) {

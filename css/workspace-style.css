@@ -112,6 +112,9 @@ tbody > .workspace-tr:hover {
 	margin-right: 8px;
 }
 
+/**
+* Add this rule to the other instances of the "empty-content" class.
+*/
 .empty-content {
 	height: 85vh;
 }
