@@ -92,6 +92,9 @@
 		<NcEmptyContent v-if="$store.state.noUsers"
 			class="empty-content"
 			:name="t('workspace', 'No users')">
+			<template #icon>
+				<NcIconSvgWrapper name="account-off" :path="mdiAccountOff" />
+			</template>
 			<template #description>
 				{{ t('workspace', 'There are no users in this space/group yet') }}
 			</template>
@@ -133,7 +136,7 @@ import { removeWorkspace } from './services/spaceService.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
-import { mdiAccountMultiple } from '@mdi/js'
+import { mdiAccountOff, mdiAccountMultiple } from '@mdi/js'
 import AddedGroupBlack from '../img/added_group_black.svg?raw'
 import AddedGroupWhite from '../img/added_group_white.svg?raw'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
@@ -168,6 +171,7 @@ export default {
 			isESR: false,
 			space: undefined,
 			mdiAccountMultiple,
+			mdiAccountOff,
 			AddedGroupBlack,
 			AddedGroupWhite,
 			iconUrl: undefined,
