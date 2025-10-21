@@ -27,9 +27,6 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException;
-use OCA\Workspace\Exceptions\SpacenameExistException;
-use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminUserGroup;
@@ -93,25 +90,7 @@ class WorkspaceController extends Controller {
 	 * @param string $spaceName
 	 */
 	public function createWorkspace(string $spaceName): JSONResponse {
-		try {
-			$workspace = $this->spaceManager->create($spaceName);
-		} catch (\Exception $e) {
-			if ($e instanceof WorkspaceNameSpecialCharException) {
-				$specialChars = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-				throw new BadRequestException(
-					title: 'Error creating workspace',
-					message: 'Your Workspace name must not contain the following characters: {specialChars}',
-					argsMessage: [ 'specialChars' => $specialChars ]
-				);
-			}
-
-			if ($e instanceof SpacenameExistException) {
-				throw new WorkspaceNameExistException(
-					title: 'Error - Duplicate space name',
-					message: "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist."
-				);
-			}
-		}
+		$workspace = $this->spaceManager->create($spaceName);
 
 		return new JSONResponse(
 			array_merge(
@@ -386,33 +365,14 @@ class WorkspaceController extends Controller {
 	public function renameSpace(int $spaceId,
 		string $newSpaceName): JSONResponse {
 
-		try {
-			if ($newSpaceName === false
-				|| $newSpaceName === null
-				|| $newSpaceName === ''
-			) {
-				throw new BadRequestException('Error to rename the workspace', 'newSpaceName must be provided');
-			}
-
-			$this->spaceManager->rename($spaceId, $newSpaceName);
-
-		} catch (\Exception $e) {
-			if ($e instanceof WorkspaceNameSpecialCharException) {
-				$specialChars = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-				throw new BadRequestException(
-					title: 'Error creating workspace',
-					message: 'Your Workspace name must not contain the following characters: {specialChars}',
-					argsMessage: [ 'specialChars' => $specialChars ]
-				);
-			}
-
-			if ($e instanceof SpacenameExistException) {
-				throw new WorkspaceNameExistException(
-					title: 'Error - Duplicate space name',
-					message: "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist."
-				);
-			}
+		if ($newSpaceName === false
+			|| $newSpaceName === null
+			|| $newSpaceName === ''
+		) {
+			throw new BadRequestException('Error to rename the workspace', 'newSpaceName must be provided');
 		}
+
+		$this->spaceManager->rename($spaceId, $newSpaceName);
 
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,

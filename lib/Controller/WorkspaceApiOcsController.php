@@ -31,15 +31,12 @@ use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Exceptions\SpacenameExistException;
-use OCA\Workspace\Exceptions\WorkspaceNameSpecialCharException;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Params\WorkspaceEditParams;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
@@ -263,24 +260,8 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
-		try {
-			$space = $this->spaceManager->create($name);
-			$this->logger->info("The workspace {$name} is created");
-		} catch (\Exception $e) {
-			if ($e instanceof WorkspaceNameSpecialCharException) {
-				$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-				throw new OCSException(
-					message: "Your Workspace name must not contain the following characters: {$specialCharsReadable}",
-					code: $e->getCode()
-				);
-			}
-
-			if ($e instanceof SpacenameExistException) {
-				throw new OCSException("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.");
-			}
-
-			throw new OCSException($e->getMessage(), $e->getCode());
-		}
+		$space = $this->spaceManager->create($name);
+		$this->logger->info("The workspace {$name} is created");
 
 		return new DataResponse($space, Http::STATUS_CREATED);
 	}
