@@ -248,8 +248,8 @@ class FileCSVController extends Controller {
 		try {
 			$space = $this->spaceManager->get($spaceId);
 			$file = $this->request->getUploadedFile('file');
-
-			if ($this->csvCheckMimeType->checkOnArray($file)) {
+	
+			if (!$this->csvCheckMimeType->checkOnArray($file)) {
 				throw new BadMimeType(
 					$this->translate->t('Error in file format'),
 					$this->translate->t('The file must be in <b>CSV format</b>.'),
@@ -296,8 +296,8 @@ class FileCSVController extends Controller {
 			$file = $folder->get($path);
 
 			$space = $this->spaceManager->get($spaceId);
-
-			if ($this->csvCheckMimeType->checkOnNode($file)) {
+	
+			if (!$this->csvCheckMimeType->checkOnNode($file)) {
 				throw new BadMimeType(
 					$this->translate->t('Error in file format'),
 					$this->translate->t('The file must be in <b>CSV format</b>.'),
