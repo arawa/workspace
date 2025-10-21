@@ -111,3 +111,7 @@ tbody > .workspace-tr:hover {
 .space-color-picker {
 	margin-right: 8px;
 }
+
+.empty-content {
+	height: 85vh;
+}
