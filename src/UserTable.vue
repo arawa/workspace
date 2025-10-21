@@ -91,7 +91,7 @@
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Delete user') }}
 								</NcActionButton>
-								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup && !isCurrentUserWorkspaceManager(user)"
+								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="removeFromGroup(user)">
