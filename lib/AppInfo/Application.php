@@ -25,12 +25,15 @@ namespace OCA\Workspace\AppInfo;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Group\GroupBackend;
+use OCA\Workspace\Middleware\DuplicateSpacenameMiddleware;
 use OCA\Workspace\Middleware\GeneralManagerAccessMiddleware;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
 use OCA\Workspace\Middleware\IsSpaceAdminMiddleware;
+use OCA\Workspace\Middleware\NotificationMiddleware;
 use OCA\Workspace\Middleware\RequireExistingGroupMiddleware;
 use OCA\Workspace\Middleware\RequireExistingSpaceMiddleware;
 use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
+use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
@@ -86,6 +89,9 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);
 		$context->registerMiddleware(WorkspaceManagerAccessMiddleware::class);
+		$context->registerMiddleware(NotificationMiddleware::class);
+		$context->registerMiddleware(DuplicateSpacenameMiddleware::class);
+		$context->registerMiddleware(SpacenameForbiddenCharactersMiddleware::class);
 
 		$context->registerCapability(Capabilities::class);
 

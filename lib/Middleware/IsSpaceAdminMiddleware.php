@@ -25,7 +25,6 @@
 
 namespace OCA\Workspace\Middleware;
 
-use OCA\Workspace\Exceptions\AbstractNotification;
 use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
@@ -69,19 +68,6 @@ class IsSpaceAdminMiddleware extends Middleware {
 			], Http::STATUS_FORBIDDEN);
 		}
 
-		if ($exception instanceof AbstractNotification) {
-			return new JSONResponse([
-				'title' => $exception->getTitle(),
-				'statuscode' => $exception->getCode(),
-				'message' => $exception->getMessage(),
-				'args_message' => $exception->getArgsMessage()
-			], $exception->getCode());
-		}
-
-		return new JSONResponse([
-			'statuscode' => $exception->getCode(),
-			'message' => $exception->getMessage(),
-			'trace' => $exception->getTrace()
-		], $exception->getCode());
+		throw $exception;
 	}
 }

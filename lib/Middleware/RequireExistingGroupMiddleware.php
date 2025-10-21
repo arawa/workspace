@@ -4,12 +4,12 @@ namespace OCA\Workspace\Middleware;
 
 use Exception;
 use OCA\Workspace\Attribute\RequireExistingGroup;
+use OCA\Workspace\Exceptions\Middleware\NotFoundException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\OCS\OCSException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\AppFramework\OCSController;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
@@ -36,17 +36,18 @@ class RequireExistingGroupMiddleware extends Middleware {
 		$group = $this->groupManager->get($gid);
 
 		if (is_null($group)) {
-			throw new OCSNotFoundException("The group with the gid {$gid} is not found.");
+			throw new NotFoundException("The group with the gid {$gid} is not found.");
 		}
 	}
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
-		if (!$exception instanceof OCSException) {
-			throw $exception;
+		if ($controller instanceof OCSController
+			|| $exception instanceof NotFoundException) {
+			return new JSONResponse([
+				'message' => $exception->getMessage()
+			], $exception->getCode());
 		}
 
-		return new JSONResponse([
-			'message' => $exception->getMessage()
-		], $exception->getCode());
+		throw $exception;
 	}
 }
