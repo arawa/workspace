@@ -484,7 +484,7 @@ section.app-sidebar__tab--active {
 .information-import {
 	position: absolute;
 	top: 56px;
-	right: 54px;
+	right: 66px;
 	z-index: 9999;
 }
 
