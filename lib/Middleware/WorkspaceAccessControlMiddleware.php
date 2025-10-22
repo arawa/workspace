@@ -62,5 +62,7 @@ class WorkspaceAccessControlMiddleware extends Middleware {
 
 			return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
 		}
+
+		throw $exception;
 	}
 }

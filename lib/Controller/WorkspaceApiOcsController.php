@@ -197,8 +197,8 @@ class WorkspaceApiOcsController extends OCSController {
 		if (!is_null($toSet['name'])) {
 			$space = $this->spaceManager->get($id);
 			if (strtolower($space['name']) !== strtolower($toSet['name'])) {
-				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
 				$this->spaceManager->rename($id, $toSet['name']);
+				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
 			} else {
 				$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
 				$toSet['name'] = $space['name']; // when case is different
@@ -260,12 +260,8 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
-		try {
-			$space = $this->spaceManager->create($name);
-			$this->logger->info("The workspace {$name} is created");
-		} catch (\Exception $e) {
-			throw new OCSException($e->getMessage(), $e->getCode());
-		}
+		$space = $this->spaceManager->create($name);
+		$this->logger->info("The workspace {$name} is created");
 
 		return new DataResponse($space, Http::STATUS_CREATED);
 	}
