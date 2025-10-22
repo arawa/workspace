@@ -111,7 +111,7 @@
 			:space="space"
 			@close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
-			:space-name="$route.params.space"
+			:space-name="title"
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
