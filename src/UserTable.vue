@@ -29,7 +29,7 @@
 					<th class="workspace-th user-info">
 						{{ t('workspace', 'Users') }}
 					</th>
-					<th class="workspace-th">
+					<th class="workspace-th role-th">
 						{{ t('workspace', 'Role') }}
 					</th>
 					<th class="workspace-th">
