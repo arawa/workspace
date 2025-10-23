@@ -61,6 +61,7 @@
 								:key="user.uid"
 								:style="{ marginRight: 2 + 'px' }"
 								:display-name="user.name"
+								:disable-menu="true"
 								:show-user-status="false"
 								:user="user.uid" />
 						</VueLazyComponent>
