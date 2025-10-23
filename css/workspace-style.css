@@ -30,6 +30,10 @@
 	border-bottom: 1px solid lightgray;
 }
 
+.role-th {
+	width: 160px;
+}
+
 .workspace-td {
 	padding: 5px;
 	border-bottom: 1px solid lightgray;
