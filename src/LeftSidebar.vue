@@ -129,6 +129,10 @@ export default {
 	margin-right: 4px;
 }
 
+.input-new-item {
+	filter: contrast(1.5);
+}
+
 .app-navigation-entry {
 	padding-right: 0px;
 }
