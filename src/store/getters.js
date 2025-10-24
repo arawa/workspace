@@ -157,4 +157,25 @@ export const getters = {
 	UGroup: (state, getters) => spaceNameOrId => {
 		return UserGroup.getGid(getters.getSpaceByNameOrId(spaceNameOrId))
 	},
+	getWorkspaceManagerUsers: (state, getters) => spacename => {
+		const space = state.spaces[spacename]
+		if (space.managers) {
+			return Object.values(space.managers)
+		}
+		return Object.values(space.users).filter((u) => getters.isSpaceAdmin(u, space))
+	},
+	getFirstTenWorkspaceManagerUsers: (state, getters) => spacename => {
+		const users = getters.getWorkspaceManagerUsers(spacename)
+		return users.slice(0, 10)
+	},
+	getLatestWorkspaceManagerUsers: (state, getters) => spacename => {
+		const users = getters.getWorkspaceManagerUsers(spacename)
+		const lastUsers = users.slice(10)
+		const lastUsersStingify = lastUsers.map((user) => user.name)
+		return lastUsersStingify.join(', ')
+	},
+	countWorkspaceManagerUsersAboveThreshold: (state, getters) => spacename => {
+		const users = getters.getWorkspaceManagerUsers(spacename)
+		return users.slice(10).length
+	},
 }

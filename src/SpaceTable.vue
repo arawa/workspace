@@ -33,7 +33,7 @@
 					<th class="workspace-th">
 						{{ t('workspace', 'Quota') }}
 					</th>
-					<th class="workspace-th">
+					<th class="workspace-th workspace-managers-th">
 						{{ t('workspace', 'Space administrators') }}
 					</th>
 				</tr>
@@ -57,12 +57,22 @@
 							:key="'avatar-'+name"
 							class="admin-avatars"
 							@init="initAdmins(space.id, name)">
-							<NcAvatar v-for="user in workspaceManagers(space)"
-								:key="user.uid"
-								:style="{ marginRight: 2 + 'px' }"
-								:display-name="user.name"
-								:show-user-status="false"
-								:user="user.uid" />
+							<div class="container-avatars">
+								<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
+									:key="user.uid"
+									:style="{ marginRight: 2 + 'px' }"
+									:display-name="user.name"
+									:show-user-status="false"
+									:user="user.uid" />
+								<div v-if="workspaceManagers(space).length > 10"
+									v-tooltip="{
+										content: getLatestWorkspaceManagerUsers(space.name),
+										show: true,
+									}"
+									class="bubble-more-users">
+									+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
+								</div>
+							</div>
 						</VueLazyComponent>
 					</td>
 				</tr>
@@ -126,6 +136,15 @@ export default {
 				this.$store.dispatch('loadAdmins', space)
 			}
 		},
+		getFirstTenWorkspaceManagerUsers(spacename) {
+			return this.$store.getters.getFirstTenWorkspaceManagerUsers(spacename)
+		},
+		getLatestWorkspaceManagerUsers(spacename) {
+			return this.$store.getters.getLatestWorkspaceManagerUsers(spacename)
+		},
+		countWorkspaceManagerUsersAboveThreshold(spacename) {
+			return this.$store.getters.countWorkspaceManagerUsersAboveThreshold(spacename)
+		},
 	},
 }
 </script>
@@ -134,6 +153,22 @@ export default {
 .admin-avatars {
 	display: flex;
 	flex-flow: row-reverse;
+}
+
+.container-avatars {
+	display: flex;
+	flex-direction: row;
+}
+
+.bubble-more-users {
+	height: 32px;
+	width: 32px;
+	border-radius: 50%;
+	background-color: var(--color-primary-light);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-primary);
 }
 
 .color-dot-home {
@@ -158,4 +193,8 @@ td, td div {
 	cursor: pointer;
 }
 
+.workspace-managers-th {
+	text-align: right;
+	padding-right: 80px;
+}
 </style>

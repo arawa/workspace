@@ -311,6 +311,10 @@ export default {
 				user,
 				role: 'user',
 			})
+			context.commit('REMOVE_USER_MANAGER', {
+				spaceName: space.name,
+				user,
+			})
 		} else {
 			user.groups.push(ManagerGroup.getGid(space))
 			context.commit('INCREMENT_GROUP_USER_COUNT', {
@@ -321,6 +325,10 @@ export default {
 				spaceName: space.name,
 				user,
 				role: 'wm',
+			})
+			context.commit('ADD_USER_MANAGER', {
+				spaceName: space.name,
+				user,
 			})
 		}
 		const spaceId = space.id
