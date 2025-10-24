@@ -33,7 +33,7 @@
 					<th class="workspace-th">
 						{{ t('workspace', 'Quota') }}
 					</th>
-					<th class="workspace-th">
+					<th class="workspace-th workspace-managers-th">
 						{{ t('workspace', 'Space administrators') }}
 					</th>
 				</tr>
@@ -158,4 +158,8 @@ td, td div {
 	cursor: pointer;
 }
 
+.workspace-managers-th {
+	text-align: right;
+	padding-right: 80px;
+}
 </style>
