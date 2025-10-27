@@ -54,7 +54,7 @@ class RequireExistingSpaceMiddleware extends Middleware {
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
 		if ($controller instanceof OCSController
-			|| $exception instanceof NotFoundException) {
+			&& $exception instanceof NotFoundException) {
 			return new JSONResponse([
 				'message' => $exception->getMessage()
 			], $exception->getCode());

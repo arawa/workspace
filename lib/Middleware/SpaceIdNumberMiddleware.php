@@ -40,7 +40,7 @@ class SpaceIdNumberMiddleware extends Middleware {
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
 		if ($controller instanceof OCSController
-			|| $exception instanceof BadRequestException) {
+			&& $exception instanceof BadRequestException) {
 			return new JSONResponse([
 				'message' => $exception->getMessage()
 			], $exception->getCode());

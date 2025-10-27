@@ -40,7 +40,7 @@ class GeneralManagerAccessMiddleware extends Middleware {
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
 		if ($controller instanceof OCSController
-			|| $exception instanceof ForbiddenException) {
+			&& $exception instanceof ForbiddenException) {
 			return new JSONResponse([
 				'message' => $exception->getMessage()
 			], Http::STATUS_FORBIDDEN);
