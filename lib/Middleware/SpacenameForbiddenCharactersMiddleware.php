@@ -14,21 +14,20 @@ use OCP\AppFramework\OCSController;
 class SpacenameForbiddenCharactersMiddleware extends Middleware {
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
-		$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-
-		if ($controller instanceof OCSController && $exception instanceof WorkspaceNameSpecialCharException) {
-			return new JSONResponse([
-				'message' => "Your Workspace name must not contain the following characters: {$specialCharsReadable}"
-			], $exception->getCode());
-		}
-
 		if ($exception instanceof WorkspaceNameSpecialCharException) {
-			return new JSONResponse([
-				'title' => 'Error creating workspace',
-				'statuscode' => $exception->getCode(),
-				'message' => 'Your Workspace name must not contain the following characters: {specialChars}',
-				'args_message' => [ 'specialChars' => $specialCharsReadable ]
-			], $exception->getCode());
+			$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
+
+			$data = $controller instanceof OCSController
+				? [ 'message' => "Your Workspace name must not contain the following characters: {$specialCharsReadable}" ]
+				: [
+					'title' => 'Error creating workspace',
+					'statuscode' => $exception->getCode(),
+					'message' => 'Your Workspace name must not contain the following characters: {specialChars}',
+					'args_message' => [ 'specialChars' => $specialCharsReadable ]
+				]
+			;
+
+			return new JSONResponse($data, $exception->getCode());
 		}
 
 		throw $exception;
