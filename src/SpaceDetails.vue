@@ -192,8 +192,10 @@ export default {
 	},
 	beforeMount() {
 		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-		if (!this.$store.state.noUsers) {
+		if (Object.keys(this.space.users).length === 0) {
 			this.$store.dispatch('loadUsers', { space: this.space })
+		} else {
+			this.$store.dispatch('setNoUsers', { activated: false })
 		}
 	},
 	beforeUpdate() {
