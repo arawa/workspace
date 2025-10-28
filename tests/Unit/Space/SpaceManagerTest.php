@@ -1931,4 +1931,201 @@ class SpaceManagerTest extends TestCase {
 
 		$this->spaceManager->addUsersToWorkspaceManagerGroup($workspace, $group, $users);
 	}
+
+	public function testRenameWorkspace(): void {
+		$spaceId = 1;
+		$folderId = 10;
+		$newSpaceName = 'SpaceOne';
+
+		/**
+		 * @var MockObject&SpaceManager
+		 *
+		 * Mock only the get method.
+		 */
+		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
+			->setConstructorArgs([
+				$this->folderHelper,
+				$this->rootFolder,
+				$this->workspaceCheck,
+				$this->userGroup,
+				$this->adminGroup,
+				$this->adminUserGroup,
+				$this->addedGroups,
+				$this->mountProviderHelper,
+				$this->subGroup,
+				$this->userManager,
+				$this->userWorkspaceGroup,
+				$this->spaceMapper,
+				$this->conntectedGroupService,
+				$this->logger,
+				$this->userFormatter,
+				$this->userService,
+				$this->groupManager,
+				$this->workspaceManagerGroup,
+				$this->workspaceService,
+				$this->colorCode
+			])
+			->onlyMethods(['get'])
+			->getMock()
+		;
+
+		$spaceManagerPartial->expects($this->once())
+			->method('get')
+			->willReturn([
+				// other data...
+				'groupfolder_id' => $folderId
+			])
+		;
+
+		$this->workspaceCheck
+			->expects($this->once())
+			->method('containSpecialChar')
+			->with($newSpaceName)
+			->willReturn(false)
+		;
+
+		$this->workspaceCheck
+			->expects($this->once())
+			->method('isExist')
+			->with($newSpaceName)
+			->willReturn(false)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('renameFolder')
+			->with($folderId, $newSpaceName)
+		;
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('updateSpaceName')
+			->with($newSpaceName, $spaceId)
+		;
+
+		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+	}
+
+	public function testRenameWorkspaceWithSpecialCharacter(): void {
+		$spaceId = 1;
+		$folderId = 10;
+		$newSpaceName = 'Space/One';
+
+		/**
+		 * @var MockObject&SpaceManager
+		 *
+		 * Mock only the get method.
+		 */
+		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
+			->setConstructorArgs([
+				$this->folderHelper,
+				$this->rootFolder,
+				$this->workspaceCheck,
+				$this->userGroup,
+				$this->adminGroup,
+				$this->adminUserGroup,
+				$this->addedGroups,
+				$this->mountProviderHelper,
+				$this->subGroup,
+				$this->userManager,
+				$this->userWorkspaceGroup,
+				$this->spaceMapper,
+				$this->conntectedGroupService,
+				$this->logger,
+				$this->userFormatter,
+				$this->userService,
+				$this->groupManager,
+				$this->workspaceManagerGroup,
+				$this->workspaceService,
+				$this->colorCode
+			])
+			->onlyMethods(['get'])
+			->getMock()
+		;
+
+		$spaceManagerPartial->expects($this->once())
+			->method('get')
+			->willReturn([
+				// other data...
+				'groupfolder_id' => $folderId
+			])
+		;
+
+		$this->workspaceCheck
+			->expects($this->once())
+			->method('containSpecialChar')
+			->with($newSpaceName)
+			->willReturn(true)
+		;
+
+		$this->expectException(BadRequestException::class);
+		$this->expectExceptionMessage('Your Workspace name must not contain the following characters: {specialChars}');
+		$this->expectExceptionCode(Http::STATUS_BAD_REQUEST);
+		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+	}
+
+	public function testRenameWorkspaceWithDuplicateName(): void {
+		$spaceId = 1;
+		$folderId = 10;
+		$newSpaceName = 'SpaceOne';
+
+		/**
+		 * @var MockObject&SpaceManager
+		 *
+		 * Mock only the get method.
+		 */
+		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
+			->setConstructorArgs([
+				$this->folderHelper,
+				$this->rootFolder,
+				$this->workspaceCheck,
+				$this->userGroup,
+				$this->adminGroup,
+				$this->adminUserGroup,
+				$this->addedGroups,
+				$this->mountProviderHelper,
+				$this->subGroup,
+				$this->userManager,
+				$this->userWorkspaceGroup,
+				$this->spaceMapper,
+				$this->conntectedGroupService,
+				$this->logger,
+				$this->userFormatter,
+				$this->userService,
+				$this->groupManager,
+				$this->workspaceManagerGroup,
+				$this->workspaceService,
+				$this->colorCode
+			])
+			->onlyMethods(['get'])
+			->getMock()
+		;
+
+		$spaceManagerPartial->expects($this->once())
+			->method('get')
+			->willReturn([
+				// other data...
+				'groupfolder_id' => $folderId
+			])
+		;
+
+		$this->workspaceCheck
+			->expects($this->once())
+			->method('containSpecialChar')
+			->with($newSpaceName)
+			->willReturn(false)
+		;
+
+		$this->workspaceCheck
+			->expects($this->once())
+			->method('isExist')
+			->with($newSpaceName)
+			->willReturn(true)
+		;
+
+		$this->expectException(WorkspaceNameExistException::class);
+		$this->expectExceptionMessage("This space or groupfolder already exist. Please, input another space.\nIf \"toto\" space exist, you cannot create the \"tOTo\" space.\nMake sure you the groupfolder doesn't exist.");
+		$this->expectExceptionCode(Http::STATUS_CONFLICT);
+		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+	}
 }
