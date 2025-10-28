@@ -39,16 +39,15 @@
 				<NcActions ref="ncAction" default-icon="icon-add">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
-						class="no-bold"
-						:name="t('workspace', 'Add users')"
-						@click="toggleShowSelectUsersModal" />
+						@click="toggleShowSelectUsersModal">
+						{{ t('workspace', 'Add users') }}
+					</NcActionButton>
 					<NcActionButton v-show="!createGroup"
-						:name="t('workspace', 'Create a workspace group')"
-						class="no-bold"
 						@click="toggleCreateGroup">
 						<template #icon>
 							<NcIconSvgWrapper name="icon-group" :path="mdiAccountMultiple" />
 						</template>
+						{{ t('workspace', 'Create a workspace group') }}
 					</NcActionButton>
 					<NcActionInput v-show="createGroup"
 						ref="createGroupInput"
@@ -61,8 +60,6 @@
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
 					<NcActionButton
-						:name="t('workspace', 'Add a group')"
-						class="no-bold"
 						:close-after-click="true"
 						@click="toggleShowConnectedGroups">
 						<template #icon>
@@ -71,6 +68,7 @@
 							<NcIconSvgWrapper v-else
 								:svg="AddedGroupBlack" />
 						</template>
+						{{ t('workspace', 'Add a group') }}
 					</NcActionButton>
 				</NcActions>
 				<NcActions>
@@ -302,10 +300,6 @@ export default {
     flex-grow: 1;
     display: inline-flex;
     align-items: center;
-}
-
-.no-bold button p strong{
-	font-weight: normal !important;
 }
 
 .user-actions {
