@@ -26,7 +26,7 @@
 		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
 			<thead>
 				<tr class="">
-					<th />
+					<th class="workspace-th" />
 					<th class="workspace-th">
 						{{ t('workspace', 'Workspace name') }}
 					</th>
