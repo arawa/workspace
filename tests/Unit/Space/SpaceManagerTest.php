@@ -2047,7 +2047,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$this->expectException(WorkspaceNameSpecialCharException::class);
-		$this->expectExceptionMessage("");
+		$this->expectExceptionMessage('');
 		$this->expectExceptionCode(Http::STATUS_BAD_REQUEST);
 		$spaceManagerPartial->rename($spaceId, $newSpaceName);
 	}
@@ -2112,7 +2112,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$this->expectException(SpacenameExistException::class);
-		$this->expectExceptionMessage("");
+		$this->expectExceptionMessage('');
 		$this->expectExceptionCode(Http::STATUS_CONFLICT);
 		$spaceManagerPartial->rename($spaceId, $newSpaceName);
 	}
