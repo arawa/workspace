@@ -24,6 +24,7 @@
 		<ul class="ws-navigation-header">
 			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				class="input-new-item"
+				:class="isDarkTheme ? '' : 'constrast-light'"
 				icon="icon-add"
 				:name="t('workspace', 'New space')"
 				@new-item="createSpace" />
@@ -70,6 +71,7 @@ import NcAppNavigationNewItem from '@nextcloud/vue/components/NcAppNavigationNew
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
+import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 
 export default {
 	name: 'LeftSidebar',
@@ -79,6 +81,11 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 		SpaceMenuItem,
+	},
+	computed: {
+		isDarkTheme() {
+			return useIsDarkTheme().value
+		},
 	},
 	methods: {
 		// Creates a new space and navigates to its details page
@@ -129,7 +136,7 @@ export default {
 	margin-right: 4px;
 }
 
-.input-new-item {
+.constrast-light {
 	filter: contrast(1.5);
 }
 
