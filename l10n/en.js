@@ -99,7 +99,7 @@ OC.L10N.register(
 		'You have not yet created any workspace': 'You have not yet created any workspace',
 		'unlimited': 'unlimited',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Vous devez spécifier le terme "unlimited" ou un nombre suivi de "TB", "GB", "MB" ou "KB" (exemple: "5GB") comme quota.',
-		'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.': 'This space or groupfolder already exist. Please, input another space.\nIf "toto" space exist, you cannot create the "tOTo" space.\nMake sure you the groupfolder doesn\'t exist.',
+		'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.': 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.',
 		'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace': 'Please, note that once {groupname} group has been removed, its users will lose access to the {spacename} workspace',
 		'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace': 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace',
 		'Confirm': 'Confirm',
