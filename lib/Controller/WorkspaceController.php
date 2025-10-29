@@ -90,7 +90,6 @@ class WorkspaceController extends Controller {
 	 * @param string $spaceName
 	 */
 	public function createWorkspace(string $spaceName): JSONResponse {
-
 		$workspace = $this->spaceManager->create($spaceName);
 
 		return new JSONResponse(
@@ -366,10 +365,6 @@ class WorkspaceController extends Controller {
 	public function renameSpace(int $spaceId,
 		string $newSpaceName): JSONResponse {
 
-		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
-			throw new BadRequestException('Error to rename the workspace', 'Your Workspace name must not contain the following characters: {args}', argsMessage: [implode(' ', array_unique(str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)))]);
-		}
-
 		if ($newSpaceName === false
 			|| $newSpaceName === null
 			|| $newSpaceName === ''
@@ -377,13 +372,11 @@ class WorkspaceController extends Controller {
 			throw new BadRequestException('Error to rename the workspace', 'newSpaceName must be provided');
 		}
 
-		$spaceName = $this->deleteBlankSpaceName($newSpaceName);
-
-		$this->spaceManager->rename($spaceId, $spaceName);
+		$this->spaceManager->rename($spaceId, $newSpaceName);
 
 		return new JSONResponse([
 			'statuscode' => Http::STATUS_NO_CONTENT,
-			'space' => $spaceName,
+			'space' => $newSpaceName,
 		]);
 	}
 }

@@ -260,12 +260,8 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
-		try {
-			$space = $this->spaceManager->create($name);
-			$this->logger->info("The workspace {$name} is created");
-		} catch (\Exception $e) {
-			throw new OCSException($e->getMessage(), $e->getCode());
-		}
+		$space = $this->spaceManager->create($name);
+		$this->logger->info("The workspace {$name} is created");
 
 		return new DataResponse($space, Http::STATUS_CREATED);
 	}
