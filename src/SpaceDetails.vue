@@ -294,6 +294,8 @@ export default {
 	min-width: 100px;
 	max-width: 100px;
 	font-size: var(--default-font-size) !important;
+	line-height: 32px !important;
+	padding: 0 12px !important;
 }
 
 .quota-bubble-esr {
@@ -301,6 +303,8 @@ export default {
 	min-width: 100px;
 	max-width: 100% !important;
 	font-size: var(--default-font-size) !important;
+	line-height: 32px !important;
+	padding: 0 12px !important;
 }
 
 .space-name {
