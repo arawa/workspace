@@ -453,6 +453,7 @@ section.app-sidebar__tab--active {
 	width: 82%;
 	overflow: scroll;
 	height: 330px;
+	padding: 8px;
 }
 
 .select-users-list-empty {

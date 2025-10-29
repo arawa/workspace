@@ -99,6 +99,9 @@ export default {
 
 .user-card {
 	display: flex;
+	margin-bottom: 8px;
+	border-radius: var(--border-radius-element);
+	padding: 4px;
 }
 
 .user-name {
