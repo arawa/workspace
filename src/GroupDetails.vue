@@ -74,7 +74,7 @@
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
-			:open="toggleShowSelectUsersModal">
+			:open.sync="showSelectUsersModal">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
 		<AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
