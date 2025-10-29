@@ -197,8 +197,8 @@ class WorkspaceApiOcsController extends OCSController {
 		if (!is_null($toSet['name'])) {
 			$space = $this->spaceManager->get($id);
 			if (strtolower($space['name']) !== strtolower($toSet['name'])) {
-				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
 				$this->spaceManager->rename($id, $toSet['name']);
+				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
 			} else {
 				$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
 				$toSet['name'] = $space['name']; // when case is different
