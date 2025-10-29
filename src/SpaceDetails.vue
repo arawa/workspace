@@ -279,6 +279,12 @@ export default {
 	display: flex;
 }
 
+@media only screen and (max-width: 900px) {
+	.dialog-addusers-tabs .modal-wrapper .modal-container {
+		max-height: 500px !important;
+	}
+}
+
 .color-picker {
 	margin: 0px;
 }
