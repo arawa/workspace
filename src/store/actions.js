@@ -519,4 +519,7 @@ export default {
 				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
 	},
+	addUserManager(context, { spaceName, user }) {
+		context.commit('ADD_USER_MANAGER', { spaceName, user })
+	},
 }

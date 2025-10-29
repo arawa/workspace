@@ -185,6 +185,11 @@ export default {
 	},
 	ADD_USER_MANAGER(state, { spaceName, user }) {
 		const space = state.spaces[spaceName]
+
+		if (space.managers === null) {
+			space.managers = {}
+		}
+
 		space.managers[user.uid] = user
 		VueSet(state.spaces, spaceName, space)
 	},
