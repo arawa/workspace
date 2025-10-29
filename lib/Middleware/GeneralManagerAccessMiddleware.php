@@ -4,6 +4,7 @@ namespace OCA\Workspace\Middleware;
 
 use Exception;
 use OCA\Workspace\Attribute\GeneralManagerRequired;
+use OCA\Workspace\Exceptions\Middleware\ForbiddenException;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
@@ -11,7 +12,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\OCS\OCSForbiddenException;
+use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
 class GeneralManagerAccessMiddleware extends Middleware {
@@ -34,12 +35,17 @@ class GeneralManagerAccessMiddleware extends Middleware {
 			return;
 		}
 
-		throw new OCSForbiddenException('You cannot access to this ressource');
+		throw new ForbiddenException('You cannot access to this ressource');
 	}
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
-		return new JSONResponse([
-			'message' => $exception->getMessage()
-		], Http::STATUS_FORBIDDEN);
+		if ($controller instanceof OCSController
+			&& $exception instanceof ForbiddenException) {
+			return new JSONResponse([
+				'message' => $exception->getMessage()
+			], Http::STATUS_FORBIDDEN);
+		}
+
+		throw $exception;
 	}
 }

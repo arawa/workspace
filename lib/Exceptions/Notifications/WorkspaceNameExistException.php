@@ -22,8 +22,9 @@
  *
  */
 
-namespace OCA\Workspace\Exceptions;
+namespace OCA\Workspace\Exceptions\Notifications;
 
+use OCA\Workspace\Exceptions\AbstractNotification;
 use OCP\AppFramework\Http;
 
 class WorkspaceNameExistException extends AbstractNotification {
