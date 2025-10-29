@@ -14,8 +14,6 @@ use OCP\AppFramework\OCSController;
 class SpacenameForbiddenCharactersMiddleware extends Middleware {
 
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
-		var_dump('test');
-		die;
 		if ($exception instanceof WorkspaceNameSpecialCharException) {
 			$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
 
