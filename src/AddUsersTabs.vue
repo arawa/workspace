@@ -382,13 +382,29 @@ section.app-sidebar__tab--active {
 }
 
 .select-users-wrapper :deep(header.app-sidebar-header) {
-    display: none !important;
+	display: none !important;
 }
 
 // Change the height of the modal container
 // to make space for the NcNoteCard
 .modal-container {
 	max-height: 900px !important;
+}
+
+@media only screen and (max-height: 700px) {
+	.select-users-list-empty {
+		line-height: 150px !important;
+	}
+
+	.select-users-list {
+		height: 160px !important;
+		margin: 0 !important;
+	}
+
+	.note-card {
+		font-size: 12px !important;
+	}
+
 }
 
 // Fix : tabs implies a min-height of 256 that overlaps the user list
