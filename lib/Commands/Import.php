@@ -64,7 +64,7 @@ class Import extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$path = realpath($input->getArgument('path'));
-	  
+
 		if (!$this->csvCreatingWorkspaces->isCsvFile($path)) {
 			$this->logger->critical("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . ' mimetype.');
 			throw new \Exception("It's not a csv file. Your file is a " . (string)$this->csvCreatingWorkspaces->getMimeType($path) . ' mimetype.');
@@ -104,7 +104,7 @@ class Import extends Command {
 
 			preg_match('/[a-zA-Z].*/', $data['quota'], $matches);
 			$unit = strtolower($matches[0]);
-			
+
 			if (!$this->checkUnitBytes($unit)) {
 				throw new \Exception('You didn\'t define the good unit for quota. Allowed units are: kb, mb, gb or tb');
 			}
@@ -221,14 +221,14 @@ class Import extends Command {
 		$workspaceNamesDiff = array_values(
 			array_diff_assoc($workspaceNames, array_unique($workspaceNames))
 		);
-		
+
 		$spacenamesFormated = array_map(fn ($spacename) => "- $spacename\n", $workspaceNamesDiff);
 
 		$message .= "The Workspace names below are duplicated:\n" . implode('', $spacenamesFormated);
 
 		return $message;
 	}
-	
+
 	private function getSpacenamesDuplicated(array $dataResponse): ?string {
 		$workspacesAreNotExist = [];
 		$message = '';
@@ -246,7 +246,7 @@ class Import extends Command {
 
 			return $message;
 		}
-		
+
 		return null;
 	}
 
@@ -284,10 +284,10 @@ class Import extends Command {
 			$spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
 			$message .= "The below workspace names contain special characters :\n" . implode('', $spacenamesStringify);
 			$message .= "\nPlease, make sure the Workspace names do not contain one of the following characters: " . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
-			
+
 			return $message;
 		}
-		
+
 		return null;
 	}
 }
