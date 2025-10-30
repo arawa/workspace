@@ -8,7 +8,7 @@ use OCA\Workspace\Files\Csv\CsvReader;
 class ValuesValidator {
 	public function validateRoles(BasicStreamInterface $file): bool {
 		$res = true;
-		
+
 		$csvReader = new CsvReader($file);
 		$index = HeaderExtractor::getHeaderName($csvReader->headers, Header::ROLE);
 		foreach ($csvReader->read() as $data) {
