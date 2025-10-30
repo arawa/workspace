@@ -56,7 +56,7 @@ class SpaceMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('space_name', $qb->createNamedParameter($spacename, $qb::PARAM_STR))
 			);
-		
+
 		try {
 			return $this->findEntity($query);
 		} catch (\Exception $e) {
@@ -114,7 +114,7 @@ class SpaceMapper extends QBMapper {
 			->where($qb->expr()->eq('space_id', $qb->createNamedParameter($spaceId)));
 
 		$qb->execute();
-		
+
 		return $this->find($spaceId);
 	}
 

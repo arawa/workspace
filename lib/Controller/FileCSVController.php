@@ -61,7 +61,7 @@ use OCP\IUserSession;
  */
 class FileCSVController extends Controller {
 	private $currentUser;
-	
+
 	public function __construct(
 		string $appName,
 		IRequest $request,
@@ -134,7 +134,7 @@ class FileCSVController extends Controller {
 		}
 
 		$names = $this->csvParser->parser($file);
-	
+
 		$usernames = array_map(fn ($user) => $user->uid, $names);
 
 		$uids = array_map(fn ($user) => $user->uid, $names);
@@ -235,7 +235,7 @@ class FileCSVController extends Controller {
 
 		return $data;
 	}
-	
+
 	/**
 	 * @NoAdminRequired
 	 * @SpaceAdminRequired
@@ -248,14 +248,14 @@ class FileCSVController extends Controller {
 		try {
 			$space = $this->spaceManager->get($spaceId);
 			$file = $this->request->getUploadedFile('file');
-	
+
 			if (!$this->csvCheckMimeType->checkOnArray($file)) {
 				throw new BadMimeType(
 					$this->translate->t('Error in file format'),
 					$this->translate->t('The file must be in <b>CSV format</b>.'),
 				);
 			}
-	
+
 			$fileUploader = new FileUploader($file['tmp_name']);
 
 			$data = $this->importProcess($fileUploader, $space);
@@ -296,14 +296,14 @@ class FileCSVController extends Controller {
 			$file = $folder->get($path);
 
 			$space = $this->spaceManager->get($spaceId);
-	
+
 			if (!$this->csvCheckMimeType->checkOnNode($file)) {
 				throw new BadMimeType(
 					$this->translate->t('Error in file format'),
 					$this->translate->t('The file must be in <b>CSV format</b>.'),
 				);
 			}
-		
+
 			$nextcloudFile = new NextcloudFile($file);
 
 			$data = $this->importProcess($nextcloudFile, $space);
