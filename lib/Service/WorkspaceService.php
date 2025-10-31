@@ -32,10 +32,12 @@ use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
 use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
+use OCP\Collaboration\Collaborators\ISearch;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IManager;
+use OCP\Share\IShare;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceService {
@@ -50,6 +52,7 @@ class WorkspaceService {
 		private ShareMembersOnlyFilter $shareMembersFilter,
 		private GroupMembersOnlyChecker $memberGroupOnlyChecker,
 		private ConnectedGroupsService $connectedGroups,
+		private ISearch $collaboratorSearch,
 	) {
 	}
 
@@ -60,7 +63,27 @@ class WorkspaceService {
 	 * @uses OCA\Workspace\User\UserSearcher
 	 */
 	private function searchUsersByMailing(string $term): array {
-		return $this->userManager->getByEmail($term);
+		[$usersByEmailSearched, $hasMoreResults] = $this->collaboratorSearch->search(
+			$term,
+			[
+				IShare::TYPE_EMAIL
+			],
+			false,
+			30,
+			0
+		);
+
+		$usersFound = $usersByEmailSearched['users'] ?? [];
+		$exactUsersFound = $usersByEmailSearched['exact']['users'] ?? [];
+
+		$users = array_merge($exactUsersFound, $usersFound);
+
+		$users = array_map(
+			fn ($user) => $this->userManager->get($user['uuid']),
+			$users
+		);
+
+		return $users;
 	}
 
 	/**
@@ -88,7 +111,7 @@ class WorkspaceService {
 	 */
 	public function searchUsers(string $term): array {
 		$users = [];
-		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
+		$REGEX_FULL_MAIL = '/^(?:[a-zA-Z0-9_.+\-]+@|@[a-zA-Z0-9_.+\-]+|[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9_.+\-]+(?:\.[a-zA-Z0-9_.*\-]+)*)$/';
 
 		if (preg_match($REGEX_FULL_MAIL, $term) === 1) {
 			$users = $this->searchUsersByMailing($term);

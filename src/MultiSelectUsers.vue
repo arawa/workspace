@@ -23,10 +23,10 @@
 	<div class="multiselect-area">
 		<NcSelect ref="userSelectInput"
 			class="select-users-input"
+			:filter-by="filterSearched"
 			aria-label-combobox="select users"
 			label="name"
 			:custom-label="displayForSearching"
-			track-by="uid"
 			:loading="isLookingUpUsers"
 			:multiple="false"
 			:options="selectableUsers"
@@ -114,6 +114,9 @@ export default {
 					showNotificationError('Network error', text, 3000)
 					console.error('Problem to search users', e)
 				})
+				.finally(() => {
+					this.isLookingUpUsers = false
+				})
 			this.isLookingUpUsers = false
 		},
 		removeDuplicatedUsers(users) {
@@ -152,6 +155,16 @@ export default {
 					return newUser.uid !== user.uid
 				})
 			})
+		},
+		filterSearched(option, label, search) {
+			const uid = option.uid.toLowerCase()
+			const name = option.name.toLowerCase()
+			const email = option.email?.toLowerCase()
+			const searchTerm = search.toLowerCase()
+
+			return uid.includes(searchTerm)
+				|| name.includes(searchTerm)
+				|| email?.includes(searchTerm)
 		},
 	},
 }
