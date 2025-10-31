@@ -68,6 +68,7 @@ describe('AddUsersTabs component tests', () => {
 		name: 'foobar',
 		quota: '-3',
 		users: {},
+		managers: null,
 	})
 
 	it('addUsersToWorkspaceOrGroup test: Adding a user to a subgroup', () => {
@@ -111,26 +112,24 @@ describe('AddUsersTabs component tests', () => {
 		expect(count).toEqual(1)
 	})
 
-	it(
-		'addUsersToWorkspaceOrGroup test: Adding a user to a workspace with admin role',
-		() => {
-			wrappedSelectUsers.vm.allSelectedUsers = [
-				{
-					uid: 'admin',
-					name: 'admin',
-					email: 'admin@acme.org',
-					subtitle: 'admin@acme.org',
-					groups: [],
-					role: 'wm',
-				},
-			]
+	it('addUsersToWorkspaceOrGroup test: Adding a user to a workspace with admin role', () => {
+		wrappedSelectUsers.vm.allSelectedUsers = [
+			{
+				uid: 'admin',
+				name: 'admin',
+				email: 'admin@acme.org',
+				subtitle: 'admin@acme.org',
+				groups: [],
+				role: 'wm',
+			},
+		]
 
-			wrappedSelectUsers.vm.$route.params.slug = undefined
+		wrappedSelectUsers.vm.$route.params.slug = undefined
 
-			wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
-			const space = wrappedSelectUsers.vm.$store.getters.getSpaceByNameOrId('foobar')
-			const count = wrappedSelectUsers.vm.$store.getters.groupUserCount(space, 'SPACE-GE-42')
-			expect(count).toEqual(1)
-		},
+		wrappedSelectUsers.vm.addUsersToWorkspaceOrGroup()
+		const space = wrappedSelectUsers.vm.$store.getters.getSpaceByNameOrId('foobar')
+		const count = wrappedSelectUsers.vm.$store.getters.groupUserCount(space, 'SPACE-GE-42')
+		expect(count).toEqual(1)
+	},
 	)
 })
