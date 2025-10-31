@@ -221,6 +221,10 @@ export default {
 				spaceName: space.name,
 			})
 			if (user.role === 'wm') {
+				this.$store.dispatch('addUserManager', {
+					spaceName: space.name,
+					user,
+				})
 				this.$store.dispatch('incrementGroupUserCount', {
 					spaceName: space.name,
 					gid: UserGroup.getGid(space),
@@ -281,6 +285,10 @@ export default {
 					spaceName: space.name,
 					gid: ManagerGroup.getGid(space),
 				})
+				this.$store.dispatch('addUserManager', {
+					spaceName: space.name,
+					user,
+				})
 			}
 		},
 		addUserFromManagerGroup(user, space) {
@@ -300,6 +308,10 @@ export default {
 			this.$store.dispatch('addUserToGroup', {
 				name: space.name,
 				gid: UserGroup.getGid(space),
+				user,
+			})
+			this.$store.dispatch('addUserManager', {
+				spaceName: space.name,
 				user,
 			})
 			this.$store.dispatch('incrementSpaceUserCount', {

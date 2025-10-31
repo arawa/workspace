@@ -178,6 +178,21 @@ export default {
 		space.users[user.uid].role = role
 		VueSet(state.spaces, spaceName, space)
 	},
+	REMOVE_USER_MANAGER(state, { spaceName, user }) {
+		const space = state.spaces[spaceName]
+		delete space.managers[user.uid]
+		VueSet(state.spaces, spaceName, space)
+	},
+	ADD_USER_MANAGER(state, { spaceName, user }) {
+		const space = state.spaces[spaceName]
+
+		if (space.managers === null) {
+			space.managers = {}
+		}
+
+		space.managers[user.uid] = user
+		VueSet(state.spaces, spaceName, space)
+	},
 	// Adds a user to a group
 	addUserToGroup(state, { name, gid, user }) {
 		const space = state.spaces[name]

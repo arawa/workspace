@@ -311,6 +311,10 @@ export default {
 				user,
 				role: 'user',
 			})
+			context.commit('REMOVE_USER_MANAGER', {
+				spaceName: space.name,
+				user,
+			})
 		} else {
 			user.groups.push(ManagerGroup.getGid(space))
 			context.commit('INCREMENT_GROUP_USER_COUNT', {
@@ -321,6 +325,10 @@ export default {
 				spaceName: space.name,
 				user,
 				role: 'wm',
+			})
+			context.commit('ADD_USER_MANAGER', {
+				spaceName: space.name,
+				user,
 			})
 		}
 		const spaceId = space.id
@@ -510,5 +518,8 @@ export default {
 				context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
 				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
+	},
+	addUserManager(context, { spaceName, user }) {
+		context.commit('ADD_USER_MANAGER', { spaceName, user })
 	},
 }
