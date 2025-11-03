@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.6] - 2025-11-03
 
-### Addde
+### Added
 
 - v4.0.6 by @zak39 in [#1457](https://github.com/arawa/workspace/pull/1457)
+- Add changelog for the 4.0.6 release [#1459](https://github.com/arawa/workspace/pull/1459)
 
 ### Fixed
 
