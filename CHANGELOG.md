@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.6] - 2025-11-03
+
+### Addde
+
+- v4.0.6 by @zak39 in [#1457](https://github.com/arawa/workspace/pull/1457)
+
+### Fixed
+
+- Backport:  Take added groups into account in ACLs for stable4.0 by @zak39 in [#1383](https://github.com/arawa/workspace/pull/1383)
+- Backport:  Remove files from groupfolders on the web server for stable4.0 by @zak39 in [#1384](https://github.com/arawa/workspace/pull/1384)
+- Allow more mime types for CSV import by @smarinier in [#1426](https://github.com/arawa/workspace/pull/1426)
+
 ## [4.0.5] - 2025-08-24
 
 ### Fixed
@@ -411,7 +423,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.5...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.6...main
+[4.0.6]: https://github.com/arawa/workspace/compare/v4.0.5...4.0.6
 [4.0.5]: https://github.com/arawa/workspace/compare/v4.0.4...4.0.5
 [4.0.4]: https://github.com/arawa/workspace/compare/v4.0.3...4.0.4
 [4.0.3]: https://github.com/arawa/workspace/compare/v4.0.2...4.0.3
