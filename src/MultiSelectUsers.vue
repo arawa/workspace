@@ -39,6 +39,21 @@
 			<template #no-options>
 				<span />
 			</template>
+			<template #option="option">
+				<div class="option-content">
+					<NcAvatar
+						class="option-avatar"
+						:type="user"
+						:display-name="option.name"
+						:uid="option.uid"
+						:title="option.name"
+						:show-user-status="false" />
+					<div class="option-text">
+						<p>{{ option.name }}</p>
+						<small>{{ option.email }}</small>
+					</div>
+				</div>
+			</template>
 		</NcSelect>
 	</div>
 </template>
@@ -47,12 +62,14 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import debounce from 'debounce'
 
 export default {
 	name: 'MultiSelectUsers',
 	components: {
+		NcAvatar,
 		NcSelect,
 	},
 	props: {
@@ -198,4 +215,16 @@ export default {
 	border-width: 2px;
 	border-color: var(--color-border-dark);
 }
+
+.option-content {
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	gap: 12px;
+}
+
+.option-content, .option-text, .option-avatar {
+	cursor: pointer;
+}
+
 </style>
