@@ -4,6 +4,73 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2025-11-10
+
+### Added
+
+- Allow more chars in workspace name by @smarinier in [#1257](https://github.com/arawa/workspace/pull/1257)
+- Display workspace count bubble on Home page by @zak39 in [#1218](https://github.com/arawa/workspace/pull/1218), [#1228](https://github.com/arawa/workspace/pull/1228)
+- Create a new modal window to edit a workspace by @zak39 in [#1229](https://github.com/arawa/workspace/pull/1229), [#1233](https://github.com/arawa/workspace/pull/1233), [#1253](https://github.com/arawa/workspace/pull/1253), [#1239](https://github.com/arawa/workspace/pull/1239)
+- Managing workspace with OCS API by @zak39 and @smarinier in [#1286](https://github.com/arawa/workspace/pull/1286), [#1409](https://github.com/arawa/workspace/pull/1409), [#1405](https://github.com/arawa/workspace/pull/1405), [#1323](https://github.com/arawa/workspace/pull/1323), [#1240](https://github.com/arawa/workspace/pull/1240), [#1406](https://github.com/arawa/workspace/pull/1406), [#1403](https://github.com/arawa/workspace/pull/1403), [#1219](https://github.com/arawa/workspace/pull/1219)
+
+### Changed
+
+- Reduce user search loading time by @zak39 in [#1251](https://github.com/arawa/workspace/pull/1251)
+- Workspace Manager cannot remove himself from his Workspace by @zak39 in [#1386](https://github.com/arawa/workspace/pull/1386), [#1425](https://github.com/arawa/workspace/pull/1425)
+- Add lighter contrast to the new workspace button for the light theme by @zak39 in [#1444](https://github.com/arawa/workspace/pull/1444)
+- Add upper case letters to the words ‘Workspaces’ in the French translation by @dorianne-arawa in [#1207](https://github.com/arawa/workspace/pull/1207)
+- Align the "Workspace Managers" column name to the right by @zak39 in [#1439](https://github.com/arawa/workspace/pull/1439)
+- Capitalize "Workspace manager" to "Workspace Manager" in all workspaces page by @zak39 in [#1378](https://github.com/arawa/workspace/pull/1378)
+- Center the "no users in space" message by @zak39 in [#1420](https://github.com/arawa/workspace/pull/1420)
+- Change quota to bubble style by @zak39 in [#1293](https://github.com/arawa/workspace/pull/1293)
+- Change the translation of 'G.E' to 'WM' in the user listing when adding them by @zak39 in [#1129](https://github.com/arawa/workspace/pull/1129)
+- Complete the bottom border of the table header by @zak39 in [#1430](https://github.com/arawa/workspace/pull/1430)
+- Create a duplicate group with a specific id by @smarinier in [#1301](https://github.com/arawa/workspace/pull/1301)
+- Disable the avatar menu on the spaces page by @zak39 in [#1434](https://github.com/arawa/workspace/pull/1434)
+- Fix typo nextcloud by @zak39 in [#1400](https://github.com/arawa/workspace/pull/1400)
+- Harmonize the hover effect for the "Add a group" and "Create a workspace group" buttons by @zak39 in [#1121](https://github.com/arawa/workspace/pull/1121)
+- Harmonize user select input with the added group select input by @zak39 in [#1216](https://github.com/arawa/workspace/pull/1216)
+- Increase the contrast for the new workspace button by @zak39 in [#1435](https://github.com/arawa/workspace/pull/1435)
+- Lighten quota bubble content by @zak39 in [#1448](https://github.com/arawa/workspace/pull/1448)
+- Lighten the users list and user cards by @zak39 in [#1446](https://github.com/arawa/workspace/pull/1446)
+- Limit workspace managers bubble to 10 users on Home page by @zak39 in [#1440](https://github.com/arawa/workspace/pull/1440)
+- Load users asynchronously when viewing a workspace by @zak39 in [#1187](https://github.com/arawa/workspace/pull/1187)
+- Move setting of quota to backend by @zak39 in [#1259](https://github.com/arawa/workspace/pull/1259)
+- Nextcloud 28 is the minimal requirement for the 4.1.0 release by @zak39 in [#1418](https://github.com/arawa/workspace/pull/1418)
+- Prevent a workspace manager from removing themselveses of a workspace by @zak39 in [#1401](https://github.com/arawa/workspace/pull/1401), [#1416](https://github.com/arawa/workspace/pull/1416)
+- Remove bold formatting from action button names (Add users, create and add group) by @zak39 in [#1431](https://github.com/arawa/workspace/pull/1431)
+- Replace French brand wordings with English equivalents by @Jerome-Herbinet in [#1182](https://github.com/arawa/workspace/pull/1182)
+- Resize the user selection modal for screen widths less than 900px by @zak39 in [#1441](https://github.com/arawa/workspace/pull/1441)
+- Set fixed width for the role column by @zak39 in [#1438](https://github.com/arawa/workspace/pull/1438)
+- Show "no spaces" message when there are no spaces by @zak39 in [#1421](https://github.com/arawa/workspace/pull/1421)
+- Show the translated error message for special character in the space name by @zak39 in [#1445](https://github.com/arawa/workspace/pull/1445)
+- Translate error message for renaming a workspace by @zak39 in [#1162](https://github.com/arawa/workspace/pull/1162)
+- Update fr.js for 2 error messages by @dorianne-arawa in [#1238](https://github.com/arawa/workspace/pull/1238)
+- Update French translation on subgroup deletion by @zak39 in [#1377](https://github.com/arawa/workspace/pull/1377)
+- v4.1.0 by @zak39 in [#1466](https://github.com/arawa/workspace/pull/1466)
+
+### Fixed
+
+- Check if a user belongs to a connected group by @zak39 in [#1130](https://github.com/arawa/workspace/pull/1130)
+- Crash of workspace list with undefined quota by @smarinier in [#1242](https://github.com/arawa/workspace/pull/1242)
+- Find users by email address by @zak39 in [#1454](https://github.com/arawa/workspace/pull/1454)
+- Fix alignment issues in headers and rows by @smarinier in [#1243](https://github.com/arawa/workspace/pull/1243)
+- Fix notification errors and special character handling in workspace names by @zak39 in [#1414](https://github.com/arawa/workspace/pull/1414)
+- Fix: 'exist' wording (is exist -> does exist) by @smarinier in [#1142](https://github.com/arawa/workspace/pull/1142)
+- Fix: GroupFolder changed getFolder  by @smarinier in [#1292](https://github.com/arawa/workspace/pull/1292)
+- Fixing typo and wording on warning log by @ThibautPlg in [#1244](https://github.com/arawa/workspace/pull/1244)
+- Get the quota after creating a workspace by @zak39 in [#1313](https://github.com/arawa/workspace/pull/1313)
+- Harmonizing cross icon in user menu by @zak39 in [#1113](https://github.com/arawa/workspace/pull/1113)
+- Move the user import information icon to be closer to the tab's title by @zak39 in [#1433](https://github.com/arawa/workspace/pull/1433)
+- Remove subgroup with special characters in its name by @zak39 in [#1371](https://github.com/arawa/workspace/pull/1371)
+- Search for groups to add to workspace on workspace page by @zak39 in [#1392](https://github.com/arawa/workspace/pull/1392)
+- Show the correct data when editing a workspace by @zak39 in [#1376](https://github.com/arawa/workspace/pull/1376)
+- Show the spacename in the space deletion modal by @zak39 in [#1432](https://github.com/arawa/workspace/pull/1432)
+
+### Docs
+
+- Add changes, fixes and features for Workspace version 4.1.0 to the CHANGELOG by @zak39 in [#1467](https://github.com/arawa/workspace/pull/1467)
+
 ## [4.0.6] - 2025-11-03
 
 ### Added
@@ -424,7 +491,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.0.6...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.1.0...main
+[4.1.0]: https://github.com/arawa/workspace/compare/v4.0.6...4.1.0
 [4.0.6]: https://github.com/arawa/workspace/compare/v4.0.5...4.0.6
 [4.0.5]: https://github.com/arawa/workspace/compare/v4.0.4...4.0.5
 [4.0.4]: https://github.com/arawa/workspace/compare/v4.0.3...4.0.4
