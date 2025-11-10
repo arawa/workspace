@@ -69,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- Add changes, fixes and features for Workspace version 4.1.0 to the CHANGELOG by @zak39 in [#1467](https://github.com/arawa/workspace/pull/1467)
+
 ## [4.0.6] - 2025-11-03
 
 ### Added
