@@ -49,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update French translation on subgroup deletion by @zak39 in [#1377](https://github.com/arawa/workspace/pull/1377)
 - v4.1.0 by @zak39 in [#1466](https://github.com/arawa/workspace/pull/1466)
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Check if a user belongs to a connected group by @zak39 in [#1130](https://github.com/arawa/workspace/pull/1130)
