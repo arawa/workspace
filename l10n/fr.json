@@ -2,8 +2,6 @@
 	"Workspace": "Workspace",
 	"Are you sure you want to delete the {space} workspace ?": "Êtes vous sûr de vouloir supprimer le Workspace {space} ?",
 	"Add": "Ajouter",
-	"Add users": "Ajouter des utilisateurs",
-	"Add a group": "Ajouter un groupe",
 	"All spaces": "Tous les Workspaces",
 	"Administrators" : "General Managers",
 	"admin" : "Workspaces Manager",
@@ -34,7 +32,6 @@
 	"This group already exists. Please, change the name": "Ce groupe existe déjà. Changez le nom, s'il vous plaît.",
 	"Quota" : "Quota",
 	"The name space must be defined.": "Le nom du Workspace doit être défini.",
-	"Role" : "Role",
 	"Convert group folders": "Convertir",
 	"Select groupfolders to convert in workspace": "Selectionner les Dossiers de groupes à convertir en Workspaces",
 	"Error in CSV file content": "Erreur dans le contenu du fichier CSV",
@@ -117,5 +114,5 @@
 	"Import csv from Files": "Importer un CSV à partir de Fichiers",
 	"View Profile": "Voir le profil"
 },
-"pluralForm" : "nplurals=2; plural=(n > 1);"
+	"pluralForm" : "nplurals=2; plural=(n > 1);"
 }
