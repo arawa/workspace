@@ -151,6 +151,7 @@ source:
 	--exclude="../$(app_name)/screenshots" \
 	--exclude="../$(app_name)/docs" \
 	--exclude="../$(app_name)/CONTRIBUTING.md" \
+	--exclude="../$(app_name)/sponsors" \
 	../$(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
@@ -178,6 +179,7 @@ appstore:
 	--exclude="../$(app_name)/package.json" \
 	--exclude="../$(app_name)/bower.json" \
 	--exclude="../$(app_name)/karma.*" \
+	--exclude="../$(app_name)/sponsors" \
 	--exclude="../$(app_name)/protractor\.*" \
 	--exclude="../$(app_name)/.*" \
 	--exclude="../$(app_name)/js/.*" \
