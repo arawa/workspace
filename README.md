@@ -145,3 +145,14 @@ sudo -u nginx /usr/local/bin/composer run test
 Please, read the [security.txt](.well-known/security.txt).
 
 If you want to report us a security issue. Please, read our [security-policy.md](.well-known/security-policy.md) file.
+
+## 🤝 Sponsoring
+
+We thanks our sponsors for their trust.
+
+<div class="sponsors">
+  <img class="sponsor" style="height: 100px;" src="./sponsors/2ministere-de-leconomie-des-finances-et-de-la-souverainete-industrielle-et-numerique.svg" alt="Ministère de l'économie, des finances et de la souveraineté industrielle et numérique">
+  <img class="sponsor" style="width:100px;" src="./sponsors/767190-ayming-vector-logo-1.png.webp" alt="Ayming">
+  <img class="sponsor" style="width:100px;" src="./sponsors/cnrs-detoure.png.webp" alt="CNRS">
+  <img class="sponsor" style="width:100px;" src="./sponsors/logo-sdis57-couleur-noir.svg" alt="Sapeurs pompiers de la Moselle">
+</div>
