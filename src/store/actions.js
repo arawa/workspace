@@ -59,7 +59,7 @@ export default {
 			} else {
 				// Restore frontend and inform user
 				context.commit('removeUserFromGroup', { name, gid, user })
-				const text = t('workspace', 'An error occured while trying to add user ') + user.name
+				const text = t('workspace', 'An error occured while trying to add user') + user.name
 				showNotificationError('Error', text, 5000)
 			}
 		}).catch((e) => {
