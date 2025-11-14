@@ -343,6 +343,6 @@ export default {
 }
 
 .role-th {
-	width: 160px;
+	width: 220px;
 }
 </style>
