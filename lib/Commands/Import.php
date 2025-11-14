@@ -142,7 +142,7 @@ class Import extends Command {
 			$quota = $this->convertToByte($data['quota']);
 			$this->groupfolderHelper->setFolderQuota($workspace['folder_id'], $quota);
 
-			$this->adminGroup->addUser($user, $adminGroupname);
+			$this->adminGroup->addUser($user, $workspace['id']);
 			$this->userGroup->addUser($user, $userGroupname);
 		}
 
