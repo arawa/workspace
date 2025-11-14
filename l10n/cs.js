@@ -44,7 +44,7 @@ OC.L10N.register(
 		'You aren\'t allowed to access into this application !': 'Nemáte oprávnění pro přístup k této aplikaci!',
 		'You have not yet created any workspace': 'Zatím jste nevytvořili žádný prac. prostor',
 		'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota': 'Jako kvótu je možné zadat pouze „neomezené“ nebo číslo následované „TB“, „GB“, „MB“ nebo „KB“ (příklad: „5GB“).',
-		'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]': 'Je třeba, aby název prac. prostoru neobsahoval následující znaky: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\ ^ = / & * ]',
+		'Your Workspace name must not contain the following characters: {specialChars}': 'Je třeba, aby název prac. prostoru neobsahoval následující znaky: {specialChars}',
 		Email: 'E-maily',
 		Error: 'Chyba',
 		Groups: 'Skupiny',
