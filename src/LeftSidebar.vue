@@ -57,8 +57,6 @@
 
 <script>
 import { createSpace } from './services/spaceService.js'
-import { PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER } from './constants.js'
-import BadCreateError from './Errors/BadCreateError.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
@@ -79,15 +77,6 @@ export default {
 			if (name === '') {
 				showNotificationError('Error', 'Please specify a name.', 3000)
 				return
-			}
-
-			const REGEX_CHECK_NOTHING_SPECIAL_CHARACTER = new RegExp(PATTERN_CHECK_NOTHING_SPECIAL_CHARACTER)
-
-			if (REGEX_CHECK_NOTHING_SPECIAL_CHARACTER.test(name)) {
-				showNotificationError('Error - Creating space', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]', 5000)
-				throw new BadCreateError(
-					'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]',
-				)
 			}
 
 			const workspace = await createSpace(name, this)

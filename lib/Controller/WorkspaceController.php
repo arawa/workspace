@@ -372,7 +372,13 @@ class WorkspaceController extends Controller {
 		string $newSpaceName): JSONResponse {
 
 		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
-			throw new BadRequestException('Error to rename the workspace', 'Your Workspace name must not contain the following characters: {args}', argsMessage: [implode(' ', array_unique(str_split(WorkspaceCheckService::CHARACTERS_SPECIAL)))]);
+			throw new BadRequestException(
+				title: 'Error creating workspace',
+				message: 'Your Workspace name must not contain the following characters: {specialChars}',
+				argsMessage: [
+					'specialChars' => implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL))
+				]
+			);
 		}
 
 		if ($newSpaceName === false
