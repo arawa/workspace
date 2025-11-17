@@ -25,7 +25,7 @@ import axios from '@nextcloud/axios'
 import { PREFIX_MANAGER, PREFIX_USER } from '../constants.js'
 import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
-import showNotificationError from './Notifications/NotificationError.js'
+import showNotificationError, { showCreatingWorkspaceNotification } from './Notifications/NotificationError.js'
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
 
 /**
@@ -47,7 +47,7 @@ export function createSpace(spaceName, vueInstance = undefined) {
 		})
 		.catch(error => {
 			if ('response' in error && 'data' in error.response) {
-				showNotificationError(error.response.data.title, error.response.data.message, 5000)
+				showCreatingWorkspaceNotification(error.response.data.title, error.response.data.message, 5000, error.response.data.args_message)
 			} else {
 				showNotificationError('Error to create a workspace', error.message, 5000)
 			}
