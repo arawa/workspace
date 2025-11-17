@@ -267,11 +267,6 @@ export default {
 				// TODO: May be to print an error message temporary
 				console.error(responseRename.message)
 			}
-
-			if (responseRename.statuscode === 400) {
-				const text = t('workspace', 'Your Workspace name must not contain the following characters: [ ~ < > { } | ; . : , ! ? \' @ # $ + ( ) % \\\\ ^ = / & * ]')
-				showNotificationError('Error to rename space', text, 5000)
-			}
 		},
 		/**
 		 * @param {string} groupname the displayname from a group
