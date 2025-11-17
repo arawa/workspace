@@ -67,7 +67,7 @@ export default {
 					const spaces = resp.data
 					this.$store.commit('addSpaces', { spaces })
 
-					this.$store.dispatch('setCountWorkspaces', { count: resp.data.length })
+					this.$store.dispatch('setCountWorkspaces', { count: Object.values(resp.data).length })
 					this.$store.state.loading = false
 
 				})
