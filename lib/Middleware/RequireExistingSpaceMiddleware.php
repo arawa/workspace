@@ -43,7 +43,13 @@ class RequireExistingSpaceMiddleware extends Middleware {
 			throw new NotFoundException("The workspace with the id {$id} is not found.");
 		}
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		if ($groupfolder === false) {
 			$this->logger->error('Failed loading groupfolder ' . $space->getGroupfolderId());

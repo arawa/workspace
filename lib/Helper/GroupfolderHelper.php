@@ -25,6 +25,8 @@
 namespace OCA\Workspace\Helper;
 
 use OCA\GroupFolders\Folder\FolderManager;
+use OCA\GroupFolders\Folder\FolderWithMappingsAndCache;
+use OCA\GroupFolders\Folder\FolderDefinition;
 use OCA\Workspace\Exceptions\GroupFolderFunctionException;
 use OCP\AutoloadNotAllowedException;
 use Psr\Container\ContainerExceptionInterface;
@@ -57,10 +59,10 @@ class GroupfolderHelper {
 		}
 	}
 
-	public function getFolder(int $folderId, int $rootStorageId) {
+	public function getFolder(int $folderId, int $rootStorageId): FolderWithMappingsAndCache|FolderDefinition|null {
 		try {
 			// since NC31 : getFolder returns null if the folder does not exist instead of false
-			return $this->folderManager->getFolder($folderId, $rootStorageId)->toArray() ?? false;
+			return $this->folderManager->getFolder($folderId, $rootStorageId) ?? false;
 		} catch (\Exception $e) {
 			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the getFolder function from FolderManager.');
 		}
