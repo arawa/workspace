@@ -23,14 +23,16 @@
 		:key="space.id"
 		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
 		:allow-collapse="true"
-		:open="open()"
+		:open="open"
 		:name="spaceName"
-		:to="{path: getSpacePath()}">
+		:to="{path: getSpacePath()}"
+		@update:open="isOpen = $event">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.getSpaceUserCount(spaceName) }}
 		</NcCounterBubble>
 		<MenuItemSelector />
+		<div v-if="isOpen">
 		<NcAppNavigationCaption
 			ref="navigationGroup"
 			:name="t('workspace', 'Workspace groups')">
@@ -79,6 +81,7 @@
 			:space-name="spaceName"
 			:count="group.usersCount"
 			:added-group="true" />
+			</div>
 	</NcAppNavigationItem>
 </template>
 
@@ -124,6 +127,7 @@ export default {
 	},
 	data() {
 		return {
+			isOpen: false,
 			workspaceGroups: [],
 			connectedGroups: [],
 
@@ -132,6 +136,16 @@ export default {
 		}
 	},
 	computed: {
+		open() {
+			const id = this.space.id.toString()
+			return this.$route.params.space === id
+		},
+	},
+	mounted() {
+		// Open the space menu item if we are in the space route
+		if (this.open) {
+			this.isOpen = true
+		}
 	},
 	methods: {
 		// sorts groups alphabetically
@@ -195,10 +209,6 @@ export default {
 			return url.substr(url.indexOf('/workspace/'))
 		},
 
-		open() {
-			const id = this.space.id.toString()
-			return this.$route.params.space === id
-		},
 	},
 }
 </script>
