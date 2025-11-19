@@ -24,12 +24,12 @@
 
 namespace OCA\Workspace\Helper;
 
+use OCA\GroupFolders\Folder\FolderDefinition;
 use OCA\GroupFolders\Mount\FolderStorageManager;
 use OCA\Workspace\Exceptions\FolderStorageManagerFunctionException;
 use OCP\AutoloadNotAllowedException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use OCA\GroupFolders\Folder\FolderDefinition;
 
 class FolderStorageManagerHelper {
 	private ?FolderStorageManager $folderStorageManager = null;
