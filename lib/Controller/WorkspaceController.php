@@ -158,6 +158,7 @@ class WorkspaceController extends Controller {
 			$wsGroups = [];
 			$space['users'] = (object)[];
 			$addedGroups = [];
+			$space['size'] = $space['root_cache_entry']?->getSize();
 
 			foreach ($gids as $gid) {
 				$group = $this->groupManager->get($gid);
