@@ -39,7 +39,6 @@ use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -67,7 +66,6 @@ class SpaceManager {
 		private AdminGroup $adminGroup,
 		private AdminUserGroup $adminUserGroup,
 		private AddedGroups $addedGroups,
-		private MountProviderHelper $mountProviderHelper,
 		private FolderStorageManagerHelper $folderStorageManagerHelper,
 		private SubGroup $subGroup,
 		private IUserManager $userManager,
@@ -231,7 +229,7 @@ class SpaceManager {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
 
 		if ($groupfolder === false || is_null($groupfolder)) {
