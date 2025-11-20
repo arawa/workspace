@@ -153,7 +153,6 @@ export default {
 <style>
 .admin-avatars {
 	display: flex;
-	flex-flow: row-reverse;
 }
 
 .container-avatars {
@@ -195,7 +194,6 @@ td, td div {
 }
 
 .workspace-managers-th {
-	text-align: right;
-	padding-right: 80px;
+	text-align: left;
 }
 </style>
