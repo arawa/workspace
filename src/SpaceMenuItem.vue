@@ -33,55 +33,55 @@
 		</NcCounterBubble>
 		<MenuItemSelector />
 		<div v-if="isOpen">
-		<NcAppNavigationCaption
-			ref="navigationGroup"
-			:name="t('workspace', 'Workspace groups')">
-			<template #actionsTriggerIcon>
-				<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
-			</template>
-			<template #actions>
-				<NcActionText :class="'space-text'">
-					{{ t('workspace', 'Create a workspace group') }}
-				</NcActionText>
-				<NcActionInput v-show="true"
-					ref="createGroupInput"
-					:class="'ws-modal-action'"
-					icon="icon-group"
-					:close-after-click="true"
-					:show-trailing-button="true"
-					@submit="onNewWorkspaceGroup" />
-			</template>
-		</NcAppNavigationCaption>
+			<NcAppNavigationCaption
+				ref="navigationGroup"
+				:name="t('workspace', 'Workspace groups')">
+				<template #actionsTriggerIcon>
+					<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
+				</template>
+				<template #actions>
+					<NcActionText :class="'space-text'">
+						{{ t('workspace', 'Create a workspace group') }}
+					</NcActionText>
+					<NcActionInput v-show="true"
+						ref="createGroupInput"
+						:class="'ws-modal-action'"
+						icon="icon-group"
+						:close-after-click="true"
+						:show-trailing-button="true"
+						@submit="onNewWorkspaceGroup" />
+				</template>
+			</NcAppNavigationCaption>
 
-		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
-			:key="group.gid"
-			:group="group"
-			:count="group.usersCount"
-			:space-id="space.id"
-			:space-name="spaceName" />
-		<NcAppNavigationCaption
-			:name="t('workspace', 'Added groups')">
-			<template #actions>
-				<NcActionButton
-					:aria-label="t('workspace', 'Add a group')"
-					@click="toggleAddGroupModal">
-					<template #icon>
-						<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
-					</template>
-				</NcActionButton>
-			</template>
-		</NcAppNavigationCaption>
-		<SelectConnectedGroups v-if="isAddGroupModalOpen" :space="space" @close="toggleAddGroupModal" />
-		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
-			:key="group.gid"
-			:group="group"
-			:space-id="space.id"
-			:space-name="spaceName"
-			:count="group.usersCount"
-			:added-group="true" />
-			</div>
+			<GroupMenuItem
+				v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
+				:key="group.gid"
+				:group="group"
+				:count="group.usersCount"
+				:space-id="space.id"
+				:space-name="spaceName" />
+			<NcAppNavigationCaption
+				:name="t('workspace', 'Added groups')">
+				<template #actions>
+					<NcActionButton
+						:aria-label="t('workspace', 'Add a group')"
+						@click="toggleAddGroupModal">
+						<template #icon>
+							<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
+						</template>
+					</NcActionButton>
+				</template>
+			</NcAppNavigationCaption>
+			<SelectConnectedGroups v-if="isAddGroupModalOpen" :space="space" @close="toggleAddGroupModal" />
+			<GroupMenuItem
+				v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
+				:key="group.gid"
+				:group="group"
+				:space-id="space.id"
+				:space-name="spaceName"
+				:count="group.usersCount"
+				:added-group="true" />
+		</div>
 	</NcAppNavigationItem>
 </template>
 
