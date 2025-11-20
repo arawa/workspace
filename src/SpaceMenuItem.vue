@@ -23,62 +23,65 @@
 		:key="space.id"
 		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
 		:allow-collapse="true"
-		:open="open()"
+		:open="open"
 		:name="spaceName"
-		:to="{path: getSpacePath()}">
+		:to="{path: getSpacePath()}"
+		@update:open="isOpen = $event">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
 			{{ $store.getters.getSpaceUserCount(spaceName) }}
 		</NcCounterBubble>
 		<MenuItemSelector />
-		<NcAppNavigationCaption
-			ref="navigationGroup"
-			:name="t('workspace', 'Workspace groups')">
-			<template #actionsTriggerIcon>
-				<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
-			</template>
-			<template #actions>
-				<NcActionText :class="'space-text'">
-					{{ t('workspace', 'Create a workspace group') }}
-				</NcActionText>
-				<NcActionInput v-show="true"
-					ref="createGroupInput"
-					:class="'ws-modal-action'"
-					icon="icon-group"
-					:close-after-click="true"
-					:show-trailing-button="true"
-					@submit="onNewWorkspaceGroup" />
-			</template>
-		</NcAppNavigationCaption>
+		<div v-if="isOpen">
+			<NcAppNavigationCaption
+				ref="navigationGroup"
+				:name="t('workspace', 'Workspace groups')">
+				<template #actionsTriggerIcon>
+					<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
+				</template>
+				<template #actions>
+					<NcActionText :class="'space-text'">
+						{{ t('workspace', 'Create a workspace group') }}
+					</NcActionText>
+					<NcActionInput v-show="true"
+						ref="createGroupInput"
+						:class="'ws-modal-action'"
+						icon="icon-group"
+						:close-after-click="true"
+						:show-trailing-button="true"
+						@submit="onNewWorkspaceGroup" />
+				</template>
+			</NcAppNavigationCaption>
 
-		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
-			:key="group.gid"
-			:group="group"
-			:count="group.usersCount"
-			:space-id="space.id"
-			:space-name="spaceName" />
-		<NcAppNavigationCaption
-			:name="t('workspace', 'Added groups')">
-			<template #actions>
-				<NcActionButton
-					:aria-label="t('workspace', 'Add a group')"
-					@click="toggleAddGroupModal">
-					<template #icon>
-						<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
-					</template>
-				</NcActionButton>
-			</template>
-		</NcAppNavigationCaption>
-		<SelectConnectedGroups v-if="isAddGroupModalOpen" :space="space" @close="toggleAddGroupModal" />
-		<GroupMenuItem
-			v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
-			:key="group.gid"
-			:group="group"
-			:space-id="space.id"
-			:space-name="spaceName"
-			:count="group.usersCount"
-			:added-group="true" />
+			<GroupMenuItem
+				v-for="group in sortedGroups(Object.values(space.groups ?? []), spaceName)"
+				:key="group.gid"
+				:group="group"
+				:count="group.usersCount"
+				:space-id="space.id"
+				:space-name="spaceName" />
+			<NcAppNavigationCaption
+				:name="t('workspace', 'Added groups')">
+				<template #actions>
+					<NcActionButton
+						:aria-label="t('workspace', 'Add a group')"
+						@click="toggleAddGroupModal">
+						<template #icon>
+							<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
+						</template>
+					</NcActionButton>
+				</template>
+			</NcAppNavigationCaption>
+			<SelectConnectedGroups v-if="isAddGroupModalOpen" :space="space" @close="toggleAddGroupModal" />
+			<GroupMenuItem
+				v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
+				:key="group.gid"
+				:group="group"
+				:space-id="space.id"
+				:space-name="spaceName"
+				:count="group.usersCount"
+				:added-group="true" />
+		</div>
 	</NcAppNavigationItem>
 </template>
 
@@ -124,6 +127,7 @@ export default {
 	},
 	data() {
 		return {
+			isOpen: false,
 			workspaceGroups: [],
 			connectedGroups: [],
 
@@ -132,6 +136,16 @@ export default {
 		}
 	},
 	computed: {
+		open() {
+			const id = this.space.id.toString()
+			return this.$route.params.space === id
+		},
+	},
+	mounted() {
+		// Open the space menu item if we are in the space route
+		if (this.open) {
+			this.isOpen = true
+		}
 	},
 	methods: {
 		// sorts groups alphabetically
@@ -195,10 +209,6 @@ export default {
 			return url.substr(url.indexOf('/workspace/'))
 		},
 
-		open() {
-			const id = this.space.id.toString()
-			return this.$route.params.space === id
-		},
 	},
 }
 </script>

@@ -28,18 +28,12 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
-use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
-use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
-use OCA\Workspace\Service\Workspace\WorkspaceCheckService;
 use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
@@ -53,22 +47,16 @@ use Psr\Log\LoggerInterface;
 class WorkspaceController extends Controller {
 	public function __construct(
 		IRequest $request,
-		private AdminGroup $adminGroup,
-		private AdminUserGroup $adminUserGroup,
 		private GroupfolderHelper $folderHelper,
 		private IGroupManager $groupManager,
 		private RootFolder $rootFolder,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
 		private SpaceMapper $spaceMapper,
-		private SpaceService $spaceService,
 		private UserService $userService,
-		private ConnectedGroupsService $connectedGroups,
-		private WorkspaceCheckService $workspaceCheck,
+		private WorkspaceFormatter $workspaceFormatter,
 		private WorkspaceService $workspaceService,
-		private UserGroup $userGroup,
 		private UserFormatter $userFormatter,
-		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private SpaceManager $spaceManager,
 		public $AppName,
 	) {
@@ -144,53 +132,27 @@ class WorkspaceController extends Controller {
 	public function findAll(): JSONResponse {
 		$workspaces = $this->workspaceService->getAll();
 		$spaces = [];
+		$rootFolderStorageId = $this->rootFolder->getRootFolderStorageId();
 		foreach ($workspaces as $workspace) {
 			$folderInfo = $this->folderHelper->getFolder(
 				$workspace['groupfolder_id'],
-				$this->rootFolder->getRootFolderStorageId()
+				$rootFolderStorageId
 			);
-			$space = ($folderInfo !== false) ? array_merge(
-				$folderInfo,
-				$workspace
-			) : $workspace;
 
-			$gids = array_keys($space['groups'] ?? []);
-			$wsGroups = [];
-			$space['users'] = (object)[];
-			$addedGroups = [];
-
-			foreach ($gids as $gid) {
-				$group = $this->groupManager->get($gid);
-				if (is_null($group)) {
-					$this->logger->warning(
-						"Be careful, the $gid group does not exist in the oc_groups table."
-						. ' The group is still present in the oc_group_folders_groups table.'
-						. ' To fix this inconsistency, recreate the group using occ commands.'
-					);
-					continue;
-				}
-				if (UserGroup::isWorkspaceGroup($group)) {
-					$wsGroups[] = $group;
-				} else {
-					$addedGroups[] = $group;
-				}
-
-				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['usersCount'] = $group->count();
-				}
+			if ($folderInfo === false) {
+				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");
+				continue;
 			}
 
-			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
-			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
-
-			$spaces[] = $space;
+			$spaces[$workspace['name']] = $this->workspaceFormatter->format($workspace, $folderInfo);
 		}
+
 		// We only want to return those workspaces for which the connected user is a manager
 		if (!$this->userService->isUserGeneralAdmin()) {
 			$this->logger->debug('Filtering workspaces');
-			$filteredWorkspaces = array_values(array_filter($spaces, function ($space) {
+			$filteredWorkspaces = array_filter($spaces, function ($space) {
 				return $this->userService->isSpaceManagerOfSpace($space);
-			}));
+			});
 			$spaces = $filteredWorkspaces;
 		}
 

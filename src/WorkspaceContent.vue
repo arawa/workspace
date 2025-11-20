@@ -64,24 +64,10 @@ export default {
 						return
 					}
 
-					resp.data.forEach(space => {
-						this.$store.commit('addSpace', {
-							color: space.color_code,
-							groupfolderId: space.groupfolder_id,
-							groups: space.groups,
-							added_groups: space.added_groups ?? {},
-							id: space.id,
-							isOpen: false,
-							name: space.name,
-							quota: space.quota,
-							size: space.size,
-							users: space.users,
-							userCount: space.userCount,
-							managers: null,
-						})
-					})
+					const spaces = resp.data
+					this.$store.commit('addSpaces', { spaces })
 
-					this.$store.dispatch('setCountWorkspaces', { count: resp.data.length })
+					this.$store.dispatch('setCountWorkspaces', { count: Object.values(resp.data).length })
 					this.$store.state.loading = false
 
 				})
