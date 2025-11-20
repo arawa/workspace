@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Commands;
 
+use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Group\User\UserGroupManager;
@@ -134,7 +135,7 @@ class Create extends Command {
 
 		try {
 			$workspace = $this->spaceManager->create($spacename);
-		} catch (\OCA\Workspace\Exceptions\Notifications\WorkspaceNameExistException $e) {
+		} catch (SpacenameExistException $e) {
 			$output->writeln(sprintf('The space %s already exists', $spacename));
 			$workspace = $this->spaceManager->getByName($spacename);
 		}
