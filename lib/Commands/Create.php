@@ -24,19 +24,19 @@
 
 namespace OCA\Workspace\Commands;
 
-use Psr\Log\LoggerInterface;
-use OCA\Workspace\User\UserFinder;
-use OCA\Workspace\Space\SpaceManager;
-use OCA\Workspace\Group\User\UserGroup;
+use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Group\Admin\AdminGroup;
-use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\User\UserPresenceChecker;
+use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Group\User\UserGroupManager;
+use OCA\Workspace\Helper\GroupfolderHelper;
+use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\User\UserFinder;
+use OCA\Workspace\User\UserPresenceChecker;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use OCA\Workspace\Exceptions\SpacenameExistException;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Create extends Command {
