@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 namespace OCA\GroupFolders\Folder {
-    class FolderWithMappingsAndCache {
+    class FolderWithMappingsAndCache extends FolderDefinition {
         public function toArray(): array {}
     }
 
-    class FolderDefinition extends FolderDefinition {
+    class FolderDefinition {
         public function useSeparateStorage(): bool {}
     }
 
