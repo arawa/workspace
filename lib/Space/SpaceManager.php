@@ -109,7 +109,7 @@ class SpaceManager {
 
 
 		if (is_null($space)) {
-			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
+			throw new CreateWorkspaceException('Error while creating a space.', Http::STATUS_CONFLICT);
 		}
 
 		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
@@ -230,7 +230,7 @@ class SpaceManager {
 
 		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group in ' . $space['name']);
+				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group of ' . $space['name']);
 				$this->adminUserGroup->removeUser($user);
 			}
 		}

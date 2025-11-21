@@ -80,7 +80,7 @@
 			type="warning"
 			class="note-card">
 			<p>
-				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automaticaly added.') }}
+				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automatically added.') }}
 			</p>
 		</NcNoteCard>
 		<div class="buttons-groups">
