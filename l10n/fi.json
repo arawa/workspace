@@ -1,0 +1,7 @@
+{ "translations": {
+    "Add users" : "Lisää käyttäjiä",
+    "Cancel" : "Peruuta",
+    "Role" : "Rooli",
+    "Groups" : "Ryhmät"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
