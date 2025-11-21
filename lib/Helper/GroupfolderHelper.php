@@ -53,7 +53,7 @@ class GroupfolderHelper {
 		try {
 			return $this->folderManager->createFolder($mountpoint);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the createFolder function from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use createFolder function from FolderManager.');
 		}
 	}
 
@@ -62,7 +62,7 @@ class GroupfolderHelper {
 			// since NC31 : getFolder returns null if the folder does not exist instead of false
 			return $this->folderManager->getFolder($folderId, $rootStorageId)->toArray() ?? false;
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the getFolder function from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the getFolder function from FolderManager.');
 		}
 	}
 
@@ -70,7 +70,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->setFolderAcl($folderId, $acl);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setFolderAcl from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the setFolderAcl function from FolderManager.');
 		}
 	}
 
@@ -78,7 +78,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->addApplicableGroup($id, $group);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the addApplicableGroup from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the addApplicableGroup function from FolderManager.');
 		}
 	}
 
@@ -93,7 +93,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->removeApplicableGroup($id, $gid);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeApplicableGroup from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the removeApplicableGroup function from FolderManager.');
 		}
 	}
 
@@ -101,7 +101,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->setManageACL($folderId, $type, $id, $manageAcl);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setManageACL from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the setManageACL function from FolderManager.');
 		}
 	}
 
@@ -109,7 +109,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->setFolderQuota($folderId, $quota);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the setFolderQuota from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the setFolderQuota function from FolderManager.');
 		}
 	}
 
@@ -117,7 +117,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->removeFolder($folderId);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the removeFolder from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the removeFolder function from FolderManager.');
 		}
 	}
 
@@ -125,7 +125,7 @@ class GroupfolderHelper {
 		try {
 			$this->folderManager->renameFolder($folderId, $newMountPoint);
 		} catch (\Exception $e) {
-			throw new GroupFolderFunctionException($e->getMessage() . 'Impossible to use the renameFolder from FolderManager.');
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the renameFolder function from FolderManager.');
 		}
 	}
 }

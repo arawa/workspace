@@ -20,7 +20,7 @@ class ShareMembersOnlyFilter {
 	 * @return IUser[]
 	 *                 Return users with groups in common.
 	 *                 Except some listed in the drop-down list
-	 *                 (`Settings > Share > Restrict users to only share with users in their groups > Ingore the following groups when cheking group membership`).
+	 *                 (`Settings > Share > Restrict users to only share with users in their groups > Ignore the following groups when checking group membership`).
 	 */
 	public function excludeGroupsList(array $users): array {
 		$usersNotExclude = [];

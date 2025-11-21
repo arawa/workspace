@@ -41,7 +41,7 @@ class UserGroupManager {
 		$group = $this->groupManager->get($gid);
 
 		if (is_null($group)) {
-			throw new \Exception("The $gid group does not exist.");
+			throw new \Exception("Group with gid $gid does not exists.");
 		}
 
 		return $group;
@@ -49,7 +49,7 @@ class UserGroupManager {
 
 	public static function findWorkspaceManager(array $workspace): string {
 		if (!array_key_exists('groups', $workspace)) {
-			throw new \Exception('The "groups" key is not present in the $workspace variable.');
+			throw new \Exception('"groups" key is missing from the $workspace variable.');
 		}
 
 		$gids = array_keys($workspace['groups']);

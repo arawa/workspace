@@ -22,7 +22,7 @@ class WorkspaceChecker {
 
 		if (!empty($workspacesAreNotExist)) {
 			$workspacesAreNotExist = array_map(fn ($spacename) => "  - $spacename\n", $workspacesAreNotExist);
-			$message .= "The Workspace names below already exist:\n" . implode('', $workspacesAreNotExist);
+			$message .= "Following Workspace names already exist:\n" . implode('', $workspacesAreNotExist);
 			$message .= "\n";
 
 			return $message;
