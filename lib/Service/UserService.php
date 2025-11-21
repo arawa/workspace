@@ -73,11 +73,11 @@ class UserService {
 		$groups = [];
 
 		if (!isset($space['groups'])) {
-			throw new \Exception('The "groups" key is not present');
+			throw new \Exception('The "groups" key is missing');
 		}
 
 		if (!is_array($space['groups'])) {
-			throw new \Exception('The "groups" key is not an array');
+			throw new \Exception('The "groups" key is missing');
 		}
 
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
@@ -163,7 +163,7 @@ class UserService {
 		$canRemove = count($allManagersGroups) >= 0 && count($allManagersGroups) <= 1 ? true : false;
 
 		if (!$canRemove) {
-			$this->logger->debug('User is still manager of other workspaces, will not remove it from the ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
+			$this->logger->debug('User is still manager of other workspaces, will not be removed from ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
 		}
 
 		return $canRemove;

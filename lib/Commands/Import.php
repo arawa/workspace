@@ -106,7 +106,7 @@ class Import extends Command {
 			$unit = strtolower($matches[0]);
 
 			if (!$this->checkUnitBytes($unit)) {
-				throw new \Exception('You didn\'t define the good unit for quota. Allowed units are: kb, mb, gb or tb');
+				throw new \Exception('Invalid unit specified for quota. Permitted units are: kb, mb, gb or tb');
 			}
 		}
 
@@ -241,7 +241,7 @@ class Import extends Command {
 
 		if (!empty($workspacesAreNotExist)) {
 			$workspacesAreNotExist = array_map(fn ($spacename) => "  - $spacename\n", $workspacesAreNotExist);
-			$message .= "The Workspace names below already exist:\n" . implode('', $workspacesAreNotExist);
+			$message .= "Following Workspace names already exist:\n" . implode('', $workspacesAreNotExist);
 			$message .= "\n";
 
 			return $message;
@@ -262,7 +262,7 @@ class Import extends Command {
 
 		if (!empty($usersAreNotExist)) {
 			$usersAreNotExist = array_map(fn ($username) => "  - $username\n", $usersAreNotExist);
-			$message .= "The below users do not exist:\n" . implode('', $usersAreNotExist);
+			$message .= "Following users do not exist:\n" . implode('', $usersAreNotExist);
 
 			return $message;
 		}
@@ -282,7 +282,7 @@ class Import extends Command {
 
 		if (!empty($spacenamesWithCharacterSpecials)) {
 			$spacenamesStringify = array_map(fn ($spacename) => "   - $spacename\n", $spacenamesWithCharacterSpecials);
-			$message .= "The below workspace names contain special characters :\n" . implode('', $spacenamesStringify);
+			$message .= "Following workspace names contain special characters :\n" . implode('', $spacenamesStringify);
 			$message .= "\nPlease, make sure the Workspace names do not contain one of the following characters: " . implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
 
 			return $message;

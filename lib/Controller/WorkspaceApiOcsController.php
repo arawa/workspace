@@ -200,7 +200,7 @@ class WorkspaceApiOcsController extends OCSController {
 				$this->spaceManager->rename($id, $toSet['name']);
 				$this->spaceManager->renameGroups($id, $space['name'], $toSet['name']);
 			} else {
-				$this->logger->info("The workspace {$toSet['name']} is already named as {$space['name']}");
+				$this->logger->info("Workspace {$toSet['name']} is already named {$space['name']}");
 				$toSet['name'] = $space['name']; // when case is different
 			}
 		}
@@ -247,7 +247,7 @@ class WorkspaceApiOcsController extends OCSController {
 	/**
 	 * Create a new workspace
 	 *
-	 * @param string $name The workspace name
+	 * @param string $name Workspace name
 	 * @return DataResponse<Http::STATUS_CREATED, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, null, array{}>|DataResponse<Http::STATUS_CONFLICT, null, array{}>
 	 * @throws OCSException for all unknown errors
 	 *
@@ -261,7 +261,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
 		$space = $this->spaceManager->create($name);
-		$this->logger->info("The workspace {$name} is created");
+		$this->logger->info("Workspace {$name} has been created");
 
 		return new DataResponse($space, Http::STATUS_CREATED);
 	}
@@ -295,7 +295,7 @@ class WorkspaceApiOcsController extends OCSController {
 
 		$this->spaceManager->remove($id);
 
-		$this->logger->info("The {$space['name']} workspace with id {$space['id']} is deleted");
+		$this->logger->info("The {$space['name']} workspace with id {$space['id']} has been deleted");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
@@ -355,10 +355,10 @@ class WorkspaceApiOcsController extends OCSController {
 		$spacename = $this->spaceMapper->find($id)->getSpaceName();
 
 		$count = count($uids);
-		$this->logger->info("{$count} users were added in the {$spacename} workspace with the {$id} id.");
+		$this->logger->info("{$count} users were added in the {$spacename} workspace with id {$id}.");
 
 		return new DataResponse([
-			'message' => "{$count} users were added in the {$spacename} workspace with the {$id} id."
+			'message' => "{$count} users were added in the {$spacename} workspace with id {$id}."
 		], Http::STATUS_OK);
 	}
 
@@ -385,7 +385,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function removeUsersInWorkspace(int $id, array $uids): DataResponse {
 		$this->spaceManager->removeUsersFromWorkspace($id, $uids);
 		$uidsStringify = implode(', ', $uids);
-		$this->logger->info("These users are removed from the workspace with the id {$id}: {$uidsStringify}");
+		$this->logger->info("These users were removed from the workspace with id {$id}: {$uidsStringify}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}
@@ -414,7 +414,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$user = $this->userManager->get($uid);
 
 		if (is_null($user)) {
-			throw new OCSNotFoundException("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+			throw new OCSNotFoundException("User with uid {$uid} doesn't exists on your Nextcloud instance.");
 		}
 
 		$this->spaceManager->addUserAsWorkspaceManager($id, $uid);
@@ -445,13 +445,13 @@ class WorkspaceApiOcsController extends OCSController {
 		$user = $this->userManager->get($uid);
 
 		if (is_null($user)) {
-			throw new OCSNotFoundException("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+			throw new OCSNotFoundException("User with uid {$uid} doesn't exists on your Nextcloud instance.");
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);
 		$managerGroup = $this->groupManager->get($managerGid);
 
-		$this->logger->info("The user with UID {$uid} has been removed from the Workspace Manager role on workspace {$id}");
+		$this->logger->info("User with UID {$uid} has been demoted from the Workspace Manager role on workspace {$id}");
 
 		$this->spaceManager->removeUsersFromWorkspaceManagerGroup($managerGroup, [$user]);
 
@@ -483,7 +483,7 @@ class WorkspaceApiOcsController extends OCSController {
 	public function createSubGroup(int $id, string $name): DataResponse {
 		try {
 			$group = $this->spaceManager->createSubGroup($id, $name);
-			$this->logger->info("The group {$group->getGID()} was created for workspace {$id}");
+			$this->logger->info("Group {$group->getGID()} has been created for workspace {$id}");
 			return new DataResponse([ 'gid' => $group->getGID() ], Http::STATUS_CREATED);
 		} catch (\Exception $exception) {
 			throw new OCSException($exception->getMessage(), $exception->getCode());
@@ -520,7 +520,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$users = [];
 		$group = $this->groupManager->get($gid);
 		if ($group === null) {
-			throw new OCSNotFoundException("The group with the gid {$gid} does not exist.");
+			throw new OCSNotFoundException("Group with gid {$gid} does not exist.");
 		}
 
 		$usersNotFound = [];
@@ -536,7 +536,7 @@ class WorkspaceApiOcsController extends OCSController {
 		if (!empty($usersNotFound)) {
 			$usersNotFound = array_map(fn ($uid) => "- {$uid}", $usersNotFound);
 			$usersNotFound = implode("\n", $usersNotFound);
-			throw new OCSNotFoundException("These users not exist in your Nextcloud instance:\n{$usersNotFound}");
+			throw new OCSNotFoundException("These users does not exist on your Nextcloud instance:\n{$usersNotFound}");
 		}
 
 		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
@@ -553,7 +553,7 @@ class WorkspaceApiOcsController extends OCSController {
 				$this->spaceManager->removeUsersFromWorkspaceManagerGroup($group, $users);
 				break;
 			default:
-				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
+				throw new OCSBadRequestException("gid {$gid} doesn't comes from a workspace");
 		}
 
 		// to remove
@@ -593,17 +593,17 @@ class WorkspaceApiOcsController extends OCSController {
 		$users = [];
 		$workspace = $this->spaceManager->get($id);
 		if ($workspace === null) {
-			throw new OCSNotFoundException("The workspace with the id {$id} does not exist.");
+			throw new OCSNotFoundException("Workspace with id {$id} does not exists.");
 		}
 		$gids = array_keys($workspace['groups']);
 		$spacename = $workspace['name'];
 
 		if (!in_array($gid, $gids)) {
-			throw new OCSException("The {$gid} group is not belong to the {$spacename} workspace.");
+			throw new OCSException("Group {$gid} does not belongs to the {$spacename} workspace.");
 		}
 		$group = $this->groupManager->get($gid);
 		if ($group === null) {
-			throw new OCSNotFoundException("The group with the gid {$gid} does not exist.");
+			throw new OCSNotFoundException("Group with gid {$gid} does not exists.");
 		}
 
 		$usersNotFound = [];
@@ -620,7 +620,7 @@ class WorkspaceApiOcsController extends OCSController {
 		if (!empty($usersNotFound)) {
 			$usersNotFound = array_map(fn ($uid) => "- {$uid}", $usersNotFound);
 			$usersNotFound = implode("\n", $usersNotFound);
-			throw new OCSNotFoundException("These users don't exist in your Nextcloud instance:\n{$usersNotFound}");
+			throw new OCSNotFoundException("These users doesn't exist on your Nextcloud instance:\n{$usersNotFound}");
 		}
 
 		switch ($gid) {
@@ -634,7 +634,7 @@ class WorkspaceApiOcsController extends OCSController {
 				$this->spaceManager->addUsersToSubGroup($workspace, $group, $users);
 				break;
 			default:
-				throw new OCSBadRequestException("Your gid {$gid} doesn't come from a workspace");
+				throw new OCSBadRequestException("Group with gid {$gid} doesn't comes from a workspace");
 		}
 
 		$displayname = $group->getDisplayName();
@@ -676,7 +676,7 @@ class WorkspaceApiOcsController extends OCSController {
 			throw new OCSException($e->getMessage(), $e->getCode());
 		}
 
-		$this->logger->info("The group {$gid} was removed from workspace {$id}");
+		$this->logger->info("Group {$gid} has been removed from workspace {$id}");
 
 		return new DataResponse([], Http::STATUS_NO_CONTENT);
 	}

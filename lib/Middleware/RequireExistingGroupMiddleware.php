@@ -36,7 +36,7 @@ class RequireExistingGroupMiddleware extends Middleware {
 		$group = $this->groupManager->get($gid);
 
 		if (is_null($group)) {
-			throw new NotFoundException("The group with the gid {$gid} is not found.");
+			throw new NotFoundException("Group with gid {$gid} was not found.");
 		}
 	}
 

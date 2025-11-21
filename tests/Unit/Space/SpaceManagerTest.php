@@ -661,7 +661,7 @@ class SpaceManagerTest extends TestCase {
 		$this->logger
 			->expects($this->once())
 			->method('info')
-			->with("The subgroup {$gid} is created within the workspace {$spacename} ({$id})")
+			->with("The subgroup {$gid} has been created within the workspace {$spacename} ({$id})")
 		;
 
 		return $this->spaceManager->createSubgroup($id, $groupname);
@@ -1405,7 +1405,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage("These users not exist in your Nextcloud instance : \n- user42\n");
+		$this->expectExceptionMessage("These users does not exist on your Nextcloud instance : \n- user42\n");
 
 		$this->spaceManager->addUsersInWorkspace($spaceId, $uids);
 	}

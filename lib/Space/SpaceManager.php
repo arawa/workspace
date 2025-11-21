@@ -110,7 +110,7 @@ class SpaceManager {
 
 
 		if (is_null($space)) {
-			throw new CreateWorkspaceException('Error to create a space.', Http::STATUS_CONFLICT);
+			throw new CreateWorkspaceException('Error while creating a space.', Http::STATUS_CONFLICT);
 		}
 
 		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
@@ -185,7 +185,7 @@ class SpaceManager {
 
 		$gid = $group->getGID();
 
-		$this->logger->info("The subgroup {$gid} is created within the workspace {$spacename} ({$id})");
+		$this->logger->info("The subgroup {$gid} has been created within the workspace {$spacename} ({$id})");
 
 		return $group;
 	}
@@ -283,7 +283,7 @@ class SpaceManager {
 		$othersStringTypes = array_values(array_filter($types, fn ($type) => $type !== 'string'));
 
 		if (!empty($othersStringTypes)) {
-			throw new BadRequestException('Error in parameters', 'uids params must contain a string array only');
+			throw new BadRequestException('Error in parameters', 'uids params must contain an array of strings only');
 		}
 
 		$usersNotExist = [];
@@ -296,16 +296,16 @@ class SpaceManager {
 
 		if (!empty($usersNotExist)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
-			$this->logger->error('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
-			throw new NotFoundException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			$this->logger->error('These users does not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			throw new NotFoundException('These users does not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 		}
 
 		$gid = UserGroup::get($id);
 		$userGroup = $this->groupManager->get($gid);
 
 		if (is_null($userGroup)) {
-			$this->logger->error("The group with {$gid} group doesn't exist.");
-			throw new NotFoundException("The group with {$gid} group doesn't exist.");
+			$this->logger->error("The group {$gid} doesn't exist.");
+			throw new NotFoundException("The group {$gid} doesn't exist.");
 		}
 
 		$users = array_map(fn ($uid) => $this->userManager->get($uid), $uids);
@@ -320,7 +320,7 @@ class SpaceManager {
 
 		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
 			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group in ' . $space['name']);
+				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group of ' . $space['name']);
 				$this->adminUserGroup->removeUser($user);
 			}
 		}
@@ -408,7 +408,7 @@ class SpaceManager {
 		if (!empty($groupsNotFound)) {
 			$gidsStringify = implode(', ', $groupsNotFound);
 
-			throw new \Exception("These groups are not present in your Nextcloud instance : {$gidsStringify}");
+			throw new \Exception("These groups does not exist on your Nextcloud instance : {$gidsStringify}");
 		}
 
 		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
@@ -427,7 +427,7 @@ class SpaceManager {
 		$gids = array_keys($space['groups']);
 
 		if (!empty($othersStringTypes)) {
-			throw new OCSBadRequestException('uids params must contain a string array only');
+			throw new OCSBadRequestException('uids params must contain an array of strings');
 		}
 
 		$usersNotExist = [];
@@ -440,8 +440,8 @@ class SpaceManager {
 
 		if (!empty($usersNotExist)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
-			$this->logger->error('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
-			throw new OCSBadRequestException('These users not exist in your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			$this->logger->error('These users not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+			throw new OCSBadRequestException('These users not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);
@@ -481,7 +481,7 @@ class SpaceManager {
 		$managerGroup = $this->groupManager->get($managerGroupGid);
 
 		if (is_null($managerGroupGid)) {
-			throw new OCSNotFoundException("Impossible to found the group {$managerGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+			throw new OCSNotFoundException("Cannot find the group {$managerGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
 		}
 
 		$gids = array_keys($space['groups']);
@@ -596,7 +596,7 @@ class SpaceManager {
 		$userGroup = $this->groupManager->get($userGroupGid);
 
 		if (is_null($userGroup)) {
-			throw new NotFoundException("Impossible to found the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+			throw new NotFoundException("Cannot find the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
 		}
 
 		foreach ($users as $user) {
@@ -614,7 +614,7 @@ class SpaceManager {
 		$workspaceManagerGroup = $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS);
 
 		if (is_null($userGroup)) {
-			throw new NotFoundException("Impossible to found the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
+			throw new NotFoundException("Cannot find the group {$userGroupGid}. You have this error because you want to remove users from the group {$group->getGID()}");
 		}
 
 		foreach ($users as $user) {
@@ -643,12 +643,12 @@ class SpaceManager {
 		$group = $this->groupManager->get($userGroupGid);
 
 		if (is_null($group)) {
-			throw new NotFoundException("The user group {$userGroupGid} is not found");
+			throw new NotFoundException("The user group {$userGroupGid} does not exist");
 		}
 
 		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
 		if ($groupfolder === false) {
-			throw new NotFoundException("The groupfolder {$space->getGroupfolderId()} is not found");
+			throw new NotFoundException("The groupfolder {$space->getGroupfolderId()} does not exist");
 		}
 
 		$workspace = array_merge($groupfolder, $space->jsonSerialize());

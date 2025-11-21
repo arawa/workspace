@@ -204,7 +204,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(Response::class, $actual);
-		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'Response must be a DataResponse for OCS API');
 	}
 	public function testRemoveUserFromGroup(): void {
 		$id = 1;
@@ -350,8 +350,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			return;
 		}
 
-		$this->assertInstanceOf(Response::class, $actual, 'The response is not extended of Response class');
-		$this->assertInstanceOf(DataResponse::class, $actual, 'The response is not extended of Response class');
+		$this->assertInstanceOf(Response::class, $actual, 'Response is not extended from Response class');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'Response is not extended from Response class');
 		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
@@ -1404,7 +1404,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 		$this->assertInstanceOf(Response::class, $actual);
-		$this->assertInstanceOf(DataResponse::class, $actual, 'The response must be a DataResponse for OCS API');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'Response must be a DataResponse for OCS API');
 	}
 
 	public function testFindGroupsBySpaceIdReturnsValidDataResponse(): void {
@@ -1467,8 +1467,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			return;
 		}
 
-		$this->assertInstanceOf(Response::class, $actual, 'The response is not extended of Response class');
-		$this->assertInstanceOf(DataResponse::class, $actual, 'The response is not extended of Response class');
+		$this->assertInstanceOf(Response::class, $actual, 'Response is not extended from Response class');
+		$this->assertInstanceOf(DataResponse::class, $actual, 'Response is not extended from Response class');
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
@@ -1482,11 +1482,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->expects($this->once())
 			->method('get')
 			->with($spaceId)
-			->willThrowException(new NotFoundException("Failed loading groupfolder with the folderId {$folderId}"));
+			->willThrowException(new NotFoundException("Failed loading groupfolder with folderId {$folderId}"));
 		;
 
 		$this->expectException(OCSNotFoundException::class);
-		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
+		$this->expectExceptionMessage("Failed loading groupfolder with folderId {$folderId}");
 
 		$this->controller->find($spaceId);
 	}
@@ -1522,7 +1522,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$expected = new DataResponse(
 			[
-				'message' => "{$count} users were added in the Espace01 workspace with the 1 id."
+				'message' => "{$count} users were added in the Espace01 workspace with id 1."
 			],
 			Http::STATUS_OK
 		)
@@ -1704,11 +1704,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->editValidator
 			->expects($this->once())
 			->method('validate')
-			->willThrowException(new InvalidParamException('The name key must be a string'))
+			->willThrowException(new InvalidParamException('Name key must be a string'))
 		;
 
 		$this->expectException(InvalidParamException::class);
-		$this->expectExceptionMessage('The name key must be a string');
+		$this->expectExceptionMessage('Name key must be a string');
 
 		$this->controller->edit($id, $params['name']);
 	}
@@ -1722,11 +1722,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->editValidator
 			->expects($this->once())
 			->method('validate')
-			->willThrowException(new InvalidParamException('The quota key must be a integer'))
+			->willThrowException(new InvalidParamException('Quota key must be a integer'))
 		;
 
 		$this->expectException(InvalidParamException::class);
-		$this->expectExceptionMessage('The quota key must be a integer');
+		$this->expectExceptionMessage('Quota key must be a integer');
 
 		$this->controller->edit($id, null, null, $params['quota']);
 	}
@@ -1740,11 +1740,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->editValidator
 			->expects($this->once())
 			->method('validate')
-			->willThrowException(new InvalidParamException('The color key must be a string'))
+			->willThrowException(new InvalidParamException('Color key must be a string'))
 		;
 
 		$this->expectException(InvalidParamException::class);
-		$this->expectExceptionMessage('The color key must be a string');
+		$this->expectExceptionMessage('Color key must be a string');
 
 		$this->controller->edit($id, null, $params['color']);
 	}
@@ -1763,7 +1763,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$this->expectException(OCSNotFoundException::class);
-		$this->expectExceptionMessage("The user with the uid {$uid} doesn't exist in your Nextcloud instance.");
+		$this->expectExceptionMessage("User with uid {$uid} doesn't exists on your Nextcloud instance.");
 
 		$this->controller->addUserAsWorkspaceManager($id, $uid);
 	}
@@ -1857,7 +1857,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$this->expectException(OCSNotFoundException::class);
-		$this->expectExceptionMessage("These users not exist in your Nextcloud instance:\n- user2\n- user4");
+		$this->expectExceptionMessage("These users does not exist on your Nextcloud instance:\n- user2\n- user4");
 
 		$this->controller->removeUsersFromGroup($id, $gid, $uids);
 	}
@@ -2420,7 +2420,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		;
 
 		$this->expectException(OCSNotFoundException::class);
-		$this->expectExceptionMessage("These users don't exist in your Nextcloud instance:\n- user42");
+		$this->expectExceptionMessage("These users doesn't exist on your Nextcloud instance:\n- user42");
 
 		$this->controller->addUsersToGroup($id, $gid, $uids);
 	}
@@ -2597,11 +2597,11 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->expects($this->once())
 			->method('removeGroup')
 			->with($group)
-			->willThrowException(new GroupException('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the system\'s functionality.'))
+			->willThrowException(new GroupException('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the app\'s operation.'))
 		;
 
 		$this->expectException(OCSException::class);
-		$this->expectExceptionMessage('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the system\'s functionality.');
+		$this->expectExceptionMessage('You cannot remove the user group (U-) or the workspace manager group (WM-) as they are essential for the app\'s operation.');
 
 		$this->controller->removeGroup($id, $gid);
 	}
