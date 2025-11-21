@@ -70,7 +70,7 @@ class Create extends Command {
 		$this
 			->setName('workspace:create')
 			->setDescription('This command allows you to create a workspace')
-			->addArgument('name', InputArgument::REQUIRED, 'The name of your workspace.')
+			->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace.')
 			->addOption(
 				'format',
 				'F',
@@ -82,13 +82,13 @@ class Create extends Command {
 				'user-workspace-manager',
 				'uwm',
 				InputOption::VALUE_REQUIRED,
-				'The user will be workspace manager of your workspace. Please, use its user-id or email address'
+				'UserID or email of the user that will be promoted workspace manager'
 			)
 			->addOption(
 				'quota',
 				'qt',
 				InputOption::VALUE_OPTIONAL,
-				'The quota of the workspace in Gb. Default it\'s illimited.'
+				'Quota of the workspace in Gb. Default is unlimited.'
 			);
 
 		parent::configure();
@@ -102,21 +102,21 @@ class Create extends Command {
 		if ($input->hasParameterOption('--user-workspace-manager')) {
 			$pattern = $input->getOption('user-workspace-manager');
 			if (!$this->userChecker->checkUserExist($pattern)) {
-				$this->logger->error("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
-				throw new \Exception("$pattern could not be found. Please, make sure user-id or email exists in the Nextcloud instance.");
+				$this->logger->error("$pattern could not be found. Please, make sure user-id or email exists on the Nextcloud instance.");
+				throw new \Exception("$pattern could not be found. Please, make sure user-id or email exists on the Nextcloud instance.");
 			}
 		}
 
 		if ($this->checkValueFormatOptionIsValid($input)) {
 			$this->logger->error(
 				sprintf(
-					"The format value is not valid.\nPlease, add a valid option : %s",
+					"Value format is not valid.\nPlease, add a valid option : %s",
 					implode(', ', self::OPTION_FORMAT_AVAILABLE)
 				)
 			);
 			throw new \Exception(
 				sprintf(
-					"The format value is not valid.\nPlease, add a valid option : %s",
+					"Value format is not valid.\nPlease, add a valid option : %s",
 					implode(', ', self::OPTION_FORMAT_AVAILABLE)
 				)
 			);
@@ -129,7 +129,7 @@ class Create extends Command {
 			$unit = strtolower($matches[0]);
 
 			if (!$this->checkUnitBytes($unit)) {
-				throw new \Exception('You didn\'t define the good unit for quota. Allowed units are: kb, mb, gb or tb');
+				throw new \Exception('Invalid unit specified for quota. Permitted units are: kb, mb, gb or tb');
 			}
 		}
 
@@ -168,7 +168,7 @@ class Create extends Command {
 			$unit = strtolower($matches[0]);
 
 			if (!$this->checkUnitBytes($unit)) {
-				throw new \Exception('You didn\'t define the good unit for quota. Allowed units are: kb, mb, gb or tb');
+				throw new \Exception('Invalid unit specified for quota. Permitted units are: kb, mb, gb or tb');
 			}
 
 			$bytes = $this->convertToByte($value);
@@ -177,7 +177,7 @@ class Create extends Command {
 
 		}
 
-		$this->logger->info(sprintf('The workspace created with %s', $outputMessage));
+		$this->logger->info(sprintf('Workspace created with %s', $outputMessage));
 		$output->writeln($outputMessage);
 
 		return 0;

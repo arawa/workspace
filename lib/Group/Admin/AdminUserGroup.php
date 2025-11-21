@@ -46,7 +46,7 @@ class AdminUserGroup {
 		$group = $this->groupManager->get(self::GID);
 
 		if (is_null($group)) {
-			throw new \Exception(sprintf('Impossible to to find the %s group.', self::GID));
+			throw new \Exception(sprintf('Cannot find the %s group.', self::GID));
 		}
 
 		$group->addUser($user);
@@ -55,7 +55,7 @@ class AdminUserGroup {
 	}
 
 	public function removeUser(IUser $user): void {
-		$this->logger->debug('The ' . $user->getUID() . 'User is not manager of any other workspace, removing it from the ' . self::GID . ' group.');
+		$this->logger->debug('The ' . $user->getUID() . 'User is not manager of any other workspaces, removing it from the ' . self::GID . ' group.');
 		$workspaceUserGroup = $this->groupManager->get(self::GID);
 		if ($workspaceUserGroup !== null) {
 			$workspaceUserGroup->removeUser($user);
