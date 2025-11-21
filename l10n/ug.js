@@ -1,0 +1,16 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Add users" : "ئىشلەتكۈچى قوشۇڭ",
+    "Cancel" : "Cancel",
+    "File to share" : "ھەمبەھىرلىنىدىغان ھۆججەت",
+    "Choose from Files" : "ھۆججەتلەردىن تاللاڭ",
+    "Group name" : "گۇرۇپپا ئاتى",
+    "Role" : "رولى",
+    "Groups" : "گۇرۇپپىلار",
+    "View profile" : "ئارخىپنى كۆرۈڭ",
+    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
+    "unlimited" : "چەكسىز",
+    "Appearance" : "كۆرۈنۈش"
+},
+"nplurals=2; plural=(n != 1);");
