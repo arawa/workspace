@@ -39,8 +39,8 @@ use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
+use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -72,7 +72,7 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&IGroupManager $groupManager;
 	private MockObject&IUserManager $userManager;
 	private MockObject&LoggerInterface $logger;
-	private MockObject&MountProviderHelper $mountProviderHelper;
+	private MockObject&FolderStorageManagerHelper $folderStorageManagerHelper;
 	private MockObject&RootFolder $rootFolder;
 	private MockObject&SpaceMapper $spaceMapper;
 	private MockObject&SubGroup $subGroup;
@@ -98,7 +98,7 @@ class SpaceManagerTest extends TestCase {
 		$this->conntectedGroupService = $this->createMock(ConnectedGroupsService::class);
 		$this->folderHelper = $this->createMock(GroupfolderHelper::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->mountProviderHelper = $this->createMock(MountProviderHelper::class);
+		$this->folderStorageManagerHelper = $this->createMock(FolderStorageManagerHelper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->rootFolder = $this->createMock(RootFolder::class);
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
@@ -121,7 +121,7 @@ class SpaceManagerTest extends TestCase {
 			$this->adminGroup,
 			$this->adminUserGroup,
 			$this->addedGroups,
-			$this->mountProviderHelper,
+			$this->folderStorageManagerHelper,
 			$this->subGroup,
 			$this->userManager,
 			$this->userWorkspaceGroup,
@@ -200,9 +200,17 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(2)
 		;
 
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')
+			->willReturn($folderDefinition)
+		;
+
+		$folderDefinition
+			->expects($this->once())
+			->method('toArray')
 			->willReturn($groupfolder)
 		;
 
@@ -395,7 +403,7 @@ class SpaceManagerTest extends TestCase {
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')
-			->willReturn(false)
+			->willReturn(null)
 		;
 
 		$this->expectException(NotFoundException::class);
@@ -444,6 +452,37 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {
+		$groupfolder = [
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => 31,
+				'SPACE-U-1' => 31,
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				0 => [
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01',
+				],
+			],
+			'group_details' => [
+				'SPACE-GE-1' => [
+					'displayName' => 'SPACE-GE-1',
+					'permissions' => 31,
+					'type' => 'group',
+				],
+				'SPACE-U-1' => [
+					'displayName' => 'SPACE-U-1',
+					'permissions' => 31,
+					'type' => 'group',
+				],
+			],
+		];
+
 		$this->folderHelper
 			->expects($this->once())
 			->method('createFolder')
@@ -457,40 +496,19 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(1)
 		;
 
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')
 			->with(1, 1)
-			->willReturn([
-				'id' => 1,
-				'mount_point' => 'Espace01',
-				'groups' => [
-					'SPACE-GE-1' => 31,
-					'SPACE-U-1' => 31,
-				],
-				'quota' => -3,
-				'size' => 0,
-				'acl' => true,
-				'manage' => [
-					0 => [
-						'type' => 'group',
-						'id' => 'SPACE-GE-1',
-						'displayname' => 'WM-Espace01',
-					],
-				],
-				'group_details' => [
-					'SPACE-GE-1' => [
-						'displayName' => 'SPACE-GE-1',
-						'permissions' => 31,
-						'type' => 'group',
-					],
-					'SPACE-U-1' => [
-						'displayName' => 'SPACE-U-1',
-						'permissions' => 31,
-						'type' => 'group',
-					],
-				],
-			])
+			->willReturn($folderDefinition)
+		;
+
+		$folderDefinition
+			->expects($this->once())
+			->method('toArray')
+			->willReturn($groupfolder)
 		;
 
 		$workspaceManagerGroupMock = $this->createMock(IGroup::class);
@@ -767,6 +785,34 @@ class SpaceManagerTest extends TestCase {
 
 	public function testFindGroupsBySpaceId(): void {
 		$spaceId = 1;
+		$groupfolder
+			= [
+				'id' => 1,
+				'mount_point' => 'Espace01',
+				'groups' => [
+					'SPACE-GE-1' => [
+						'displayName' => 'WM-Espace01',
+						'permissions' => 31,
+						'type' => 'group',
+					],
+					'SPACE-U-1' => [
+						'displayName' => 'U-Espace01',
+						'permissions' => 31,
+						'type' => 'group',
+					],
+				],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Espace01',
+					],
+				]
+			]
+		;
 
 		/** @var Space&MockObject */
 		$space = $this->createMock(Space::class);
@@ -790,37 +836,18 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(2)
 		;
 
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')
-			->willReturn(
-				[
-					'id' => 1,
-					'mount_point' => 'Espace01',
-					'groups' => [
-						'SPACE-GE-1' => [
-							'displayName' => 'WM-Espace01',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-						'SPACE-U-1' => [
-							'displayName' => 'U-Espace01',
-							'permissions' => 31,
-							'type' => 'group',
-						],
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-1',
-							'displayname' => 'WM-Espace01',
-						],
-					]
-				]
-			)
+			->willReturn($folderDefinition)
+		;
+
+		$folderDefinition
+			->expects($this->once())
+			->method('toArray')
+			->willReturn($groupfolder)
 		;
 
 		$groupUser = $this->createMock(IGroup::class);
@@ -927,6 +954,27 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testFindAll(): void {
+		$groupfolder
+			= [
+				'id' => 1,
+				'mount_point' => 'Espace01',
+				'groups' => [
+					'SPACE-GE-1' => 31,
+					'SPACE-U-1' => 31
+				],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [
+					[
+						'type' => 'group',
+						'id' => 'SPACE-GE-1',
+						'displayname' => 'WM-Espace01'
+					]
+				]
+			]
+		;
+
 		$this->workspaceService
 			->expects($this->once())
 			->method('getAll')
@@ -946,29 +994,19 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(2)
 		;
 
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
 		$this->folderHelper
 			->expects($this->any())
 			->method('getFolder')
-			->willReturnOnConsecutiveCalls(
-				[
-					'id' => 1,
-					'mount_point' => 'Espace01',
-					'groups' => [
-						'SPACE-GE-1' => 31,
-						'SPACE-U-1' => 31
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-1',
-							'displayname' => 'WM-Espace01'
-						]
-					]
-				]
-			);
+			->willReturnOnConsecutiveCalls($folderDefinition)
+		;
+
+		$folderDefinition
+			->expects($this->once())
+			->method('toArray')
+			->willReturn($groupfolder)
+		;
 
 		$groupUser = $this->createMock(IGroup::class);
 		$groupUser
@@ -1190,7 +1228,7 @@ class SpaceManagerTest extends TestCase {
 				$this->adminGroup,
 				$this->adminUserGroup,
 				$this->addedGroups,
-				$this->mountProviderHelper,
+				$this->folderStorageManagerHelper,
 				$this->subGroup,
 				$this->userManager,
 				$this->userWorkspaceGroup,
@@ -1939,7 +1977,7 @@ class SpaceManagerTest extends TestCase {
 				$this->adminGroup,
 				$this->adminUserGroup,
 				$this->addedGroups,
-				$this->mountProviderHelper,
+				$this->folderStorageManagerHelper,
 				$this->subGroup,
 				$this->userManager,
 				$this->userWorkspaceGroup,
@@ -2013,7 +2051,7 @@ class SpaceManagerTest extends TestCase {
 				$this->adminGroup,
 				$this->adminUserGroup,
 				$this->addedGroups,
-				$this->mountProviderHelper,
+				$this->folderStorageManagerHelper,
 				$this->subGroup,
 				$this->userManager,
 				$this->userWorkspaceGroup,
@@ -2071,7 +2109,7 @@ class SpaceManagerTest extends TestCase {
 				$this->adminGroup,
 				$this->adminUserGroup,
 				$this->addedGroups,
-				$this->mountProviderHelper,
+				$this->folderStorageManagerHelper,
 				$this->subGroup,
 				$this->userManager,
 				$this->userWorkspaceGroup,

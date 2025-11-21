@@ -24,31 +24,31 @@
 
 namespace OCA\Workspace\Helper;
 
-use OCA\GroupFolders\Mount\MountProvider;
-use OCA\Workspace\Exceptions\MountProviderFunctionException;
+use OCA\GroupFolders\Folder\FolderDefinition;
+use OCA\GroupFolders\Mount\FolderStorageManager;
+use OCA\Workspace\Exceptions\FolderStorageManagerFunctionException;
 use OCP\AutoloadNotAllowedException;
-use OCP\Files\Node;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
-class MountProviderHelper {
-	private ?MountProvider $mountProvider = null;
+class FolderStorageManagerHelper {
+	private ?FolderStorageManager $folderStorageManager = null;
 	private string $dependencyInjectionError = '';
 
 	public function __construct(ContainerInterface $appContainer) {
 		try {
-			$this->mountProvider = $appContainer->get(MountProvider::class);
+			$this->folderStorageManager = $appContainer->get(FolderStorageManager::class);
 		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
 			// Could not instantiate - probably groupfolders is disabled.
 			$this->dependencyInjectionError = $e->getMessage();
 		}
 	}
 
-	public function getFolder(int $id, bool $create = true): ?Node {
+	public function deleteStoragesForFolder(FolderDefinition $folder): void {
 		try {
-			return $this->mountProvider->getFolder($id, $create);
+			$this->folderStorageManager->deleteStoragesForFolder($folder);
 		} catch (\Exception $e) {
-			throw new MountProviderFunctionException($e->getMessage(), $e->getCode());
+			throw new FolderStorageManagerFunctionException($e->getMessage(), $e->getCode());
 		}
 	}
 }

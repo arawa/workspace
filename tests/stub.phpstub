@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace OCA\GroupFolders\Folder {
+    class FolderWithMappingsAndCache extends FolderDefinition {
+        public function toArray(): array {}
+    }
+
+    class FolderDefinition {
+        public function useSeparateStorage(): bool {}
+    }
+
+    class FolderManager {
+        public function createFolder(string $mountPoint, array $options = []): int {}
+        public function getFolder(int $id): ?FolderWithMappingsAndCache {}
+        public function setFolderACL(int $folderId, bool $acl): void {}
+        public function addApplicableGroup(int $folderId, string $groupId): void {}
+        public function removeApplicableGroup(int $folderId, string $groupId): void {}
+        public function setFolderQuota(int $folderId, int $quota): void {}
+        public function setManageACL(int $folderId, string $type, string $id, bool $manageAcl): void {}
+        public function removeFolder(int $folderId): void {}
+        	public function renameFolder(int $folderId, string $newMountPoint): void {}
+    }
+}
