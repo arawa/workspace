@@ -41,13 +41,12 @@ class UsersExistCheck {
 
 		if (count($userEmail) > 1) {
 			$message = $this->translate->t(
-				'The %s email address is duplicated in your instance.'
-				. ' Impossible to know which users choice or maybe is'
-				. ' an error.',
+				'Email address %s is linked to multiple users.'
+				. ' Impossible to know which user to choose.',
 				$email
 			);
 			throw new EmailDoesntUniqueException(
-				'Email address doesn\'t unique',
+				'Email address is not unique',
 				$message
 			);
 		}
@@ -66,13 +65,12 @@ class UsersExistCheck {
 
 			if (count($userEmail) > 1) {
 				$message = $this->translate->t(
-					'The %s email address is duplicated in your instance.'
-					. ' Impossible to know which users choice or maybe is'
-					. ' an error.',
+					'Email address %s is linked to multiple users.'
+					. ' Impossible to know which user to choose.',
 					$email
 				);
 				throw new EmailDoesntUniqueException(
-					'Email address doesn\'t unique',
+					'Email address is not unique',
 					$message
 				);
 			}

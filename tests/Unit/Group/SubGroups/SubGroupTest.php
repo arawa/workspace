@@ -139,7 +139,7 @@ class SubGroupTest extends TestCase {
 		;
 
 		$this->expectException(GroupException::class);
-		$this->expectExceptionMessage("The group with the display name $displayName already exists.");
+		$this->expectExceptionMessage("Group with display name $displayName already exists.");
 
 		$this->subGroup->create($groupname, $id, $spacename);
 	}

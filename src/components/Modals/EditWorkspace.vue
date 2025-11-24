@@ -161,7 +161,7 @@ export default {
 						})
 					})
 					.catch(err => {
-						const text = t('workspace', 'A network error occured when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
+						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
 						showNotificationError('Network error', text, 3000)
 					})
 			}

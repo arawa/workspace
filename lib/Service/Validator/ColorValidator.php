@@ -13,7 +13,7 @@ class ColorValidator {
 
 	public function validate(string $color): void {
 		if (!$this->isHexadecimal($color)) {
-			throw new \Exception('Your color must be a hexadecimal.');
+			throw new \Exception('Color code must be hexadecimal.');
 		}
 	}
 }
