@@ -35,7 +35,8 @@
 					:checked="isWorkspaceManager(user.role)"
 					:disabled="disabled"
 					@update:checked="toggleUserRole(user)">
-					{{ t('workspace', 'WM') }}
+          <!-- TRANSLATORS WM = Is an abbreviation for "Workspace Manager" -->
+ 					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<NcActions>
