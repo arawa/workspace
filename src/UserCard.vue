@@ -36,6 +36,7 @@
 					:checked="isWorkspaceManager(user.role)"
 					:disabled="$store.getters.isMember($route.params.space, user)"
 					@update:checked="toggleUserRole(user)">
+					<!-- TRANSLATORS WM = Is an abbreviation for "Workspace Manager" -->
 					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
 			</div>
