@@ -6,7 +6,7 @@
 		class="modal"
 		@close="close">
 		<div class="modal__container">
-			<h1>{{ t('workspace', 'Edit the Workspace') }}</h1>
+			<h1>{{ t('workspace', 'Edit the workspace') }}</h1>
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
 			<div class="content-appearance">
 				<NcColorPicker ref="colorPicker"
@@ -18,14 +18,14 @@
 				</NcColorPicker>
 				<NcInputField class="input-spacename"
 					:value="getSpaceName"
-					:placeholder="t('workspace', 'Rename your Workspace')"
+					:placeholder="t('workspace', 'Rename your workspace')"
 					type="text"
 					@update:value="updateSpacename" />
 			</div>
 			<h2>{{ t('workspace', 'Quota') }}</h2>
 			<div class="content-quota">
 				<p class="max-contrast">
-					{{ t('workspace', 'Set maximum Workspace storage space') }}
+					{{ t('workspace', 'Set maximum workspace storage space') }}
 				</p>
 				<NcSelect :value.sync="getQuota"
 					aria-label-combobox="set quota"
@@ -46,7 +46,7 @@
 					:error="isError" />
 				<NcNoteCard v-if="isError"
 					type="warning">
-					<p>{{ t('workspace', 'Please note that the quota you have selected is less than the space currently used by your Workspace. You will no longer be able to add or modify files.') }}</p>
+					<p>{{ t('workspace', 'Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files.') }}</p>
 				</NcNoteCard>
 			</div>
 			<NcButton aria-label="Save"
@@ -127,7 +127,7 @@ export default {
 			return this.$store.getters.convertQuotaForFrontend(this.size)
 		},
 		getQuotaMessage() {
-			return t('workspace', 'You use <b>{size}</b> on {quota}', { size: this.getSize, quota: this.getQuota })
+			return t('workspace', 'You use <b>{size}</b> of {quota}', { size: this.getSize, quota: this.getQuota })
 		},
 		getSpaceName() {
 			return this.spacename
@@ -161,7 +161,7 @@ export default {
 						})
 					})
 					.catch(err => {
-						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>The error is: {error}', { error: err })
+						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>Error: {error}', { error: err })
 						showNotificationError('Network error', text, 3000)
 					})
 			}
