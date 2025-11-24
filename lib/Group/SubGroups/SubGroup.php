@@ -41,7 +41,7 @@ class SubGroup {
 			$group = $this->groupManager->get($gid);
 			if (is_null($group)) {
 				$this->logger->warning(
-					"Be careful, the $gid group does not exist in the oc_groups table."
+					"Be careful, this $gid group does not exists in the oc_groups table."
 					. ' The group is still present in the oc_group_folders_groups table.'
 					. ' To fix this inconsistency, recreate the group using occ commands.'
 				);

@@ -385,7 +385,7 @@ class WorkspaceController extends Controller {
 			|| $newSpaceName === null
 			|| $newSpaceName === ''
 		) {
-			throw new BadRequestException('Error to rename the workspace', 'newSpaceName must be provided');
+			throw new BadRequestException('Error renaming the workspace', 'newSpaceName must be provided');
 		}
 
 		$spaceName = $this->deleteBlankSpaceName($newSpaceName);

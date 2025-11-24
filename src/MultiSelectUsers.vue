@@ -104,12 +104,12 @@ export default {
 						const usersToDisplay = this.filterAlreadyPresentUsers(users)
 						this.selectableUsers = this.addSubtitleToUsers(usersToDisplay)
 					} else {
-						const text = t('workspace', 'An error occured while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
+						const text = t('workspace', 'An error occurred while trying to lookup users.<br>The error is: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 3000)
 					}
 				})
 				.catch((e) => {
-					const text = t('workspace', 'A network error occured while trying to lookup users.<br>The error is: {error}', { error: e })
+					const text = t('workspace', 'A network error occurred while trying to lookup users.<br>The error is: {error}', { error: e })
 					showNotificationError('Network error', text, 3000)
 					console.error('Problem to search users', e)
 				})

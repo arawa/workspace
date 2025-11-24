@@ -171,7 +171,7 @@ class GroupController extends Controller {
 		if (!empty($groups)
 			&& in_array($newGroupName, $groupsNameSearched)) {
 			return new JSONResponse(
-				'This group already exists. Please, change the name',
+				'This group already exists. Please, use another name',
 				Http::STATUS_CONFLICT
 			);
 		}
@@ -179,7 +179,7 @@ class GroupController extends Controller {
 		// Rename group
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
-			return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+			return new JSONResponse(['Group with gid ' . $gid . ' does not exists'], Http::STATUS_EXPECTATION_FAILED);
 		}
 		$NCGroup->setDisplayName($newGroupName);
 
@@ -207,7 +207,7 @@ class GroupController extends Controller {
 			// In some cases, frontend might give a group's displayName rather than its gid
 			$NCGroup = $this->groupManager->search($gid);
 			if (empty($NCGroup)) {
-				return new JSONResponse(['Group ' . $gid . ' does not exist'], Http::STATUS_EXPECTATION_FAILED);
+				return new JSONResponse(['Group with gid ' . $gid . ' does not exists'], Http::STATUS_EXPECTATION_FAILED);
 			}
 			$NCGroup = $NCGroup[0];
 		}
@@ -223,7 +223,7 @@ class GroupController extends Controller {
 				$workspaceUsersGroup->addUser($NCUser);
 			} else {
 				$NCGroup->removeUser($NCUser);
-				return new JSONResponse(['Generar error: Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exist'],
+				return new JSONResponse(['Generar error: Group ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' does not exists'],
 					Http::STATUS_EXPECTATION_FAILED);
 			}
 		}
@@ -233,7 +233,7 @@ class GroupController extends Controller {
 		$UGroup = $this->groupManager->get(UserGroup::get($spaceId));
 		$UGroup->addUser($NCUser);
 
-		return new JSONResponse(['message' => 'The user ' . $user . ' is added in the ' . $gid . ' group'], Http::STATUS_CREATED);
+		return new JSONResponse(['message' => 'User ' . $user . ' was added in the ' . $gid . ' group'], Http::STATUS_CREATED);
 	}
 
 	/**

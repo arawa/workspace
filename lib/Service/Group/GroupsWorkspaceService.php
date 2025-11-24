@@ -44,7 +44,7 @@ class GroupsWorkspaceService {
 		);
 
 		if (is_null($groupSpaceManager)) {
-			throw new GroupException('Error to get the workspace manage group relative to workspace.');
+			throw new GroupException('Error getting workspace manager group relative to this workspace.');
 		}
 
 		return $groupSpaceManager;
@@ -59,7 +59,7 @@ class GroupsWorkspaceService {
 		);
 
 		if (is_null($groupUser)) {
-			throw new GroupException('Error to get the workspace manage group relative to workspace.');
+			throw new GroupException('Error getting workspace manager group relative to this workspace.');
 		}
 
 		return $groupUser;
