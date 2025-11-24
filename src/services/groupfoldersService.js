@@ -238,7 +238,7 @@ export function createGroupfolder(spaceName) {
 		})
 		.catch(error => {
 			showNotificationError('Error creating workspace', error.message, 5000)
-			throw new CreateGroupfolderError('Network error - the error is: ' + error.message)
+			throw new CreateGroupfolderError('Network error - Error: ' + error.message)
 		})
 }
 

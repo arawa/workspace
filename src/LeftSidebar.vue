@@ -47,7 +47,7 @@
 					<div id="app-settings-content">
 						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 							:close-after-click="true"
-							:title="t('workspace', 'Convert group folders')"
+							:title="t('workspace', 'Convert Team folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
