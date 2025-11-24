@@ -30,7 +30,8 @@
 		</div>
 		<div class="user-entry-actions">
 			<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
-				<NcCheckboxRadioSwitch type="checkbox"
+				<NcCheckboxRadioSwitch v-tooltip="{ content: defineWorkspaceManagerShortcut, show: true, placement: 'bottom' }"
+					type="checkbox"
 					class="role-toggle"
 					:checked="isWorkspaceManager(user.role)"
 					:disabled="$store.getters.isMember($route.params.space, user)"
@@ -69,6 +70,9 @@ export default {
 		},
 	},
 	methods: {
+		defineWorkspaceManagerShortcut() {
+			return t('workspace', 'Set user as Workspace Manager')
+		},
 		toggleUserRole(user) {
 			this.$emit('toggle-role', user)
 		},
