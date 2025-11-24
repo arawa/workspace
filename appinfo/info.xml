@@ -23,7 +23,7 @@
         <nextcloud min-version="32" max-version="32"/>
     </dependencies>
 
-    <summary>Create Groupfolders with delegated management</summary>
+    <summary>Create team folders with delegated management</summary>
 
     <types>
 	<dav />
@@ -40,7 +40,7 @@ Workspace allows managers to :
     - configure advanced permissions on workspace folders
 - All through a simple unified interface, designed to simplify your users' experience and make them autonomous
 
-It is necessary to install the Group Folders app for the Workspace app to work.
+It is necessary to install the Team folders app for the Workspace app to work.
 
 # App configuration
 
@@ -48,8 +48,8 @@ Before using Workspace, you must configure the app, following these important st
 
 - Limit the Workspace app to specific groups : in your "application management" administrator interface, limit the application to the following groups: "GeneralManager" and "WorkspacesManagers".
 
-- Configure Groupfolders for Workspace:
-    - In "Settings" > "Group folders" > "Group folder admin delegation" section, add the group "GeneralManager" to the **first** field, and the group "WorkspacesManagers" to the **second** field
+- Configure Team folders for Workspace:
+    - In "Settings" > "Team folders" > "Group folder admin delegation" section, add the group "GeneralManager" to the **first** field, and the group "WorkspacesManagers" to the **second** field
 
 If you are using a major version of Nextcloud lower than Nextcloud 25, please follow the instructions provided on [GitHub](https://github.com/arawa/workspace). 
 

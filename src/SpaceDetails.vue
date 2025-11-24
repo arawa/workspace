@@ -75,7 +75,7 @@
 					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
 						icon="icon-rename"
 						@click="toggleShowEditWorkspaceModal">
-						{{ t('workspace', 'Edit the Workspace') }}
+						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">

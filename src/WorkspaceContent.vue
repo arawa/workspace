@@ -58,7 +58,7 @@ export default {
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
-						const text = t('workspace', 'An error occurred while trying to retrieve workspaces.<br>The error is: {error}', { error: resp.statusText })
+						const text = t('workspace', 'An error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: resp.statusText })
 						showNotificationError('Error', text, 4000)
 						this.$store.state.loading = false
 						return
@@ -73,7 +73,7 @@ export default {
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
-					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>The error is: {error}', { error: e })
+					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
 					showNotificationError('Network error', text, 5000)
 					this.$store.state.loading = false
 				})
