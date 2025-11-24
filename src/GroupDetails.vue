@@ -76,7 +76,7 @@
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
-			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} Workspace', { groupname: getDisplaynameGroup, spacename: getSpaceName })"
+			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace', { groupname: getDisplaynameGroup, spacename: getSpaceName })"
 			@cancel="closeRemoveGroupModal"
 			@remove-group="deleteGroup" />
 	</div>

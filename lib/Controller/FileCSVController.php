@@ -173,7 +173,7 @@ class FileCSVController extends Controller {
 			);
 
 			$usersUnknown = implode('<br>', $usersUnknown);
-			$errorMessage = $this->translate->t('Users of this CSV file are unknown and can not be imported. Check the following users and repeat the process:<br>');
+			$errorMessage = $this->translate->t('Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>');
 			$errorMessage .= $usersUnknown;
 
 			throw new UserDoesntExistException(
