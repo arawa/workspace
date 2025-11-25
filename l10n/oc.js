@@ -1,12 +1,9 @@
 OC.L10N.register(
     "workspace",
     {
-    "Add users" : "Apondre utilizaires",
     "Search users" : "Recercar d’utilizaires",
-    "Cancel" : "Cancel",
-    "File to share" : "Fichièr de partejar",
+    "Add" : "Apondre",
     "Role" : "Ròtle",
-    "View profile" : "Veire perfil",
-    "Delete user" : "Suprimir l’utilizaire"
+    "Save" : "Enregistrar"
 },
 "nplurals=2; plural=(n > 1);");

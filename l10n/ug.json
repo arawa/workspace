@@ -1,14 +1,12 @@
 { "translations": {
-    "Add users" : "ئىشلەتكۈچى قوشۇڭ",
-    "Cancel" : "Cancel",
-    "File to share" : "ھەمبەھىرلىنىدىغان ھۆججەت",
+    "or" : "ياكى",
+    "Add" : "قوش",
     "Choose from Files" : "ھۆججەتلەردىن تاللاڭ",
-    "Group name" : "گۇرۇپپا ئاتى",
+    "Delete group" : "گۇرۇپپىنى ئۆچۈرۈش",
+    "No users" : "ئىشلەتكۈچى يوق",
     "Role" : "رولى",
     "Groups" : "گۇرۇپپىلار",
-    "View profile" : "ئارخىپنى كۆرۈڭ",
-    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
-    "unlimited" : "چەكسىز",
-    "Appearance" : "كۆرۈنۈش"
+    "Appearance" : "كۆرۈنۈش",
+    "Save" : "ساقلاش"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

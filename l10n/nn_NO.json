@@ -1,5 +1,5 @@
 { "translations": {
-    "Cancel" : "Cancel",
-    "Groups" : "Grupper"
+    "Groups" : "Grupper",
+    "Save" : "Lagre"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

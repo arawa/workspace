@@ -1,6 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "Cancel" : "Cancel"
+    "Save" : "Saklamak"
 },
 "nplurals=2; plural=(n != 1);");

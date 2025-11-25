@@ -1,0 +1,18 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "或者",
+    "Search users" : "搜尋使用者",
+    "Add" : "新增",
+    "Upload new files" : "上傳新檔案",
+    "File to share" : "要分享的檔案",
+    "Choose from Files" : "從檔案選擇",
+    "Delete group" : "刪除群組",
+    "No users" : "無使用者",
+    "Quota" : "容量限額",
+    "Role" : "職位",
+    "Groups" : "群組",
+    "Appearance" : "外觀",
+    "Save" : "儲存"
+},
+"nplurals=1; plural=0;");

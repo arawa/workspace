@@ -1,15 +1,16 @@
 { "translations": {
-    "Add users" : "新增用戶",
+    "or" : "或者",
     "Search users" : "搜尋用戶",
-    "Cancel" : "取消",
+    "Add" : "添加",
+    "Upload new files" : "上傳新檔案",
     "File to share" : "要分享的檔案",
     "Choose from Files" : "從檔案選取",
-    "Group name" : "群組名稱",
+    "Delete group" : "刪除群組",
+    "No users" : "沒有用戶",
+    "Quota" : "容量限制",
     "Role" : "角色",
     "Groups" : "群組",
-    "View profile" : "查看個人資料",
-    "Delete user" : "刪除用戶",
-    "unlimited" : "無限制",
-    "Appearance" : "外觀"
+    "Appearance" : "外觀",
+    "Save" : "保存"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
