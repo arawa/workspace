@@ -1,15 +1,11 @@
 OC.L10N.register(
     "workspace",
     {
-    "Add users" : "Legg til brukere",
     "Search users" : "Søk etter brukere",
-    "Cancel" : "Cancel",
-    "File to share" : "Fil for deling",
+    "Add" : "Legg til",
     "Choose from Files" : "Velg fra Files",
-    "Role" : "Rolle",
+    "No users" : "Ingen brukere",
     "Groups" : "Grupper",
-    "View profile" : "Vis profil",
-    "Delete user" : "Slett bruker",
-    "unlimited" : "ubegrenset"
+    "Save" : "Lagre"
 },
 "nplurals=2; plural=(n != 1);");

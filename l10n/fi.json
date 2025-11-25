@@ -1,7 +1,6 @@
 { "translations": {
-    "Add users" : "Lisää käyttäjiä",
-    "Cancel" : "Peruuta",
-    "Role" : "Rooli",
+    "Search users" : "Etsi käyttäjistä",
+    "Delete group" : "Poista ryhmä",
     "Groups" : "Ryhmät"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

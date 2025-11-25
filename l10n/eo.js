@@ -1,6 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "Cancel" : "Cancel"
+    "Search users" : "Serĉi uzantojn"
 },
 "nplurals=2; plural=(n != 1);");

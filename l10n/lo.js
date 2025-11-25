@@ -1,0 +1,26 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Invalid separator for CSV file" : "ຕົວແຍກສຳລັບໄຟລ໌ CSV ບໍ່ຖືກຕ້ອງ",
+    "Error: unknown users" : "ຜິດພາດ: ຜູ້ໃຊ້ບໍ່ເປັນທີ່ຮູ້ຈັກ",
+    "- <b>%1$s</b> has the <b>%2$s</b> role" : "- <b>%1$s</b> ມີບົດບາດເປັນ <b>%2$s</b>",
+    "Search users" : "ຄົ້ນຫາຜູ້ໃຊ້",
+    "Add" : "ເພີ່ມ",
+    "Choose from Files" : "ເລືອກຈາກໄຟລ໌ຕ່າງໆ",
+    "You aren't allowed to access into this application !" : "ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຂົ້າເຖິງແອັບພລິເຄຊັນນີ້!",
+    "Delete group" : "ລຶບກຸ່ມ",
+    "New space" : "ພື້ນທີ່ວຽກໃໝ່",
+    "Start typing text to search for groups" : "ເລີ່ມພິມເພື່ອຄົ້ນຫາກຸ່ມ",
+    "No group selected" : "ຍັງບໍ່ໄດ້ເລືອກກຸ່ມ",
+    "No users" : "ບໍ່ມີຜູ້ໃຊ້",
+    "There are no users in this space/group yet" : "ຍັງບໍ່ມີຜູ້ໃຊ້ໃນພື້ນທີ່/ກຸ່ມນີ້",
+    "Workspace groups" : "ກຸ່ມພື້ນທີ່ວຽກ",
+    "You have not yet created any workspace" : "ທ່ານຍັງບໍ່ໄດ້ສ້າງພື້ນທີ່ວຽກໃດໆ",
+    "Groups" : "ກຸ່ມ",
+    "Remove admin rights" : "ຖອນສິດຜູ້ບໍລິຫານ",
+    "Make administrator" : "ກຳນົດເປັນຜູ້ບໍລິຫານ",
+    "Remove from group" : "ເອົາອອກຈາກກຸ່ມ",
+    "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "ທ່ານສາມາດລະບຸໂຄຕ້າໄດ້ພຽງ \"ບໍ່ຈຳກັດ\" ຫຼື ຕົວເລກທີ່ຕາມດ້ວຍ \"TB\", \"GB\", \"MB\", ຫຼື \"KB\" (ຕົວຢ່າງ: \"5GB\")",
+    "Space name" : "ຊື່ພື້ນທີ່ວຽກ"
+},
+"nplurals=1; plural=0;");

@@ -1,9 +1,11 @@
 OC.L10N.register(
     "workspace",
     {
-    "Cancel" : "Bekor qilish",
+    "or" : "yoki",
+    "Add" : "Qo'shish",
+    "Quota" : "kvota",
     "Groups" : "Groups",
-    "View profile" : "View profile",
-    "Appearance" : "Tashqi ko'rinish"
+    "Appearance" : "Tashqi ko'rinish",
+    "Save" : "Saqlash"
 },
 "nplurals=1; plural=0;");

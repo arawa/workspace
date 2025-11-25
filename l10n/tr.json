@@ -1,14 +1,12 @@
 { "translations": {
-    "Add users" : "Kullanıcı ekle",
+    "or" : "ya da",
     "Search users" : "Kullanıcı arama",
-    "Cancel" : "İptal",
-    "File to share" : "Paylaşılacak dosya",
+    "Add" : "Ekle",
     "Choose from Files" : "Dosyalar uygulamasından seçin",
-    "Group name" : "Grup adı",
+    "Delete group" : "Grubu sil",
+    "No users" : "Herhangi bir kullanıcı yok",
     "Groups" : "Gruplar",
-    "View profile" : "Profili görüntüle",
-    "Delete user" : "Kullanıcıyı sil",
-    "unlimited" : "sınırsız",
-    "Appearance" : "Görünüm"
+    "Appearance" : "Görünüm",
+    "Save" : "Kaydet"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

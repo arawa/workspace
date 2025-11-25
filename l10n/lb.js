@@ -1,7 +1,7 @@
 OC.L10N.register(
     "workspace",
     {
-    "Cancel" : "Cancel",
+    "Add" : "Dobäisetzen",
     "Groups" : "Gruppen"
 },
 "nplurals=2; plural=(n != 1);");
