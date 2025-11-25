@@ -109,6 +109,10 @@ export default {
 		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
+	addSpaces(state, spaces) {
+		state.spaces = spaces.spaces
+		sortSpaces(state)
+	},
 	addSpaceAdminUsers(state, space) {
 		state.spaces[space.name].managers = space.managers
 	},
