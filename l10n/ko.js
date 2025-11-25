@@ -1,0 +1,9 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Search users" : "사용자 검색",
+    "Choose from Files" : "파일에서 선택",
+    "No users" : "사용자 없음",
+    "Groups" : "그룹"
+},
+"nplurals=1; plural=0;");

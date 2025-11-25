@@ -1,0 +1,13 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Search users" : "Gebruikers zoeken",
+    "Add" : "Toevoegen",
+    "Choose from Files" : "Kies uit Bestanden",
+    "Delete group" : "Verwijder groep",
+    "No users" : "Geen gebruikers",
+    "Role" : "Rol",
+    "Groups" : "Groepen",
+    "Save" : "Opslaan"
+},
+"nplurals=2; plural=(n != 1);");

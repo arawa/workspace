@@ -1,6 +1,7 @@
 OC.L10N.register(
     "workspace",
     {
-    "Cancel" : "Cancel"
+    "Search users" : "Cari pengguna",
+    "Groups" : "Grup"
 },
 "nplurals=1; plural=0;");

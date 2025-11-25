@@ -1,15 +1,15 @@
 OC.L10N.register(
     "workspace",
     {
-    "Add users" : "Thêm người dùng",
+    "or" : "hoặc",
     "Search users" : "‎Tìm kiếm người dùng‎",
-    "Cancel" : "Cancel",
+    "Add" : "Thêm",
     "File to share" : "Tệp để chia sẻ",
-    "Group name" : "Tên nhóm",
+    "No users" : "Không có người dùng",
+    "Quota" : "Hạn ngạch",
     "Role" : "Vai trò",
     "Groups" : "Nhóm",
-    "View profile" : "Xem hồ sơ",
-    "Delete user" : "Xóa người dùng",
-    "Appearance" : "Giao diện"
+    "Appearance" : "Giao diện",
+    "Save" : "Lưu"
 },
 "nplurals=1; plural=0;");

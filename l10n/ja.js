@@ -1,13 +1,10 @@
 OC.L10N.register(
     "workspace",
     {
-    "Add users" : "ユーザーを追加",
-    "Cancel" : "キャンセル",
-    "File to share" : "共有するファイル",
+    "Search users" : "ユーザーを検索",
     "Choose from Files" : "ファイルから選択",
-    "Role" : "ロール",
-    "Groups" : "グループ",
-    "View profile" : "プロフィールを表示",
-    "unlimited" : "無制限"
+    "Delete group" : "グループを削除",
+    "No users" : "No users",
+    "Groups" : "グループ"
 },
 "nplurals=1; plural=0;");

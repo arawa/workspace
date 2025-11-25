@@ -1,9 +1,5 @@
 { "translations": {
-    "Add users" : "Felhasználók hozzáadása",
-    "Cancel" : "Cancel",
-    "File to share" : "Fájl megosztása",
-    "Role" : "Szerepkör",
-    "Groups" : "Csoportok",
-    "unlimited" : "korlátlan"
+    "Search users" : "Fehasználók keresése",
+    "Groups" : "Csoportok"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
