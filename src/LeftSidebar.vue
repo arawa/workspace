@@ -30,7 +30,7 @@
 				@new-item="createSpace" />
 			<li class="ws-navigation-spacer" />
 			<NcAppNavigationItem
-				:name="t('workspace', 'All spaces')"
+				:name="t('workspace', 'All workspaces')"
 				:to="{path: '/'}">
 				<NcCounterBubble slot="counter">
 					{{ $store.state.countWorkspaces }}
