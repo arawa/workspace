@@ -26,7 +26,7 @@
 				class="input-new-item"
 				:class="isDarkTheme ? '' : 'constrast-light'"
 				icon="icon-add"
-				:name="t('workspace', 'New space')"
+				:name="t('workspace', 'New workspace')"
 				@new-item="createSpace" />
 			<li class="ws-navigation-spacer" />
 			<NcAppNavigationItem
