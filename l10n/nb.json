@@ -1,9 +1,26 @@
 { "translations": {
+    "or" : "eller",
+    "Unknown error" : "Ukjent feil",
+    "Add users" : "Legg til brukere",
     "Search users" : "Søk etter brukere",
     "Add" : "Legg til",
+    "Cancel" : "Cancel",
+    "Confirm" : "Bekreft",
+    "Upload new files" : "Last opp nye filer",
+    "File to share" : "Fil for deling",
     "Choose from Files" : "Velg fra Files",
+    "Rename group" : "Gi nytt navn til gruppen",
+    "Group name" : "Gruppenavn",
+    "Settings" : "Innstillinger",
     "No users" : "Ingen brukere",
+    "Quota" : "Kvote",
+    "Users" : "Brukere",
+    "Role" : "Rolle",
     "Groups" : "Grupper",
+    "View profile" : "Vis profil",
+    "Delete user" : "Slett bruker",
+    "unlimited" : "ubegrenset",
+    "Appearance" : "Utseende",
     "Save" : "Lagre"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

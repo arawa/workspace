@@ -1,0 +1,27 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "ή",
+    "Unknown error" : "Άγνωστο σφάλμα",
+    "Add users" : "Προσθήκη χρηστών",
+    "Search users" : "Αναζήτηση χρηστών",
+    "Add" : "Προσθήκη",
+    "Cancel" : "Ακύρωση",
+    "Confirm" : "Επιβεβαίωση",
+    "Upload new files" : "Μεταφορτώστε νέα αρχεία",
+    "File to share" : "Αρχείο για κοινή χρήση",
+    "Rename group" : "Μετονομασία ομάδας",
+    "Group name" : "Όνομα ομάδας",
+    "Delete group" : "Διαγραφή ομάδας",
+    "Settings" : "Ρυθμίσεις",
+    "Quota" : "Χωρητικότητα",
+    "Users" : "Χρήστες",
+    "Role" : "Ρόλος/Θέση",
+    "Groups" : "Ομάδες",
+    "View profile" : "Προβολή προφίλ",
+    "Delete user" : "Διαγραφή χρήστη",
+    "unlimited" : "απεριόριστο",
+    "Appearance" : "Εμφάνιση",
+    "Save" : "Αποθήκευση"
+},
+"nplurals=2; plural=(n != 1);");

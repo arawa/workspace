@@ -1,10 +1,24 @@
 OC.L10N.register(
     "workspace",
     {
+    "or" : "o",
+    "Unknown error" : "Errore disconnotu",
+    "Add users" : "Agiunghe utentes",
     "Search users" : "Chirca utentes",
     "Add" : "Agiunghe",
+    "Cancel" : "Cancel",
+    "Confirm" : "Cunfirma",
+    "Upload new files" : "Càrriga archìvios noos",
+    "File to share" : "Archìviu de cumpartzire",
     "Choose from Files" : "Sèbera dae Archìvios",
+    "Settings" : "Cunfiguratzione",
+    "Quota" : "Cuota",
+    "Users" : "Utentes",
     "Groups" : "Grupos",
+    "View profile" : "Ammustra su profilu",
+    "Delete user" : "Cantzella utente",
+    "unlimited" : "illacanadu",
+    "Appearance" : "Aspetu",
     "Save" : "Sarva"
 },
 "nplurals=2; plural=(n != 1);");

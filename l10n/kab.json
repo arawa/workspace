@@ -1,4 +1,12 @@
 { "translations": {
-    "Groups" : "Igrawen"
+    "or" : "neɣ",
+    "Unknown error" : "Tuccḍa tarussint",
+    "Cancel" : "Semmet",
+    "Confirm" : "Sergeg",
+    "Settings" : "Iɣewwaren",
+    "Users" : "Iseqdacen",
+    "Groups" : "Igrawen",
+    "Appearance" : "Udem",
+    "Save" : "Sekles"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

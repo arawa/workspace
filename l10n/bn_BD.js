@@ -1,0 +1,14 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Unknown error" : "অজানা জটিলতা",
+    "Add" : "যোগ কর",
+    "Cancel" : "Cancel",
+    "Group name" : "গ্রুপের নাম",
+    "Settings" : "সেটিংস",
+    "Quota" : "কোটা",
+    "Users" : "ব্যবহারকারী",
+    "Groups" : "গোষ্ঠীসমূহ",
+    "Save" : "সংরক্ষণ"
+},
+"nplurals=2; plural=(n != 1);");

@@ -1,7 +1,21 @@
 OC.L10N.register(
     "workspace",
     {
+    "or" : "atau",
+    "Unknown error" : "Kesalahan tidak diketahui",
     "Search users" : "Cari pengguna",
-    "Groups" : "Grup"
+    "Add" : "Tambah",
+    "Cancel" : "Cancel",
+    "Confirm" : "Konfirmasi",
+    "Rename group" : "Ganti nama grup",
+    "Group name" : "Nama grup",
+    "Settings" : "Setelan",
+    "Quota" : "Kuota",
+    "Users" : "Pengguna",
+    "Groups" : "Grup",
+    "View profile" : "Tampilkan profil",
+    "Delete user" : "Hapus pengguna",
+    "Appearance" : "Tampilan",
+    "Save" : "Simpan"
 },
 "nplurals=1; plural=0;");

@@ -1,0 +1,12 @@
+{ "translations": {
+    "Unknown error" : "Onbekende fout",
+    "Add" : "Voeg toe",
+    "Cancel" : "Cancel",
+    "Confirm" : "Bevestig",
+    "Group name" : "Groepnaam",
+    "Settings" : "Instellings",
+    "Users" : "Gebruikers",
+    "Groups" : "Groepe",
+    "Save" : "Stoor"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

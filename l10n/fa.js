@@ -1,0 +1,27 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "یا",
+    "Unknown error" : "خطای ناشناخته",
+    "Add users" : "Add users",
+    "Search users" : "جستجوی کاربران",
+    "Add" : "افزودن",
+    "Cancel" : "انصراف",
+    "Confirm" : "تأیید",
+    "Upload new files" : "فایل‌های جدید را آپلود کنید",
+    "File to share" : "فایل برای اشتراک‌گذاری",
+    "Choose from Files" : "Choose from Files",
+    "Rename group" : "Rename group",
+    "Group name" : "نام گروه",
+    "Settings" : "تنظیمات",
+    "No users" : "No users",
+    "Quota" : "سهم",
+    "Users" : "کاربران",
+    "Groups" : "گروه ها",
+    "View profile" : "مشاهدهٔ نمایه",
+    "Delete user" : "حذف کردن کاربر",
+    "unlimited" : "نامحدود",
+    "Appearance" : "ظاهر",
+    "Save" : "ذخیره"
+},
+"nplurals=2; plural=(n > 1);");

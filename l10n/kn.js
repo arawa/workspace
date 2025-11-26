@@ -1,6 +1,12 @@
 OC.L10N.register(
     "workspace",
     {
-    "Groups" : "﻿ಗುಂಪುಗಳು"
+    "Unknown error" : "ಗೊತ್ತಿಲ್ಲದ ದೋಷ",
+    "Cancel" : "Cancel",
+    "Settings" : "ಆಯ್ಕೆ",
+    "Quota" : "ಪಾಲು",
+    "Users" : "﻿ಬಳಕೆದಾರರು",
+    "Groups" : "﻿ಗುಂಪುಗಳು",
+    "Save" : "﻿ಉಳಿಸಿ"
 },
 "nplurals=2; plural=(n > 1);");

@@ -1,12 +1,27 @@
 { "translations": {
     "or" : "или",
+    "Unknown error" : "Непозната грешка",
+    "Add users" : "Додај кориснике",
     "Search users" : "Претражи кориснике",
     "Add" : "Додај",
+    "Cancel" : "Откажи",
+    "Confirm" : "Потврди",
+    "Upload new files" : "Отпреми нове фајлове",
+    "File to share" : "Фајл за дељење",
     "Choose from Files" : "Изаберите из Фајлова",
+    "Rename group" : "Промени име групе",
+    "Group name" : "Назив групе",
     "Delete group" : "Брисање групе",
+    "Settings" : "Поставке",
     "No users" : "Нема корисника",
+    "Quota" : "Квота",
+    "Users" : "Корисници",
     "Role" : "Улога",
     "Groups" : "Групе",
+    "View profile" : "Погледај профил",
+    "Delete user" : "Обриши корисника",
+    "unlimited" : "неограничено",
+    "Appearance" : "Изглед",
     "Save" : "Сачувај"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

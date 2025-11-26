@@ -1,6 +1,23 @@
 { "translations": {
+    "or" : "eða",
+    "Unknown error" : "Óþekkt villa",
     "Search users" : "Leita að notendum",
+    "Add" : "Bæta við",
+    "Cancel" : "Cancel",
+    "Confirm" : "Staðfesta",
+    "Upload new files" : "Senda inn nýjar skrár",
+    "File to share" : "Skrá til að deila",
+    "Rename group" : "Endurnefna hóp",
+    "Group name" : "Heiti hóps",
+    "Settings" : "Stillingar",
     "No users" : "Engir notendur",
-    "Groups" : "Hópar"
+    "Quota" : "Kvóti",
+    "Users" : "Notendur",
+    "Groups" : "Hópar",
+    "View profile" : "Skoða notandasnið",
+    "Delete user" : "Eyða notanda",
+    "unlimited" : "ótakmarkað",
+    "Appearance" : "Útlit",
+    "Save" : "Vista"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

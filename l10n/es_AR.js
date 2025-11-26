@@ -1,0 +1,17 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "Unknown error" : "Error desconocido",
+    "Add" : "Agregar",
+    "Cancel" : "Cancel",
+    "Confirm" : "Confirmar",
+    "Rename group" : "Cambiar nombre del grupo",
+    "Group name" : "Nombre del grupo",
+    "Settings" : "Configuración",
+    "Quota" : "Cuota",
+    "Users" : "Usuarios",
+    "Role" : "Rol",
+    "Groups" : "Grupos",
+    "Save" : "Guardar"
+},
+"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
