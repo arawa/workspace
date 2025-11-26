@@ -34,7 +34,7 @@
 						{{ t('workspace', 'Quota') }}
 					</th>
 					<th class="workspace-th">
-						{{ t('workspace', 'Space administrators') }}
+						{{ t('workspace', 'Workspace Managers') }}
 					</th>
 				</tr>
 			</thead>
@@ -69,7 +69,7 @@
 			</tbody>
 		</table>
 		<NcEmptyContent v-else>
-			<p>{{ t('workspace', 'No spaces') }}</p>
+			<p>{{ t('workspace', 'No workspace') }}</p>
 			<template #desc>
 				{{ t('workspace', 'You have not yet created any workspace') }}
 			</template>
