@@ -1,5 +1,12 @@
 { "translations": {
+    "Unknown error" : "үл мэдэгдэх алдаа",
     "Add" : "Нэмэх",
+    "Cancel" : "Cancel",
+    "Confirm" : "Батлах",
+    "Group name" : "Бүлгийн нэр",
+    "Settings" : "Тохиргоо",
+    "Quota" : " хувь хэмжээ",
+    "Users" : "хэрэглэгч",
     "Groups" : "бүлэгүүд",
     "Save" : "Хадгалах"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

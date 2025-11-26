@@ -1,6 +1,14 @@
 { "translations": {
+    "Unknown error" : "ข้อผิดพลาดที่ไม่รู้จัก",
     "Search users" : "ค้นหาผู้ใช้",
+    "Cancel" : "Cancel",
+    "Confirm" : "ยืนยัน",
+    "Group name" : "ชื่อกลุ่ม",
+    "Settings" : "การตั้งค่า",
+    "Quota" : "โควต้า",
+    "Users" : "ผู้ใช้",
     "Groups" : "กลุ่ม",
+    "Delete user" : "ลบผู้ใช้",
     "Appearance" : "ลักษณะที่ปรากฏ",
     "Save" : "บันทึก"
 },"pluralForm" :"nplurals=1; plural=0;"

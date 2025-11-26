@@ -1,0 +1,12 @@
+{ "translations": {
+    "or" : "o",
+    "Unknown error" : "Error desconocido",
+    "Add" : "Guardar",
+    "Cancel" : "Cancel",
+    "Confirm" : "Confirmar",
+    "Group name" : "Nombre del grupo",
+    "Settings" : "Ajustes",
+    "Users" : "Ususarios",
+    "Save" : "Guardar"
+},"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
+}

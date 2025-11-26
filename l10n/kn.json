@@ -1,4 +1,10 @@
 { "translations": {
-    "Groups" : "﻿ಗುಂಪುಗಳು"
+    "Unknown error" : "ಗೊತ್ತಿಲ್ಲದ ದೋಷ",
+    "Cancel" : "Cancel",
+    "Settings" : "ಆಯ್ಕೆ",
+    "Quota" : "ಪಾಲು",
+    "Users" : "﻿ಬಳಕೆದಾರರು",
+    "Groups" : "﻿ಗುಂಪುಗಳು",
+    "Save" : "﻿ಉಳಿಸಿ"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -1,8 +1,26 @@
 OC.L10N.register(
     "workspace",
     {
+    "or" : "tai",
+    "Unknown error" : "Tuntematon virhe",
+    "Add users" : "Lisää käyttäjiä",
     "Search users" : "Etsi käyttäjistä",
+    "Add" : "Lisää",
+    "Cancel" : "Peruuta",
+    "Confirm" : "Vahvista",
+    "Upload new files" : "Lähetä uusia tiedostoja",
+    "File to share" : "Jaettava tiedosto",
+    "Rename group" : "Nimeä ryhmä uudelleen",
+    "Group name" : "Ryhmän nimi",
     "Delete group" : "Poista ryhmä",
-    "Groups" : "Ryhmät"
+    "Settings" : "Asetukset",
+    "No users" : "Ei käyttäjiä",
+    "Quota" : "Kiintiö",
+    "Role" : "Rooli",
+    "Groups" : "Ryhmät",
+    "View profile" : "Näytä profiili",
+    "Delete user" : "Poista käyttäjä",
+    "Appearance" : "Ulkoasu",
+    "Save" : "Tallenna"
 },
 "nplurals=2; plural=(n != 1);");

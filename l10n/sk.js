@@ -1,12 +1,28 @@
 OC.L10N.register(
     "workspace",
     {
+    "or" : "alebo",
+    "Unknown error" : "Neznáma chyba",
+    "Add users" : "Pridať užívateľov",
     "Search users" : "Hľadať používateľov",
     "Add" : "Pridať",
+    "Cancel" : "Cancel",
+    "Confirm" : "Potvrdiť",
+    "Upload new files" : "Nahrať nové súbory",
+    "File to share" : "Súbor na zdieľanie",
     "Choose from Files" : "Vybrať zo Súborov",
+    "Rename group" : "Premenovať skupinu",
+    "Group name" : "Názov skupiny",
+    "Settings" : "Nastavenia",
     "No users" : "Žiadni užívatelia",
+    "Quota" : "Kvóta",
+    "Users" : "Používatelia",
     "Role" : "Rola",
     "Groups" : "Skupiny",
+    "View profile" : "Zobraziť profil",
+    "Delete user" : "Zmazať používateľa",
+    "unlimited" : "neobmedzené",
+    "Appearance" : "Vzhľad",
     "Save" : "Uložiť"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

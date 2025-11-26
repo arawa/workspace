@@ -1,0 +1,23 @@
+{ "translations": {
+    "or" : "o",
+    "Unknown error" : "Error desconegut",
+    "Add users" : "Afegeix usuaris",
+    "Search users" : "Cerqueu usuaris",
+    "Add" : "Afegeix",
+    "Cancel" : "Cancel",
+    "Confirm" : "Confirma",
+    "Upload new files" : "Pujada de nous fitxers",
+    "File to share" : "Fitxer a compartir",
+    "Rename group" : "Canvia el nom del grup",
+    "Group name" : "Nom del grup",
+    "Settings" : "Paràmetres",
+    "No users" : "Cap usuari",
+    "Quota" : "Quota",
+    "Groups" : "Grups",
+    "View profile" : "Visualitza el perfil",
+    "Delete user" : "Suprimeix l'usuari",
+    "unlimited" : "il·limitada",
+    "Appearance" : "Aparença",
+    "Save" : "Desar"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

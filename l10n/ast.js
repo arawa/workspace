@@ -1,0 +1,25 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "o",
+    "Unknown error" : "Error desconocíu",
+    "Add users" : "Amestar usuarios",
+    "Search users" : "Buscar usuarios",
+    "Add" : "Amestar",
+    "Cancel" : "Cancel",
+    "Confirm" : "Confirmar",
+    "Rename group" : "Renomar el grupu",
+    "Group name" : "Nome del grupu",
+    "Settings" : "Configuración",
+    "No users" : "Nun hai nengún usuariu…",
+    "Quota" : "Cuota",
+    "Users" : "Usuarios",
+    "Role" : "Rol",
+    "Groups" : "Grupos",
+    "View profile" : "Ver el perfil",
+    "Delete user" : "Desaniciar l'usuariu",
+    "unlimited" : "ensin llende",
+    "Appearance" : "Aspeutu",
+    "Save" : "Guardar"
+},
+"nplurals=2; plural=(n != 1);");

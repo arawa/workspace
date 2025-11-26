@@ -1,0 +1,27 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "o",
+    "Unknown error" : "Errore sconosciuto",
+    "Add users" : "Aggiungi utenti",
+    "Search users" : "Cerca utenti",
+    "Add" : "Aggiungi",
+    "Cancel" : "Cancel",
+    "Confirm" : "Conferma",
+    "Upload new files" : "Carica nuovi file",
+    "File to share" : "File da condividere",
+    "Choose from Files" : "Scegli da File",
+    "Rename group" : "Rinomina gruppo",
+    "Group name" : "Nome del gruppo",
+    "Settings" : "Impostazioni",
+    "No users" : "Nessun utente",
+    "Quota" : "Quote",
+    "Role" : "Ruolo",
+    "Groups" : "Gruppi",
+    "View profile" : "Vedi profilo",
+    "Delete user" : "Elimina utente",
+    "unlimited" : "illimitato",
+    "Appearance" : "Aspetto",
+    "Save" : "Salva"
+},
+"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
