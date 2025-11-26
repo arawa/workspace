@@ -1,0 +1,26 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "или",
+    "Unknown error" : "Неизвестна грешка",
+    "Add users" : "Добавяне на потребители",
+    "Search users" : "Търсене за потребители",
+    "Add" : "Добавяне",
+    "Cancel" : "Cancel",
+    "Confirm" : "Потвърдете",
+    "Upload new files" : "Качване на нови файлове",
+    "File to share" : "Файл за споделяне",
+    "Rename group" : "Преименуване на група",
+    "Group name" : "Име на групата",
+    "Delete group" : "Изтриване на група",
+    "Settings" : "Настройки",
+    "Quota" : "Квота",
+    "Role" : "Роля",
+    "Groups" : "Групи",
+    "View profile" : "Преглед на профил",
+    "Delete user" : "Изтриване",
+    "unlimited" : "неограничено",
+    "Appearance" : "Изглед",
+    "Save" : "Запиши"
+},
+"nplurals=2; plural=(n != 1);");

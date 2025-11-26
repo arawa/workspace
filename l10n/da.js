@@ -1,0 +1,27 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "eller",
+    "Unknown error" : "Ukendt fejl",
+    "Add users" : "Tilføj brugere",
+    "Search users" : "Søg efter brugere",
+    "Add" : "Tilføj",
+    "Cancel" : "Annullér",
+    "Confirm" : "Bekræft",
+    "Upload new files" : "Upload nye filer",
+    "File to share" : "Fil til deling",
+    "Rename group" : "Omdøb gruppe",
+    "Group name" : "Gruppenavn",
+    "Delete group" : "Slet gruppe",
+    "Settings" : "Indstillinger",
+    "No users" : "Ingen brugere",
+    "Quota" : "Kvote",
+    "Users" : "Brugere",
+    "Role" : "Rolle",
+    "Groups" : "Grupper",
+    "View profile" : "Vis profil",
+    "Delete user" : "Slet bruger",
+    "Appearance" : "Udseende",
+    "Save" : "Gem"
+},
+"nplurals=2; plural=(n != 1);");

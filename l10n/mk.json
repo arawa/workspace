@@ -1,8 +1,25 @@
 { "translations": {
+    "or" : "или",
+    "Unknown error" : "Непозната грешка",
+    "Add users" : "Додади корисници",
     "Search users" : "Пребарувај корисници",
     "Add" : "Додади",
+    "Cancel" : "Откажи",
+    "Confirm" : "Потврди",
+    "Upload new files" : "Прикачи нови датотеки",
+    "File to share" : "Датотека за споделување",
+    "Rename group" : "Преименувај група",
+    "Group name" : "Име на група",
     "Delete group" : "Избриши група",
+    "Settings" : "Параметри",
     "No users" : "Нема корисници",
-    "Groups" : "Групи"
+    "Quota" : "Квота",
+    "Role" : "Улога",
+    "Groups" : "Групи",
+    "View profile" : "Прегледај профил",
+    "Delete user" : "Избриши корисник",
+    "unlimited" : "неограничено",
+    "Appearance" : "Изглед",
+    "Save" : "Сними"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }

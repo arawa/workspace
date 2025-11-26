@@ -1,7 +1,27 @@
 OC.L10N.register(
     "workspace",
     {
+    "or" : "vagy",
+    "Unknown error" : "Ismeretlen hiba",
+    "Add users" : "Felhasználók hozzáadása",
     "Search users" : "Fehasználók keresése",
-    "Groups" : "Csoportok"
+    "Add" : "Hozzáadás",
+    "Cancel" : "Cancel",
+    "Confirm" : "Megerősítés",
+    "Upload new files" : "Új fájlok feltöltése",
+    "File to share" : "Fájl megosztása",
+    "Rename group" : "Csoport átnevezése",
+    "Group name" : "Csoport neve",
+    "Settings" : "Beállítások",
+    "No users" : "Nincsenek felhasználók",
+    "Quota" : "Kvóta",
+    "Users" : "Felhasználók",
+    "Role" : "Szerepkör",
+    "Groups" : "Csoportok",
+    "View profile" : "Profil megtekintése",
+    "Delete user" : "Felhasználó törlése",
+    "unlimited" : "korlátlan",
+    "Appearance" : "Megjelenés",
+    "Save" : "Mentés"
 },
 "nplurals=2; plural=(n != 1);");

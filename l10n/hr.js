@@ -1,0 +1,26 @@
+OC.L10N.register(
+    "workspace",
+    {
+    "or" : "ili",
+    "Unknown error" : "Nepoznata pogreška",
+    "Add users" : "Dodaj korisnike",
+    "Search users" : "Pretraži korisnike",
+    "Add" : "Dodaj",
+    "Cancel" : "Cancel",
+    "Confirm" : "Potvrdi",
+    "Upload new files" : "Otpremi nove datoteke",
+    "File to share" : "Datoteka za dijeljenje",
+    "Choose from Files" : "Odaberi iz datoteka",
+    "Group name" : "Naziv grupe",
+    "Settings" : "Postavke",
+    "Quota" : "Kvota",
+    "Users" : "Korisnici",
+    "Role" : "Uloga",
+    "Groups" : "Grupe",
+    "View profile" : "Prikaži profil",
+    "Delete user" : "Izbriši korisnika",
+    "unlimited" : "neograničeno",
+    "Appearance" : "Izgled",
+    "Save" : "Spremi"
+},
+"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");
