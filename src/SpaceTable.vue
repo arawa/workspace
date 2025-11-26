@@ -34,7 +34,7 @@
 						{{ t('workspace', 'Quota') }}
 					</th>
 					<th class="workspace-th workspace-managers-th">
-						{{ t('workspace', 'Space administrators') }}
+						{{ t('workspace', 'Workspace Managers') }}
 					</th>
 				</tr>
 			</thead>
