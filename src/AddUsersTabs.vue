@@ -145,7 +145,7 @@ export default {
 			return t('workspace', 'Search users')
 		},
 		informCsvStructureMessage() {
-			return t('workspace', 'You CSV file must follow this structure:')
+			return t('workspace', 'Your CSV file must follow this structure:')
 		},
 		csvTemplateMarkdown() {
 			return `> **user, role**
