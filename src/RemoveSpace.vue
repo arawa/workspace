@@ -38,7 +38,7 @@
 				<NcButton
 					type="error"
 					@click="handleDelete()">
-					{{ t('workspace', 'Delete space') }}
+					{{ t('workspace', 'Delete workspace') }}
 				</NcButton>
 			</div>
 		</div>
