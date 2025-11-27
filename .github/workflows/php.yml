@@ -35,6 +35,8 @@ jobs:
       uses: actions/checkout@main
       with:
         path: nextcloud/apps/workspace
+    - name: Enable groupfolders app
+      run: php -f nextcloud/occ app:enable groupfolders --force
     - name: Validate composer.json and composer.lock
       working-directory: nextcloud/apps/workspace
       run: composer validate --strict
