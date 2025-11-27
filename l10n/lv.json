@@ -1,5 +1,10 @@
 { "translations": {
+    "Invalid separator for CSV file" : "Nederīgs CSV datnes atdalītājs",
+    "Your CSV file must use a comma (\",\") as separator" : "CSV datnē jāizmanto komats (“,”) kā atdalītājs",
     "or" : "vai",
+    "Error in CSV file content" : "Kļūda CSV datnes saturā",
+    "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Šīs CSV datnes lietotāji nav zināmi, un tos nevar ievietot. Jāpārbauda šie lietotāji un jāatkārto darbība: <br>",
+    "Error: unknown users" : "Kļūda: nezināmi lietotāji",
     "Unknown error" : "Nezināma kļūda",
     "Add" : "Pievienot",
     "Cancel" : "Atcelt",
@@ -14,6 +19,8 @@
     "Groups" : "Grupas",
     "View profile" : "Skatīt profilu",
     "Appearance" : "Izskats",
-    "Save" : "Saglabāt"
+    "Save" : "Saglabāt",
+    "Rename space" : "Pārdēvēt vietu",
+    "Space name" : "Vietas nosaukums"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }
