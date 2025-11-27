@@ -34,7 +34,7 @@
 						{{ t('workspace', 'Quota') }}
 					</th>
 					<th class="workspace-th workspace-managers-th">
-						{{ t('workspace', 'Space administrators') }}
+						{{ t('workspace', 'Workspace Managers') }}
 					</th>
 				</tr>
 			</thead>
@@ -80,7 +80,7 @@
 			</tbody>
 		</table>
 		<NcEmptyContent v-else
-			:name="t('workspace', 'No spaces')">
+			:name="t('workspace', 'No workspace')">
 			<template #icon>
 				<NcIconSvgWrapper name="folders-off" :path="mdiFolderOff" />
 			</template>
