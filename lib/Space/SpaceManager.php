@@ -37,8 +37,8 @@ use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminUserGroup;
 use OCA\Workspace\Group\SubGroups\SubGroup;
 use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
+use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
-use OCA\Workspace\Helper\MountProviderHelper;
 use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -66,7 +66,7 @@ class SpaceManager {
 		private AdminGroup $adminGroup,
 		private AdminUserGroup $adminUserGroup,
 		private AddedGroups $addedGroups,
-		private MountProviderHelper $mountProviderHelper,
+		private FolderStorageManagerHelper $folderStorageManagerHelper,
 		private SubGroup $subGroup,
 		private IUserManager $userManager,
 		private UserWorkspaceGroup $userWorkspaceGroup,
@@ -135,10 +135,13 @@ class SpaceManager {
 			true
 		);
 
-		$groupfolder = $this->folderHelper->getFolder(
-			$folderId,
-			$this->rootFolder->getRootFolderStorageId()
-		);
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$folderId,
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		return [
 			'name' => $space->getSpaceName(),
@@ -161,7 +164,13 @@ class SpaceManager {
 
 	public function findGroupsBySpaceId(int $id): array {
 		$space = $this->spaceMapper->find($id);
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		$gids = array_keys($groupfolder['groups']);
 		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
@@ -215,7 +224,13 @@ class SpaceManager {
 			return null;
 		}
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			?->toArray()
+		;
 
 		if ($groupfolder === false || is_null($groupfolder)) {
 			$folderId = $space->getGroupfolderId();
@@ -336,8 +351,8 @@ class SpaceManager {
 		$this->spaceMapper->deleteSpace($spaceId);
 
 		$folderId = $space['groupfolder_id'];
-		$folder = $this->mountProviderHelper->getFolder($folderId);
-		$folder->delete();
+		$folder = $this->folderHelper->getFolder($folderId, $this->rootFolder->getRootFolderStorageId());
+		$this->folderStorageManagerHelper->deleteStoragesForFolder($folder);
 		$this->folderHelper->removeFolder($folderId);
 	}
 
@@ -387,7 +402,13 @@ class SpaceManager {
 			return;
 		}
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		if ($groupfolder === false || is_null($groupfolder)) {
 			$folderId = $space->getGroupfolderId();
@@ -536,10 +557,13 @@ class SpaceManager {
 		$spaces = [];
 
 		foreach ($workspaces as $workspace) {
-			$folderInfo = $this->folderHelper->getFolder(
-				$workspace['groupfolder_id'],
-				$this->rootFolder->getRootFolderStorageId()
-			);
+			$folderInfo = $this->folderHelper
+				->getFolder(
+					$workspace['groupfolder_id'],
+					$this->rootFolder->getRootFolderStorageId()
+				)
+				->toArray()
+			;
 			$space = ($folderInfo !== false) ? array_merge(
 				$folderInfo,
 				$workspace
@@ -646,7 +670,13 @@ class SpaceManager {
 			throw new NotFoundException("The user group {$userGroupGid} does not exist");
 		}
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 		if ($groupfolder === false) {
 			throw new NotFoundException("The groupfolder {$space->getGroupfolderId()} does not exist");
 		}

@@ -136,8 +136,12 @@ class WorkspaceController extends Controller {
 		foreach ($workspaces as $workspace) {
 			$folderInfo = $this->folderHelper->getFolder(
 				$workspace['groupfolder_id'],
-				$rootFolderStorageId
-			);
+				$this->rootFolder->getRootFolderStorageId()
+			)->toArray();
+			$space = ($folderInfo !== false) ? array_merge(
+				$folderInfo,
+				$workspace
+			) : $workspace;
 
 			if ($folderInfo === false) {
 				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");
@@ -166,7 +170,13 @@ class WorkspaceController extends Controller {
 
 		$space = $this->spaceMapper->find($spaceId);
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		if ($groupfolder === false) {
 			return new JSONResponse(
@@ -190,7 +200,13 @@ class WorkspaceController extends Controller {
 
 		$space = $this->spaceMapper->find($spaceId);
 
-		$groupfolder = $this->folderHelper->getFolder($space->getGroupfolderId(), $this->rootFolder->getRootFolderStorageId());
+		$groupfolder = $this->folderHelper
+			->getFolder(
+				$space->getGroupfolderId(),
+				$this->rootFolder->getRootFolderStorageId()
+			)
+			->toArray()
+		;
 
 		if ($groupfolder === false) {
 			return new JSONResponse(
