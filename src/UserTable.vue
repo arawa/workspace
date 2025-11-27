@@ -75,7 +75,7 @@
 									icon="icon-close"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
-									{{ t('workspace', 'Remove admin rights') }}
+									{{ t('workspace', 'Remove WM rights') }}
 								</NcActionButton>
 								<NcActionButton v-else
 									:close-after-click="true"
@@ -83,7 +83,7 @@
 									<template #icon>
 										<AccountCog :size="20" />
 									</template>
-									{{ t('workspace', 'Make administrator') }}
+									{{ t('workspace', 'Assign as WM') }}
 								</NcActionButton>
 								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $route.params.space)"
 									icon="icon-delete"
@@ -106,7 +106,7 @@
 		<NcEmptyContent v-else>
 			{{ t('workspace', 'No users') }}
 			<template #desc>
-				{{ t('workspace', 'There are no users in this space/group yet') }}
+				{{ t('workspace', 'There are no users in this workspace/group yet') }}
 			</template>
 		</NcEmptyContent>
 	</div>

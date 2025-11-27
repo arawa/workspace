@@ -69,7 +69,7 @@ export default {
 			console.error('e.lineNumber', e.lineNumber)
 			console.error('e.columnNumber', e.columnNumber)
 			console.error('e.stack', e.stack)
-			const text = t('workspace', 'A network error occurred while trying to add user {user_name} to workspaces.<br>Error: {error}', { user_name: user.name, error: e })
+			const text = t('workspace', 'A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}', { user_name: user.name, error: e })
 			showNotificationError('Network error', text, 4000)
 		})
 	},
