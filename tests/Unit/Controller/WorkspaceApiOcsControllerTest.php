@@ -1820,6 +1820,54 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			'user5',
 		];
 
+		$space = [
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => [
+				'SPACE-GE-1' => [
+					'gid' => 'SPACE-GE-1',
+					'displayName' => 'WM-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-GE-1'
+				],
+				'SPACE-U-1' => [
+					'gid' => 'SPACE-U-1',
+					'displayName' => 'U-Espace01',
+					'types' => [
+						'Database'
+					],
+					'usersCount' => 0,
+					'slug' => 'SPACE-U-1'
+				]
+			],
+			'quota' => -3,
+			'size' => 0,
+			'acl' => true,
+			'manage' => [
+				[
+					'type' => 'group',
+					'id' => 'SPACE-GE-1',
+					'displayname' => 'WM-Espace01'
+				]
+			],
+			'groupfolder_id' => 1,
+			'name' => 'Espace01',
+			'color_code' => '#5ca609',
+			'usersCount' => 0,
+			'users' => [],
+			'added_groups' => []
+		];
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with($id)
+			->willReturn($space)
+		;
+
 		$group = $this->createMock(IGroup::class);
 
 		$this->groupManager
