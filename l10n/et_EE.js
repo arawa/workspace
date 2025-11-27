@@ -2,7 +2,10 @@ OC.L10N.register(
     "workspace",
     {
     "Invalid separator for CSV file" : "Vigane eraldaja CSV-failis",
+    "Your CSV file must use a comma (\",\") as separator" : "Oma CSV-falis pead eraldajana kasutama koma (\",\")",
     "or" : "või",
+    "Error in CSV file content" : "Viga CSV-faili sisus",
+    "Error: unknown users" : "Viga: tundmatud kasutajad",
     "Error: unknown role" : "Viga: tundmatu roll",
     "Error in file format" : "Failivormingu viga",
     "The file must be in <b>CSV format</b>." : "See fail peab olema <b>CSV-vormingus</b>.",

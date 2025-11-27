@@ -2,7 +2,11 @@ OC.L10N.register(
     "workspace",
     {
     "or" : "或者",
+    "The file must be in <b>CSV format</b>." : "檔案必須為 <b>CSV 格式</b>。",
     "Unknown error" : "錯誤不詳",
+    "Email address %s is linked to multiple users. Impossible to know which user to choose." : "電郵地址 %s 連結至多個用戶。無法確定該選擇哪位用戶。",
+    "Workspace" : "工作空間",
+    "# Description\n\nWorkspace allows managers to :\n- Create shared workspaces\n- Delegate management of each workspace to users (workspace managers) in order for them to:\n    - choose members\n    - create groups\n    - configure advanced permissions on workspace folders\n- All through a simple unified interface, designed to simplify your users' experience and make them autonomous\n\nIt is necessary to install the Team folders app for the Workspace app to work.\n\n# App configuration\n\nBefore using Workspace, you must configure the app, following these important steps:\n\n- Limit the Workspace app to specific groups : in your \"application management\" administrator interface, limit the application to the following groups: \"GeneralManager\" and \"WorkspacesManagers\".\n\n- Configure Team folders for Workspace:\n    - In \"Settings\" > \"Team folders\" > \"Group folder admin delegation\" section, add the group \"GeneralManager\" to the **first** field, and the group \"WorkspacesManagers\" to the **second** field\n\nIf you are using a major version of Nextcloud lower than Nextcloud 25, please follow the instructions provided on [GitHub](https://github.com/arawa/workspace). \n\nFor more information, please visit [our website](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/) (french content).\n\nFor more details, please go to the [admin documentation](https://github.com/arawa/workspace/blob/main/README.md#installation), or [user documentation](https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X)." : "# 描述\n\n工作空間讓工作空間管理員可以：\n- 建立共享工作空間\n- 將每個工作空間的管理委託給使用者（工作空間管理員），他們可以：\n    - 選擇成員\n    - 建立群組\n    - 在工作空間的資料夾設定進階權限\n- 透過單一簡潔的介面，簡化使用者的體驗並賦予他們自主權\n\n必須先安裝團隊資料夾應用程式，工作空間應用程式才能運作。\n\n# 應用程式設定\n\n在使用工作空間前，您必須先按照以下重要步驟設定應用程式：\n\n- 將工作空間應用程式限定為僅供特定群組使用：在您的「應用程式」管理介面中，將應用程式限制為僅供以下群組使用：「總經理」與「工作空間管理員」。\n\n- 為工作空間設定團隊資料夾：\n    - 在「設定」→「團隊資料夾」→「委託群組資料夾管理員」一節，新增群組「總經理」到「第一」欄位中，並將「工作空間管理員」群組新增至「第二」欄位中\n\n若您正在使用低於 Nextcloud 25 的版本，請按照 [GitHub](https://github.com/arawa/workspace) 上提供的指示進行。 \n\n要取得更多資訊，請造訪[我們的網站](https://www.arawa.fr/solutions/produits-arawa/arawa-workspace-for-nextcloud/)（法文內容）。\n\n要取得詳細資訊，請前往[管理員文件](https://github.com/arawa/workspace/blob/main/README.md#installation)或[使用者文件](https://github.com/arawa/workspace/tree/main/docs/user-guide/from-3.X.X)。",
     "Add users" : "新增用戶",
     "Search users" : "搜尋用戶",
     "Add" : "添加",
@@ -24,6 +28,7 @@ OC.L10N.register(
     "Delete user" : "刪除用戶",
     "unlimited" : "無限制",
     "Appearance" : "外觀",
-    "Save" : "保存"
+    "Save" : "保存",
+    "Space name" : "空間名稱"
 },
 "nplurals=1; plural=0;");
