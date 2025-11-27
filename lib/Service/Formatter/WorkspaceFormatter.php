@@ -30,7 +30,7 @@ class WorkspaceFormatter {
 			'isOpen' => false,
 			'name' => $workspace['name'] ?? null,
 			'quota' => $folderInfo['quota'] ?? null,
-			'size' => $folderInfo['size'] ?? null,
+			'size' => $folderInfo['root_cache_entry']?->getSize() ?? null,
 			'managers' => null,
 			'users' => (object)[],
 			'usersCount' => self::NO_USERS,
