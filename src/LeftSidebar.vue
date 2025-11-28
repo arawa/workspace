@@ -24,7 +24,7 @@
 		<ul class="ws-navigation-header">
 			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
 				class="input-new-item"
-				:class="isDarkTheme ? '' : 'constrast-light'"
+				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
 				:name="t('workspace', 'New workspace')"
 				@new-item="createSpace" />
@@ -136,8 +136,17 @@ export default {
 	margin-right: 4px;
 }
 
-.constrast-light {
-	filter: contrast(1.5);
+.btn-light :deep(.app-navigation-entry-button) {
+	background-color: var(--color-main-background);
+}
+
+.btn-dark :deep(.app-navigation-entry-button) {
+	background-color: var(--color-background-dark);
+}
+
+.btn-light :deep(.app-navigation-entry-button):hover,
+.btn-dark :deep(.app-navigation-entry-button):hover {
+	background-color: var(--color-background-hover);
 }
 
 .app-navigation-entry {
