@@ -523,6 +523,15 @@ class WorkspaceApiOcsController extends OCSController {
 			throw new OCSNotFoundException("Group with gid {$gid} does not exist.");
 		}
 
+		$space = $this->spaceManager->get($id);
+
+		$gids = array_keys($space['groups']);
+		$spacename = $space['name'];
+
+		if (!in_array($gid, $gids)) {
+			throw new OCSException("Group {$gid} does not belongs to the {$spacename} workspace.");
+		}
+
 		$usersNotFound = [];
 		foreach ($uids as $uid) {
 			$user = $this->userManager->get($uid);
@@ -543,7 +552,6 @@ class WorkspaceApiOcsController extends OCSController {
 
 		switch ($gid) {
 			case GroupsWorkspace::isWorkspaceUserGroupId($gid):
-				$space = $this->spaceManager->get($id);
 				$this->spaceManager->removeUsersFromUserGroup($space, $group, $users);
 				break;
 			case GroupsWorkspace::isWorkspaceSubGroup($gid) || GroupsWorkspace::isWorkspaceGroup($group):
