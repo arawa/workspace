@@ -29,7 +29,6 @@ OC.L10N.register(
     "Role" : "Cargo",
     "Groups" : "Grupos",
     "View profile" : "Ver perfil",
-    "Remove admin rights" : "Eliminar derechos de administrador",
     "Delete user" : "Eliminar usuario",
     "Remove from group" : "Eliminar del grupo",
     "unlimited" : "ilimitado",
