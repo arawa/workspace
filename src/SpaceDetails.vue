@@ -64,8 +64,10 @@
 						@click="toggleShowConnectedGroups">
 						<template #icon>
 							<NcIconSvgWrapper v-if="isDarkTheme"
+								:size="16"
 								:svg="AddedGroupWhite" />
 							<NcIconSvgWrapper v-else
+								:size="16"
 								:svg="AddedGroupBlack" />
 						</template>
 						{{ t('workspace', 'Add a group') }}
