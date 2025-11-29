@@ -78,6 +78,7 @@ OC.L10N.register(
     "Save" : "Uložit",
     "Can't load workspace users" : "Nebylo možné načíst uživatele pracovního prostoru",
     "An error occurred while trying to add user" : "Při pokusu o přidání uživatele došlo k chybě",
+    "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Při pokusu o přidání uživatele {user_name} do pracovního prostoru došlo k síťové chybě.<br>Chyba: {error}",
     "A network error occurred while trying to create group {group}<br>Error: {error}" : "Při pokusu o vytvoření skupiny {group} došlo k chybě sítě<br>Chyba: {error}",
     "An error occurred while trying to delete group {group}<br>Error: {error}" : "Při pokusu o smazání skupiny {group} došlo k chybě<br>Chyba: {error}",
     "Network error occurred while trying to delete group {group}<br>Error: {error}" : "Při pokusu o smazání skupiny {group} došlo k chybě sítě<br>Chyba: {error}",
