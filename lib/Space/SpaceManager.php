@@ -83,6 +83,18 @@ class SpaceManager {
 	}
 
 	public function create(string $spacename): array {
+		return $this->createWorkspace($spacename);
+	}
+
+	public function createWithId(int $spaceId, string $spacename): array {
+		if ($spaceId <= 0) {
+			throw new BadRequestException('Error creating workspace', 'spaceId must be a positive integer');
+		}
+
+		return $this->createWorkspace($spacename, $spaceId);
+	}
+
+	private function createWorkspace(string $spacename, ?int $spaceId = null): array {
 		if ($spacename === false
 			|| $spacename === null
 			|| $spacename === ''
@@ -103,6 +115,13 @@ class SpaceManager {
 		$folderId = $this->folderHelper->createFolder($spacename);
 
 		$space = new Space();
+		if (!is_null($spaceId)) {
+			$existingSpace = $this->spaceMapper->find($spaceId);
+			if (!is_null($existingSpace)) {
+				throw new CreateWorkspaceException("A workspace already exists with the identifier {$spaceId}.", Http::STATUS_CONFLICT);
+			}
+			$space->setSpaceId($spaceId);
+		}
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
 		$space->setColorCode($this->colorCode->generate());
