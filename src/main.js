@@ -21,16 +21,18 @@
  *
  */
 
-import Vue from 'vue'
+import { createApp } from 'vue'
 import router from './router.js'
 import { linkTo } from '@nextcloud/router'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import { Tooltip } from '@nextcloud/vue'
+// import { Tooltip } from '@nextcloud/vue'
 import VueLazyComponent from '@xunlei/vue-lazy-component'
 
-Vue.mixin({
+const app = createApp(App)
+
+app.mixin({
 	methods: {
 		t,
 		n,
@@ -40,16 +42,15 @@ Vue.mixin({
 // eslint-disable-next-line
 __webpack_public_path__ = linkTo('workspace', 'js/')
 
-Vue.directive('tooltip', Tooltip)
-Vue.use(VueLazyComponent)
+// Vue.directive('tooltip', Tooltip)
+app.use(VueLazyComponent)
 
-export default new Vue({
-	el: '#content',
-	data: {
-		isUserGeneralAdmin: false,
-		spaces: {},
-	},
-	router,
-	store,
-	render: (h) => h(App),
+app.provide('rootState', {
+	isUserGeneralAdmin: false,
+	spaces: {},
 })
+
+app.use(router)
+app.use(store)
+
+app.mount('#content')
