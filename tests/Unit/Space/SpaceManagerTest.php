@@ -1200,6 +1200,15 @@ class SpaceManagerTest extends TestCase {
 
 		$userGroup
 			->expects($this->any())
+			->method('inGroup')
+			->with(
+				$this->logicalOr($user1, $user2)
+			)
+			->willReturnOnConsecutiveCalls(true, true)
+		;
+
+		$userGroup
+			->expects($this->any())
 			->method('removeUser')
 			->with(
 				$this->logicalOr($user1, $user2)

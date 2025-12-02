@@ -451,11 +451,20 @@ class SpaceManager {
 			throw new OCSBadRequestException('uids params must contain an array of strings');
 		}
 
+		$userGid = UserGroup::get($id);
+		$userGroup = $this->groupManager->get($userGid);
+
 		$usersNotExist = [];
+		$usersAreNotPresentInWorkspace = [];
 		foreach ($uids as $uid) {
 			$user = $this->userManager->get($uid);
 			if (is_null($user)) {
 				$usersNotExist[] = $uid;
+				continue;
+			}
+
+			if (!$userGroup->inGroup($user)) {
+				$usersAreNotPresentInWorkspace[] = $uid;
 			}
 		}
 
@@ -463,6 +472,12 @@ class SpaceManager {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}" . PHP_EOL, $usersNotExist));
 			$this->logger->error('These users not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
 			throw new OCSBadRequestException('These users not exist on your Nextcloud instance : ' . PHP_EOL . $formattedUsers);
+		}
+
+		if (!empty($usersAreNotPresentInWorkspace)) {
+			$formattedUsers = implode(array_map(fn ($user) => "- {$user}\n", $usersAreNotPresentInWorkspace));
+			throw new NotFoundException("These users were not found in the workspace {$space['name']}: {$formattedUsers}");
+
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);
