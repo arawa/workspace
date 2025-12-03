@@ -175,9 +175,9 @@ class WorkspaceService {
 		return $data;
 	}
 
-	public function getAll(): array {
-		// Gets all spaces
-		$spaces = $this->spaceMapper->findAll();
+	public function getAll(?int $page = null, ?int $limit = null): array {
+		$spaces = $this->spaceMapper->findAll($page, $limit);
+
 		$newSpaces = [];
 		foreach ($spaces as $space) {
 			$newSpace = $space->jsonSerialize();

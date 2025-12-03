@@ -45,6 +45,10 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
+
+	private const DEFAULT_LIMIT = 30;
+	private const DEFAULT_PAGE = 0;
+
 	public function __construct(
 		IRequest $request,
 		private GroupfolderHelper $folderHelper,
@@ -126,11 +130,14 @@ class WorkspaceController extends Controller {
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
 	 *
+	 * @param int|null $page is the page (offset) number for pagination.
+	 * @param int|null $limit is the number of workspaces per page.
+	 *
 	 * @NoAdminRequired
 	 *
 	 */
-	public function findAll(): JSONResponse {
-		$workspaces = $this->workspaceService->getAll();
+	public function findAll(?int $page = self::DEFAULT_PAGE, ?int $limit = self::DEFAULT_LIMIT): JSONResponse {
+		$workspaces = $this->workspaceService->getAll($page, $limit);
 		$spaces = [];
 		$rootFolderStorageId = $this->rootFolder->getRootFolderStorageId();
 		foreach ($workspaces as $workspace) {
