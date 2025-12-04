@@ -136,4 +136,26 @@ class SpaceMapper extends QBMapper {
 
 		return $row;
 	}
+
+	public function countSpaces(): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb
+			->select(
+				$qb
+					->func()
+					->count('*', 'count')
+			)
+			->from(
+				$this->getTableName()
+			)
+		;
+
+		$cursor = $qb->executeQuery();
+
+		$count = (int)$cursor->fetch()['count'];
+		$cursor->closeCursor();
+
+		return $count;
+	}
 }

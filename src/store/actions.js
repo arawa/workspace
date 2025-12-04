@@ -96,11 +96,26 @@ export default {
 	setCountWorkspaces(context, { count }) {
 		context.commit('SET_COUNT_WORKSPACES', { count })
 	},
+	setCountTotalWorkspaces(context, { count }) {
+		context.commit('SET_COUNT_TOTAL_WORKSPACES', { count })
+	},
+	incrementCountTotalWorkspaces(context) {
+		context.commit('INCREMENT_COUNT_TOTAL_WORKSPACES')
+	},
+	decrementCountTotalWorkspaces(context) {
+		context.commit('DECREMENT_COUNT_TOTAL_WORKSPACES')
+	},
+	recountWorkspaces(context) {
+		context.commit('RECOUNT_WORKSPACES')
+	},
 	incrementCountWorkspaces(context) {
 		context.commit('INCREMENT_COUNT_WORKSPACES')
 	},
 	decrementCountWorkspaces(context) {
 		context.commit('DECREMENT_COUNT_WORKSPACES')
+	},
+	incrementWorkspacePage(context) {
+		context.commit('INCREMENT_WORKSPACE_PAGE')
 	},
 	// Creates a group and navigates to its details page
 	createGroup(context, { space, gid }) {

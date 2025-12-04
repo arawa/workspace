@@ -111,6 +111,7 @@ export default {
 				managers: null,
 			})
 			this.$store.dispatch('incrementCountWorkspaces')
+			this.$store.dispatch('incrementCountTotalWorkspaces')
 			this.$router.push({
 				path: `/workspace/${workspace.id_space}`,
 			})

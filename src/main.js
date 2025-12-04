@@ -29,6 +29,7 @@ import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { Tooltip } from '@nextcloud/vue'
 import VueLazyComponent from '@xunlei/vue-lazy-component'
+import { vElementVisibility } from '@vueuse/components'
 
 Vue.mixin({
 	methods: {
@@ -41,6 +42,7 @@ Vue.mixin({
 __webpack_public_path__ = linkTo('workspace', 'js/')
 
 Vue.directive('tooltip', Tooltip)
+Vue.directive('elementVisibility', vElementVisibility)
 Vue.use(VueLazyComponent)
 
 export default new Vue({

@@ -603,6 +603,10 @@ class SpaceManager {
 		return $spaces;
 	}
 
+	public function countWorkspaces(): int {
+		return $this->spaceMapper->countSpaces();
+	}
+
 	/**
 	 * @var array<IUser> $users
 	 */

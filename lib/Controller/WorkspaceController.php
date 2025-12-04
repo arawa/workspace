@@ -38,6 +38,9 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -168,6 +171,22 @@ class WorkspaceController extends Controller {
 		}
 
 		return new JSONResponse($spaces);
+	}
+
+
+	/**
+	 * @GeneralManagerRequired
+	*/
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/workspaces/count'
+	)]
+	public function countWorkspaces(): JSONResponse {
+		$count = $this->spaceManager->countWorkspaces();
+		return new JSONResponse([
+			'count' => $count
+		]);
 	}
 
 	/**
