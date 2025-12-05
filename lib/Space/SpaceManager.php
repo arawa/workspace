@@ -547,8 +547,8 @@ class SpaceManager {
 		$this->adminGroup->addUser($user, $spaceId);
 	}
 
-	public function findAll(): ?array {
-		$workspaces = $this->workspaceService->getAll();
+	public function findAll(?int $page = null, ?int $limit = null): ?array {
+		$workspaces = $this->workspaceService->getAll($page, $limit);
 
 		if (empty($workspaces)) {
 			return null;
@@ -601,6 +601,10 @@ class SpaceManager {
 		}
 
 		return $spaces;
+	}
+
+	public function countWorkspaces(): int {
+		return $this->spaceMapper->countSpaces();
 	}
 
 	/**

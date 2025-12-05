@@ -65,10 +65,13 @@ class SpaceMapper extends QBMapper {
 	}
 
 	/**
-	 * work
+	 * @param int|null $offset to paginate the workspaces returned
+	 * @param int|null $limit to limit the number of workspaces returned
 	 * @return Space[]
 	 */
-	public function findAll($limit = null, $offset = null): array {
+	public function findAll(?int $offset = null, ?int $limit = null): array {
+		$offset = $offset ? $offset * $limit : $offset;
+
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -132,5 +135,27 @@ class SpaceMapper extends QBMapper {
 		$cursor->closeCursor();
 
 		return $row;
+	}
+
+	public function countSpaces(): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb
+			->select(
+				$qb
+					->func()
+					->count('*', 'count')
+			)
+			->from(
+				$this->getTableName()
+			)
+		;
+
+		$cursor = $qb->executeQuery();
+
+		$count = (int)$cursor->fetch()['count'];
+		$cursor->closeCursor();
+
+		return $count;
 	}
 }

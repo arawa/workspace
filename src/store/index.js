@@ -38,6 +38,8 @@ const store = new Store({
 		spaces: {},
 		groupfolders: {},
 		countWorkspaces: 0,
+		countTotalWorkspaces: 0,
+		workspaceCurrentPage: 1,
 	},
 	mutations,
 	actions,

@@ -65,7 +65,7 @@ export default {
 					}
 
 					const spaces = resp.data
-					this.$store.commit('addSpaces', { spaces })
+					this.$store.commit('setSpaces', { spaces })
 
 					this.$store.dispatch('setCountWorkspaces', { count: Object.values(resp.data).length })
 					this.$store.state.loading = false
@@ -76,6 +76,12 @@ export default {
 					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
 					showNotificationError('Network error', text, 5000)
 					this.$store.state.loading = false
+				})
+
+			axios.get(generateUrl('apps/workspace/workspaces/count'))
+				.then(resp => {
+					const count = resp.data.count
+					this.$store.dispatch('setCountTotalWorkspaces', { count })
 				})
 		}
 	},

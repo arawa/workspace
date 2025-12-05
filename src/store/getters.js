@@ -178,4 +178,13 @@ export const getters = {
 		const users = getters.getWorkspaceManagerUsers(spacename)
 		return users.slice(10).length
 	},
+	countWorkspaces: (state, getters) => {
+		return state.countWorkspaces
+	},
+	countTotalWorkspaces: (state, getters) => {
+		return state.countTotalWorkspaces
+	},
+	workspaceCurrentPage: (state, getters) => {
+		return state.workspaceCurrentPage
+	},
 }
