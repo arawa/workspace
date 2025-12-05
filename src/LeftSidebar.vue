@@ -59,6 +59,11 @@
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
+			<div v-if="Object.keys($store.state.spaces).length">
+				<PageLoader v-if="nextPage"
+					v-element-visibility="next"
+					:message="messageLoader" />
+			</div>
 		</template>
 	</NcAppNavigation>
 </template>
@@ -72,6 +77,8 @@ import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+import PageLoader from './components/PageLoader.vue'
+import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 
 export default {
 	name: 'LeftSidebar',
@@ -81,7 +88,9 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 		SpaceMenuItem,
+		PageLoader,
 	},
+	mixins: [WorkspacesLoader],
 	computed: {
 		isDarkTheme() {
 			return useIsDarkTheme().value
