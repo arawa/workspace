@@ -33,7 +33,7 @@ export default {
 
 .loader-next-page-element {
 	display: flex;
-	justify-content: space-around;
+	justify-content: left;
 	align-items: center;
 	gap: 8px;
 }
