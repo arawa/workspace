@@ -79,7 +79,7 @@ OC.L10N.register(
     "You use <b>{size}</b> of {quota}" : "Você usa <b>{size}</b> de {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar alterar a cor da área de trabalho.<br>Erro: {error}",
     "unlimited" : "sem limite",
-    "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Você só pode especificar “ilimitado” ou um número seguido de “TB”, “GB”, “MB” ou “KB” (por exemplo: “5 GB”) como cota.",
+    "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Você só pode especificar \"ilimitado\" ou um número seguido de \"TB\", \"GB\", \"MB\" ou \"KB\" (p. ex.: \"5 GB\") como cota.",
     "Appearance" : "Aparência",
     "Rename your workspace" : "Renomeie seu espaço de trabalho",
     "Set maximum workspace storage space" : "Definir o espaço máximo de armazenamento do espaço de trabalho",
