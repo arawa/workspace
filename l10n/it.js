@@ -13,6 +13,7 @@ OC.L10N.register(
     "Choose from Files" : "Scegli da File",
     "Rename group" : "Rinomina gruppo",
     "Group name" : "Nome del gruppo",
+    "Delete group" : "Cancella gruppo",
     "Settings" : "Impostazioni",
     "No users" : "Nessun utente",
     "Quota" : "Quote",
