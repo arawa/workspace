@@ -139,16 +139,11 @@ class WorkspaceController extends Controller {
 	public function findAll(?string $search = null, ?int $offset = null, ?int $limit = null): JSONResponse {
 		$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
 		$spaces = [];
-		$rootFolderStorageId = $this->rootFolder->getRootFolderStorageId();
 		foreach ($workspaces as $workspace) {
 			$folderInfo = $this->folderHelper->getFolder(
 				$workspace['groupfolder_id'],
 				$this->rootFolder->getRootFolderStorageId()
 			)->toArray();
-			$space = ($folderInfo !== false) ? array_merge(
-				$folderInfo,
-				$workspace
-			) : $workspace;
 
 			if ($folderInfo === false) {
 				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");
