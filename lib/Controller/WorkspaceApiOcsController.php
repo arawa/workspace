@@ -61,6 +61,7 @@ use Psr\Log\LoggerInterface;
  * @psalm-import-type WorkspaceUserDefinition from ResponseDefinitions
  */
 class WorkspaceApiOcsController extends OCSController {
+
 	public function __construct(
 		IRequest $request,
 		private LoggerInterface $logger,
@@ -77,18 +78,20 @@ class WorkspaceApiOcsController extends OCSController {
 	}
 
 	/**
-	 * Return workspaces (optional filtering by name)
+	 * Return the first 25 workspaces (optional filtering by name)
 	 *
 	 * @param string|null $name Optional filter to return workspaces by name
+	 * @param int|null $offset Optional page number for pagination
+	 * @param int|null $limit Optional limit of workspaces per page
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
 	 *
-	 * 200: Succesfully retrieved workspaces
+	 * 200: Successfully retrieved workspaces
 	 */
 	#[OpenAPI(tags: ['workspace'])]
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/spaces')]
-	public function findAll(?string $name): DataResponse {
-		$workspaces = $this->spaceManager->findAll();
+	public function findAll(?string $name, ?int $offset = null, ?int $limit = null): DataResponse {
+		$workspaces = $this->spaceManager->findAll($offset, $limit, $name);
 
 		if (is_null($workspaces)) {
 			return new DataResponse(null, Http::STATUS_OK);
@@ -100,19 +103,6 @@ class WorkspaceApiOcsController extends OCSController {
 				return $this->userService->isSpaceManagerOfSpace($workspace);
 			}));
 			$workspaces = $filteredWorkspaces;
-		}
-
-		if (!is_null($name)) {
-			$filterToLower = strtolower($name);
-
-			$workspacesFiltered = [];
-			foreach ($workspaces as $workspace) {
-				if (strpos(strtolower($workspace['name']), $filterToLower) !== false) {
-					$workspacesFiltered[] = $workspace;
-				}
-			}
-
-			$workspaces = $workspacesFiltered ? $workspacesFiltered : null;
 		}
 
 		return new DataResponse($workspaces, Http::STATUS_OK);
