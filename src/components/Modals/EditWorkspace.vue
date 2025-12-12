@@ -134,7 +134,6 @@ export default {
 		},
 	},
 	beforeMount() {
-		console.debug('beforeMount EditWorkspace')
 		this.color = this.space.color
 		this.quota = this.space.quota
 		this.size = this.space.size
