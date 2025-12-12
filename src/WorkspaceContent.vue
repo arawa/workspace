@@ -43,6 +43,7 @@ import showNotificationError from './services/Notifications/NotificationError.js
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import LoadingUsers from './LoadingUsers.vue'
+import { LIMIT_WORKSPACES_PER_PAGE } from './constants.js'
 
 export default {
 	name: 'WorkspaceContent',
@@ -54,7 +55,11 @@ export default {
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spaces'))
+			axios.get(generateUrl('/apps/workspace/spaces'), {
+				params: {
+					limit: LIMIT_WORKSPACES_PER_PAGE
+				},
+			})
 				.then(resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
@@ -65,7 +70,7 @@ export default {
 					}
 
 					const spaces = resp.data
-					this.$store.commit('addSpaces', { spaces })
+					this.$store.commit('setSpaces', { spaces })
 
 					this.$store.dispatch('setCountWorkspaces', { count: Object.values(resp.data).length })
 					this.$store.state.loading = false
@@ -76,6 +81,12 @@ export default {
 					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
 					showNotificationError('Network error', text, 5000)
 					this.$store.state.loading = false
+				})
+
+			axios.get(generateUrl('apps/workspace/workspaces/count'))
+				.then(resp => {
+					const count = resp.data.count
+					this.$store.dispatch('setCountTotalWorkspaces', { count })
 				})
 		}
 	},
