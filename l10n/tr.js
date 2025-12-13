@@ -23,6 +23,7 @@ OC.L10N.register(
     "Delete user" : "Kullanıcıyı sil",
     "unlimited" : "sınırsız",
     "Appearance" : "Görünüm",
-    "Save" : "Kaydet"
+    "Save" : "Kaydet",
+    "Loading..." : "Yükleniyor..."
 },
 "nplurals=2; plural=(n > 1);");

@@ -24,6 +24,7 @@ OC.L10N.register(
     "Delete user" : "Ezabatu erabiltzailea",
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
-    "Save" : "Gorde"
+    "Save" : "Gorde",
+    "Loading..." : "Kargatzen..."
 },
 "nplurals=2; plural=(n != 1);");

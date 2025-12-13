@@ -22,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "حذف کردن کاربر",
     "unlimited" : "نامحدود",
     "Appearance" : "ظاهر",
-    "Save" : "ذخیره"
+    "Save" : "ذخیره",
+    "Loading..." : "در حال بارگذاری..."
 },
 "nplurals=2; plural=(n > 1);");

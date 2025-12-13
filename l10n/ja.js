@@ -24,6 +24,7 @@ OC.L10N.register(
     "Delete user" : "ユーザーを削除",
     "unlimited" : "無制限",
     "Appearance" : "表示",
-    "Save" : "保存する"
+    "Save" : "保存する",
+    "Loading..." : "読み込み中…"
 },
 "nplurals=1; plural=0;");

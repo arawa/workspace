@@ -21,6 +21,7 @@ OC.L10N.register(
     "View profile" : "Näytä profiili",
     "Delete user" : "Poista käyttäjä",
     "Appearance" : "Ulkoasu",
-    "Save" : "Tallenna"
+    "Save" : "Tallenna",
+    "Loading..." : "Ladataan..."
 },
 "nplurals=2; plural=(n != 1);");

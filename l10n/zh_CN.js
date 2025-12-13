@@ -23,6 +23,7 @@ OC.L10N.register(
     "Delete user" : "删除用户",
     "unlimited" : "无限制",
     "Appearance" : "外观",
-    "Save" : "保存"
+    "Save" : "保存",
+    "Loading..." : "载入中..."
 },
 "nplurals=1; plural=0;");

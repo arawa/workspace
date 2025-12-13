@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "設定容量限額",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "請注意，您選取的容量限額少於您的工作空間目前已使用的空間。您將無法再新增或修改檔案。",
     "Save" : "儲存",
+    "Loading..." : "正在載入……",
     "Can't load workspace users" : "無法載入工作空間使用者",
     "An error occurred while trying to add user" : "嘗試新增使用者時發生錯誤",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "嘗試新增使用者 {user_name} 到工作空間時發生網路錯誤。<br>錯誤：{error}",

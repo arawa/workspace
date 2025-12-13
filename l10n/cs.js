@@ -76,6 +76,7 @@ OC.L10N.register(
     "Set quota" : "Nastavit kvótu",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Uvědomte si, že kvóta, kterou jste vybrali, je nižší než prostor, který je pracovním prostorem v tuto chvíli využíván. Nebude už nadále možné přidávat nebo měnit soubory.",
     "Save" : "Uložit",
+    "Loading..." : "Načítání …",
     "Can't load workspace users" : "Nebylo možné načíst uživatele pracovního prostoru",
     "An error occurred while trying to add user" : "Při pokusu o přidání uživatele došlo k chybě",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Při pokusu o přidání uživatele {user_name} do pracovního prostoru došlo k síťové chybě.<br>Chyba: {error}",

@@ -22,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "Ta bort användare",
     "unlimited" : "obegränsat",
     "Appearance" : "Utseende",
-    "Save" : "Spara"
+    "Save" : "Spara",
+    "Loading..." : "Laddar..."
 },
 "nplurals=2; plural=(n != 1);");

@@ -20,6 +20,7 @@
     "Delete user" : "Διαγραφή χρήστη",
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
-    "Save" : "Αποθήκευση"
+    "Save" : "Αποθήκευση",
+    "Loading..." : "Γίνεται φόρτωση..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

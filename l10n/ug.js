@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "چەك بېكىت",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "سىز تاللىغان بوشلۇقنىڭ خىزمەت بوشلۇقىڭىز ھازىر ئىشلىتىۋاتقان بوشلۇقتىن ئاز ئىكەنلىكىنى ئۇنۇتماڭ. ئەمدى ھۆججەت قوشالمايسىز ياكى ئۆزگەرتەلمەيسىز.",
     "Save" : "ساقلاش",
+    "Loading..." : "يۈكلەۋاتىدۇ…",
     "Can't load workspace users" : "خىزمەت بوشلۇقى ئىشلەتكۈچىلىرىنى يۈكلىيەلمىدى",
     "An error occurred while trying to add user" : "ئىشلەتكۈچى قېتىۋاتقاندا بىر خاتالىق يۈز بەردى",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "{user_name} نى خىزمەت بوشلۇقىغا قېتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",

@@ -21,6 +21,7 @@
     "Delete user" : "Slett bruker",
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
-    "Save" : "Lagre"
+    "Save" : "Lagre",
+    "Loading..." : "Laster…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -20,6 +20,7 @@
     "View profile" : "Vis profil",
     "Delete user" : "Slet bruger",
     "Appearance" : "Udseende",
-    "Save" : "Gem"
+    "Save" : "Gem",
+    "Loading..." : "Indlæser..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

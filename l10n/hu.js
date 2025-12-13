@@ -22,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "Felhasználó törlése",
     "unlimited" : "korlátlan",
     "Appearance" : "Megjelenés",
-    "Save" : "Mentés"
+    "Save" : "Mentés",
+    "Loading..." : "Betöltés…"
 },
 "nplurals=2; plural=(n != 1);");
