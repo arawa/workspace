@@ -84,6 +84,7 @@
     "Set quota" : "設定配額",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "請注意：你設定的配額少於目前工作空間已使用的容量，你將無法新增或修改檔案。",
     "Save" : "保存",
+    "Loading..." : "加載中...",
     "Can't load workspace users" : "無法載入工作空間用戶",
     "An error occurred while trying to add user" : "新增用戶時發生錯誤",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "將用戶 {user_name} 加入工作空間時發生網絡錯誤。<br>錯誤：{error}",

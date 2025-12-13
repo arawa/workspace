@@ -75,6 +75,7 @@
     "Set quota" : "Establecer cuota",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Ten en cuenta que la cuota que seleccionaste es menor que el espacio actualmente usado por tu espacio de trabajo. Ya no podrás agregar o modificar archivos.",
     "Save" : "Guardar",
+    "Loading..." : "Cargando...",
     "Can't load workspace users" : "No se pueden cargar usuarios del espacio de trabajo",
     "An error occurred while trying to add user" : "Ocurrió un error al intentar agregar usuario",
     "A network error occurred while trying to create group {group}<br>Error: {error}" : "Ocurrió un error de red al intentar crear el grupo {group}<br>Error: {error}",

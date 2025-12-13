@@ -22,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "Διαγραφή χρήστη",
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
-    "Save" : "Αποθήκευση"
+    "Save" : "Αποθήκευση",
+    "Loading..." : "Γίνεται φόρτωση..."
 },
 "nplurals=2; plural=(n != 1);");

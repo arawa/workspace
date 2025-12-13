@@ -10,6 +10,7 @@ OC.L10N.register(
     "Quota" : "ქვოტა",
     "Users" : "მომხმარებლები",
     "Groups" : "ჯგუფები",
-    "Save" : "შენახვა"
+    "Save" : "შენახვა",
+    "Loading..." : "იტვირთება…"
 },
 "nplurals=2; plural=(n!=1);");

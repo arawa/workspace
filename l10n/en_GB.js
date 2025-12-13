@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "Set quota",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files.",
     "Save" : "Save",
+    "Loading..." : "Loading...",
     "Can't load workspace users" : "Can't load workspace users",
     "An error occurred while trying to add user" : "An error occurred while trying to add user",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}",

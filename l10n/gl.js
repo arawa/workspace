@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "Definir a cota",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Teña en conta que a cota que seleccionou é menor que o espazo actualmente utilizado polo seu espazo de traballo. Xa non poderá engadir nin modificar ficheiros.",
     "Save" : "Gardar",
+    "Loading..." : "Cargando...",
     "Can't load workspace users" : "Non é posíbel cargar os usuarios do espazo de traballo",
     "An error occurred while trying to add user" : "Produciuse un erro ao tentar engadir un usuario",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Produciuse un erro de rede ao tentar engadir o usuario {user_name} ao espazo de traballo.<br>Erro: {error}",

@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "Kontingent festlegen",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Bitte beachten, dass das gewählte Kontingent geringer ist als der aktuell von Ihrem Arbeitsbereich genutzte Platz. Sie können keine Dateien mehr hinzufügen oder ändern.",
     "Save" : "Speichern",
+    "Loading..." : "Lade …",
     "Can't load workspace users" : "Benutzer des Arbeitsbereichs konnten nicht geladen werden",
     "An error occurred while trying to add user" : "Es ist ein Fehler beim Hinzufügen des Benutzers aufgetreten",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Beim Versuch, den Benutzer {user_name} zum Arbeitsbereich hinzuzufügen, ist ein Netzwerkfehler aufgetreten. <br>Fehler: {error}",

@@ -20,6 +20,7 @@ OC.L10N.register(
     "Delete user" : "Eyða notanda",
     "unlimited" : "ótakmarkað",
     "Appearance" : "Útlit",
-    "Save" : "Vista"
+    "Save" : "Vista",
+    "Loading..." : "Hleð..."
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

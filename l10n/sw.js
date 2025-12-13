@@ -17,6 +17,7 @@ OC.L10N.register(
     "View profile" : "Angalia wasifu",
     "unlimited" : "isiyo na kikomo",
     "Appearance" : "Mwonekano",
-    "Save" : "Hifadhi"
+    "Save" : "Hifadhi",
+    "Loading..." : "Inapakia..."
 },
 "nplurals=2; plural=(n != 1);");

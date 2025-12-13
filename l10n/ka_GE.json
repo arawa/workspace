@@ -8,6 +8,7 @@
     "Quota" : "ქვოტა",
     "Users" : "მომხმარებლები",
     "Groups" : "ჯგუფები",
-    "Save" : "შენახვა"
+    "Save" : "შენახვა",
+    "Loading..." : "იტვირთება…"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

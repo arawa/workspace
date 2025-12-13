@@ -22,6 +22,7 @@
     "Delete user" : "Ezabatu erabiltzailea",
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
-    "Save" : "Gorde"
+    "Save" : "Gorde",
+    "Loading..." : "Kargatzen..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
