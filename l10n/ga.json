@@ -84,6 +84,7 @@
     "Set quota" : "Socraigh cuóta",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Tabhair faoi deara le do thoil go bhfuil an cuóta atá roghnaithe agat níos lú ná an spás atá in úsáid ag do spás oibre faoi láthair. Ní bheidh tú in ann comhaid a chur leis ná a mhodhnú a thuilleadh.",
     "Save" : "Sábháil",
+    "Loading..." : "Á lódáil...",
     "Can't load workspace users" : "Ní féidir úsáideoirí an spáis oibre a lódáil",
     "An error occurred while trying to add user" : "Tharla earráid agus iarracht á déanamh úsáideoir a chur leis",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh an t-úsáideoir {user_name} a chur leis an spás oibre.1Earráid: {error}",

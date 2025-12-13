@@ -58,6 +58,7 @@ OC.L10N.register(
     "Appearance" : "ຮູບລັກ",
     "Set quota" : "ກຳນົດໂຄຕ້າ",
     "Save" : "ບັນທຶກ",
+    "Loading..." : "ກຳລັງໂຫລດ...",
     "Can't load workspace users" : "ບໍ່ສາມາດໂຫຼດຜູ້ໃຊ້ຂອງພື້ນທີ່ວຽກໄດ້",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "ເກີດຂໍ້ຜິດພາດດ້ານເຄືອຂ່າຍຂະນະພະຍາຍາມປ່ຽນສີພື້ນທີ່ວຽກ.<br>ຂໍ້ຜິດພາດຄື: {error}",
     "Rename space" : "ປ່ຽນຊື່ພື້ນທີ່ວຽກ",

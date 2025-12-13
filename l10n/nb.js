@@ -23,6 +23,7 @@ OC.L10N.register(
     "Delete user" : "Slett bruker",
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
-    "Save" : "Lagre"
+    "Save" : "Lagre",
+    "Loading..." : "Laster…"
 },
 "nplurals=2; plural=(n != 1);");

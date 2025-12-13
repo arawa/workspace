@@ -21,6 +21,7 @@
     "Delete user" : "Kullanıcıyı sil",
     "unlimited" : "sınırsız",
     "Appearance" : "Görünüm",
-    "Save" : "Kaydet"
+    "Save" : "Kaydet",
+    "Loading..." : "Yükleniyor..."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -10,6 +10,7 @@ OC.L10N.register(
     "Quota" : "Kuota",
     "Users" : "Përdoruesit",
     "Groups" : "Grupet",
-    "Save" : "Ruaje"
+    "Save" : "Ruaje",
+    "Loading..." : "Po ngarkohet"
 },
 "nplurals=2; plural=(n != 1);");

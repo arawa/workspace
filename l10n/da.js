@@ -22,6 +22,7 @@ OC.L10N.register(
     "View profile" : "Vis profil",
     "Delete user" : "Slet bruger",
     "Appearance" : "Udseende",
-    "Save" : "Gem"
+    "Save" : "Gem",
+    "Loading..." : "Indlæser..."
 },
 "nplurals=2; plural=(n != 1);");

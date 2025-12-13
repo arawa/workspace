@@ -24,6 +24,7 @@ OC.L10N.register(
     "Delete user" : "Verwijder gebruiker",
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
-    "Save" : "Opslaan"
+    "Save" : "Opslaan",
+    "Loading..." : "Laden...."
 },
 "nplurals=2; plural=(n != 1);");

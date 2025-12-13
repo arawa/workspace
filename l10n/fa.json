@@ -20,6 +20,7 @@
     "Delete user" : "حذف کردن کاربر",
     "unlimited" : "نامحدود",
     "Appearance" : "ظاهر",
-    "Save" : "ذخیره"
+    "Save" : "ذخیره",
+    "Loading..." : "در حال بارگذاری..."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

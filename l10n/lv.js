@@ -22,6 +22,7 @@ OC.L10N.register(
     "View profile" : "Skatīt profilu",
     "Appearance" : "Izskats",
     "Save" : "Saglabāt",
+    "Loading..." : "Notiek ielāde...",
     "Rename space" : "Pārdēvēt vietu",
     "Space name" : "Vietas nosaukums"
 },

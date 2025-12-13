@@ -21,6 +21,7 @@ OC.L10N.register(
     "View profile" : "프로필 보기",
     "Delete user" : "사용자 지우기",
     "Appearance" : "외형",
-    "Save" : "저장"
+    "Save" : "저장",
+    "Loading..." : "불러오는 중..."
 },
 "nplurals=1; plural=0;");

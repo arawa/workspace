@@ -23,6 +23,7 @@ OC.L10N.register(
     "Delete user" : "Zmazať používateľa",
     "unlimited" : "neobmedzené",
     "Appearance" : "Vzhľad",
-    "Save" : "Uložiť"
+    "Save" : "Uložiť",
+    "Loading..." : "Načítava sa…"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

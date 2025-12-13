@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "Seadista kvoot",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Palun arvesta, et sinu sisestatud kvoot on väiksem, kui hetkel töötoa kasutatav andmemaht. See tähendab, et uusi faile ei saa enam lisada ja seniseid muuta.",
     "Save" : "Salvesta",
+    "Loading..." : "Laadin...",
     "Can't load workspace users" : "Töötubade kasutjate laadimine ei õnnestu",
     "An error occurred while trying to add user" : "Kasutaja lisamisel tekkis viga",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "{user_name} kasutaja lisamisel töötuppa tekkis viga. <br>Viga: {error}",

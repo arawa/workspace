@@ -86,6 +86,7 @@ OC.L10N.register(
     "Set quota" : "Установить квоту",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Пожалуйста, обратите внимание, что выбранная вами квота меньше, чем пространство, используемое в данный момент вашей рабочей областью. Вы больше не сможете добавлять или изменять файлы.",
     "Save" : "Сохранить",
+    "Loading..." : "Загрузка...",
     "Can't load workspace users" : "Не удается загрузить пользователей рабочего пространства",
     "An error occurred while trying to add user" : "Произошла ошибка при попытке добавить пользователя",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Произошла сетевая ошибка при попытке добавить пользователя {user_name} в рабочее пространство. <br>Ошибка: {error}",
