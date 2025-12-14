@@ -20,6 +20,7 @@ OC.L10N.register(
     "Delete user" : "Desaniciar l'usuariu",
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
-    "Save" : "Guardar"
+    "Save" : "Guardar",
+    "Loading..." : "Cargando..."
 },
 "nplurals=2; plural=(n != 1);");
