@@ -99,6 +99,9 @@ export default {
 	setCountTotalWorkspaces(context, { count }) {
 		context.commit('SET_COUNT_TOTAL_WORKSPACES', { count })
 	},
+	setCountTotalWorkspacesByQuery(context, { count }) {
+		context.commit('SET_COUNT_TOTAL_WORKSPACES_BY_QUERY', { count })
+	},
 	incrementCountTotalWorkspaces(context) {
 		context.commit('INCREMENT_COUNT_TOTAL_WORKSPACES')
 	},

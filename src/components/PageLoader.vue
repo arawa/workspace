@@ -27,7 +27,7 @@ export default {
 
 <style scoped>
 .loader-next-page-container {
-	width: 250px;;
+	width: 250px;
 	padding: 16px;
 }
 

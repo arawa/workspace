@@ -87,6 +87,7 @@ export default {
 				.then(resp => {
 					const count = resp.data.count
 					this.$store.dispatch('setCountTotalWorkspaces', { count })
+					this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
 				})
 		}
 	},
