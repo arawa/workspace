@@ -6,7 +6,7 @@ import { LIMIT_WORKSPACES_PER_PAGE } from '../constants.js'
 export const WorkspacesLoader = {
 	computed: {
 		messageLoader() {
-			return t('workspace', '{number} workspaces loading...', { number: LIMIT_WORKSPACES_PER_PAGE })
+			return t('workspace', '{number} workspaces...', { number: this.$store.getters.countWorkspaces })
 		},
 		nextPage() {
 			return this.$store.getters.nextPage
@@ -49,7 +49,7 @@ export const WorkspacesLoader = {
 			this.showNextPage()
 		},
 		countMaxPages() {
-			return Math.ceil(this.$store.getters.countTotalWorkspaces / LIMIT_WORKSPACES_PER_PAGE)
+			return Math.ceil(this.$store.getters.countTotalWorkspacesByQuery / LIMIT_WORKSPACES_PER_PAGE)
 		},
 		toggleNextPage() {
 			this.$store.dispatch('toggleNextPage')

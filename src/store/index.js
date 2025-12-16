@@ -39,6 +39,7 @@ const store = new Store({
 		groupfolders: {},
 		countWorkspaces: 0,
 		countTotalWorkspaces: 0,
+		countTotalWorkspacesByQuery: 0,
 		workspaceCurrentPage: 1,
 		searchWorkspace: null,
 		nextPage: true,
