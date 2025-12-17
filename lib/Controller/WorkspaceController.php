@@ -44,6 +44,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
@@ -55,6 +56,7 @@ class WorkspaceController extends Controller {
 		private RootFolder $rootFolder,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
+		private IUserSession $userSession,
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
 		private WorkspaceFormatter $workspaceFormatter,
@@ -137,7 +139,13 @@ class WorkspaceController extends Controller {
 	 *
 	 */
 	public function findAll(?string $search = null, ?int $offset = null, ?int $limit = null): JSONResponse {
-		$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
+		if ($this->userService->isUserGeneralAdmin()) {
+			$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
+		} else {
+			$currentUser = $this->userSession->getUser();
+			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $currentUser->getUID());
+		}
+
 		$spaces = [];
 		$rootFolderStorageId = $this->rootFolder->getRootFolderStorageId();
 		foreach ($workspaces as $workspace) {
@@ -154,21 +162,12 @@ class WorkspaceController extends Controller {
 			$spaces[$workspace['name']] = $this->workspaceFormatter->format($workspace, $folderInfo);
 		}
 
-		// We only want to return those workspaces for which the connected user is a manager
-		if (!$this->userService->isUserGeneralAdmin()) {
-			$this->logger->debug('Filtering workspaces');
-			$filteredWorkspaces = array_filter($spaces, function ($space) {
-				return $this->userService->isSpaceManagerOfSpace($space);
-			});
-			$spaces = $filteredWorkspaces;
-		}
-
 		return new JSONResponse($spaces);
 	}
 
 
 	/**
-	 * @GeneralManagerRequired
+	 * SpaceAdminRequired
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(
@@ -176,7 +175,15 @@ class WorkspaceController extends Controller {
 		url: '/workspaces/count'
 	)]
 	public function countWorkspaces(?string $search = null): JSONResponse {
-		$count = $this->spaceManager->countWorkspaces($search);
+		$currentUser = $this->userSession->getUser();
+		$generalManagerGroup = $this->groupManager->get(ManagersWorkspace::GENERAL_MANAGER);
+
+		if ($generalManagerGroup->inGroup($currentUser)) {
+			$count = $this->spaceManager->countWorkspaces($search);
+		} else {
+			$count = $this->spaceManager->countWorkspacesForWorkspaceManager($currentUser->getUID(), $search);
+		}
+
 		return new JSONResponse([
 			'count' => $count
 		]);
