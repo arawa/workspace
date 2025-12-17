@@ -47,6 +47,7 @@ use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -57,6 +58,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private IGroupManager&MockObject $groupManager;
 	private IRequest&MockObject $request;
 	private IUserManager&MockObject $userManager;
+	private IUserSession&MockObject $userSession;
 	private LoggerInterface&MockObject $logger;
 	private SpaceManager&MockObject $spaceManager;
 	private SpaceMapper&MockObject $spaceMapper;
@@ -79,6 +81,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->spaceMapper = $this->createMock(SpaceMapper::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->userService = $this->createMock(UserService::class);
+		$this->userSession = $this->createMock(IUserSession::class);
 
 		$this->controller = new WorkspaceApiOcsController(
 			$this->request,
@@ -88,6 +91,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->spaceManager,
 			$this->editValidator,
 			$this->groupsWorkspaceService,
+			$this->userSession,
 			$this->spaceMapper,
 			$this->userService,
 			$this->appName
@@ -766,46 +770,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'added_groups' => (object)[]
 				],
 				[
-					'id' => 2,
-					'mount_point' => 'Espace02',
-					'groups' => [
-						'SPACE-GE-2' => [
-							'gid' => 'SPACE-GE-2',
-							'displayName' => 'WM-Espace02',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-GE-2'
-						],
-						'SPACE-U-2' => [
-							'gid' => 'SPACE-U-2',
-							'displayName' => 'U-Espace02',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-U-2'
-						]
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-2',
-							'displayname' => 'WM-Espace02'
-						]
-					],
-					'groupfolder_id' => 2,
-					'name' => 'Espace02',
-					'color_code' => '#46221f',
-					'users' => (object)[],
-					'usersCount' => 0,
-					'added_groups' => (object)[]
-				],
-				[
 					'id' => 3,
 					'mount_point' => 'Human Ressource',
 					'groups' => [
@@ -845,49 +809,10 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 					'usersCount' => 0,
 					'added_groups' => (object)[]
 				],
-				[
-					'id' => 4,
-					'mount_point' => 'Tech Ressource',
-					'groups' => [
-						'SPACE-GE-4' => [
-							'gid' => 'SPACE-GE-4',
-							'displayName' => 'WM-Tech Ressource',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-GE-4'
-						],
-						'SPACE-U-4' => [
-							'gid' => 'SPACE-U-4',
-							'displayName' => 'U-Tech Ressource',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-U-4'
-						]
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-4',
-							'displayname' => 'WM-Tech Ressource'
-						]
-					],
-					'groupfolder_id' => 1,
-					'name' => 'Tech Ressource',
-					'color_code' => '#46221f',
-					'users' => (object)[],
-					'usersCount' => 0,
-					'added_groups' => (object)[]
-				]
 			]
 		;
 		$name = null;
+		$uid = 'bob';
 
 		$this->spaceManager
 			->expects($this->once())
@@ -901,97 +826,23 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(!self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
 
-		$this->userService
-			->expects($this->exactly(4))
-			->method('isSpaceManagerOfSpace')
-			->willReturn(true, false, true, false)
+		$user = $this->createMock(IUser::class);
+		$this->userSession
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
 		;
 
 		$actual = $this->controller->findAll($name);
 
 		$expected = new DataResponse(
-			[
-				[
-					'id' => 1,
-					'mount_point' => 'Espace01',
-					'groups' => [
-						'SPACE-GE-1' => [
-							'gid' => 'SPACE-GE-1',
-							'displayName' => 'WM-Espace01',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-GE-1'
-						],
-						'SPACE-U-1' => [
-							'gid' => 'SPACE-U-1',
-							'displayName' => 'U-Espace01',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-U-1'
-						]
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-1',
-							'displayname' => 'WM-Espace01'
-						]
-					],
-					'groupfolder_id' => 1,
-					'name' => 'Espace01',
-					'color_code' => '#46221f',
-					'users' => (object)[],
-					'usersCount' => 0,
-					'added_groups' => (object)[]
-				],
-				[
-					'id' => 3,
-					'mount_point' => 'Human Ressource',
-					'groups' => [
-						'SPACE-GE-3' => [
-							'gid' => 'SPACE-GE-3',
-							'displayName' => 'WM-Human Ressource',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-GE-3'
-						],
-						'SPACE-U-3' => [
-							'gid' => 'SPACE-U-3',
-							'displayName' => 'U-Human Ressource',
-							'types' => [
-								'Database'
-							],
-							'usersCount' => 0,
-							'slug' => 'SPACE-U-3'
-						]
-					],
-					'quota' => -3,
-					'size' => 0,
-					'acl' => true,
-					'manage' => [
-						[
-							'type' => 'group',
-							'id' => 'SPACE-GE-3',
-							'displayname' => 'WM-Human Ressource'
-						]
-					],
-					'groupfolder_id' => 3,
-					'name' => 'Human Ressource',
-					'color_code' => '#46221f',
-					'users' => (object)[],
-					'usersCount' => 0,
-					'added_groups' => (object)[]
-				],
-			],
+			$spaces,
 			Http::STATUS_OK
 		);
 
@@ -1050,6 +901,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			],
 		]
 		;
+		$uid = 'jane';
 
 		$this->spaceManager
 			->expects($this->once())
@@ -1057,7 +909,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->with(
 				$page,
 				$limit,
-				$name
+				$name,
+				$uid
 			)
 			->willReturn($spacesSearched)
 		;
@@ -1068,10 +921,17 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(!self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
 
-		$this->userService
+		$user = $this->createMock(IUser::class);
+		$this->userSession
 			->expects($this->once())
-			->method('isSpaceManagerOfSpace')
-			->willReturn(true)
+			->method('getUser')
+			->willReturn($user)
+		;
+
+		$user
+			->expects($this->once())
+			->method('getUID')
+			->willReturn($uid)
 		;
 
 		$actual = $this->controller->findAll($name, $page, $limit);
