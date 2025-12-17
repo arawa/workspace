@@ -35,7 +35,7 @@
 				:name="t('workspace', 'All workspaces')"
 				:to="{path: '/'}">
 				<NcCounterBubble slot="counter">
-					{{ $store.state.countWorkspaces }}
+					{{ $store.state.countTotalWorkspaces }}
 				</NcCounterBubble>
 			</NcAppNavigationItem>
 		</ul>
@@ -127,7 +127,7 @@ export default {
 			})
 				.then(resp => {
 					const count = resp.data.count
-					this.$store.dispatch('setCountTotalWorkspaces', { count })
+					this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
 				})
 
 			axios.get(generateUrl('/apps/workspace/spaces'), {
@@ -174,6 +174,7 @@ export default {
 			})
 			this.$store.dispatch('incrementCountWorkspaces')
 			this.$store.dispatch('incrementCountTotalWorkspaces')
+			this.$store.dispatch('incrementCountTotalWorkspacesByQuery')
 			this.$router.push({
 				path: `/workspace/${workspace.id_space}`,
 			})
