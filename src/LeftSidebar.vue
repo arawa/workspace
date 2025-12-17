@@ -28,8 +28,6 @@
 				icon="icon-add"
 				:name="t('workspace', 'New workspace')"
 				@new-item="createSpace" />
-			<NcAppNavigationSearch v-model="workspacesSearchQuery"
-				:label="t('workspace', 'Search workspaces...')" />
 			<li class="ws-navigation-spacer" />
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
@@ -39,6 +37,8 @@
 				</NcCounterBubble>
 			</NcAppNavigationItem>
 		</ul>
+		<NcAppNavigationSearch v-model="workspacesSearchQuery"
+			:label="t('workspace', 'Search workspaces...')" />
 		<template #list>
 			<SpaceMenuItem
 				v-for="(space, spaceName) in $store.state.spaces"
