@@ -28,8 +28,6 @@
 				icon="icon-add"
 				:name="t('workspace', 'New workspace')"
 				@new-item="createSpace" />
-			<NcAppNavigationSearch v-model="workspacesSearchQuery"
-				:label="t('workspace', 'Search workspaces...')" />
 			<li class="ws-navigation-spacer" />
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
@@ -61,11 +59,6 @@
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
-			<div v-if="Object.keys($store.state.spaces).length">
-				<PageLoader v-if="nextPage"
-					v-element-visibility="next"
-					:message="messageLoader" />
-			</div>
 		</template>
 	</NcAppNavigation>
 </template>
@@ -74,18 +67,11 @@
 import { createSpace } from './services/spaceService.js'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
-import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
 import NcAppNavigationNewItem from '@nextcloud/vue/components/NcAppNavigationNewItem'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
-import PageLoader from './components/PageLoader.vue'
-import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
-import debounce from 'debounce'
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { LIMIT_WORKSPACES_PER_PAGE } from './constants.js'
 
 export default {
 	name: 'LeftSidebar',
@@ -95,61 +81,13 @@ export default {
 		NcAppNavigationItem,
 		NcCounterBubble,
 		SpaceMenuItem,
-		PageLoader,
-		NcAppNavigationSearch,
-	},
-	mixins: [WorkspacesLoader],
-	data() {
-		return {
-			workspacesSearchQuery: this.$store.getters.searchWorkspace,
-		}
 	},
 	computed: {
 		isDarkTheme() {
 			return useIsDarkTheme().value
 		},
 	},
-	watch: {
-		workspacesSearchQuery(query) {
-			this.$store.dispatch('updateSearchWorkspace', { search: query })
-			this.debounceSearch()
-		},
-	},
 	methods: {
-		debounceSearch: debounce(function() {
-			this.search()
-		}, 500),
-		search() {
-			axios.get(generateUrl('apps/workspace/workspaces/count'), {
-				params: {
-					search: this.$store.getters.searchWorkspace,
-				},
-			})
-				.then(resp => {
-					const count = resp.data.count
-					this.$store.dispatch('setCountTotalWorkspaces', { count })
-				})
-
-			axios.get(generateUrl('/apps/workspace/spaces'), {
-				params: {
-					search: this.$store.getters.searchWorkspace,
-					limit: LIMIT_WORKSPACES_PER_PAGE
-				},
-			})
-				.then(resp => {
-					const spaces = resp.data
-
-					this.$store.commit('setSpaces', { spaces })
-					this.$store.dispatch('setCountWorkspaces', { count: Object.values(spaces).length })
-					this.$store.dispatch('initWorkspacePage')
-					this.$store.dispatch('resetNextPage')
-
-					this.showNextPage()
-				})
-				.catch((e) => {
-					console.error('Problem to search workspaces', e)
-				})
-		},
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
@@ -173,7 +111,6 @@ export default {
 				managers: null,
 			})
 			this.$store.dispatch('incrementCountWorkspaces')
-			this.$store.dispatch('incrementCountTotalWorkspaces')
 			this.$router.push({
 				path: `/workspace/${workspace.id_space}`,
 			})

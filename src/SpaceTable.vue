@@ -23,68 +23,62 @@
 <template>
 	<div class="main-div">
 		<div class="header" />
-		<div v-if="Object.keys($store.state.spaces).length"
-			class="table-container">
-			<table class="table-spaces">
-				<thead>
-					<tr class="">
-						<th class="workspace-th" />
-						<th class="workspace-th">
-							{{ t('workspace', 'Workspace name') }}
-						</th>
-						<th class="workspace-th">
-							{{ t('workspace', 'Quota') }}
-						</th>
-						<th class="workspace-th workspace-managers-th">
-							{{ t('workspace', 'Workspace Managers') }}
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="(space,name) in $store.state.spaces"
-						:key="'space-item-' + space.id"
-						class="workspace-tr"
-						@click="openSpace(space.id)">
-						<td style="width: 50px;" class="workspace-td">
-							<span class="color-dot-home" :style="{background: space.color}" />
-						</td>
-						<td class="workspace-td">
-							{{ name }}
-						</td>
-						<td class="workspace-td">
-							{{ getQuota(space.quota) }}
-						</td>
-						<td class="workspace-td">
-							<VueLazyComponent
-								:key="'avatar-'+name"
-								class="admin-avatars"
-								@init="initAdmins(space.id, name)">
-								<div class="container-avatars">
-									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
-										:key="user.uid"
-										:style="{ marginRight: 2 + 'px' }"
-										:display-name="user.name"
-										:disable-menu="true"
-										:show-user-status="false"
-										:user="user.uid" />
-									<div v-if="workspaceManagers(space).length > 10"
-										v-tooltip="{
-											content: getLatestWorkspaceManagerUsers(space.name),
-											show: true,
-										}"
-										class="bubble-more-users">
-										+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
-									</div>
+		<table v-if="Object.keys($store.state.spaces).length" class="table-spaces">
+			<thead>
+				<tr class="">
+					<th class="workspace-th" />
+					<th class="workspace-th">
+						{{ t('workspace', 'Workspace name') }}
+					</th>
+					<th class="workspace-th">
+						{{ t('workspace', 'Quota') }}
+					</th>
+					<th class="workspace-th workspace-managers-th">
+						{{ t('workspace', 'Workspace Managers') }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(space,name) in $store.state.spaces"
+					:key="'space-item-' + space.id"
+					class="workspace-tr"
+					@click="openSpace(space.id)">
+					<td style="width: 50px;" class="workspace-td">
+						<span class="color-dot-home" :style="{background: space.color}" />
+					</td>
+					<td class="workspace-td">
+						{{ name }}
+					</td>
+					<td class="workspace-td">
+						{{ getQuota(space.quota) }}
+					</td>
+					<td class="workspace-td">
+						<VueLazyComponent
+							:key="'avatar-'+name"
+							class="admin-avatars"
+							@init="initAdmins(space.id, name)">
+							<div class="container-avatars">
+								<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
+									:key="user.uid"
+									:style="{ marginRight: 2 + 'px' }"
+									:display-name="user.name"
+									:disable-menu="true"
+									:show-user-status="false"
+									:user="user.uid" />
+								<div v-if="workspaceManagers(space).length > 10"
+									v-tooltip="{
+										content: getLatestWorkspaceManagerUsers(space.name),
+										show: true,
+									}"
+									class="bubble-more-users">
+									+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
 								</div>
-							</VueLazyComponent>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<PageLoader v-if="nextPage"
-				v-element-visibility="next"
-				:message="messageLoader" />
-		</div>
+							</div>
+						</VueLazyComponent>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		<NcEmptyContent v-else
 			:name="t('workspace', 'No workspace')">
 			<template #icon>
@@ -103,8 +97,6 @@ import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 import { mdiFolderOff } from '@mdi/js'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
-import PageLoader from './components/PageLoader.vue'
-import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 
 export default {
 	name: 'SpaceTable',
@@ -113,16 +105,11 @@ export default {
 		NcEmptyContent,
 		NcIconSvgWrapper,
 		VueLazyComponent,
-		PageLoader,
 	},
-	mixins: [WorkspacesLoader],
 	data() {
 		return {
 			mdiFolderOff,
 		}
-	},
-	beforeMount() {
-		this.showNextPage()
 	},
 	methods: {
 		getQuota(quota) {
@@ -191,7 +178,7 @@ export default {
 	display: block;
 }
 
-.table-container, .table-spaces {
+.table-spaces {
 	width: 100%;
 }
 
