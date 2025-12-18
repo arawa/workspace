@@ -109,11 +109,18 @@ export default {
 		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
-	addSpaces(state, spaces) {
+	setSpaces(state, spaces) {
 		state.spaces = spaces.spaces
 		sortSpaces(state)
 	},
+	addSpaces(state, spaces) {
+		Object.assign(state.spaces, spaces.spaces)
+		sortSpaces(state)
+	},
 	addSpaceAdminUsers(state, space) {
+		if (state.spaces[space.name] === undefined) {
+			return
+		}
 		state.spaces[space.name].managers = space.managers
 	},
 	UPDATE_USERS(state, { space, users }) {
@@ -148,6 +155,21 @@ export default {
 	SET_COUNT_WORKSPACES(state, { count }) {
 		state.countWorkspaces = count
 	},
+	SET_COUNT_TOTAL_WORKSPACES(state, { count }) {
+		state.countTotalWorkspaces = count
+	},
+	INCREMENT_COUNT_TOTAL_WORKSPACES(state) {
+		state.countTotalWorkspaces++
+	},
+	DECREMENT_COUNT_TOTAL_WORKSPACES(state) {
+		if (state.countTotalWorkspaces === 0) {
+			return
+		}
+		state.countTotalWorkspaces--
+	},
+	RECOUNT_WORKSPACES(state) {
+		state.countWorkspaces = Object.values(state.spaces).length
+	},
 	INCREMENT_COUNT_WORKSPACES(state) {
 		state.countWorkspaces++
 	},
@@ -156,6 +178,21 @@ export default {
 			return
 		}
 		state.countWorkspaces--
+	},
+	INCREMENT_WORKSPACE_PAGE(state) {
+		state.workspaceCurrentPage++
+	},
+	INIT_WORKSPACE_PAGE(state) {
+		state.workspaceCurrentPage = 1
+	},
+	UPDATE_SEARCH_WORKSPACE(state, { search }) {
+		state.searchWorkspace = search
+	},
+	TOGGLE_NEXT_PAGE(state) {
+		state.nextPage = !state.nextPage
+	},
+	RESET_NEXT_PAGE(state) {
+		state.nextPage = true
 	},
 	DECREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
