@@ -181,7 +181,7 @@ class WorkspaceController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces($search);
 		} else {
-			$count = $this->spaceManager->countWorkspacesForWorkspaceManager($currentUser->getUID(), $search);
+			$count = $this->spaceManager->countWorkspaces($search, $currentUser->getUID());
 		}
 
 		return new JSONResponse([

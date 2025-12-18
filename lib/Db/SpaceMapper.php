@@ -98,7 +98,7 @@ class SpaceMapper extends QBMapper {
 					'gu',
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
-				->where(
+				->andWhere(
 					'gu.gid like "SPACE-GE-%"'
 				)
 				->andWhere('gu.uid = :uid')
@@ -180,7 +180,7 @@ class SpaceMapper extends QBMapper {
 		return $row;
 	}
 
-	public function countSpaces(?string $name): int {
+	public function countSpaces(?string $name, ?string $uid = null): int {
 		$qb = $this->db->getQueryBuilder();
 		$name = $name ? strtolower($name) : null;
 
@@ -191,57 +191,36 @@ class SpaceMapper extends QBMapper {
 					->count('*', 'count')
 			)
 			->from(
-				$this->getTableName()
-			)
-			->where('lower(space_name) like :name')
-			->setParameter('name', "%{$name}%")
-		;
-
-		$cursor = $qb->executeQuery();
-
-		$count = (int)$cursor->fetch()['count'];
-		$cursor->closeCursor();
-
-		return $count;
-	}
-
-	public function countSpacesForWorkspaceManager(string $uid, ?string $name = null): int {
-		$qb = $this->db->getQueryBuilder();
-		$name = $name ? strtolower($name) : null;
-
-		$qb
-			->select(
-				$qb
-					->createFunction('COUNT(DISTINCT(ws.space_id)) as count')
-			)
-			->from(
 				$this->getTableName(),
 				'ws'
 			)
-			->innerJoin(
-				'ws',
-				'group_folders_groups',
-				'gfg',
-				$qb->expr()->eq('ws.groupfolder_id', 'gfg.folder_id'))
-			->leftJoin(
-				'gfg',
-				'group_user',
-				'gu',
-				$qb->expr()->eq('gfg.group_id', 'gu.gid')
-			)
-			->where(
-				'gu.gid like "SPACE-GE-%"'
-			)
-			->andWhere('gu.uid = :uid')
-			->setParameter('uid', $uid)
 		;
 
-		if ($name !== null) {
+		if ($uid !== null) {
 			$qb
-				->Andwhere('lower(ws.space_name) like :name')
-				->setParameter('name', "%{$name}%")
+				->innerJoin(
+					'ws',
+					'group_folders_groups',
+					'gfg',
+					$qb->expr()->eq('ws.groupfolder_id', 'gfg.folder_id'))
+				->leftJoin(
+					'gfg',
+					'group_user',
+					'gu',
+					$qb->expr()->eq('gfg.group_id', 'gu.gid')
+				)
+				->andWhere(
+					'gu.gid like "SPACE-GE-%"'
+				)
+				->andWhere('gu.uid = :uid')
+				->setParameter('uid', $uid)
 			;
 		}
+
+		$qb
+			->andWhere('lower(space_name) like :name')
+			->setParameter('name', "%{$name}%")
+		;
 
 		$cursor = $qb->executeQuery();
 

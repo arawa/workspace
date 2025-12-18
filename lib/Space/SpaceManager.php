@@ -579,12 +579,8 @@ class SpaceManager {
 		return $spaces;
 	}
 
-	public function countWorkspaces(?string $search): int {
-		return $this->spaceMapper->countSpaces($search);
-	}
-
-	public function countWorkspacesForWorkspaceManager(string $uid, ?string $search): int {
-		return $this->spaceMapper->countSpacesForWorkspaceManager($uid, $search);
+	public function countWorkspaces(?string $search, ?string $uid = null): int {
+		return $this->spaceMapper->countSpaces($search, $uid);
 	}
 
 	/**
