@@ -223,6 +223,7 @@ export default {
 							space,
 						})
 						this.$store.dispatch('decrementCountWorkspaces')
+						this.$store.dispatch('decrementCountTotalWorkspaces')
 						this.$router.push({
 							path: '/',
 						})
