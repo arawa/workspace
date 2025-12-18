@@ -9,6 +9,7 @@ OC.L10N.register(
     "Confirm" : "Thibitisha",
     "Upload new files" : "Pakia mafaili mapya",
     "File to share" : "Faili la kushirikisha",
+    "Choose from Files" : "Choose from Files",
     "Group name" : "Jina la kundi",
     "Settings" : "Mipangilio",
     "Quota" : "Kiasi",
