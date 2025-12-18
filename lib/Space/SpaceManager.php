@@ -526,8 +526,8 @@ class SpaceManager {
 		$this->adminGroup->addUser($user, $spaceId);
 	}
 
-	public function findAll(?int $offset = null, ?int $limit = null, ?string $search = null): ?array {
-		$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
+	public function findAll(): ?array {
+		$workspaces = $this->workspaceService->getAll();
 
 		if (empty($workspaces)) {
 			return null;
@@ -577,10 +577,6 @@ class SpaceManager {
 		}
 
 		return $spaces;
-	}
-
-	public function countWorkspaces(?string $search): int {
-		return $this->spaceMapper->countSpaces($search);
 	}
 
 	/**

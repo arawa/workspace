@@ -38,8 +38,6 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\FrontpageRoute;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -47,7 +45,6 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
-
 	public function __construct(
 		IRequest $request,
 		private GroupfolderHelper $folderHelper,
@@ -129,15 +126,11 @@ class WorkspaceController extends Controller {
 	 *
 	 * Returns a list of all the workspaces that the connected user may use.
 	 *
-	 * @param string|null $search filter workspaces by name
-	 * @param int|null $offset is the page (offset) number for pagination.
-	 * @param int|null $limit is the number of workspaces per page.
-	 *
 	 * @NoAdminRequired
 	 *
 	 */
-	public function findAll(?string $search = null, ?int $offset = null, ?int $limit = null): JSONResponse {
-		$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
+	public function findAll(): JSONResponse {
+		$workspaces = $this->workspaceService->getAll();
 		$spaces = [];
 		$rootFolderStorageId = $this->rootFolder->getRootFolderStorageId();
 		foreach ($workspaces as $workspace) {
@@ -164,22 +157,6 @@ class WorkspaceController extends Controller {
 		}
 
 		return new JSONResponse($spaces);
-	}
-
-
-	/**
-	 * @GeneralManagerRequired
-	 */
-	#[NoAdminRequired]
-	#[FrontpageRoute(
-		verb: 'GET',
-		url: '/workspaces/count'
-	)]
-	public function countWorkspaces(?string $search = null): JSONResponse {
-		$count = $this->spaceManager->countWorkspaces($search);
-		return new JSONResponse([
-			'count' => $count
-		]);
 	}
 
 	/**

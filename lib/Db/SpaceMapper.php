@@ -65,34 +65,16 @@ class SpaceMapper extends QBMapper {
 	}
 
 	/**
-	 * @param int|null $offset to paginate the workspaces returned
-	 * @param int|null $limit to limit the number of workspaces returned
+	 * work
 	 * @return Space[]
 	 */
-	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null): array {
-		$name = $name ? strtolower($name) : null;
-		$offset = $offset ? $offset * $limit : $offset;
-
+	public function findAll($limit = null, $offset = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
 			->from($this->getTableName())
-		;
-
-		if ($name !== null) {
-			$qb
-				->where('lower(space_name) like :name')
-				->setParameter('name', "%{$name}%")
-			;
-		}
-
-		if ($limit !== null) {
-			$qb->setMaxResults($limit);
-		}
-
-		if ($offset !== null) {
-			$qb->setFirstResult($offset);
-		}
+			->setMaxResults($limit)
+			->setFirstResult($offset);
 
 		return $this->findEntities($qb);
 	}
@@ -150,30 +132,5 @@ class SpaceMapper extends QBMapper {
 		$cursor->closeCursor();
 
 		return $row;
-	}
-
-	public function countSpaces(?string $name): int {
-		$qb = $this->db->getQueryBuilder();
-		$name = $name ? strtolower($name) : null;
-
-		$qb
-			->select(
-				$qb
-					->func()
-					->count('*', 'count')
-			)
-			->from(
-				$this->getTableName()
-			)
-			->where('lower(space_name) like :name')
-			->setParameter('name', "%{$name}%")
-		;
-
-		$cursor = $qb->executeQuery();
-
-		$count = (int)$cursor->fetch()['count'];
-		$cursor->closeCursor();
-
-		return $count;
 	}
 }
