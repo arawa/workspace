@@ -69,19 +69,47 @@ class SpaceMapper extends QBMapper {
 	 * @param int|null $limit to limit the number of workspaces returned
 	 * @return Space[]
 	 */
-	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null): array {
+	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null): array {
 		$name = $name ? strtolower($name) : null;
 		$offset = $offset ? $offset * $limit : $offset;
 
 		$qb = $this->db->getQueryBuilder();
 
-		$qb->select('*')
-			->from($this->getTableName())
+		$qb
+			->select(
+				'ws.space_id AS space_id',
+				'ws.groupfolder_id AS groupfolder_id',
+				'ws.color_code AS color_code',
+				'ws.space_name AS space_name'
+			)
+			->from($this->getTableName(), 'ws')
 		;
+
+		if ($uid !== null) {
+			$qb
+				->innerJoin(
+					'ws',
+					'group_folders_groups',
+					'gfg',
+					$qb->expr()->eq('ws.groupfolder_id', 'gfg.folder_id'))
+				->leftJoin(
+					'gfg',
+					'group_user',
+					'gu',
+					$qb->expr()->eq('gfg.group_id', 'gu.gid')
+				)
+				->andWhere(
+					'gu.gid like "SPACE-GE-%"'
+				)
+				->andWhere('gu.uid = :uid')
+				->setParameter('uid', $uid)
+			;
+
+		}
 
 		if ($name !== null) {
 			$qb
-				->where('lower(space_name) like :name')
+				->andWhere('lower(space_name) like :name')
 				->setParameter('name', "%{$name}%")
 			;
 		}
@@ -152,7 +180,7 @@ class SpaceMapper extends QBMapper {
 		return $row;
 	}
 
-	public function countSpaces(?string $name): int {
+	public function countSpaces(?string $name, ?string $uid = null): int {
 		$qb = $this->db->getQueryBuilder();
 		$name = $name ? strtolower($name) : null;
 
@@ -163,9 +191,34 @@ class SpaceMapper extends QBMapper {
 					->count('*', 'count')
 			)
 			->from(
-				$this->getTableName()
+				$this->getTableName(),
+				'ws'
 			)
-			->where('lower(space_name) like :name')
+		;
+
+		if ($uid !== null) {
+			$qb
+				->innerJoin(
+					'ws',
+					'group_folders_groups',
+					'gfg',
+					$qb->expr()->eq('ws.groupfolder_id', 'gfg.folder_id'))
+				->leftJoin(
+					'gfg',
+					'group_user',
+					'gu',
+					$qb->expr()->eq('gfg.group_id', 'gu.gid')
+				)
+				->andWhere(
+					'gu.gid like "SPACE-GE-%"'
+				)
+				->andWhere('gu.uid = :uid')
+				->setParameter('uid', $uid)
+			;
+		}
+
+		$qb
+			->andWhere('lower(space_name) like :name')
 			->setParameter('name', "%{$name}%")
 		;
 

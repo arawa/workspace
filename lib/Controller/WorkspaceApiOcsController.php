@@ -51,6 +51,7 @@ use OCP\AppFramework\OCSController;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -70,6 +71,7 @@ class WorkspaceApiOcsController extends OCSController {
 		private SpaceManager $spaceManager,
 		private WorkspaceEditParamsValidator $editParamsValidator,
 		private GroupsWorkspaceService $groupsWorkspaceService,
+		private IUserSession $userSession,
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
 		public $appName,
@@ -91,18 +93,15 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/spaces')]
 	public function findAll(?string $name, ?int $offset = null, ?int $limit = null): DataResponse {
-		$workspaces = $this->spaceManager->findAll($offset, $limit, $name);
+		if ($this->userService->isUserGeneralAdmin()) {
+			$workspaces = $this->spaceManager->findAll($offset, $limit, $name);
+		} else {
+			$currentUser = $this->userSession->getUser();
+			$workspaces = $this->spaceManager->findAll($offset, $limit, $name, $currentUser->getUID());
+		}
 
 		if (is_null($workspaces)) {
 			return new DataResponse(null, Http::STATUS_OK);
-		}
-
-		// We only want to return those workspaces for which the connected user is a manager
-		if (!$this->userService->isUserGeneralAdmin()) {
-			$filteredWorkspaces = array_values(array_filter($workspaces, function ($workspace) {
-				return $this->userService->isSpaceManagerOfSpace($workspace);
-			}));
-			$workspaces = $filteredWorkspaces;
 		}
 
 		return new DataResponse($workspaces, Http::STATUS_OK);
