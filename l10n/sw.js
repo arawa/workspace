@@ -14,6 +14,7 @@ OC.L10N.register(
     "Settings" : "Mipangilio",
     "Quota" : "Kiasi",
     "Users" : "Watumiaji",
+    "Role" : "Role",
     "Groups" : "Makundi",
     "View profile" : "Angalia wasifu",
     "unlimited" : "isiyo na kikomo",
