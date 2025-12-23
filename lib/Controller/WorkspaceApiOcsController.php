@@ -27,6 +27,7 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Attribute\GeneralManagerRequired;
 use OCA\Workspace\Attribute\RequireExistingGroup;
 use OCA\Workspace\Attribute\RequireExistingSpace;
+use OCA\Workspace\Attribute\RequireExistingUsers;
 use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
@@ -577,6 +578,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[SpaceIdNumber]
 	#[RequireExistingSpace]
 	#[RequireExistingGroup]
+	#[RequireExistingUsers]
 	#[NoAdminRequired]
 	#[WorkspaceManagerGroup]
 	#[ApiRoute(
@@ -599,26 +601,15 @@ class WorkspaceApiOcsController extends OCSController {
 		if (!in_array($gid, $gids)) {
 			throw new OCSException("Group {$gid} does not belongs to the {$spacename} workspace.");
 		}
+
 		$group = $this->groupManager->get($gid);
 		if ($group === null) {
 			throw new OCSNotFoundException("Group with gid {$gid} does not exists.");
 		}
 
-		$usersNotFound = [];
 		foreach ($uids as $uid) {
 			$user = $this->userManager->get($uid);
-			if (is_null($user)) {
-				$usersNotFound[] = $uid;
-				continue;
-			}
-
 			$users[] = $user;
-		}
-
-		if (!empty($usersNotFound)) {
-			$usersNotFound = array_map(fn ($uid) => "- {$uid}", $usersNotFound);
-			$usersNotFound = implode("\n", $usersNotFound);
-			throw new OCSNotFoundException("These users doesn't exist on your Nextcloud instance:\n{$usersNotFound}");
 		}
 
 		switch ($gid) {
