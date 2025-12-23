@@ -150,9 +150,9 @@ class WorkspaceApiOcsController extends OCSController {
 	 * Edit workspace name, color and quota
 	 *
 	 * @param int $id Represents the ID of a workspace
-	 * @param string|null $name Workspace name (optional)
-	 * @param string|null $color Workspace color (optional)
-	 * @param int|null $quota Workspace quota in bytes (optional, -3 means unlimited, 0 means no quota)
+	 * @param string|null $name Optional - Workspace name.
+	 * @param string|null $color Optional - Workspace color in hexadecimal format (example: #f91616).
+	 * @param int|null $quota Optional - Workspace quota in bytes; e.g., 5368709120 for 5GB, or -3 for unlimited.
 	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
 	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID
 	 * @throws OCSException for all unknown errors
@@ -171,7 +171,7 @@ class WorkspaceApiOcsController extends OCSController {
 		url: '/api/v1/spaces/{id}',
 		requirements: ['id' => '\d+']
 	)]
-	public function edit(int $id, ?string $name, ?string $color = null, ?int $quota = null): DataResponse {
+	public function edit(int $id, ?string $name = null, ?string $color = null, ?int $quota = null): DataResponse {
 		$toSet = array_merge(WorkspaceEditParams::DEFAULT, [
 			'name' => $name,
 			'color' => $color,
