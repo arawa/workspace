@@ -158,6 +158,9 @@ export default {
 	SET_COUNT_TOTAL_WORKSPACES(state, { count }) {
 		state.countTotalWorkspaces = count
 	},
+	SET_COUNT_TOTAL_WORKSPACES_BY_QUERY(state, { count }) {
+		state.countTotalWorkspacesByQuery = count
+	},
 	INCREMENT_COUNT_TOTAL_WORKSPACES(state) {
 		state.countTotalWorkspaces++
 	},

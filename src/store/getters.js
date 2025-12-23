@@ -184,6 +184,9 @@ export const getters = {
 	countTotalWorkspaces: (state, getters) => {
 		return state.countTotalWorkspaces
 	},
+	countTotalWorkspacesByQuery: (state, getters) => {
+		return state.countTotalWorkspacesByQuery
+	},
 	workspaceCurrentPage: (state, getters) => {
 		return state.workspaceCurrentPage
 	},

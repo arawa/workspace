@@ -84,6 +84,12 @@
 			<PageLoader v-if="nextPage"
 				v-element-visibility="next"
 				:message="messageLoader" />
+			<div v-if="isFullyLoaded"
+				class="total-workspaces-information">
+				<div class="total-workspaces-information-element">
+					<span>{{ t('workspace', '{totalAccount} workspaces', { totalAccount: $store.getters.countTotalWorkspacesByQuery }) }}</span>
+				</div>
+			</div>
 		</div>
 		<NcEmptyContent v-else
 			:name="t('workspace', 'No workspace')">
@@ -120,6 +126,11 @@ export default {
 		return {
 			mdiFolderOff,
 		}
+	},
+	computed: {
+		isFullyLoaded() {
+			return this.$store.state.countWorkspaces === this.$store.getters.countTotalWorkspacesByQuery
+		},
 	},
 	beforeMount() {
 		this.showNextPage()
@@ -208,5 +219,17 @@ td, td div {
 
 .workspace-managers-th {
 	text-align: left;
+}
+
+.total-workspaces-information {
+	width: 250px;
+	padding: 16px;
+}
+
+.total-workspaces-information-element {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	gap: 8px;
 }
 </style>
