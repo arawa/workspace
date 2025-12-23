@@ -234,7 +234,7 @@
         "/ocs/v2.php/apps/workspace/api/v1/spaces": {
             "get": {
                 "operationId": "workspace_api_ocs-find-all",
-                "summary": "Return the first 30 workspaces (optional filtering by name)",
+                "summary": "Return the first 25 workspaces (optional filtering by name)",
                 "tags": [
                     "workspace"
                 ],
@@ -257,13 +257,14 @@
                         }
                     },
                     {
-                        "name": "page",
+                        "name": "offset",
                         "in": "query",
                         "description": "Optional page number for pagination",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
-                            "nullable": true
+                            "nullable": true,
+                            "default": null
                         }
                     },
                     {
@@ -273,7 +274,8 @@
                         "schema": {
                             "type": "integer",
                             "format": "int64",
-                            "nullable": true
+                            "nullable": true,
+                            "default": null
                         }
                     },
                     {
@@ -1983,6 +1985,36 @@
                     },
                     "404": {
                         "description": "Subgroup with this id does not exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "nullable": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Target group does not belong to the workspace",
                         "content": {
                             "application/json": {
                                 "schema": {
