@@ -69,6 +69,8 @@ OC.L10N.register(
     "Role" : "Role",
     "Groups" : "Skupiny",
     "View profile" : "Zobrazit profil ",
+    "Remove WM rights" : "Odebrat oprávnění pro správu",
+    "Assign as WM" : "Přiřadit jako správce prostoru",
     "Delete user" : "Smazat uživatele",
     "Remove from group" : "Odebrat ze skupiny",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Při pokusu o získání pracovního prostorů došlo k chybě.<br>Chyba: {error}",
