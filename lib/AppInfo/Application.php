@@ -33,6 +33,7 @@ use OCA\Workspace\Middleware\NotificationMiddleware;
 use OCA\Workspace\Middleware\OCSMiddleware;
 use OCA\Workspace\Middleware\RequireExistingGroupMiddleware;
 use OCA\Workspace\Middleware\RequireExistingSpaceMiddleware;
+use OCA\Workspace\Middleware\RequireExistingUsersMiddleware;
 use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
@@ -85,6 +86,7 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(OCSMiddleware::class);
 		$context->registerMiddleware(SpaceIdNumberMiddleware::class);
 		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
+		$context->registerMiddleware(RequireExistingUsersMiddleware::class);
 		$context->registerMiddleware(RequireExistingGroupMiddleware::class);
 		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
