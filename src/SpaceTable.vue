@@ -91,41 +91,37 @@
 				</div>
 			</div>
 		</div>
-		<NcEmptyContent v-else
-			:name="t('workspace', 'No workspace')">
-			<template #icon>
-				<NcIconSvgWrapper name="folders-off" :path="mdiFolderOff" />
-			</template>
-			<template #description>
-				{{ t('workspace', 'You have not yet created any workspace') }}
-			</template>
-		</NcEmptyContent>
+		<WorkspaceContentEmpty v-if="noWorkspaceForSearch"
+			:message="t('workspace', 'No workspaces found')" />
+		<WorkspaceContentEmpty v-else-if="hasNoWorkspaces"
+			:message="t('workspace', 'You have not yet created any workspace')" />
 	</div>
 </template>
 
 <script>
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
-import { mdiFolderOff } from '@mdi/js'
-import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import PageLoader from './components/PageLoader.vue'
 import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
+import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEmpty.vue'
 
 export default {
 	name: 'SpaceTable',
 	components: {
 		NcAvatar,
-		NcEmptyContent,
-		NcIconSvgWrapper,
 		VueLazyComponent,
 		PageLoader,
+		WorkspaceContentEmpty,
 	},
 	mixins: [WorkspacesLoader],
-	data() {
-		return {
-			mdiFolderOff,
-		}
+	computed: {
+		noWorkspaceForSearch() {
+			return this.$store.state.countTotalWorkspaces === 0
+				&& (this.$store.state.searchWorkspace !== null && this.$store.state.searchWorkspace !== '')
+		},
+		hasNoWorkspaces() {
+			return this.$store.state.countTotalWorkspaces === 0
+		},
 	},
 	computed: {
 		isFullyLoaded() {
