@@ -46,6 +46,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\OCS\OCSForbiddenException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IGroupManager;
@@ -566,10 +567,11 @@ class WorkspaceApiOcsController extends OCSController {
 	 * @param int $id Represents the ID of the workspace
 	 * @param string $gid The subgroup id
 	 * @param list<string> $uids Represents the user uids to add to the subgroup
-	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>|DataResponse<Http::STATUS_FORBIDDEN, null, array{}>
 	 * @throws OCSException for all unknown errors
 	 *
 	 * 200: Users added in subgroup successfully
+	 * 403: Target group does not belong to the workspace
 	 * 404: Subgroup with this id does not exist
 	 */
 	#[OpenAPI(tags: ['workspace-users'])]
@@ -596,7 +598,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$spacename = $workspace['name'];
 
 		if (!in_array($gid, $gids)) {
-			throw new OCSException("Group {$gid} does not belongs to the {$spacename} workspace.");
+			throw new OCSForbiddenException("Group {$gid} does not belongs to the {$spacename} workspace.");
 		}
 		$group = $this->groupManager->get($gid);
 		if ($group === null) {
