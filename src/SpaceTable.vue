@@ -122,8 +122,6 @@ export default {
 		hasNoWorkspaces() {
 			return this.$store.state.countTotalWorkspaces === 0
 		},
-	},
-	computed: {
 		isFullyLoaded() {
 			return this.$store.state.countWorkspaces === this.$store.getters.countTotalWorkspacesByQuery
 		},
