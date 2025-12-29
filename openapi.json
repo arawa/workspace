@@ -234,7 +234,7 @@
         "/ocs/v2.php/apps/workspace/api/v1/spaces": {
             "get": {
                 "operationId": "workspace_api_ocs-find-all",
-                "summary": "Return the first 30 workspaces (optional filtering by name)",
+                "summary": "Return the first 25 workspaces (optional filtering by name)",
                 "tags": [
                     "workspace"
                 ],
@@ -257,13 +257,14 @@
                         }
                     },
                     {
-                        "name": "page",
+                        "name": "offset",
                         "in": "query",
                         "description": "Optional page number for pagination",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
-                            "nullable": true
+                            "nullable": true,
+                            "default": null
                         }
                     },
                     {
@@ -273,7 +274,8 @@
                         "schema": {
                             "type": "integer",
                             "format": "int64",
-                            "nullable": true
+                            "nullable": true,
+                            "default": null
                         }
                     },
                     {
@@ -665,20 +667,21 @@
                                     "name": {
                                         "type": "string",
                                         "nullable": true,
-                                        "description": "Workspace name (optional)"
+                                        "default": null,
+                                        "description": "Optional - Workspace name."
                                     },
                                     "color": {
                                         "type": "string",
                                         "nullable": true,
                                         "default": null,
-                                        "description": "Workspace color (optional)"
+                                        "description": "Optional - Workspace color in hexadecimal format (example: #f91616)."
                                     },
                                     "quota": {
                                         "type": "integer",
                                         "format": "int64",
                                         "nullable": true,
                                         "default": null,
-                                        "description": "Workspace quota in bytes (optional, -3 means unlimited, 0 means no quota)"
+                                        "description": "Optional - Workspace quota in bytes. For example: 5368709120 for 5GB or -3 means unlimited."
                                     }
                                 }
                             }
