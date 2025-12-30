@@ -160,6 +160,11 @@ export default {
 	directives: {
 		Tooltip,
 	},
+	setup() {
+		return {
+			isDarkTheme: useIsDarkTheme(),
+		}
+	},
 	data() {
 		return {
 			createGroup: false, // true to display 'Create Group' ActionInput
@@ -175,7 +180,7 @@ export default {
 			AddedGroupBlack,
 			AddedGroupWhite,
 			iconUrl: undefined,
-			isDarkTheme: useIsDarkTheme(),
+			// isDarkTheme: useIsDarkTheme(),
 		}
 	},
 	computed: {

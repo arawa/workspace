@@ -53,9 +53,13 @@ export default {
 			default: 0,
 		},
 	},
-	data() {
+	setup() {
 		return {
 			isDarkTheme: useIsDarkTheme(),
+		}
+	},
+	data() {
+		return {
 			mdiAccountMultiple,
 			AddedGroupBlack,
 			AddedGroupWhite,
