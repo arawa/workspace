@@ -26,6 +26,7 @@
 		:open="open"
 		:name="spaceName"
 		:to="{path: getSpacePath()}"
+		@click="openMenu"
 		@update:open="isOpen = $event">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		<NcCounterBubble slot="counter" class="user-counter">
@@ -148,6 +149,9 @@ export default {
 		}
 	},
 	methods: {
+		openMenu() {
+			this.isOpen = true
+		},
 		// sorts groups alphabetically
 		sortedGroups(groups, space) {
 			groups.sort((a, b) => {
