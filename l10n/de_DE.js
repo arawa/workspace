@@ -62,6 +62,7 @@ OC.L10N.register(
     "Quota" : "Kontingent",
     "Workspace Managers" : "Arbeitsbereichsverwalter",
     "{totalAccount} workspaces" : "{totalAccount} Arbeitsbereiche",
+    "No workspaces found" : "Keine Arbeitsbereiche gefunden",
     "You have not yet created any workspace" : "Sie haben bislang keinen Arbeitsbereich erstellt",
     "Set user as Workspace Manager" : "Benutzer als Arbeitsbereichsverwalter festlegen",
     "WM" : "WM",
