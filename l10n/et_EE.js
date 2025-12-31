@@ -62,6 +62,7 @@ OC.L10N.register(
     "Quota" : "Kvoot",
     "Workspace Managers" : "Töötubade haldurid",
     "{totalAccount} workspaces" : "{totalAccount} töötuba",
+    "No workspaces found" : "Ühtegi töötuba ei leidu",
     "You have not yet created any workspace" : "Sa pole veel ühtegi töötuba lisanud",
     "Set user as Workspace Manager" : "Määra kasutaja töötoa halduriks",
     "WM" : "Töötoa haldur",
