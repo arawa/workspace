@@ -62,6 +62,7 @@ OC.L10N.register(
     "Quota" : "Cota",
     "Workspace Managers" : "Xestores do espazo de traballo",
     "{totalAccount} workspaces" : "{totalAccount} espazos de traballo",
+    "No workspaces found" : "Non se atopou ningún espazo de traballo",
     "You have not yet created any workspace" : "Vde. aínda non creou ningún espazo de traballo",
     "Set user as Workspace Manager" : "Definir ao usuario como xestor de espazo de traballo",
     "WM" : "AE",
