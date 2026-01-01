@@ -60,6 +60,7 @@
     "Quota" : "容量限制",
     "Workspace Managers" : "工作空間管理員",
     "{totalAccount} workspaces" : "{totalAccount} 個工作空間",
+    "No workspaces found" : "找不到工作空間",
     "You have not yet created any workspace" : "你尚未建立任何工作空間",
     "Set user as Workspace Manager" : "將用戶設為工作空間管理員",
     "WM" : "WM",
