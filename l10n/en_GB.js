@@ -62,6 +62,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Workspace Managers" : "Workspace Managers",
     "{totalAccount} workspaces" : "{totalAccount} workspaces",
+    "No workspaces found" : "No workspaces found",
     "You have not yet created any workspace" : "You have not yet created any workspace",
     "Set user as Workspace Manager" : "Set user as Workspace Manager",
     "WM" : "WM",
