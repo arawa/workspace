@@ -62,6 +62,7 @@ OC.L10N.register(
     "Quota" : "Kota",
     "Workspace Managers" : "Çalışma alanı yöneticileri",
     "{totalAccount} workspaces" : "{totalAccount} çalışma alanı",
+    "No workspaces found" : "Herhangi bir çalışma alanı bulunamadı",
     "You have not yet created any workspace" : "Henüz bir çalışma alanı eklememişsiniz",
     "Set user as Workspace Manager" : "Kullanıcıyı çalışma alanı yöneticisi olarak ayarla",
     "WM" : "ÇAY",
