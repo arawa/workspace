@@ -60,6 +60,7 @@
     "Quota" : "Cuóta",
     "Workspace Managers" : "Bainisteoirí Spás Oibre",
     "{totalAccount} workspaces" : "spásanna oibre {totalAccount}",
+    "No workspaces found" : "Níor aimsíodh aon spásanna oibre",
     "You have not yet created any workspace" : "Níl aon spás oibre cruthaithe agat fós",
     "Set user as Workspace Manager" : "Socraigh úsáideoir mar Bhainisteoir Spáis Oibre",
     "WM" : "WM",
