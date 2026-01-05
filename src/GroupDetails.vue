@@ -116,13 +116,17 @@ export default {
 		UserTable,
 		NcIconSvgWrapper,
 	},
+	setup() {
+		return {
+			isDarkTheme: useIsDarkTheme(),
+		}
+	},
 	data() {
 		return {
 			showRenameGroupInput: false, // true to display 'Rename Group' NcActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showRemoveConnectedGroupModal: false,
 			showRemoveGroupModal: false,
-			isDarkTheme: useIsDarkTheme(),
 			mdiAccountMultiple,
 			AddedGroupBlack,
 			AddedGroupWhite,
