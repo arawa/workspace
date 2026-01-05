@@ -30,6 +30,7 @@ import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
 import { alreadyExistsGroupName, alreadyExistsGroupId } from '../services/Groups/functions.js'
+import { t } from '@nextcloud/l10n'
 
 export default {
 
@@ -60,7 +61,7 @@ export default {
 				// Restore frontend and inform user
 				context.commit('removeUserFromGroup', { name, gid, user })
 				const text = t('workspace', 'An error occurred while trying to add user') + user.name
-				showNotificationError('Error', text, 5000)
+				showNotificationError(t('workspace', 'Error'), text, 5000)
 			}
 		}).catch((e) => {
 			// Restore frontend and inform user
@@ -72,7 +73,7 @@ export default {
 			console.error('e.columnNumber', e.columnNumber)
 			console.error('e.stack', e.stack)
 			const text = t('workspace', 'A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}', { user_name: user.name, error: e })
-			showNotificationError('Network error', text, 4000)
+			showNotificationError(t('workspace', 'Network error'), text, 4000)
 		})
 	},
 	incrementGroupUserCount(context, { spaceName, gid }) {
@@ -140,7 +141,7 @@ export default {
 		let newGid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
 		if (alreadyExistsGroupName(space, displayName)) {
-			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
+			showNotificationError(t('workspace', 'Duplication of groups'), t('workspace', 'The group already exists.'), 3000)
 			return
 		}
 
@@ -182,7 +183,7 @@ export default {
 				context.commit('removeGroupFromSpace', { name, newGid })
 				const message = (e.response && e.response.data && e.response.data.msg) ?? e.message
 				const text = t('workspace', 'A network error occurred while trying to create group {group}<br>Error: {error}', { error: message, group: newGid })
-				showNotificationError('Error', text, 4000)
+				showNotificationError(t('workspace', 'Error'), text, 4000)
 			})
 	},
 	// Deletes a group
@@ -207,13 +208,13 @@ export default {
 				} else {
 					context.commit('addGroupToSpace', { space, gid })
 					const text = t('workspace', 'An error occurred while trying to delete group {group}<br>Error: {error}', { group: gid, error: resp.statusText })
-					showNotificationError('Error', text, 3000)
+					showNotificationError(t('workspace', 'Error'), text, 3000)
 				}
 			})
 			.catch((e) => {
 				context.commit('addGroupToSpace', { space, gid })
 				const text = t('workspace', 'Network error occurred while trying to delete group {group}<br>Error: {error}', { group: gid, error: e })
-				showNotificationError('Network error', text, 3000)
+				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
 	// Deletes a space
@@ -240,12 +241,12 @@ export default {
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
 				const text = t('workspace', 'An error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: resp.statusText })
-				showNotificationError('Error', text, 4000)
+				showNotificationError(t('workspace', 'Error'), text, 4000)
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: e })
-			showNotificationError('Error', text, 4000)
+			showNotificationError(t('workspace', 'Error'), text, 4000)
 			if (gid === UserGroup.getGid(space)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
@@ -283,12 +284,12 @@ export default {
 				console.log('User ' + user.name + ' removed from group ' + gid)
 			} else {
 				const text = t('workspace', 'An error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: resp.statusText })
-				showNotificationError('Error', text, 4000)
+				showNotificationError(t('workspace', 'Error'), text, 4000)
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
 			const text = t('workspace', 'Network error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: e })
-			showNotificationError('Error', text, 4000)
+			showNotificationError(t('workspace', 'Error'), text, 4000)
 			if (gid === UserGroup.getGid(space)) {
 				backupGroups.forEach(group =>
 					context.commit('addUserToGroup', { name, group, user }),
@@ -303,7 +304,7 @@ export default {
 		const space = context.getters.getSpaceByNameOrId(name)
 
 		if (alreadyExistsGroupName(space, newGroupName)) {
-			showNotificationError('Duplication of groups', 'The group already exists.', 3000)
+			showNotificationError(t('workspace', 'Duplication of groups'), t('workspace', 'The group already exists.'), 3000)
 			return
 		}
 
@@ -382,7 +383,7 @@ export default {
 					}
 					context.commit('updateUser', { name, user })
 					const text = t('workspace', 'An error occurred while trying to change the role of user {user}.<br>Error: {error}', { user: user.name, error: resp.statusText })
-					showNotificationError('Error', text, 3000)
+					showNotificationError(t('workspace', 'Error'), text, 3000)
 				}
 			}).catch((e) => {
 				// Revert action an inform user
@@ -393,7 +394,7 @@ export default {
 				}
 				context.commit('updateUser', { name, user })
 				const text = t('workspace', 'Network error occurred while trying to change the role of user {user}.<br>Error: {error}', { user: user.name, error: e })
-				showNotificationError('Network error', text, 3000)
+				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
 	updateSpace(context, { space }) {
@@ -469,14 +470,14 @@ export default {
 					// Reverts change made in the frontend in case of error
 					context.commit('setSpaceQuota', { name, oldQuota })
 					const text = t('workspace', 'An error occurred while trying to update the workspace\'s quota.<br>Error: {error}', { error: resp.statusText })
-					showNotificationError('Error', text, 3000)
+					showNotificationError(t('workspace', 'Error'), text, 3000)
 				}
 			})
 			.catch((e) => {
 				// Reverts change made in the frontend in case of error
 				context.commit('setSpaceQuota', { name, oldQuota })
 				const text = t('workspace', 'Network error occurred while trying to update the workspace\'s quota.<br>Error: {error}', { error: e })
-				showNotificationError('Network error', text, 3000)
+				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
 	updateColor(context, { name, colorCode }) {

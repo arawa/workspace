@@ -30,7 +30,7 @@ const TOAST_DEFAULT_TIMEOUT = 7000
  * @param {string} text error notification text
  * @param {number} duration in milliseconds, 7 seconds by default, -1 for permanent notification
  */
-function showNotificaiton(title, text, duration) {
+function showNotification(title, text, duration) {
 	const message = `<div style="max-width: 36rem;"><p style="font-weight: bold;display: block;">${title}</p><p>${text}</p></div>`
 	const options = duration ? { isHTML: true, timeout: duration } : { isHTML: true }
 	showError(message, options)
@@ -43,9 +43,7 @@ function showNotificaiton(title, text, duration) {
  * @param {number} duration in milliseconds, 7 seconds by default, -1 for permanent notification
  */
 export default function showNotificationError(title, text, duration = TOAST_DEFAULT_TIMEOUT) {
-	title = t('workspace', title)
-	text = t('workspace', text)
-	showNotificaiton(title, text, duration)
+	showNotification(title, text, duration)
 }
 
 /**
@@ -56,7 +54,5 @@ export default function showNotificationError(title, text, duration = TOAST_DEFA
  * @param {object} options is an object with variables to complete the error message
  */
 export function showCreatingWorkspaceNotification(title, text, duration = TOAST_DEFAULT_TIMEOUT, options) {
-	title = t('workspace', title)
-	text = t('workspace', text, { specialChars: options.specialChars })
-	showNotificaiton(title, text, duration)
+	showNotification(title, text, duration)
 }

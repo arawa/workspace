@@ -74,6 +74,7 @@ import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import { renameSpace } from '../../services/spaceService.js'
 import showNotificationError from '../../services/Notifications/NotificationError.js'
+import { t } from '@nextcloud/l10n'
 
 export default {
 	name: 'EditWorkspace',
@@ -161,7 +162,7 @@ export default {
 					})
 					.catch(err => {
 						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>Error: {error}', { error: err })
-						showNotificationError('Network error', text, 3000)
+						showNotificationError(t('workspace', 'Network error'), text, 3000)
 					})
 			}
 
@@ -277,7 +278,7 @@ export default {
 			const control = new RegExp(`^(${t('workspace', 'unlimited')}|\\d+(tb|gb|mb|kb)?)$`, 'i')
 			if (!control.test(quota)) {
 				const text = t('workspace', 'You may only specify "unlimited" or a number followed by "TB", "GB", "MB", or "KB" (eg: "5GB") as quota')
-				showNotificationError('Error', text, 3000)
+				showNotificationError(t('workspace', 'Error'), text, 3000)
 				return
 			}
 

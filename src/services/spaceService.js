@@ -147,8 +147,8 @@ export function addGroupToWorkspace(spaceId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				'Error groups',
-				`Impossible to attach the ${error} group to workspace. May be a problem with the connection ?`,
+				t('workspace', 'Error groups'),
+				t('workspace', 'Impossible to attach the {gid} group to workspace. May be a problem with the connection ?', { gid }),
 				5000)
 			console.error('Impossible to attach the group to workspace. May be a problem with the connection ?', gid, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
@@ -214,7 +214,7 @@ export function renameSpace(spaceId, newSpaceName) {
 				showNotificationError(error.response.data.title, error.response.data.message, 5000)
 				break
 			default:
-				showNotificationError('Error to create a workspace', error.message, 5000)
+				showNotificationError(t('workspace', 'Error to create a workspace'), error.message, 5000)
 				break
 			}
 		})
