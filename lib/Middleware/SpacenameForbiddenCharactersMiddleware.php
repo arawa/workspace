@@ -24,7 +24,7 @@ class SpacenameForbiddenCharactersMiddleware extends Middleware {
 			$specialCharsReadable = implode(' ', str_split(WorkspaceCheckService::CHARACTERS_SPECIAL));
 
 			$data = $controller instanceof OCSController
-				? [ 'message' => $this->l10n->t("Your Workspace name must not contain the following characters: %s", [ $specialCharsReadable ]) ]
+				? [ 'message' => $this->l10n->t('Your Workspace name must not contain the following characters: %s', [ $specialCharsReadable ]) ]
 				: [
 					'title' => $this->l10n->t('Error creating workspace'),
 					'statuscode' => $exception->getCode(),
