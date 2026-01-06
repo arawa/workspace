@@ -681,7 +681,7 @@
                                         "format": "int64",
                                         "nullable": true,
                                         "default": null,
-                                        "description": "Optional - Workspace quota in bytes. For example: 5368709120 for 5GB or -3 means unlimited."
+                                        "description": "Optional - Workspace quota in bytes; e.g., 5368709120 for 5GB, or -3 for unlimited."
                                     }
                                 }
                             }
