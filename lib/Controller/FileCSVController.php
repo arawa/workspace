@@ -31,7 +31,6 @@ use OCA\Workspace\Exceptions\Notifications\InvalidCsvFormatException;
 use OCA\Workspace\Exceptions\Notifications\InvalidSeparatorCsvException;
 use OCA\Workspace\Exceptions\Notifications\UserDoesntExistException;
 use OCA\Workspace\Files\Csv\CheckMimeType;
-use OCA\Workspace\Files\Csv\ImportUsers\Header;
 use OCA\Workspace\Files\Csv\ImportUsers\HeaderValidator;
 use OCA\Workspace\Files\Csv\ImportUsers\Parser;
 use OCA\Workspace\Files\Csv\ImportUsers\Values;
@@ -106,30 +105,16 @@ class FileCSVController extends Controller {
 		}
 
 		if (!$this->headerValidator->validate($file)) {
-
-			$displaynamesBold = array_map(fn ($displayname) => "<b>$displayname</b>", Header::DISPLAY_NAME);
-			$rolesBold = array_map(fn ($role) => "<b>$role</b>", Header::ROLE);
-
-			$separatorOr = $this->translate->t('or');
-			$displaynamesBoldStringify = implode(" $separatorOr ", $displaynamesBold);
-			$rolesBoldStringify = implode(" $separatorOr ", $rolesBold);
-
-			$message = 'The content of your file is invalid. '
-			. 'Two columns are required, with the following header names and values:<br>'
-			. "- \"user\": the user's username or e-mail address<br>"
-			. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)";
-
-			$errorMessage = $this->translate->t(
-				$message,
-				[
-					$displaynamesBoldStringify,
-					$rolesBoldStringify
-				]
+			$message = $this->translate->t(
+				'The content of your file is invalid. '
+				. 'Two columns are required, with the following header names and values:<br>'
+				. "- \"user\": the user's username or e-mail address<br>"
+				. "- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)"
 			);
 
 			throw new InvalidCsvFormatException(
 				$this->translate->t('Error in CSV file content'),
-				$this->translate->t($errorMessage),
+				$message,
 			);
 		}
 
