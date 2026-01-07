@@ -86,6 +86,7 @@ import debounce from 'debounce'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { LIMIT_WORKSPACES_PER_PAGE } from './constants.js'
+import { t } from '@nextcloud/l10n'
 
 export default {
 	name: 'LeftSidebar',
@@ -153,7 +154,7 @@ export default {
 		// Creates a new space and navigates to its details page
 		async createSpace(name) {
 			if (name === '') {
-				showNotificationError('Error', 'Please specify a name.', 3000)
+				showNotificationError(t('workspace', 'Error'), t('workspace', 'Please specify a name.'), 3000)
 				return
 			}
 

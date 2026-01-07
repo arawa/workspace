@@ -104,7 +104,7 @@ export async function checkGroupfolderNameExist(spaceName) {
 		})
 
 	if (duplicateExists) {
-		showNotificationError('Error - Duplicate space name', 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
+		showNotificationError(t('workspace', 'Error - Duplicate space name'), t('workspace', 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.'), 5000)
 		throw new CheckGroupfolderNameExistError('This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
 	}
 	return false
@@ -154,8 +154,8 @@ export function addGroupToGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				'Error groups',
-				`Impossible to attach the ${error} group to groupfolder. May be a problem with the connection ?`,
+				t('workspace', 'Error groups'),
+				t('workspace', 'Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?', { gid }),
 				5000)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
@@ -182,8 +182,8 @@ export function addGroupToManageACLForGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				'Error to add group as manager acl',
-				'Impossible to add the Space Manager group in Manage ACL groupfolder',
+				t('workspace', 'Error to add group as manager acl'),
+				t('workspace', 'Impossible to add the Space Manager group in Manage ACL groupfolder'),
 				5000)
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
 			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
@@ -208,8 +208,8 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				'Error to remove group as manager acl',
-				'Impossible to remove the group from the advanced permissions.',
+				t('workspace', 'Error to remove group as manager acl'),
+				t('workspace', 'Impossible to remove the group from the advanced permissions.'),
 				5000)
 			console.error('Impossible to remove the group from the advanced permissions.', error)
 			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
@@ -235,7 +235,7 @@ export function createGroupfolder(spaceName) {
 			return resp.data.ocs
 		})
 		.catch(error => {
-			showNotificationError('Error creating workspace', error.message, 5000)
+			showNotificationError(t('workspace', 'Error creating workspace'), error.message, 5000)
 			throw new CreateGroupfolderError('Network error - Error: ' + error.message)
 		})
 }

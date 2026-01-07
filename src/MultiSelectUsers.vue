@@ -65,6 +65,7 @@ import showNotificationError from './services/Notifications/NotificationError.js
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import debounce from 'debounce'
+import { t } from '@nextcloud/l10n'
 
 export default {
 	name: 'MultiSelectUsers',
@@ -123,12 +124,12 @@ export default {
 						this.selectableUsers = this.addSubtitleToUsers(usersToDisplay)
 					} else {
 						const text = t('workspace', 'An error occurred while trying to lookup users.<br>Error: {error}', { error: resp.statusText })
-						showNotificationError('Error', text, 3000)
+						showNotificationError(t('workspace', 'Error'), text, 3000)
 					}
 				})
 				.catch((e) => {
 					const text = t('workspace', 'A network error occurred while trying to lookup users.<br>Error: {error}', { error: e })
-					showNotificationError('Network error', text, 3000)
+					showNotificationError(t('workspace', 'Network error'), text, 3000)
 					console.error('Problem to search users', e)
 				})
 				.finally(() => {

@@ -28,7 +28,7 @@ export const WorkspacesLoader = {
 						.then(resp => {
 							if (resp.status !== 200) {
 								const text = t('workspace', 'An error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: resp.statusText })
-								showNotificationError('Error', text, 4000)
+								showNotificationError(t('workspace', 'Error'), text, 4000)
 								return
 							}
 
@@ -41,7 +41,7 @@ export const WorkspacesLoader = {
 						.catch((e) => {
 							console.error('Problem to load spaces only', e)
 							const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
-							showNotificationError('Network error', text, 5000)
+							showNotificationError(t('workspace', 'Network error'), text, 5000)
 						})
 				}
 			}
