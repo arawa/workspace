@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "或",
     "Unknown error" : "未知错误",
     "Add users" : "添加用户",
     "Search users" : "搜索用户",
@@ -14,7 +13,9 @@ OC.L10N.register(
     "Rename group" : "重命名分组",
     "Group name" : "分组名称",
     "Delete group" : "删除群组",
+    "Error" : "错误",
     "Settings" : "设置",
+    "Network error" : "网络错误",
     "No users" : "无用户",
     "Quota" : "配额",
     "Role" : "角色",
@@ -24,6 +25,7 @@ OC.L10N.register(
     "unlimited" : "无限制",
     "Appearance" : "外观",
     "Save" : "保存",
-    "Loading..." : "载入中..."
+    "Loading..." : "载入中...",
+    "or" : "或"
 },
 "nplurals=1; plural=0;");

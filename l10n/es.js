@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Separador inválido para archivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Tu archivo CSV debe usar una coma (\",\") como separador",
-    "or" : "o",
     "Error: unknown users" : "Error: usuarios desconocidos",
     "Unknown error" : "Error desconocido",
     "Add users" : "Añadir usuarios",
@@ -35,6 +34,7 @@ OC.L10N.register(
     "Appearance" : "Apariencia",
     "Set quota" : "Establecer cuota",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

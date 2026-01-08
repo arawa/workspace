@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "или",
     "Unknown error" : "Неизвестна грешка",
     "Add users" : "Добавяне на потребители",
     "Search users" : "Търсене за потребители",
@@ -19,6 +18,7 @@
     "Delete user" : "Изтриване",
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
-    "Save" : "Запиши"
+    "Save" : "Запиши",
+    "or" : "или"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

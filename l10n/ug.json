@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "CSV ھۆججىتىنىڭ ئىناۋەتسىز ئايرىغۇچى",
     "Your CSV file must use a comma (\",\") as separator" : "CSV ھۆججىتىڭىز پەش (\",\") ئايرىغۇچى قىلىشى كېرەك",
-    "or" : "ياكى",
     "Error in CSV file content" : "CSV ھۆججەت مەزمۇنىدىكى خاتالىق",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "بۇ CSV ھۆججىتىنىڭ ئىشلەتكۈچىلىرى نامەلۇم، شۇڭا ئۇلارنى ئىمپورت قىلغىلى بولمايدۇ. تۆۋەندىكى ئىشلەتكۈچىلەرنى تەكشۈرۈپ، جەرياننى تەكرارلاڭ: <br>",
     "Error: unknown users" : "خاتالىق: نامەلۇم ئىشلەتكۈچىلەر",
@@ -35,6 +34,7 @@
     "Remove added group" : "قوشۇلغان گۇرۇپپىنى ئۆچۈر",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "ئاگاھلاندۇرۇش،گۇرۇپپا <b>{groupname}</b> ئۆچۈرۈلگەندىن كېيىن، ئۇنىڭ ئىشلەتكۈچىلىرى <b>{spacename}</b> خىزمەت بوشلۇقىغا كىرىش ھوقۇقىنى يوقىتىدۇ، پەقەت تۆۋەندىكىلەردىن باشقا:<br> <br> - خىزمەت بوشلۇقى باشقۇرغۇچىلىرى (<b> خ ب-{spacename} </b>) <br>- <b>Workspace گۇرۇپلىرى</b> نىڭ ئەزاسى بولغان ئىشلەتكۈچىلەر(ئالدىنقى <b>-G) <br>- باشقا قوشۇلغان گۇرۇپنىڭ ئەزاسى بولغان ئىشلەتكۈچىلەر <br>- قولدا Workspace <b>{spacename}</b> دىن قوشۇلغان ئىشلەتكۈچىلەر",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "{groupname} گۇرۇپپىنى ئۆچۈرگەندىن كېيىن، ئۇنىڭ ئىشلەتكۈچىلىرى {spacename} خىزمەت بوشلۇقىغا كىرىش ھوقۇقىنى ساقلاپ قالىدىغانلىقىنى ئۇنۇتماڭ.",
+    "Error" : "خاتالىق",
     "New workspace" : "يېڭى خىزمەت بوشلۇقى",
     "All workspaces" : "بارلىق خىزمەت بوشلۇقى",
     "Search workspaces..." : "خىزمەت بوشلۇقى ئىزدە...",
@@ -42,6 +42,7 @@
     "Convert Team folders" : "ئەتىرەت قىسقۇچىنى ئايلاندۇر",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "ئىشلەتكۈچىنى ئىزدەۋاتقاندا بىر خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "ئىشلەتكۈچىنى ئىزدەۋاتقاندا بىر تور خاتالىقى يۈز بەردى. <br> خاتالىق: {error}",
+    "Network error" : "تور خاتالىقى",
     "Start typing to lookup users" : "ئىشلەتكۈچىلەرنى ئىزدەش ئۈچۈن ياز",
     "Are you sure you want to delete the {space} workspace?" : "سىز خىزمەت بوشلۇقى {space} نى راستىنلا ئۆچۈرمەكچىمۇ؟",
     "Delete workspace" : "خىزمەت بوشلۇقىنى ئۆچۈر",
@@ -100,6 +101,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "ئىشلەتكۈچى {user} نىڭ رولىنى ئۆزگەرتىۋاتقاندا بىر تور خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنىڭ ھەجىمىنى يېڭىلاۋاتقاندا بىر خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنىڭ ھەجىمىنى يېڭىلاۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
+    "or" : "ياكى",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "خىزمەت بوشلۇقلىرىنىڭ رەڭگىنى ئۆزگەرتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
     "Rename space" : "بوشلۇقنىڭ نامىنى ئۆزگەرت",
     "Space name" : "بوشلۇق نامى"

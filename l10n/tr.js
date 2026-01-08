@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "CSV dosyası ayracı geçersiz",
     "Your CSV file must use a comma (\",\") as separator" : "CSV dosyanızda ayraç olarak virgül (\",\") kullanılmalıdır",
-    "or" : "ya da",
     "Error in CSV file content" : "CSV dosyasının içeriği hatalı",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Bu CSV dosyasının kullanıcıları bilinmediğinden içe aktarılamaz. Aşağıdaki kullanıcıları kontrol edin ve işlemi yeniden yapın:<br>",
     "Error: unknown users" : "Hata: Kullanıcılar bilinmiyor",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Remove added group" : "Eklenmiş grubu kaldır",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Uyarı, <b>{groupname}</b> grubu kaldırıldıktan sonra, aşağıdaki istisnalar dışında, kullanıcıları <b>{spacename}</b> çalışma alanına erişimlerini kaybedecek: <br><br>- Çalışma alanı yöneticileri (<b>WM-{spacename}</b>)<br>- <b>Çalışma alanı gruplarının üyeleri olan kullanıcılar (<b>G-</b> ön ekli) <br>- Başka bir eklenen grubun üyeleri olan kullanıcılar <br>- <b>{spacename}</b> çalışma alanından el ile eklenmiş kullanıcılar",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Lütfen {groupname} grubunu sildikten sonra, bu grubun kullanıcılarının {spacename} çalışma alanına erişimlerinin süreceğini unutmayın.",
+    "Error" : "Hata",
     "New workspace" : "Yeni çalışma alanı",
     "All workspaces" : "Tüm çalışma alanları",
     "Search workspaces..." : "Çalışma alanı arama...",
@@ -44,6 +44,7 @@ OC.L10N.register(
     "Convert Team folders" : "Takım klasörlerini dönüştür",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Kullanıcılar aranırken bir sorun çıktı.<br>Hata: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Kullanıcılar aranırken bir ağ sorunu çıktı.<br>Hata: {error}",
+    "Network error" : "Ağ sorunu",
     "Start typing to lookup users" : "Kullanıcıları aramak için yazmaya başlayın",
     "Are you sure you want to delete the {space} workspace?" : "{space} çalışma alanını silmek istediğinize emin misiniz?",
     "Delete workspace" : "Çalışma alanını sil",
@@ -103,6 +104,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "{user} kullanıcısının rolü değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Çalışma alanının kotası güncellenirken bir sorun çıktı.<br>Hata: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Çalışma alanının kotası güncellenirken bir ağ sorunu çıktı.<br>Hata: {error}",
+    "or" : "ya da",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Çalışma alanının rengi değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "Rename space" : "Çalışma alanını yeniden adlandır",
     "Space name" : "Çalışma alanı adı"

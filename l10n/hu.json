@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "vagy",
     "Unknown error" : "Ismeretlen hiba",
     "Add users" : "Felhasználók hozzáadása",
     "Search users" : "Fehasználók keresése",
@@ -10,7 +9,9 @@
     "File to share" : "Fájl megosztása",
     "Rename group" : "Csoport átnevezése",
     "Group name" : "Csoport neve",
+    "Error" : "Hiba",
     "Settings" : "Beállítások",
+    "Network error" : "Hálózati hiba",
     "No users" : "Nincsenek felhasználók",
     "Quota" : "Kvóta",
     "Users" : "Felhasználók",
@@ -21,6 +22,7 @@
     "unlimited" : "korlátlan",
     "Appearance" : "Megjelenés",
     "Save" : "Mentés",
-    "Loading..." : "Betöltés…"
+    "Loading..." : "Betöltés…",
+    "or" : "vagy"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

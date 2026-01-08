@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "Neplatný oddeľovač pre CSV súbor",
     "Your CSV file must use a comma (\",\") as separator" : "Váš CSV súbor musí používať čiarku (\",\") ako oddeľovač.",
-    "or" : "alebo",
     "Error in CSV file content" : "Chyba v obsahu súboru CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Používatelia tohto CSV súboru sú neznámi a nemôžu byť importovaní. Skontrolujte nasledujúcich používateľov a proces opakujte: <br>",
     "Error: unknown users" : "Chyba: neznámi používatelia",
@@ -35,6 +34,7 @@
     "Remove added group" : "Odstrániť pridanú skupinu",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Upozornenie, po odstránení skupiny <b>{groupname}</b> jej používatelia stratia prístup k pracovisku <b>{spacename}</b>, s výnimkou:<br> <br>- Manažéri Workspace (5WM-{spacename}<b>)<br>- používatelia, ktorí sú členmi <b>Skupín Workspace (s prefixom <b>G-</b>)<br>- používatelia, ktorí sú členmi inej Pridanej skupiny<br>- používatelia, ktorí boli manuálne pridaní z pracoviska <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Upozorňujeme, že po vymazaní skupiny {groupname} jej používatelia si zachovajú prístup k pracovisku {spacename}.",
+    "Error" : "Chyba",
     "New workspace" : "Nový pracovný priestor",
     "All workspaces" : "Všetky pracoviská",
     "Search workspaces..." : "Hľadať pracovné priestory...",
@@ -42,6 +42,7 @@
     "Convert Team folders" : "Prevod priečinkov tímu",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Došlo k chybe pri pokuse o vyhľadanie používateľov. <br>Chyba: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Vyskytla sa chyba siete pri pokuse o vyhľadanie používateľov.<br>Chyba: {error}",
+    "Network error" : "Chyba siete",
     "Start typing to lookup users" : "Začnite písať na vyhľadanie používateľov",
     "Are you sure you want to delete the {space} workspace?" : "Ste si istí, že chcete odstrániť pracovný priestor {space}?",
     "Delete workspace" : "Vymazať pracovný priestor",
@@ -100,6 +101,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Došlo k chybe siete pri pokuse o zmenu úlohy používateľa {user}.<br>Chyba: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Došlo k chybe pri pokuse o aktualizáciu kvóty pracovného priestoru. <br>Chyba: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Došlo k chybe siete pri pokuse o aktualizáciu kvóty pracovného priestoru.1Chyba: {error}",
+    "or" : "alebo",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Došlo k chybe siete pri pokuse o zmenu farby pracovného priestoru.<br>Chyba je: {error}",
     "Rename space" : "Premenovať miesto",
     "Space name" : "Názov miesta"

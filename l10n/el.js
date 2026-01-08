@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "ή",
     "Unknown error" : "Άγνωστο σφάλμα",
     "Add users" : "Προσθήκη χρηστών",
     "Search users" : "Αναζήτηση χρηστών",
@@ -23,6 +22,7 @@ OC.L10N.register(
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
     "Save" : "Αποθήκευση",
-    "Loading..." : "Γίνεται φόρτωση..."
+    "Loading..." : "Γίνεται φόρτωση...",
+    "or" : "ή"
 },
 "nplurals=2; plural=(n != 1);");

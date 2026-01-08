@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "o",
     "Unknown error" : "Errore disconnotu",
     "Add users" : "Agiunghe utentes",
     "Search users" : "Chirca utentes",
@@ -11,7 +10,9 @@ OC.L10N.register(
     "Upload new files" : "Càrriga archìvios noos",
     "File to share" : "Archìviu de cumpartzire",
     "Choose from Files" : "Sèbera dae Archìvios",
+    "Error" : "Errore",
     "Settings" : "Cunfiguratzione",
+    "Network error" : "Errore de rete",
     "Quota" : "Cuota",
     "Users" : "Utentes",
     "Groups" : "Grupos",
@@ -19,6 +20,7 @@ OC.L10N.register(
     "Delete user" : "Cantzella utente",
     "unlimited" : "illacanadu",
     "Appearance" : "Aspetu",
-    "Save" : "Sarva"
+    "Save" : "Sarva",
+    "or" : "o"
 },
 "nplurals=2; plural=(n != 1);");

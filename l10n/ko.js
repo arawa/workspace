@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "또는",
     "Unknown error" : "알 수 없는 오류",
     "Add users" : "사용자 추가",
     "Search users" : "사용자 검색",
@@ -13,7 +12,9 @@ OC.L10N.register(
     "Choose from Files" : "파일에서 선택",
     "Rename group" : "그룹 이름 바꾸기",
     "Group name" : "그룹 이름",
+    "Error" : "오류",
     "Settings" : "설정",
+    "Network error" : "네트워크 오류",
     "No users" : "사용자 없음",
     "Quota" : "할당량",
     "Users" : "사용자",
@@ -22,6 +23,7 @@ OC.L10N.register(
     "Delete user" : "사용자 지우기",
     "Appearance" : "외형",
     "Save" : "저장",
-    "Loading..." : "불러오는 중..."
+    "Loading..." : "불러오는 중...",
+    "or" : "또는"
 },
 "nplurals=1; plural=0;");

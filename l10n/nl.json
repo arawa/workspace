@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "of",
     "Unknown error" : "Onbekende fout",
     "Add users" : "Gebruikers toevoegen",
     "Search users" : "Gebruikers zoeken",
@@ -12,7 +11,9 @@
     "Rename group" : "Hernoem groep",
     "Group name" : "Groepsnaam",
     "Delete group" : "Verwijder groep",
+    "Error" : "Fout",
     "Settings" : "Instellingen",
+    "Network error" : "Netwerk fout",
     "No users" : "Geen gebruikers",
     "Quota" : "Limieten",
     "Users" : "Gebruikers",
@@ -23,6 +24,7 @@
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
-    "Loading..." : "Laden...."
+    "Loading..." : "Laden....",
+    "or" : "of"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

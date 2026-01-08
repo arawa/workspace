@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "ή",
     "Unknown error" : "Άγνωστο σφάλμα",
     "Add users" : "Προσθήκη χρηστών",
     "Search users" : "Αναζήτηση χρηστών",
@@ -21,6 +20,7 @@
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
     "Save" : "Αποθήκευση",
-    "Loading..." : "Γίνεται φόρτωση..."
+    "Loading..." : "Γίνεται φόρτωση...",
+    "or" : "ή"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

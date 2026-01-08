@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "Neplatný oddělovač v CSV souboru",
     "Your CSV file must use a comma (\",\") as separator" : "Je třeba, aby ve vámi poskytnutém CSV souboru byla jako oddělovač používána čárka („,“)",
-    "or" : "nebo",
     "Error in CSV file content" : "Chyba v obsahu CSV souboru",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Uživatelé z tohoto CSV souboru nejsou známi a není je možné naimportovat. Zkontrolujte následujíc uživatele a proces zopakujte:<br>",
     "Error: unknown users" : "Chyba: neznámí uživatelé",
@@ -99,6 +98,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Při pokusu o změnu role uživatele {user}došlo k chybě sítě.<br>Chyba: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Při pokusu o aktualizaci kvóty pracovního prostoru došlo k chybě.<br>Chyba: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Při pokusu o aktualizaci kvóty pracovního prostoru došlo k chybě sítě.<br>Chyba: {error}",
+    "or" : "nebo",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Při pokusu o změnu barvy pracovního prostoru došlo k síťové chybě.<br>Chyba je: {error}",
     "Rename space" : "Přejmenovat prostor",
     "Space name" : "Název prostoru"

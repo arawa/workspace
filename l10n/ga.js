@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Deighilteoir neamhbhailí le haghaidh comhad CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Ní mór camóg (\",\") a úsáid mar dheighilteoir i do chomhad CSV",
-    "or" : "nó",
     "Error in CSV file content" : "Earráid in ábhar an chomhaid CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Ní féidir úsáideoirí an chomhaid CSV seo a allmhairiú agus níl siad ar eolas. Seiceáil na húsáideoirí seo a leanas agus déan an próiseas arís: <br>",
     "Error: unknown users" : "Earráid: úsáideoirí anaithnid",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Remove added group" : "Bain an grúpa curtha leis",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Rabhadh, tar éis grúpa <b>{groupname}</b> a bhaint, caillfidh a úsáideoirí rochtain ar spás oibre <b>{spacename}</b>, seachas:<br><br>- Bainisteoirí Spás Oibre (<b>WM-{spacename}</b>)<br>- úsáideoirí atá ina mbaill de <b> ngrúpa Spás Oibre</b> (réimír <b>G-</b>)<br>- úsáideoirí atá ina mbaill de Ghrúpa Breise eile<br>- úsáideoirí a cuireadh leis de láimh ón Spás Oibre <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Tabhair faoi deara, le do thoil, tar éis an grúpa {groupname} a scriosadh, go gcoimeádfaidh a úsáideoirí rochtain ar spás oibre {spacename}",
+    "Error" : "Earráid",
     "New workspace" : "Spás oibre nua",
     "All workspaces" : "Gach spás oibre",
     "Search workspaces..." : "Cuardaigh spásanna oibre...",
@@ -44,6 +44,7 @@ OC.L10N.register(
     "Convert Team folders" : "Tiontaigh fillteáin Foirne",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Tharla earráid agus úsáideoirí á gcuardach.<br>Earráid: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Tharla earráid líonra agus úsáideoirí á gcuardach.<br>Earráid: {error}",
+    "Network error" : "Earráid líonra",
     "Start typing to lookup users" : "Tosaigh ag clóscríobh chun úsáideoirí a chuardach",
     "Are you sure you want to delete the {space} workspace?" : "An bhfuil tú cinnte gur mian leat an spás oibre {space} a scriosadh?",
     "Delete workspace" : "Scrios spás oibre",
@@ -103,6 +104,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh ról an úsáideora {user} a athrú.<br>Earráid: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Tharla earráid agus iarracht á déanamh cuóta an spás oibre a nuashonrú.<br>Earráid: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh cuóta an spás oibre a nuashonrú.<br>Earráid: {error}",
+    "or" : "nó",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br> Is é seo an earráid: {error}",
     "Rename space" : "Athainmnigh an spás",
     "Space name" : "Ainm an spáis"

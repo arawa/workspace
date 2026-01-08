@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "Ungültiger Separator für CSV-Datei",
     "Your CSV file must use a comma (\",\") as separator" : "Die CSV-Datei muss ein Komma (\",\") als Separator verwenden",
-    "or" : "oder",
     "Error in CSV file content" : "Fehler im Inhalt der CSV-Datei",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Die Benutzer dieser CSV-Datei sind unbekannt und können nicht importiert werden. Bitte die folgenden Benutzer überprüfen und den Vorgang wiederholen:<br>",
     "Error: unknown users" : "Fehler: Unbekannte Benutzer",
@@ -101,6 +100,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Ändern der Rolle des Benutzers {user} aufgetreten. <br>Fehler: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Es ist ein Fehler beim Aktualisieren des Arbeitsbereichskontigents aufgetreten. <br>Fehler: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Netzwerkfehler beim Aktualisieren des Arbeitsbereichskontigents. <br>Fehler: {error}",
+    "or" : "oder",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Netzwerkfehler beim Ändern der Farbe des Arbeitsbereichs. <br>Fehlermeldung: {error}",
     "Rename space" : "Bereich umbenennen",
     "Space name" : "Bereichsname"

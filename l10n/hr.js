@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "ili",
     "Unknown error" : "Nepoznata pogreška",
     "Add users" : "Dodaj korisnike",
     "Search users" : "Pretraži korisnike",
@@ -12,7 +11,9 @@ OC.L10N.register(
     "File to share" : "Datoteka za dijeljenje",
     "Choose from Files" : "Odaberi iz datoteka",
     "Group name" : "Naziv grupe",
+    "Error" : "Pogreška",
     "Settings" : "Postavke",
+    "Network error" : "Pogreška mreže",
     "Quota" : "Kvota",
     "Users" : "Korisnici",
     "Role" : "Uloga",
@@ -22,6 +23,7 @@ OC.L10N.register(
     "unlimited" : "neograničeno",
     "Appearance" : "Izgled",
     "Save" : "Spremi",
-    "Loading..." : "Učitavanje..."
+    "Loading..." : "Učitavanje...",
+    "or" : "ili"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

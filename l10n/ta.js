@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Add" : "சேர்க்க",
     "Cancel" : "Cancel",
+    "Error" : "வழு",
     "Settings" : "அமைப்புகள்",
     "Quota" : "பங்கு",
     "Users" : "பயனாளர்",

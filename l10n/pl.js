@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "lub",
     "Unknown error" : "Nieznany błąd",
     "Add users" : "Dodaj użytkowników",
     "Search users" : "Wyszukaj użytkowników",
@@ -14,7 +13,9 @@ OC.L10N.register(
     "Rename group" : "Zmień nazwę grupy",
     "Group name" : "Nazwa grupy",
     "Delete group" : "Usuń grupę",
+    "Error" : "Błąd",
     "Settings" : "Ustawienia",
+    "Network error" : "Błąd sieci",
     "No users" : "Brak użytkowników",
     "Quota" : "Quota",
     "Users" : "Użytkownicy",
@@ -25,6 +26,7 @@ OC.L10N.register(
     "unlimited" : "nieograniczony",
     "Appearance" : "Wygląd",
     "Save" : "Zapisz",
-    "Loading..." : "Ładowanie..."
+    "Loading..." : "Ładowanie...",
+    "or" : "lub"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");
