@@ -30,7 +30,7 @@
 				<NcSelect :value.sync="getQuota"
 					aria-label-combobox="set quota"
 					class="quota-input"
-					:clear-search-on-select="false"
+					:clear-search-on-select="true"
 					:taggable="true"
 					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
 					:placeholder="t('workspace', 'Set quota')"
