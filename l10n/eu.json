@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "edo",
     "Unknown error" : "Errore ezezaguna",
     "Add users" : "Gehitu erabiltzaileak",
     "Search users" : "Bilatu erabiltzaileak",
@@ -12,7 +11,9 @@
     "Rename group" : "Berrizendatu taldea",
     "Group name" : "Taldearen izena",
     "Delete group" : "Ezabatu taldea",
+    "Error" : "Errorea",
     "Settings" : "Ezarpenak",
+    "Network error" : "Sare errorea",
     "No users" : "Erabiltzailerik ez",
     "Quota" : "Kuota",
     "Users" : "Erabiltzaileak",
@@ -23,6 +24,7 @@
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
     "Save" : "Gorde",
-    "Loading..." : "Kargatzen..."
+    "Loading..." : "Kargatzen...",
+    "or" : "edo"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

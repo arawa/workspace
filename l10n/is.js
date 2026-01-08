@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "eða",
     "Unknown error" : "Óþekkt villa",
     "Search users" : "Leita að notendum",
     "Add" : "Bæta við",
@@ -11,7 +10,9 @@ OC.L10N.register(
     "File to share" : "Skrá til að deila",
     "Rename group" : "Endurnefna hóp",
     "Group name" : "Heiti hóps",
+    "Error" : "Villa",
     "Settings" : "Stillingar",
+    "Network error" : "Villa í netkerfi",
     "No users" : "Engir notendur",
     "Quota" : "Kvóti",
     "Users" : "Notendur",
@@ -21,6 +22,7 @@ OC.L10N.register(
     "unlimited" : "ótakmarkað",
     "Appearance" : "Útlit",
     "Save" : "Vista",
-    "Loading..." : "Hleð..."
+    "Loading..." : "Hleð...",
+    "or" : "eða"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

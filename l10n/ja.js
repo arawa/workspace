@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "或いは",
     "Unknown error" : "不明なエラー",
     "Add users" : "ユーザーを追加",
     "Search users" : "ユーザーを検索",
@@ -14,7 +13,9 @@ OC.L10N.register(
     "Rename group" : "グループの名称変更",
     "Group name" : "グループ名",
     "Delete group" : "グループを削除",
+    "Error" : "エラー",
     "Settings" : "設定",
+    "Network error" : "ネットワークエラー",
     "No users" : "No users",
     "Quota" : "クオータ",
     "Users" : "ユーザ",
@@ -25,6 +26,7 @@ OC.L10N.register(
     "unlimited" : "無制限",
     "Appearance" : "表示",
     "Save" : "保存する",
-    "Loading..." : "読み込み中…"
+    "Loading..." : "読み込み中…",
+    "or" : "或いは"
 },
 "nplurals=1; plural=0;");

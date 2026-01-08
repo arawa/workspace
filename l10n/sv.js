@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "eller",
     "Unknown error" : "Okänt fel",
     "Add users" : "Lägg till användare",
     "Search users" : "Sök användare",
@@ -12,7 +11,9 @@ OC.L10N.register(
     "File to share" : "Fil att dela",
     "Rename group" : "Byt namn på grupp",
     "Group name" : "Gruppnamn",
+    "Error" : "Fel",
     "Settings" : "Inställningar",
+    "Network error" : "Nätverksfel",
     "No users" : "Inga användare",
     "Quota" : "Kvot",
     "Users" : "Användare",
@@ -23,6 +24,7 @@ OC.L10N.register(
     "unlimited" : "obegränsat",
     "Appearance" : "Utseende",
     "Save" : "Spara",
-    "Loading..." : "Laddar..."
+    "Loading..." : "Laddar...",
+    "or" : "eller"
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "Virheellinen erotin CSV-tiedostoa varten",
     "Your CSV file must use a comma (\",\") as separator" : "CSV-tiedostossa täytyy käyttää pilkkua (\",\") erottimena",
-    "or" : "tai",
     "Error in CSV file content" : "Virhe CSV-tiedoston sisällössä",
     "Error: unknown users" : "Virhe: tuntemattomat käyttäjät",
     "Error: unknown role" : "Virhe: tuntematon rooli",
@@ -25,11 +24,13 @@
     "Group name" : "Ryhmän nimi",
     "Delete group" : "Poista ryhmä",
     "Remove added group" : "Poista lisätty ryhmä",
+    "Error" : "Virhe",
     "New workspace" : "Uusi työtila",
     "All workspaces" : "Kaikki työtilat",
     "Search workspaces..." : "Etsi työtiloja...",
     "Settings" : "Asetukset",
     "Convert Team folders" : "Muunna tiimikansiot",
+    "Network error" : "Verkkovirhe",
     "Start typing to lookup users" : "Aloita kirjoittaminen etsiäksesi käyttäjiä",
     "Delete workspace" : "Poista työtila",
     "Add a group" : "Lisää ryhmä",
@@ -55,6 +56,7 @@
     "Save" : "Tallenna",
     "Loading..." : "Ladataan...",
     "Can't load workspace users" : "Työtilan käyttäjiä ei voi ladata",
+    "or" : "tai",
     "Rename space" : "Nimeä tila uudelleen",
     "Space name" : "Tilan nimi"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

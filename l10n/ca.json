@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "o",
     "Unknown error" : "Error desconegut",
     "Add users" : "Afegeix usuaris",
     "Search users" : "Cerqueu usuaris",
@@ -19,6 +18,7 @@
     "unlimited" : "il·limitada",
     "Appearance" : "Aparença",
     "Save" : "Desar",
-    "Loading..." : "Carregant..."
+    "Loading..." : "Carregant...",
+    "or" : "o"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

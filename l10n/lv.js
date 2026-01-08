@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Nederīgs CSV datnes atdalītājs",
     "Your CSV file must use a comma (\",\") as separator" : "CSV datnē jāizmanto komats (“,”) kā atdalītājs",
-    "or" : "vai",
     "Error in CSV file content" : "Kļūda CSV datnes saturā",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Šīs CSV datnes lietotāji nav zināmi, un tos nevar ievietot. Jāpārbauda šie lietotāji un jāatkārto darbība: <br>",
     "Error: unknown users" : "Kļūda: nezināmi lietotāji",
@@ -14,7 +13,9 @@ OC.L10N.register(
     "File to share" : "Kopīgojamā datne",
     "Rename group" : "Pārdēvēt kopu",
     "Group name" : "Grupas nosaukums",
+    "Error" : "Kļūda",
     "Settings" : "Iestatījumi",
+    "Network error" : "Datu tīkla kļūda",
     "Quota" : "Kvota",
     "Users" : "Lietotāji",
     "Role" : "Loma",
@@ -23,6 +24,7 @@ OC.L10N.register(
     "Appearance" : "Izskats",
     "Save" : "Saglabāt",
     "Loading..." : "Notiek ielāde...",
+    "or" : "vai",
     "Rename space" : "Pārdēvēt vietu",
     "Space name" : "Vietas nosaukums"
 },

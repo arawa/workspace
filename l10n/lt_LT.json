@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "ar",
     "Unknown error" : "Nežinoma klaida",
     "Add users" : "Pridėti naudotojus",
     "Search users" : "Ieškoti naudotojų",
@@ -10,7 +9,9 @@
     "File to share" : "Failas, kurį bendrinti",
     "Rename group" : "Pervadinti grupę",
     "Group name" : "Grupės pavadinimas",
+    "Error" : "Klaida",
     "Settings" : "Nustatymai",
+    "Network error" : "Tinklo klaida",
     "Quota" : "Leidžiamas duomenų kiekis",
     "Users" : "Naudotojai",
     "Role" : "Vaidmuo",
@@ -19,6 +20,7 @@
     "Delete user" : "Ištrinti naudotoją",
     "Appearance" : "Išvaizda",
     "Save" : "Įrašyti",
-    "Loading..." : "Įkeliama..."
+    "Loading..." : "Įkeliama...",
+    "or" : "ar"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Separador inválido para archivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Tu archivo CSV debe usar una coma (\",\") como separador",
-    "or" : "o",
     "Error in CSV file content" : "Error en el contenido del archivo CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Los usuarios de este archivo CSV son desconocidos y no pueden ser importados. Verifica los siguientes usuarios y repite el proceso:<br>",
     "Error: unknown users" : "Error: usuarios desconocidos",
@@ -36,6 +35,7 @@ OC.L10N.register(
     "Remove added group" : "Quitar grupo agregado",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Advertencia, después de eliminar el grupo <b>{groupname}</b>, sus usuarios perderán acceso al espacio de trabajo <b>{spacename}</b>, con excepción de:<br><br>- Administradores del espacio (<b>WM-{spacename}</b>)<br>- usuarios que son miembros de <b>grupos del espacio de trabajo</b> (prefijo <b>G-</b>)<br>- usuarios que son miembros de otro Grupo Agregado<br>- usuarios agregados manualmente desde el espacio de trabajo <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Ten en cuenta que después de eliminar el grupo {groupname}, sus usuarios conservarán acceso al espacio de trabajo {spacename}",
+    "Error" : "Error",
     "Settings" : "Ajustes",
     "Convert Team folders" : "Convertir Carpetas de Equipo",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Ocurrió un error al buscar usuarios.<br>Error: {error}",
@@ -89,6 +89,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Ocurrió un error de red al intentar cambiar el rol del usuario {user}.<br>Error: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocurrió un error al intentar actualizar la cuota del espacio de trabajo.<br>Error: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocurrió un error de red al intentar actualizar la cuota del espacio de trabajo.<br>Error: {error}",
+    "or" : "o",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>El error es: {error}",
     "Rename space" : "Renombrar espacio",
     "Space name" : "Nombre del espacio"

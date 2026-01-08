@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Separador inválido para arquivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Seu arquivo CSV deve usar uma vírgula (\",\") como separador",
-    "or" : "ou",
     "Error in CSV file content" : "Erro no conteúdo do arquivo CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Os usuários deste arquivo CSV são desconhecidos e não podem ser importados. Verifique os seguintes usuários e repita o processo: <br>",
     "Error: unknown users" : "Erro: usuários desconhecidos",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Remove added group" : "Remover grupo adicionado",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Atenção, após a remoção do grupo <b>{groupname}</b>, seus usuários perderão acesso ao espaço de trabalho <b>{spacename}</b>, com exceção de: <br><br> - Gerentes do espaço de trabalho (<b>WM-{spacename}</b>)<br>- usuários que são membros de <b>grupos do espaço de trabalho </b> (prefixados com <b>G-</b>)<br>- usuários que são membros de outro grupo adicionado <br>- usuários adicionados manualmente a partir do espaço de trabalho <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Observe que, após excluir o grupo {groupname}, seus usuários manterão o acesso ao espaço de trabalho {spacename}",
+    "Error" : "Erro",
     "New workspace" : "Novo espaço de trabalho",
     "All workspaces" : "Todos os espaços de trabalho",
     "Search workspaces..." : "Pesquisar espaços de trabalho…",
@@ -44,6 +44,7 @@ OC.L10N.register(
     "Convert Team folders" : "Converter pastas da equipe",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Ocorreu um erro ao tentar obter usuários. <br>Erro: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar obter usuários.<br>Erro: {error}",
+    "Network error" : "Erro de rede",
     "Start typing to lookup users" : "Comece a digitar para pesquisar usuários",
     "Are you sure you want to delete the {space} workspace?" : "Tem certeza de que deseja excluir o espaço de trabalho {space}?",
     "Delete workspace" : "Excluir espaço de trabalho",
@@ -102,6 +103,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar alterar a função do usuário {user}.<br>Erro: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocorreu um erro ao tentar atualizar a cota do espaço de trabalho.<br>Error: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar atualizar a cota do espaço de trabalho.<br>Erro: {error}",
+    "or" : "ou",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocorreu um erro de rede ao tentar alterar a cor do espaço de trabalho.<br>O erro é: {error}",
     "Rename space" : "Renomear espaço",
     "Space name" : "Nome do espaço"

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Kitenganishi batili cha faili ya CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Faili yako ya CSV lazima itumie koma (\",\") kama kitenganishi",
-    "or" : "au",
     "Error in CSV file content" : "Hitilafu katika maudhui ya faili ya CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Watumiaji wa faili hii ya CSV hawajulikani na hawawezi kuingizwa. Angalia watumiaji wafuatao na kurudia mchakato:<br>",
     "Error: unknown users" : "Hitilafu: watumiaji wasiojulikana",
@@ -37,10 +36,12 @@ OC.L10N.register(
     "Remove added group" : "Ondoa kikundi kilichoongezwa",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace",
+    "Error" : "Hitilafu",
     "New workspace" : "New workspace",
     "All workspaces" : "All workspaces",
     "Search workspaces..." : "Search workspaces...",
     "Settings" : "Mipangilio",
+    "Network error" : "Hitilafu ya mtandao",
     "Quota" : "Kiasi",
     "Users" : "Watumiaji",
     "Role" : "Role",
@@ -53,6 +54,7 @@ OC.L10N.register(
     "unlimited" : "isiyo na kikomo",
     "Appearance" : "Mwonekano",
     "Save" : "Hifadhi",
-    "Loading..." : "Inapakia..."
+    "Loading..." : "Inapakia...",
+    "or" : "au"
 },
 "nplurals=2; plural=(n != 1);");

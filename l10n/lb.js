@@ -6,6 +6,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "Konfirméieren",
     "Group name" : "Gruppe Numm",
+    "Error" : "Fehler",
     "Settings" : "Astellungen",
     "Quota" : "Quota",
     "Users" : "Benotzer",

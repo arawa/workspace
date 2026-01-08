@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "eller",
     "Unknown error" : "Ukendt fejl",
     "Add users" : "Tilføj brugere",
     "Search users" : "Søg efter brugere",
@@ -21,6 +20,7 @@
     "Delete user" : "Slet bruger",
     "Appearance" : "Udseende",
     "Save" : "Gem",
-    "Loading..." : "Indlæser..."
+    "Loading..." : "Indlæser...",
+    "or" : "eller"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

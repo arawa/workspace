@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "hoặc",
     "Unknown error" : "Lỗi không xác định",
     "Add users" : "Thêm người dùng",
     "Search users" : "‎Tìm kiếm người dùng‎",
@@ -12,6 +11,7 @@ OC.L10N.register(
     "File to share" : "Tệp để chia sẻ",
     "Rename group" : "Đổi tên nhóm",
     "Group name" : "Tên nhóm",
+    "Error" : "Lỗi",
     "Settings" : "Thiết lập",
     "No users" : "Không có người dùng",
     "Quota" : "Hạn ngạch",
@@ -21,6 +21,7 @@ OC.L10N.register(
     "View profile" : "Xem hồ sơ",
     "Delete user" : "Xóa người dùng",
     "Appearance" : "Giao diện",
-    "Save" : "Lưu"
+    "Save" : "Lưu",
+    "or" : "hoặc"
 },
 "nplurals=1; plural=0;");

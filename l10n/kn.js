@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Unknown error" : "ಗೊತ್ತಿಲ್ಲದ ದೋಷ",
     "Cancel" : "Cancel",
+    "Error" : "﻿ತಪ್ಪಾಗಿದೆ",
     "Settings" : "ಆಯ್ಕೆ",
     "Quota" : "ಪಾಲು",
     "Users" : "﻿ಬಳಕೆದಾರರು",

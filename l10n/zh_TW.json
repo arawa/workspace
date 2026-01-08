@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "CSV 檔案的分隔符號無效",
     "Your CSV file must use a comma (\",\") as separator" : "您的 CSV 檔案必須使用半形逗號 (\",\") 作為分隔符號",
-    "or" : "或者",
     "Error in CSV file content" : "CSV 檔案內容錯誤",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "此 CSV 檔案的使用者未知或無法匯入。請檢查以下使用者並再次執行流程：<br>",
     "Error: unknown users" : "錯誤：未知使用者",
@@ -35,6 +34,7 @@
     "Remove added group" : "移除新增的群組",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "警告，在移除群組 <b>{groupname}</b> 之後，其使用者會失去對 <b>{spacename}</b> 工作空間的存取權，除了：<br><br>- 工作空間管理員（<b>WM-{spacename}</b>）<br>- <b>工作空間群組</b>成員的使用者（前綴為 <b>G-</b>）<br>- 其他新增群組成員的使用者<br>- 手動從工作空間 <b>{spacename}</b> 新增的使用者",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "請注意，刪除 {groupname} 群組後，其使用者將會保留對 {spacename} 工作空間的存取權",
+    "Error" : "錯誤",
     "New workspace" : "新增工作空間",
     "All workspaces" : "所有工作空間",
     "Search workspaces..." : "搜尋工作空間……",
@@ -42,6 +42,7 @@
     "Convert Team folders" : "轉換團隊資料夾",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "嘗試查詢使用者時發生錯誤。<br>錯誤：{error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "嘗試查詢使用者時發生網路錯誤。<br>錯誤：{error}",
+    "Network error" : "網路錯誤",
     "Start typing to lookup users" : "開始輸入以查詢使用者",
     "Are you sure you want to delete the {space} workspace?" : "您確定您想要刪除 {space} 工作空間？",
     "Delete workspace" : "刪除工作空間",
@@ -101,6 +102,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "嘗試變更使用者 {user} 的角色時發生網路錯誤。<br>錯誤：{error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "嘗試更新工作空間容量限額時發生錯誤。<br>錯誤：{error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "嘗試更新工作空間容量限額時發生網路錯誤。<br>錯誤：{error}",
+    "or" : "或者",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "嘗試變更工作空間顏色時發生網路錯誤。<br>錯誤：{error}",
     "Rename space" : "重新命名空間",
     "Space name" : "空間名稱"

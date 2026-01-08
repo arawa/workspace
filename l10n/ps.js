@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Unknown error" : "نامعلومه ستونزه",
     "Cancel" : "Cancel",
+    "Error" : "شسیب",
     "Settings" : "سمونې",
     "Users" : "کارنان",
     "Groups" : "ګروپونه",

@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "eller",
     "Unknown error" : "Okänt fel",
     "Add users" : "Lägg till användare",
     "Search users" : "Sök användare",
@@ -10,7 +9,9 @@
     "File to share" : "Fil att dela",
     "Rename group" : "Byt namn på grupp",
     "Group name" : "Gruppnamn",
+    "Error" : "Fel",
     "Settings" : "Inställningar",
+    "Network error" : "Nätverksfel",
     "No users" : "Inga användare",
     "Quota" : "Kvot",
     "Users" : "Användare",
@@ -21,6 +22,7 @@
     "unlimited" : "obegränsat",
     "Appearance" : "Utseende",
     "Save" : "Spara",
-    "Loading..." : "Laddar..."
+    "Loading..." : "Laddar...",
+    "or" : "eller"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

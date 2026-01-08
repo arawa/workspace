@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "vagy",
     "Unknown error" : "Ismeretlen hiba",
     "Add users" : "Felhasználók hozzáadása",
     "Search users" : "Fehasználók keresése",
@@ -12,7 +11,9 @@ OC.L10N.register(
     "File to share" : "Fájl megosztása",
     "Rename group" : "Csoport átnevezése",
     "Group name" : "Csoport neve",
+    "Error" : "Hiba",
     "Settings" : "Beállítások",
+    "Network error" : "Hálózati hiba",
     "No users" : "Nincsenek felhasználók",
     "Quota" : "Kvóta",
     "Users" : "Felhasználók",
@@ -23,6 +24,7 @@ OC.L10N.register(
     "unlimited" : "korlátlan",
     "Appearance" : "Megjelenés",
     "Save" : "Mentés",
-    "Loading..." : "Betöltés…"
+    "Loading..." : "Betöltés…",
+    "or" : "vagy"
 },
 "nplurals=2; plural=(n != 1);");

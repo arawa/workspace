@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "或いは",
     "Unknown error" : "不明なエラー",
     "Add users" : "ユーザーを追加",
     "Search users" : "ユーザーを検索",
@@ -12,7 +11,9 @@
     "Rename group" : "グループの名称変更",
     "Group name" : "グループ名",
     "Delete group" : "グループを削除",
+    "Error" : "エラー",
     "Settings" : "設定",
+    "Network error" : "ネットワークエラー",
     "No users" : "No users",
     "Quota" : "クオータ",
     "Users" : "ユーザ",
@@ -23,6 +24,7 @@
     "unlimited" : "無制限",
     "Appearance" : "表示",
     "Save" : "保存する",
-    "Loading..." : "読み込み中…"
+    "Loading..." : "読み込み中…",
+    "or" : "或いは"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

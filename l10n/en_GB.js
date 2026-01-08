@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Invalid separator for CSV file",
     "Your CSV file must use a comma (\",\") as separator" : "Your CSV file must use a comma (\",\") as separator",
-    "or" : "or",
     "Error in CSV file content" : "Error in CSV file content",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>",
     "Error: unknown users" : "Error: unknown users",
@@ -103,6 +102,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Network error occurred while trying to change the role of user {user}.<br>Error: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "An error occurred while trying to update the workspace's quota.<br>Error: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Network error occurred while trying to update the workspace's quota.<br>Error: {error}",
+    "or" : "or",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "A network error occured when trying to change the workspace's color.<br>The error is: {error}",
     "Rename space" : "Rename space",
     "Space name" : "Space name"

@@ -6,6 +6,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "Батлах",
     "Group name" : "Бүлгийн нэр",
+    "Error" : "Алдаа",
     "Settings" : "Тохиргоо",
     "Quota" : " хувь хэмжээ",
     "Users" : "хэрэглэгч",

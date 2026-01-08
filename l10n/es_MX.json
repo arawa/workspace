@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "o",
     "Unknown error" : "Se presentó un error desconocido",
     "Search users" : "Buscar usuarios",
     "Add" : "Añadir",
@@ -8,7 +7,9 @@
     "Upload new files" : "Cargar nuevos archivos",
     "Rename group" : "Renombrar grupo",
     "Group name" : "Nombre del grupo",
+    "Error" : "Error",
     "Settings" : "Ajustes",
+    "Network error" : "Error en la red",
     "No users" : "Sin usuarios",
     "Quota" : "Cuota",
     "Users" : " Usuarios",
@@ -18,6 +19,7 @@
     "Delete user" : "Borrar usuario",
     "Appearance" : "Apariencia",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
