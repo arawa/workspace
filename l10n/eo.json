@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "aŭ",
     "Unknown error" : "Nekonata eraro",
     "Search users" : "Serĉi uzantojn",
     "Cancel" : "Cancel",
@@ -11,6 +10,7 @@
     "Groups" : "Grupoj",
     "View profile" : "Vidi profilon",
     "Delete user" : "Forigi uzanton",
-    "Save" : "Konservi"
+    "Save" : "Konservi",
+    "or" : "aŭ"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

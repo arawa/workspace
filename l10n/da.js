@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "eller",
     "Unknown error" : "Ukendt fejl",
     "Add users" : "Tilføj brugere",
     "Search users" : "Søg efter brugere",
@@ -23,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "Slet bruger",
     "Appearance" : "Udseende",
     "Save" : "Gem",
-    "Loading..." : "Indlæser..."
+    "Loading..." : "Indlæser...",
+    "or" : "eller"
 },
 "nplurals=2; plural=(n != 1);");

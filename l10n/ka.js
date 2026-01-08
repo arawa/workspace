@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "or",
     "Unknown error" : "Unknown error",
     "Add users" : "Add users",
     "Search users" : "Search users",
@@ -12,7 +11,9 @@ OC.L10N.register(
     "File to share" : "File to share",
     "Rename group" : "Rename group",
     "Group name" : "Group name",
+    "Error" : "Error",
     "Settings" : "ოფციები",
+    "Network error" : "Network error",
     "No users" : "No users",
     "Quota" : "Quota",
     "Users" : "Users",
@@ -20,6 +21,7 @@ OC.L10N.register(
     "Groups" : "Groups",
     "View profile" : "View profile",
     "Delete user" : "Delete user",
-    "Save" : "დამახსოვრება"
+    "Save" : "დამახსოვრება",
+    "or" : "or"
 },
 "nplurals=2; plural=(n!=1);");

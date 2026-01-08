@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "ar",
     "Unknown error" : "Nežinoma klaida",
     "Add users" : "Pridėti naudotojus",
     "Search users" : "Ieškoti naudotojų",
@@ -12,7 +11,9 @@ OC.L10N.register(
     "File to share" : "Failas, kurį bendrinti",
     "Rename group" : "Pervadinti grupę",
     "Group name" : "Grupės pavadinimas",
+    "Error" : "Klaida",
     "Settings" : "Nustatymai",
+    "Network error" : "Tinklo klaida",
     "Quota" : "Leidžiamas duomenų kiekis",
     "Users" : "Naudotojai",
     "Role" : "Vaidmuo",
@@ -21,6 +22,7 @@ OC.L10N.register(
     "Delete user" : "Ištrinti naudotoją",
     "Appearance" : "Išvaizda",
     "Save" : "Įrašyti",
-    "Loading..." : "Įkeliama..."
+    "Loading..." : "Įkeliama...",
+    "or" : "ar"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

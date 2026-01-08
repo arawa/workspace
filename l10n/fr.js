@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Séparateur invalide pour le fichier CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Votre fichier CSV doit utiliser une virgule (\",\") comme séparateur.",
-    "or" : "ou",
     "Error in CSV file content" : "Erreur dans le contenu du fichier CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Les utilisateurs de ce fichier CSV sont inconnus et ne peuvent pas être importés. Vérifiez les utilisateurs suivants et répétez le processus :<br>",
     "Error: unknown users" : "Erreur : utilisateurs inconnus",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Remove added group" : "Retirer le groupe ajouté",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Attention, après la suppression du groupe <b>{groupname}</b>, ses utilisateurs perdront l'accès au workspace <b>{spacename}</b>, à l'exception des : <br><br>- Workspaces Managers (<b>WM-{spacename}</b>)<br>- utilisateurs qui sont membres d'un <b>groupe workspace</b> (préfixé <b>G-</b>)<br>- utilisateurs qui sont membres d'un autre groupe Ajouté<br>- des utilisateurs ajoutés manuellement depuis le workspace <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Veuillez noter qu'après la suppression du groupe {groupname}, ses utilisateurs conserveront l'accès au workspace {spacename}",
+    "Error" : "Erreur",
     "New workspace" : "Nouveau workspace",
     "All workspaces" : "Tous les workspaces",
     "Search workspaces..." : "Rechercher des Workspaces...",
@@ -44,6 +44,7 @@ OC.L10N.register(
     "Convert Team folders" : "Convertir des dossiers d'équipe",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Une erreur s'est produite lors de la recherche des utilisateurs.<br>Erreur : {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la recherche des utilisateurs.<br>Erreur : {error}",
+    "Network error" : "Erreur réseau",
     "Start typing to lookup users" : "Commencez à taper pour rechercher des utilisateurs",
     "Are you sure you want to delete the {space} workspace?" : "Êtes vous sûr de vouloir supprimer le workspace {space} ?",
     "Delete workspace" : "Supprimer le workspace",
@@ -103,6 +104,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Une erreur réseau s'est produite lors de modification du rôle de l'utilisateur {user}.<br>Erreur : {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Une erreur s'est produite lors de mise à jour du quota du Workspace.<br>Erreur : {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Une erreur réseau s'est produite lors de mise à jour du quota du workspace.<br>Erreur : {error}",
+    "or" : "ou",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace.<br>Erreur : {error}",
     "Rename space" : "Renommer le workspace",
     "Space name" : "Nom du workspace"

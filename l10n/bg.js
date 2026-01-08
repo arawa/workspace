@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "или",
     "Unknown error" : "Неизвестна грешка",
     "Add users" : "Добавяне на потребители",
     "Search users" : "Търсене за потребители",
@@ -21,6 +20,7 @@ OC.L10N.register(
     "Delete user" : "Изтриване",
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
-    "Save" : "Запиши"
+    "Save" : "Запиши",
+    "or" : "или"
 },
 "nplurals=2; plural=(n != 1);");

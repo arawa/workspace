@@ -1,7 +1,6 @@
 { "translations": {
     "Invalid separator for CSV file" : "Separador non válido para ficheiro CSV",
     "Your CSV file must use a comma (\",\") as separator" : "O seu ficheiro CSV debe usar unha coma («,») como separador",
-    "or" : "ou",
     "Error in CSV file content" : "Hai un erro no contido do ficheiro CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Os usuarios deste ficheiro CSV son descoñecidos e non é posíbel importalos. Comprobe os seguintes usuarios e repita o proceso:<br>",
     "Error: unknown users" : "Erro: usuarios descoñecidos",
@@ -35,6 +34,7 @@
     "Remove added group" : "Retirar o grupo engadido",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Advertencia: tras a eliminación do grupo <b>{groupname}</b>, os seus usuarios perderán o acceso ao espazo de traballo <b>{spacename}</b>, agás:<br><br>- Xestores do espazo de traballo (<b>WM-{spacename}</b>)<br>- Usuarios que sexan membros de <b>grupos do espazo de traballo</b> (co prefixo <b>G-</b>)<br>- Usuarios que sexan membros doutro grupo engadido<br>- Usuarios engadidos manualmente desde o espazo de traballo <b>{spacename}</b>",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Observe que, após eliminar o grupo {groupname}, os seus usuarios manterán o acceso ao espazo de traballo {spacename}",
+    "Error" : "Erro",
     "New workspace" : "Novo espazo de traballo",
     "All workspaces" : "Todos os espazos de traballo",
     "Search workspaces..." : "Buscar espazos de traballo…",
@@ -42,6 +42,7 @@
     "Convert Team folders" : "Converter os cartafoles do equipo",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Produciuse un erro ao tentar buscar usuarios.<br>Erro: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Produciuse un erro de rede ao tentar buscar usuarios.<br>Erro: {error}",
+    "Network error" : "Produciuse un erro na rede",
     "Start typing to lookup users" : "Comece a escribir para buscar usuarios",
     "Are you sure you want to delete the {space} workspace?" : "Confirma que quere eliminar o espazo de traballo {space}?",
     "Delete workspace" : "Eliminar o espazo de traballo",
@@ -101,6 +102,7 @@
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Produciuse un erro de rede ao tentar cambiar o rol de usuario {user}.<br>Erro: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Produciuse un erro ao tentar actualizar a cota do espazo de traballo.<br>Erro: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Produciuse un erro de rede ao tentar actualizar a cota do espazo de traballo.<br>Erro: {error}",
+    "or" : "ou",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Produciuse un erro de rede ao tentar cambiar a cor do espazo de traballo.<br>Erro: {error}",
     "Rename space" : "Cambiar o nome do espazo",
     "Space name" : "Nome do espazo"

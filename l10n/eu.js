@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "edo",
     "Unknown error" : "Errore ezezaguna",
     "Add users" : "Gehitu erabiltzaileak",
     "Search users" : "Bilatu erabiltzaileak",
@@ -14,7 +13,9 @@ OC.L10N.register(
     "Rename group" : "Berrizendatu taldea",
     "Group name" : "Taldearen izena",
     "Delete group" : "Ezabatu taldea",
+    "Error" : "Errorea",
     "Settings" : "Ezarpenak",
+    "Network error" : "Sare errorea",
     "No users" : "Erabiltzailerik ez",
     "Quota" : "Kuota",
     "Users" : "Erabiltzaileak",
@@ -25,6 +26,7 @@ OC.L10N.register(
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
     "Save" : "Gorde",
-    "Loading..." : "Kargatzen..."
+    "Loading..." : "Kargatzen...",
+    "or" : "edo"
 },
 "nplurals=2; plural=(n != 1);");

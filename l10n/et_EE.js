@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Vigane eraldaja CSV-failis",
     "Your CSV file must use a comma (\",\") as separator" : "Oma CSV-falis pead eraldajana kasutama koma (\",\")",
-    "or" : "või",
     "Error in CSV file content" : "Viga CSV-faili sisus",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Selles CSV-failis leiduvaid kasutajaid pole võimalik tuvastada ja seega ei saa ka neid importida. Palun kontrolli, kas järgnevad kasutajad on õiged ja korda tegevust: <br>",
     "Error: unknown users" : "Viga: tundmatud kasutajad",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Remove added group" : "Eemalda lisatud grupp",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "Palun arvesta, et „{groupname}“ grupi kustutamisel selle liikmetele üldjuhul ei jää alles ligipääs „{spacename}“ töötuppa. Erandjuhud on:<br><br>- töötoa haldurid (<b>WM-{spacename}</b>)<br>- kasutajad, kes on <b>töötubade grupi</b> liikmed (äratuntavad <b>G-</b> prefiksi alusel)<br>- kasutajad, kes on teise lisatud grupi (Added Group) liikmed<br> - kasutajad, kes on  <b>{spacename}</b> töötoast käsitsi lisatud",
     "Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace" : "Palun arvesta, et „{groupname}“ grupi kustutamisel jääb selle liikmetele alles ligipääs „{spacename}“ töötuppa",
+    "Error" : "Viga",
     "New workspace" : "Uus töötuba",
     "All workspaces" : "Kõik töötoad",
     "Search workspaces..." : "Otsi töötube...",
@@ -44,6 +44,7 @@ OC.L10N.register(
     "Convert Team folders" : "Teisenda tiimikaustad",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Kasutajate tuvastamisel tekkis viga.<br>Viga:{error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Kasutajate tuvastamisel tekkis võrguühenduse viga.<br>Viga:{error}",
+    "Network error" : "Võrguühenduse viga:",
     "Start typing to lookup users" : "Kasutajate otsimiseks hakka kirjutama",
     "Are you sure you want to delete the {space} workspace?" : "Kas sa oled kindel, et soovid „{space}“ töötoa kustutada?",
     "Delete workspace" : "Kustuta töötuba",
@@ -103,6 +104,7 @@ OC.L10N.register(
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "„{user}“ kasutaja rolli muutmisel tekkis võrguühenduse viga.<br>Viga:{error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Töötubade kvoodi muutmisel tekkis viga.<br>Viga:{error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Töötubade kvoodi muutmisel tekkis võrguühenduse viga.<br>Viga:{error}",
+    "or" : "või",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Töötoa värvi muutmisel tekkis võrguühenduse viga.<br>Viga:{error}",
     "Rename space" : "Muuda töötoa nime",
     "Space name" : "Töötoa nimi"

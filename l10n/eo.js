@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "aŭ",
     "Unknown error" : "Nekonata eraro",
     "Search users" : "Serĉi uzantojn",
     "Cancel" : "Cancel",
@@ -13,6 +12,7 @@ OC.L10N.register(
     "Groups" : "Grupoj",
     "View profile" : "Vidi profilon",
     "Delete user" : "Forigi uzanton",
-    "Save" : "Konservi"
+    "Save" : "Konservi",
+    "or" : "aŭ"
 },
 "nplurals=2; plural=(n != 1);");

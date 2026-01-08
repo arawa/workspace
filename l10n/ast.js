@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "o",
     "Unknown error" : "Error desconocíu",
     "Add users" : "Amestar usuarios",
     "Search users" : "Buscar usuarios",
@@ -21,6 +20,7 @@ OC.L10N.register(
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o"
 },
 "nplurals=2; plural=(n != 1);");

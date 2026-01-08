@@ -5,6 +5,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "Confirmar",
     "Group name" : "Nomine del gruppo",
+    "Error" : "Error",
     "Settings" : "Configurationes",
     "Quota" : "Quota",
     "Users" : "Usatores",
