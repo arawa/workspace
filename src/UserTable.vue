@@ -89,7 +89,7 @@
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
-									{{ t('workspace', 'Delete user') }}
+									{{ t('workspace', 'Remove user') }}
 								</NcActionButton>
 								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup"
 									icon="icon-close"
