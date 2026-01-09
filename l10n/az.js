@@ -5,6 +5,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "Təsdiq edin",
     "Rename group" : "Qrupun adını dəyiş",
+    "Error" : "Səhv",
     "Settings" : "Quraşdırmalar",
     "Quota" : "Norma",
     "Users" : "İstifadəçilər",

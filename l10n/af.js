@@ -7,6 +7,7 @@ OC.L10N.register(
     "Confirm" : "Bevestig",
     "Group name" : "Groepnaam",
     "Settings" : "Instellings",
+    "Network error" : "Netwerkfout",
     "Users" : "Gebruikers",
     "Groups" : "Groepe",
     "Save" : "Stoor"

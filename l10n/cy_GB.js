@@ -4,6 +4,7 @@ OC.L10N.register(
     "Unknown error" : "Gwall anhysbys",
     "Cancel" : "Cancel",
     "Confirm" : "Cadarnhau",
+    "Error" : "Gwall",
     "Settings" : "Gosodiadau",
     "Users" : "Defnyddwyr",
     "Groups" : "Grwpiau",

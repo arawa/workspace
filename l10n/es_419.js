@@ -7,6 +7,7 @@ OC.L10N.register(
     "Confirm" : "Confirmar",
     "Group name" : "Nombre del grupo",
     "Settings" : "Ajustes",
+    "Network error" : "Error en la red",
     "Users" : "Ususarios",
     "Save" : "Guardar",
     "Loading..." : "Cargando...",

@@ -14,6 +14,7 @@ OC.L10N.register(
     "Group name" : "Назва групы",
     "Delete group" : "Выдаліць групу",
     "Remove added group" : "Выдаліць дададзеную групу",
+    "Error" : "Памылка",
     "Settings" : "Налады",
     "No users" : "Няма карыстальнікаў",
     "Quota" : "Квота",
