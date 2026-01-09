@@ -149,6 +149,10 @@ export default {
 	mounted() {
 		const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 		this.$store.dispatch('loadUsers', { space })
+
+		if (space.managers === null) {
+			this.$store.dispatch('loadAdmins', { space })
+		}
 	},
 	methods: {
 		deleteGroup() {
