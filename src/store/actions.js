@@ -538,7 +538,7 @@ export default {
 	setNoUsers(context, { activated }) {
 		context.commit('SET_NO_USERS', ({ activated }))
 	},
-	async loadAdmins(context, space) {
+	async loadAdmins(context, { space }) {
 		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
 		axios.get(url)
 			.then(response => {
