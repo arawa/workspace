@@ -4,6 +4,7 @@ OC.L10N.register(
     "Unknown error" : "Nepoznata greška",
     "Cancel" : "Cancel",
     "Group name" : "Naziv grupe",
+    "Error" : "Greška",
     "Settings" : "Podešavanje",
     "Quota" : "Kvota",
     "Users" : "Korisnici",
