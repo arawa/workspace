@@ -202,6 +202,10 @@ export default {
 		} else {
 			this.$store.dispatch('setNoUsers', { activated: false })
 		}
+
+		if (this.space.managers === null) {
+			this.$store.dispatch('loadAdmins', { space: this.space })
+		}
 	},
 	beforeUpdate() {
 		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
