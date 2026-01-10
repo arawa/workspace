@@ -182,11 +182,11 @@ export function addGroupToManageACLForGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error to add group as manager acl'),
+				t('workspace', 'Error while adding group as manager ACL'),
 				t('workspace', 'Impossible to add the Space Manager group in Manage ACL groupfolder'),
 				5000)
 			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
-			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
+			throw new AddGroupToManageACLForGroupfolderError('Error while adding the Space Manager group in manage ACL groupfolder')
 		})
 }
 
@@ -208,8 +208,8 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error to remove group as manager acl'),
-				t('workspace', 'Impossible to remove the group from the advanced permissions.'),
+				t('workspace', 'Error while removing group as manager ACL'),
+				t('workspace', 'Impossible to remove group from the advanced permissions.'),
 				5000)
 			console.error('Impossible to remove the group from the advanced permissions.', error)
 			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
