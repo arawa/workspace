@@ -128,7 +128,7 @@ export function enableAcl(folderId) {
 			}
 
 			if (resp.status === 500) {
-				throw new Error('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?')
+				throw new Error('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection?')
 			}
 		})
 		.catch(error => {
@@ -155,9 +155,9 @@ export function addGroupToGroupfolder(folderId, gid) {
 		.catch(error => {
 			showNotificationError(
 				t('workspace', 'Error groups'),
-				t('workspace', 'Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?', { gid }),
+				t('workspace', 'Impossible to attach the {gid} group to groupfolder. May be a problem with the connection?', { gid }),
 				5000)
-			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
+			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection?`, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
 }
@@ -230,7 +230,7 @@ export function createGroupfolder(spaceName) {
 		})
 		.then(resp => {
 			if (resp.data.ocs.meta.statuscode !== 100) {
-				throw new Error('Impossible to create a groupfolder. May be an error network ?')
+				throw new Error('Impossible to create a groupfolder. May be an error network?')
 			}
 			return resp.data.ocs
 		})
@@ -265,7 +265,7 @@ export function destroy(workspace) {
 						}
 					})
 					.catch(error => {
-						console.error('Error to delete a groupfolder. May be a problem network ?', error)
+						console.error('Error to delete a groupfolder. May be a problem network?', error)
 					})
 			}
 			return resp.data
