@@ -21,11 +21,12 @@ OC.L10N.register(
     "Role" : "Ruolo",
     "Groups" : "Gruppi",
     "View profile" : "Vedi profilo",
-    "Delete user" : "Elimina utente",
+    "Remove user" : "Rimuovi utente",
     "unlimited" : "illimitato",
     "Appearance" : "Aspetto",
     "Save" : "Salva",
     "Loading..." : "Caricamento in corso...",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Elimina utente"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

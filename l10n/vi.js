@@ -19,9 +19,10 @@ OC.L10N.register(
     "Role" : "Vai trò",
     "Groups" : "Nhóm",
     "View profile" : "Xem hồ sơ",
-    "Delete user" : "Xóa người dùng",
+    "Remove user" : "Xóa người dùng",
     "Appearance" : "Giao diện",
     "Save" : "Lưu",
-    "or" : "hoặc"
+    "or" : "hoặc",
+    "Delete user" : "Xóa người dùng"
 },
 "nplurals=1; plural=0;");

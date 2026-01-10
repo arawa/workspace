@@ -73,7 +73,7 @@ OC.L10N.register(
     "View profile" : "Zobraziť profil",
     "Remove WM rights" : "Odstrániť práva WM",
     "Assign as WM" : "Priradiť ako WM",
-    "Delete user" : "Zmazať používateľa",
+    "Remove user" : "Odstrániť používateľa",
     "Remove from group" : "Odstrániť zo skupiny",
     "There are no users in this workspace/group yet" : "V tomto pracovnom priestore/skupine ešte nie sú žiadni používatelia.",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Došlo k chybe pri pokuse o získanie pracovných priestorov. <br>Chyba: {error}",
@@ -106,6 +106,7 @@ OC.L10N.register(
     "or" : "alebo",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Došlo k chybe siete pri pokuse o zmenu farby pracovného priestoru.<br>Chyba je: {error}",
     "Rename space" : "Premenovať miesto",
-    "Space name" : "Názov miesta"
+    "Space name" : "Názov miesta",
+    "Delete user" : "Zmazať používateľa"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

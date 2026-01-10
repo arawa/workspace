@@ -72,7 +72,7 @@
     "View profile" : "Ver o perfil",
     "Remove WM rights" : "Retirar os dereitos de WM",
     "Assign as WM" : "Asignar como WM",
-    "Delete user" : "Eliminar usuario",
+    "Remove user" : "Retirar o usuario",
     "Remove from group" : "Retirar do grupo",
     "There are no users in this workspace/group yet" : "Aínda non hai ningún usuario neste espazo de traballo/grupo",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Produciuse un erro ao tentar recuperar espazos de traballo.<br>Erro: {error}",
@@ -105,6 +105,7 @@
     "or" : "ou",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Produciuse un erro de rede ao tentar cambiar a cor do espazo de traballo.<br>Erro: {error}",
     "Rename space" : "Cambiar o nome do espazo",
-    "Space name" : "Nome do espazo"
+    "Space name" : "Nome do espazo",
+    "Delete user" : "Eliminar usuario"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

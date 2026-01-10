@@ -40,6 +40,7 @@ OC.L10N.register(
     "Convert Team folders" : "Convertir Carpetas de Equipo",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "Ocurrió un error al buscar usuarios.<br>Error: {error}",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Ocurrió un error de red al buscar usuarios.<br>Error: {error}",
+    "Network error" : "Error en la red",
     "Start typing to lookup users" : "Comienza a escribir para buscar usuarios",
     "Are you sure you want to delete the {space} workspace?" : "¿Estás seguro de que deseas eliminar el espacio de trabajo {space}?",
     "Add a group" : "Agregar un grupo",
@@ -63,7 +64,7 @@ OC.L10N.register(
     "Role" : "Rol",
     "Groups" : "Grupos",
     "View profile" : "Ver perfil",
-    "Delete user" : "Eliminar usuario",
+    "Remove user" : "Eliminar usuario",
     "Remove from group" : "Quitar de grupo",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocurrió un error al intentar recuperar espacios de trabajo.<br>Error: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocurrió un error de red al intentar recuperar espacios de trabajo.<br>Error: {error}",
@@ -92,6 +93,7 @@ OC.L10N.register(
     "or" : "o",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>El error es: {error}",
     "Rename space" : "Renombrar espacio",
-    "Space name" : "Nombre del espacio"
+    "Space name" : "Nombre del espacio",
+    "Delete user" : "Eliminar usuario"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

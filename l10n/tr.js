@@ -74,7 +74,7 @@ OC.L10N.register(
     "View profile" : "Profili görüntüle",
     "Remove WM rights" : "ÇAY izinlerini kaldır",
     "Assign as WM" : "ÇAY olarak ata",
-    "Delete user" : "Kullanıcıyı sil",
+    "Remove user" : "Kullanıcıyı kaldır",
     "Remove from group" : "Gruptan kaldır",
     "There are no users in this workspace/group yet" : "Bu çalışma alanında/grubunda herhangi bir kullanıcı yok",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Çalışma alanları alınırken bir sorun çıktı.<br>Hata: {error}",
@@ -107,6 +107,7 @@ OC.L10N.register(
     "or" : "ya da",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Çalışma alanının rengi değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "Rename space" : "Çalışma alanını yeniden adlandır",
-    "Space name" : "Çalışma alanı adı"
+    "Space name" : "Çalışma alanı adı",
+    "Delete user" : "Kullanıcıyı sil"
 },
 "nplurals=2; plural=(n > 1);");

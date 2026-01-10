@@ -49,12 +49,12 @@ OC.L10N.register(
     "View profile" : "Angalia wasifu",
     "Remove WM rights" : "Ondoa haki za WM",
     "Assign as WM" : "Ingia kama WM",
-    "Delete user" : "Futa mtumiaji",
     "Remove from group" : "Ondoa kutoka katika kundi",
     "unlimited" : "isiyo na kikomo",
     "Appearance" : "Mwonekano",
     "Save" : "Hifadhi",
     "Loading..." : "Inapakia...",
-    "or" : "au"
+    "or" : "au",
+    "Delete user" : "Futa mtumiaji"
 },
 "nplurals=2; plural=(n != 1);");

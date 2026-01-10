@@ -17,10 +17,11 @@ OC.L10N.register(
     "Users" : "Utentes",
     "Groups" : "Grupos",
     "View profile" : "Ammustra su profilu",
-    "Delete user" : "Cantzella utente",
+    "Remove user" : "Boga utente",
     "unlimited" : "illacanadu",
     "Appearance" : "Aspetu",
     "Save" : "Sarva",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Cantzella utente"
 },
 "nplurals=2; plural=(n != 1);");

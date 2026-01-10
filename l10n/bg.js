@@ -19,10 +19,11 @@ OC.L10N.register(
     "Role" : "Роля",
     "Groups" : "Групи",
     "View profile" : "Преглед на профил",
-    "Delete user" : "Изтриване",
+    "Remove user" : "Премахване на потребител",
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
     "Save" : "Запиши",
-    "or" : "или"
+    "or" : "или",
+    "Delete user" : "Изтриване"
 },
 "nplurals=2; plural=(n != 1);");

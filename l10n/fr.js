@@ -74,7 +74,7 @@ OC.L10N.register(
     "View profile" : "Voir le profil",
     "Remove WM rights" : "Retirer les droits de WM",
     "Assign as WM" : "Assigner comme WM",
-    "Delete user" : "Supprimer l'utilisateur",
+    "Remove user" : "Retirer l'utilisateur",
     "Remove from group" : "Retirer du groupe",
     "There are no users in this workspace/group yet" : "Il n'y a encore aucun utilisateur dans ce workspace/groupe",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
@@ -107,6 +107,7 @@ OC.L10N.register(
     "or" : "ou",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace.<br>Erreur : {error}",
     "Rename space" : "Renommer le workspace",
-    "Space name" : "Nom du workspace"
+    "Space name" : "Nom du workspace",
+    "Delete user" : "Supprimer l'utilisateur"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

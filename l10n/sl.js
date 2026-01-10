@@ -20,10 +20,11 @@ OC.L10N.register(
     "Role" : "Vloga",
     "Groups" : "Skupine",
     "View profile" : "Pokaži profil",
-    "Delete user" : "Izbriši uporabnika",
+    "Remove user" : "Odstrani uporabnika",
     "unlimited" : "neomejeno",
     "Appearance" : "Videz",
     "Save" : "Shrani",
-    "or" : "ali"
+    "or" : "ali",
+    "Delete user" : "Izbriši uporabnika"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

@@ -49,7 +49,7 @@ OC.L10N.register(
     "Role" : "Rooli",
     "Groups" : "Ryhmät",
     "View profile" : "Näytä profiili",
-    "Delete user" : "Poista käyttäjä",
+    "Remove user" : "Poista käyttäjä",
     "Remove from group" : "Poista ryhmästä",
     "No workspace" : "Ei työtilaa",
     "Appearance" : "Ulkoasu",
@@ -60,6 +60,7 @@ OC.L10N.register(
     "Can't load workspace users" : "Työtilan käyttäjiä ei voi ladata",
     "or" : "tai",
     "Rename space" : "Nimeä tila uudelleen",
-    "Space name" : "Tilan nimi"
+    "Space name" : "Tilan nimi",
+    "Delete user" : "Poista käyttäjä"
 },
 "nplurals=2; plural=(n != 1);");

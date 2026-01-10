@@ -72,7 +72,7 @@
     "View profile" : "View profile",
     "Remove WM rights" : "Remove WM rights",
     "Assign as WM" : "Assign as WM",
-    "Delete user" : "Delete user",
+    "Remove user" : "Remove user",
     "Remove from group" : "Remove from group",
     "There are no users in this workspace/group yet" : "There are no users in this workspace/group yet",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "An error occurred while trying to retrieve workspaces.<br>Error: {error}",
@@ -105,6 +105,7 @@
     "or" : "or",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "A network error occured when trying to change the workspace's color.<br>The error is: {error}",
     "Rename space" : "Rename space",
-    "Space name" : "Space name"
+    "Space name" : "Space name",
+    "Delete user" : "Delete user"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -21,11 +21,12 @@ OC.L10N.register(
     "Role" : "角色",
     "Groups" : "用户组",
     "View profile" : "查看个人资料",
-    "Delete user" : "删除用户",
+    "Remove user" : "移除用户",
     "unlimited" : "无限制",
     "Appearance" : "外观",
     "Save" : "保存",
     "Loading..." : "载入中...",
-    "or" : "或"
+    "or" : "或",
+    "Delete user" : "删除用户"
 },
 "nplurals=1; plural=0;");
