@@ -165,7 +165,7 @@ describe('enableAcl function', () => {
 	it('throws error if resp.status is not 200', async () => {
 		axios.post.mockResolvedValue({ status: 500, ...responseValue })
 		const promise = enableAcl()
-		await expect(promise).rejects.toThrow('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?')
+		await expect(promise).rejects.toThrow('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection?')
 	})
 })
 
@@ -225,7 +225,7 @@ describe('addGroupToManageACLForGroupfolder', () => {
 	})
 	it('throws proper error message if request fails', async () => {
 		axios.post.mockImplementation(() => Promise.reject(new Error()))
-		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add the Space Manager group in manage ACL groupfolder')
+		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error while adding the Space Manager group in manage ACL groupfolder')
 	})
 })
 
