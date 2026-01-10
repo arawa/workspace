@@ -77,7 +77,7 @@ OC.L10N.register(
     "View profile" : "Vaata profiili",
     "Remove WM rights" : "Eemalda töötoa halduri õigused",
     "Assign as WM" : "Määra töötoa halduriks",
-    "Delete user" : "Kustuta kasutaja",
+    "Remove user" : "Eemalda kasutaja",
     "Remove from group" : "Eemalda grupist",
     "There are no users in this workspace/group yet" : "Selles töötoas või grupis veel pole kasutajaid",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Töötubade laadimisel tekkis viga.<br>Viga:{error}",
@@ -114,6 +114,7 @@ OC.L10N.register(
     "or" : "või",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Töötoa värvi muutmisel tekkis võrguühenduse viga.<br>Viga:{error}",
     "Rename space" : "Muuda töötoa nime",
-    "Space name" : "Töötoa nimi"
+    "Space name" : "Töötoa nimi",
+    "Delete user" : "Kustuta kasutaja"
 },
 "nplurals=2; plural=(n != 1);");

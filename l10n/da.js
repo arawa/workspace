@@ -21,10 +21,10 @@ OC.L10N.register(
     "Role" : "Rolle",
     "Groups" : "Grupper",
     "View profile" : "Vis profil",
-    "Delete user" : "Slet bruger",
     "Appearance" : "Udseende",
     "Save" : "Gem",
     "Loading..." : "Indlæser...",
-    "or" : "eller"
+    "or" : "eller",
+    "Delete user" : "Slet bruger"
 },
 "nplurals=2; plural=(n != 1);");

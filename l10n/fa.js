@@ -20,11 +20,12 @@ OC.L10N.register(
     "Users" : "کاربران",
     "Groups" : "گروه ها",
     "View profile" : "مشاهدهٔ نمایه",
-    "Delete user" : "حذف کردن کاربر",
+    "Remove user" : "برداشتن کاربر",
     "unlimited" : "نامحدود",
     "Appearance" : "ظاهر",
     "Save" : "ذخیره",
     "Loading..." : "در حال بارگذاری...",
-    "or" : "یا"
+    "or" : "یا",
+    "Delete user" : "حذف کردن کاربر"
 },
 "nplurals=2; plural=(n > 1);");

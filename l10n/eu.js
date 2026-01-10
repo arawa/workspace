@@ -22,11 +22,12 @@ OC.L10N.register(
     "Role" : "Zeregina",
     "Groups" : "Taldeak",
     "View profile" : "Ikusi profila",
-    "Delete user" : "Ezabatu erabiltzailea",
+    "Remove user" : "Kendu erabiltzailea",
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
     "Save" : "Gorde",
     "Loading..." : "Kargatzen...",
-    "or" : "edo"
+    "or" : "edo",
+    "Delete user" : "Ezabatu erabiltzailea"
 },
 "nplurals=2; plural=(n != 1);");

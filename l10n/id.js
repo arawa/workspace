@@ -14,9 +14,9 @@ OC.L10N.register(
     "Users" : "Pengguna",
     "Groups" : "Grup",
     "View profile" : "Tampilkan profil",
-    "Delete user" : "Hapus pengguna",
     "Appearance" : "Tampilan",
     "Save" : "Simpan",
-    "or" : "atau"
+    "or" : "atau",
+    "Delete user" : "Hapus pengguna"
 },
 "nplurals=1; plural=0;");

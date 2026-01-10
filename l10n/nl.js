@@ -22,11 +22,12 @@ OC.L10N.register(
     "Role" : "Rol",
     "Groups" : "Groepen",
     "View profile" : "Bekijk profiel",
-    "Delete user" : "Verwijder gebruiker",
+    "Remove user" : "Gebruiker verwijderen",
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
     "Loading..." : "Laden....",
-    "or" : "of"
+    "or" : "of",
+    "Delete user" : "Verwijder gebruiker"
 },
 "nplurals=2; plural=(n != 1);");

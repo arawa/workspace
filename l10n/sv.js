@@ -20,11 +20,12 @@ OC.L10N.register(
     "Role" : "Roll",
     "Groups" : "Grupper",
     "View profile" : "Visa profil",
-    "Delete user" : "Ta bort användare",
+    "Remove user" : "Ta bort användare",
     "unlimited" : "obegränsat",
     "Appearance" : "Utseende",
     "Save" : "Spara",
     "Loading..." : "Laddar...",
-    "or" : "eller"
+    "or" : "eller",
+    "Delete user" : "Ta bort användare"
 },
 "nplurals=2; plural=(n != 1);");

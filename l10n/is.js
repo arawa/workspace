@@ -18,11 +18,11 @@ OC.L10N.register(
     "Users" : "Notendur",
     "Groups" : "Hópar",
     "View profile" : "Skoða notandasnið",
-    "Delete user" : "Eyða notanda",
     "unlimited" : "ótakmarkað",
     "Appearance" : "Útlit",
     "Save" : "Vista",
     "Loading..." : "Hleð...",
-    "or" : "eða"
+    "or" : "eða",
+    "Delete user" : "Eyða notanda"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

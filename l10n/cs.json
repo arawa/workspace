@@ -70,7 +70,7 @@
     "View profile" : "Zobrazit profil ",
     "Remove WM rights" : "Odebrat oprávnění pro správu",
     "Assign as WM" : "Přiřadit jako správce prostoru",
-    "Delete user" : "Smazat uživatele",
+    "Remove user" : "Odebrat uživatele",
     "Remove from group" : "Odebrat ze skupiny",
     "There are no users in this workspace/group yet" : "V tomto pracovním prostoru / skupině se zatím ještě nenacházejí žádní uživatelé",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Při pokusu o získání pracovního prostorů došlo k chybě.<br>Chyba: {error}",
@@ -103,6 +103,7 @@
     "or" : "nebo",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Při pokusu o změnu barvy pracovního prostoru došlo k síťové chybě.<br>Chyba je: {error}",
     "Rename space" : "Přejmenovat prostor",
-    "Space name" : "Název prostoru"
+    "Space name" : "Název prostoru",
+    "Delete user" : "Smazat uživatele"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

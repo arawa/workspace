@@ -20,11 +20,12 @@ OC.L10N.register(
     "Role" : "Ρόλος/Θέση",
     "Groups" : "Ομάδες",
     "View profile" : "Προβολή προφίλ",
-    "Delete user" : "Διαγραφή χρήστη",
+    "Remove user" : "Αφαίρεση χρήστη",
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
     "Save" : "Αποθήκευση",
     "Loading..." : "Γίνεται φόρτωση...",
-    "or" : "ή"
+    "or" : "ή",
+    "Delete user" : "Διαγραφή χρήστη"
 },
 "nplurals=2; plural=(n != 1);");
