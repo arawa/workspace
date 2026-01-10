@@ -52,7 +52,7 @@ OC.L10N.register(
     "Role" : "ບົດບາດ",
     "Groups" : "ກຸ່ມ",
     "View profile" : "ເບິ່ງໂປຣໄຟລ໌",
-    "Delete user" : "ລຶບຜູ້ໃຊ້",
+    "Remove user" : "Remove user",
     "Remove from group" : "ເອົາອອກຈາກກຸ່ມ",
     "unlimited" : "ບໍ່ຈຳກັດ",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "ທ່ານສາມາດລະບຸໂຄຕ້າໄດ້ພຽງ \"ບໍ່ຈຳກັດ\" ຫຼື ຕົວເລກທີ່ຕາມດ້ວຍ \"TB\", \"GB\", \"MB\", ຫຼື \"KB\" (ຕົວຢ່າງ: \"5GB\")",
@@ -64,6 +64,7 @@ OC.L10N.register(
     "or" : "ຫຼື",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "ເກີດຂໍ້ຜິດພາດດ້ານເຄືອຂ່າຍຂະນະພະຍາຍາມປ່ຽນສີພື້ນທີ່ວຽກ.<br>ຂໍ້ຜິດພາດຄື: {error}",
     "Rename space" : "ປ່ຽນຊື່ພື້ນທີ່ວຽກ",
-    "Space name" : "ຊື່ພື້ນທີ່ວຽກ"
+    "Space name" : "ຊື່ພື້ນທີ່ວຽກ",
+    "Delete user" : "ລຶບຜູ້ໃຊ້"
 },
 "nplurals=1; plural=0;");

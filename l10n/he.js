@@ -15,10 +15,11 @@ OC.L10N.register(
     "Quota" : "מכיסה",
     "Users" : "משתמשים",
     "Groups" : "קבוצות",
-    "Delete user" : "מחיקת משתמש",
+    "Remove user" : "הסרת משתמש",
     "unlimited" : "ללא הגבלה",
     "Appearance" : "מראה",
     "Save" : "שמירה",
-    "or" : "או"
+    "or" : "או",
+    "Delete user" : "מחיקת משתמש"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

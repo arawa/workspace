@@ -18,11 +18,11 @@ OC.L10N.register(
     "Role" : "Rol",
     "Groups" : "Grupos",
     "View profile" : "Ver el perfil",
-    "Delete user" : "Desaniciar l'usuariu",
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
     "Save" : "Guardar",
     "Loading..." : "Cargando...",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Desaniciar l'usuariu"
 },
 "nplurals=2; plural=(n != 1);");

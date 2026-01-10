@@ -30,13 +30,14 @@ OC.L10N.register(
     "Role" : "Cargo",
     "Groups" : "Grupos",
     "View profile" : "Ver perfil",
-    "Delete user" : "Eliminar usuario",
+    "Remove user" : "Eliminar usuario",
     "Remove from group" : "Eliminar del grupo",
     "unlimited" : "ilimitado",
     "Appearance" : "Apariencia",
     "Set quota" : "Establecer cuota",
     "Save" : "Guardar",
     "Loading..." : "Cargando...",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Eliminar usuario"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

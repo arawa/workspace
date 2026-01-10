@@ -20,10 +20,11 @@ OC.L10N.register(
     "Users" : "사용자",
     "Groups" : "그룹",
     "View profile" : "프로필 보기",
-    "Delete user" : "사용자 지우기",
+    "Remove user" : "사용자 제거",
     "Appearance" : "외형",
     "Save" : "저장",
     "Loading..." : "불러오는 중...",
-    "or" : "또는"
+    "or" : "또는",
+    "Delete user" : "사용자 지우기"
 },
 "nplurals=1; plural=0;");

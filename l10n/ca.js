@@ -18,11 +18,12 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Groups" : "Grups",
     "View profile" : "Visualitza el perfil",
-    "Delete user" : "Suprimeix l'usuari",
+    "Remove user" : "Suprimir usuari",
     "unlimited" : "il·limitada",
     "Appearance" : "Aparença",
     "Save" : "Desar",
     "Loading..." : "Carregant...",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Suprimeix l'usuari"
 },
 "nplurals=2; plural=(n != 1);");

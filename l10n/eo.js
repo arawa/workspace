@@ -6,13 +6,14 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "Konfirmi",
     "Group name" : "Gruponomo",
+    "Error" : "Eraro",
     "Settings" : "Agordoj",
     "Quota" : "Kvoto",
     "Users" : "Uzantoj",
     "Groups" : "Grupoj",
     "View profile" : "Vidi profilon",
-    "Delete user" : "Forigi uzanton",
     "Save" : "Konservi",
-    "or" : "aŭ"
+    "or" : "aŭ",
+    "Delete user" : "Forigi uzanton"
 },
 "nplurals=2; plural=(n != 1);");

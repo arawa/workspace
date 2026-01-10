@@ -73,7 +73,7 @@ OC.L10N.register(
     "View profile" : "ئارخىپنى كۆرۈڭ",
     "Remove WM rights" : "خ ب ھوقوقىنى تارتىۋال",
     "Assign as WM" : "خ ب قىلىپ بېكىت",
-    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
+    "Remove user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
     "Remove from group" : "گۇرۇپپىدىن چىقار",
     "There are no users in this workspace/group yet" : "بۇ خىزمەت بوشلۇقىدا/گۇرۇپپىدا ئىشلەتكۈچى يوق",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنى چۈشۈرۋاتقاندا بىر خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
@@ -106,6 +106,7 @@ OC.L10N.register(
     "or" : "ياكى",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "خىزمەت بوشلۇقلىرىنىڭ رەڭگىنى ئۆزگەرتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
     "Rename space" : "بوشلۇقنىڭ نامىنى ئۆزگەرت",
-    "Space name" : "بوشلۇق نامى"
+    "Space name" : "بوشلۇق نامى",
+    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ"
 },
 "nplurals=2; plural=(n != 1);");

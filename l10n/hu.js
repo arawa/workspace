@@ -20,11 +20,12 @@ OC.L10N.register(
     "Role" : "Szerepkör",
     "Groups" : "Csoportok",
     "View profile" : "Profil megtekintése",
-    "Delete user" : "Felhasználó törlése",
+    "Remove user" : "Felhasználó eltávolítása",
     "unlimited" : "korlátlan",
     "Appearance" : "Megjelenés",
     "Save" : "Mentés",
     "Loading..." : "Betöltés…",
-    "or" : "vagy"
+    "or" : "vagy",
+    "Delete user" : "Felhasználó törlése"
 },
 "nplurals=2; plural=(n != 1);");

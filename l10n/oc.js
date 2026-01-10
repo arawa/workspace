@@ -17,9 +17,9 @@ OC.L10N.register(
     "Users" : "Utilizaires",
     "Role" : "Ròtle",
     "View profile" : "Veire perfil",
-    "Delete user" : "Suprimir l’utilizaire",
     "Appearance" : "Aparéncia",
     "Save" : "Enregistrar",
-    "or" : "o"
+    "or" : "o",
+    "Delete user" : "Suprimir l’utilizaire"
 },
 "nplurals=2; plural=(n > 1);");

@@ -78,7 +78,7 @@ OC.L10N.register(
     "View profile" : "檢視個人檔案",
     "Remove WM rights" : "移除工作空間管理員權限",
     "Assign as WM" : "指派為工作空間管理員",
-    "Delete user" : "刪除使用者",
+    "Remove user" : "移除使用者",
     "Remove from group" : "從群組移除",
     "There are no users in this workspace/group yet" : "此工作空間/群組中尚無使用者",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "嘗試擷取工作空間時發生錯誤。<br>錯誤：{error}",
@@ -123,6 +123,7 @@ OC.L10N.register(
     "or" : "或者",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "嘗試變更工作空間顏色時發生網路錯誤。<br>錯誤：{error}",
     "Rename space" : "重新命名空間",
-    "Space name" : "空間名稱"
+    "Space name" : "空間名稱",
+    "Delete user" : "刪除使用者"
 },
 "nplurals=1; plural=0;");

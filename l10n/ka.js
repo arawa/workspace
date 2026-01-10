@@ -20,8 +20,9 @@ OC.L10N.register(
     "Role" : "Role",
     "Groups" : "Groups",
     "View profile" : "View profile",
-    "Delete user" : "Delete user",
+    "Remove user" : "Remove user",
     "Save" : "დამახსოვრება",
-    "or" : "or"
+    "or" : "or",
+    "Delete user" : "Delete user"
 },
 "nplurals=2; plural=(n!=1);");
