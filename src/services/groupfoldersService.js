@@ -179,8 +179,8 @@ export function removeGroupToManageACLForGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error to remove group as manager acl'),
-				t('workspace', 'Impossible to remove the group from the advanced permissions.'),
+				t('workspace', 'Error while removing group as manager ACL'),
+				t('workspace', 'Impossible to remove group from the advanced permissions.'),
 				5000)
 			console.error('Impossible to remove the group from the advanced permissions.', error)
 			throw new RemoveGroupToManageACLForGroupfolderError('Impossible to remove the group from the advanced permissions.')
