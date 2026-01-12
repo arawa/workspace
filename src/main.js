@@ -27,7 +27,7 @@ import { linkTo } from '@nextcloud/router'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import { Tooltip } from '@nextcloud/vue'
+import Tooltip from '@nextcloud/vue/directives/Tooltip'
 import VueLazyComponent from '@xunlei/vue-lazy-component'
 import { vElementVisibility } from '@vueuse/components'
 
