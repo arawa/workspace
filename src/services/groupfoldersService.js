@@ -104,8 +104,8 @@ export async function checkGroupfolderNameExist(spaceName) {
 		})
 
 	if (duplicateExists) {
-		showNotificationError(t('workspace', 'Error - Duplicate space name'), t('workspace', 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.'), 5000)
-		throw new CheckGroupfolderNameExistError('This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
+		showNotificationError(t('workspace', 'Error - Duplicate space name'), t('workspace', 'This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist.'), 5000)
+		throw new CheckGroupfolderNameExistError('This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist.', 5000)
 	}
 	return false
 }
@@ -154,7 +154,7 @@ export function addGroupToGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error groups'),
+				t('workspace', 'Group error'),
 				t('workspace', 'Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?', { gid }),
 				5000)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection ?`, error)
