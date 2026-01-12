@@ -24,7 +24,6 @@
 import { deleteBlankSpacename } from './spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
-import AddGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/AddGroupToManageACLForGroupfolderError.js'
 import axios from '@nextcloud/axios'
 import BadGetError from '../Errors/BadGetError.js'
 import CheckGroupfolderNameExistError from '../Errors/Groupfolders/CheckGroupfolderNameError.js'
@@ -104,8 +103,8 @@ export async function checkGroupfolderNameExist(spaceName) {
 		})
 
 	if (duplicateExists) {
-		showNotificationError(t('workspace', 'Error - Duplicate space name'), t('workspace', 'This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.'), 5000)
-		throw new CheckGroupfolderNameExistError('This space or groupfolder already exists. Please, use another space name.\nIf a "toto" space exists, you cannot create the "tOTo" space.\nPlease check also the groupfolder doesn\'t exist.', 5000)
+		showNotificationError(t('workspace', 'Error - Duplicate space name'), t('workspace', 'This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist.'), 5000)
+		throw new CheckGroupfolderNameExistError('This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist.', 5000)
 	}
 	return false
 }
@@ -159,34 +158,6 @@ export function addGroupToGroupfolder(folderId, gid) {
 				5000)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection?`, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
-		})
-}
-
-/**
- * @param {number} folderId it's an id of a groupfolder
- * @param {string} gid it's an id (string format) of a group
- * @return {Promise}
- * @throws {AddGroupToManageACLForGroupfolderError}
- * @deprecated
- * @use createSpace from spaceService
- */
-export function addGroupToManageACLForGroupfolder(folderId, gid) {
-	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
-		{
-			mappingType: 'group',
-			mappingId: gid,
-			manageAcl: true,
-		})
-		.then(resp => {
-			return resp.data.ocs.data
-		})
-		.catch(error => {
-			showNotificationError(
-				t('workspace', 'Error while adding group as manager ACL'),
-				t('workspace', 'Impossible to add the Space Manager group in Manage ACL groupfolder'),
-				5000)
-			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
-			throw new AddGroupToManageACLForGroupfolderError('Error while adding the Space Manager group in manage ACL groupfolder')
 		})
 }
 

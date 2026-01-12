@@ -21,7 +21,7 @@
  */
 
 import { expect } from '@jest/globals'
-import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, addGroupToManageACLForGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
+import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
@@ -194,38 +194,6 @@ describe('addGroupToGroupfolder', () => {
 		axios.post.mockResolvedValue(responseValue)
 		await addGroupToGroupfolder(1, 'SPACE-U-1')
 		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/1/groups'), { group: 'SPACE-U-1' })
-	})
-})
-
-/**
- * @deprecated
- */
-describe('addGroupToManageACLForGroupfolder', () => {
-	beforeEach(() => {
-		axios.mockClear()
-	})
-	it('calls axios.post method', () => {
-		const spy = jest.spyOn(axios, 'post')
-		axios.post.mockResolvedValue(responseValue)
-		addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(spy).toBeCalled()
-	})
-	it('calls groupfolders API with proper parameters', async () => {
-		axios.post.mockResolvedValue(responseValue)
-		await addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/5/manageACL'), {
-			mappingType: 'group',
-			mappingId: 'SPACE-U-5',
-			manageAcl: true,
-		})
-	})
-	it('returns data value of the object received from axios.post call', async () => {
-		axios.post.mockImplementation(() => Promise.resolve(responseValue))
-		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
-	})
-	it('throws proper error message if request fails', async () => {
-		axios.post.mockImplementation(() => Promise.reject(new Error()))
-		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error while adding the Space Manager group in manage ACL groupfolder')
 	})
 })
 
