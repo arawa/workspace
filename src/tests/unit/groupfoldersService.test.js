@@ -197,38 +197,6 @@ describe('addGroupToGroupfolder', () => {
 	})
 })
 
-/**
- * @deprecated
- */
-describe('addGroupToManageACLForGroupfolder', () => {
-	beforeEach(() => {
-		axios.mockClear()
-	})
-	it('calls axios.post method', () => {
-		const spy = jest.spyOn(axios, 'post')
-		axios.post.mockResolvedValue(responseValue)
-		addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(spy).toBeCalled()
-	})
-	it('calls groupfolders API with proper parameters', async () => {
-		axios.post.mockResolvedValue(responseValue)
-		await addGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
-		expect(axios.post).toHaveBeenCalledWith(generateUrl('/apps/groupfolders/folders/5/manageACL'), {
-			mappingType: 'group',
-			mappingId: 'SPACE-U-5',
-			manageAcl: true,
-		})
-	})
-	it('returns data value of the object received from axios.post call', async () => {
-		axios.post.mockImplementation(() => Promise.resolve(responseValue))
-		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).resolves.toEqual(responseValue.data.ocs.data)
-	})
-	it('throws proper error message if request fails', async () => {
-		axios.post.mockImplementation(() => Promise.reject(new Error()))
-		await expect(addGroupToManageACLForGroupfolder(1, 'SPACE-U-1')).rejects.toThrow('Error to add the Space Manager group in manage ACL groupfolder')
-	})
-})
-
 describe('removeGroupToManageACLForGroupfolder', () => {
 	beforeEach(() => {
 		axios.mockClear()

@@ -166,34 +166,6 @@ export function addGroupToGroupfolder(folderId, gid) {
  * @param {number} folderId it's an id of a groupfolder
  * @param {string} gid it's an id (string format) of a group
  * @return {Promise}
- * @throws {AddGroupToManageACLForGroupfolderError}
- * @deprecated
- * @use createSpace from spaceService
- */
-export function addGroupToManageACLForGroupfolder(folderId, gid) {
-	return axios.post(generateUrl(`/apps/groupfolders/folders/${folderId}/manageACL`),
-		{
-			mappingType: 'group',
-			mappingId: gid,
-			manageAcl: true,
-		})
-		.then(resp => {
-			return resp.data.ocs.data
-		})
-		.catch(error => {
-			showNotificationError(
-				t('workspace', 'Error to add group as manager acl'),
-				t('workspace', 'Impossible to add the Space Manager group in Manage ACL groupfolder'),
-				5000)
-			console.error('Impossible to add the Space Manager group in Manage ACL groupfolder', error)
-			throw new AddGroupToManageACLForGroupfolderError('Error to add the Space Manager group in manage ACL groupfolder')
-		})
-}
-
-/**
- * @param {number} folderId it's an id of a groupfolder
- * @param {string} gid it's an id (string format) of a group
- * @return {Promise}
  * @throws {RemoveGroupToManageACLForGroupfolderError}
  */
 export function removeGroupToManageACLForGroupfolder(folderId, gid) {
