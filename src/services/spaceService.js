@@ -147,7 +147,7 @@ export function addGroupToWorkspace(spaceId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error groups'),
+				t('workspace', 'Group error'),
 				t('workspace', 'Impossible to attach the {gid} group to workspace. May be a problem with the connection ?', { gid }),
 				5000)
 			console.error('Impossible to attach the group to workspace. May be a problem with the connection ?', gid, error)
