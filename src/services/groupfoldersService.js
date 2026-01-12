@@ -24,7 +24,6 @@
 import { deleteBlankSpacename } from './spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
-import AddGroupToManageACLForGroupfolderError from '../Errors/Groupfolders/AddGroupToManageACLForGroupfolderError.js'
 import axios from '@nextcloud/axios'
 import BadGetError from '../Errors/BadGetError.js'
 import CheckGroupfolderNameExistError from '../Errors/Groupfolders/CheckGroupfolderNameError.js'
