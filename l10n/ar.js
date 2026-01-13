@@ -20,6 +20,7 @@ OC.L10N.register(
     "Role" : "الوظيفة",
     "Groups" : "المجموعات",
     "View profile" : "عرض الملف الشخصي",
+    "Remove user" : "حذف مستخدِم",
     "unlimited" : "غير محدود",
     "Appearance" : "المظهر",
     "Save" : "حفظ",
