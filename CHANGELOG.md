@@ -53,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve OCS API Documentation for edit function by @zak39 in [#1553](https://github.com/arawa/workspace/pull/1553)
 - Add sponsoring section by @zak39 in [#1476](https://github.com/arawa/workspace/pull/1476)
 - Update OpenAPI for OCS API Viewer (Swagger) by @zak39 in [#1571](https://github.com/arawa/workspace/pull/1571)
+- Update CHANGELOG for v4.3.0 by @zak39 in [#1586](https://github.com/arawa/workspace/pull/1586)
 
 ## [4.1.0] - 2025-11-10
 
