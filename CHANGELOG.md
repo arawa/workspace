@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support for German language by @zak39 in [#1490](https://github.com/arawa/workspace/pull/1490)
 - Add translator comment for 'WM' abbreviation by @rakekniven in [#1505](https://github.com/arawa/workspace/pull/1505)
-- Paginate workspaces for workspace managers by @zak39 in [#1545](https://github.com/arawa/workspace/pull/1545), [#1540](https://github.com/arawa/workspace/pull/1540), [#1537](https://github.com/arawa/workspace/pull/1537), [#1543](https://github.com/arawa/workspace/pull/1543), [#1544](https://github.com/arawa/workspace/pull/1544)
+- Implement pagination for workspace listing by @zak39 in [#1545](https://github.com/arawa/workspace/pull/1545), [#1540](https://github.com/arawa/workspace/pull/1540), [#1537](https://github.com/arawa/workspace/pull/1537), [#1543](https://github.com/arawa/workspace/pull/1543), [#1544](https://github.com/arawa/workspace/pull/1544)
 
 ### Changed
 
