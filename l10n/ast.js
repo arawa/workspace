@@ -18,6 +18,7 @@ OC.L10N.register(
     "Role" : "Rol",
     "Groups" : "Grupos",
     "View profile" : "Ver el perfil",
+    "Remove user" : "Quitar l'usuariu",
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
     "Save" : "Guardar",
