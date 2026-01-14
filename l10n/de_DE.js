@@ -97,6 +97,8 @@ OC.L10N.register(
     "Loading..." : "Lade …",
     "{number} workspaces..." : "{number} Arbeitsbereiche …",
     "Error - Duplicate space name" : "Fehler - Doppelter Arbeitsbereichname",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Dieser Arbeitsbereich oder Gruppenordner existiert bereits.\nBitte beachten, dass bei Arbeitsbereichsnamen zwischen Groß- und Kleinschreibung nicht unterschieden wird.\nBeispiel: Wenn bereits ein Arbeitsbereich mit dem Namen “Personalwesen” vorhanden ist, kann kein Arbeitsbereich mit dem Namen “Personalwesen” erstellt werden.\nBitte auch überprüfen, dass ein Gruppenordner mit dem Namen, der gerade eingegeben wurde, noch nicht existiert.",
+    "Group error" : "Gruppenfehler",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Die Gruppe {gid} kann nicht an den Gruppenordner angefügt werden. Besteht ein Problem mit der Verbindung?",
     "Error to remove group as manager acl" : "Fehler beim Entfernen der Gruppe als Verwaltungs-ACL",
     "Impossible to remove the group from the advanced permissions." : "Gruppe konnte nicht aus den erweiterten Berechtigungen entfernt werden",
