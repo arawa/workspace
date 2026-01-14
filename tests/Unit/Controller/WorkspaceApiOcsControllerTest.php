@@ -542,7 +542,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testFindAllAsGeneralManagerWithSearchParameter(): void {
 		$name = 'reSsoUrcE';
 		$page = null;
-		$limit = null;
+		$limit = 25;
 		$spacesSearched = [
 			[
 				'id' => 3,
@@ -643,7 +643,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn(self::CURRENT_USER_IS_GENERAL_MANAGER)
 		;
 
-		$actual = $this->controller->findAll($name, $page, $limit);
+		$actual = $this->controller->findAll($name, $page);
 
 		$expected = new DataResponse(
 			$spacesSearched,
@@ -857,7 +857,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testFindAllAsWorkspaceManagerWithSearchParameter(): void {
 		$name = 'space';
 		$page = null;
-		$limit = null;
+		$limit = 25;
 		$spacesSearched = [
 			[
 				'id' => 1,
@@ -909,8 +909,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->with(
 				$page,
 				$limit,
-				$name,
-				$uid
+				$name
 			)
 			->willReturn($spacesSearched)
 		;
@@ -934,7 +933,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			->willReturn($uid)
 		;
 
-		$actual = $this->controller->findAll($name, $page, $limit);
+		$actual = $this->controller->findAll($name, $page);
 
 		$expected = new DataResponse($spacesSearched, Http::STATUS_OK);
 
