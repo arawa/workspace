@@ -275,7 +275,7 @@
                             "type": "integer",
                             "format": "int64",
                             "nullable": true,
-                            "default": null
+                            "default": 25
                         }
                     },
                     {
