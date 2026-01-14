@@ -94,7 +94,7 @@ class WorkspaceApiOcsController extends OCSController {
 	#[OpenAPI(tags: ['workspace'])]
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/spaces')]
-	public function findAll(?string $name, ?int $offset = null, ?int $limit = null): DataResponse {
+	public function findAll(?string $name, ?int $offset = null, int $limit = 25): DataResponse {
 		if ($this->userService->isUserGeneralAdmin()) {
 			$workspaces = $this->spaceManager->findAll($offset, $limit, $name);
 		} else {
