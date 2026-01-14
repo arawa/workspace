@@ -152,7 +152,7 @@ export default {
 				if (space.managers !== null || space.users.length > 0) {
 					return
 				}
-				this.$store.dispatch('loadAdmins', space)
+				this.$store.dispatch('loadAdmins', { space })
 			}
 		},
 		getFirstTenWorkspaceManagerUsers(spacename) {
