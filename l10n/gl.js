@@ -97,6 +97,8 @@ OC.L10N.register(
     "Loading..." : "Cargando...",
     "{number} workspaces..." : "{number} espazos de traballo…",
     "Error - Duplicate space name" : "Erro: nome de espazo duplicado",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Este espazo de traballo ou cartafol de grupo xa existe.\nTeña en conta que os nomes dos espazos de traballo non son sensíbeis a maiúsculas.\nPor exemplo: se xa existe un espazo de traballo chamado «Recursos humanos».\nComprobe que non exista xa un cartafol con ese mesmo nome.",
+    "Group error" : "Erro de grupo",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Non é posíbel anexar o grupo {gid} ao cartafol de grupo. Podería ser un problema coa conexión?",
     "Error to remove group as manager acl" : "Produciuse un erro ao retirar o grupo como xestor ACL",
     "Impossible to remove the group from the advanced permissions." : "Non é posíbel retirar o grupo dos permisos avanzados.",
