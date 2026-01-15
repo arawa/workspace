@@ -95,6 +95,8 @@
     "Loading..." : "Chargement...",
     "{number} workspaces..." : "{number} workspaces...",
     "Error - Duplicate space name" : "Erreur - Nom de workspace en doublon",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Ce workspace ou ce dossier de groupe existe déjà.\nVeuillez noter que les noms de workspace ne sont pas sensibles à la casse.\nPar exemple : si un espace de travail nommé « ressources humaines » existe déjà, vous ne pourrez pas créer un espace de travail nommé « Ressources humaines ».\nVérifiez également qu'un dossier de groupe portant le nom que vous venez de saisir n'existe pas déjà.",
+    "Group error" : "Erreur de groupe",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Impossible d'associer le groupe {gid} au dossier de groupe. Peut-être un problème de connexion ?",
     "Error to remove group as manager acl" : "Erreur lors de la suppression du groupe en tant que gestionnaire des ACL",
     "Impossible to remove the group from the advanced permissions." : "Impossible de supprimer le groupe des autorisations avancées.",
