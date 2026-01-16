@@ -21,28 +21,29 @@
  *
  */
 
-import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+// import Vue from 'vue'
+import { createStore } from 'vuex'
 import actions from './actions.js'
 import { getters } from './getters.js'
 import mutations from './mutations.js'
 
-Vue.use(Vuex)
-Vue.config.devtools = true // Debug mode
+// Vue.config.devtools = true // Debug mode
 
-const store = new Store({
-	state: {
-		loading: true,
-		noUsers: false,
-		loadingUsersWaiting: false,
-		spaces: {},
-		groupfolders: {},
-		countWorkspaces: 0,
-		countTotalWorkspaces: 0,
-		countTotalWorkspacesByQuery: 0,
-		workspaceCurrentPage: 1,
-		searchWorkspace: null,
-		nextPage: true,
+const store = createStore({
+	state() {
+		return {
+			loading: true,
+			noUsers: false,
+			loadingUsersWaiting: false,
+			spaces: {},
+			groupfolders: {},
+			countWorkspaces: 0,
+			countTotalWorkspaces: 0,
+			countTotalWorkspacesByQuery: 0,
+			workspaceCurrentPage: 1,
+			searchWorkspace: null,
+			nextPage: true,
+		}
 	},
 	mutations,
 	actions,

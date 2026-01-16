@@ -27,6 +27,12 @@
 <script>
 export default {
 	name: 'App',
+	data() {
+		return {
+			isUserGeneralAdmin: false,
+			spaces: {},
+		}
+	},
 	created() {
 		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
 		this.$root.$data.canAccessApp = document.getElementById('canAccessApp').value

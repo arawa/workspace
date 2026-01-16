@@ -29,8 +29,7 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcCounterBubble v-tooltip="{ content: getQuotaTooltip, show: true, placement: 'right' }"
-					:class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
+				<NcCounterBubble :class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
 					type="outlined">
 					{{ getQuota }}
 				</NcCounterBubble>
@@ -129,7 +128,6 @@ import NcActionInput from '@nextcloud/vue/components/NcActionInput'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
-import Tooltip from '@nextcloud/vue/directives/Tooltip'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
@@ -156,9 +154,6 @@ export default {
 		RemoveSpace,
 		UserTable,
 		NcIconSvgWrapper,
-	},
-	directives: {
-		Tooltip,
 	},
 	setup() {
 		return {
@@ -190,9 +185,6 @@ export default {
 		},
 		getQuota() {
 			return this.$store.getters.convertQuotaForFrontend(this.$store.getters.getSpaceByNameOrId(this.$route.params.space).quota)
-		},
-		getQuotaTooltip() {
-			return 'Quota : ' + this.getQuota
 		},
 	},
 	beforeMount() {

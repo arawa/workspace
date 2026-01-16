@@ -68,10 +68,6 @@
 										:show-user-status="false"
 										:user="user.uid" />
 									<div v-if="workspaceManagers(space).length > 10"
-										v-tooltip="{
-											content: getLatestWorkspaceManagerUsers(space.name),
-											show: true,
-										}"
 										class="bubble-more-users">
 										+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
 									</div>

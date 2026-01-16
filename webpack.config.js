@@ -21,17 +21,14 @@
  *
  */
 
-const { merge } = require('webpack-merge')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 
-module.exports = merge(webpackConfig, {
-	module: {
-		rules: [
-			{
-				test: /\.svg$/i,
-				resourceQuery: /raw/,
-				type: 'asset/source',
-			},
-		]
-	}
-})
+webpackConfig.module.rules.push(
+	{
+		test: /\.svg$/i,
+		resourceQuery: /raw/,
+		type: 'asset/source',
+	},
+)
+
+module.exports = webpackConfig

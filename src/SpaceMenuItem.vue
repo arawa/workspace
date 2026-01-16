@@ -38,7 +38,7 @@
 				ref="navigationGroup"
 				:name="t('workspace', 'Workspace groups')">
 				<template #actionsTriggerIcon>
-					<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
+					<Plus :name="t('workspace', 'Create a workspace group')" :size="20" />
 				</template>
 				<template #actions>
 					<NcActionText :class="'space-text'">
@@ -68,7 +68,7 @@
 						:aria-label="t('workspace', 'Add a group')"
 						@click="toggleAddGroupModal">
 						<template #icon>
-							<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
+							<Plus :size="20" />
 						</template>
 					</NcActionButton>
 				</template>
