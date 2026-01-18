@@ -97,6 +97,8 @@ OC.L10N.register(
     "Loading..." : "加載中...",
     "{number} workspaces..." : "{number} 個工作空間 …",
     "Error - Duplicate space name" : "錯誤 - 重複的空間名稱",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "此工作空間或群組資料夾已存在。\n請注意，工作空間名稱不分大小寫。\n例如：若已存在名為「human resources」的工作空間，則無法建立名為「Human Resources」的工作空間。\n同時請確認您剛輸入的名稱是否已存在於群組資料夾中。",
+    "Group error" : "群組錯誤",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "無法附加 {gid} 群組到群組資料夾。可能是連線問題？",
     "Error to remove group as manager acl" : "移除群組作為管理員的存取控制清單時發生錯誤",
     "Impossible to remove the group from the advanced permissions." : "無法從進階權限移除群組。",
