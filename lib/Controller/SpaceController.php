@@ -28,6 +28,7 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\SpaceService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
@@ -53,6 +54,21 @@ class SpaceController extends Controller {
 	 */
 	public function findAll(): DataResponse {
 		return new DataResponse($this->spaceService->findAll());
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function getByName(string $name): DataResponse {
+		$space = $this->spaceMapper->findByName($name);
+
+		if (is_null($space)) {
+			return new DataResponse([
+				'message' => 'Nothing space.'
+			], Http::STATUS_NOT_FOUND);
+		}
+
+		return new DataResponse($space);
 	}
 
 	/**
