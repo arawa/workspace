@@ -8,6 +8,7 @@ OC.L10N.register(
     "Confirm" : "Konfirmasi",
     "Rename group" : "Ganti nama grup",
     "Group name" : "Nama grup",
+    "Delete group" : "Hapus grup",
     "Error" : "Galat",
     "Settings" : "Setelan",
     "Network error" : "Kesalahan jaringan",
