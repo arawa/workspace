@@ -96,7 +96,7 @@ class UserService {
 			'groups' => $groups,
 			'role' => $role,
 			'is_connected' => !$isStrictSpaceUser,
-			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()])
+			'profile' => $this->urlGenerator->linkToRouteAbsolute('profile.ProfilePage.index', ['targetUserId' => $user->getUID()])
 		];
 	}
 
