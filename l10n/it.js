@@ -18,6 +18,7 @@ OC.L10N.register(
     "Network error" : "Errore di rete",
     "No users" : "Nessun utente",
     "Quota" : "Quote",
+    "Users" : "Utenti",
     "Role" : "Ruolo",
     "Groups" : "Gruppi",
     "View profile" : "Vedi profilo",
