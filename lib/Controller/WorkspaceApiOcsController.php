@@ -504,7 +504,7 @@ class WorkspaceApiOcsController extends OCSController {
 		url: '/api/v1/spaces/{id}/groups/{gid}/users',
 		requirements: [
 			'id' => '\d+',
-			'gid' => '^[A-Za-z0-9\W]+'
+			'gid' => '^[A-Za-z0-9\W].+'
 		]
 	)]
 	public function removeUsersFromGroup(int $id, string $gid, array $uids): DataResponse {
