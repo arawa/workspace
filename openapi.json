@@ -1795,7 +1795,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "^[A-Za-z0-9\\W]+$"
+                            "pattern": "^[A-Za-z0-9\\W].+$"
                         }
                     },
                     {
@@ -1939,7 +1939,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "^[A-Za-z0-9\\W]+$"
+                            "pattern": "^[A-Za-z0-9\\W].+$"
                         }
                     },
                     {
