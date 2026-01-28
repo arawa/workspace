@@ -46,7 +46,7 @@ export const getters = {
 		return getters.getSpaceByNameOrId(spaceNameOrId).groups[gid].usersCount
 	},
 	getSpaceUserCount: (state, getters) => (spaceNameOrId) => {
-		return getters.getSpaceByNameOrId(spaceNameOrId).userCount
+		return getters.getSpaceByNameOrId(spaceNameOrId).usersCount
 	},
 	getSpaceById: state => (spaceId) => {
 		return Object.values(state.spaces).find((space) => space.id === spaceId)
@@ -143,8 +143,8 @@ export const getters = {
 		if (space === undefined || space === null) {
 			return 0
 		}
-		if (space.userCount !== undefined && space.userCount > 0) {
-			return space.userCount
+		if (space.usersCount !== undefined && space.usersCount > 0) {
+			return space.usersCount
 		}
 		const users = space.users
 		if (users === undefined || users.length === 0) {
