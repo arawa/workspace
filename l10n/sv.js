@@ -11,6 +11,7 @@ OC.L10N.register(
     "File to share" : "Fil att dela",
     "Rename group" : "Byt namn på grupp",
     "Group name" : "Gruppnamn",
+    "Delete group" : "Ta bort grupp",
     "Error" : "Fel",
     "Settings" : "Inställningar",
     "Network error" : "Nätverksfel",
