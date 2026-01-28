@@ -55,24 +55,24 @@
 							{{ getQuota(space.quota) }}
 						</td>
 						<td class="workspace-td">
-							<VueLazyComponent
+							<!-- <VueLazyComponent
 								:key="'avatar-'+name"
 								class="admin-avatars"
-								@init="initAdmins(space.id, name)">
-								<div class="container-avatars">
-									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
-										:key="user.uid"
-										:style="{ marginRight: 2 + 'px' }"
-										:display-name="user.name"
-										:disable-menu="true"
-										:show-user-status="false"
-										:user="user.uid" />
-									<div v-if="workspaceManagers(space).length > 10"
-										class="bubble-more-users">
-										+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
-									</div>
+								@init="initAdmins(space.id, name)"> -->
+							<div class="container-avatars">
+								<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
+									:key="user.uid"
+									:style="{ marginRight: 2 + 'px' }"
+									:display-name="user.name"
+									:disable-menu="true"
+									:show-user-status="false"
+									:user="user.uid" />
+								<div v-if="workspaceManagers(space).length > 10"
+									class="bubble-more-users">
+									+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
 								</div>
-							</VueLazyComponent>
+							</div>
+							<!-- </VueLazyComponent> -->
 						</td>
 					</tr>
 				</tbody>
@@ -96,7 +96,7 @@
 
 <script>
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
+// import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 import PageLoader from './components/PageLoader.vue'
 import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEmpty.vue'
@@ -105,7 +105,7 @@ export default {
 	name: 'SpaceTable',
 	components: {
 		NcAvatar,
-		VueLazyComponent,
+		// VueLazyComponent,
 		PageLoader,
 		WorkspaceContentEmpty,
 	},

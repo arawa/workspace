@@ -30,6 +30,7 @@ use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\Util;
@@ -38,6 +39,7 @@ class PageController extends Controller {
 	public function __construct(
 		private UserService $userService,
 		private IConfig $config,
+		private IInitialState $initialState,
 		private IUserSession $session,
 	) {
 	}
@@ -58,16 +60,15 @@ class PageController extends Controller {
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 
+		$this->initialState->provideInitialState('userSession', $this->session->getUser()?->getUID());
+		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
+		$this->initialState->provideInitialState('canAccessApp', $this->userService->canAccessApp());
+		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
+
 		// templates/index.php
 		return new TemplateResponse(
 			'workspace',
-			'index',
-			[
-				'userSession' => $this->session->getUser()?->getUID(),
-				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
-				'canAccessApp' => $this->userService->canAccessApp(),
-				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true',
-			]
+			'index'
 		);
 	}
 }

@@ -28,10 +28,12 @@
 		:to="{path: getSpacePath()}"
 		@click="openMenu"
 		@update:open="isOpen = $event">
-		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-		<NcCounterBubble slot="counter" class="user-counter">
-			{{ $store.getters.getSpaceUserCount(spaceName) }}
-		</NcCounterBubble>
+		<template #icon>
+			<NcAppNavigationIconBullet slot="icon" :color="space.color" />
+		</template>
+		<template #counter>
+			<NcCounterBubble :count="$store.getters.getSpaceUserCount(spaceName)" class="user-counter" />
+		</template>
 		<MenuItemSelector />
 		<div v-if="isOpen">
 			<NcAppNavigationCaption
@@ -138,6 +140,9 @@ export default {
 	},
 	computed: {
 		open() {
+			console.debug('SpaceMenuItem - open - this.space', this.space)
+			console.debug('SpaceMenuItem - open - this.space.id', this.space.id)
+			console.debug('SpaceMenuItem - open - this.space.id.toString()', this.space.id.toString())
 			const id = this.space.id.toString()
 			return this.$route.params.space === id
 		},

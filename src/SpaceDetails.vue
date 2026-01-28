@@ -30,9 +30,8 @@
 					{{ title }}
 				</span>
 				<NcCounterBubble :class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
-					type="outlined">
-					{{ getQuota }}
-				</NcCounterBubble>
+					type="outlined"
+					:count="getQuota" />
 			</div>
 			<div class="space-actions">
 				<NcActions ref="ncAction" default-icon="icon-add">

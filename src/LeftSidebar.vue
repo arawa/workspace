@@ -20,9 +20,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
+	<NcAppNavigation v-if="$root.$data.canAccessApp">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
@@ -32,9 +32,12 @@
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
 				:to="{path: '/'}">
-				<NcCounterBubble slot="counter">
-					{{ $store.state.countTotalWorkspaces }}
-				</NcCounterBubble>
+				<template #counter>
+					<NcCounterBubble slot="counter">
+						{{ $store.state.countTotalWorkspaces }}
+					</NcCounterBubble>
+
+				</template>
 			</NcAppNavigationItem>
 		</ul>
 		<NcAppNavigationSearch v-model="workspacesSearchQuery"
@@ -61,11 +64,11 @@
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
-			<div v-if="Object.keys($store.state.spaces).length">
+			<!-- <div v-if="Object.keys($store.state.spaces).length">
 				<PageLoader v-if="nextPage"
 					v-element-visibility="next"
 					:message="messageLoader" />
-			</div>
+			</div> -->
 		</template>
 	</NcAppNavigation>
 </template>
@@ -115,6 +118,10 @@ export default {
 			this.$store.dispatch('updateSearchWorkspace', { search: query })
 			this.debounceSearch()
 		},
+	},
+	created() {
+		console.debug('root data', this.$root.$data.canAccessApp)
+		console.debug('root data - this.$root.$data.canAccessApp === \'true\'', this.$root.$data.canAccessApp === true)
 	},
 	methods: {
 		debounceSearch: debounce(function() {

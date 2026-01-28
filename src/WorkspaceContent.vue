@@ -57,7 +57,7 @@ export default {
 			this.$store.state.loading = true
 			axios.get(generateUrl('/apps/workspace/spaces'), {
 				params: {
-					limit: LIMIT_WORKSPACES_PER_PAGE
+					limit: LIMIT_WORKSPACES_PER_PAGE,
 				},
 			})
 				.then(resp => {
@@ -86,6 +86,7 @@ export default {
 			axios.get(generateUrl('apps/workspace/workspaces/count'))
 				.then(resp => {
 					const count = resp.data.count
+					console.debug('WorkspaceContent - count:', count)
 					this.$store.dispatch('setCountTotalWorkspaces', { count })
 					this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
 				})

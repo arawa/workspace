@@ -22,6 +22,7 @@
  */
 
 const webpackConfig = require('@nextcloud/webpack-vue-config')
+const webpack = require('webpack')
 
 webpackConfig.module.rules.push(
 	{
@@ -30,5 +31,24 @@ webpackConfig.module.rules.push(
 		type: 'asset/source',
 	},
 )
+console.debug('coucou')
+webpackConfig.plugins = webpackConfig.plugins.filter(
+	p => p.constructor.name !== 'DefinePlugin',
+)
+
+webpackConfig.plugins.push(
+	new webpack.DefinePlugin({
+		__VUE_PROD_DEVTOOLS__: JSON.stringify(true),
+		__VUE_OPTIONS_API__: JSON.stringify(true),
+	}),
+)
+
+// process.env.NODE_ENV = 'production'
+// webpackConfig.plugins.push(
+// 	new webpack.DefinePlugin({
+// 		// __VUE_OPTIONS_API__: 'true',
+// 		__VUE_PROD_DEVTOOLS__: 'true',
+// 	}),
+// )
 
 module.exports = webpackConfig

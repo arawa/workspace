@@ -21,10 +21,14 @@
 -->
 
 <template>
-	<router-view />
+	<div>
+		<RouterView />
+	</div>
 </template>
 
 <script>
+import { loadState } from '@nextcloud/initial-state'
+
 export default {
 	name: 'App',
 	data() {
@@ -34,11 +38,16 @@ export default {
 		}
 	},
 	created() {
-		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
-		this.$root.$data.canAccessApp = document.getElementById('canAccessApp').value
-		this.$root.$data.aclInheritPerUser = document.getElementById('aclInheritPerUser').value
-		this.$root.$data.userSession = document.getElementById('userSession').value
-		const aclInheritPerUser = document.getElementById('aclInheritPerUser').value
+		const isUserGeneralAdmin = loadState('workspace', 'isUserGeneralAdmin')
+		const canAccessApp = loadState('workspace', 'canAccessApp')
+		const aclInheritPerUser = loadState('workspace', 'aclInheritPerUser')
+		const userSession = loadState('workspace', 'userSession')
+
+		this.$root.$data.isUserGeneralAdmin = isUserGeneralAdmin
+		this.$root.$data.canAccessApp = canAccessApp
+		this.$root.$data.aclInheritPerUser = aclInheritPerUser
+		this.$root.$data.userSession = userSession
+
 		// eslint-disable-next-line no-console
 		aclInheritPerUser ? console.log('workspace: h1') : console.log('workspace: h2')
 	},

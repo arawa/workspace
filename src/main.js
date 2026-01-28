@@ -24,20 +24,23 @@
 // import Vue from 'vue'
 import { createApp } from 'vue'
 import router from './router.js'
-import { linkTo } from '@nextcloud/router'
+// import { linkTo } from '@nextcloud/router'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import VueLazyComponent from '@xunlei/vue-lazy-component'
 import { vElementVisibility } from '@vueuse/components'
+import { generateFilePath } from '@nextcloud/router'
 
 // eslint-disable-next-line
-__webpack_public_path__ = linkTo('workspace', 'js/')
+__webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 
 // Vue.directive('elementVisibility', vElementVisibility)
 // Vue.use(VueLazyComponent)
 
 const app = createApp(App)
+
+app
 	.use(VueLazyComponent)
 	.use(vElementVisibility)
 	.mixin({
