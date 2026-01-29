@@ -129,7 +129,11 @@ export default {
 			return this.$store.getters.convertQuotaForFrontend(this.size)
 		},
 		getQuotaMessage() {
-			return t('workspace', 'You use {size}', { size: this.getSize })
+			if (this.quota === -3) {
+				return t('workspace', 'You are using {size}', { size: this.getSize })
+			}
+
+			return t('workspace', 'You are using {size} out of {quota}', { size: this.getSize, quota: this.getQuota })
 		},
 		getSpaceName() {
 			return this.spacename
