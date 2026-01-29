@@ -21,6 +21,7 @@
  *
  */
 
+import { t } from '@nextcloud/l10n'
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import UserGroup from '../services/Groups/UserGroup.js'
 
@@ -106,6 +107,8 @@ export const getters = {
 	convertQuotaForFrontend: state => quota => {
 		if (quota === -3 || quota === '-3' || quota === undefined) {
 			return t('workspace', 'unlimited')
+		} else if (quota === 0) {
+			return '0 GB'
 		} else {
 			const units = ['', 'KB', 'MB', 'GB', 'TB']
 			let i = 0

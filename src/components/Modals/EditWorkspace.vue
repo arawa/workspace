@@ -40,7 +40,8 @@
 					@option:selected="updateQuota" />
 				<p class="max-contrast"
 					v-html="getQuotaMessage" />
-				<NcProgressBar class="progress-bar"
+				<NcProgressBar v-if="quota !== -3"
+					class="progress-bar"
 					size="medium"
 					:value="calculPercentSize"
 					:error="isError" />
@@ -128,7 +129,7 @@ export default {
 			return this.$store.getters.convertQuotaForFrontend(this.size)
 		},
 		getQuotaMessage() {
-			return t('workspace', 'You use <b>{size}</b> of {quota}', { size: this.getSize, quota: this.getQuota })
+			return t('workspace', 'You use {size}', { size: this.getSize })
 		},
 		getSpaceName() {
 			return this.spacename
