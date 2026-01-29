@@ -125,8 +125,8 @@ export default {
 	},
 	UPDATE_USERS(state, { space, users }) {
 		space.users = users
-		if (space.userCount !== Object.keys(users).length) {
-			space.userCount = Object.keys(users).length
+		if (space.usersCount !== Object.keys(users).length) {
+			space.usersCount = Object.keys(users).length
 			updateGroupUserCount(space.groups, users)
 		}
 		VueSet(state.spaces, space.name, space)
@@ -147,9 +147,9 @@ export default {
 		space.added_groups[gid].usersCount++
 		VueSet(state.spaces, spaceName, space)
 	},
-	INCREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+	INCREMENT_SPACE_USERS_COUNT(state, { spaceName }) {
 		const space = state.spaces[spaceName]
-		space.userCount++
+		space.usersCount++
 		VueSet(state.spaces, spaceName, space)
 	},
 	SET_COUNT_WORKSPACES(state, { count }) {
@@ -202,14 +202,14 @@ export default {
 		space.groups[gid].usersCount--
 		VueSet(state.spaces, spaceName, space)
 	},
-	DECREMENT_SPACE_USER_COUNT(state, { spaceName }) {
+	DECREMENT_SPACE_USERS_COUNT(state, { spaceName }) {
 		const space = state.spaces[spaceName]
-		space.userCount--
+		space.usersCount--
 		VueSet(state.spaces, spaceName, space)
 	},
-	SUBSTRACTION_SPACE_USER_COUNT(state, { spaceName, usersCount }) {
+	SUBSTRACTION_SPACE_USERS_COUNT(state, { spaceName, usersCount }) {
 		const space = state.spaces[spaceName]
-		space.userCount -= usersCount
+		space.usersCount -= usersCount
 		VueSet(state.spaces, spaceName, space)
 	},
 	SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {

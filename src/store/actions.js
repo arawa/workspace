@@ -79,16 +79,16 @@ export default {
 		context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName, gid })
 	},
 	incrementSpaceUserCount(context, { spaceName }) {
-		context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName })
+		context.commit('INCREMENT_SPACE_USERS_COUNT', { spaceName })
 	},
 	decrementGroupUserCount(context, { spaceName, gid }) {
 		context.commit('DECREMENT_GROUP_USER_COUNT', { spaceName, gid })
 	},
 	decrementSpaceUserCount(context, { spaceName }) {
-		context.commit('DECREMENT_SPACE_USER_COUNT', { spaceName })
+		context.commit('DECREMENT_SPACE_USERS_COUNT', { spaceName })
 	},
 	substractionSpaceUserCount(context, { spaceName, usersCount }) {
-		context.commit('SUBSTRACTION_SPACE_USER_COUNT', { spaceName, usersCount })
+		context.commit('SUBSTRACTION_SPACE_USERS_COUNT', { spaceName, usersCount })
 	},
 	substractionGroupUserCount(context, { spaceName, gid, usersCount }) {
 		context.commit('SUBSTRACTION_GROUP_USER_COUNT', { spaceName, gid, usersCount })
@@ -435,7 +435,7 @@ export default {
 
 					if (!usersFromSpace.includes(uid)) {
 						context.commit('INCREMENT_GROUP_USER_COUNT', { spaceName: name, gid: UserGroup.getGid(space) })
-						context.commit('INCREMENT_SPACE_USER_COUNT', { spaceName: name })
+						context.commit('INCREMENT_SPACE_USERS_COUNT', { spaceName: name })
 					} else {
 						// TODO: It's a little patch, we have to fix in the backend side.
 						users[user].is_connected = false
@@ -510,7 +510,7 @@ export default {
 		context.commit('SET_LOADING_USERS_WAITING', ({ activated: false }))
 		context.commit('SET_NO_USERS', ({ activated: false }))
 
-		if (Object.keys(space.users).length === space.userCount) {
+		if (Object.keys(space.users).length === space.usersCount) {
 			context.commit('SET_NO_USERS', ({ activated: true }))
 			return
 		}
