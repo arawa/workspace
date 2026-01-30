@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "An error occurred while trying to retrieve workspaces.<br>Error: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "A network error occurred while trying to retrieve workspaces.<br>Error: {error}",
     "No workspace" : "No workspace",
-    "You use <b>{size}</b> of {quota}" : "You use <b>{size}</b> of {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "A network error occurred when trying to change the workspace's color.<br>Error: {error}",
     "unlimited" : "unlimited",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "A network error occured when trying to change the workspace's color.<br>The error is: {error}",
     "Rename space" : "Rename space",
     "Space name" : "Space name",
-    "Delete user" : "Delete user"
+    "Delete user" : "Delete user",
+    "You use <b>{size}</b> of {quota}" : "You use <b>{size}</b> of {quota}"
 },
 "nplurals=2; plural=(n != 1);");

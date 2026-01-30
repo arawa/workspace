@@ -82,7 +82,6 @@
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "No workspace" : "Aucun workspace",
-    "You use <b>{size}</b> of {quota}" : "Vous utilisez <b>{size}</b> sur {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace. Erreur : {error}",
     "unlimited" : "illimité",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Vous ne pouvez spécifier que \"illimité\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple : \"5GB\") comme quota.",
@@ -120,6 +119,7 @@
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace.<br>Erreur : {error}",
     "Rename space" : "Renommer le workspace",
     "Space name" : "Nom du workspace",
-    "Delete user" : "Supprimer l'utilisateur"
+    "Delete user" : "Supprimer l'utilisateur",
+    "You use <b>{size}</b> of {quota}" : "Vous utilisez <b>{size}</b> sur {quota}"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

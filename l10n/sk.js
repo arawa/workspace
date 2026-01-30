@@ -79,7 +79,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Došlo k chybe pri pokuse o získanie pracovných priestorov. <br>Chyba: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Došlo k chybe siete pri pokuse o načítanie pracovných priestorov.<br>Chyba: {error}",
     "No workspace" : "Žiadny pracovný priestor",
-    "You use <b>{size}</b> of {quota}" : "Používate <b>{size}</b> z {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Došlo k chybe siete pri pokuse o zmenu farby pracovného priestoru. <br>Chyba: {error}",
     "unlimited" : "neobmedzené",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Môžete zadať iba \"neobmedzené\" alebo číslo nasledované \"TB\", \"GB\", \"MB\" alebo \"KB\" (napr. \"5GB\") ako kvótu.",
@@ -107,6 +106,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Došlo k chybe siete pri pokuse o zmenu farby pracovného priestoru.<br>Chyba je: {error}",
     "Rename space" : "Premenovať miesto",
     "Space name" : "Názov miesta",
-    "Delete user" : "Zmazať používateľa"
+    "Delete user" : "Zmazať používateľa",
+    "You use <b>{size}</b> of {quota}" : "Používate <b>{size}</b> z {quota}"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

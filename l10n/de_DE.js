@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Es ist ein Fehler beim Empfangen der Arbeitsbereiche aufgetreten.<br>Fehler: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Empfangen der Arbeitsbereiche aufgetreten.<br>Fehler: {error}",
     "No workspace" : "Kein Arbeitsbereich",
-    "You use <b>{size}</b> of {quota}" : "Sie verwenden <b>{size}</b> von {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Ändern der Farbe des Arbeitsbereichs aufgetreten.<br>Fehler: {error}",
     "unlimited" : "Unbegrenzt",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Es darf nur „unbegrenzt“ oder eine Zahl gefolgt von „TB“, „GB“, „MB“ oder „KB“ (z. B. „5 GB“) als Kontingent angegeben werden",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Netzwerkfehler beim Ändern der Farbe des Arbeitsbereichs. <br>Fehlermeldung: {error}",
     "Rename space" : "Bereich umbenennen",
     "Space name" : "Bereichsname",
-    "Delete user" : "Konto löschen"
+    "Delete user" : "Konto löschen",
+    "You use <b>{size}</b> of {quota}" : "Sie verwenden <b>{size}</b> von {quota}"
 },
 "nplurals=2; plural=(n != 1);");

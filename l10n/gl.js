@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Produciuse un erro ao tentar recuperar espazos de traballo.<br>Erro: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Produciuse un erro de rede ao tentar recuperar espazos de traballo.<br>Erro: {error}",
     "No workspace" : "Non hai ningún espazo de traballo",
-    "You use <b>{size}</b> of {quota}" : "Está a empregar <b>{size}</b> de {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Produciuse un erro de rede ao tentar cambiar a cor do espazo de traballo.<br>Erro: {error}",
     "unlimited" : "sen límite",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Só pode especificar «sen límite» ou un número seguido de «TB», «GB», «MB» ou «KB» (p. ex.: «5GB») como cota",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Produciuse un erro de rede ao tentar cambiar a cor do espazo de traballo.<br>Erro: {error}",
     "Rename space" : "Cambiar o nome do espazo",
     "Space name" : "Nome do espazo",
-    "Delete user" : "Eliminar usuario"
+    "Delete user" : "Eliminar usuario",
+    "You use <b>{size}</b> of {quota}" : "Está a empregar <b>{size}</b> de {quota}"
 },
 "nplurals=2; plural=(n != 1);");
