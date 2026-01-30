@@ -82,7 +82,6 @@
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Terjadi kesalahan saat mencoba mengambil ruang kerja.<br>Kesalahan: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Terjadi kesalahan jaringan saat mencoba mengambil ruang kerja.<br>Kesalahan: {error}",
     "No workspace" : "Tidak ada ruang kerja",
-    "You use <b>{size}</b> of {quota}" : "Anda menggunakan <b>{size}</b> dari {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Terjadi kesalahan jaringan saat mencoba mengubah warna ruang kerja.<br>Kesalahan: {error}",
     "unlimited" : "tak terbatas",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Anda hanya boleh menentukan \"tak terbatas\" atau angka yang diikuti oleh \"TB\", \"GB\", \"MB\", atau \"KB\" (misalnya: \"5GB\") sebagai kuota",
@@ -120,6 +119,7 @@
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Terjadi kesalahan jaringan saat mencoba mengubah warna ruang kerja.<br>Kesalahannya adalah: {error}",
     "Rename space" : "Ubah nama ruang",
     "Space name" : "Nama ruang",
-    "Delete user" : "Hapus pengguna"
+    "Delete user" : "Hapus pengguna",
+    "You use <b>{size}</b> of {quota}" : "Anda menggunakan <b>{size}</b> dari {quota}"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

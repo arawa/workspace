@@ -78,7 +78,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Při pokusu o získání pracovního prostorů došlo k chybě.<br>Chyba: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Při pokusu o získání pracovního prostorů došlo k síťové chybě.<br>Chyba: {error}",
     "No workspace" : "Žádný pracovní prostor",
-    "You use <b>{size}</b> of {quota}" : "Je možné využít <b>{size}</b> z {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Při pokusu o změnu barvy pracovního prostoru došlo k síťové chybě.<br>Chyba: {error}",
     "unlimited" : "neomezené",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Jako kvótu je možné zadat pouze „neomezeně“ nebo objem, následovaný „TB“, „GB“, „MB“ nebo „KB“ (např.: „5GB“)",
@@ -90,6 +89,7 @@ OC.L10N.register(
     "Save" : "Uložit",
     "Loading..." : "Načítání …",
     "{number} workspaces..." : "{number} pracovních prostorů…",
+    "Group error" : "Chyba skupiny",
     "Can't load workspace users" : "Nebylo možné načíst uživatele pracovního prostoru",
     "An error occurred while trying to add user" : "Při pokusu o přidání uživatele došlo k chybě",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Při pokusu o přidání uživatele {user_name} do pracovního prostoru došlo k síťové chybě.<br>Chyba: {error}",
@@ -106,6 +106,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Při pokusu o změnu barvy pracovního prostoru došlo k síťové chybě.<br>Chyba je: {error}",
     "Rename space" : "Přejmenovat prostor",
     "Space name" : "Název prostoru",
-    "Delete user" : "Smazat uživatele"
+    "Delete user" : "Smazat uživatele",
+    "You use <b>{size}</b> of {quota}" : "Je možné využít <b>{size}</b> z {quota}"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

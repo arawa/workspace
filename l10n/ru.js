@@ -77,7 +77,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Произошла ошибка при попытке получить рабочие пространства. <br>Ошибка: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Произошла сетевая ошибка при попытке получить рабочие пространства. <br>Ошибка: {error}",
     "No workspace" : "Нет рабочего пространства",
-    "You use <b>{size}</b> of {quota}" : "Вы используете <b>{size}</b> из {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Произошла сетевая ошибка при попытке изменить цвет  рабочего пространства. <br>Ошибка: {error}",
     "unlimited" : "неограниченный",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Вы можете указать только \"unlimited\" или число, за которым следуют \"TB\", \"GB\", \"MB\" или \"KB\" (например: \"5GB\") в качестве квоты",
@@ -104,6 +103,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Произошла сетевая ошибка при попытке изменить цвет  рабочего пространства.<br>Ошибка: {error}",
     "Rename space" : "Переименовать пространство",
     "Space name" : "Имя пространства",
-    "Delete user" : "Удалить пользователя"
+    "Delete user" : "Удалить пользователя",
+    "You use <b>{size}</b> of {quota}" : "Вы используете <b>{size}</b> из {quota}"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

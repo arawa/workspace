@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "嘗試擷取工作空間時發生錯誤。<br>錯誤：{error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "嘗試擷取工作空間時發生網絡錯誤。<br>錯誤：{error}",
     "No workspace" : "無工作空間",
-    "You use <b>{size}</b> of {quota}" : "你已使用 <b>{size}</b>（總額 {quota}）",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "嘗試更改工作空間顏色時發生網絡錯誤。<br>錯誤：{error}",
     "unlimited" : "無限制",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "配額只可設定為「unlimited」或一個後接「TB」、「GB」、「MB」或「KB」的數字（例如：「5GB」）",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "嘗試更改工作空間顏色時發生網絡錯誤。<br>錯誤為：{error}",
     "Rename space" : "重新命名工作空間",
     "Space name" : "空間名稱",
-    "Delete user" : "刪除用戶"
+    "Delete user" : "刪除用戶",
+    "You use <b>{size}</b> of {quota}" : "你已使用 <b>{size}</b>（總額 {quota}）"
 },
 "nplurals=1; plural=0;");

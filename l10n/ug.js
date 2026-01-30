@@ -79,7 +79,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنى چۈشۈرۋاتقاندا بىر خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنى چۈشۈرۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
     "No workspace" : "خىزمەت بوشلۇقى يوق",
-    "You use <b>{size}</b> of {quota}" : "سىز {quota} نىڭ <b>{size}</b> نى ئىشلەتتىڭىز",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "خىزمەت بوشلۇقلىرىنىڭ رەڭگىنى ئۆزگەرتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
     "unlimited" : "چەكسىز",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "سىز پەقەت «چەكسىز» ياكى ساننى «TB»، «GB»، «MB» ياكى «KB» (مەسىلەن: «5GB») دەپ بەلگىلىسىڭىز بولىدۇ.",
@@ -107,6 +106,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "خىزمەت بوشلۇقلىرىنىڭ رەڭگىنى ئۆزگەرتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
     "Rename space" : "بوشلۇقنىڭ نامىنى ئۆزگەرت",
     "Space name" : "بوشلۇق نامى",
-    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ"
+    "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
+    "You use <b>{size}</b> of {quota}" : "سىز {quota} نىڭ <b>{size}</b> نى ئىشلەتتىڭىز"
 },
 "nplurals=2; plural=(n != 1);");

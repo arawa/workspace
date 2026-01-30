@@ -65,7 +65,6 @@
     "Remove from group" : "Remover do grupo",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocorreu um erro ao tentar recuperar os espaços de trabalho.<br>Erro: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar recuperar os espaços de trabalho.<br>Erro: {error}",
-    "You use <b>{size}</b> of {quota}" : "Está a usar <b>{size}</b> de {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar alterar a cor do espaço de trabalho.<br>Erro: {error}",
     "unlimited" : "Ilimitado",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Só pode especificar \"ilimitado\" ou um número seguido de \"TB\", \"GB\", \"MB\" ou \"KB\" (ex.: \"5GB\") como quota.",
@@ -90,6 +89,7 @@
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocorreu um erro de rede ao tentar mudar a cor do espaço de trabalho.<br>O erro é: {error}",
     "Rename space" : "Renomear espaço",
     "Space name" : "Nome do espaço",
-    "Delete user" : "Eliminar utilizador"
+    "Delete user" : "Eliminar utilizador",
+    "You use <b>{size}</b> of {quota}" : "Está a usar <b>{size}</b> de {quota}"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
