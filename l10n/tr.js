@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Çalışma alanları alınırken bir sorun çıktı.<br>Hata: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Çalışma alanları alınırken bir ağ sorunu çıktı.<br>Hata: {error}",
     "No workspace" : "Herhangi bir çalışma alanı yok",
-    "You use <b>{size}</b> of {quota}" : "Kullanımınız: <b>{size}</b> / {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Çalışma alanının rengi değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "unlimited" : "sınırsız",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Kota olarak yalnızca \"sınırsız\" veya bir sayı ve ardından \"TB\", \"GB\", \"MB\" veya \"KB\" (örneğin: \"5GB\") belirtebilirsiniz.",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Çalışma alanının rengi değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "Rename space" : "Çalışma alanını yeniden adlandır",
     "Space name" : "Çalışma alanı adı",
-    "Delete user" : "Kullanıcıyı sil"
+    "Delete user" : "Kullanıcıyı sil",
+    "You use <b>{size}</b> of {quota}" : "Kullanımınız: <b>{size}</b> / {quota}"
 },
 "nplurals=2; plural=(n > 1);");

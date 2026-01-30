@@ -84,7 +84,6 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid líonra agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "No workspace" : "Gan spás oibre",
-    "You use <b>{size}</b> of {quota}" : "Úsáideann tú <b>{size}</b> de {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br>Earráid: {error}",
     "unlimited" : "gan teorainn",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Ní féidir leat ach \"gan teorainn\" nó uimhir agus \"TB\", \"GB\", \"MB\", nó \"KB\" ina diaidh (m.sh.: \"5GB\") a shonrú mar chuóta",
@@ -122,6 +121,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br> Is é seo an earráid: {error}",
     "Rename space" : "Athainmnigh an spás",
     "Space name" : "Ainm an spáis",
-    "Delete user" : "Scrios úsáideoir"
+    "Delete user" : "Scrios úsáideoir",
+    "You use <b>{size}</b> of {quota}" : "Úsáideann tú <b>{size}</b> de {quota}"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

@@ -68,7 +68,6 @@ OC.L10N.register(
     "Remove from group" : "Quitar de grupo",
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocurrió un error al intentar recuperar espacios de trabajo.<br>Error: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocurrió un error de red al intentar recuperar espacios de trabajo.<br>Error: {error}",
-    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>Error: {error}",
     "unlimited" : "ilimitado",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Sólo puedes especificar \"ilimitado\" o un número seguido de \"TB\", \"GB\", \"MB\" o \"KB\" (ej: \"5GB\") como cuota",
@@ -94,6 +93,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>El error es: {error}",
     "Rename space" : "Renombrar espacio",
     "Space name" : "Nombre del espacio",
-    "Delete user" : "Eliminar usuario"
+    "Delete user" : "Eliminar usuario",
+    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
