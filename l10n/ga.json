@@ -82,6 +82,8 @@
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid líonra agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "No workspace" : "Gan spás oibre",
+    "You are using {size}" : "Tá tú ag úsáid {size}",
+    "You are using {size} out of {quota}" : "Tá tú ag úsáid {size} as {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br>Earráid: {error}",
     "unlimited" : "gan teorainn",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Ní féidir leat ach \"gan teorainn\" nó uimhir agus \"TB\", \"GB\", \"MB\", nó \"KB\" ina diaidh (m.sh.: \"5GB\") a shonrú mar chuóta",
