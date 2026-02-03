@@ -84,6 +84,8 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "No workspace" : "Aucun workspace",
+    "You are using {size}" : "Vous utilisez {size}",
+    "You are using {size} out of {quota}" : "Vous utilisez {size} sur {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace. Erreur : {error}",
     "unlimited" : "illimité",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Vous ne pouvez spécifier que \"illimité\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple : \"5GB\") comme quota.",
