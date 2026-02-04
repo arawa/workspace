@@ -10,14 +10,14 @@
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
 			<div class="content-appearance">
 				<NcColorPicker ref="colorPicker"
-					:value="color"
+					v-model="color"
 					class="space-color-picker"
 					@update:value="updateColor">
 					<button class="color-dot color-picker"
 						:style="{backgroundColor: color}" />
 				</NcColorPicker>
-				<NcInputField class="input-spacename"
-					:value="getSpaceName"
+				<NcTextField v-model="spacename"
+					class="input-spacename"
 					:placeholder="t('workspace', 'Rename your workspace')"
 					type="text"
 					@update:value="updateSpacename" />
@@ -27,12 +27,12 @@
 				<p class="max-contrast">
 					{{ t('workspace', 'Set maximum workspace storage space') }}
 				</p>
-				<NcSelect :value.sync="getQuota"
+				<NcSelect v-model="getQuota"
 					aria-label-combobox="set quota"
 					class="quota-input"
 					:clear-search-on-select="true"
 					:taggable="true"
-					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
+					:disabled="$root.$data.isUserGeneralAdmin === false"
 					:placeholder="t('workspace', 'Set quota')"
 					:multiple="false"
 					:clearable="false"
@@ -67,7 +67,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import Check from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcModal from '@nextcloud/vue/components/NcModal'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcProgressBar from '@nextcloud/vue/components/NcProgressBar'
@@ -85,7 +85,7 @@ export default {
 		NcModal,
 		NcNoteCard,
 		NcColorPicker,
-		NcInputField,
+		NcTextField,
 		NcSelect,
 		NcProgressBar,
 	},
@@ -97,10 +97,13 @@ export default {
 	},
 	data() {
 		return {
-			spacename: undefined,
-			color: undefined,
-			quota: undefined,
-			size: undefined,
+			// Provide safe defaults to avoid components calling toString on null/undefined
+			spacename: '',
+			color: '',
+			// -3 seems to be used as "unlimited" in the code. Use it as a safe default
+			quota: -3,
+			// size in bytes (or converted format). Default to 0 to avoid division by zero
+			size: 0,
 		}
 	},
 	computed: {
@@ -137,6 +140,7 @@ export default {
 	},
 	beforeMount() {
 		this.color = this.space.color
+		// this.quota = this.$store.getters.convertQuotaForFrontend(this.quota)
 		this.quota = this.space.quota
 		this.size = this.space.size
 		this.spacename = this.space.name
@@ -285,6 +289,7 @@ export default {
 
 			quota = this.$store.getters.convertQuotaToByte(quota)
 
+			console.debug('Converted quota:', quota)
 			this.quota = quota
 		},
 		updateSpacename(spacename) {

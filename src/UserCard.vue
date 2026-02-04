@@ -63,16 +63,16 @@ export default {
 		NcActionButton,
 		NcCheckboxRadioSwitch,
 	},
-	data() {
-		return {
-			disabled: false
-		}
-	},
 	props: {
 		user: {
 			type: Object,
 			default: () => {},
 		},
+	},
+	data() {
+		return {
+			disabled: false,
+		}
 	},
 	beforeMount() {
 		this.disabled = this.isWorkspaceManager(this.user.role)
@@ -88,8 +88,12 @@ export default {
 			this.$emit('remove-user', user)
 		},
 		isWorkspaceManager(role) {
-			role = role.toLowerCase()
-			return role === 'wm'
+			console.debug('role', role)
+			// Safely handle undefined or null roles
+			if (!role) {
+				return false
+			}
+			return role.toLowerCase() === 'wm'
 		},
 	},
 }

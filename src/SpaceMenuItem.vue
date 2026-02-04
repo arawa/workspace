@@ -201,8 +201,8 @@ export default {
 
 		onNewWorkspaceGroup(e) {
 			// Hide and clean popup menu
-			this.$refs.navigationGroup.$children.find((child) => child.$options.name === 'NcActions').opened = false
-			this.$refs.navigationGroup.$emit('update')
+			// this.$refs.navigationGroup.$children.find((child) => child.$options.name === 'NcActions').opened = false
+			// this.$refs.navigationGroup.$emit('update')
 
 			// Don't accept empty names
 			const gid = e.target[0].value

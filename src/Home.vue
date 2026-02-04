@@ -21,7 +21,7 @@
 -->
 
 <template>
-	<NcContent app-name="workspace">
+	<NcContent appName="workspace">
 		<LeftSidebar />
 		<WorkspaceContent />
 	</NcContent>
@@ -40,7 +40,7 @@ export default {
 		WorkspaceContent,
 	},
 	beforeCreate() {
-		if (this.$root.$data.canAccessApp === 'false') {
+		if (this.$root.$data.canAccessApp === false) {
 			this.$router.push({
 				path: '/unauthorized',
 			})

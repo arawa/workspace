@@ -183,7 +183,7 @@ export default {
 			return groupsSorted.map(group => this.$store.getters.groupName(space.name, group)).join(', ')
 		},
 		isCurrentUserWorkspaceManager(user) {
-			return this.$root.$data.isUserGeneralAdmin === 'false' && (this.$root.$data.userSession === user.uid)
+			return this.$root.$data.isUserGeneralAdmin === false && (this.$root.$data.userSession === user.uid)
 		},
 		sortedGroups(groups, space) {
 			groups.sort((groupCurrent, groupNext) => {

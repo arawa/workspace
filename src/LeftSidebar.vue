@@ -33,10 +33,7 @@
 				:name="t('workspace', 'All workspaces')"
 				:to="{path: '/'}">
 				<template #counter>
-					<NcCounterBubble slot="counter">
-						{{ $store.state.countTotalWorkspaces }}
-					</NcCounterBubble>
-
+					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
 				</template>
 			</NcAppNavigationItem>
 		</ul>
@@ -50,7 +47,7 @@
 				:space-name="spaceName" />
 			<!-- <div id="app-settings">
 					<div id="app-settings-header">
-						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						<button v-if="$root.$data.isUserGeneralAdmin === true"
 							icon="icon-settings-dark"
 							class="settings-button"
 							data-apps-slide-toggle="#app-settings-content">
@@ -58,7 +55,7 @@
 						</button>
 					</div>
 					<div id="app-settings-content">
-						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
 							:close-after-click="true"
 							:title="t('workspace', 'Convert Team folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
@@ -105,7 +102,7 @@ export default {
 	mixins: [WorkspacesLoader],
 	data() {
 		return {
-			workspacesSearchQuery: this.$store.getters.searchWorkspace,
+			workspacesSearchQuery: this.$store.getters.searchWorkspace || '',
 		}
 	},
 	computed: {

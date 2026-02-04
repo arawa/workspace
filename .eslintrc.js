@@ -21,7 +21,10 @@
  *
  */
 
-module.exports = {
+import { recommended } from '@nextcloud/eslint-config'
+
+export default {
+	...recommended,
 	extends: [
 		'@nextcloud',
 		'plugin:vue/recommended',

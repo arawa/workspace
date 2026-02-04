@@ -116,6 +116,7 @@ export const getters = {
 				quota = quota / 1024
 				i++
 			}
+			console.debug('Converted quota: ' + quota + ' ' + units[i])
 			return Number(quota.toFixed(2)) + ' ' + units[i]
 		}
 	},

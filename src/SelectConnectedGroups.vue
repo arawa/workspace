@@ -38,7 +38,7 @@
 						<div class="group-avatar">
 							<NcAvatar
 								:display-name="group.displayName"
-								:show-user-status="false"
+								:hide-status="false"
 								:is-no-user="true" />
 							<div class="groupname">
 								<span>{{ group.displayName }}</span>

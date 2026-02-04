@@ -31,6 +31,7 @@
 				</span>
 				<NcCounterBubble :class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
 					type="outlined"
+					:raw="true"
 					:count="getQuota" />
 			</div>
 			<div class="space-actions">
@@ -72,13 +73,13 @@
 					</NcActionButton>
 				</NcActions>
 				<NcActions>
-					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
 						icon="icon-rename"
 						@click="toggleShowEditWorkspaceModal">
 						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
-				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
+				<NcActions v-if="$root.$data.isUserGeneralAdmin === true">
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="toggleShowDelWorkspaceModal">
@@ -102,7 +103,8 @@
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
-			:open.sync="showSelectUsersModal">
+			:open="showSelectUsersModal"
+			@update:open="val => { showSelectUsersModal = val }">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
 		<SelectConnectedGroups v-if="showSelectConnectedGroups"

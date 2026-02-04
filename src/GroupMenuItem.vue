@@ -7,7 +7,9 @@
 			<NcIconSvgWrapper v-else-if="isAddedGroup && (isDarkTheme === false)" :svg="AddedGroupBlack" />
 			<NcIconSvgWrapper v-else :path="mdiAccountMultiple" />
 		</template>
-		<NcCounterBubble :count="count" class="user-counter" />
+		<template #counter>
+			<NcCounterBubble :count="count" class="user-counter" />
+		</template>
 	</NcAppNavigationItem>
 </template>
 
