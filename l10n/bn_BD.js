@@ -5,6 +5,7 @@ OC.L10N.register(
     "Add" : "যোগ কর",
     "Cancel" : "Cancel",
     "Group name" : "গ্রুপের নাম",
+    "Error" : "সমস্যা",
     "Settings" : "সেটিংস",
     "Quota" : "কোটা",
     "Users" : "ব্যবহারকারী",

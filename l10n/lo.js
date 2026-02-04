@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "ຕົວແຍກສຳລັບໄຟລ໌ CSV ບໍ່ຖືກຕ້ອງ",
     "Your CSV file must use a comma (\",\") as separator" : "ໄຟລ໌ CSV ຂອງທ່ານຕ້ອງໃຊ້ເຄື່ອງໝາຍຈຸດ (\",\") ເປັນຕົວແຍກ",
-    "or" : "ຫຼື",
     "Error in CSV file content" : "ຜິດພາດໃນເນື້ອໃນຂອງໄຟລ໌ CSV",
     "Error: unknown users" : "ຜິດພາດ: ຜູ້ໃຊ້ບໍ່ເປັນທີ່ຮູ້ຈັກ",
     "- <b>%1$s</b> has the <b>%2$s</b> role" : "- <b>%1$s</b> ມີບົດບາດເປັນ <b>%2$s</b>",
@@ -30,7 +29,9 @@ OC.L10N.register(
     "Delete group" : "ລຶບກຸ່ມ",
     "Remove added group" : "ເອົາກຸ່ມທີ່ເພີ່ມອອກ",
     "Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>" : "ຄຳເຕືອນ, ຫຼັງຈາກເອົາກຸ່ມ <b>{groupname}</b> ອອກ, ຜູ້ໃຊ້ໃນກຸ່ມຈະສູນເສຍການເຂົ້າເຖິງພື້ນທີ່ວຽກ <b>{spacename}</b>, ຍົກເວັ້ນ:<br><br>- ຜູ້ຈັດການພື້ນທີ່ວຽກ (<b>WM-{spacename}</b>)<br>- ຜູ້ໃຊ້ທີ່ເປັນສະມາຊິກຂອງ <b>ກຸ່ມພື້ນທີ່ວຽກ</b> (ຂຶ້ນຕົ້ນດ້ວຍ <b>G-</b>)<br>- ຜູ້ໃຊ້ທີ່ເປັນສະມາຊິກຂອງກຸ່ມອື່ນທີ່ຖືກເພີ່ມເຂົ້າມາ<br>- ຜູ້ໃຊ້ທີ່ຖືກເພີ່ມດ້ວຍຕົນເອງຈາກພື້ນທີ່ວຽກ <b>{spacename}</b>",
+    "Error" : "ຂໍ້ຜິດພາດ",
     "Settings" : "ການຕັ້ງຄ່າ",
+    "Network error" : "Network error",
     "Start typing to lookup users" : "ເລີ່ມພິມເພື່ອຄົ້ນຫາຜູ້ໃຊ້",
     "Add a group" : "ເພີ່ມກຸ່ມ",
     "Start typing text to search for groups" : "ເລີ່ມພິມເພື່ອຄົ້ນຫາກຸ່ມ",
@@ -51,7 +52,7 @@ OC.L10N.register(
     "Role" : "ບົດບາດ",
     "Groups" : "ກຸ່ມ",
     "View profile" : "ເບິ່ງໂປຣໄຟລ໌",
-    "Delete user" : "ລຶບຜູ້ໃຊ້",
+    "Remove user" : "Remove user",
     "Remove from group" : "ເອົາອອກຈາກກຸ່ມ",
     "unlimited" : "ບໍ່ຈຳກັດ",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "ທ່ານສາມາດລະບຸໂຄຕ້າໄດ້ພຽງ \"ບໍ່ຈຳກັດ\" ຫຼື ຕົວເລກທີ່ຕາມດ້ວຍ \"TB\", \"GB\", \"MB\", ຫຼື \"KB\" (ຕົວຢ່າງ: \"5GB\")",
@@ -60,8 +61,10 @@ OC.L10N.register(
     "Save" : "ບັນທຶກ",
     "Loading..." : "ກຳລັງໂຫລດ...",
     "Can't load workspace users" : "ບໍ່ສາມາດໂຫຼດຜູ້ໃຊ້ຂອງພື້ນທີ່ວຽກໄດ້",
+    "or" : "ຫຼື",
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "ເກີດຂໍ້ຜິດພາດດ້ານເຄືອຂ່າຍຂະນະພະຍາຍາມປ່ຽນສີພື້ນທີ່ວຽກ.<br>ຂໍ້ຜິດພາດຄື: {error}",
     "Rename space" : "ປ່ຽນຊື່ພື້ນທີ່ວຽກ",
-    "Space name" : "ຊື່ພື້ນທີ່ວຽກ"
+    "Space name" : "ຊື່ພື້ນທີ່ວຽກ",
+    "Delete user" : "ລຶບຜູ້ໃຊ້"
 },
 "nplurals=1; plural=0;");

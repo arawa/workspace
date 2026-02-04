@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "او",
     "Unknown error" : "خطأ غير مُحدّدٍ",
     "Add users" : "اضافة اعضاء",
     "Search users" : "ابحث عن مستخدمين",
@@ -12,17 +11,21 @@ OC.L10N.register(
     "File to share" : "ملف للمشاركة",
     "Rename group" : "تغيير تسمية مجموعة",
     "Group name" : "اسم الفريق",
+    "Error" : "خطأ",
     "Settings" : "الإعدادات",
+    "Network error" : "خطأ في الشبكة",
     "No users" : "لا يوجد مستخدِمون",
     "Quota" : "الحصة التخزينية",
     "Users" : "المستخدمين",
     "Role" : "الوظيفة",
     "Groups" : "المجموعات",
     "View profile" : "عرض الملف الشخصي",
-    "Delete user" : "حذف المستخدم",
+    "Remove user" : "حذف مستخدِم",
     "unlimited" : "غير محدود",
     "Appearance" : "المظهر",
     "Save" : "حفظ",
-    "Loading..." : "التحميل جارٍ ..."
+    "Loading..." : "التحميل جارٍ ...",
+    "or" : "او",
+    "Delete user" : "حذف المستخدم"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

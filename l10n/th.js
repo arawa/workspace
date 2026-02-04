@@ -6,12 +6,13 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Confirm" : "ยืนยัน",
     "Group name" : "ชื่อกลุ่ม",
+    "Error" : "ข้อผิดพลาด",
     "Settings" : "การตั้งค่า",
     "Quota" : "โควต้า",
     "Users" : "ผู้ใช้",
     "Groups" : "กลุ่ม",
-    "Delete user" : "ลบผู้ใช้",
     "Appearance" : "ลักษณะที่ปรากฏ",
-    "Save" : "บันทึก"
+    "Save" : "บันทึก",
+    "Delete user" : "ลบผู้ใช้"
 },
 "nplurals=1; plural=0;");

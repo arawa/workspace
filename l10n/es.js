@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Invalid separator for CSV file" : "Separador inválido para archivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Tu archivo CSV debe usar una coma (\",\") como separador",
-    "or" : "o",
     "Error: unknown users" : "Error: usuarios desconocidos",
     "Unknown error" : "Error desconocido",
     "Add users" : "Añadir usuarios",
@@ -21,7 +20,9 @@ OC.L10N.register(
     "Rename group" : "Renombrar grupo",
     "Group name" : "Nombre del grupo",
     "Delete group" : "Eliminar grupo",
+    "Error" : "Error",
     "Settings" : "Ajustes",
+    "Network error" : "Error de red",
     "Add a group" : "Añadir un grupo",
     "No users" : "Sin usuarios",
     "Quota" : "Cuota",
@@ -29,12 +30,14 @@ OC.L10N.register(
     "Role" : "Cargo",
     "Groups" : "Grupos",
     "View profile" : "Ver perfil",
-    "Delete user" : "Eliminar usuario",
+    "Remove user" : "Eliminar usuario",
     "Remove from group" : "Eliminar del grupo",
     "unlimited" : "ilimitado",
     "Appearance" : "Apariencia",
     "Set quota" : "Establecer cuota",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o",
+    "Delete user" : "Eliminar usuario"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "of",
     "Unknown error" : "Onbekende fout",
     "Add users" : "Gebruikers toevoegen",
     "Search users" : "Gebruikers zoeken",
@@ -14,17 +13,21 @@ OC.L10N.register(
     "Rename group" : "Hernoem groep",
     "Group name" : "Groepsnaam",
     "Delete group" : "Verwijder groep",
+    "Error" : "Fout",
     "Settings" : "Instellingen",
+    "Network error" : "Netwerk fout",
     "No users" : "Geen gebruikers",
     "Quota" : "Limieten",
     "Users" : "Gebruikers",
     "Role" : "Rol",
     "Groups" : "Groepen",
     "View profile" : "Bekijk profiel",
-    "Delete user" : "Verwijder gebruiker",
+    "Remove user" : "Gebruiker verwijderen",
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
-    "Loading..." : "Laden...."
+    "Loading..." : "Laden....",
+    "or" : "of",
+    "Delete user" : "Verwijder gebruiker"
 },
 "nplurals=2; plural=(n != 1);");

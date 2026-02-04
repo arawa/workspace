@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "або",
     "Error: unknown role" : "Памылка: невядомая роля",
     "Unknown error" : "Невядомая памылка",
     "Add users" : "Дадаць карыстальнікаў",
@@ -15,6 +14,7 @@ OC.L10N.register(
     "Group name" : "Назва групы",
     "Delete group" : "Выдаліць групу",
     "Remove added group" : "Выдаліць дададзеную групу",
+    "Error" : "Памылка",
     "Settings" : "Налады",
     "No users" : "Няма карыстальнікаў",
     "Quota" : "Квота",
@@ -22,9 +22,11 @@ OC.L10N.register(
     "Role" : "Роля",
     "Groups" : "Групы",
     "View profile" : "Праглядзець профіль",
-    "Delete user" : "Выдаліць карыстальніка",
     "Remove from group" : "Выдаліць з групы",
     "Appearance" : "Знешні выгляд",
-    "Save" : "Захаваць"
+    "Save" : "Захаваць",
+    "Loading..." : "Загрузка…",
+    "or" : "або",
+    "Delete user" : "Выдаліць карыстальніка"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

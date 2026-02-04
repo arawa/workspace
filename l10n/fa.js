@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "یا",
     "Unknown error" : "خطای ناشناخته",
     "Add users" : "Add users",
     "Search users" : "جستجوی کاربران",
@@ -13,16 +12,20 @@ OC.L10N.register(
     "Choose from Files" : "Choose from Files",
     "Rename group" : "Rename group",
     "Group name" : "نام گروه",
+    "Error" : "خطا",
     "Settings" : "تنظیمات",
+    "Network error" : "خطای شبکه",
     "No users" : "No users",
     "Quota" : "سهم",
     "Users" : "کاربران",
     "Groups" : "گروه ها",
     "View profile" : "مشاهدهٔ نمایه",
-    "Delete user" : "حذف کردن کاربر",
+    "Remove user" : "برداشتن کاربر",
     "unlimited" : "نامحدود",
     "Appearance" : "ظاهر",
     "Save" : "ذخیره",
-    "Loading..." : "در حال بارگذاری..."
+    "Loading..." : "در حال بارگذاری...",
+    "or" : "یا",
+    "Delete user" : "حذف کردن کاربر"
 },
 "nplurals=2; plural=(n > 1);");

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "ή",
     "Unknown error" : "Άγνωστο σφάλμα",
     "Add users" : "Προσθήκη χρηστών",
     "Search users" : "Αναζήτηση χρηστών",
@@ -13,16 +12,20 @@ OC.L10N.register(
     "Rename group" : "Μετονομασία ομάδας",
     "Group name" : "Όνομα ομάδας",
     "Delete group" : "Διαγραφή ομάδας",
+    "Error" : "Σφάλμα",
     "Settings" : "Ρυθμίσεις",
+    "Network error" : "Σφάλμα δικτύου",
     "Quota" : "Χωρητικότητα",
     "Users" : "Χρήστες",
     "Role" : "Ρόλος/Θέση",
     "Groups" : "Ομάδες",
     "View profile" : "Προβολή προφίλ",
-    "Delete user" : "Διαγραφή χρήστη",
+    "Remove user" : "Αφαίρεση χρήστη",
     "unlimited" : "απεριόριστο",
     "Appearance" : "Εμφάνιση",
     "Save" : "Αποθήκευση",
-    "Loading..." : "Γίνεται φόρτωση..."
+    "Loading..." : "Γίνεται φόρτωση...",
+    "or" : "ή",
+    "Delete user" : "Διαγραφή χρήστη"
 },
 "nplurals=2; plural=(n != 1);");

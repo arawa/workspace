@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "o",
     "Unknown error" : "Se presentó un error desconocido",
     "Search users" : "Buscar usuarios",
     "Add" : "Añadir",
@@ -10,16 +9,20 @@ OC.L10N.register(
     "Upload new files" : "Cargar nuevos archivos",
     "Rename group" : "Renombrar grupo",
     "Group name" : "Nombre del grupo",
+    "Error" : "Error",
     "Settings" : "Ajustes",
+    "Network error" : "Error en la red",
     "No users" : "Sin usuarios",
     "Quota" : "Cuota",
     "Users" : " Usuarios",
     "Role" : "Cargo",
     "Groups" : "Grupos",
     "View profile" : "Ver perfil",
-    "Delete user" : "Borrar usuario",
+    "Remove user" : "Remover usuario",
     "Appearance" : "Apariencia",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o",
+    "Delete user" : "Borrar usuario"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "eller",
     "Unknown error" : "Ukjent feil",
     "Add users" : "Legg til brukere",
     "Search users" : "Søk etter brukere",
@@ -13,17 +12,21 @@ OC.L10N.register(
     "Choose from Files" : "Velg fra Files",
     "Rename group" : "Gi nytt navn til gruppen",
     "Group name" : "Gruppenavn",
+    "Error" : "Feil",
     "Settings" : "Innstillinger",
+    "Network error" : "Nettverksfeil",
     "No users" : "Ingen brukere",
     "Quota" : "Kvote",
     "Users" : "Brukere",
     "Role" : "Rolle",
     "Groups" : "Grupper",
     "View profile" : "Vis profil",
-    "Delete user" : "Slett bruker",
+    "Remove user" : "Fjern bruker",
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
     "Save" : "Lagre",
-    "Loading..." : "Laster…"
+    "Loading..." : "Laster…",
+    "or" : "eller",
+    "Delete user" : "Slett bruker"
 },
 "nplurals=2; plural=(n != 1);");

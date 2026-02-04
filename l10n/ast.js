@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "o",
     "Unknown error" : "Error desconocíu",
     "Add users" : "Amestar usuarios",
     "Search users" : "Buscar usuarios",
@@ -10,17 +9,21 @@ OC.L10N.register(
     "Confirm" : "Confirmar",
     "Rename group" : "Renomar el grupu",
     "Group name" : "Nome del grupu",
+    "Error" : "Error",
     "Settings" : "Configuración",
+    "Network error" : "Fallu de rede",
     "No users" : "Nun hai nengún usuariu…",
     "Quota" : "Cuota",
     "Users" : "Usuarios",
     "Role" : "Rol",
     "Groups" : "Grupos",
     "View profile" : "Ver el perfil",
-    "Delete user" : "Desaniciar l'usuariu",
+    "Remove user" : "Quitar l'usuariu",
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
     "Save" : "Guardar",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "or" : "o",
+    "Delete user" : "Desaniciar l'usuariu"
 },
 "nplurals=2; plural=(n != 1);");

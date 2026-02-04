@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workspace",
     {
-    "or" : "o",
     "Unknown error" : "Error desconegut",
     "Add users" : "Afegeix usuaris",
     "Search users" : "Cerqueu usuaris",
@@ -12,15 +11,19 @@ OC.L10N.register(
     "File to share" : "Fitxer a compartir",
     "Rename group" : "Canvia el nom del grup",
     "Group name" : "Nom del grup",
+    "Error" : "Error",
     "Settings" : "Paràmetres",
+    "Network error" : "Error de xarxa",
     "No users" : "Cap usuari",
     "Quota" : "Quota",
     "Groups" : "Grups",
     "View profile" : "Visualitza el perfil",
-    "Delete user" : "Suprimeix l'usuari",
+    "Remove user" : "Suprimir usuari",
     "unlimited" : "il·limitada",
     "Appearance" : "Aparença",
     "Save" : "Desar",
-    "Loading..." : "Carregant..."
+    "Loading..." : "Carregant...",
+    "or" : "o",
+    "Delete user" : "Suprimeix l'usuari"
 },
 "nplurals=2; plural=(n != 1);");

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Unknown error" : "Nepoznata greška",
     "Cancel" : "Poništi",
+    "Error" : "Greška",
     "Settings" : "Поставке",
     "Groups" : "Grupe",
     "View profile" : "Vidi profil",

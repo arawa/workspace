@@ -1,5 +1,4 @@
 { "translations": {
-    "or" : "또는",
     "Unknown error" : "알 수 없는 오류",
     "Add users" : "사용자 추가",
     "Search users" : "사용자 검색",
@@ -11,15 +10,19 @@
     "Choose from Files" : "파일에서 선택",
     "Rename group" : "그룹 이름 바꾸기",
     "Group name" : "그룹 이름",
+    "Error" : "오류",
     "Settings" : "설정",
+    "Network error" : "네트워크 오류",
     "No users" : "사용자 없음",
     "Quota" : "할당량",
     "Users" : "사용자",
     "Groups" : "그룹",
     "View profile" : "프로필 보기",
-    "Delete user" : "사용자 지우기",
+    "Remove user" : "사용자 제거",
     "Appearance" : "외형",
     "Save" : "저장",
-    "Loading..." : "불러오는 중..."
+    "Loading..." : "불러오는 중...",
+    "or" : "또는",
+    "Delete user" : "사용자 지우기"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
