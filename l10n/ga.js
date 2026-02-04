@@ -84,7 +84,8 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Tharla earráid líonra agus spásanna oibre á n-aisghabháil.<br>Earráid: {error}",
     "No workspace" : "Gan spás oibre",
-    "You use <b>{size}</b> of {quota}" : "Úsáideann tú <b>{size}</b> de {quota}",
+    "You are using {size}" : "Tá tú ag úsáid {size}",
+    "You are using {size} out of {quota}" : "Tá tú ag úsáid {size} as {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br>Earráid: {error}",
     "unlimited" : "gan teorainn",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Ní féidir leat ach \"gan teorainn\" nó uimhir agus \"TB\", \"GB\", \"MB\", nó \"KB\" ina diaidh (m.sh.: \"5GB\") a shonrú mar chuóta",
@@ -97,6 +98,8 @@ OC.L10N.register(
     "Loading..." : "Á lódáil...",
     "{number} workspaces..." : "{number} spásanna oibre...",
     "Error - Duplicate space name" : "Earráid - Ainm spáis dúblach",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Tá an spás oibre nó an fillteán grúpa seo ann cheana féin.\nTabhair faoi deara nach bhfuil ainmneacha spásanna oibre íogair ó thaobh cás de.\nMar shampla: má tá spás oibre darb ainm “acmhainní daonna” ann cheana féin, ní bheidh tú in ann spás oibre darb ainm “Acmhainní Daonna” a chruthú.\nSeiceáil freisin nach bhfuil fillteán grúpa leis an ainm atá díreach curtha isteach agat ann cheana féin.",
+    "Group error" : "Earráid ghrúpa",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Ní féidir an grúpa {gid} a cheangal leis an bhfillteán grúpa. B’fhéidir go bhfuil fadhb leis an nasc?",
     "Error to remove group as manager acl" : "Earráid agus grúpa á bhaint mar acl bainisteoir",
     "Impossible to remove the group from the advanced permissions." : "Ní féidir an grúpa a bhaint as na ceadanna ardleibhéil.",
@@ -120,6 +123,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Tharla earráid líonra agus iarracht á déanamh dath an spáis oibre a athrú.<br> Is é seo an earráid: {error}",
     "Rename space" : "Athainmnigh an spás",
     "Space name" : "Ainm an spáis",
-    "Delete user" : "Scrios úsáideoir"
+    "Delete user" : "Scrios úsáideoir",
+    "You use <b>{size}</b> of {quota}" : "Úsáideann tú <b>{size}</b> de {quota}"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

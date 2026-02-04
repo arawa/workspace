@@ -82,7 +82,8 @@
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la récupération des workspaces.<br>Erreur : {error}",
     "No workspace" : "Aucun workspace",
-    "You use <b>{size}</b> of {quota}" : "Vous utilisez <b>{size}</b> sur {quota}",
+    "You are using {size}" : "Vous utilisez {size}",
+    "You are using {size} out of {quota}" : "Vous utilisez {size} sur {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace. Erreur : {error}",
     "unlimited" : "illimité",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Vous ne pouvez spécifier que \"illimité\" ou un nombre suivi de \"TB\", \"GB\", \"MB\" ou \"KB\" (exemple : \"5GB\") comme quota.",
@@ -95,6 +96,8 @@
     "Loading..." : "Chargement...",
     "{number} workspaces..." : "{number} workspaces...",
     "Error - Duplicate space name" : "Erreur - Nom de workspace en doublon",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Ce workspace ou ce dossier de groupe existe déjà.\nVeuillez noter que les noms de workspace ne sont pas sensibles à la casse.\nPar exemple : si un espace de travail nommé « ressources humaines » existe déjà, vous ne pourrez pas créer un espace de travail nommé « Ressources humaines ».\nVérifiez également qu'un dossier de groupe portant le nom que vous venez de saisir n'existe pas déjà.",
+    "Group error" : "Erreur de groupe",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Impossible d'associer le groupe {gid} au dossier de groupe. Peut-être un problème de connexion ?",
     "Error to remove group as manager acl" : "Erreur lors de la suppression du groupe en tant que gestionnaire des ACL",
     "Impossible to remove the group from the advanced permissions." : "Impossible de supprimer le groupe des autorisations avancées.",
@@ -118,6 +121,7 @@
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Une erreur réseau s'est produite lors de la modification de la couleur du workspace.<br>Erreur : {error}",
     "Rename space" : "Renommer le workspace",
     "Space name" : "Nom du workspace",
-    "Delete user" : "Supprimer l'utilisateur"
+    "Delete user" : "Supprimer l'utilisateur",
+    "You use <b>{size}</b> of {quota}" : "Vous utilisez <b>{size}</b> sur {quota}"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

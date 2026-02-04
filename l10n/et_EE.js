@@ -83,7 +83,8 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Töötubade laadimisel tekkis viga.<br>Viga:{error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Töötubade laadimisel tekkis võrguühenduse viga.<br>Viga:{error}",
     "No workspace" : "Töötuba pole",
-    "You use <b>{size}</b> of {quota}" : "Sinu kvoodikasutus: <b>{size}/{quota}</b>",
+    "You are using {size}" : "Sa kasutad: {size}",
+    "You are using {size} out of {quota}" : "Sinu kvoodikasutus: <b>{size}/{quota}</b>",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Töötoa värvi muutmisel tekkis viga.<br>Viga:{error}",
     "unlimited" : "piiramatu",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Sa võid kvoodiks sisestada „unlimited“ või numbri, mille järel on „TB“, „GB“, „MB“, or „KB“ (nt: „5GB“)",
@@ -96,6 +97,7 @@ OC.L10N.register(
     "Loading..." : "Laadin...",
     "{number} workspaces..." : "{number} töötuba...",
     "Error - Duplicate space name" : "Viga - topelt töötoa nimi",
+    "Group error" : "Grupi viga",
     "Can't load workspace users" : "Töötubade kasutjate laadimine ei õnnestu",
     "Error to create a workspace" : "Viga töötoa loomisel",
     "An error occurred while trying to add user" : "Kasutaja lisamisel tekkis viga",
@@ -115,6 +117,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Töötoa värvi muutmisel tekkis võrguühenduse viga.<br>Viga:{error}",
     "Rename space" : "Muuda töötoa nime",
     "Space name" : "Töötoa nimi",
-    "Delete user" : "Kustuta kasutaja"
+    "Delete user" : "Kustuta kasutaja",
+    "You use <b>{size}</b> of {quota}" : "Sinu kvoodikasutus: <b>{size}/{quota}</b>"
 },
 "nplurals=2; plural=(n != 1);");

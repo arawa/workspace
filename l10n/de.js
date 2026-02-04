@@ -84,7 +84,8 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Es ist ein Fehler beim Empfangen der Arbeitsbereiche aufgetreten.<br>Fehler: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Empfangen der Arbeitsbereiche aufgetreten.<br>Fehler: {error}",
     "No workspace" : "Kein Arbeitsbereich",
-    "You use <b>{size}</b> of {quota}" : "Du verwendest <b>{size}</b> von {quota}",
+    "You are using {size}" : "Du verwendest {size}",
+    "You are using {size} out of {quota}" : "Du verwendest {size} von {quota}",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Ändern der Farbe des Arbeitsbereichs aufgetreten.<br>Fehler: {error}",
     "unlimited" : "Unbegrenzt",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Es darf nur \"unbegrenzt“ oder eine Zahl gefolgt von \"TB“, \"GB“, \"MB“ oder \"KB“ (z. B. \"5 GB“) als Kontingent angegeben werden",
@@ -97,6 +98,8 @@ OC.L10N.register(
     "Loading..." : "Lade …",
     "{number} workspaces..." : "{number} Arbeitsbereiche …",
     "Error - Duplicate space name" : "Fehler - Doppelter Arbeitsbereichname",
+    "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Dieser Arbeitsbereich oder Gruppenordner existiert bereits.\nBitte beachten, dass bei Arbeitsbereichsnamen zwischen Groß- und Kleinschreibung nicht unterschieden wird.\nBeispiel: Wenn bereits ein Arbeitsbereich mit dem Namen “Personalwesen” vorhanden ist, kann kein Arbeitsbereich mit dem Namen “Personalwesen” erstellt werden\nBitte auch überprüfen, dass ein Gruppenordner mit dem Namen, der gerade eingegeben wurde, noch nicht existiert.",
+    "Group error" : "Gruppenfehler",
     "Impossible to attach the {gid} group to groupfolder. May be a problem with the connection ?" : "Die Gruppe {gid} kann nicht an den Gruppenordner angefügt werden. Besteht ein Problem mit der Verbindung?",
     "Error to remove group as manager acl" : "Fehler beim Entfernen der Gruppe als Verwaltungs-ACL",
     "Impossible to remove the group from the advanced permissions." : "Gruppe konnte nicht aus den erweiterten Berechtigungen entfernt werden",
@@ -120,6 +123,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Netzwerkfehler beim Ändern der Farbe des Arbeitsbereichs. <br>Fehlermeldung: {error}",
     "Rename space" : "Bereich umbenennen",
     "Space name" : "Bereichsname",
-    "Delete user" : "Benutzer löschen"
+    "Delete user" : "Benutzer löschen",
+    "You use <b>{size}</b> of {quota}" : "Du verwendest <b>{size}</b> von {quota}"
 },
 "nplurals=2; plural=(n != 1);");
