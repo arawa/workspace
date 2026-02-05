@@ -20,7 +20,7 @@
 
     <bugs>https://www.arawa.fr/contact/</bugs>
     <dependencies>
-        <nextcloud min-version="32" max-version="32"/>
+        <nextcloud min-version="32" max-version="33"/>
     </dependencies>
 
     <summary>Create team folders with delegated management</summary>
