@@ -55,6 +55,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update OpenAPI for OCS API Viewer (Swagger) by @zak39 in [#1571](https://github.com/arawa/workspace/pull/1571)
 - Update CHANGELOG for v4.3.0 by @zak39 in [#1586](https://github.com/arawa/workspace/pull/1586)
 
+## [4.2.0] - 2026-02-05
+
+### Added
+
+- Backport: Add pagination for workspace list by @zak39 in https://github.com/arawa/workspace/pull/1547, [#1556](https://github.com/arawa/workspace/pull/1556), [#1554](https://github.com/arawa/workspace/pull/1554), [#1555](https://github.com/arawa/workspace/pull/1555), [#1560](https://github.com/arawa/workspace/pull/1560)
+- Backport: Add support for German language by @zak39 in [#1491](https://github.com/arawa/workspace/pull/1491)
+
+### Changed
+
+- v4.2.0 by @zak39 in [#1615](https://github.com/arawa/workspace/pull/1615)
+- Backport: Remove a space white in a message by @zak39 in [#1489](https://github.com/arawa/workspace/pull/1489)
+- Backport: Resolve translation issues by @zak39 in [#1507](https://github.com/arawa/workspace/pull/1507)
+- Backport: Show WM description on checkbox hover by @zak39 in [#1510](https://github.com/arawa/workspace/pull/1510)
+- Backport: Fix wording in OCS API, CLI, log and web interface by @zak39 in [#1504](https://github.com/arawa/workspace/pull/1504)
+- Backport: English wording(s) improvement by @zak39 in [#1524](https://github.com/arawa/workspace/pull/1524)
+- Backport: Use a lighter color for "New workspace" button by @zak39 in [#1528](https://github.com/arawa/workspace/pull/1528)
+- Backport: Set added group icon to 16px in action menu by @zak39 in [#1530](https://github.com/arawa/workspace/pull/1530)
+- Backport: Increase the width of the role column by @zak39 in [#1532](https://github.com/arawa/workspace/pull/1532)
+- Backport: Add new RequireExistingUsers attribute by @zak39 in [#1558](https://github.com/arawa/workspace/pull/1558)
+- Backport: Replace "Delete user" with "Remove user" (more appropriate meaning) b/y @zak39 in [#](https://github.com/arawa/workspace/)pull/1593
+- Backport: Update quota wording when editing workspace by @zak39 in [#1607](https://github.com/arawa/workspace/pull/1607)
+- Backport: Clarify quota wording for unlimited vs limited cases by @zak39 in [#1612](https://github.com/arawa/workspace/pull/1612)
+- Backport: Add translator comment for 'WM' abbreviation  by @zak39 in [#1511](https://github.com/arawa/workspace/pull/1511)
+
+### Fixed
+
+- Backport: Show email addresses in the options results after searching fo/r users by @zak39 in [#](https://github.com/arawa/)workspace/pull/1493
+- Backport: Improve the time to display more than 1500 workspaces by @zak39 in [#1514](https://github.com/arawa/workspace/pull/1514)
+- Backport: Fix typo in CSV structure message by @zak39 in [#1523](https://github.com/arawa/workspace/pull/1523)
+- Backport: Verify gid belongs to workspace when removing user from group by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1526
+- Backport: Move the workspace managers column content to the left by @zak39 in [#1531](https://github.com/arawa/workspace/pull/1531)
+- Backport: Return 403 status when adding user to subgroup outside target workspac/e via OCS API  by @zak39 in [#](https://github.com/)arawa/workspace/pull/1559
+- Backport: Open the submenu when clicking workspace in left panel by @zak39 in [#1567](https://github.com/arawa/workspace/pull/1567)
+- Backport: Remove users from Workspace Manager after refreshing group view by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1589
+- Backport: Replace spaceId with spacename in added group removal message by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1590
+- Backport: Remove users from Workspace Manager after refreshing workspace view b/y @zak39 in [#](https://github.com/arawa/workspace/)pull/1591
+- Backport: Show options when quota selected by @zak39 in [#1592](https://github.com/arawa/workspace/pull/1592)
+- Backport: Set default workspace list limit to 25 by @zak39 in [#1597](https://github.com/arawa/workspace/pull/1597)
+- Backport: Accept all characters in subgroup gid when adding users by @zak39 in [#1598](https://github.com/arawa/workspace/pull/1598)
+- Backport: Validate gid special chars for subgroup when removing users by @zak39 in [#1608](https://github.com/arawa/workspace/pull/1608)
+- Backport: Show user counter bubbles for workspaces in left sidebar by @zak39 in [#1609](https://github.com/arawa/workspace/pull/1609)
+- Backport: Verify users belong to workspace before removing them by @zak39 in [#1550](https://github.com/arawa/workspace/pull/1550)
+- Backport: Show email addresses in the options results after searching fo/r users by @zak39 in [#](https://github.com/arawa/)workspace/pull/1493
+- Backport: Improve the time to display more than 1500 workspaces by @zak39 in [#1514](https://github.com/arawa/workspace/pull/1514)
+- Backport: Fix typo in CSV structure message by @zak39 in [#1523](https://github.com/arawa/workspace/pull/1523)
+- Backport: Verify gid belongs to workspace when removing user from group by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1526
+- Backport: Move the workspace managers column content to the left by @zak39 in [#1531](https://github.com/arawa/workspace/pull/1531)
+- Backport: Return 403 status when adding user to subgroup outside target workspac/e via OCS API  by @zak39 in [#](https://github.com/)arawa/workspace/pull/1559
+- Backport: Open the submenu when clicking workspace in left panel by @zak39 in [#1567](https://github.com/arawa/workspace/pull/1567)
+- Backport: Remove users from Workspace Manager after refreshing group view by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1589
+- Backport: Replace spaceId with spacename in added group removal message by @zak3/9 in [#](https://github.com/arawa/workspace/pull/)1590
+- Backport: Remove users from Workspace Manager after refreshing workspace view b/y @zak39 in [#](https://github.com/arawa/workspace/)pull/1591
+- Backport: Show options when quota selected by @zak39 in [#1592](https://github.com/arawa/workspace/pull/1592)
+- Backport: Set default workspace list limit to 25 by @zak39 in [#1597](https://github.com/arawa/workspace/pull/1597)
+- Backport: Accept all characters in subgroup gid when adding users by @zak39 in [#1598](https://github.com/arawa/workspace/pull/1598)
+- Validate gid special chars for subgroup when removing users by @zak39 in [#1608](https://github.com/arawa/workspace/pull/1608)
+- Show user counter bubbles for workspaces in left sidebar by @zak39 in [#1609](https://github.com/arawa/workspace/pull/1609)
+
+### Docs
+
+- Backport: Update OpenAPI for OCS API Viewer (Swagger) by @zak39 in [#1572](https://github.com/arawa/workspace/pull/1572)
+- Backport: Improve OCS API Documentation for edit function by @zak39 in [#1557](https://github.com/arawa/workspace/pull/1557)
+
+
 ## [4.1.0] - 2025-11-10
 
 ### Added
@@ -543,7 +607,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 
 
 [Unreleased]: https://github.com/arawa/workspace/compare/v4.3.0...main
-[4.3.0]: https://github.com/arawa/workspace/compare/v4.1.0...4.3.0
+[4.3.0]: https://github.com/arawa/workspace/compare/v4.2.0...4.3.0
+[4.2.0]: https://github.com/arawa/workspace/compare/v4.1.0...4.2.0
 [4.1.0]: https://github.com/arawa/workspace/compare/v4.0.6...4.1.0
 [4.0.6]: https://github.com/arawa/workspace/compare/v4.0.5...4.0.6
 [4.0.5]: https://github.com/arawa/workspace/compare/v4.0.4...4.0.5
