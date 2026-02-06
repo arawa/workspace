@@ -165,7 +165,7 @@ describe('enableAcl function', () => {
 	it('throws error if resp.status is not 200', async () => {
 		axios.post.mockResolvedValue({ status: 500, ...responseValue })
 		const promise = enableAcl()
-		await expect(promise).rejects.toThrow('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection ?')
+		await expect(promise).rejects.toThrow('Groupfolders\' API doesn\'t enable ACL. May be a problem with the connection?')
 	})
 })
 
