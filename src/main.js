@@ -28,20 +28,16 @@ import router from './router.js'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import VueLazyComponent from '@xunlei/vue-lazy-component'
 import { vElementVisibility } from '@vueuse/components'
 import { generateFilePath } from '@nextcloud/router'
+import VueLazyload from 'vue-lazyload'
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 
-// Vue.directive('elementVisibility', vElementVisibility)
-// Vue.use(VueLazyComponent)
-
 const app = createApp(App)
 
 app
-	.use(VueLazyComponent)
 	.use(vElementVisibility)
 	.mixin({
 		methods: {
@@ -51,6 +47,10 @@ app
 	})
 	.use(store)
 	.use(router)
+	.use(VueLazyload, {
+		preLoad: 1.3,
+		lazyComponent: true,
+	})
 	.mount('#content')
 
 export default app

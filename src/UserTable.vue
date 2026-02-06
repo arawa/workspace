@@ -43,10 +43,9 @@
 					:key="user.uid"
 					:class="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
 					<td class="avatar workspace-td">
-						<VueLazyComponent
-							:key="'avatar-'+user.uid">
+					<lazy-component :key="user.uid">
 							<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
-						</VueLazyComponent>
+					</lazy-component>
 					</td>
 					<td class="workspace-td user-info">
 						<div class="user-name">
@@ -120,7 +119,6 @@ import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import UserGroup from './services/Groups/UserGroup.js'
 import AccountCog from 'vue-material-design-icons/AccountCog.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
-import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 import { getLocale } from '@nextcloud/l10n'
 
 export default {
@@ -131,7 +129,6 @@ export default {
 		NcActionButton,
 		NcEmptyContent,
 		AccountCog,
-		VueLazyComponent,
 	},
 	data() {
 		return {
