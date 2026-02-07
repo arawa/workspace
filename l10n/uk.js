@@ -1,6 +1,9 @@
 OC.L10N.register(
     "workspace",
     {
+    "Invalid separator for CSV file" : "Недійсний роздільник у файлі CSV",
+    "Your CSV file must use a comma (\",\") as separator" : "Файл CSV має використовувати кому (\",\") в якості роздільника",
+    "Error in CSV file content" : "Помилка у вмісті файлу CSV",
     "Unknown error" : "Невідома помилка",
     "Add users" : "Додати користувачів",
     "Search users" : "Пошук користувачів",
