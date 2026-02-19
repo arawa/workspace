@@ -1,7 +1,13 @@
 { "translations": {
     "Invalid separator for CSV file" : "Separador inválido para archivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Tu archivo CSV debe usar una coma (\",\") como separador",
+    "Error in CSV file content" : "Error en el contenido del archivo CSV",
+    "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Los usuarios de este archivo CSV son desconocidos y no pueden ser importados. Verifica los siguientes usuarios y repite el proceso:<br>",
     "Error: unknown users" : "Error: usuarios desconocidos",
+    "- <b>%1$s</b> has the <b>%2$s</b> role" : "- <b>%1$s</b> tiene el rol <b>%2$s</b>",
+    "Error: unknown role" : "Error: rol desconocido",
+    "Error in file format" : "Error en el formato del archivo",
+    "The file must be in <b>CSV format</b>." : "El archivo debe estar en <b>formato CSV</b>.",
     "Unknown error" : "Error desconocido",
     "Add users" : "Añadir usuarios",
     "Import a .csv file" : "Importar un archivo .csv",
