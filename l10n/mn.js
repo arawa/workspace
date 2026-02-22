@@ -2,15 +2,27 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "үл мэдэгдэх алдаа",
+    "Add users" : "Хэрэглэгчид нэмэх",
     "Add" : "Нэмэх",
     "Cancel" : "Cancel",
     "Confirm" : "Батлах",
+    "Upload new files" : "Шинэ файл байршуулах",
+    "File to share" : "Хуваалцах файл",
+    "Choose from Files" : "Файлуудаас сонгох",
+    "Rename group" : "Бүлэг нэр өөрчлөх",
     "Group name" : "Бүлгийн нэр",
+    "Delete group" : "Бүлэг устгах",
     "Error" : "Алдаа",
     "Settings" : "Тохиргоо",
+    "Network error" : "Сүлжээний алдаа",
     "Quota" : " хувь хэмжээ",
     "Users" : "хэрэглэгч",
+    "Role" : "Үүрэг",
     "Groups" : "бүлэгүүд",
-    "Save" : "Хадгалах"
+    "View profile" : "Профайл үзэх",
+    "Remove user" : "Хэрэглэгч хасах",
+    "Appearance" : "Гадаад төрх",
+    "Save" : "Хадгалах",
+    "or" : "эсвэл"
 },
 "nplurals=2; plural=(n != 1);");
