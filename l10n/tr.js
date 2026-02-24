@@ -84,6 +84,8 @@ OC.L10N.register(
     "An error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Çalışma alanları alınırken bir sorun çıktı.<br>Hata: {error}",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Çalışma alanları alınırken bir ağ sorunu çıktı.<br>Hata: {error}",
     "No workspace" : "Herhangi bir çalışma alanı yok",
+    "You are using {size}" : "{size} kullanıyorsunuz",
+    "You are using {size} out of {quota}" : "{size} / {quota} kullanıyorsunuz",
     "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Çalışma alanının rengi değiştirilirken bir ağ sorunu çıktı.<br>Hata: {error}",
     "unlimited" : "sınırsız",
     "You may only specify \"unlimited\" or a number followed by \"TB\", \"GB\", \"MB\", or \"KB\" (eg: \"5GB\") as quota" : "Kota olarak yalnızca \"sınırsız\" veya bir sayı ve ardından \"TB\", \"GB\", \"MB\" veya \"KB\" (örneğin: \"5GB\") belirtebilirsiniz.",
