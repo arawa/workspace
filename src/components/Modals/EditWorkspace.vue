@@ -211,12 +211,6 @@ export default {
 				})
 			}
 
-			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
-				this.$router.push({
-					path: `/workspace/${space.id}`,
-				})
-			}
-
 			this.$emit('close')
 
 		},
