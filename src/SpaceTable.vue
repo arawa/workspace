@@ -54,30 +54,26 @@
 						<td class="workspace-td">
 							{{ getQuota(space.quota) }}
 						</td>
-						<td class="workspace-td">
-							<VueLazyComponent
-								:key="'avatar-'+name"
-								class="admin-avatars"
-								@init="initAdmins(space.id, name)">
-								<div class="container-avatars">
-									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
-										:key="user.uid"
-										:style="{ marginRight: 2 + 'px' }"
-										:display-name="user.name"
-										:disable-menu="true"
-										:show-user-status="false"
-										:user="user.uid" />
-									<div v-if="workspaceManagers(space).length > 10"
-										v-tooltip="{
-											content: getLatestWorkspaceManagerUsers(space.name),
-											show: true,
-										}"
-										class="bubble-more-users">
-										+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
-									</div>
+					<td class="workspace-td">
+						<lazy-component v-if="space.managers && Object.keys(space.managers).length > 0"
+							:key="space.id + '-avatars'"
+							class="admin-avatars"
+							@show="initAdmins(space.id, space.name)">
+							<div class="container-avatars">
+								<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
+									:key="user.uid"
+									:style="{ marginRight: 2 + 'px' }"
+									:display-name="user.name"
+									:disable-menu="true"
+									:show-user-status="false"
+									:user="user.uid" />
+								<div v-if="workspaceManagers(space).length > 10"
+									class="bubble-more-users">
+									+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
 								</div>
-							</VueLazyComponent>
-						</td>
+							</div>
+						</lazy-component>
+					</td>
 					</tr>
 				</tbody>
 			</table>
@@ -100,7 +96,6 @@
 
 <script>
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-import { component as VueLazyComponent } from '@xunlei/vue-lazy-component'
 import PageLoader from './components/PageLoader.vue'
 import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEmpty.vue'
@@ -109,7 +104,6 @@ export default {
 	name: 'SpaceTable',
 	components: {
 		NcAvatar,
-		VueLazyComponent,
 		PageLoader,
 		WorkspaceContentEmpty,
 	},
@@ -127,7 +121,9 @@ export default {
 		},
 	},
 	beforeMount() {
-		this.showNextPage()
+		if (this.$store.getters.countWorkspaces < this.$store.getters.countTotalWorkspacesByQuery) {
+			this.showNextPage()
+		}
 	},
 	methods: {
 		getQuota(quota) {

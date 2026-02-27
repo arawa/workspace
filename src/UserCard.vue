@@ -30,12 +30,11 @@
 		</div>
 		<div class="user-entry-actions">
 			<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
-				<NcCheckboxRadioSwitch v-tooltip="{ content: defineWorkspaceManagerShortcut, show: true, placement: 'bottom' }"
-					type="checkbox"
+				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
-					:checked="isWorkspaceManager(user.role)"
+					:modelValue="isWorkspaceManager(user.role)"
 					:disabled="disabled"
-					@update:checked="toggleUserRole(user)">
+					@update:modelValue="toggleUserRole(user)">
 					<!-- TRANSLATORS WM = Is an abbreviation for "Workspace Manager" -->
 					{{ t('workspace', 'WM') }}
 				</NcCheckboxRadioSwitch>
@@ -64,16 +63,16 @@ export default {
 		NcActionButton,
 		NcCheckboxRadioSwitch,
 	},
-	data() {
-		return {
-			disabled: false
-		}
-	},
 	props: {
 		user: {
 			type: Object,
 			default: () => {},
 		},
+	},
+	data() {
+		return {
+			disabled: false,
+		}
 	},
 	beforeMount() {
 		this.disabled = this.isWorkspaceManager(this.user.role)
@@ -89,8 +88,11 @@ export default {
 			this.$emit('remove-user', user)
 		},
 		isWorkspaceManager(role) {
-			role = role.toLowerCase()
-			return role === 'wm'
+			// Safely handle undefined or null roles
+			if (!role) {
+				return false
+			}
+			return role.toLowerCase() === 'wm'
 		},
 	},
 }

@@ -20,9 +20,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
+	<NcAppNavigation v-if="$root.$data.canAccessApp"
+		ariaLabel="workspace navigation">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
@@ -32,9 +33,9 @@
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
 				:to="{path: '/'}">
-				<NcCounterBubble slot="counter">
-					{{ $store.state.countTotalWorkspaces }}
-				</NcCounterBubble>
+				<template #counter>
+					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
+				</template>
 			</NcAppNavigationItem>
 		</ul>
 		<NcAppNavigationSearch v-model="workspacesSearchQuery"
@@ -47,7 +48,7 @@
 				:space-name="spaceName" />
 			<!-- <div id="app-settings">
 					<div id="app-settings-header">
-						<button v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						<button v-if="$root.$data.isUserGeneralAdmin === true"
 							icon="icon-settings-dark"
 							class="settings-button"
 							data-apps-slide-toggle="#app-settings-content">
@@ -55,17 +56,17 @@
 						</button>
 					</div>
 					<div id="app-settings-content">
-						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
 							:close-after-click="true"
 							:title="t('workspace', 'Convert Team folders')"
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
-			<div v-if="Object.keys($store.state.spaces).length">
-				<PageLoader v-if="nextPage"
-					v-element-visibility="next"
-					:message="messageLoader" />
-			</div>
+				<div v-if="Object.keys($store.state.spaces).length">
+					<PageLoader v-if="nextPage"
+						v-element-visibility="next"
+						:message="messageLoader" />
+				</div>
 		</template>
 	</NcAppNavigation>
 </template>
@@ -102,7 +103,7 @@ export default {
 	mixins: [WorkspacesLoader],
 	data() {
 		return {
-			workspacesSearchQuery: this.$store.getters.searchWorkspace,
+			workspacesSearchQuery: this.$store.getters.searchWorkspace || '',
 		}
 	},
 	computed: {
@@ -170,7 +171,8 @@ export default {
 				name,
 				quota: workspace.quota,
 				users: {},
-				userCount: workspace.usersCount,
+				size: 0,
+				usersCount: workspace.usersCount,
 				managers: null,
 			})
 			this.$store.dispatch('incrementCountWorkspaces')

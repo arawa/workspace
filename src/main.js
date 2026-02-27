@@ -21,37 +21,34 @@
  *
  */
 
-import Vue from 'vue'
+import { createApp } from 'vue'
 import router from './router.js'
-import { linkTo } from '@nextcloud/router'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-import { Tooltip } from '@nextcloud/vue'
-import VueLazyComponent from '@xunlei/vue-lazy-component'
 import { vElementVisibility } from '@vueuse/components'
-
-Vue.mixin({
-	methods: {
-		t,
-		n,
-	},
-})
+import { generateFilePath } from '@nextcloud/router'
+import VueLazyload from '@jambonn/vue-lazyload'
 
 // eslint-disable-next-line
-__webpack_public_path__ = linkTo('workspace', 'js/')
+__webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 
-Vue.directive('tooltip', Tooltip)
-Vue.directive('elementVisibility', vElementVisibility)
-Vue.use(VueLazyComponent)
+const app = createApp(App)
 
-export default new Vue({
-	el: '#content',
-	data: {
-		isUserGeneralAdmin: false,
-		spaces: {},
-	},
-	router,
-	store,
-	render: (h) => h(App),
-})
+app
+	.directive('element-visibility', vElementVisibility)	
+	.mixin({
+		methods: {
+			t,
+			n,
+		},
+	})
+	.use(store)
+	.use(router)
+	.use(VueLazyload, {
+		preLoad: 1.3,
+		lazyComponent: true,
+	})
+	.mount('#content')
+
+export default app

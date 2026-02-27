@@ -57,7 +57,7 @@ export default {
 			this.$store.state.loading = true
 			axios.get(generateUrl('/apps/workspace/spaces'), {
 				params: {
-					limit: LIMIT_WORKSPACES_PER_PAGE
+					limit: LIMIT_WORKSPACES_PER_PAGE,
 				},
 			})
 				.then(resp => {
@@ -71,23 +71,15 @@ export default {
 
 					const spaces = resp.data
 					this.$store.commit('setSpaces', { spaces })
+					this.$store.dispatch('setCountWorkspaces', { count: Object.values(spaces).length })
 
-					this.$store.dispatch('setCountWorkspaces', { count: Object.values(resp.data).length })
 					this.$store.state.loading = false
-
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
 					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
 					showNotificationError(t('workspace', 'Network error'), text, 5000)
 					this.$store.state.loading = false
-				})
-
-			axios.get(generateUrl('apps/workspace/workspaces/count'))
-				.then(resp => {
-					const count = resp.data.count
-					this.$store.dispatch('setCountTotalWorkspaces', { count })
-					this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
 				})
 		}
 	},

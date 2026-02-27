@@ -21,8 +21,7 @@
  *
  */
 
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 import GroupDetails from './GroupDetails.vue'
 import Home from './Home.vue'
@@ -30,16 +29,15 @@ import SpaceDetails from './SpaceDetails.vue'
 import SpaceTable from './SpaceTable.vue'
 import Error403 from './Error403.vue'
 
-Vue.use(Router)
+const baseRoute = generateUrl('/apps/workspace/')
 
-export default new Router({
-	mode: 'history',
-	base: generateUrl('/apps/workspace/'),
+const router = createRouter({
+	history: createWebHistory(baseRoute),
 	linkActiveClass: 'active',
 	routes: [
 		{
 			path: '/',
-			component: resolve => resolve(Home),
+			component: Home,
 			children: [
 				{
 					path: '',
@@ -61,3 +59,5 @@ export default new Router({
 		},
 	],
 })
+
+export default router

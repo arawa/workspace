@@ -57,7 +57,7 @@ export const WorkspacesLoader = {
 		showNextPage() {
 			const pageMax = this.countMaxPages()
 
-			if (this.$store.getters.workspaceCurrentPage >= pageMax) {
+			if (this.$store.getters.workspaceCurrentPage === pageMax || this.$store.getters.countWorkspaces === this.$store.getters.countTotalWorkspacesByQuery) {
 				this.toggleNextPage()
 			}
 		},

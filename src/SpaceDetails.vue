@@ -29,11 +29,21 @@
 				<span class="titles-for-space">
 					{{ title }}
 				</span>
-				<NcCounterBubble v-tooltip="{ content: getQuotaTooltip, show: true, placement: 'right' }"
-					:class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
-					type="outlined">
-					{{ getQuota }}
-				</NcCounterBubble>
+				<NcPopover placement="right"
+					:triggers="['hover']">
+					<template #trigger="{ attrs }">
+						<NcCounterBubble v-bind="attrs"
+							:class="isESR ? 'quota-bubble-esr' : 'quota-bubble'"
+							type="outlined"
+							:raw="true"
+							:count="getQuota" />
+					</template>
+					<template #default>
+						<div class="popover-content">
+							{{ getQuotaHover }}
+						</div>
+					</template>
+				</NcPopover>
 			</div>
 			<div class="space-actions">
 				<NcActions ref="ncAction" default-icon="icon-add">
@@ -74,13 +84,13 @@
 					</NcActionButton>
 				</NcActions>
 				<NcActions>
-					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === 'true'"
+					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
 						icon="icon-rename"
 						@click="toggleShowEditWorkspaceModal">
 						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
-				<NcActions v-if="$root.$data.isUserGeneralAdmin === 'true'">
+				<NcActions v-if="$root.$data.isUserGeneralAdmin === true">
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="toggleShowDelWorkspaceModal">
@@ -100,11 +110,13 @@
 			</template>
 		</NcEmptyContent>
 		<UserTable v-else
+			:key="'user-' + $route.params.space"
 			:space-name="$route.params.space" />
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
-			:open.sync="showSelectUsersModal">
+			:open="showSelectUsersModal"
+			@update:open="val => { showSelectUsersModal = val }">
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
 		<SelectConnectedGroups v-if="showSelectConnectedGroups"
@@ -129,7 +141,6 @@ import NcActionInput from '@nextcloud/vue/components/NcActionInput'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
-import Tooltip from '@nextcloud/vue/directives/Tooltip'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
 import { removeWorkspace } from './services/spaceService.js'
@@ -140,6 +151,7 @@ import { mdiAccountOff, mdiAccountMultiple } from '@mdi/js'
 import AddedGroupBlack from '../img/added_group_black.svg?raw'
 import AddedGroupWhite from '../img/added_group_white.svg?raw'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 
 export default {
 	name: 'SpaceDetails',
@@ -156,9 +168,7 @@ export default {
 		RemoveSpace,
 		UserTable,
 		NcIconSvgWrapper,
-	},
-	directives: {
-		Tooltip,
+		NcPopover,
 	},
 	setup() {
 		return {
@@ -191,7 +201,7 @@ export default {
 		getQuota() {
 			return this.$store.getters.convertQuotaForFrontend(this.$store.getters.getSpaceByNameOrId(this.$route.params.space).quota)
 		},
-		getQuotaTooltip() {
+		getQuotaHover() {
 			return 'Quota : ' + this.getQuota
 		},
 	},
@@ -334,4 +344,7 @@ export default {
 	min-height: 12rem !important;
 }
 
+.popover-content {
+	padding: 8px;
+}
 </style>

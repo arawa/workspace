@@ -12,17 +12,13 @@
 					aria-label="cancel"
 					type="secondary"
 					@click="cancel()">
-					<template>
 						{{ t('workspace', 'Cancel') }}
-					</template>
 				</NcButton>
 				<NcButton
 					aria-label="confirm"
 					type="primary"
 					@click="removeGroup()">
-					<template>
 						{{ t('workspace', 'Confirm') }}
-					</template>
 				</NcButton>
 			</div>
 		</div>
