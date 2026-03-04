@@ -32,7 +32,7 @@
 			<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
 				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
-					:modelValue="isWorkspaceManager(user.role)"
+					:model-value="isWorkspaceManager(user.role)"
 					:disabled="disabled"
 					@update:modelValue="toggleUserRole(user)">
 					<!-- TRANSLATORS WM = Is an abbreviation for "Workspace Manager" -->

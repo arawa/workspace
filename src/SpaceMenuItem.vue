@@ -44,9 +44,10 @@
 					<NcPopover placement="right"
 						:triggers="['hover']">
 						<template #trigger="{ attrs }">
-							<Plus v-bind="attrs" 
-								@click="openCaption" :name="t('workspace', 'Create a workspace group')"
-								:size="20" />
+							<Plus v-bind="attrs"
+								:name="t('workspace', 'Create a workspace group')"
+								:size="20"
+								@click="openCaption" />
 						</template>
 						<template #default>
 							<div class="popover-content">

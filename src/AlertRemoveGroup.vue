@@ -12,13 +12,13 @@
 					aria-label="cancel"
 					type="secondary"
 					@click="cancel()">
-						{{ t('workspace', 'Cancel') }}
+					{{ t('workspace', 'Cancel') }}
 				</NcButton>
 				<NcButton
 					aria-label="confirm"
 					type="primary"
 					@click="removeGroup()">
-						{{ t('workspace', 'Confirm') }}
+					{{ t('workspace', 'Confirm') }}
 				</NcButton>
 			</div>
 		</div>

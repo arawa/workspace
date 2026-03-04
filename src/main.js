@@ -36,7 +36,7 @@ __webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 const app = createApp(App)
 
 app
-	.directive('element-visibility', vElementVisibility)	
+	.directive('element-visibility', vElementVisibility)
 	.mixin({
 		methods: {
 			t,

@@ -20,11 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import { recommended } from '@nextcloud/eslint-config'
-
-export default {
-	...recommended,
+module.exports = {
 	extends: [
 		'@nextcloud',
 		'plugin:vue/recommended',

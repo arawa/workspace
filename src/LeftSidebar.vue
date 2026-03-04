@@ -21,7 +21,7 @@
 -->
 <template>
 	<NcAppNavigation v-if="$root.$data.canAccessApp"
-		ariaLabel="workspace navigation">
+		aria-label="workspace navigation">
 		<ul class="ws-navigation-header">
 			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin"
 				class="input-new-item"
@@ -62,11 +62,11 @@
 							@click="toggleShowSelectGroupfoldersModal" />
 					</div>
 				</div> -->
-				<div v-if="Object.keys($store.state.spaces).length">
-					<PageLoader v-if="nextPage"
-						v-element-visibility="next"
-						:message="messageLoader" />
-				</div>
+			<div v-if="Object.keys($store.state.spaces).length">
+				<PageLoader v-if="nextPage"
+					v-element-visibility="next"
+					:message="messageLoader" />
+			</div>
 		</template>
 	</NcAppNavigation>
 </template>
@@ -135,7 +135,7 @@ export default {
 			axios.get(generateUrl('/apps/workspace/spaces'), {
 				params: {
 					search: this.$store.getters.searchWorkspace,
-					limit: LIMIT_WORKSPACES_PER_PAGE
+					limit: LIMIT_WORKSPACES_PER_PAGE,
 				},
 			})
 				.then(resp => {

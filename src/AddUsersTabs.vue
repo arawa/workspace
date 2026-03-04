@@ -339,7 +339,7 @@ export default {
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
-			const isUser = user.uid ? true : false
+			const isUser = !!user.uid
 
 			if (!isUser) {
 				return

@@ -54,26 +54,26 @@
 						<td class="workspace-td">
 							{{ getQuota(space.quota) }}
 						</td>
-					<td class="workspace-td">
-						<lazy-component v-if="space.managers && Object.keys(space.managers).length > 0"
-							:key="space.id + '-avatars'"
-							class="admin-avatars"
-							@show="initAdmins(space.id, space.name)">
-							<div class="container-avatars">
-								<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
-									:key="user.uid"
-									:style="{ marginRight: 2 + 'px' }"
-									:display-name="user.name"
-									:disable-menu="true"
-									:show-user-status="false"
-									:user="user.uid" />
-								<div v-if="workspaceManagers(space).length > 10"
-									class="bubble-more-users">
-									+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
+						<td class="workspace-td">
+							<lazy-component v-if="space.managers && Object.keys(space.managers).length > 0"
+								:key="space.id + '-avatars'"
+								class="admin-avatars"
+								@show="initAdmins(space.id, space.name)">
+								<div class="container-avatars">
+									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
+										:key="user.uid"
+										:style="{ marginRight: 2 + 'px' }"
+										:display-name="user.name"
+										:disable-menu="true"
+										:show-user-status="false"
+										:user="user.uid" />
+									<div v-if="workspaceManagers(space).length > 10"
+										class="bubble-more-users">
+										+{{ countWorkspaceManagerUsersAboveThreshold(space.name) }}
+									</div>
 								</div>
-							</div>
-						</lazy-component>
-					</td>
+							</lazy-component>
+						</td>
 					</tr>
 				</tbody>
 			</table>
