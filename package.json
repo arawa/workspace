@@ -67,20 +67,20 @@
     "@nextcloud/webpack-vue-config": "^7.0.2",
     "@vue/compiler-dom": "^3.4.21",
     "@vue/test-utils": "^2.4.6",
+    "@vue/vue3-jest": "^29.2.6",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^30.2.0",
+    "babel-jest": "^29.7.0",
     "core-js": "^3.36.1",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^30.2.0",
+    "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.2.0",
-    "jest-mock-axios": "^4.8.0",
+    "jest-mock-axios": "^4.9.0",
     "jest-serializer-vue": "^3.1.0",
     "jsdom": "^24.0.0",
     "jsdom-global": "^3.0.2",
     "prettier": "^2.7.1",
     "regenerator-runtime": "^0.14.1",
     "vue-loader": "^17.4.2",
-    "vue-template-compiler": "^2.7.16",
     "webpack": "^5.104.1",
     "webpack-node-externals": "^3.0.0"
   },
@@ -95,7 +95,7 @@
     "@vueuse/components": "^14.1.0",
     "debounce": "^2.2.0",
     "ramda": "^0.30.1",
-    "vue": "^3.5.26",
+    "vue": "^3.5.29",
     "vue-material-design-icons": "^5.2.0",
     "vue-router": "^4.6.4",
     "vuex": "^4.1.0"
@@ -105,7 +105,7 @@
   },
   "jest": {
     "verbose": true,
-    "testEnvironment": "jest-environment-jsdom",
+    "testEnvironment": "jsdom",
     "moduleFileExtensions": [
       "js",
       "vue"
@@ -114,14 +114,17 @@
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|less)$": "identity-obj-proxy",
       "^uuid$": "<rootDir>/node_modules/uuid/dist/index.js",
-      "^@vue/test-utils": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js",
-      "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js"
+      "^@vue/test-utils$": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
+      "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js",
+      "^@nextcloud/dialogs$": "<rootDir>/src/tests/__mocks__/nextcloudDialogsMock.js",
+      "^@nextcloud/vue/components/(.*)$": "<rootDir>/src/tests/__mocks__/nextcloudVueComponentMock.js",
+      "^@nextcloud/vue/composables/useIsDarkTheme$": "<rootDir>/src/tests/__mocks__/useIsDarkThemeMock.js"
     },
     "snapshotSerializers": [
       "<rootDir>/node_modules/jest-serializer-vue"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!@ckeditor)/.+\\.js$"
+      "/node_modules/(?!(@nextcloud|@ckeditor|splitpanes)).+\\.js$"
     ],
     "testEnvironmentOptions": {
       "customExportConditions": [
@@ -130,8 +133,8 @@
       ]
     },
     "transform": {
-      ".*\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/@vue/vue2-jest"
+      ".*\\.js$": "babel-jest",
+      ".*\\.(vue)$": "@vue/vue3-jest"
     },
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/splitpanes"

@@ -21,30 +21,32 @@
  *
  */
 
-import { createLocalVue, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { createSpace } from '../../services/spaceService.js'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import axios from '@nextcloud/axios'
 import WorkspaceContent from '../../WorkspaceContent.vue'
 import LeftSidebar from '../../LeftSidebar.vue'
 import store from '../../store/index.js'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 
 jest.mock('axios')
 
-Vue.prototype.t = t
-Vue.prototype.n = n
-
-const localVue = createLocalVue()
-const router = new VueRouter()
-localVue.use(Vuex)
-localVue.use(VueRouter)
-const wrappedHome = mount(WorkspaceContent, {
-	store,
-	localVue,
-	router,
+const wrappedHome = shallowMount(WorkspaceContent, {
+	global: {
+		plugins: [store],
+		mocks: {
+			$route: {
+				params: { id: '1' },
+				path: '/apps/workspace/',
+			},
+			$router: {
+				push: jest.fn(),
+			},
+		},
+		stubs: {
+			'router-link': true,
+			'router-view': true,
+		},
+	},
 })
 
 // const expect = require('chai').expect
