@@ -48,7 +48,7 @@
 				:space-name="spaceName" />
 			<!-- <div id="app-settings">
 					<div id="app-settings-header">
-						<button v-if="$root.$data.isUserGeneralAdmin === true"
+						<button v-if="$root.$data.isUserGeneralAdmin"
 							icon="icon-settings-dark"
 							class="settings-button"
 							data-apps-slide-toggle="#app-settings-content">
@@ -56,7 +56,7 @@
 						</button>
 					</div>
 					<div id="app-settings-content">
-						<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
+						<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
 							:close-after-click="true"
 							:title="t('workspace', 'Convert Team folders')"
 							@click="toggleShowSelectGroupfoldersModal" />

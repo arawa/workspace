@@ -84,13 +84,13 @@
 					</NcActionButton>
 				</NcActions>
 				<NcActions>
-					<NcActionButton v-if="$root.$data.isUserGeneralAdmin === true"
+					<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
 						icon="icon-rename"
 						@click="toggleShowEditWorkspaceModal">
 						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
-				<NcActions v-if="$root.$data.isUserGeneralAdmin === true">
+				<NcActions v-if="$root.$data.isUserGeneralAdmin">
 					<NcActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click="toggleShowDelWorkspaceModal">
