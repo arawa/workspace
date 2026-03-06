@@ -61,7 +61,7 @@
 				:count="group.usersCount"
 				:space-id="space.id"
 				:space-name="spaceName" />
-			<NcAppNavigationCaption
+			<NcAppNavigationCaption v-if="$root.$data.connectedGroupEnabled === 'true'"
 				:name="t('workspace', 'Added groups')">
 				<template #actions>
 					<NcActionButton

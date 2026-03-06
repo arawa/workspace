@@ -45,6 +45,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -99,18 +100,26 @@ class Application extends App implements IBootstrap {
 
 		$context->registerCapability(Capabilities::class);
 
-		$context->registerService(GroupBackend::class, function ($c) {
-			return new GroupBackend(
-				$c->query(IGroupManager::class),
-				$c->query(UserService::class),
-				$c->query(SpaceMapper::class),
-				$c->query(SpaceService::class),
-				$c->query(ConnectedGroupsService::class)
-			);
-			return $groupBackend;
-		});
+		$appConfig = \OC::$server->get(IAppConfig::class);
+		$connectedGroupEnabled = $appConfig->getAppValueString(self::APP_ID, 'connected_group_enabled', 'true') === 'true';
 
-		\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+		if ($connectedGroupEnabled) {
+			$context->registerService(GroupBackend::class, function ($c) {
+				return new GroupBackend(
+					$c->query(IGroupManager::class),
+					$c->query(UserService::class),
+					$c->query(SpaceMapper::class),
+					$c->query(SpaceService::class),
+					$c->query(ConnectedGroupsService::class)
+				);
+				return $groupBackend;
+			});
+
+			\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+		} else {
+			$groupManager = \OC::$server->get(IGroupManager::class);
+			$groupManager->clearBackends();
+		}
 	}
 
 	public function boot(IBootContext $context): void {

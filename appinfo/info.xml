@@ -96,6 +96,7 @@ For more details, please go to the [admin documentation](https://github.com/araw
         </pre-migration>
 	    <install>
 		    <step>OCA\Workspace\Migration\RegisterWorkspaceUsersGroup</step>
+		    <step>OCA\Workspace\Migration\EnableConnectedGroupRepairStep</step>
 	    </install>
     </repair-steps>
 

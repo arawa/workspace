@@ -59,7 +59,7 @@
 						</template>
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
-					<NcActionButton
+					<NcActionButton v-if="$root.$data.connectedGroupEnabled === 'true'"
 						:close-after-click="true"
 						@click="toggleShowConnectedGroups">
 						<template #icon>
