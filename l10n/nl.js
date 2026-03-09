@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error" : "Fout",
     "Settings" : "Instellingen",
     "Network error" : "Netwerk fout",
+    "Delete space" : "Verwijder spatie",
     "No users" : "Geen gebruikers",
     "Quota" : "Limieten",
     "Users" : "Gebruikers",
