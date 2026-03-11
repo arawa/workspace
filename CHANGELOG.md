@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve translations by @zak39 in [#1584](https://github.com/arawa/workspace/pull/1584)
 
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Show email addresses in the options results after searching for users by @zak39 in [#1464](https://github.com/arawa/workspace/pull/1464)
