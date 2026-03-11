@@ -143,7 +143,8 @@ export default {
 		openSpace(id) {
 			this.$store.getters.getSpaceByNameOrId(id).isOpen = true
 			this.$router.push({
-				path: `/workspace/${id}`,
+				name: 'space.show',
+				params: { space: id },
 			})
 		},
 		initAdmins(id, name) {

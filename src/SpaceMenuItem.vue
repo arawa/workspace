@@ -25,7 +25,7 @@
 		:allow-collapse="true"
 		:open="open"
 		:name="spaceName"
-		:to="{path: getSpacePath()}"
+		:to="{ name: 'space.show', params: { space: space.id } }"
 		@click="openMenu"
 		@update:open="isOpen = $event">
 		<NcAppNavigationIconBullet slot="icon" :color="space.color" />

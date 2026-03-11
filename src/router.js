@@ -40,22 +40,27 @@ export default new Router({
 		{
 			path: '/',
 			component: resolve => resolve(Home),
+			name: 'home',
 			children: [
 				{
 					path: '',
 					component: SpaceTable,
+					name: 'space.table',
 				},
 				{
 					path: 'workspace/:space',
 					component: SpaceDetails,
+					name: 'space.show',
 				},
 				{
 					path: 'group/:space/:slug',
 					component: GroupDetails,
+					name: 'space.group.show',
 				},
 				{
 					path: 'unauthorized',
 					component: Error403,
+					name: 'unauthorized',
 				},
 			],
 		},
