@@ -27,6 +27,17 @@
 					<template #no-options>
 						<span />
 					</template>
+					<template #option="option">
+						<div class="option-content">
+							<NcAvatar
+								:display-name="option.displayName"
+								:hide-status="false"
+								:is-no-user="true" />
+							<div class="option-text">
+								<p>{{ option.displayName }}</p>
+							</div>
+						</div>
+					</template>
 				</NcSelect>
 			</div>
 			<div class="content-group-list">
@@ -38,7 +49,7 @@
 						<div class="group-avatar">
 							<NcAvatar
 								:display-name="group.displayName"
-								:show-user-status="false"
+								:hide-status="false"
 								:is-no-user="true" />
 							<div class="groupname">
 								<span>{{ group.displayName }}</span>
@@ -268,6 +279,13 @@ export default {
 .group-avatar {
 	display: flex;
 	align-items: center;
+}
+
+.option-content {
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	gap: 12px;
 }
 
 </style>

@@ -20,8 +20,5 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div id="content"></div>
-<input type="hidden" id="isUserGeneralAdmin" value="<?php p($_['isUserGeneralAdmin'] ? 'true' : 'false'); ?>">
-<input type="hidden" id="canAccessApp" value="<?php p($_['canAccessApp'] ? 'true': 'false'); ?>">
-<input type="hidden" id="aclInheritPerUser" value="<?php p($_['aclInheritPerUser'] ? 'true': 'false'); ?>">
-<input type="hidden" id="userSession" value="<?php p($_['userSession']); ?>">
+<div id="content">
+</div>

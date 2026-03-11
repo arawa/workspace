@@ -33,7 +33,7 @@
 			:placeholder="t('workspace', 'Start typing to lookup users')"
 			:append-to-body="false"
 			:user-select="true"
-			@option:selected="addUserToBatch"
+			@option:selected="$emit('change', $event)"
 			@close="selectableUsers=[]"
 			@search="debounceLookupUsers">
 			<template #no-options>
@@ -94,10 +94,6 @@ export default {
 		}, 100)
 	},
 	methods: {
-		// Adds user to the batch when user selects user in the MultiSelect
-		addUserToBatch(user) {
-			this.$emit('change', user)
-		},
 		displayForSearching({ name, email, uid }) {
 			return `${name} - ${email} - ${uid}`
 		},
