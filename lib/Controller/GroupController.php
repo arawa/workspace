@@ -279,15 +279,15 @@ class GroupController extends Controller {
 			$gidsStringify
 		);
 
+		foreach ($groups as $group) {
+			$group->removeUser($NcUser);
+			$groupnames[] = $group->getGID();
+		}
+
 		if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
 			$this->userService->removeGEFromWM($NcUser);
 			$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
 			$groupnames[] = $workspacesManagersGroup->getGID();
-		}
-
-		foreach ($groups as $group) {
-			$group->removeUser($NcUser);
-			$groupnames[] = $group->getGID();
 		}
 
 		return new JSONResponse([
@@ -331,6 +331,9 @@ class GroupController extends Controller {
 
 		$groupnames = [];
 
+		$group->removeUser($NcUser);
+		$groupnames[] = $group->getGID();
+
 		if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())) {
 			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
 				$this->userService->removeGEFromWM($NcUser);
@@ -338,9 +341,6 @@ class GroupController extends Controller {
 				$groupnames[] = $workspacesManagersGroup->getGID();
 			}
 		}
-
-		$group->removeUser($NcUser);
-		$groupnames[] = $group->getGID();
 
 		if ($cascade) {
 			if (gettype($space) === 'string') {
@@ -365,15 +365,15 @@ class GroupController extends Controller {
 				$gidsStringify
 			);
 
+			foreach ($groups as $group) {
+				$group->removeUser($NcUser);
+				$groupnames[] = $group->getGID();
+			}
+
 			if ($this->userService->canRemoveWorkspaceManagers($NcUser)) {
 				$this->userService->removeGEFromWM($NcUser);
 				$workspacesManagersGroup = $this->groupManager->get('WorkspacesManagers');
 				$groupnames[] = $workspacesManagersGroup->getGID();
-			}
-
-			foreach ($groups as $group) {
-				$group->removeUser($NcUser);
-				$groupnames[] = $group->getGID();
 			}
 		}
 
