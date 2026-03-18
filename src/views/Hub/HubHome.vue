@@ -5,17 +5,10 @@
 				{{ space.name }}
 			</h1>
 			<div>
-				<NcButton
-					:aria-label="t('workspace', 'Go to Workspace')"
-					:to="{ path: `/workspace/${spaceId}` }">
-					<template #icon>
-						<NcIconSvgWrapper v-if="isDarkTheme" name="workspace-icon" :svg="App" />
-						<NcIconSvgWrapper v-else name="workspace-icon" :svg="AppBlack" />
-					</template>
-					<template #default>
-						{{ t('workspace', 'Go to Workspace') }}
-					</template>
-				</NcButton>
+				<HubItem
+					:path="`/workspace/${spaceId}`"
+					:title="t('workspace', 'Users')"
+					:path-icon="mdiAccountMultiple" />
 			</div>
 		</div>
 	</NcAppContent>
@@ -23,18 +16,15 @@
 
 <script>
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
-import App from '../../../img/app.svg?raw'
-import AppBlack from '../../../img/app_black.svg?raw'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
+import { mdiAccountMultiple } from '@mdi/js'
+import HubItem from '../../components/Hub/HubItem.vue'
 
 export default {
 	name: 'HubHome',
 	components: {
 		NcAppContent,
-		NcButton,
-		NcIconSvgWrapper,
+		HubItem,
 	},
 	props: {
 		spaceId: {
@@ -49,9 +39,8 @@ export default {
 	},
 	data() {
 		return {
-			App,
-			AppBlack,
 			space: null,
+			mdiAccountMultiple,
 		}
 	},
 	created() {
