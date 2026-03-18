@@ -26,6 +26,7 @@ import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 import GroupDetails from './GroupDetails.vue'
 import Home from './Home.vue'
+import HubHome from './views/Hub/HubHome.vue'
 import SpaceDetails from './SpaceDetails.vue'
 import SpaceTable from './SpaceTable.vue'
 import Error403 from './Error403.vue'
@@ -44,6 +45,12 @@ export default new Router({
 				{
 					path: '',
 					component: SpaceTable,
+				},
+				{
+					path: 'hub/:spaceId',
+					name: 'hub.home',
+					component: HubHome,
+					props: true,
 				},
 				{
 					path: 'workspace/:space',
