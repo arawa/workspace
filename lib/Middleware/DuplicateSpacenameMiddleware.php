@@ -9,19 +9,24 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\OCSController;
+use OCP\IL10N;
 
 class DuplicateSpacenameMiddleware extends Middleware {
 
+	public function __construct(
+		private IL10N $l10n,
+	) {
+	}
+
 	public function afterException(Controller $controller, string $methodName, Exception $exception): Response {
 		if ($exception instanceof SpacenameExistException) {
-			$message = "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.";
 
 			$data = $controller instanceof OCSController
-				? [ 'message' => $message ]
+				? [ 'message' => $this->l10n->t("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.") ]
 				: [
-					'title' => 'Error - Duplicate space name',
+					'title' => $this->l10n->t('Error - Duplicate space name'),
 					'statuscode' => $exception->getCode(),
-					'message' => $message,
+					'message' => $this->l10n->t("This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist."),
 					'args_message' => []
 				]
 			;
