@@ -10,6 +10,7 @@
     "Error in file format" : "Dosya biçimi hatalı",
     "The file must be in <b>CSV format</b>." : "Dosya <b>CSV biçiminde</b> olmalıdır.",
     "Unknown error" : "Sorun bilinmiyor",
+    "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist." : "Bu alan veya grup klasörü zaten var. Lütfen başka bir alan adı kullanın.\nBir \"toto\" alanı varsa, \"tOTo\" alanını oluşturamazsınız.\nLütfen grup klasörünün var olmadığını da denetleyin.",
     "Error - Duplicate space name" : "Hata - Aynı adlı bir alan var",
     "Your Workspace name must not contain the following characters: %s" : "Çalışma alanınızın adında şu karakterler bulunmamalıdır: %s",
     "Error creating workspace" : "Çalışma alanı oluşturulurken sorun çıktı",
