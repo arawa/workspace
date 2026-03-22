@@ -12,6 +12,7 @@ OC.L10N.register(
     "Error in file format" : "Error in file format",
     "The file must be in <b>CSV format</b>." : "The file must be in <b>CSV format</b>.",
     "Unknown error" : "Unknown error",
+    "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist." : "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist.",
     "Error - Duplicate space name" : "Error - Duplicate space name",
     "Your Workspace name must not contain the following characters: %s" : "Your Workspace name must not contain the following characters: %s",
     "Error creating workspace" : "Error creating workspace",
