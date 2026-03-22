@@ -12,6 +12,7 @@ OC.L10N.register(
     "Error in file format" : "Chyba ve formátu souboru",
     "The file must be in <b>CSV format</b>." : "Je třeba, aby soubory byl ve <b>formátu CSV</b>.",
     "Unknown error" : "Neznámá chyba",
+    "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist." : "Tento prostor nebo skupinová složka už existuje. Použijte jiný název prostoru.\nPokud existuje prostor „toto“, není možné vytvořit „tOTo“.\nZkontrolujte také, že neexistuje taková skupinová složka.",
     "Error - Duplicate space name" : "Chyba – dvojitá mezera v názvu",
     "Your Workspace name must not contain the following characters: %s" : "Je třeba, aby název pracovního prostoru neobsahoval následující znaky: %s",
     "Error creating workspace" : "Chyba při vytváření pracovního prostoru",
