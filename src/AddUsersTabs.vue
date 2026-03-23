@@ -339,6 +339,12 @@ export default {
 		},
 		// Adds user to the batch when user selects user in the MultiSelect
 		addUserToBatch(user) {
+			const isUser = !!user.uid
+
+			if (!isUser) {
+				return
+			}
+
 			this.allSelectedUsers.push(user)
 		},
 		isWorkspaceManager(role) {

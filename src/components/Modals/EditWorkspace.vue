@@ -10,14 +10,14 @@
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
 			<div class="content-appearance">
 				<NcColorPicker ref="colorPicker"
-					:value="color"
+					v-model="color"
 					class="space-color-picker"
 					@update:value="updateColor">
 					<button class="color-dot color-picker"
 						:style="{backgroundColor: color}" />
 				</NcColorPicker>
-				<NcInputField class="input-spacename"
-					:value="getSpaceName"
+				<NcTextField v-model="spacename"
+					class="input-spacename"
 					:placeholder="t('workspace', 'Rename your workspace')"
 					type="text"
 					@update:value="updateSpacename" />
@@ -27,12 +27,12 @@
 				<p class="max-contrast">
 					{{ t('workspace', 'Set maximum workspace storage space') }}
 				</p>
-				<NcSelect :value.sync="getQuota"
+				<NcSelect v-model="getQuota"
 					aria-label-combobox="set quota"
 					class="quota-input"
 					:clear-search-on-select="true"
 					:taggable="true"
-					:disabled="$root.$data.isUserGeneralAdmin === 'false'"
+					:disabled="$root.$data.isUserGeneralAdmin === false"
 					:placeholder="t('workspace', 'Set quota')"
 					:multiple="false"
 					:clearable="false"
@@ -67,7 +67,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import Check from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcModal from '@nextcloud/vue/components/NcModal'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcProgressBar from '@nextcloud/vue/components/NcProgressBar'
@@ -85,7 +85,7 @@ export default {
 		NcModal,
 		NcNoteCard,
 		NcColorPicker,
-		NcInputField,
+		NcTextField,
 		NcSelect,
 		NcProgressBar,
 	},
@@ -97,10 +97,10 @@ export default {
 	},
 	data() {
 		return {
-			spacename: undefined,
-			color: undefined,
-			quota: undefined,
-			size: undefined,
+			spacename: '',
+			color: '',
+			quota: -3,
+			size: 0,
 		}
 	},
 	computed: {

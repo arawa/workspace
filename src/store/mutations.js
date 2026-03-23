@@ -21,7 +21,6 @@
  *
  */
 
-import { set as VueSet } from 'vue'
 import { getLocale } from '@nextcloud/l10n'
 
 // Function to sort spaces case-insensitively, and locale-based
@@ -101,7 +100,7 @@ export default {
 			usersCount: 0,
 			slug,
 		}
-		VueSet(state.spaces, space.name, space)
+		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
 	// Adds a space to the workspaces list
@@ -129,7 +128,7 @@ export default {
 			space.usersCount = Object.keys(users).length
 			updateGroupUserCount(space.groups, users)
 		}
-		VueSet(state.spaces, space.name, space)
+		state.spaces[space.name] = space
 	},
 	SET_LOADING_USERS_WAITING(state, { activated }) {
 		state.loadingUsersWaiting = activated
@@ -140,17 +139,17 @@ export default {
 	INCREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
 		space.groups[gid].usersCount++
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	INCREMENT_ADDED_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
 		space.added_groups[gid].usersCount++
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	INCREMENT_SPACE_USERS_COUNT(state, { spaceName }) {
 		const space = state.spaces[spaceName]
 		space.usersCount++
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	SET_COUNT_WORKSPACES(state, { count }) {
 		state.countWorkspaces = count
@@ -163,6 +162,9 @@ export default {
 	},
 	INCREMENT_COUNT_TOTAL_WORKSPACES(state) {
 		state.countTotalWorkspaces++
+	},
+	INCREMENT_COUNT_TOTAL_WORKSPACES_BY_QUERY(state) {
+		state.countTotalWorkspacesByQuery++
 	},
 	DECREMENT_COUNT_TOTAL_WORKSPACES(state) {
 		if (state.countTotalWorkspaces === 0) {
@@ -200,32 +202,32 @@ export default {
 	DECREMENT_GROUP_USER_COUNT(state, { spaceName, gid }) {
 		const space = state.spaces[spaceName]
 		space.groups[gid].usersCount--
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	DECREMENT_SPACE_USERS_COUNT(state, { spaceName }) {
 		const space = state.spaces[spaceName]
 		space.usersCount--
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	SUBSTRACTION_SPACE_USERS_COUNT(state, { spaceName, usersCount }) {
 		const space = state.spaces[spaceName]
 		space.usersCount -= usersCount
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	SUBSTRACTION_GROUP_USER_COUNT(state, { spaceName, gid, usersCount }) {
 		const space = state.spaces[spaceName]
 		space.groups[gid].usersCount -= usersCount
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	CHANGE_USER_ROLE(state, { spaceName, user, role }) {
 		const space = state.spaces[spaceName]
 		space.users[user.uid].role = role
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	REMOVE_USER_MANAGER(state, { spaceName, user }) {
 		const space = state.spaces[spaceName]
 		delete space.managers[user.uid]
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	ADD_USER_MANAGER(state, { spaceName, user }) {
 		const space = state.spaces[spaceName]
@@ -235,7 +237,7 @@ export default {
 		}
 
 		space.managers[user.uid] = user
-		VueSet(state.spaces, spaceName, space)
+		state.spaces[spaceName] = space
 	},
 	// Adds a user to a group
 	addUserToGroup(state, { name, gid, user }) {
@@ -248,7 +250,7 @@ export default {
 			user.groups.push(gid)
 			space.users[user.uid] = user
 		}
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	// Adds a user to a workspace
@@ -256,12 +258,12 @@ export default {
 	addUserToWorkspace(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.uid] = user
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	addConnectedGroupToWorkspace(state, { space, group, slug }) {
 		space.added_groups[group.gid] = { displayName: group.displayName, gid: group.gid, slug, usersCount: 0 }
-		VueSet(state.spaces, space.name, space)
+		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
 	// Removes a group from a space
@@ -278,7 +280,7 @@ export default {
 		})
 		// Saves the space back in the store
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	removeAddedGroupFromSpace(state, { name, gid }) {
@@ -287,7 +289,7 @@ export default {
 		delete space.added_groups[gid]
 		// Saves the space back in the store
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	// Removes a user from a group
@@ -297,7 +299,7 @@ export default {
 		const index = space.users[user.uid].groups.indexOf(gid)
 		space.users[user.uid].groups.splice(index, 1)
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	// Removes a user from a workspace
@@ -306,7 +308,7 @@ export default {
 		const space = state.spaces[name]
 		delete space.users[user.uid]
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	// Renames a group
@@ -320,13 +322,13 @@ export default {
 			usersCount: group.usersCount,
 		}
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	setSpaceQuota(state, { name, quota }) {
 		const space = state.spaces[name]
 		space.quota = quota
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	deleteSpace(state, { space }) {
@@ -334,31 +336,31 @@ export default {
 	},
 	updateSpace(state, space) {
 		delete state.spaces[space.name]
-		VueSet(state.spaces, space.name, space)
+		state.spaces[space.name] = space
 		sortSpaces(state)
 	},
 	updateUser(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.uid] = user
 		delete state.spaces[space.name]
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 		sortSpaces(state)
 	},
 	UPDATE_COLOR(state, { name, colorCode }) {
 		const space = state.spaces[name]
 		space.color = colorCode
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 	},
 	EMPTY_GROUPFOLDERS(state) {
 		state.groupfolders = {}
 	},
 	UPDATE_GROUPFOLDERS(state, { groupfolder }) {
-		VueSet(state.groupfolders, groupfolder.mount_point, groupfolder)
+		state.groupfolders[groupfolder.mount_point] = groupfolder
 		sortGroupfolders(state)
 	},
 	TOGGLE_USER_CONNECTED(state, { name, user }) {
 		const space = state.spaces[name]
 		space.users[user.uid].is_connected = !space.users[user.uid].is_connected
-		VueSet(state.spaces, name, space)
+		state.spaces[name] = space
 	},
 }

@@ -9,18 +9,18 @@ import mockAxios from 'jest-mock-axios'
 document.title = 'Standard Nextcloud title'
 
 // Mock nextcloud translate functions
-config.mocks.$t = function(app, string) {
+config.global.mocks.$t = function(app, string) {
 	return string
 }
 
-config.mocks.t = config.mocks.$t
-global.t = config.mocks.$t
+config.global.mocks.t = config.global.mocks.$t
+global.t = config.global.mocks.$t
 
-config.mocks.$n = function(app, singular, plural, count) {
+config.global.mocks.$n = function(app, singular, plural, count) {
 	return singular
 }
-config.mocks.n = config.mocks.$n
-global.n = config.mocks.$n
+config.global.mocks.n = config.global.mocks.$n
+global.n = config.global.mocks.$n
 
 global.console = {
 	...console,

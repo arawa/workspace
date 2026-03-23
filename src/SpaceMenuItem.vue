@@ -28,17 +28,33 @@
 		:to="{path: getSpacePath()}"
 		@click="openMenu"
 		@update:open="isOpen = $event">
-		<NcAppNavigationIconBullet slot="icon" :color="space.color" />
-		<NcCounterBubble slot="counter" class="user-counter">
-			{{ $store.getters.getSpaceUserCount(spaceName) }}
-		</NcCounterBubble>
+		<template #icon>
+			<NcAppNavigationIconBullet slot="icon" :color="space.color" />
+		</template>
+		<template #counter>
+			<NcCounterBubble :count="$store.getters.getSpaceUserCount(spaceName)" class="user-counter" />
+		</template>
 		<MenuItemSelector />
 		<div v-if="isOpen">
 			<NcAppNavigationCaption
 				ref="navigationGroup"
+				:open="captionOpened"
 				:name="t('workspace', 'Workspace groups')">
 				<template #actionsTriggerIcon>
-					<Plus v-tooltip.right="t('workspace', 'Create a workspace group')" :name="t('workspace', 'Create a workspace group')" :size="20" />
+					<NcPopover placement="right"
+						:triggers="['hover']">
+						<template #trigger="{ attrs }">
+							<Plus v-bind="attrs"
+								:name="t('workspace', 'Create a workspace group')"
+								:size="20"
+								@click="openCaption" />
+						</template>
+						<template #default>
+							<div class="popover-content">
+								{{ t('workspace', 'Create a workspace group') }}
+							</div>
+						</template>
+					</NcPopover>
 				</template>
 				<template #actions>
 					<NcActionText :class="'space-text'">
@@ -68,7 +84,18 @@
 						:aria-label="t('workspace', 'Add a group')"
 						@click="toggleAddGroupModal">
 						<template #icon>
-							<Plus v-tooltip.right="t('workspace', 'Add a group')" :size="20" />
+							<NcPopover placement="right"
+								:triggers="['hover']">
+								<template #trigger="{ attrs }">
+									<Plus v-bind="attrs"
+										:size="20" />
+								</template>
+								<template #default>
+									<div class="popover-content">
+										{{ t('workspace', 'Add a group') }}
+									</div>
+								</template>
+							</NcPopover>
 						</template>
 					</NcActionButton>
 				</template>
@@ -100,6 +127,7 @@ import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import Plus from 'vue-material-design-icons/Plus.vue'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 
 export default {
 	name: 'SpaceMenuItem',
@@ -115,6 +143,7 @@ export default {
 		NcCounterBubble,
 		Plus,
 		SelectConnectedGroups,
+		NcPopover,
 	},
 	props: {
 		space: {
@@ -128,10 +157,10 @@ export default {
 	},
 	data() {
 		return {
-			isOpen: false,
 			workspaceGroups: [],
 			connectedGroups: [],
-
+			isOpen: false,
+			captionOpened: false,
 			// Added groups
 			isAddGroupModalOpen: false,
 		}
@@ -142,8 +171,7 @@ export default {
 			return this.$route.params.space === id
 		},
 	},
-	mounted() {
-		// Open the space menu item if we are in the space route
+	created() {
 		if (this.open) {
 			this.isOpen = true
 		}
@@ -151,6 +179,9 @@ export default {
 	methods: {
 		openMenu() {
 			this.isOpen = true
+		},
+		openCaption() {
+			this.captionOpened = true
 		},
 		// sorts groups alphabetically
 		sortedGroups(groups, space) {
@@ -196,8 +227,7 @@ export default {
 
 		onNewWorkspaceGroup(e) {
 			// Hide and clean popup menu
-			this.$refs.navigationGroup.$children.find((child) => child.$options.name === 'NcActions').opened = false
-			this.$refs.navigationGroup.$emit('update')
+			this.captionOpened = false
 
 			// Don't accept empty names
 			const gid = e.target[0].value
@@ -223,5 +253,8 @@ export default {
 }
 .action.ws-modal-action.active {
 	background-color: transparent !important;
+}
+.popover-content {
+	padding: 8px;
 }
 </style>

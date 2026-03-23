@@ -21,25 +21,27 @@
  *
  */
 
-import { createLocalVue, mount } from '@vue/test-utils'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { shallowMount } from '@vue/test-utils'
 import AddUsersTabs from '../../AddUsersTabs.vue'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 import store from '../../store/index.js'
 
-Vue.prototype.t = t
-Vue.prototype.n = n
-
-const localVue = createLocalVue()
-const router = new VueRouter()
-localVue.use(Vuex)
-localVue.use(VueRouter)
-const wrappedSelectUsers = mount(AddUsersTabs, {
-	store,
-	localVue,
-	router,
+const wrappedSelectUsers = shallowMount(AddUsersTabs, {
+	global: {
+		plugins: [store],
+		mocks: {
+			$route: {
+				params: { id: '1' },
+				path: '/apps/workspace/',
+			},
+			$router: {
+				push: jest.fn(),
+			},
+		},
+		stubs: {
+			'router-link': true,
+			'router-view': true,
+		},
+	},
 })
 
 // const expect = require('chai').expect
