@@ -1,15 +1,16 @@
 <template>
 	<a class="item-hub cursor-pointer"
+		:class="disabled ? 'disabled' : ''"
 		:href="url"
-		@click.prevent="to">
+		@click="to($event)">
 		<NcIconSvgWrapper v-if="pathIcon !== null"
 			class="cursor-pointer"
 			:path="pathIcon"
-			:size="64" />
+			:size="size" />
 		<NcIconSvgWrapper v-if="svg !== null"
 			class="cursor-pointer"
-			:path="pathIcon"
-			:size="64" />
+			:svg="svg"
+			:size="size" />
 		<span class="cursor-pointer">
 			{{ title }}
 		</span>
@@ -44,15 +45,44 @@ export default {
 			required: false,
 			default: null,
 		},
+		size: {
+			type: Number,
+			required: false,
+			default: 64,
+		},
+		external: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		disabled: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	computed: {
 		url() {
+			if (this.external) {
+				return this.path
+			}
+
 			const url = generateUrl(`/apps/workspace${this.path}`)
 			return url
 		},
 	},
 	methods: {
-		to() {
+		to(event) {
+			if (this.disabled) {
+				event.preventDefault()
+				return
+			}
+
+			if (this.external) {
+				return this.path
+			}
+
+			event.preventDefault()
 			this.$router.push({ path: this.path })
 		},
 	},
@@ -70,5 +100,9 @@ export default {
 	align-items: center;
 	justify-self: center;
 	width: 84px;
+}
+
+.disabled {
+	filter: opacity(50%);
 }
 </style>
