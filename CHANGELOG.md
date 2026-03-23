@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.3.1 - 2026-03-23
+
+### Added
+
+- Backport: Add workspace support for Nextcloud 33 by @zak39 in [#1629](https://github.com/arawa/workspace/pull/1629)
+
+### Changed
+
+- Backport: Make compatibility with Nextcloud 33 by @zak39 in [#1628](https://github.com/arawa/workspace/pull/1628)
+
+### Fixed
+
+- Backport: Translate duplicate workspace name error message by @zak39 in [#1638](https://github.com/arawa/workspace/pull/1638)
+
+### Docs
+
+- Rename title for workspace pagination feature by @zak39 in [#1588](https://github.com/arawa/workspace/pull/1588)
+
+### Misc
+
+- Backport: Add Transifex support for stable4.2 and stable4.3 by @zak39 in [#1619](https://github.com/arawa/workspace/pull/1619)
+- Backport: Add all PRs for v4.2.0 to CHANGELOG by @zak39 in [#1622](https://github.com/arawa/workspace/pull/1622)
+- v4.3.1-rc1 by @zak39 in [#1630](https://github.com/arawa/workspace/pull/1630)
+- v4.3.1 by @zak39 in [#1640](https://github.com/arawa/workspace/pull/1640)
+
 ## [4.3.0] - 2026-01-13
 
 ### Added
@@ -606,7 +631,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.3.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.3.1...main
+[4.3.1]: https://github.com/arawa/workspace/compare/v4.3.0...4.3.1
 [4.3.0]: https://github.com/arawa/workspace/compare/v4.2.0...4.3.0
 [4.2.0]: https://github.com/arawa/workspace/compare/v4.1.0...4.2.0
 [4.1.0]: https://github.com/arawa/workspace/compare/v4.0.6...4.1.0
