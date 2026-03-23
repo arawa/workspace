@@ -14,6 +14,7 @@ OC.L10N.register(
     "Network error" : "שגיאת רשת",
     "Quota" : "מכיסה",
     "Users" : "משתמשים",
+    "Role" : "תפקיד",
     "Groups" : "קבוצות",
     "Remove user" : "הסרת משתמש",
     "unlimited" : "ללא הגבלה",
