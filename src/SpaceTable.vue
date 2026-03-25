@@ -44,7 +44,7 @@
 					<tr v-for="(space,name) in $store.state.spaces"
 						:key="'space-item-' + space.id"
 						class="workspace-tr"
-						@click="openSpace(space.id)">
+						@click="openHub(space.id)">
 						<td style="width: 50px;" class="workspace-td">
 							<span class="color-dot-home" :style="{background: space.color}" />
 						</td>
@@ -136,10 +136,13 @@ export default {
 			}
 			return Object.values(space.users).filter((u) => this.$store.getters.isSpaceAdmin(u, space))
 		},
-		openSpace(id) {
+		openHub(id) {
 			this.$store.getters.getSpaceByNameOrId(id).isOpen = true
 			this.$router.push({
-				path: `/workspace/${id}`,
+				name: 'hub.home',
+				params: {
+					spaceId: id,
+				},
 			})
 		},
 		initAdmins(id, name) {
