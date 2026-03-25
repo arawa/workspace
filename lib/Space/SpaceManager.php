@@ -332,19 +332,20 @@ class SpaceManager {
 
 	public function remove(string $spaceId): void {
 		$space = $this->get($spaceId);
-
-		foreach ($this->adminGroup->getUsers($spaceId) as $user) {
-			if ($this->userService->canRemoveWorkspaceManagers($user)) {
-				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group of ' . $space['name']);
-				$this->adminUserGroup->removeUser($user);
-			}
-		}
+		$usersAsWorkspaceManager = $this->adminGroup->getUsers($spaceId);
 
 		$this->logger->debug('Removing workspace groups.');
 		foreach (array_keys($space['groups']) as $group) {
 			$o_group = $this->groupManager->get($group);
 			if ($o_group !== null) {
 				$o_group->delete();
+			}
+		}
+
+		foreach ($usersAsWorkspaceManager as $user) {
+			if ($this->userService->canRemoveWorkspaceManagers($user)) {
+				$this->logger->debug('Remove user ' . $user->getUID() . ' from the Workspace Manager group of ' . $space['name']);
+				$this->adminUserGroup->removeUser($user);
 			}
 		}
 
@@ -489,6 +490,7 @@ class SpaceManager {
 			$uid = $user->getUID();
 
 			if ($managerGroup->inGroup($user)) {
+				$managerGroup->removeUser($user);
 				if ($this->userService->canRemoveWorkspaceManagers($user)) {
 					$this->userService->removeGEFromWM($user);
 				}
@@ -498,8 +500,6 @@ class SpaceManager {
 				$group = $this->groupManager->get($gid);
 				$group->removeUser($user);
 			}
-
-			$managerGroup->removeUser($user);
 		}
 	}
 
@@ -537,12 +537,11 @@ class SpaceManager {
 	public function removeUsersFromWorkspaceManagerGroup(IGroup $group, array $users): void {
 		foreach ($users as $user) {
 			if ($group->inGroup($user)) {
+				$group->removeUser($user);
 				if ($this->userService->canRemoveWorkspaceManagers($user)) {
 					$this->userService->removeGEFromWM($user);
 				}
 			}
-
-			$group->removeUser($user);
 		}
 	}
 
