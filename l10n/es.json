@@ -1,6 +1,7 @@
 { "translations": {
     "Invalid separator for CSV file" : "Separador inválido para archivo CSV",
     "Your CSV file must use a comma (\",\") as separator" : "Tu archivo CSV debe usar una coma (\",\") como separador",
+    "The content of your file is invalid. Two columns are required, with the following header names and values:<br>- \"user\": the user's username or e-mail address<br>- \"role\": the user's role (\"u\" or \"user\" for a user and \"wm\" for a workspace manager)" : "El contenido de tu archivo es inválido. Se requieren dos columnas, con los siguientes nombres de encabezado y valores: <br>-\"user\": el nombre de usuario o dirección de correo<br> - \"role\" el rol del usuario (\"u\" o \"user\" para usuario y \"wm\" para un gestor de espacios de trabajo)",
     "Error in CSV file content" : "Error en el contenido del archivo CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Los usuarios de este archivo CSV son desconocidos y no pueden ser importados. Verifica los siguientes usuarios y repite el proceso:<br>",
     "Error: unknown users" : "Error: usuarios desconocidos",
@@ -9,6 +10,7 @@
     "Error in file format" : "Error en el formato del archivo",
     "The file must be in <b>CSV format</b>." : "El archivo debe estar en <b>formato CSV</b>.",
     "Unknown error" : "Error desconocido",
+    "This space or groupfolder already exists. Please, use another space name.\nIf a \"toto\" space exists, you cannot create the \"tOTo\" space.\nPlease check also the groupfolder doesn't exist." : "Este espacio o carpeta de grupo ya existe. Por favor, usa otro nombre de espacio. Si existe un espacio \"toto\", no se puede crear el espacio \"tOTo\".\nPor favor, comprueba también que no existe la carpeta de grupo.",
     "Error - Duplicate space name" : "Error: Nombre de espacio duplicado",
     "Your Workspace name must not contain the following characters: %s" : "El nombre de su espacio de trabajo no debe contener los siguientes caracteres: %s",
     "Error creating workspace" : "Error al crear el espacio de trabajo",
