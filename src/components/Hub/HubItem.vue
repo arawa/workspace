@@ -1,15 +1,12 @@
 <template>
 	<a class="item-hub cursor-pointer"
 		:href="url"
-		@click.prevent="to">
-		<NcIconSvgWrapper v-if="pathIcon !== null"
+		@click="to($event)">
+		<NcIconSvgWrapper
 			class="cursor-pointer"
 			:path="pathIcon"
-			:size="64" />
-		<NcIconSvgWrapper v-if="svg !== null"
-			class="cursor-pointer"
-			:path="pathIcon"
-			:size="64" />
+			:svg="svg"
+			:size="size" />
 		<span class="cursor-pointer">
 			{{ title }}
 		</span>
