@@ -45,10 +45,12 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
@@ -99,18 +101,23 @@ class Application extends App implements IBootstrap {
 
 		$context->registerCapability(Capabilities::class);
 
-		$context->registerService(GroupBackend::class, function ($c) {
-			return new GroupBackend(
-				$c->query(IGroupManager::class),
-				$c->query(UserService::class),
-				$c->query(SpaceMapper::class),
-				$c->query(SpaceService::class),
-				$c->query(ConnectedGroupsService::class)
-			);
-			return $groupBackend;
-		});
+		$container = $this->getContainer();
 
-		\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+		$appConfig = $container->get(IAppConfig::class);
+		$addedGroupDisabled = $appConfig->getAppValueBool('added_group_disabled', true);
+
+		if (!$addedGroupDisabled) {
+			$context->registerService(GroupBackend::class, function ($c) {
+				return new GroupBackend(
+					$c->query(IGroupManager::class),
+					$c->query(IUserManager::class),
+					$c->query(ConnectedGroupsService::class)
+				);
+				return $groupBackend;
+			});
+
+			\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+		}
 	}
 
 	public function boot(IBootContext $context): void {

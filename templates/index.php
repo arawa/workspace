@@ -25,3 +25,4 @@
 <input type="hidden" id="canAccessApp" value="<?php p($_['canAccessApp'] ? 'true': 'false'); ?>">
 <input type="hidden" id="aclInheritPerUser" value="<?php p($_['aclInheritPerUser'] ? 'true': 'false'); ?>">
 <input type="hidden" id="userSession" value="<?php p($_['userSession']); ?>">
+<input type="hidden" id="addedGroupDisabled" value="<?php p($_['addedGroupDisabled'] ? 'true': 'false'); ?>">
