@@ -147,10 +147,10 @@ export function addGroupToWorkspace(spaceId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Group error'),
-				t('workspace', 'Impossible to attach the {gid} group to workspace. May be a problem with the connection ?', { gid }),
+				t('workspace', 'Error groups'),
+				t('workspace', 'Impossible to attach the {gid} group to workspace. May be a problem with the connection?', { gid }),
 				5000)
-			console.error('Impossible to attach the group to workspace. May be a problem with the connection ?', gid, error)
+			console.error('Impossible to attach the group to workspace. May be a problem with the connection?', gid, error)
 			throw new AddGroupToGroupfolderError('Error to add Space Manager group in the groupfolder')
 		})
 }
@@ -166,7 +166,7 @@ export function removeWorkspace(spaceId) {
 			return resp.data
 		})
 		.catch(error => {
-			console.error('Error to delete a workspace. May be a problem network ?', error)
+			console.error('Error to delete a workspace. May be a problem network?', error)
 		})
 	return result
 }
