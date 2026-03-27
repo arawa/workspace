@@ -25,8 +25,8 @@ import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mdiAccountMultiple } from '@mdi/js'
 import HubItem from '../../components/Hub/HubItem.vue'
-import { getReadme } from '../../services/spaceService.js'
 import NcRichText from '@nextcloud/vue/components/NcRichText'
+import { getReadme } from '../../services/DavService.js'
 
 export default {
 	name: 'HubHome',
@@ -58,14 +58,11 @@ export default {
 		if (this.space === null) {
 			this.space = this.$store.getters.getSpaceByNameOrId(this.spaceId)
 
-			getReadme(this.spaceId)
-				.then((response) => {
-					if (response.success) {
-						this.readmeContent = response.content
-					}
+			getReadme(this.space.name)
+				.then((result) => {
+					this.readmeContent = result
 				})
-				.catch((error) => {
-					console.error(error.message, error)
+				.catch(() => {
 					this.readmeContent = null
 				})
 		}
@@ -73,16 +70,11 @@ export default {
 	updated() {
 		this.space = this.$store.getters.getSpaceByNameOrId(this.spaceId)
 
-		getReadme(this.spaceId)
-			.then((response) => {
-				if (response.success) {
-					this.readmeContent = response.content
-				} else {
-					this.readmeContent = null
-				}
+		getReadme(this.space.name)
+			.then((result) => {
+				this.readmeContent = result
 			})
-			.catch((error) => {
-				console.error(error.message, error)
+			.catch(() => {
 				this.readmeContent = null
 			})
 	},
