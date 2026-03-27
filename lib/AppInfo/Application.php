@@ -38,7 +38,6 @@ use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
@@ -50,7 +49,6 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\IUserManager;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
@@ -104,19 +102,12 @@ class Application extends App implements IBootstrap {
 		$container = $this->getContainer();
 
 		$appConfig = $container->get(IAppConfig::class);
-		$addedGroupDisabled = $appConfig->getAppValueBool('added_group_disabled', true);
+		$addedGroupDisabled = $appConfig->getAppValueBool('added_group_disabled', false);
 
 		if (!$addedGroupDisabled) {
-			$context->registerService(GroupBackend::class, function ($c) {
-				return new GroupBackend(
-					$c->query(IGroupManager::class),
-					$c->query(IUserManager::class),
-					$c->query(ConnectedGroupsService::class)
-				);
-				return $groupBackend;
-			});
-
-			\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+			$groupManager = $container->get(IGroupManager::class);
+			$groupBackend = $container->get(GroupBackend::class);
+			$groupManager->addBackend($groupBackend);
 		}
 	}
 
