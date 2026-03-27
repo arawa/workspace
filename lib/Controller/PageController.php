@@ -57,7 +57,7 @@ class PageController extends Controller {
 			throw new NotFoundException('Not found');
 		}
 
-		$addedGroupDisabled = $this->appConfig->getAppValueBool('added_group_disabled', true);
+		$addedGroupDisabled = $this->appConfig->getAppValueBool('added_group_disabled', false);
 
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
