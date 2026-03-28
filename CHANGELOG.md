@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Backport: Make compatibility with Nextcloud 33 by @zak39 in [#1628](https://github.com/arawa/workspace/pull/1628)
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Backport: Translate duplicate workspace name error message by @zak39 in [#1638](https://github.com/arawa/workspace/pull/1638)
