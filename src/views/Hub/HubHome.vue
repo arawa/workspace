@@ -25,7 +25,7 @@ import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import { mdiAccountMultiple } from '@mdi/js'
 import HubItem from '../../components/Hub/HubItem.vue'
-import NcRichText from '@nextcloud/vue/components/NcRichText'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 import { getReadme } from '../../services/DavService.js'
 
 export default {
