@@ -1,6 +1,6 @@
 <template>
 	<NcAppNavigationItem
-		:to="{path: `/group/${spaceId}/${group.slug}`}"
+		:to="{ name: 'space.group.show', params: { space: spaceId, slug: group.slug } }"
 		:name="group.displayName">
 		<template #icon>
 			<NcIconSvgWrapper v-if="isAddedGroup && isDarkTheme" :svg="AddedGroupWhite" />

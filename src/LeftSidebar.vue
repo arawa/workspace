@@ -32,10 +32,10 @@
 			<li class="ws-navigation-spacer" />
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
-				:to="{path: '/'}">
-				<template #counter>
-					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
-				</template>
+				:to="{ name: 'space.table' }">
+				<NcCounterBubble slot="counter">
+					{{ $store.state.countTotalWorkspaces }}
+				</NcCounterBubble>
 			</NcAppNavigationItem>
 		</ul>
 		<NcAppNavigationSearch v-model="workspacesSearchQuery"
@@ -179,7 +179,10 @@ export default {
 			this.$store.dispatch('incrementCountTotalWorkspaces')
 			this.$store.dispatch('incrementCountTotalWorkspacesByQuery')
 			this.$router.push({
-				path: `/workspace/${workspace.id_space}`,
+				name: 'space.show',
+				params: {
+					space: workspace.id_space,
+				},
 			})
 		},
 	},

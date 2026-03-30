@@ -41,9 +41,7 @@ export default {
 	},
 	beforeCreate() {
 		if (this.$root.$data.canAccessApp === false) {
-			this.$router.push({
-				path: '/unauthorized',
-			})
+			this.$router.push({ name: 'unauthorized' })
 		}
 	},
 }

@@ -42,18 +42,22 @@ const router = createRouter({
 				{
 					path: '',
 					component: SpaceTable,
+					name: 'space.table',
 				},
 				{
 					path: 'workspace/:space',
 					component: SpaceDetails,
+					name: 'space.show',
 				},
 				{
 					path: 'group/:space/:slug',
 					component: GroupDetails,
+					name: 'space.group.show',
 				},
 				{
 					path: 'unauthorized',
 					component: Error403,
+					name: 'unauthorized',
 				},
 			],
 		},
