@@ -25,7 +25,7 @@
 		:allow-collapse="true"
 		:open="open"
 		:name="spaceName"
-		:to="{ name: 'space.show', params: { space: space.id } }"
+		:to="{name: 'hub.home', params: { spaceId: space.id }}"
 		@click="openMenu"
 		@update:open="isOpen = $event">
 		<template #icon>
