@@ -51,15 +51,15 @@ export const WorkspacesLoader = {
 		countMaxPages() {
 			return Math.ceil(this.$store.getters.countTotalWorkspacesByQuery / LIMIT_WORKSPACES_PER_PAGE)
 		},
-		toggleNextPage() {
-			this.$store.dispatch('toggleNextPage')
-		},
 		showNextPage() {
 			const pageMax = this.countMaxPages()
 
 			if (this.$store.getters.workspaceCurrentPage === pageMax || this.$store.getters.countWorkspaces === this.$store.getters.countTotalWorkspacesByQuery) {
-				this.toggleNextPage()
+				this.$store.dispatch('setShowNextPage', { show: false })
+				return
 			}
+
+			this.$store.dispatch('setShowNextPage', { show: true })
 		},
 	},
 }
