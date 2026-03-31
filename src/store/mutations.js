@@ -193,8 +193,8 @@ export default {
 	UPDATE_SEARCH_WORKSPACE(state, { search }) {
 		state.searchWorkspace = search
 	},
-	TOGGLE_NEXT_PAGE(state) {
-		state.nextPage = !state.nextPage
+	SET_SHOW_NEXT_PAGE(state, { show }) {
+		state.nextPage = show
 	},
 	RESET_NEXT_PAGE(state) {
 		state.nextPage = true

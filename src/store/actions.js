@@ -130,8 +130,8 @@ export default {
 	updateSearchWorkspace(context, { search }) {
 		context.commit('UPDATE_SEARCH_WORKSPACE', { search })
 	},
-	toggleNextPage(context) {
-		context.commit('TOGGLE_NEXT_PAGE')
+	setShowNextPage(context, { show }) {
+		context.commit('SET_SHOW_NEXT_PAGE', { show })
 	},
 	resetNextPage(context) {
 		context.commit('RESET_NEXT_PAGE')

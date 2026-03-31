@@ -33,9 +33,9 @@
 			<NcAppNavigationItem
 				:name="t('workspace', 'All workspaces')"
 				:to="{ name: 'space.table' }">
-				<NcCounterBubble slot="counter">
-					{{ $store.state.countTotalWorkspaces }}
-				</NcCounterBubble>
+				<template #counter>
+					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
+				</template>
 			</NcAppNavigationItem>
 		</ul>
 		<NcAppNavigationSearch v-model="workspacesSearchQuery"
