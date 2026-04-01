@@ -118,6 +118,7 @@
       "^@vue/test-utils$": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
       "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js",
       "^@nextcloud/dialogs$": "<rootDir>/src/tests/__mocks__/nextcloudDialogsMock.js",
+      "^@nextcloud/files/dav$": "<rootDir>/src/tests/__mocks__/nextcloudFilesMock.js",
       "^@nextcloud/vue/components/(.*)$": "<rootDir>/src/tests/__mocks__/nextcloudVueComponentMock.js",
       "^@nextcloud/vue/composables/useIsDarkTheme$": "<rootDir>/src/tests/__mocks__/useIsDarkThemeMock.js"
     },
