@@ -89,6 +89,7 @@
     "@nextcloud/axios": "^2.5.1",
     "@nextcloud/dialogs": "^7.2.0",
     "@nextcloud/initial-state": "^3.0.0",
+    "@nextcloud/files": "^3.12.2",
     "@nextcloud/l10n": "^3.4.0",
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/vue": "^9.4.0",
@@ -117,6 +118,7 @@
       "^@vue/test-utils$": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
       "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js",
       "^@nextcloud/dialogs$": "<rootDir>/src/tests/__mocks__/nextcloudDialogsMock.js",
+      "^@nextcloud/files/dav$": "<rootDir>/src/tests/__mocks__/nextcloudFilesMock.js",
       "^@nextcloud/vue/components/(.*)$": "<rootDir>/src/tests/__mocks__/nextcloudVueComponentMock.js",
       "^@nextcloud/vue/composables/useIsDarkTheme$": "<rootDir>/src/tests/__mocks__/useIsDarkThemeMock.js"
     },
