@@ -43,6 +43,7 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
@@ -63,6 +64,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserFormatter $userFormatter,
 		private SpaceManager $spaceManager,
+		private IURLGenerator $urlGenerator,
 		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
@@ -320,6 +322,32 @@ class WorkspaceController extends Controller {
 		}
 		$users = $this->workspaceService->autoComplete($term, $space);
 		return new JSONResponse($users);
+	}
+
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/{spaceId}/folder'
+	)]
+	#[NoAdminRequired]
+	public function getFolderUrl(int $spaceId): JSONResponse {
+		$space = $this->spaceMapper->find($spaceId);
+		$groups = $this->spaceManager->findGroupsBySpaceId($spaceId);
+		$userGroup = array_values(array_filter($groups, fn ($group) => str_starts_with($group['gid'], 'SPACE-U')));
+		$gid = $userGroup[0]['gid'];
+
+		$group = $this->groupManager->get($gid);
+
+		$path = $this->urlGenerator->linkToRoute('files.view.index',
+			[
+				'dir' => $space->getSpaceName()
+			]);
+
+		$url = $this->urlGenerator->getAbsoluteURL($path);
+
+		return new JSONResponse([
+			'url' => $url,
+			'user_in_group' => $group->inGroup($this->userSession->getUser())
+		]);
 	}
 
 	/**
