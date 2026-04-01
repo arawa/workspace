@@ -10,11 +10,18 @@
 					:text="readmeContent"
 					:use-markdown="true" />
 			</div>
-			<div>
+			<div class="container-hub">
 				<HubItem
 					:path="`/workspace/${spaceId}`"
 					:title="t('workspace', 'Users')"
 					:path-icon="mdiAccountMultiple" />
+				<HubItem
+					:path="urlToFolder"
+					:title="space.name"
+					:svg="isDarkTheme ? App : AppBlack"
+					:size="60"
+					:external="true"
+					:disabled="userNotInSpace" />
 			</div>
 		</div>
 	</NcAppContent>
@@ -27,6 +34,9 @@ import { mdiAccountMultiple } from '@mdi/js'
 import HubItem from '../../components/Hub/HubItem.vue'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 import { getReadme } from '../../services/DavService.js'
+import { getFolderUrl } from '../../services/spaceService.js'
+import App from '../../../img/app.svg?raw'
+import AppBlack from '../../../img/app_black.svg?raw'
 
 export default {
 	name: 'HubHome',
@@ -52,6 +62,10 @@ export default {
 			mdiAccountMultiple,
 			readmeContent: null,
 			showContent: false,
+			urlToFolder: null,
+			userNotInSpace: false,
+			App,
+			AppBlack,
 		}
 	},
 	created() {
@@ -65,6 +79,17 @@ export default {
 				.catch(() => {
 					this.readmeContent = null
 				})
+
+			getFolderUrl(this.spaceId)
+				.then((response) => {
+					this.urlToFolder = response.url
+					this.userNotInSpace = !response.user_in_group
+				})
+				.catch((error) => {
+					console.error(error.message, error)
+					this.urlToFolder = null
+					this.userNotInSpace = false
+				})
 		}
 	},
 	updated() {
@@ -76,6 +101,17 @@ export default {
 			})
 			.catch(() => {
 				this.readmeContent = null
+			})
+
+		getFolderUrl(this.spaceId)
+			.then((response) => {
+				this.urlToFolder = response.url
+				this.userNotInSpace = !response.user_in_group
+			})
+			.catch((error) => {
+				console.error(error.message, error)
+				this.urlToFolder = null
+				this.userNotInSpace = false
 			})
 	},
 }
@@ -94,6 +130,15 @@ export default {
 
 .readme-content {
 	margin: 1.5rem 0;
+}
+
+.container-hub {
+	display: flex;
+	gap: 1.5rem;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	width: 336px;
+	margin: 0 auto;
 }
 
 </style>

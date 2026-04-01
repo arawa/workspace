@@ -221,3 +221,19 @@ export function renameSpace(spaceId, newSpaceName) {
 
 	return respFormatFinal
 }
+
+/**
+ * Get the folder URL for accessing files
+ * @param {number} spaceId is id for space
+ * @return {object} { url: String, user_in_group: Bool }, Folder information : folder url and group membership
+ */
+export function getFolderUrl(spaceId) {
+	const result = axios.get(generateUrl(`/apps/workspace/${spaceId}/folder`))
+		.then(resp => {
+			return resp.data
+		})
+		.catch(error => {
+			console.error('Impossible to get the folder url', error)
+		})
+	return result
+}

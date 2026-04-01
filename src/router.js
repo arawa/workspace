@@ -52,12 +52,6 @@ const router = createRouter({
 					props: true,
 				},
 				{
-					path: 'hub/:spaceId',
-					name: 'hub.home',
-					component: HubHome,
-					props: true,
-				},
-				{
 					path: 'workspace/:space',
 					component: SpaceDetails,
 					name: 'space.show',
