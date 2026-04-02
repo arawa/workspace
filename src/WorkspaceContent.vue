@@ -74,6 +74,10 @@ export default {
 					this.$store.dispatch('setCountWorkspaces', { count: Object.values(spaces).length })
 
 					this.$store.state.loading = false
+
+					if (Object.values(spaces).length === 1) {
+						this.$router.push({ name: 'space.show', params: { space: Object.values(spaces)[0].id } })
+					}
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
