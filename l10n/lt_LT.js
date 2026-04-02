@@ -11,6 +11,7 @@ OC.L10N.register(
     "File to share" : "Failas, kurį bendrinti",
     "Rename group" : "Pervadinti grupę",
     "Group name" : "Grupės pavadinimas",
+    "Delete group" : "Ištrinti grupę",
     "Error" : "Klaida",
     "Settings" : "Nustatymai",
     "Network error" : "Tinklo klaida",
