@@ -12,16 +12,16 @@
 			</div>
 			<div class="container-hub">
 				<HubItem
-					:path="`/workspace/${spaceId}`"
-					:title="t('workspace', 'Users')"
-					:path-icon="mdiAccountMultiple" />
-				<HubItem
 					:path="urlToFolder"
 					:title="space.name"
-					:svg="isDarkTheme ? App : AppBlack"
+					:svg="isDarkTheme ? teamfolderIcon : teamfolderDarkIcon"
 					:size="60"
 					:external="true"
 					:disabled="userNotInSpace" />
+				<HubItem
+					:path="`/workspace/${spaceId}`"
+					:title="t('workspace', 'Users')"
+					:path-icon="mdiAccountMultiple" />
 			</div>
 		</div>
 	</NcAppContent>
@@ -35,6 +35,7 @@ import HubItem from '../../components/Hub/HubItem.vue'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 import { getReadme } from '../../services/DavService.js'
 import { getFolderUrl } from '../../services/spaceService.js'
+import { getAppIcon } from '../../services/HubService.js'
 import App from '../../../img/app.svg?raw'
 import AppBlack from '../../../img/app_black.svg?raw'
 
@@ -66,6 +67,8 @@ export default {
 			userNotInSpace: false,
 			App,
 			AppBlack,
+			teamfolderIcon: null,
+			teamfolderDarkIcon: null,
 		}
 	},
 	created() {
@@ -90,6 +93,17 @@ export default {
 					this.urlToFolder = null
 					this.userNotInSpace = false
 				})
+
+			getAppIcon('groupfolders')
+				.then((response) => {
+					this.teamfolderIcon = response.icon_path
+					this.teamfolderDarkIcon = response.dark_icon_path
+				})
+				.catch((error) => {
+					console.error(error.message, error)
+					this.teamfolderIcon = null
+					this.teamfolderDarkIcon = null
+				})
 		}
 	},
 	updated() {
@@ -113,6 +127,17 @@ export default {
 				this.urlToFolder = null
 				this.userNotInSpace = false
 			})
+
+		getAppIcon('groupfolders')
+			.then((response) => {
+				this.teamfolderIcon = response.icon_path
+				this.teamfolderDarkIcon = response.dark_icon_path
+			})
+			.catch((error) => {
+				console.error(error.message, error)
+				this.teamfolderIcon = null
+				this.teamfolderDarkIcon = null
+			})
 	},
 }
 </script>
@@ -126,6 +151,7 @@ export default {
 
 .space-title {
 	margin-bottom: 1.5rem;
+	text-align: center;
 }
 
 .readme-content {
