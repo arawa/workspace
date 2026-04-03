@@ -45,7 +45,8 @@
 					</template>
 				</NcPopover>
 			</div>
-			<div class="space-actions">
+			<div v-if="!isSimpleUser"
+				class="space-actions">
 				<NcActions ref="ncAction" default-icon="icon-add">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
@@ -287,6 +288,9 @@ export default {
 		},
 		toggleShowEditWorkspaceModal() {
 			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
+		},
+		isSimpleUser() {
+			return this.$root.$data.isSpaceManager === false && this.$root.$data.isUserGeneralAdmin === false
 		},
 	},
 }

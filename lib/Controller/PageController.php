@@ -68,6 +68,7 @@ class PageController extends Controller {
 		$this->initialState->provideInitialState('userSession', $this->session->getUser()?->getUID());
 		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
 		$this->initialState->provideInitialState('canAccessApp', $this->userService->canAccessApp());
+		$this->initialState->provideInitialState('isSpaceManager', $this->userService->isSpaceManager());
 		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
 
 		$currentUser = $this->session->getUser();
@@ -76,7 +77,8 @@ class PageController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces();
 		} else {
-			$count = $this->spaceManager->countWorkspaces(uid: $currentUser->getUID());
+			$isSimpleUser = !$this->userService->isSpaceManager();
+			$count = $this->spaceManager->countWorkspaces(uid: $currentUser->getUID(), simpleUser: $isSimpleUser);
 		}
 
 		$this->initialState->provideInitialState('countWorkspaces', $count);

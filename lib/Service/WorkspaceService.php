@@ -175,8 +175,8 @@ class WorkspaceService {
 		return $data;
 	}
 
-	public function getAll(?int $page = null, ?int $limit = null, ?string $name = null, ?string $uid = null): array {
-		$spaces = $this->spaceMapper->findAll($page, $limit, $name, $uid);
+	public function getAll(?int $page = null, ?int $limit = null, ?string $name = null, ?string $uid = null, bool $simpleUser = false): array {
+		$spaces = $this->spaceMapper->findAll($page, $limit, $name, $uid, $simpleUser);
 
 		$newSpaces = [];
 		foreach ($spaces as $space) {

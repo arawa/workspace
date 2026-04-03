@@ -145,7 +145,8 @@ class WorkspaceController extends Controller {
 			$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
 		} else {
 			$currentUser = $this->userSession->getUser();
-			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $currentUser->getUID());
+			$isSimpleUser = !$this->userService->isSpaceManager();
+			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $currentUser->getUID(), $isSimpleUser);
 		}
 
 		$spaces = [];
@@ -182,8 +183,10 @@ class WorkspaceController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces($search);
 		} else {
-			$count = $this->spaceManager->countWorkspaces($search, $currentUser->getUID());
+			$isSimpleUser = !$this->userService->isSpaceManager();
+			$count = $this->spaceManager->countWorkspaces($search, $currentUser->getUID(), $isSimpleUser);
 		}
+		var_dump($count);
 
 		return new JSONResponse([
 			'count' => $count

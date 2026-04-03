@@ -63,7 +63,16 @@
 					</td>
 					<td class="workspace-td">
 						<div class="user-actions">
-							<NcActions :force-menu="true">
+							<NcActions v-if="isSimpleUser">
+								<NcActionButton v-if="user.profile !== undefined"
+									icon="icon-user"
+									:close-after-click="true"
+									@click="viewProfile(user)">
+									{{ t('workspace', 'View profile') }}
+								</NcActionButton>
+							</NcActions>
+							<NcActions v-else>
+								:force-menu="true">
 								<NcActionButton v-if="user.profile !== undefined"
 									icon="icon-user"
 									:close-after-click="true"
@@ -171,6 +180,9 @@ export default {
 			const groupName = this.$store.getters.groupName(this.$route.params.space, decodeURIComponent(decodeURIComponent(this.$route.params.slug)))
 
 			return groupName.startsWith('G-')
+		},
+		isSimpleUser() {
+			return this.$root.$data.isSpaceManager === false && this.$root.$data.isUserGeneralAdmin === false
 		},
 	},
 	methods: {

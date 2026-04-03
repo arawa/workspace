@@ -69,7 +69,7 @@ class SpaceMapper extends QBMapper {
 	 * @param int|null $limit to limit the number of workspaces returned
 	 * @return Space[]
 	 */
-	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null): array {
+	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null, bool $simpleUser = false): array {
 		$name = $name ? strtolower($name) : null;
 		$offset = $offset ? $offset * $limit : $offset;
 
@@ -86,6 +86,8 @@ class SpaceMapper extends QBMapper {
 		;
 
 		if ($uid !== null) {
+			$group = $simpleUser ? 'SPACE-U-' : 'SPACE-GE-';
+			// var_dump($group);
 			$qb
 				->innerJoin(
 					'ws',
@@ -99,10 +101,11 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					'gu.gid like :group'
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
+				->setParameter('group', "{$group}%")
 			;
 
 		}
@@ -180,7 +183,7 @@ class SpaceMapper extends QBMapper {
 		return $row;
 	}
 
-	public function countSpaces(?string $name, ?string $uid = null): int {
+	public function countSpaces(?string $name, ?string $uid = null, bool $simpleUser = false): int {
 		$qb = $this->db->getQueryBuilder();
 		$name = $name ? strtolower($name) : null;
 
@@ -197,6 +200,7 @@ class SpaceMapper extends QBMapper {
 		;
 
 		if ($uid !== null) {
+			$group = $simpleUser ? 'SPACE-U-' : 'SPACE-GE-';
 			$qb
 				->innerJoin(
 					'ws',
@@ -210,10 +214,11 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					'gu.gid like :group'
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
+				->setParameter('group', "{$group}%")
 			;
 		}
 

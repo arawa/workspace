@@ -58,14 +58,6 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-
-		$context->registerService(WorkspaceAccessControlMiddleware::class, function ($c) {
-			return new WorkspaceAccessControlMiddleware(
-				$c->query(IURLGenerator::class),
-				$c->query(UserService::class)
-			);
-		});
-
 		$context->registerService(IsSpaceAdminMiddleware::class, function ($c) {
 			return new IsSpaceAdminMiddleware(
 				$c->query(IControllerMethodReflector::class),
@@ -88,7 +80,6 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
 		$context->registerMiddleware(RequireExistingUsersMiddleware::class);
 		$context->registerMiddleware(RequireExistingGroupMiddleware::class);
-		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);
