@@ -69,7 +69,7 @@ class SpaceMapper extends QBMapper {
 	 * @param int|null $limit to limit the number of workspaces returned
 	 * @return Space[]
 	 */
-	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null): array {
+	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null, ?array $ids = null): array {
 		$name = $name ? strtolower($name) : null;
 		$offset = $offset ? $offset * $limit : $offset;
 
@@ -99,12 +99,20 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					'gu.gid like "SPACE-U-%"'
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
 			;
 
+		}
+
+		if ($ids !== null) {
+			$parameters = $qb->createNamedParameter($ids, $qb::PARAM_INT_ARRAY);
+			$qb
+				->orWhere(
+					$qb->expr()->in('ws.space_id', $parameters)
+				);
 		}
 
 		if ($name !== null) {
@@ -180,15 +188,14 @@ class SpaceMapper extends QBMapper {
 		return $row;
 	}
 
-	public function countSpaces(?string $name, ?string $uid = null): int {
+	public function countSpaces(?string $name, ?string $uid = null, ?array $ids = null): int {
 		$qb = $this->db->getQueryBuilder();
 		$name = $name ? strtolower($name) : null;
 
 		$qb
 			->select(
 				$qb
-					->func()
-					->count('*', 'count')
+					->createFunction('COUNT(DISTINCT ws.space_id) as count')
 			)
 			->from(
 				$this->getTableName(),
@@ -210,10 +217,19 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					'gu.gid like "SPACE-U-%"'
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
+			;
+		}
+
+		if ($ids !== null) {
+			$parameters = $qb->createNamedParameter($ids, $qb::PARAM_INT_ARRAY);
+			$qb
+				->orWhere(
+					$qb->expr()->in('ws.space_id', $parameters)
+				)
 			;
 		}
 

@@ -36,7 +36,6 @@ use OCA\Workspace\Middleware\RequireExistingSpaceMiddleware;
 use OCA\Workspace\Middleware\RequireExistingUsersMiddleware;
 use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
-use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\SpaceService;
@@ -48,7 +47,6 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
-use OCP\IURLGenerator;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
@@ -58,14 +56,6 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-
-		$context->registerService(WorkspaceAccessControlMiddleware::class, function ($c) {
-			return new WorkspaceAccessControlMiddleware(
-				$c->query(IURLGenerator::class),
-				$c->query(UserService::class)
-			);
-		});
-
 		$context->registerService(IsSpaceAdminMiddleware::class, function ($c) {
 			return new IsSpaceAdminMiddleware(
 				$c->query(IControllerMethodReflector::class),
@@ -88,7 +78,6 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
 		$context->registerMiddleware(RequireExistingUsersMiddleware::class);
 		$context->registerMiddleware(RequireExistingGroupMiddleware::class);
-		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);

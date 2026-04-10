@@ -45,7 +45,8 @@
 					</template>
 				</NcPopover>
 			</div>
-			<div class="space-actions">
+			<div v-if="!$store.getters.getSpaceByNameOrId($route.params.space).currentUserIsSimpleUser"
+				class="space-actions">
 				<NcActions ref="ncAction" default-icon="icon-add">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"

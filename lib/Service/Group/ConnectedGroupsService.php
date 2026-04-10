@@ -55,6 +55,23 @@ class ConnectedGroupsService {
 		return $this->linkedSpaceGroups;
 	}
 
+	public function getSpacesByGroups(array $gids): array {
+		$linkedSpaceGroups = $this->getLinkedSpaceGroups();
+		$linkedSpaceGroupsByUserGroups = [];
+		$linkedSpaceGroupsByUserGroups = array_filter($linkedSpaceGroups, function ($spaceGid) use ($gids, $linkedSpaceGroups) {
+			foreach ($gids as $gid) {
+				if (isset($linkedSpaceGroups[$spaceGid]) && in_array($gid, $linkedSpaceGroups[$spaceGid])) {
+					return true;
+				}
+			}
+			return false;
+		}, ARRAY_FILTER_USE_KEY);
+
+		$groups = array_keys($linkedSpaceGroupsByUserGroups);
+
+		return $groups;
+	}
+
 	private function initLinkedSpaceGroups(): void {
 		$connectedGroups = $this->mapper->findAllAddedGroups();
 

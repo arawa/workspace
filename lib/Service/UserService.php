@@ -26,6 +26,7 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\GroupFoldersGroupsMapper;
+use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -45,6 +46,7 @@ class UserService {
 		private IURLGenerator $urlGenerator,
 		private UserGroup $userGroup,
 		private GroupFoldersGroupsMapper $groupFoldersGroupsMapper,
+		private SpaceMapper $spaceMapper,
 	) {
 	}
 
@@ -123,14 +125,34 @@ class UserService {
 		return false;
 	}
 
+	public function isSimpleUserOfSpace(array $space): bool {
+		if ($this->isSpaceManagerOfSpace($space) || $this->isUserGeneralAdmin()) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * @return boolean true if user is space manager or general manager, false otherwise
 	 * @todo Can we move this function in the lib/AppInfo/Application.php ?
 	 */
 	public function canAccessApp(): bool {
-		if ($this->isSpaceManager() || $this->isUserGeneralAdmin()) {
+		if ($this->isSpaceManager() || $this->isUserGeneralAdmin() || $this->isInUserGroup()) {
 			return true;
 		}
+		return false;
+	}
+
+	public function isInUserGroup(): bool {
+		$spaces = $this->spaceMapper->findAll();
+
+		foreach ($spaces as $space) {
+			$userGroup = UserGroup::get($space->getSpaceId());
+			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $userGroup)) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 

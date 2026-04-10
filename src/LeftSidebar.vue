@@ -20,10 +20,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-	<NcAppNavigation v-if="$root.$data.canAccessApp"
+	<NcAppNavigation
 		aria-label="workspace navigation">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || $root.$data.isSpaceManager"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"

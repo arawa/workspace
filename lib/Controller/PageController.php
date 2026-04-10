@@ -27,6 +27,7 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
@@ -46,6 +47,7 @@ class PageController extends Controller {
 		private IUserSession $session,
 		private SpaceManager $spaceManager,
 		private IGroupManager $groupManager,
+		private ConnectedGroupsService $connectedGroups,
 	) {
 	}
 
@@ -68,6 +70,7 @@ class PageController extends Controller {
 		$this->initialState->provideInitialState('userSession', $this->session->getUser()?->getUID());
 		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
 		$this->initialState->provideInitialState('canAccessApp', $this->userService->canAccessApp());
+		$this->initialState->provideInitialState('isSpaceManager', $this->userService->isSpaceManager());
 		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
 
 		$currentUser = $this->session->getUser();
@@ -76,7 +79,11 @@ class PageController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces();
 		} else {
-			$count = $this->spaceManager->countWorkspaces(uid: $currentUser->getUID());
+			$gids = $this->groupManager->getUserGroupIds($this->session->getUser());
+			$groups = $this->connectedGroups->getSpacesByGroups($gids);
+			$spaceIds = count($groups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $groups) : null;
+
+			$count = $this->spaceManager->countWorkspaces(ids: $spaceIds, uid: $currentUser->getUID());
 		}
 
 		$this->initialState->provideInitialState('countWorkspaces', $count);

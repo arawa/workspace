@@ -40,7 +40,7 @@
 				ref="navigationGroup"
 				:open="captionOpened"
 				:name="t('workspace', 'Workspace groups')">
-				<template #actionsTriggerIcon>
+				<template v-if="!space.currentUserIsSimpleUser" #actionsTriggerIcon>
 					<NcPopover placement="right"
 						:triggers="['hover']">
 						<template #trigger="{ attrs }">
@@ -56,7 +56,7 @@
 						</template>
 					</NcPopover>
 				</template>
-				<template #actions>
+				<template v-if="!space.currentUserIsSimpleUser" #actions>
 					<NcActionText :class="'space-text'">
 						{{ t('workspace', 'Create a workspace group') }}
 					</NcActionText>
@@ -79,7 +79,7 @@
 				:space-name="spaceName" />
 			<NcAppNavigationCaption
 				:name="t('workspace', 'Added groups')">
-				<template #actions>
+				<template v-if="!space.currentUserIsSimpleUser" #actions>
 					<NcActionButton
 						:aria-label="t('workspace', 'Add a group')"
 						@click="toggleAddGroupModal">
@@ -242,7 +242,6 @@ export default {
 			const url = generateUrl('/workspace/{id}', { id: this.space.id })
 			return url.substr(url.indexOf('/workspace/'))
 		},
-
 	},
 }
 </script>
