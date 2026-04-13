@@ -26,7 +26,7 @@
 			{{ t('workspace', 'No workspace found') }}
 		</h1>
 		<p class="p-400">
-			{{ t('workspace', 'You aren\'t in any workspaces. Please contact your administrator.') }}
+			{{ t('workspace', 'You aren\'t in any workspaces. Please contact a General Manager.') }}
 		</p>
 		<p class="p-400">
 			<span>
