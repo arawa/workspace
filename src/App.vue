@@ -39,15 +39,17 @@ export default {
 	},
 	created() {
 		const isUserGeneralAdmin = loadState('workspace', 'isUserGeneralAdmin')
-		const canAccessApp = loadState('workspace', 'canAccessApp')
 		const aclInheritPerUser = loadState('workspace', 'aclInheritPerUser')
 		const userSession = loadState('workspace', 'userSession')
 		const count = loadState('workspace', 'countWorkspaces')
+		const isSpaceManager = loadState('workspace', 'isSpaceManager')
+		const canAccessApp = count > 0
 
 		this.$root.$data.isUserGeneralAdmin = isUserGeneralAdmin
 		this.$root.$data.canAccessApp = canAccessApp
 		this.$root.$data.aclInheritPerUser = aclInheritPerUser
 		this.$root.$data.userSession = userSession
+		this.$root.$data.isSpaceManager = isSpaceManager
 
 		this.$store.dispatch('setCountTotalWorkspaces', { count })
 		this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })

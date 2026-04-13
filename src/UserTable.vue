@@ -63,7 +63,16 @@
 					</td>
 					<td class="workspace-td">
 						<div class="user-actions">
-							<NcActions :force-menu="true">
+							<NcActions v-if="$store.getters.getSpaceByNameOrId($route.params.space).currentUserIsSimpleUser">
+								<NcActionButton v-if="user.profile !== undefined"
+									icon="icon-user"
+									:close-after-click="true"
+									@click="viewProfile(user)">
+									{{ t('workspace', 'View profile') }}
+								</NcActionButton>
+							</NcActions>
+							<NcActions v-else>
+								:force-menu="true">
 								<NcActionButton v-if="user.profile !== undefined"
 									icon="icon-user"
 									:close-after-click="true"

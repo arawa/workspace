@@ -21,12 +21,12 @@
 -->
 
 <template>
-	<div class="error403">
+	<div class="container">
 		<h1 class="h-400">
-			{{ t('workspace', 'Error 403') }}
+			{{ t('workspace', 'No workspace found') }}
 		</h1>
 		<p class="p-400">
-			{{ t('workspace', 'You aren\'t allowed to access into this application !') }}
+			{{ t('workspace', 'You aren\'t in any workspaces. Please contact a General Manager.') }}
 		</p>
 		<p class="p-400">
 			<span>
@@ -40,7 +40,7 @@
 import { generateUrl } from '@nextcloud/router'
 
 export default ({
-	name: 'Error403',
+	name: 'Error404',
 	components: {
 	},
 	data() {
@@ -57,7 +57,7 @@ export default ({
 
 <style scoped>
 
-.error403 {
+.container {
 	height: auto;
 	width: auto;
 	text-align: center;

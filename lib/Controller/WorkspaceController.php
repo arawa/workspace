@@ -30,6 +30,7 @@ use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
+use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
@@ -65,6 +66,7 @@ class WorkspaceController extends Controller {
 		private UserFormatter $userFormatter,
 		private SpaceManager $spaceManager,
 		private IURLGenerator $urlGenerator,
+		private ConnectedGroupsService $connectedGroups,
 		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
@@ -144,8 +146,10 @@ class WorkspaceController extends Controller {
 		if ($this->userService->isUserGeneralAdmin()) {
 			$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
 		} else {
-			$currentUser = $this->userSession->getUser();
-			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $currentUser->getUID());
+			$gids = $this->groupManager->getUserGroupIds($this->userSession->getUser());
+			$userGroups = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-U'));
+			$spaceIds = count($userGroups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $userGroups) : null;
+			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $this->userSession->getUser()->getUID(), $spaceIds);
 		}
 
 		$spaces = [];
@@ -182,7 +186,9 @@ class WorkspaceController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces($search);
 		} else {
-			$count = $this->spaceManager->countWorkspaces($search, $currentUser->getUID());
+			$groups = $this->groupManager->getUserGroups($this->userSession->getUser());
+			$userGroups = array_filter($groups, fn ($group) => str_starts_with($group->getGID(), 'SPACE-U'));
+			$count = count($userGroups);
 		}
 
 		return new JSONResponse([

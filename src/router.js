@@ -28,7 +28,7 @@ import Home from './Home.vue'
 import HubHome from './views/Hub/HubHome.vue'
 import SpaceDetails from './SpaceDetails.vue'
 import SpaceTable from './SpaceTable.vue'
-import Error403 from './Error403.vue'
+import Error404 from './views/errors/Error404.vue'
 
 const baseRoute = generateUrl('/apps/workspace/')
 
@@ -62,9 +62,9 @@ const router = createRouter({
 					name: 'space.group.show',
 				},
 				{
-					path: 'unauthorized',
-					component: Error403,
-					name: 'unauthorized',
+					path: 'not-found',
+					component: Error404,
+					name: 'not-found',
 				},
 			],
 		},
