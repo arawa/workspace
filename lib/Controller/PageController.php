@@ -84,7 +84,6 @@ class PageController extends Controller {
 		}
 
 		$this->initialState->provideInitialState('countWorkspaces', $count);
-		$this->initialState->provideInitialState('canAccessApp', $count > 0);
 
 		// templates/index.php
 		return new TemplateResponse(
