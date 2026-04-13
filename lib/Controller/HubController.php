@@ -12,10 +12,10 @@ use OCP\IURLGenerator;
 class HubController extends Controller {
 	public function __construct(
 		private IAppManager $appManager,
-		private IURLGenerator $urlGenerator
+		private IURLGenerator $urlGenerator,
 	) {
 	}
-	
+
 	#[FrontpageRoute(
 		verb: 'GET',
 		url: '/hub/app/{appName}/icon'
@@ -24,7 +24,7 @@ class HubController extends Controller {
 	public function getAppIcon(string $appName): JSONResponse {
 		$iconPath = $this->appManager->getAppIcon($appName);
 		$darkIconPath = $this->appManager->getAppIcon($appName, true);
-		
+
 		$iconFullPath = file_get_contents($this->urlGenerator->getAbsoluteURL($iconPath));
 		$darkIconFullPath = file_get_contents($this->urlGenerator->getAbsoluteURL($darkIconPath));
 
