@@ -126,34 +126,10 @@ class UserService {
 	}
 
 	public function isSimpleUserOfSpace(array $space): bool {
-		if ($this->isSpaceManagerOfSpace($space) || $this->isUserGeneralAdmin()) {
+		if ($this->isUserGeneralAdmin() || $this->isSpaceManagerOfSpace($space)) {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * @return boolean true if user is space manager or general manager, false otherwise
-	 * @todo Can we move this function in the lib/AppInfo/Application.php ?
-	 */
-	public function canAccessApp(): bool {
-		if ($this->isSpaceManager() || $this->isUserGeneralAdmin() || $this->isInUserGroup()) {
-			return true;
-		}
-		return false;
-	}
-
-	public function isInUserGroup(): bool {
-		$spaces = $this->spaceMapper->findAll();
-
-		foreach ($spaces as $space) {
-			$userGroup = UserGroup::get($space->getSpaceId());
-			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $userGroup)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**

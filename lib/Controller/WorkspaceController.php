@@ -147,8 +147,8 @@ class WorkspaceController extends Controller {
 			$workspaces = $this->workspaceService->getAll($offset, $limit, $search);
 		} else {
 			$gids = $this->groupManager->getUserGroupIds($this->userSession->getUser());
-			$groups = $this->connectedGroups->getSpacesByGroups($gids);
-			$spaceIds = count($groups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $groups) : null;
+			$userGroups = array_filter($gids, fn ($gid) => str_starts_with($gid, 'SPACE-U'));
+			$spaceIds = count($userGroups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $userGroups) : null;
 			$workspaces = $this->workspaceService->getAll($offset, $limit, $search, $this->userSession->getUser()->getUID(), $spaceIds);
 		}
 
@@ -186,10 +186,9 @@ class WorkspaceController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces($search);
 		} else {
-			$gids = $this->groupManager->getUserGroupIds($this->userSession->getUser());
-			$groups = $this->connectedGroups->getSpacesByGroups($gids);
-			$spaceIds = count($groups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $groups) : null;
-			$count = $this->spaceManager->countWorkspaces($search, $currentUser->getUID(), $spaceIds);
+			$groups = $this->groupManager->getUserGroups($this->userSession->getUser());
+			$userGroups = array_filter($groups, fn ($group) => str_starts_with($group->getGID(), 'SPACE-U'));
+			$count = count($userGroups);
 		}
 
 		return new JSONResponse([

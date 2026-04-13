@@ -69,7 +69,6 @@ class PageController extends Controller {
 
 		$this->initialState->provideInitialState('userSession', $this->session->getUser()?->getUID());
 		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
-		$this->initialState->provideInitialState('canAccessApp', $this->userService->canAccessApp());
 		$this->initialState->provideInitialState('isSpaceManager', $this->userService->isSpaceManager());
 		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
 
@@ -79,14 +78,13 @@ class PageController extends Controller {
 		if ($generalManagerGroup->inGroup($currentUser)) {
 			$count = $this->spaceManager->countWorkspaces();
 		} else {
-			$gids = $this->groupManager->getUserGroupIds($this->session->getUser());
-			$groups = $this->connectedGroups->getSpacesByGroups($gids);
-			$spaceIds = count($groups) > 0 ? array_map(fn ($gid) => (int)explode('-', $gid)[2], $groups) : null;
-
-			$count = $this->spaceManager->countWorkspaces(ids: $spaceIds, uid: $currentUser->getUID());
+			$groups = $this->groupManager->getUserGroups($this->session->getUser());
+			$userGroups = array_filter($groups, fn ($group) => str_starts_with($group->getGID(), 'SPACE-U'));
+			$count = count($userGroups);
 		}
 
 		$this->initialState->provideInitialState('countWorkspaces', $count);
+		$this->initialState->provideInitialState('canAccessApp', $count > 0);
 
 		// templates/index.php
 		return new TemplateResponse(
