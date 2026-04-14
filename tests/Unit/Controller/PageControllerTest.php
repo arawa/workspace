@@ -26,10 +26,10 @@
 namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\PageController;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IGroup;
@@ -48,7 +48,7 @@ class PageControllerTest extends TestCase {
 	private MockObject&SpaceManager $spaceManager;
 	private MockObject&IGroupManager $groupManager;
 	private MockObject&IUserSession $session;
-	private MockObject&ConnectedGroupsService $connectedGroupService;
+	private MockObject&IAppConfig $appConfig;
 
 	public function setUp(): void {
 		$this->userService = $this->createMock(UserService::class);
@@ -57,7 +57,7 @@ class PageControllerTest extends TestCase {
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->connectedGroupService = $this->createMock(ConnectedGroupsService::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		$this->controller = new PageController(
 			$this->userService,
@@ -66,7 +66,7 @@ class PageControllerTest extends TestCase {
 			$this->session,
 			$this->spaceManager,
 			$this->groupManager,
-			$this->connectedGroupService,
+			$this->appConfig,
 		);
 	}
 

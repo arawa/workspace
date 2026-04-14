@@ -27,12 +27,12 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Exceptions\NotFoundException;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IGroupManager;
@@ -47,7 +47,7 @@ class PageController extends Controller {
 		private IUserSession $session,
 		private SpaceManager $spaceManager,
 		private IGroupManager $groupManager,
-		private ConnectedGroupsService $connectedGroups,
+		private IAppConfig $appConfig,
 	) {
 	}
 
@@ -71,6 +71,7 @@ class PageController extends Controller {
 		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
 		$this->initialState->provideInitialState('isSpaceManager', $this->userService->isSpaceManager());
 		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
+		$this->initialState->provideInitialState('addedGroupDisabled', $this->appConfig->getAppValueBool('added_group_disabled', false));
 
 		$currentUser = $this->session->getUser();
 		$generalManagerGroup = $this->groupManager->get(ManagersWorkspace::GENERAL_MANAGER);

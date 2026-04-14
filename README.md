@@ -55,6 +55,22 @@ In `Settings` > `Group folders` > `Group folder admin delegation` section, add t
 
 Add the users in charge of creating Workspaces to the GeneralManager group.
 
+## Settings
+
+### Disable added groups feature
+
+Starting with version [4.0.0](https://github.com/arawa/workspace/releases/tag/v4.0.0), you can add an existing group to your workspace.
+
+To disable this feature, run the following occ command:
+
+```shell
+occ config:app:set workspace added_group_disabled --value true
+```
+
+> [!IMPORTANT]
+> If you have already added groups, they will remain present and you can remove them at any time.
+> However, you will not be able to add new groups while the feature is disabled.
+
 
 ## Contributing
 
