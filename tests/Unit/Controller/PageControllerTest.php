@@ -26,12 +26,11 @@
 namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\PageController;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Services\IInitialState;
 use OCP\AppFramework\Services\IAppConfig;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
