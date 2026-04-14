@@ -31,7 +31,6 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IAppConfig;
-use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\Util;
