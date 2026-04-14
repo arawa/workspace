@@ -43,6 +43,7 @@ export default {
 		const userSession = loadState('workspace', 'userSession')
 		const count = loadState('workspace', 'countWorkspaces')
 		const isSpaceManager = loadState('workspace', 'isSpaceManager')
+		const addedGroupDisabled = loadState('workspace', 'addedGroupDisabled')
 		const canAccessApp = count > 0
 
 		this.$root.$data.isUserGeneralAdmin = isUserGeneralAdmin
@@ -50,6 +51,7 @@ export default {
 		this.$root.$data.aclInheritPerUser = aclInheritPerUser
 		this.$root.$data.userSession = userSession
 		this.$root.$data.isSpaceManager = isSpaceManager
+		this.$root.$data.addedGroupDisabled = addedGroupDisabled
 
 		this.$store.dispatch('setCountTotalWorkspaces', { count })
 		this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
