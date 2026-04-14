@@ -27,9 +27,6 @@ OC.L10N.register(
     "Upload new files" : "Pakia mafaili mapya",
     "File to share" : "Faili la kushirikisha",
     "Choose from Files" : "Choose from Files",
-    "Error 403" : "Hitilafu 403",
-    "You aren't allowed to access into this application !" : "Huruhusiwi kufikia katika programu hii !",
-    "return to home" : "kurudi nyumbani",
     "Rename group" : "Kipe kikundi jina jipya",
     "Group name" : "Jina la kundi",
     "Delete group" : "Futa kikundi",
@@ -54,7 +51,10 @@ OC.L10N.register(
     "Appearance" : "Mwonekano",
     "Save" : "Hifadhi",
     "Loading..." : "Inapakia...",
+    "return to home" : "kurudi nyumbani",
     "or" : "au",
+    "Error 403" : "Hitilafu 403",
+    "You aren't allowed to access into this application !" : "Huruhusiwi kufikia katika programu hii !",
     "Delete user" : "Futa mtumiaji"
 },
 "nplurals=2; plural=(n != 1);");
