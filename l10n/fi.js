@@ -21,7 +21,6 @@ OC.L10N.register(
     "Upload new files" : "Lähetä uusia tiedostoja",
     "File to share" : "Jaettava tiedosto",
     "Choose from Files" : "Valitse tiedostoista",
-    "Error 403" : "Virhe 403",
     "Rename group" : "Nimeä ryhmä uudelleen",
     "Group name" : "Ryhmän nimi",
     "Delete group" : "Poista ryhmä",
@@ -59,6 +58,7 @@ OC.L10N.register(
     "Loading..." : "Ladataan...",
     "Can't load workspace users" : "Työtilan käyttäjiä ei voi ladata",
     "or" : "tai",
+    "Error 403" : "Virhe 403",
     "Rename space" : "Nimeä tila uudelleen",
     "Space name" : "Tilan nimi",
     "Delete user" : "Poista käyttäjä"
