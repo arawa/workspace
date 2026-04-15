@@ -160,7 +160,7 @@ class UserService {
 			fn ($group) => WorkspaceManagerGroup::isWorkspaceAdminGroupId($group->getGID())
 		);
 
-		$canRemove = count($allManagersGroups) >= 0 && count($allManagersGroups) <= 1 ? true : false;
+		$canRemove = count($allManagersGroups) === 0 ? true : false;
 
 		if (!$canRemove) {
 			$this->logger->debug('User is still manager of other workspaces, will not be removed from ' . ManagersWorkspace::WORKSPACES_MANAGERS . ' group.');
