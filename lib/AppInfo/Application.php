@@ -38,13 +38,13 @@ use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -99,18 +99,16 @@ class Application extends App implements IBootstrap {
 
 		$context->registerCapability(Capabilities::class);
 
-		$context->registerService(GroupBackend::class, function ($c) {
-			return new GroupBackend(
-				$c->query(IGroupManager::class),
-				$c->query(UserService::class),
-				$c->query(SpaceMapper::class),
-				$c->query(SpaceService::class),
-				$c->query(ConnectedGroupsService::class)
-			);
-			return $groupBackend;
-		});
+		$container = $this->getContainer();
 
-		\OC::$server->get(IGroupManager::class)->addBackend(\OC::$server->get(GroupBackend::class));
+		$appConfig = $container->get(IAppConfig::class);
+		$addedGroupDisabled = $appConfig->getAppValueBool('added_group_disabled', false);
+
+		if (!$addedGroupDisabled) {
+			$groupManager = $container->get(IGroupManager::class);
+			$groupBackend = $container->get(GroupBackend::class);
+			$groupManager->addBackend($groupBackend);
+		}
 	}
 
 	public function boot(IBootContext $context): void {
