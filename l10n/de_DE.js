@@ -95,6 +95,8 @@ OC.L10N.register(
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Bitte beachten, dass das gewählte Kontingent geringer ist als der aktuell von Ihrem Arbeitsbereich genutzte Platz. Sie können keine Dateien mehr hinzufügen oder ändern.",
     "Save" : "Speichern",
     "Loading..." : "Lade …",
+    "No workspace found" : "Kein Arbeitsbereich gefunden",
+    "You aren't in any workspaces. Please contact a General Manager." : "Sie sind nicht Teil eines Arbeitsbereichs. Bitte wenden Sie sich an einen Allgemeinen Manager.",
     "return to home" : "Zurück zum Start",
     "{number} workspaces..." : "{number} Arbeitsbereiche …",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Dieser Arbeitsbereich oder Gruppenordner existiert bereits.\nBitte beachten, dass bei Arbeitsbereichsnamen zwischen Groß- und Kleinschreibung nicht unterschieden wird.\nBeispiel: Wenn bereits ein Arbeitsbereich mit dem Namen “Personalwesen” vorhanden ist, kann kein Arbeitsbereich mit dem Namen “Personalwesen” erstellt werden.\nBitte auch überprüfen, dass ein Gruppenordner mit dem Namen, der gerade eingegeben wurde, noch nicht existiert.",
