@@ -95,6 +95,8 @@ OC.L10N.register(
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "請注意，您選取的容量限額少於您的工作空間目前已使用的空間。您將無法再新增或修改檔案。",
     "Save" : "儲存",
     "Loading..." : "正在載入……",
+    "No workspace found" : "找不到工作空間",
+    "You aren't in any workspaces. Please contact a General Manager." : "您不在任何工作空間中。請聯絡總管理員。",
     "return to home" : "回到首頁",
     "{number} workspaces..." : "{number} 個工作空間……",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "此工作空間或群組資料夾已存在。\n請注意，工作空間名稱不分大小寫。\n例如：若已存在名為「human resources」的工作空間，則無法建立名為「Human Resources」的工作空間。\n同時請確認您剛輸入的名稱是否已存在於群組資料夾中。",
