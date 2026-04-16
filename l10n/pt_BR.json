@@ -93,6 +93,8 @@
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Observe que a cota selecionada é menor do que o espaço atualmente utilizado pelo seu espaço de trabalho. Você não poderá mais adicionar ou modificar arquivos.",
     "Save" : "Salvar",
     "Loading..." : "Carregando…",
+    "No workspace found" : "Nenhum espaço de trabalho encontrado",
+    "You aren't in any workspaces. Please contact a General Manager." : "Você não está em nenhum espaço de trabalho. Entre em contato com um gerente geral.",
     "return to home" : "voltar para a página inicial",
     "{number} workspaces..." : "{number} espaços de trabalho…",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Este espaço de trabalho ou pasta de grupo já existe.\nObserve que os nomes dos espaços de trabalho não diferenciam maiúsculas de minúsculas.\nPor exemplo: se já existir um espaço de trabalho chamado “recursos humanos”, você não poderá criar um espaço de trabalho chamado “Recursos Humanos”.\nVerifique também se já não existe uma pasta de grupo com o nome que você acabou de inserir.",
