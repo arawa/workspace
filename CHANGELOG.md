@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## 4.4.0 - 2026-04-16
+
+### Added
+
+- Backport: Disable added groups via occ command by @zak39 in [#1647](https://github.com/arawa/workspace/pull/1647)
+
+### Changed
+
+- v4.4.0 by @zak39 in [#1652](https://github.com/arawa/workspace/pull/1652)
+
+### Fixed
+
+- Backport: Remove user from WorkspaceManagers group when not a workspace manager by @zak39 in [#1650](https://github.com/arawa/workspace/pull/1650)
+
 ## 4.3.1 - 2026-03-23
 
 ### Added
@@ -631,7 +646,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.3.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.4.0...main
+[4.4.0]: https://github.com/arawa/workspace/compare/v4.3.1...4.4.0
 [4.3.1]: https://github.com/arawa/workspace/compare/v4.3.0...4.3.1
 [4.3.0]: https://github.com/arawa/workspace/compare/v4.2.0...4.3.0
 [4.2.0]: https://github.com/arawa/workspace/compare/v4.1.0...4.2.0
