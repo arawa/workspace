@@ -93,6 +93,8 @@
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Tabhair faoi deara le do thoil go bhfuil an cuóta atá roghnaithe agat níos lú ná an spás atá in úsáid ag do spás oibre faoi láthair. Ní bheidh tú in ann comhaid a chur leis ná a mhodhnú a thuilleadh.",
     "Save" : "Sábháil",
     "Loading..." : "Á lódáil...",
+    "No workspace found" : "Níor aimsíodh aon spás oibre",
+    "You aren't in any workspaces. Please contact a General Manager." : "Níl tú in aon spásanna oibre. Téigh i dteagmháil le Bainisteoir Ginearálta, le do thoil.",
     "return to home" : "filleadh ar an mbaile",
     "{number} workspaces..." : "{number} spásanna oibre...",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Tá an spás oibre nó an fillteán grúpa seo ann cheana féin.\nTabhair faoi deara nach bhfuil ainmneacha spásanna oibre íogair ó thaobh cás de.\nMar shampla: má tá spás oibre darb ainm “acmhainní daonna” ann cheana féin, ní bheidh tú in ann spás oibre darb ainm “Acmhainní Daonna” a chruthú.\nSeiceáil freisin nach bhfuil fillteán grúpa leis an ainm atá díreach curtha isteach agat ann cheana féin.",
