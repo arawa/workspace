@@ -82,7 +82,7 @@ class SpaceManager {
 	) {
 	}
 
-	public function create(string $spacename): array {
+	public function create(string $spacename, ?string $colorCode = null, int $quota = -3): array {
 		if ($spacename === false
 			|| $spacename === null
 			|| $spacename === ''
@@ -102,10 +102,18 @@ class SpaceManager {
 
 		$folderId = $this->folderHelper->createFolder($spacename);
 
+		if ($quota !== -3) {
+			$this->folderHelper->setFolderQuota($folderId, $quota);
+		}
+
+		if ($colorCode === null) {
+			$colorCode = $this->colorCode->generate();
+		}
+
 		$space = new Space();
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
-		$space->setColorCode($this->colorCode->generate());
+		$space->setColorCode($colorCode);
 		$this->spaceMapper->insert($space);
 
 
@@ -154,7 +162,7 @@ class SpaceManager {
 				$newSpaceUsersGroup
 			]),
 			'added_groups' => (object)[],
-			'quota' => $groupfolder['quota'],
+			'quota' => $quota,
 			'size' => $groupfolder['size'],
 			'acl' => $groupfolder['acl'],
 			'manage' => $groupfolder['manage'],

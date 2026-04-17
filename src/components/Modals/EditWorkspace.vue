@@ -6,7 +6,7 @@
 		class="modal"
 		@close="close">
 		<div class="modal__container">
-			<h1>{{ t('workspace', 'Edit the workspace') }}</h1>
+			<h1>{{ title }}</h1>
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
 			<div class="content-appearance">
 				<NcColorPicker ref="colorPicker"
@@ -18,7 +18,7 @@
 				</NcColorPicker>
 				<NcTextField v-model="spacename"
 					class="input-spacename"
-					:placeholder="t('workspace', 'Rename your workspace')"
+					:placeholder="placeHolderWorkspace"
 					type="text"
 					@update:value="updateSpacename" />
 			</div>
@@ -38,22 +38,24 @@
 					:clearable="false"
 					:options="['1 GB', '5 GB', '10 GB', t('workspace','unlimited')]"
 					@option:selected="updateQuota" />
-				<p class="max-contrast"
-					v-html="getQuotaMessage" />
-				<NcProgressBar v-if="quota !== -3"
-					class="progress-bar"
-					size="medium"
-					:value="calculPercentSize"
-					:error="isError" />
-				<NcNoteCard v-if="isError"
-					type="warning">
-					<p>{{ t('workspace', 'Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files.') }}</p>
-				</NcNoteCard>
+				<div v-if="progressBar">
+					<p class="max-contrast"
+						v-html="getQuotaMessage" />
+					<NcProgressBar v-if="quota !== -3"
+						class="progress-bar"
+						size="medium"
+						:value="calculPercentSize"
+						:error="isError" />
+					<NcNoteCard v-if="isError"
+						type="warning">
+						<p>{{ t('workspace', 'Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files.') }}</p>
+					</NcNoteCard>
+				</div>
 			</div>
 			<NcButton aria-label="Save"
 				class="btn-save"
-				@click="save">
-				{{ t('workspace', 'Save') }}
+				@click="handleClick">
+				{{ buttonName }}
 				<template #icon>
 					<Check />
 				</template>
@@ -63,8 +65,6 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
 import Check from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
@@ -73,9 +73,9 @@ import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcProgressBar from '@nextcloud/vue/components/NcProgressBar'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
-import { renameSpace } from '../../services/spaceService.js'
 import showNotificationError from '../../services/Notifications/NotificationError.js'
 import { t } from '@nextcloud/l10n'
+import { generateColor } from '../../services/colorService.js'
 
 export default {
 	name: 'EditWorkspace',
@@ -92,7 +92,35 @@ export default {
 	props: {
 		space: {
 			type: Object,
+			required: false,
+			default() {
+				return {
+					color: generateColor(),
+					name: '',
+					quota: -3,
+					size: 0,
+				}
+			},
+		},
+		title: {
+			type: String,
+			required: false,
+			default: '',
+		},
+		placeHolderWorkspace: {
+			type: String,
+			required: false,
+			default: 'Workspace name',
+		},
+		buttonName: {
+			type: String,
 			required: true,
+			default: t('workspace', 'Save'),
+		},
+		progressBar: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
 	},
 	data() {
@@ -149,121 +177,6 @@ export default {
 		close() {
 			this.$emit('close')
 		},
-		async save() {
-			const oldSpace = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-			const oldSpaceName = oldSpace.name
-			const space = { ...oldSpace }
-
-			if (this.color !== space.color) {
-				axios.post(generateUrl(`/apps/workspace/workspaces/${oldSpace.id}/color`),
-					{
-						colorCode: this.color,
-					})
-					.then(resp => {
-						this.$store.dispatch('updateColor', {
-							name: oldSpaceName,
-							colorCode: this.color,
-						})
-					})
-					.catch(err => {
-						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>Error: {error}', { error: err })
-						showNotificationError(t('workspace', 'Network error'), text, 3000)
-					})
-			}
-
-			if ((oldSpaceName !== this.spacename) && (this.spacename !== '')) {
-				let responseRename = await renameSpace(oldSpace.id, this.spacename)
-				responseRename = responseRename.data
-
-				if (responseRename.statuscode === 204) {
-					const spaceBeforeRenamed = { ...oldSpace }
-					spaceBeforeRenamed.name = responseRename.space
-					space.name = responseRename.space
-
-					this.$store.dispatch('updateSpace', {
-						space: spaceBeforeRenamed,
-					})
-					this.$store.dispatch('removeSpace', {
-						space: oldSpace,
-					})
-
-					const groupKeys = Object.keys(spaceBeforeRenamed.groups)
-					groupKeys.forEach(key => {
-						const group = spaceBeforeRenamed.groups[key]
-						if (!this.checkSpaceNameIsEqual(group.displayName, oldSpaceName)) {
-							group.displayName = this.replaceSpaceName(group.displayName, oldSpaceName)
-						}
-						const newDisplayName = group.displayName.replace(oldSpaceName, this.spacename)
-						// Renames group
-						this.$store.dispatch('renameGroup', {
-							name: this.spacename,
-							gid: group.gid,
-							newGroupName: newDisplayName,
-						})
-					})
-				}
-			}
-
-			if (space.quota !== this.quota) {
-				this.$store.dispatch('setSpaceQuota', {
-					name: space.name,
-					quota: this.quota,
-				})
-			}
-
-			this.$emit('close')
-
-		},
-		/**
-		 * @param {string} groupname the displayname from a group
-		 * @param {string} oldSpaceName the currently space name
-		 * To fix a bug from release 3.0.2
-		 */
-		checkSpaceNameIsEqual(groupname, oldSpaceName) {
-			let spaceNameFiltered = ''
-
-			if (groupname.startsWith('U-')) {
-				spaceNameFiltered = groupname.replace('U-', '')
-			}
-
-			if (groupname.startsWith('WM-')) {
-				spaceNameFiltered = groupname.replace('WM-', '')
-			} else if (groupname.startsWith('GE-')) {
-				spaceNameFiltered = groupname.replace('GE-', '')
-			}
-
-			if (groupname.startsWith('G-')) {
-				spaceNameFiltered = groupname.replace('G-', '')
-			}
-
-			if (spaceNameFiltered === oldSpaceName) {
-				return true
-			}
-
-			return false
-		},
-		/**
-		 * @param {string} groupname the displayname from a group
-		 * @param {string} oldSpaceName the currently space name
-		 * To fix a bug from release 3.0.2
-		 */
-		replaceSpaceName(groupname, oldSpaceName) {
-			const spaceNameSplitted = groupname
-				.split('-')
-				.filter(element => element)
-
-			if (spaceNameSplitted[0] === 'WM'
-					|| spaceNameSplitted[0] === 'U') {
-				spaceNameSplitted[1] = oldSpaceName
-			}
-
-			if (spaceNameSplitted[0] === 'G') {
-				const lengthMax = spaceNameSplitted.length - 1
-				spaceNameSplitted[lengthMax] = oldSpaceName
-			}
-
-			return spaceNameSplitted.join('-')
-		},
 		updateColor(e) {
 			this.color = e
 		},
@@ -287,6 +200,13 @@ export default {
 		},
 		updateSpacename(spacename) {
 			this.spacename = spacename
+		},
+		handleClick() {
+			this.$emit('click-action', {
+				name: this.spacename,
+				quota: this.quota,
+				colorCode: this.color,
+			})
 		},
 	},
 }
