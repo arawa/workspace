@@ -75,7 +75,7 @@
 				</div>
 			</template>
 		</NcAppNavigation>
-		<EditWorkspace v-if="showEditWorkspaceModal"
+		<FormWorkspace v-if="showFormWorkspaceModal"
 			:title="t('workspace', 'New workspace')"
 			:place-holder-workspace="t('workspace', 'Workspace name')"
 			:button-name="t('workspace', 'Create')"
@@ -104,7 +104,7 @@ import { LIMIT_WORKSPACES_PER_PAGE } from './constants.js'
 import { t } from '@nextcloud/l10n'
 import Plus from 'vue-material-design-icons/Plus.vue'
 import NcAppNavigationSpacer from '@nextcloud/vue/components/NcAppNavigationSpacer'
-import EditWorkspace from './components/Modals/EditWorkspace.vue'
+import FormWorkspace from './components/Modals/FormWorkspace.vue'
 
 export default {
 	name: 'LeftSidebar',
@@ -119,13 +119,13 @@ export default {
 		PageLoader,
 		NcAppNavigationSearch,
 		Plus,
-		EditWorkspace,
+		FormWorkspace,
 	},
 	mixins: [WorkspacesLoader],
 	data() {
 		return {
 			workspacesSearchQuery: this.$store.getters.searchWorkspace || '',
-			showEditWorkspaceModal: false,
+			showFormWorkspaceModal: false,
 		}
 	},
 	computed: {
@@ -212,14 +212,14 @@ export default {
 			})
 			this.closeModal()
 		},
-		toggleShowEditWorkspaceModal() {
-			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
+		toggleshowFormWorkspaceModal() {
+			this.showFormWorkspaceModal = !this.showFormWorkspaceModal
 		},
 		openModal() {
-			this.showEditWorkspaceModal = true
+			this.showFormWorkspaceModal = true
 		},
 		closeModal() {
-			this.showEditWorkspaceModal = false
+			this.showFormWorkspaceModal = false
 		},
 	},
 }

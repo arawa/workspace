@@ -87,7 +87,7 @@
 				<NcActions>
 					<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
 						icon="icon-rename"
-						@click="openEditWorkspaceModal">
+						@click="openFormWorkspaceModal">
 						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
@@ -128,19 +128,19 @@
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
-		<EditWorkspace v-if="showEditWorkspaceModal"
+		<FormWorkspace v-if="showFormWorkspaceModal"
 			:space="$store.getters.getSpaceByNameOrId($route.params.space)"
 			:title="t('workspace', 'Edit the workspace')"
 			:place-holder-workspace="t('workspace', 'Rename your workspace')"
 			:button-name="t('workspace', 'Save')"
 			:progress-bar="true"
 			@click-action="save"
-			@close="closeEditWorkspaceModal" />
+			@close="closeFormWorkspaceModal" />
 	</div>
 </template>
 
 <script>
-import EditWorkspace from './components/Modals/EditWorkspace.vue'
+import FormWorkspace from './components/Modals/FormWorkspace.vue'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
@@ -166,7 +166,7 @@ export default {
 	name: 'SpaceDetails',
 	components: {
 		AddUsersTabs,
-		EditWorkspace,
+		FormWorkspace,
 		NcActions,
 		NcCounterBubble,
 		NcEmptyContent,
@@ -191,7 +191,7 @@ export default {
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
 			showSelectConnectedGroups: false,
-			showEditWorkspaceModal: false,
+			showFormWorkspaceModal: false,
 			isESR: false,
 			space: undefined,
 			mdiAccountMultiple,
@@ -294,11 +294,11 @@ export default {
 		toggleShowConnectedGroups() {
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
 		},
-		openEditWorkspaceModal() {
-			this.showEditWorkspaceModal = true
+		openFormWorkspaceModal() {
+			this.showFormWorkspaceModal = true
 		},
-		closeEditWorkspaceModal() {
-			this.showEditWorkspaceModal = false
+		closeFormWorkspaceModal() {
+			this.showFormWorkspaceModal = false
 		},
 		async save(payload) {
 			const oldSpace = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
@@ -362,7 +362,7 @@ export default {
 				})
 			}
 
-			this.closeEditWorkspaceModal()
+			this.closeFormWorkspaceModal()
 
 		},
 		/**

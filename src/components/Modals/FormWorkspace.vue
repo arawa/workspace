@@ -78,7 +78,7 @@ import { t } from '@nextcloud/l10n'
 import { generateColor } from '../../services/colorService.js'
 
 export default {
-	name: 'EditWorkspace',
+	name: 'FormWorkspace',
 	components: {
 		Check,
 		NcButton,
