@@ -29,14 +29,17 @@ import showNotificationError, { showCreatingWorkspaceNotification } from './Noti
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
 
 /**
-	* @param {string} spaceName it's a name for the space to create
+	* @param {object} space a space object with required properties (quota, space name and quota)
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}
 	*/
-export function createSpace(spaceName, vueInstance = undefined) {
+export function createSpace(space, vueInstance = undefined) {
+	console.debug('createSpace - space', space)
 	const result = axios.post(generateUrl('/apps/workspace/spaces'),
 		{
-			spaceName,
+			spaceName: space.name,
+			colorCode: space.colorCode,
+			quota: space.quota,
 		})
 		.then(resp => {
 			if (typeof (resp.data) !== 'object') {

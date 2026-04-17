@@ -20,55 +20,68 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-	<NcAppNavigation
-		aria-label="workspace navigation">
-		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || $root.$data.isSpaceManager"
-				class="input-new-item"
-				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
-				icon="icon-add"
-				:name="t('workspace', 'New workspace')"
-				@new-item="createSpace" />
-			<li class="ws-navigation-spacer" />
-			<NcAppNavigationItem
-				:name="t('workspace', 'All workspaces')"
-				:to="{ name: 'space.table' }">
-				<template #counter>
-					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
-				</template>
-			</NcAppNavigationItem>
-		</ul>
-		<NcAppNavigationSearch v-model="workspacesSearchQuery"
-			:label="t('workspace', 'Search workspaces...')" />
-		<template #list>
-			<SpaceMenuItem
-				v-for="(space, spaceName) in $store.state.spaces"
-				:key="space.id"
-				:space="space"
-				:space-name="spaceName" />
-			<!-- <div id="app-settings">
-					<div id="app-settings-header">
-						<button v-if="$root.$data.isUserGeneralAdmin"
-							icon="icon-settings-dark"
-							class="settings-button"
-							data-apps-slide-toggle="#app-settings-content">
-							{{ t('workspace', 'Settings') }}
-						</button>
-					</div>
-					<div id="app-settings-content">
-						<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
-							:close-after-click="true"
-							:title="t('workspace', 'Convert Team folders')"
-							@click="toggleShowSelectGroupfoldersModal" />
-					</div>
-				</div> -->
-			<div v-if="Object.keys($store.state.spaces).length">
-				<PageLoader v-if="nextPage"
-					v-element-visibility="next"
-					:message="messageLoader" />
-			</div>
-		</template>
-	</NcAppNavigation>
+	<div>
+		<NcAppNavigation
+			aria-label="workspace navigation">
+			<ul class="ws-navigation-header">
+				<li class="ws-navigation-spacer" />
+				<NcButton v-if="$root.$data.isUserGeneralAdmin || $root.$data.isSpaceManager"
+					:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
+					:aria-label="t('workspace', 'New workspace')"
+					:text="t('workspace', 'New workspace')"
+					:wide="true"
+					@click="openModal">
+					<template #icon>
+						<Plus />
+					</template>
+				</NcButton>
+				<NcAppNavigationSpacer />
+				<NcAppNavigationItem
+					:name="t('workspace', 'All workspaces')"
+					:to="{ name: 'space.table' }">
+					<template #counter>
+						<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
+					</template>
+				</NcAppNavigationItem>
+			</ul>
+			<NcAppNavigationSearch v-model="workspacesSearchQuery"
+				:label="t('workspace', 'Search workspaces...')" />
+			<template #list>
+				<SpaceMenuItem
+					v-for="(space, spaceName) in $store.state.spaces"
+					:key="space.id"
+					:space="space"
+					:space-name="spaceName" />
+				<!-- <div id="app-settings">
+						<div id="app-settings-header">
+							<button v-if="$root.$data.isUserGeneralAdmin"
+								icon="icon-settings-dark"
+								class="settings-button"
+								data-apps-slide-toggle="#app-settings-content">
+								{{ t('workspace', 'Settings') }}
+							</button>
+						</div>
+						<div id="app-settings-content">
+							<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
+								:close-after-click="true"
+								:title="t('workspace', 'Convert Team folders')"
+								@click="toggleShowSelectGroupfoldersModal" />
+						</div>
+					</div> -->
+				<div v-if="Object.keys($store.state.spaces).length">
+					<PageLoader v-if="nextPage"
+						v-element-visibility="next"
+						:message="messageLoader" />
+				</div>
+			</template>
+		</NcAppNavigation>
+		<FormWorkspace v-if="showFormWorkspaceModal"
+			:title="t('workspace', 'New workspace')"
+			:place-holder-workspace="t('workspace', 'Workspace name')"
+			:button-name="t('workspace', 'Create')"
+			@click-action="createSpace"
+			@close="closeModal" />
+	</div>
 </template>
 
 <script>
@@ -76,7 +89,7 @@ import { createSpace } from './services/spaceService.js'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
-import NcAppNavigationNewItem from '@nextcloud/vue/components/NcAppNavigationNewItem'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import SpaceMenuItem from './SpaceMenuItem.vue'
@@ -88,22 +101,29 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { LIMIT_WORKSPACES_PER_PAGE } from './constants.js'
 import { t } from '@nextcloud/l10n'
+import Plus from 'vue-material-design-icons/Plus.vue'
+import NcAppNavigationSpacer from '@nextcloud/vue/components/NcAppNavigationSpacer'
+import FormWorkspace from './components/Modals/FormWorkspace.vue'
 
 export default {
 	name: 'LeftSidebar',
 	components: {
 		NcAppNavigation,
-		NcAppNavigationNewItem,
 		NcAppNavigationItem,
+		NcAppNavigationSpacer,
+		NcButton,
 		NcCounterBubble,
 		SpaceMenuItem,
 		PageLoader,
 		NcAppNavigationSearch,
+		Plus,
+		FormWorkspace,
 	},
 	mixins: [WorkspacesLoader],
 	data() {
 		return {
 			workspacesSearchQuery: this.$store.getters.searchWorkspace || '',
+			showFormWorkspaceModal: false,
 		}
 	},
 	computed: {
@@ -153,13 +173,17 @@ export default {
 				})
 		},
 		// Creates a new space and navigates to its details page
-		async createSpace(name) {
-			if (name === '') {
+		async createSpace(payload) {
+			if (payload.name === '') {
 				showNotificationError(t('workspace', 'Error'), t('workspace', 'Please specify a name.'), 3000)
 				return
 			}
 
-			const workspace = await createSpace(name, this)
+			const workspace = await createSpace({
+				name: payload.name,
+				quota: payload.quota,
+				colorCode: payload.colorCode,
+			}, this)
 
 			this.$store.commit('addSpace', {
 				color: workspace.color,
@@ -168,7 +192,7 @@ export default {
 				isOpen: false,
 				id: workspace.id_space,
 				groupfolderId: workspace.folder_id,
-				name,
+				name: payload.name,
 				quota: workspace.quota,
 				users: {},
 				size: 0,
@@ -184,38 +208,34 @@ export default {
 					space: workspace.id_space,
 				},
 			})
+			this.closeModal()
+		},
+		toggleshowFormWorkspaceModal() {
+			this.showFormWorkspaceModal = !this.showFormWorkspaceModal
+		},
+		openModal() {
+			this.showFormWorkspaceModal = true
+		},
+		closeModal() {
+			this.showFormWorkspaceModal = false
 		},
 	},
 }
 </script>
 
 <style scoped>
-.input-new-item :deep(.app-navigation-entry-button) {
-	align-items: center;
-}
-
-.input-new-item :deep(.button-vue--icon-only) {
-	height: 20px;
-}
-
-.input-new-item :deep(.app-navigation-input-confirm form) {
-	align-items: center;
-}
-
-.input-new-item :deep(.app-navigation-entry-button .app-navigation-entry-icon) {
-	margin-right: 4px;
-}
-
-.btn-light :deep(.app-navigation-entry-button) {
+.btn-light {
 	background-color: var(--color-main-background);
 }
 
-.btn-dark :deep(.app-navigation-entry-button) {
+.btn-dark {
 	background-color: var(--color-background-dark);
 }
 
-.btn-light :deep(.app-navigation-entry-button):hover,
-.btn-dark :deep(.app-navigation-entry-button):hover {
+.btn-light :hover,
+.btn-light :deep(span):hover
+.btn-dark :hover,
+.btn-dark :deep(span):hover {
 	background-color: var(--color-background-hover);
 }
 
