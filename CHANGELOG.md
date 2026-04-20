@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - v4.4.0 by @zak39 in [#1652](https://github.com/arawa/workspace/pull/1652)
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Backport: Remove user from WorkspaceManagers group when not a workspace manager by @zak39 in [#1650](https://github.com/arawa/workspace/pull/1650)
