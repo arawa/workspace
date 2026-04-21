@@ -92,6 +92,7 @@
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Uvědomte si, že kvóta, kterou jste vybrali, je nižší než prostor, který je pracovním prostorem v tuto chvíli využíván. Nebude už nadále možné přidávat nebo měnit soubory.",
     "Save" : "Uložit",
     "Loading..." : "Načítání …",
+    "No workspace found" : "Nenalezen žádný pracovní prostor",
     "return to home" : "vrátit na úvodní stránku",
     "{number} workspaces..." : "{number} pracovních prostorů…",
     "Group error" : "Chyba skupiny",
