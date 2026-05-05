@@ -9,6 +9,7 @@ OC.L10N.register(
     "Confirm" : "Patvirtinti",
     "Upload new files" : "Išsiųsti naujus failus",
     "File to share" : "Failas, kurį bendrinti",
+    "Choose from Files" : "Pasirinkti iš Failų",
     "Rename group" : "Pervadinti grupę",
     "Group name" : "Grupės pavadinimas",
     "Delete group" : "Ištrinti grupę",
