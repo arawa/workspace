@@ -39,6 +39,7 @@ use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
+use OCA\Workspace\User\Backend\UserBackend;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -47,6 +48,7 @@ use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
+use OCP\IUserManager;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
@@ -98,6 +100,10 @@ class Application extends App implements IBootstrap {
 			$groupBackend = $container->get(GroupBackend::class);
 			$groupManager->addBackend($groupBackend);
 		}
+
+		$userManager = $container->get(IUserManager::class);
+		$userBackend = $container->get(UserBackend::class);
+		$userManager->registerBackend($userBackend);
 	}
 
 	public function boot(IBootContext $context): void {
