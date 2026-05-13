@@ -24,6 +24,7 @@
 namespace OCA\Workspace\Group;
 
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\User\Backend\UserBackend;
 use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\ICountUsersBackend;
 use OCP\Group\Backend\INamedBackend;
@@ -82,6 +83,17 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		} else {
 			$groupIds = [];
 		}
+
+		if (empty($groupIds)) {
+			if (str_starts_with($uid, 'SPACE-UWS-')) {
+				// die;
+				preg_match('/[0-9].*/', $uid, $matches);
+				$id = $matches[0];
+				return [ "SPACE-U-{$id}", "SPACE-GE-{$id}"];
+			}
+		}
+
+
 		$this->avoidRecurse_groups = $avoid;
 		if (empty($groupIds)) {
 			return [];
@@ -91,6 +103,19 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			$connectedGids = $this->connectedGroups->getConnectedSpaceToGroupIds($gid);
 			if ($connectedGids !== null && $user->isEnabled()) {
 				$userGroups = array_merge($userGroups, $connectedGids);
+			}
+		}
+
+		if (str_starts_with($uid, 'SPACE-UWS-')) {
+			$userManagerWorkspaces = array_filter($groupIds, fn ($gid) => str_starts_with($gid, 'SPACE-GE-'));
+			$userWorkspaces = array_filter($groupIds, fn ($gid) => str_starts_with($gid, 'SPACE-U-'));
+
+			foreach ($userManagerWorkspaces as $gid) {
+            	$userGroups[] = $gid;
+			}
+
+			foreach ($userWorkspaces as $gid) {
+            	$userGroups[] = $gid;
 			}
 		}
 
@@ -152,6 +177,16 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 		$this->avoidRecurse_users = $avoid;
+
+		if (
+			str_starts_with($gid, 'SPACE-U-')
+			|| str_starts_with($gid, 'SPACE-GE-')
+		) {
+			preg_match('/[0-9].*/', $gid, $matches);
+			$id = $matches[0];
+			$users[] = "SPACE-UWS-{$id}";
+		}
+
 		return $users;
 	}
 
