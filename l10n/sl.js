@@ -12,6 +12,7 @@ OC.L10N.register(
     "Choose from Files" : "Izbor iz oblaka",
     "Rename group" : "Preimenuj skupino",
     "Group name" : "Ime skupine",
+    "Delete group" : "Izbriši skupino",
     "Error" : "Napaka",
     "Settings" : "Nastavitve",
     "Network error" : "Omrežna napaka",
