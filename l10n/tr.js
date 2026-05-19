@@ -95,6 +95,8 @@ OC.L10N.register(
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Seçtiğiniz kotanın şu anda çalışma alanınız tarafından kullanılan alandan daha az olduğunu lütfen unutmayın. Artık dosya ekleyemeyecek veya değiştiremeyeceksiniz.",
     "Save" : "Kaydet",
     "Loading..." : "Yükleniyor...",
+    "No workspace found" : "Herhangi bir çalışma alanı bulunamadı",
+    "You aren't in any workspaces. Please contact a General Manager." : "Herhangi bir çalışma alanında değilsiniz. Lütfen bir genel müdür ile görüşün.",
     "return to home" : "girişe dön",
     "{number} workspaces..." : "{number} çalışma alanı...",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Bu çalışma alanı veya grup klasörü zaten var.\nÇalışma alanı adlarının büyük/küçük harfe duyarlı olmadığını lütfen unutmayın.\nÖrneğin: \"insan kaynakları\" adlı bir çalışma alanı zaten varsa, \"İnsan Kaynakları\" adlı bir çalışma alanı oluşturamazsınız.\nAyrıca az önce yazdığınız adı taşıyan bir grup klasörünün zaten var olup olmadığına da bakın.",
