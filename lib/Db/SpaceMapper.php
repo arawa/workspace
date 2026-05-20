@@ -99,7 +99,7 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					"gu.gid like 'SPACE-U-%'"
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
@@ -210,7 +210,7 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					'gu.gid like "SPACE-GE-%"'
+					"gu.gid like 'SPACE-U-%'"
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
