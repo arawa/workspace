@@ -84,38 +84,26 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			$groupIds = [];
 		}
 
-		if (empty($groupIds)) {
-			if (str_starts_with($uid, 'SPACE-UWS-')) {
-				// die;
-				preg_match('/[0-9].*/', $uid, $matches);
-				$id = $matches[0];
-				return [ "SPACE-U-{$id}", "SPACE-GE-{$id}"];
+		$userGroups = [];
+		if (str_starts_with($uid, 'SPACE-UWS-')) {
+			$spaceId = (int)substr($uid, 10);
+			if ($spaceId !== 0) {
+				$userGroups[] = "SPACE-U-{$spaceId}";
+				/// @TODO is it necessary ?
+				// $groupIds[] = "SPACE-GE-{$spaceId}";
 			}
 		}
+
 
 
 		$this->avoidRecurse_groups = $avoid;
 		if (empty($groupIds)) {
-			return [];
+			return $userGroups;
 		}
-		$userGroups = [];
 		foreach ($groupIds as $gid) {
 			$connectedGids = $this->connectedGroups->getConnectedSpaceToGroupIds($gid);
 			if ($connectedGids !== null && $user->isEnabled()) {
 				$userGroups = array_merge($userGroups, $connectedGids);
-			}
-		}
-
-		if (str_starts_with($uid, 'SPACE-UWS-')) {
-			$userManagerWorkspaces = array_filter($groupIds, fn ($gid) => str_starts_with($gid, 'SPACE-GE-'));
-			$userWorkspaces = array_filter($groupIds, fn ($gid) => str_starts_with($gid, 'SPACE-U-'));
-
-			foreach ($userManagerWorkspaces as $gid) {
-            	$userGroups[] = $gid;
-			}
-
-			foreach ($userWorkspaces as $gid) {
-            	$userGroups[] = $gid;
 			}
 		}
 
@@ -143,7 +131,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	 */
 	public function groupExists($gid) {
 		// @note : need to implement, but this backend doesn't manage existence of connected groups
-		return $this->connectedGroups->hasConnectedGroups($gid);
+		return str_starts_with($gid, 'SPACE-U-') || $this->connectedGroups->hasConnectedGroups($gid);
 	}
 
 	/**
@@ -159,12 +147,19 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			return [];
 		}
 
-		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
-		if ($groups === null) {
-			return [];
+		$users = [];
+		if (str_starts_with($gid, 'SPACE-U-')) {
+			$spaceId = (int)substr($gid, 8);
+			if ($spaceId !== 0) {
+				$users[] = "SPACE-UWS-{$spaceId}";
+			}
 		}
 
-		$users = [];
+		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+		if ($groups === null) {
+			return $users;
+		}
+
 		$avoid = $this->avoidRecurse_users;
 		$this->avoidRecurse_users = true;
 		foreach ($groups as $group) {
@@ -177,15 +172,6 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 		$this->avoidRecurse_users = $avoid;
-
-		if (
-			str_starts_with($gid, 'SPACE-U-')
-			|| str_starts_with($gid, 'SPACE-GE-')
-		) {
-			preg_match('/[0-9].*/', $gid, $matches);
-			$id = $matches[0];
-			$users[] = "SPACE-UWS-{$id}";
-		}
 
 		return $users;
 	}
