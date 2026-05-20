@@ -151,19 +151,18 @@ class WorkspaceController extends Controller {
 			$folderInfo = $this->folderHelper->getFolder(
 				$workspace['groupfolder_id'],
 				$this->rootFolder->getRootFolderStorageId()
-			)->toArray();
+			);
 
-			if ($folderInfo === false) {
+			if ($folderInfo === null) {
 				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");
 				continue;
 			}
 
-			$spaces[$workspace['name']] = $this->workspaceFormatter->format($workspace, $folderInfo);
+			$spaces[$workspace['name']] = $this->workspaceFormatter->format($workspace, $folderInfo->toArray());
 		}
 
 		return new JSONResponse($spaces);
 	}
-
 
 	/**
 	 * SpaceAdminRequired
