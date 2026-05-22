@@ -67,7 +67,7 @@ OC.L10N.register(
     "Workspace Managers" : "Çalışma alanı yöneticileri",
     "{totalAccount} workspaces" : "{totalAccount} çalışma alanı",
     "No workspaces found" : "Herhangi bir çalışma alanı bulunamadı",
-    "You have not yet created any workspace" : "Henüz bir çalışma alanı eklememişsiniz",
+    "You have not yet created any workspace" : "Henüz bir çalışma alanı oluşturmamışsınız",
     "Set user as Workspace Manager" : "Kullanıcıyı çalışma alanı yöneticisi olarak ayarla",
     "WM" : "ÇAY",
     "remove users from selection" : "kullanıcıları seçimden kaldır",
