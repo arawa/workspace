@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.4.1 - 2026-05-02
+
+### Changed
+
+- v4.4.1 [#1665](https://github.com/arawa/workspace/pull/1665) 
+
+### Fixed
+
+- Use correct string delimiters in query conditions for PostgreSQL by @ThibautPlg , @zak39 in [#1660](https://github.com/arawa/workspace/pull/1660)
+- Ensure groupfolder existence check returns null and format folder info correctly by @ThibautPlg , @zak39 in [#1662](https://github.com/arawa/workspace/pull/1662)
+
+### Docs
+
+- Update CHANGELOG for v4.4.0 by @zak39 in [#1654](https://github.com/arawa/workspace/pull/1654)
+
 
 ## 4.4.0 - 2026-04-16
 
@@ -646,7 +661,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.4.0...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.4.1...main
+[4.4.1]: https://github.com/arawa/workspace/compare/v4.4.0...4.4.1
 [4.4.0]: https://github.com/arawa/workspace/compare/v4.3.1...4.4.0
 [4.3.1]: https://github.com/arawa/workspace/compare/v4.3.0...4.3.1
 [4.3.0]: https://github.com/arawa/workspace/compare/v4.2.0...4.3.0
