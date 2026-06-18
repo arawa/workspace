@@ -1,0 +1,10 @@
+{ "translations": {
+    "Cancel" : "Cancel",
+    "Error" : "Error",
+    "Settings" : "Configuración",
+    "Quota" : "Quota",
+    "Users" : "Usuarios",
+    "Groups" : "Grupos",
+    "Save" : "Save"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
