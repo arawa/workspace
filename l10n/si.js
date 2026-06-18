@@ -9,6 +9,7 @@ OC.L10N.register(
     "Settings" : "සැකසුම්",
     "Network error" : "ජාලයේ දෝෂයකි",
     "Users" : "පරිශීලකයින්",
-    "Groups" : "සමූහ"
+    "Groups" : "සමූහ",
+    "Save" : "Save"
 },
 "nplurals=2; plural=(n != 1);");
