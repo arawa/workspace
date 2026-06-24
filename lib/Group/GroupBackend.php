@@ -24,7 +24,6 @@
 namespace OCA\Workspace\Group;
 
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\User\Backend\UserBackend;
 use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\ICountUsersBackend;
 use OCP\Group\Backend\INamedBackend;
@@ -179,7 +178,6 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	public function getBackendName(): string {
 		return 'WorkspaceGroupBackend';
 	}
-
 
 	public function countUsersInGroup(string $gid, string $search = ''): int {
 
