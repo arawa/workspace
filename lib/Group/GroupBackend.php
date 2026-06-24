@@ -93,8 +93,6 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 
-
-
 		$this->avoidRecurse_groups = $avoid;
 		if (empty($groupIds)) {
 			return $userGroups;
@@ -130,6 +128,10 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	 */
 	public function groupExists($gid) {
 		// @note : need to implement, but this backend doesn't manage existence of connected groups
+		if (str_starts_with($gid, 'SPACE-U-') && !$this->avoidRecurse_groups) {
+			return true;
+		}
+
 		return str_starts_with($gid, 'SPACE-U-') || $this->connectedGroups->hasConnectedGroups($gid);
 	}
 
@@ -200,5 +202,13 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 		return $nbUsers;
+	}
+
+	public function disable() {
+		$this->avoidRecurse_users = $this->avoidRecurse_groups = true;
+	}
+
+	public function enable() {
+		$this->avoidRecurse_users = $this->avoidRecurse_groups = false;
 	}
 };
