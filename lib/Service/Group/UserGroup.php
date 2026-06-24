@@ -35,10 +35,7 @@ use OCP\Server;
 
 class UserGroup extends GroupsWorkspace {
 
-	public function __construct(
-		IAppConfig $appConfig,
-		private IGroupManager $groupManager,
-	) {
+	public function __construct(IAppConfig $appConfig, private IGroupManager $groupManager) {
 		parent::__construct($appConfig);
 	}
 

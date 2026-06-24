@@ -131,8 +131,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		if (str_starts_with($gid, 'SPACE-U-') && !$this->avoidRecurse_groups) {
 			return true;
 		}
-
-		return str_starts_with($gid, 'SPACE-U-') || $this->connectedGroups->hasConnectedGroups($gid);
+		return $this->connectedGroups->hasConnectedGroups($gid);
 	}
 
 	/**
@@ -180,6 +179,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	public function getBackendName(): string {
 		return 'WorkspaceGroupBackend';
 	}
+
 
 	public function countUsersInGroup(string $gid, string $search = ''): int {
 
