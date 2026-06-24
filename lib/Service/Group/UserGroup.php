@@ -26,17 +26,17 @@ namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\Db\Space;
 use OCA\Workspace\Exceptions\CreateGroupException;
+use OCA\Workspace\Group\GroupBackend;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\Server;
 
 class UserGroup extends GroupsWorkspace {
-	private IGroupManager $groupManager;
 
-	public function __construct(IGroupManager $groupManager, IAppConfig $appConfig) {
+	public function __construct(IAppConfig $appConfig, private IGroupManager $groupManager) {
 		parent::__construct($appConfig);
-		$this->groupManager = $groupManager;
 	}
 
 	public static function get(int $spaceId): string {
@@ -48,7 +48,10 @@ class UserGroup extends GroupsWorkspace {
 	}
 
 	public function create(Space $space): IGroup {
+		$groupBackend = Server::get(GroupBackend::class);
+		$groupBackend->disable();
 		$group = $this->groupManager->createGroup(self::PREFIX_GID_USERS . $space->getId());
+		$groupBackend->enable();
 
 		if (is_null($group)) {
 			throw new CreateGroupException('Error to create a Space Manager group.', Http::STATUS_CONFLICT);
