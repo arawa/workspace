@@ -82,11 +82,21 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		} else {
 			$groupIds = [];
 		}
+
+		$userGroups = [];
+		if (str_starts_with($uid, 'SPACE-UWS-')) {
+			$spaceId = (int)substr($uid, 10);
+			if ($spaceId !== 0) {
+				$userGroups[] = "SPACE-U-{$spaceId}";
+				/// @TODO is it necessary ?
+				// $groupIds[] = "SPACE-GE-{$spaceId}";
+			}
+		}
+
 		$this->avoidRecurse_groups = $avoid;
 		if (empty($groupIds)) {
-			return [];
+			return $userGroups;
 		}
-		$userGroups = [];
 		foreach ($groupIds as $gid) {
 			$connectedGids = $this->connectedGroups->getConnectedSpaceToGroupIds($gid);
 			if ($connectedGids !== null && $user->isEnabled()) {
@@ -118,6 +128,9 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 	 */
 	public function groupExists($gid) {
 		// @note : need to implement, but this backend doesn't manage existence of connected groups
+		if (str_starts_with($gid, 'SPACE-U-') && !$this->avoidRecurse_groups) {
+			return true;
+		}
 		return $this->connectedGroups->hasConnectedGroups($gid);
 	}
 
@@ -134,12 +147,19 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			return [];
 		}
 
-		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
-		if ($groups === null) {
-			return [];
+		$users = [];
+		if (str_starts_with($gid, 'SPACE-U-')) {
+			$spaceId = (int)substr($gid, 8);
+			if ($spaceId !== 0) {
+				$users[] = "SPACE-UWS-{$spaceId}";
+			}
 		}
 
-		$users = [];
+		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+		if ($groups === null) {
+			return $users;
+		}
+
 		$avoid = $this->avoidRecurse_users;
 		$this->avoidRecurse_users = true;
 		foreach ($groups as $group) {
@@ -152,6 +172,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 		$this->avoidRecurse_users = $avoid;
+
 		return $users;
 	}
 
@@ -181,5 +202,13 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 			}
 		}
 		return $nbUsers;
+	}
+
+	public function disable() {
+		$this->avoidRecurse_users = $this->avoidRecurse_groups = true;
+	}
+
+	public function enable() {
+		$this->avoidRecurse_users = $this->avoidRecurse_groups = false;
 	}
 };
