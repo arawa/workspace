@@ -4,6 +4,7 @@ OC.L10N.register(
     "Unknown error" : "Onbekende fout",
     "Add users" : "Gebruikers toevoegen",
     "Search users" : "Gebruikers zoeken",
+    "No users selected" : "Geen gebruikers geselecteerd",
     "Add" : "Toevoegen",
     "Cancel" : "Annuleren",
     "Confirm" : "Bevestigen",
