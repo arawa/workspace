@@ -83,16 +83,16 @@
 			</div>
 		</div>
 		<NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
-			type="warning"
+			type="info"
 			class="note-card">
 			<p>
-				{{ t('workspace', 'Caution, users highlighted in red are not yet member of this workspace. They will be automatically added.') }}
+				{{ t('workspace', 'Users highlighted in red are not yet member of this workspace. They will be automatically added.') }}
 			</p>
 		</NcNoteCard>
 		<div class="buttons-groups">
 			<NcButton
 				@click="addUsersToWorkspaceOrGroup()">
-				{{ t('workspace', 'Add') }}
+				{{ t('workspace', 'Add these users') }}
 			</NcButton>
 		</div>
 	</div>

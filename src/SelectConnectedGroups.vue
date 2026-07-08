@@ -69,7 +69,7 @@
 					class="content-group-list-empty"
 					:name="t('workspace', 'No group selected')" />
 			</div>
-			<NcButton type="secondary"
+			<NcButton variant="secondary"
 				class="btn-add-groups"
 				@click="validate">
 				{{ t('workspace', 'Add') }}
