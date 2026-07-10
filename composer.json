@@ -27,5 +27,10 @@
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"openapi": "generate-spec"
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.99"
+        }
     }
 }
