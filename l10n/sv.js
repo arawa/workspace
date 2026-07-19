@@ -22,10 +22,10 @@ OC.L10N.register(
     "Groups" : "Grupper",
     "View profile" : "Visa profil",
     "Remove user" : "Ta bort användare",
-    "unlimited" : "obegränsat",
+    "unlimited" : "obegränsad",
     "Appearance" : "Utseende",
     "Save" : "Spara",
-    "Loading..." : "Laddar...",
+    "Loading..." : "Läser in …",
     "or" : "eller",
     "Delete user" : "Ta bort användare"
 },
