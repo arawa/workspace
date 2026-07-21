@@ -4,6 +4,7 @@ OC.L10N.register(
     "Unknown error" : "Okänt fel",
     "Add users" : "Lägg till användare",
     "Search users" : "Sök användare",
+    "No users selected" : "Inga användare valda",
     "Add" : "Lägg till",
     "Cancel" : "Avbryt",
     "Confirm" : "Bekräfta",
