@@ -86,7 +86,6 @@ class ConnectedGroupController extends Controller {
 			$group->getGid(),
 		);
 
-
 		$dataSpace = $this->spaceManager->get($spaceId);
 		foreach ($group->getUsers() as $user) {
 			if (!$user->isEnabled()) {

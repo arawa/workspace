@@ -63,7 +63,6 @@ class ErrorResponseFormatter {
 			 * array
 			 */
 			'exception_file' => [
-
 				/**
 				 * string - absolute path.
 				 */

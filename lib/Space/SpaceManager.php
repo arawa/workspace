@@ -108,7 +108,6 @@ class SpaceManager {
 		$space->setColorCode($this->colorCode->generate());
 		$this->spaceMapper->insert($space);
 
-
 		if (is_null($space)) {
 			throw new CreateWorkspaceException('Error while creating a space.', Http::STATUS_CONFLICT);
 		}
@@ -478,7 +477,6 @@ class SpaceManager {
 		if (!empty($usersAreNotPresentInWorkspace)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}\n", $usersAreNotPresentInWorkspace));
 			throw new NotFoundException("These users were not found in the workspace {$space['name']}: {$formattedUsers}");
-
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);

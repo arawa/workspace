@@ -31,7 +31,6 @@ class RequireExistingUsersMiddleware extends Middleware {
 
 		$uids = $this->request->getParam('uids');
 
-
 		if ($uids === null) {
 			return;
 		}

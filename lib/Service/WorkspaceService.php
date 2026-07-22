@@ -127,7 +127,6 @@ class WorkspaceService {
 		return $users;
 	}
 
-
 	/**
 	 * Returns a list of users whose name matches $term
 	 *
