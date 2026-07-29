@@ -143,7 +143,6 @@ class UserService {
 		return false;
 	}
 
-
 	/**
 	 * Return `true` if the user can be removed from workspace manager group (SPACE-GE), Otherwise, `false`.
 	 *

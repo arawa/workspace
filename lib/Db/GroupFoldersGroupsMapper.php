@@ -71,7 +71,6 @@ class GroupFoldersGroupsMapper extends QBMapper {
 		return $qb->executeQuery()->fetchAll();
 	}
 
-
 	/**
 	 * @return array<ConnectedGroup>
 	 */

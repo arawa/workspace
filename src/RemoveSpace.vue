@@ -31,12 +31,12 @@
 			</h2>
 			<div class="remove-space-actions">
 				<NcButton
-					type="secondary"
+					variant="secondary"
 					@click="handleCancel()">
 					{{ t('workspace', 'Cancel') }}
 				</NcButton>
 				<NcButton
-					type="error"
+					variant="error"
 					@click="handleDelete()">
 					{{ t('workspace', 'Delete workspace') }}
 				</NcButton>

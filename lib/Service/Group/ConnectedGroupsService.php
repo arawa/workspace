@@ -34,7 +34,6 @@ use OCP\IUserManager;
 
 class ConnectedGroupsService {
 
-
 	private ?array $linkedSpaceGroups = null;
 	private array $linkedGroupsWSGroups = [];
 	private array $strictSpaceUsers = [];

@@ -10,13 +10,13 @@
 			<div class="container-buttons-remove">
 				<NcButton
 					aria-label="cancel"
-					type="secondary"
+					variant="secondary"
 					@click="cancel()">
 					{{ t('workspace', 'Cancel') }}
 				</NcButton>
 				<NcButton
 					aria-label="confirm"
-					type="primary"
+					variant="primary"
 					@click="removeGroup()">
 					{{ t('workspace', 'Confirm') }}
 				</NcButton>

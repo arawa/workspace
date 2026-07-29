@@ -17,7 +17,6 @@ use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-
 use function PHPUnit\Framework\exactly;
 
 class RequireExistingUsersMiddlewareTest extends TestCase {
@@ -62,7 +61,6 @@ class RequireExistingUsersMiddlewareTest extends TestCase {
 			'alice'
 		];
 		$methodName = 'addUsersToGroup';
-
 
 		/** @var ObjectMock&IUser */
 		$bob = $this->createMock(IUser::class);

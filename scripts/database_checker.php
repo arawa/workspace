@@ -36,12 +36,10 @@ use OC\SystemConfig;
 use OCA\GroupFolders\Folder\FolderManager;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Group\Admin\AdminGroup;
-
 // workspace
 use OCA\Workspace\Group\User\UserGroup;
 use OCP\Files\IRootFolder;
 use OCP\IDBConnection;
-
 // GroupFolders
 use OCP\IGroupManager;
 

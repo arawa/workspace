@@ -67,7 +67,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	private WorkspaceApiOcsController $controller;
 	private WorkspaceEditParamsValidator&MockObject $editValidator;
 
-
 	private const CURRENT_USER_IS_GENERAL_MANAGER = true;
 
 	public function setUp(): void {
@@ -324,7 +323,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 		$this->assertEquals($expected->getStatus(), $actual->getStatus());
 	}
-
 
 	public function testCreateSubGroup() {
 		$id = 1;
@@ -1208,7 +1206,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
-
 	public function testShouldAddUserAsWorkspaceManager(): void {
 		$uid = 'user1';
 		$id = 1;
@@ -1451,7 +1448,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->controller->removeUsersFromGroup($id, $gid, $uids);
 	}
 
-
 	public function testAddUsersInSubgroup(): void {
 		$id = 1;
 		$gid = "SPACE-G-Talk-{$id}";
@@ -1607,7 +1603,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
-
 	public function testAddUsersInUserGroup(): void {
 		$id = 1;
 		$gid = "SPACE-U-{$id}";
@@ -1756,7 +1751,6 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals($expected->getData(), $actual->getData());
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
-
 
 	public function testAddUsersInWorkspaceManagerGroup(): void {
 		$id = 1;

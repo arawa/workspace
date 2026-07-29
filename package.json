@@ -80,13 +80,14 @@
     "jsdom-global": "^3.0.2",
     "prettier": "^2.7.1",
     "regenerator-runtime": "^0.14.1",
+    "terser-webpack-plugin": "^5.6.1",
     "vue-loader": "^17.4.2",
     "webpack": "^5.104.1",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@jambonn/vue-lazyload": "^1.0.10",
-    "@nextcloud/axios": "^2.5.1",
+    "@nextcloud/axios": "^2.6.0",
     "@nextcloud/dialogs": "^7.2.0",
     "@nextcloud/files": "^3.12.2",
     "@nextcloud/initial-state": "^3.0.0",
@@ -109,18 +110,19 @@
     "testEnvironment": "jsdom",
     "moduleFileExtensions": [
       "js",
-      "vue"
+      "vue",
+      "mjs"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|less)$": "identity-obj-proxy",
       "^uuid$": "<rootDir>/node_modules/uuid/dist/index.js",
-      "^@vue/test-utils$": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
       "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js",
       "^@nextcloud/dialogs$": "<rootDir>/src/tests/__mocks__/nextcloudDialogsMock.js",
       "^@nextcloud/files/dav$": "<rootDir>/src/tests/__mocks__/nextcloudFilesMock.js",
       "^@nextcloud/vue/components/(.*)$": "<rootDir>/src/tests/__mocks__/nextcloudVueComponentMock.js",
-      "^@nextcloud/vue/composables/useIsDarkTheme$": "<rootDir>/src/tests/__mocks__/useIsDarkThemeMock.js"
+      "^@nextcloud/vue/composables/useIsDarkTheme$": "<rootDir>/src/tests/__mocks__/useIsDarkThemeMock.js",
+      "^@nextcloud/axios$": "<rootDir>/src/tests/__mocks__/axios.js"
     },
     "snapshotSerializers": [
       "<rootDir>/node_modules/jest-serializer-vue"

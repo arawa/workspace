@@ -177,7 +177,6 @@ return [
 			'verb' => 'POST'
 		],
 		[
-
 			'name' => 'group#removeUser',
 			'url' => '/api/group/delUser/{spaceId}',
 			'verb' => 'PATCH',
