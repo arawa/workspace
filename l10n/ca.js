@@ -16,6 +16,7 @@ OC.L10N.register(
     "Network error" : "Error de xarxa",
     "No users" : "Cap usuari",
     "Quota" : "Quota",
+    "Role" : "Rol",
     "Groups" : "Grups",
     "View profile" : "Visualitza el perfil",
     "Remove user" : "Suprimir usuari",
