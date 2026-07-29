@@ -23,7 +23,7 @@
 	<NcAppNavigation
 		aria-label="workspace navigation">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || $root.$data.isSpaceManager"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || ($root.$data.isSpaceManager && $root.$data.allowWmWorkspaceCreation)"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
