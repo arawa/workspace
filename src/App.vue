@@ -33,6 +33,8 @@ export default {
 		this.$root.$data.aclInheritPerUser = document.getElementById('aclInheritPerUser').value
 		this.$root.$data.userSession = document.getElementById('userSession').value
 		this.$root.$data.addedGroupDisabled = document.getElementById('addedGroupDisabled').value
+		this.$root.$data.isSpaceManager = document.getElementById('isSpaceManager').value
+		this.$root.$data.allowWmWorkspaceCreation = document.getElementById('allowWmWorkspaceCreation').value
 		const aclInheritPerUser = document.getElementById('aclInheritPerUser').value
 		// eslint-disable-next-line no-console
 		aclInheritPerUser ? console.log('workspace: h1') : console.log('workspace: h2')

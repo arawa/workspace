@@ -69,7 +69,9 @@ class PageController extends Controller {
 				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
 				'canAccessApp' => $this->userService->canAccessApp(),
 				'aclInheritPerUser' => $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true',
-				'addedGroupDisabled' => $this->appConfig->getAppValueBool('added_group_disabled', false)
+				'addedGroupDisabled' => $this->appConfig->getAppValueBool('added_group_disabled', false),
+				'isSpaceManager' => $this->userService->isSpaceManager(),
+				'allowWmWorkspaceCreation' => $this->appConfig->getAppValueBool('allow_wm_workspace_creation', false)
 			]
 		);
 	}

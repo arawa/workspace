@@ -22,7 +22,7 @@
 <template>
 	<NcAppNavigation v-if="$root.$data.canAccessApp === 'true'">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true'"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin === 'true' || ($root.$data.isSpaceManager === 'true' && $root.$data.allowWmWorkspaceCreation === 'true')"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
