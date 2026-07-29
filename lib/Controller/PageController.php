@@ -72,6 +72,7 @@ class PageController extends Controller {
 		$this->initialState->provideInitialState('isSpaceManager', $this->userService->isSpaceManager());
 		$this->initialState->provideInitialState('aclInheritPerUser', $this->config->getAppValue('groupfolders', 'acl-inherit-per-user', 'false') === 'true');
 		$this->initialState->provideInitialState('addedGroupDisabled', $this->appConfig->getAppValueBool('added_group_disabled', false));
+		$this->initialState->provideInitialState('allowWmWorkspaceCreation', $this->appConfig->getAppValueBool('allow_wm_workspace_creation', false));
 
 		$currentUser = $this->session->getUser();
 		$generalManagerGroup = $this->groupManager->get(ManagersWorkspace::GENERAL_MANAGER);
