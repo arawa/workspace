@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Unknown error" : "Óþekkt villa",
     "Search users" : "Leita að notendum",
-    "Add" : "Bæta við",
     "Cancel" : "Cancel",
     "Confirm" : "Staðfesta",
     "Upload new files" : "Senda inn nýjar skrár",
@@ -13,6 +12,7 @@ OC.L10N.register(
     "Error" : "Villa",
     "Settings" : "Stillingar",
     "Network error" : "Villa í netkerfi",
+    "Add" : "Bæta við",
     "No users" : "Engir notendur",
     "Quota" : "Kvóti",
     "Users" : "Notendur",

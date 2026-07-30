@@ -2,11 +2,11 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "অজানা জটিলতা",
-    "Add" : "যোগ কর",
     "Cancel" : "Cancel",
     "Group name" : "গ্রুপের নাম",
     "Error" : "সমস্যা",
     "Settings" : "সেটিংস",
+    "Add" : "যোগ কর",
     "Quota" : "কোটা",
     "Users" : "ব্যবহারকারী",
     "Groups" : "গোষ্ঠীসমূহ",

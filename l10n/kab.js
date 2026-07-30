@@ -2,7 +2,6 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Tuccḍa tarussint",
-    "Add" : "Rnu",
     "Cancel" : "Semmet",
     "Confirm" : "Sergeg",
     "Choose from Files" : "Fren seg yifuyla",
@@ -10,6 +9,7 @@ OC.L10N.register(
     "Delete group" : "Kkes agraw",
     "Error" : "Tuccḍa",
     "Settings" : "Iɣewwaren",
+    "Add" : "Rnu",
     "Users" : "Iseqdacen",
     "Role" : "Tamlilt",
     "Groups" : "Igrawen",

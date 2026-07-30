@@ -2,12 +2,12 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Onbekende fout",
-    "Add" : "Voeg toe",
     "Cancel" : "Cancel",
     "Confirm" : "Bevestig",
     "Group name" : "Groepnaam",
     "Settings" : "Instellings",
     "Network error" : "Netwerkfout",
+    "Add" : "Voeg toe",
     "Users" : "Gebruikers",
     "Groups" : "Groepe",
     "Save" : "Stoor"
