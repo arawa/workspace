@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Unknown error" : "שגיאה בלתי ידועה",
     "Search users" : "חיפוש משתמשים",
-    "Add" : "הוספה",
     "Cancel" : "Cancel",
     "Confirm" : "אישור",
     "Upload new files" : "העלאת קבצים חדשים",
@@ -12,6 +11,7 @@ OC.L10N.register(
     "Error" : "שגיאה",
     "Settings" : "הגדרות",
     "Network error" : "שגיאת רשת",
+    "Add" : "הוספה",
     "Quota" : "מכיסה",
     "Users" : "משתמשים",
     "Role" : "תפקיד",
