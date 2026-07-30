@@ -1,10 +1,10 @@
 OC.L10N.register(
     "workspace",
     {
-    "Add" : "சேர்க்க",
     "Cancel" : "Cancel",
     "Error" : "வழு",
     "Settings" : "அமைப்புகள்",
+    "Add" : "சேர்க்க",
     "Quota" : "பங்கு",
     "Users" : "பயனாளர்",
     "Groups" : "குழுக்கள்",
