@@ -2,11 +2,11 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Noma'lum xato",
-    "Add" : "Qo'shish",
     "Cancel" : "Bekor qilish",
     "Confirm" : "Tasdiqlash",
     "Error" : "Xatolik",
     "Settings" : "Sozlamalar",
+    "Add" : "Qo'shish",
     "Quota" : "kvota",
     "Users" : "Foydalanuvchilar",
     "Groups" : "Groups",

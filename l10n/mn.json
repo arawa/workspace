@@ -1,7 +1,6 @@
 { "translations": {
     "Unknown error" : "үл мэдэгдэх алдаа",
     "Add users" : "Хэрэглэгчид нэмэх",
-    "Add" : "Нэмэх",
     "Cancel" : "Cancel",
     "Confirm" : "Батлах",
     "Upload new files" : "Шинэ файл байршуулах",
@@ -13,6 +12,7 @@
     "Error" : "Алдаа",
     "Settings" : "Тохиргоо",
     "Network error" : "Сүлжээний алдаа",
+    "Add" : "Нэмэх",
     "Quota" : " хувь хэмжээ",
     "Users" : "хэрэглэгч",
     "Role" : "Үүрэг",
