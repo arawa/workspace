@@ -2,7 +2,6 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Error desconocido",
-    "Add" : "Agregar",
     "Cancel" : "Cancel",
     "Confirm" : "Confirmar",
     "Rename group" : "Cambiar nombre del grupo",
@@ -10,6 +9,7 @@ OC.L10N.register(
     "Error" : "Error",
     "Settings" : "Configuración",
     "Network error" : "Error en la red",
+    "Add" : "Agregar",
     "Quota" : "Cuota",
     "Users" : "Usuarios",
     "Role" : "Rol",

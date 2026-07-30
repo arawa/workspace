@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Unknown error" : "Se presentó un error desconocido",
     "Search users" : "Buscar usuarios",
-    "Add" : "Añadir",
     "Cancel" : "Cancel",
     "Confirm" : "Confirmar",
     "Upload new files" : "Cargar nuevos archivos",
@@ -12,6 +11,7 @@ OC.L10N.register(
     "Error" : "Error",
     "Settings" : "Ajustes",
     "Network error" : "Error en la red",
+    "Add" : "Añadir",
     "No users" : "Sin usuarios",
     "Quota" : "Cuota",
     "Users" : " Usuarios",
