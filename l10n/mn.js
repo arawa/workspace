@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Unknown error" : "үл мэдэгдэх алдаа",
     "Add users" : "Хэрэглэгчид нэмэх",
-    "Add" : "Нэмэх",
     "Cancel" : "Cancel",
     "Confirm" : "Батлах",
     "Upload new files" : "Шинэ файл байршуулах",
@@ -15,6 +14,7 @@ OC.L10N.register(
     "Error" : "Алдаа",
     "Settings" : "Тохиргоо",
     "Network error" : "Сүлжээний алдаа",
+    "Add" : "Нэмэх",
     "Quota" : " хувь хэмжээ",
     "Users" : "хэрэглэгч",
     "Role" : "Үүрэг",

@@ -1,6 +1,5 @@
 { "translations": {
     "Unknown error" : "Tuccḍa tarussint",
-    "Add" : "Rnu",
     "Cancel" : "Semmet",
     "Confirm" : "Sergeg",
     "Choose from Files" : "Fren seg yifuyla",
@@ -8,6 +7,7 @@
     "Delete group" : "Kkes agraw",
     "Error" : "Tuccḍa",
     "Settings" : "Iɣewwaren",
+    "Add" : "Rnu",
     "Users" : "Iseqdacen",
     "Role" : "Tamlilt",
     "Groups" : "Igrawen",
