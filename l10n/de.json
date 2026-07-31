@@ -23,6 +23,8 @@
     "Search users" : "Suche Benutzer",
     "Your CSV file must follow this structure:" : "Die CSV-Datei muss folgende Struktur haben:",
     "No users selected" : "Keine Benutzer ausgewählt",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Rot hervorgehobene Benutzer sind noch kein Mitglied dieses Arbeitsbereichs. Sie werden automatisch hinzugefügt.",
+    "Add these users" : "Diese Benutzer hinzufügen",
     "Cancel" : "Abbrechen",
     "Confirm" : "Bestätigen",
     "Upload new files" : "Neue Dateien hochladen",
