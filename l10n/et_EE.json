@@ -21,6 +21,8 @@
     "Search users" : "Otsi kasutajaid",
     "Your CSV file must follow this structure:" : "Sinu CSV-faili peab olema järgnev struktuur:",
     "No users selected" : "Ühtegi kasutajat pole valitud",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Punasega märgitud kasutajad pole veel selle töötoa liikmed, aga nad lisatakse nüüd automaatselt.",
+    "Add these users" : "Lisa need kasutajad",
     "Cancel" : "Katkesta",
     "Confirm" : "Kinnita",
     "Upload new files" : "Laadi uued failid üles",
