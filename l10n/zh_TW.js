@@ -25,6 +25,8 @@ OC.L10N.register(
     "Search users" : "搜尋使用者",
     "Your CSV file must follow this structure:" : "您的 CSV 檔案必須按照此結構製作：",
     "No users selected" : "未選取使用者",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "以紅色標示的使用者尚未成為此工作空間的成員。系統將自動將其加入。",
+    "Add these users" : "新增這些使用者",
     "Cancel" : "取消",
     "Confirm" : "確認",
     "Upload new files" : "上傳新檔案",
