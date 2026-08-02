@@ -23,6 +23,8 @@
     "Search users" : "Cuardaigh úsáideoirí",
     "Your CSV file must follow this structure:" : "Caithfidh do chomhad CSV an struchtúr seo a leanúint:",
     "No users selected" : "Níl aon úsáideoirí roghnaithe",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Níl úsáideoirí atá aibhsithe i ndearg ina mbaill den spás oibre seo go fóill. Cuirfear leis go huathoibríoch iad.",
+    "Add these users" : "Cuir na húsáideoirí seo leis",
     "Cancel" : "Cealaigh",
     "Confirm" : "Deimhnigh",
     "Upload new files" : "Uaslódáil comhaid nua",
