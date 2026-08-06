@@ -23,6 +23,8 @@
     "Search users" : "Ieškoti vartotojų",
     "Your CSV file must follow this structure:" : "Jūsų CSV failas turi atitikti šią struktūrą:",
     "No users selected" : "Nepasirinkta jokių vartotojų",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Raudonai pažymėti vartotojai dar nėra šios darbo erdvės nariai. Jie bus įtraukti automatiškai.",
+    "Add these users" : "Pridėti šiuos vartotojus",
     "Cancel" : "Atsisakyti",
     "Confirm" : "Patvirtinti",
     "Upload new files" : "Įkelti naujus failus",
