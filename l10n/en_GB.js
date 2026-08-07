@@ -25,6 +25,8 @@ OC.L10N.register(
     "Search users" : "Search users",
     "Your CSV file must follow this structure:" : "Your CSV file must follow this structure:",
     "No users selected" : "No users selected",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Users highlighted in red are not yet member of this workspace. They will be automatically added.",
+    "Add these users" : "Add these users",
     "Cancel" : "Cancel",
     "Confirm" : "Confirm",
     "Upload new files" : "Upload new files",
