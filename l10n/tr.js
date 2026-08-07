@@ -25,6 +25,8 @@ OC.L10N.register(
     "Search users" : "Kullanıcı ara",
     "Your CSV file must follow this structure:" : "CSV dosyanızın yapısı şöyle olmalıdır:",
     "No users selected" : "Herhangi bir kullanıcı seçilmemiş",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Kırmızı ile vurgulanan kullanıcılar henüz bu çalışma alanının üyesi değil. Otomatik olarak eklenecekler.",
+    "Add these users" : "Bu kullanıcıları ekle",
     "Cancel" : "İptal",
     "Confirm" : "Onayla",
     "Upload new files" : "Yeni dosyalar yükle",
