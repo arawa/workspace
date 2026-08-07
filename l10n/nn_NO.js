@@ -7,8 +7,10 @@ OC.L10N.register(
     "Error" : "Feil",
     "Settings" : "Innstillingar",
     "Network error" : "Netverks feil",
+    "Add" : "Legg til",
     "Quota" : "Kvote",
     "Users" : "Brukarare",
+    "Role" : "Rolle",
     "Groups" : "Grupper",
     "Appearance" : "Utsjånad",
     "Save" : "Lagre"
