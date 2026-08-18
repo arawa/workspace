@@ -165,7 +165,7 @@ export default {
 				groups: workspace.groups,
 				added_groups: workspace.added_groups,
 				isOpen: false,
-				id: workspace.id_space,
+				id: workspace.id,
 				groupfolderId: workspace.folder_id,
 				name,
 				quota: workspace.quota,

@@ -34,6 +34,9 @@ class WorkspaceFormatter {
 			'managers' => null,
 			'users' => (object)[],
 			'usersCount' => self::NO_USERS,
+			'createdBy' => $workspace['created_by'] ?? null,
+			'createdAt' => (new \DateTimeImmutable())->setTimestamp($workspace['created_at'])->format('Y-m-d H:i:s') ?? null,
+			'currentUserIsSimpleUser' => $this->userService->isSimpleUserOfSpace($workspace),
 		];
 
 		$wsGroups = [];

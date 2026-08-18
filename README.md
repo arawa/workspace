@@ -71,6 +71,17 @@ occ config:app:set workspace added_group_disabled --value true
 > If you have already added groups, they will remain present and you can remove them at any time.
 > However, you will not be able to add new groups while the feature is disabled.
 
+### Allow Workspace Managers to create a Workspace
+
+Run the following occ command to let Workspace Managers create new Workspaces:
+
+```shell
+occ config:app:set workspace allow_wm_workspace_creation --value true
+```
+
+>[!INFO]
+> When a Workspace Manager creates a Workspace, they are automatically assigned to it.
+
 
 ## Contributing
 
