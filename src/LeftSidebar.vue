@@ -166,7 +166,7 @@ export default {
 				groups: workspace.groups,
 				added_groups: workspace.added_groups,
 				isOpen: false,
-				id: workspace.id_space,
+				id: workspace.id,
 				groupfolderId: workspace.folder_id,
 				name,
 				quota: workspace.quota,
@@ -181,7 +181,7 @@ export default {
 			this.$router.push({
 				name: 'space.show',
 				params: {
-					space: workspace.id_space,
+					space: workspace.id,
 				},
 			})
 		},

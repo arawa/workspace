@@ -40,6 +40,7 @@ use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
@@ -55,6 +56,7 @@ use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class SpaceManager {
@@ -79,6 +81,8 @@ class SpaceManager {
 		private WorkspaceManagerGroup $workspaceManagerGroup,
 		private WorkspaceService $workspaceService,
 		private ColorCode $colorCode,
+		private IUserSession $userSession,
+		private WorkspaceFormatter $workspaceFormatter,
 	) {
 	}
 
@@ -106,6 +110,8 @@ class SpaceManager {
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
 		$space->setColorCode($this->colorCode->generate());
+		$space->setCreatedBy($this->userSession->getUser()?->getUID());
+		$space->setCreatedAt((new \DateTimeImmutable('now'))->getTimestamp());
 		$this->spaceMapper->insert($space);
 
 		if (is_null($space)) {
@@ -237,36 +243,15 @@ class SpaceManager {
 			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
 		}
 
-		$workspace = array_merge($space->jsonSerialize(), $groupfolder);
-		$workspace['id'] = $space->getSpaceId();
-
-		$workspace = ($groupfolder !== false) ? array_merge(
-			$groupfolder,
-			$workspace
-		) : $workspace;
-
-		$wsGroups = [];
-		$addedGroups = [];
-		$gids = array_keys($workspace['groups'] ?? []);
-		foreach ($gids as $gid) {
-			$group = $this->groupManager->get($gid);
-			if (is_null($group)) {
-				continue;
-			}
-			if (UserGroup::isWorkspaceGroup($group)) {
-				$wsGroups[] = $group;
-			} else {
-				$addedGroups[] = $group;
-			}
-
-			if (UserGroup::isWorkspaceUserGroupId($gid)) {
-				$workspace['usersCount'] = $group->count();
-			}
-		}
-
-		$workspace['users'] = $this->adminGroup->getUsersFormatted($groupfolder, $space);
-		$workspace['groups'] = GroupFormatter::formatGroups($wsGroups);
-		$workspace['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+		$workspace = $this->workspaceFormatter
+			->format(
+				$space->jsonSerialize(),
+				$this->folderHelper->getFolder(
+					$space->getGroupfolderId(),
+					$this->rootFolder->getRootFolderStorageId()
+				)->toArray()
+			)
+		;
 
 		return $workspace;
 	}
