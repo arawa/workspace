@@ -123,6 +123,13 @@ class UserService {
 		return false;
 	}
 
+	public function isSimpleUserOfSpace(array $space): bool {
+		if ($this->isUserGeneralAdmin() || $this->isSpaceManagerOfSpace($space)) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * @return boolean true if user is space manager or general manager, false otherwise
 	 * @todo Can we move this function in the lib/AppInfo/Application.php ?
