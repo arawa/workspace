@@ -44,6 +44,7 @@ export default {
 		const count = loadState('workspace', 'countWorkspaces')
 		const isSpaceManager = loadState('workspace', 'isSpaceManager')
 		const addedGroupDisabled = loadState('workspace', 'addedGroupDisabled')
+		const allowWmWorkspaceCreation = loadState('workspace', 'allowWmWorkspaceCreation')
 		const canAccessApp = count > 0
 
 		this.$root.$data.isUserGeneralAdmin = isUserGeneralAdmin
@@ -52,6 +53,7 @@ export default {
 		this.$root.$data.userSession = userSession
 		this.$root.$data.isSpaceManager = isSpaceManager
 		this.$root.$data.addedGroupDisabled = addedGroupDisabled
+		this.$root.$data.allowWmWorkspaceCreation = allowWmWorkspaceCreation
 
 		this.$store.dispatch('setCountTotalWorkspaces', { count })
 		this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })

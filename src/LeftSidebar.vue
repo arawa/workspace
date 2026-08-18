@@ -23,7 +23,7 @@
 	<NcAppNavigation
 		aria-label="workspace navigation">
 		<ul class="ws-navigation-header">
-			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || $root.$data.isSpaceManager"
+			<NcAppNavigationNewItem v-if="$root.$data.isUserGeneralAdmin || ($root.$data.isSpaceManager && $root.$data.allowWmWorkspaceCreation)"
 				class="input-new-item"
 				:class="isDarkTheme ? 'btn-dark' : 'btn-light'"
 				icon="icon-add"
@@ -166,7 +166,7 @@ export default {
 				groups: workspace.groups,
 				added_groups: workspace.added_groups,
 				isOpen: false,
-				id: workspace.id_space,
+				id: workspace.id,
 				groupfolderId: workspace.folder_id,
 				name,
 				quota: workspace.quota,
@@ -181,7 +181,7 @@ export default {
 			this.$router.push({
 				name: 'space.show',
 				params: {
-					space: workspace.id_space,
+					space: workspace.id,
 				},
 			})
 		},

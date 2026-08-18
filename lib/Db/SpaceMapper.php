@@ -80,7 +80,9 @@ class SpaceMapper extends QBMapper {
 				'ws.space_id AS space_id',
 				'ws.groupfolder_id AS groupfolder_id',
 				'ws.color_code AS color_code',
-				'ws.space_name AS space_name'
+				'ws.space_name AS space_name',
+				'ws.created_by AS created_by',
+				'ws.created_at AS created_at'
 			)
 			->from($this->getTableName(), 'ws')
 		;
