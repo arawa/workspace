@@ -87,7 +87,7 @@
 				<NcActions>
 					<NcActionButton v-if="$root.$data.isUserGeneralAdmin"
 						icon="icon-rename"
-						@click="toggleShowEditWorkspaceModal">
+						@click="openFormWorkspaceModal">
 						{{ t('workspace', 'Edit the workspace') }}
 					</NcActionButton>
 				</NcActions>
@@ -128,14 +128,19 @@
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
-		<EditWorkspace v-if="showEditWorkspaceModal"
+		<FormWorkspace v-if="showFormWorkspaceModal"
 			:space="$store.getters.getSpaceByNameOrId($route.params.space)"
-			@close="toggleShowEditWorkspaceModal" />
+			:title="t('workspace', 'Edit the workspace')"
+			:place-holder-workspace="t('workspace', 'Rename your workspace')"
+			:button-name="t('workspace', 'Save')"
+			:progress-bar="true"
+			@click-action="save"
+			@close="closeFormWorkspaceModal" />
 	</div>
 </template>
 
 <script>
-import EditWorkspace from './components/Modals/EditWorkspace.vue'
+import FormWorkspace from './components/Modals/FormWorkspace.vue'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionInput from '@nextcloud/vue/components/NcActionInput'
@@ -144,7 +149,7 @@ import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { removeWorkspace } from './services/spaceService.js'
+import { removeWorkspace, renameSpace } from './services/spaceService.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
@@ -153,12 +158,15 @@ import AddedGroupBlack from '../img/added_group_black.svg?raw'
 import AddedGroupWhite from '../img/added_group_white.svg?raw'
 import { useIsDarkTheme } from '@nextcloud/vue/composables/useIsDarkTheme'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import showNotificationError from './services/Notifications/NotificationError.js'
 
 export default {
 	name: 'SpaceDetails',
 	components: {
 		AddUsersTabs,
-		EditWorkspace,
+		FormWorkspace,
 		NcActions,
 		NcCounterBubble,
 		NcEmptyContent,
@@ -183,7 +191,7 @@ export default {
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
 			showSelectConnectedGroups: false,
-			showEditWorkspaceModal: false,
+			showFormWorkspaceModal: false,
 			isESR: false,
 			space: undefined,
 			mdiAccountMultiple,
@@ -286,8 +294,126 @@ export default {
 		toggleShowConnectedGroups() {
 			this.showSelectConnectedGroups = !this.showSelectConnectedGroups
 		},
-		toggleShowEditWorkspaceModal() {
-			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
+		openFormWorkspaceModal() {
+			this.showFormWorkspaceModal = true
+		},
+		closeFormWorkspaceModal() {
+			this.showFormWorkspaceModal = false
+		},
+		async save(payload) {
+			const oldSpace = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const oldSpaceName = oldSpace.name
+			const space = { ...oldSpace }
+
+			if (payload.colorCode !== space.color) {
+				axios.post(generateUrl(`/apps/workspace/workspaces/${oldSpace.id}/color`),
+					{
+						colorCode: payload.colorCode,
+					})
+					.then(resp => {
+						this.$store.dispatch('updateColor', {
+							name: oldSpaceName,
+							colorCode: payload.colorCode,
+						})
+					})
+					.catch(err => {
+						const text = t('workspace', 'A network error occurred when trying to change the workspace\'s color.<br>Error: {error}', { error: err })
+						showNotificationError(t('workspace', 'Network error'), text, 3000)
+					})
+			}
+
+			if ((oldSpaceName !== payload.name) && (payload.name !== '')) {
+				let responseRename = await renameSpace(oldSpace.id, payload.name)
+				responseRename = responseRename.data
+
+				if (responseRename.statuscode === 204) {
+					const spaceBeforeRenamed = { ...oldSpace }
+					spaceBeforeRenamed.name = responseRename.space
+					space.name = responseRename.space
+
+					this.$store.dispatch('updateSpace', {
+						space: spaceBeforeRenamed,
+					})
+					this.$store.dispatch('removeSpace', {
+						space: oldSpace,
+					})
+
+					const groupKeys = Object.keys(spaceBeforeRenamed.groups)
+					groupKeys.forEach(key => {
+						const group = spaceBeforeRenamed.groups[key]
+						if (!this.checkSpaceNameIsEqual(group.displayName, oldSpaceName)) {
+							group.displayName = this.replaceSpaceName(group.displayName, oldSpaceName)
+						}
+						const newDisplayName = group.displayName.replace(oldSpaceName, payload.name)
+						// Renames group
+						this.$store.dispatch('renameGroup', {
+							name: payload.name,
+							gid: group.gid,
+							newGroupName: newDisplayName,
+						})
+					})
+				}
+			}
+
+			if (space.quota !== payload.quota) {
+				this.$store.dispatch('setSpaceQuota', {
+					name: space.name,
+					quota: payload.quota,
+				})
+			}
+
+			this.closeFormWorkspaceModal()
+
+		},
+		/**
+		 * @param {string} groupname the displayname from a group
+		 * @param {string} oldSpaceName the currently space name
+		 * To fix a bug from release 3.0.2
+		 */
+		checkSpaceNameIsEqual(groupname, oldSpaceName) {
+			let spaceNameFiltered = ''
+
+			if (groupname.startsWith('U-')) {
+				spaceNameFiltered = groupname.replace('U-', '')
+			}
+
+			if (groupname.startsWith('WM-')) {
+				spaceNameFiltered = groupname.replace('WM-', '')
+			} else if (groupname.startsWith('GE-')) {
+				spaceNameFiltered = groupname.replace('GE-', '')
+			}
+
+			if (groupname.startsWith('G-')) {
+				spaceNameFiltered = groupname.replace('G-', '')
+			}
+
+			if (spaceNameFiltered === oldSpaceName) {
+				return true
+			}
+
+			return false
+		},
+		/**
+		 * @param {string} groupname the displayname from a group
+		 * @param {string} oldSpaceName the currently space name
+		 * To fix a bug from release 3.0.2
+		 */
+		replaceSpaceName(groupname, oldSpaceName) {
+			const spaceNameSplit = groupname
+				.split('-')
+				.filter(element => element)
+
+			if (spaceNameSplit[0] === 'WM'
+					|| spaceNameSplit[0] === 'U') {
+				spaceNameSplit[1] = oldSpaceName
+			}
+
+			if (spaceNameSplit[0] === 'G') {
+				const lengthMax = spaceNameSplit.length - 1
+				spaceNameSplit[lengthMax] = oldSpaceName
+			}
+
+			return spaceNameSplit.join('-')
 		},
 	},
 }

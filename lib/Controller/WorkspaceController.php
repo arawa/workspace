@@ -86,8 +86,8 @@ class WorkspaceController extends Controller {
 	 * @GeneralManagerRequired
 	 * @param string $spaceName
 	 */
-	public function createWorkspace(string $spaceName): JSONResponse {
-		$workspace = $this->spaceManager->create($spaceName);
+	public function createWorkspace(string $spaceName, ?string $colorCode = null, int $quota = -3): JSONResponse {
+		$workspace = $this->spaceManager->create($spaceName, $colorCode, $quota);
 
 		return new JSONResponse(
 			array_merge(
