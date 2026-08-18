@@ -91,17 +91,17 @@ class WorkspaceController extends Controller {
 	 */
 	public function createWorkspace(string $spaceName): JSONResponse {
 
-		$workspaceManagersCanCreateWorkspace = 
-			$this->userService->isSpaceManager()
+		$workspaceManagersCanCreateWorkspace
+			= $this->userService->isSpaceManager()
 			&& $this->appConfig->getAppValueBool('allow_wm_workspace_creation', false)
 		;
 
 		if ($this->userService->isSpaceManager()) {
-			if (false === $workspaceManagersCanCreateWorkspace) {
+			if ($workspaceManagersCanCreateWorkspace === false) {
 				throw new ForbiddenException('You can not create a workspace.');
 			}
 		}
-		
+
 		$workspace = $this->spaceManager->create($spaceName);
 
 		if ($workspaceManagersCanCreateWorkspace) {

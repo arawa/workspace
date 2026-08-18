@@ -206,7 +206,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$timestamp = (new \DateTimeImmutable('now'))->getTimestamp();
-		
+
 		$folderDefinition
 			->expects($this->any())
 			->method('toArray')
@@ -223,7 +223,6 @@ class SpaceManagerTest extends TestCase {
 				'color_code' => '#93b250',
 				'created_by' => null,
 				'created_at' => $timestamp,
-				
 			])
 		;
 
