@@ -42,19 +42,11 @@ class Space extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $colorCode;
 
-	/** @var string */
-	protected $createdBy;
-
-	/** @var integer */
-	protected $createdAt;
-
 	public function __construct() {
 		$this->addType('id', 'integer');
 		$this->addType('groupfolder_id', 'integer');
 		$this->addType('space_name', 'string');
 		$this->addType('color_code', 'string');
-		$this->addType('created_by', 'string');
-		$this->addType('created_at', 'integer');
 	}
 
 	public function getSpaceName(): string {
@@ -80,8 +72,6 @@ class Space extends Entity implements JsonSerializable {
 			'groupfolder_id' => (int)$this->groupfolderId,
 			'name' => $this->spaceName,
 			'color_code' => $this->colorCode,
-			'created_by' => $this->createdBy,
-			'created_at' => $this->createdAt,
 		];
 	}
 }

@@ -110,8 +110,6 @@ class SpaceManager {
 		$space->setSpaceName($spacename);
 		$space->setGroupfolderId($folderId);
 		$space->setColorCode($this->colorCode->generate());
-		$space->setCreatedBy($this->userSession->getUser()?->getUID());
-		$space->setCreatedAt((new \DateTimeImmutable('now'))->getTimestamp());
 		$this->spaceMapper->insert($space);
 
 

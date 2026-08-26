@@ -220,9 +220,7 @@ class SpaceManagerTest extends TestCase {
 				'id' => 4,
 				'groupfolder_id' => 4,
 				'name' => 'Espace04',
-				'color_code' => '#93b250',
-				'created_by' => null,
-				'created_at' => $timestamp,
+				'color_code' => '#93b250'
 			])
 		;
 
