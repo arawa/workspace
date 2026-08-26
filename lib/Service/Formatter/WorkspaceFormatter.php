@@ -4,6 +4,7 @@ namespace OCA\Workspace\Service\Formatter;
 
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\UserService;
 use OCP\IGroupManager;
 use Psr\Log\LoggerInterface;
 
@@ -14,6 +15,7 @@ class WorkspaceFormatter {
 	public function __construct(
 		private LoggerInterface $logger,
 		private IGroupManager $groupManager,
+		private UserService $userService,
 	) {
 	}
 
@@ -34,6 +36,9 @@ class WorkspaceFormatter {
 			'managers' => null,
 			'users' => (object)[],
 			'usersCount' => self::NO_USERS,
+			'createdBy' => $workspace['created_by'] ?? null,
+			'createdAt' => (new \DateTimeImmutable())->setTimestamp($workspace['created_at'])->format('Y-m-d H:i:s') ?? null,
+			'currentUserIsSimpleUser' => $this->userService->isSimpleUserOfSpace($workspace),
 		];
 
 		$wsGroups = [];

@@ -42,6 +42,7 @@ use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
@@ -57,6 +58,7 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -83,6 +85,8 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&WorkspaceCheckService $workspaceCheck;
 	private MockObject&WorkspaceManagerGroup $workspaceManagerGroup;
 	private MockObject&WorkspaceService $workspaceService;
+	private MockObject&IUserSession $userSession;
+	private MockObject&WorkspaceFormatter $workspaceFormatter;
 
 	private SpaceManager $spaceManager;
 
@@ -112,6 +116,8 @@ class SpaceManagerTest extends TestCase {
 		$this->workspaceManagerGroup = $this->createMock(WorkspaceManagerGroup::class);
 		$this->workspaceService = $this->createMock(WorkspaceService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->userSession = $this->createMock(IUserSession::class);
+		$this->workspaceFormatter = $this->createMock(WorkspaceFormatter::class);
 
 		$this->spaceManager = new SpaceManager(
 			$this->folderHelper,
@@ -133,7 +139,9 @@ class SpaceManagerTest extends TestCase {
 			$this->groupManager,
 			$this->workspaceManagerGroup,
 			$this->workspaceService,
-			$this->colorCode
+			$this->colorCode,
+			$this->userSession,
+			$this->workspaceFormatter
 		);
 	}
 
@@ -172,7 +180,8 @@ class SpaceManagerTest extends TestCase {
 					'id' => 'SPACE-GE-4',
 					'displayname' => 'WM-Espace04',
 				],
-			]
+			],
+			'root_cache_entry' => null,
 		];
 
 		$this->spaceMapper
@@ -183,15 +192,38 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$space
-			->expects($this->once())
+			->expects($this->any())
 			->method('getGroupfolderId')
 			->willReturn($folderId)
 		;
 
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
+		$this->folderHelper
+			->expects($this->any())
+			->method('getFolder')
+			->willReturn($folderDefinition)
+		;
+
+		$timestamp = (new \DateTimeImmutable('now'))->getTimestamp();
+
+		$folderDefinition
+			->expects($this->any())
+			->method('toArray')
+			->willReturn($groupfolder)
+		;
+
 		$space
-			->expects($this->once())
-			->method('getSpaceId')
-			->willReturn($spaceId)
+			->expects($this->any())
+			->method('jsonSerialize')
+			->willReturn([
+				'id' => 4,
+				'groupfolder_id' => 4,
+				'name' => 'Espace04',
+				'color_code' => '#93b250',
+				'created_by' => null,
+				'created_at' => $timestamp,
+			])
 		;
 
 		$this->rootFolder
@@ -200,158 +232,40 @@ class SpaceManagerTest extends TestCase {
 			->willReturn(2)
 		;
 
-		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+		$workspaceFormatter = new WorkspaceFormatter(
+			$this->logger,
+			$this->groupManager,
+			$this->userService,
+		);
 
-		$this->folderHelper
-			->expects($this->once())
-			->method('getFolder')
-			->willReturn($folderDefinition)
-		;
+		$expected = $workspaceFormatter->format($space->jsonSerialize(), $groupfolder);
 
-		$folderDefinition
-			->expects($this->once())
-			->method('toArray')
-			->willReturn($groupfolder)
-		;
+		$spaceManager = new SpaceManager(
+			$this->folderHelper,
+			$this->rootFolder,
+			$this->workspaceCheck,
+			$this->userGroup,
+			$this->adminGroup,
+			$this->adminUserGroup,
+			$this->addedGroups,
+			$this->folderStorageManagerHelper,
+			$this->subGroup,
+			$this->userManager,
+			$this->userWorkspaceGroup,
+			$this->spaceMapper,
+			$this->conntectedGroupService,
+			$this->logger,
+			$this->userFormatter,
+			$this->userService,
+			$this->groupManager,
+			$this->workspaceManagerGroup,
+			$this->workspaceService,
+			$this->colorCode,
+			$this->userSession,
+			$workspaceFormatter
+		);
 
-
-		$space
-			->expects($this->once())
-			->method('jsonSerialize')
-			->willReturn([
-				'id' => 4,
-				'groupfolder_id' => 4,
-				'name' => 'Espace04',
-				'color_code' => '#93b250',
-			])
-		;
-
-		$groupUser = $this->createMock(IGroup::class);
-		$groupWorkspaceManagerUser = $this->createMock(IGroup::class);
-
-		$this->groupManager
-			->expects($this->any())
-			->method('get')
-			->willReturn($groupUser, $groupWorkspaceManagerUser)
-		;
-
-		$groupUser
-			->expects($this->any())
-			->method('getGID')
-			->willReturn('SPACE-U-4')
-		;
-		$groupUser
-			->expects($this->any())
-			->method('getDisplayName')
-			->willReturn('U-Espace04')
-		;
-		$groupUser
-			->expects($this->any())
-			->method('count')
-			->willReturn(0)
-		;
-		$groupUser
-			->expects($this->any())
-			->method('getBackendNames')
-			->willReturn(['Database'])
-		;
-
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('count')
-			->willReturn(0)
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getGID')
-			->willReturn('SPACE-GE-4')
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getDisplayName')
-			->willReturn('WM-Espace04')
-		;
-		$groupWorkspaceManagerUser
-			->expects($this->any())
-			->method('getBackendNames')
-			->willReturn(['Database'])
-		;
-
-		$groupFormatter = Mockery::mock(GroupFormatter::class);
-		$groupFormatter
-			->shouldReceive('formatGroups')
-			->with([$groupUser, $groupWorkspaceManagerUser])
-			->andReturn([
-				'SPACE-GE-4' => [
-					'gid' => 'SPACE-GE-4',
-					'displayName' => 'WM-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-GE-4'
-				],
-				'SPACE-U-4' => [
-					'gid' => 'SPACE-U-4',
-					'displayName' => 'U-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-U-4'
-				]
-			])
-		;
-
-		$this->adminGroup
-			->expects($this->once())
-			->method('getUsersFormatted')
-			->with($groupfolder, $space)
-			->willReturn([])
-		;
-
-		$actual = $this->spaceManager->get($spaceId);
-
-		$expected = [
-			'id' => 4,
-			'mount_point' => 'Espace04',
-			'groups' => [
-				'SPACE-GE-4' => [
-					'gid' => 'SPACE-GE-4',
-					'displayName' => 'WM-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-GE-4'
-				],
-				'SPACE-U-4' => [
-					'gid' => 'SPACE-U-4',
-					'displayName' => 'U-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-U-4'
-				]
-			],
-			'quota' => -3,
-			'size' => 0,
-			'acl' => true,
-			'manage' => [
-				[
-					'type' => 'group',
-					'id' => 'SPACE-GE-4',
-					'displayname' => 'WM-Espace04'
-				]
-			],
-			'groupfolder_id' => 4,
-			'name' => 'Espace04',
-			'color_code' => '#93b250',
-			'users' => [],
-			'usersCount' => 0,
-			'added_groups' => (object)[]
-		];
+		$actual = $spaceManager->get($spaceId);
 
 		$this->assertEquals($expected, $actual);
 		$this->assertIsArray($actual);
@@ -1249,7 +1163,9 @@ class SpaceManagerTest extends TestCase {
 				$this->groupManager,
 				$this->workspaceManagerGroup,
 				$this->workspaceService,
-				$this->colorCode
+				$this->colorCode,
+				$this->userSession,
+				$this->workspaceFormatter
 			])
 			->onlyMethods(['get'])
 			->getMock()
@@ -1998,7 +1914,9 @@ class SpaceManagerTest extends TestCase {
 				$this->groupManager,
 				$this->workspaceManagerGroup,
 				$this->workspaceService,
-				$this->colorCode
+				$this->colorCode,
+				$this->userSession,
+				$this->workspaceFormatter
 			])
 			->onlyMethods(['get'])
 			->getMock()
@@ -2072,7 +1990,9 @@ class SpaceManagerTest extends TestCase {
 				$this->groupManager,
 				$this->workspaceManagerGroup,
 				$this->workspaceService,
-				$this->colorCode
+				$this->colorCode,
+				$this->userSession,
+				$this->workspaceFormatter
 			])
 			->onlyMethods(['get'])
 			->getMock()
@@ -2130,7 +2050,9 @@ class SpaceManagerTest extends TestCase {
 				$this->groupManager,
 				$this->workspaceManagerGroup,
 				$this->workspaceService,
-				$this->colorCode
+				$this->colorCode,
+				$this->userSession,
+				$this->workspaceFormatter
 			])
 			->onlyMethods(['get'])
 			->getMock()

@@ -27,6 +27,7 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\Middleware\ForbiddenException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
@@ -41,6 +42,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -63,6 +65,7 @@ class WorkspaceController extends Controller {
 		private WorkspaceService $workspaceService,
 		private UserFormatter $userFormatter,
 		private SpaceManager $spaceManager,
+		private IAppConfig $appConfig,
 		public $AppName,
 	) {
 		parent::__construct($AppName, $request);
@@ -79,11 +82,37 @@ class WorkspaceController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @GeneralManagerRequired
+	 * @WorkspaceManagerAccessMiddleware
 	 * @param string $spaceName
 	 */
 	public function createWorkspace(string $spaceName): JSONResponse {
+
+		$workspaceManagersCanCreateWorkspace
+			= $this->userService->isSpaceManager()
+			&& $this->appConfig->getAppValueBool('allow_wm_workspace_creation', false)
+		;
+
+		if ($this->userService->isSpaceManager()) {
+			if ($workspaceManagersCanCreateWorkspace === false) {
+				throw new ForbiddenException('You can not create a workspace.');
+			}
+		}
+
 		$workspace = $this->spaceManager->create($spaceName);
+
+		if ($workspaceManagersCanCreateWorkspace) {
+			$spaceId = $workspace['id'];
+			$this->spaceManager->addUserAsWorkspaceManager(
+				$spaceId,
+				$this->userSession->getUser()->getUID()
+			);
+
+			$workspace = $this->spaceManager->get($spaceId);
+			/*
+			$workspace['id_space'] = $workspace['id'];
+			$workspace['color'] = $workspace['color_code'];
+			*/
+		}
 
 		return new JSONResponse(
 			array_merge(
