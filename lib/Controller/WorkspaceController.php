@@ -108,10 +108,6 @@ class WorkspaceController extends Controller {
 			);
 
 			$workspace = $this->spaceManager->get($spaceId);
-			/*
-			$workspace['id_space'] = $workspace['id'];
-			$workspace['color'] = $workspace['color_code'];
-			*/
 		}
 
 		return new JSONResponse(
