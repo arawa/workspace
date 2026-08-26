@@ -116,6 +116,9 @@ class SpaceManager {
 			throw new CreateWorkspaceException('Error while creating a space.', Http::STATUS_CONFLICT);
 		}
 
+		$uid = $this->userSession->getUser()->getUID();
+		$this->logger->info("Workspace {$spacename} created by $uid");
+
 		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
 		$newSpaceUsersGroup = $this->userGroup->create($space);
 
