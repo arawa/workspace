@@ -25,7 +25,6 @@
 namespace OCA\Workspace\Db;
 
 use JsonSerializable;
-
 use OCP\AppFramework\Db\Entity;
 
 class ConnectedGroup extends Entity implements JsonSerializable {

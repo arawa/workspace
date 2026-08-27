@@ -269,7 +269,6 @@ class SpaceManagerTest extends TestCase {
 		$this->assertIsArray($actual);
 	}
 
-
 	public function testFindAWorkspaceAndReturnNull(): void {
 		$spaceId = 4;
 
@@ -284,7 +283,6 @@ class SpaceManagerTest extends TestCase {
 
 		$this->assertNull($actual);
 	}
-
 
 	public function testThrowsNotFoundExceptionWhenGettingWorkspaceWithGroupfolderReturningFalse(): void {
 		$spaceId = 4;
@@ -409,6 +407,20 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+
+		$userMocked = $this->createMock(IUser::class);
+
+		$this->userSession
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($userMocked)
+		;
+
+		$userMocked
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('admin')
+		;
 
 		$this->folderHelper
 			->expects($this->once())
@@ -1247,7 +1259,6 @@ class SpaceManagerTest extends TestCase {
 			->with($uid)
 			->willReturn($user)
 		;
-
 
 		$workspaceManagerGroupMock = Mockery::mock(WorkspaceManagerGroup::class);
 		$workspaceManagerGroupMock

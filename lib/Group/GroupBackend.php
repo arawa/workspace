@@ -159,7 +159,6 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		return 'WorkspaceGroupBackend';
 	}
 
-
 	public function countUsersInGroup(string $gid, string $search = ''): int {
 
 		$users = $this->usersInGroup($gid);

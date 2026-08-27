@@ -26,3 +26,5 @@
 <input type="hidden" id="aclInheritPerUser" value="<?php p($_['aclInheritPerUser'] ? 'true': 'false'); ?>">
 <input type="hidden" id="addedGroupDisabled" value="<?php p($_['addedGroupDisabled'] ? 'true': 'false'); ?>">
 <input type="hidden" id="userSession" value="<?php p($_['userSession']); ?>">
+<input type="hidden" id="isSpaceManager" value="<?php p($_['isSpaceManager'] ? 'true' : 'false'); ?>">
+<input type="hidden" id="allowWmWorkspaceCreation" value="<?php p($_['allowWmWorkspaceCreation'] ? 'true' : 'false'); ?>">

@@ -246,7 +246,6 @@ class FileCSVController extends Controller {
 			$data = $this->importProcess($fileUploader, $space);
 
 			return new JSONResponse($data);
-
 		} catch (AbstractNotificationException $exception) {
 			return new JSONResponse(
 				ErrorResponseFormatter::format(
