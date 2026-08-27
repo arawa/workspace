@@ -410,6 +410,20 @@ class SpaceManagerTest extends TestCase {
 
 		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
 
+		$userMocked = $this->createMock(IUser::class);
+
+		$this->userSession
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($userMocked)
+		;
+
+		$userMocked
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('admin')
+		;
+		
 		$this->folderHelper
 			->expects($this->once())
 			->method('getFolder')

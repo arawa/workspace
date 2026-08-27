@@ -177,7 +177,7 @@ export default {
 			this.$store.dispatch('incrementCountTotalWorkspaces')
 			this.$store.dispatch('incrementCountTotalWorkspacesByQuery')
 			this.$router.push({
-				path: `/workspace/${workspace.id_space}`,
+				path: `/workspace/${workspace.id}`,
 			})
 		},
 	},
