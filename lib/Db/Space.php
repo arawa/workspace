@@ -26,7 +26,6 @@
 namespace OCA\Workspace\Db;
 
 use JsonSerializable;
-
 use OCP\AppFramework\Db\Entity;
 
 class Space extends Entity implements JsonSerializable {

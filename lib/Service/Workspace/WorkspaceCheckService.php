@@ -49,7 +49,6 @@ class WorkspaceCheckService {
 		return false;
 	}
 
-
 	/**
 	 * Check if the space name exist in groupfolders or workspace
 	 */
