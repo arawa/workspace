@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - v4.4.1 [#1665](https://github.com/arawa/workspace/pull/1665) 
 
+### Added
+
+- add users from csv file ( [#872](https://github.com/arawa/workspace/pull/872) )
+
+### Changed
+
+- style(vue): replace css spinner by a built-in spinner of Nextcloud ( [#887](https://github.com/arawa/workspace/pull/887) )
+
 ### Fixed
 
 - Use correct string delimiters in query conditions for PostgreSQL by @ThibautPlg , @zak39 in [#1660](https://github.com/arawa/workspace/pull/1660)
