@@ -25,6 +25,8 @@ OC.L10N.register(
     "Search users" : "Sök användare",
     "Your CSV file must follow this structure:" : "CSV-filen måste följa den här strukturen:",
     "No users selected" : "Inga användare valda",
+    "Users highlighted in red are not yet member of this workspace. They will be automatically added." : "Användare som är markerade med rött är ännu inte medlemmar i den här arbetsytan. De läggs till automatiskt.",
+    "Add these users" : "Lägg till dessa användare",
     "Cancel" : "Avbryt",
     "Confirm" : "Bekräfta",
     "Upload new files" : "Ladda upp nya filer",
