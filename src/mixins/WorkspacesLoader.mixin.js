@@ -6,7 +6,7 @@ import { LIMIT_WORKSPACES_PER_PAGE } from '../constants.js'
 export const WorkspacesLoader = {
 	computed: {
 		messageLoader() {
-			return t('workspace', '{number} workspaces...', { number: this.$store.getters.countWorkspaces })
+			return t('workspace', '{number} workspaces\u00A0…', { number: this.$store.getters.countWorkspaces })
 		},
 		nextPage() {
 			return this.$store.getters.nextPage

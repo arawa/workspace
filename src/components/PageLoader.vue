@@ -19,7 +19,7 @@ export default {
 	props: {
 		message: {
 			type: String,
-			default: t('workspace', 'Loading...'),
+			default: t('workspace', 'Loading\u00A0…'),
 		},
 	},
 }

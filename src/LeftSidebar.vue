@@ -39,7 +39,7 @@
 			</NcAppNavigationItem>
 		</ul>
 		<NcAppNavigationSearch v-model="workspacesSearchQuery"
-			:label="t('workspace', 'Search workspaces...')" />
+			:label="t('workspace', 'Search workspaces\u00A0…')" />
 		<template #list>
 			<SpaceMenuItem
 				v-for="(space, spaceName) in $store.state.spaces"
