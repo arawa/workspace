@@ -16,6 +16,7 @@ OC.L10N.register(
     "No users" : "Engir notendur",
     "Quota" : "Kvóti",
     "Users" : "Notendur",
+    "Role" : "Hlutverk",
     "Groups" : "Hópar",
     "View profile" : "Skoða notandasnið",
     "unlimited" : "ótakmarkað",
