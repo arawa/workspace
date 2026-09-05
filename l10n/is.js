@@ -2,6 +2,7 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Óþekkt villa",
+    "Add users" : "Bæta við notendum",
     "Search users" : "Leita að notendum",
     "Cancel" : "Cancel",
     "Confirm" : "Staðfesta",
