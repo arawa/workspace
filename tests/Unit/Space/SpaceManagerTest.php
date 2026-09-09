@@ -466,6 +466,13 @@ class SpaceManagerTest extends TestCase {
 			->willReturn('#a50b1c')
 		;
 
+		$userMocked = $this->createMock(IUser::class);
+		$this->userSession
+			->expects($this->once())
+			->method('getUser')
+			->willReturn($userMocked)
+		;
+
 		$space = $this->spaceManager->create('Espace01');
 
 		$this->assertEquals(
