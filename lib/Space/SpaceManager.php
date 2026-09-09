@@ -112,13 +112,16 @@ class SpaceManager {
 		$space->setColorCode($this->colorCode->generate());
 		$this->spaceMapper->insert($space);
 
-
 		if (is_null($space)) {
 			throw new CreateWorkspaceException('Error while creating a space.', Http::STATUS_CONFLICT);
 		}
 
-		$uid = $this->userSession->getUser()->getUID();
-		$this->logger->info("Workspace {$spacename} created by $uid");
+		$uid = $this->userSession->getUser()?->getUID();
+		if ($uid === null) {
+			$this->logger->info("Workspace {$spacename} created by an admin user from the command line");
+		} else {
+			$this->logger->info("Workspace {$spacename} created by $uid");
+		}
 
 		$newSpaceManagerGroup = $this->workspaceManagerGroup->create($space);
 		$newSpaceUsersGroup = $this->userGroup->create($space);
@@ -337,7 +340,7 @@ class SpaceManager {
 
 		$this->spaceMapper->deleteSpace($spaceId);
 
-		$folderId = $space['groupfolder_id'];
+		$folderId = $space['groupfolderId'];
 		$folder = $this->folderHelper->getFolder($folderId, $this->rootFolder->getRootFolderStorageId());
 		$this->folderStorageManagerHelper->deleteStoragesForFolder($folder);
 		$this->folderHelper->removeFolder($folderId);
@@ -464,7 +467,6 @@ class SpaceManager {
 		if (!empty($usersAreNotPresentInWorkspace)) {
 			$formattedUsers = implode(array_map(fn ($user) => "- {$user}\n", $usersAreNotPresentInWorkspace));
 			throw new NotFoundException("These users were not found in the workspace {$space['name']}: {$formattedUsers}");
-
 		}
 
 		$managerGid = WorkspaceManagerGroup::get($id);
