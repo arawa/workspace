@@ -28,7 +28,7 @@ import GroupDetails from './GroupDetails.vue'
 import Home from './Home.vue'
 import SpaceDetails from './SpaceDetails.vue'
 import SpaceTable from './SpaceTable.vue'
-import Error403 from './Error403.vue'
+import Error404 from './Error404.vue'
 
 Vue.use(Router)
 
@@ -54,8 +54,8 @@ export default new Router({
 					component: GroupDetails,
 				},
 				{
-					path: 'unauthorized',
-					component: Error403,
+					path: 'not-found',
+					component: Error404,
 				},
 			],
 		},
