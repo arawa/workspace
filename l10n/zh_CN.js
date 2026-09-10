@@ -18,6 +18,7 @@ OC.L10N.register(
     "Add" : "添加",
     "No users" : "无用户",
     "Quota" : "配额",
+    "Users" : "用户",
     "Role" : "角色",
     "Groups" : "用户组",
     "View profile" : "查看个人资料",
