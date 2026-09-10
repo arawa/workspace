@@ -62,7 +62,7 @@ class ShareMembersOnlyFilter {
 			$users,
 			function ($user) use ($usersInTheSameGroup) {
 				$usernames = array_values(array_map(fn ($user) => $user->getUID(), $usersInTheSameGroup));
-				return in_array($user->getUID(), $usernames);
+				return in_array($user->getUID(), $usernames, true);
 			});
 
 		return $usersInTheSameGroup;

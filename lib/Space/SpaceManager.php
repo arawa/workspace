@@ -419,7 +419,7 @@ class SpaceManager {
 		}
 
 		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
-		$groups = array_filter($groups, fn ($group) => !in_array('LDAP', $group->getBackendNames()));
+		$groups = array_filter($groups, fn ($group) => !in_array('LDAP', $group->getBackendNames(), true));
 
 		foreach ($groups as $group) {
 			$newGroupName = str_replace($oldSpacename, $newSpacename, $group->getDisplayName());

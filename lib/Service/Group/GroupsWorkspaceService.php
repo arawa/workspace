@@ -78,8 +78,8 @@ class GroupsWorkspaceService {
 		$groups = [];
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
 			if (
-				in_array($group->getGID(), array_keys($groupfolder['groups']))
-				|| in_array($group->getGID(), $groupsWorkspace)
+				in_array($group->getGID(), array_keys($groupfolder['groups']), true)
+				|| in_array($group->getGID(), $groupsWorkspace, true)
 			) {
 				array_push($groups, $group->getGID());
 			}

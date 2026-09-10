@@ -171,7 +171,7 @@ class GroupController extends Controller {
 			$groups);
 
 		if (!empty($groups)
-			&& in_array($newGroupName, $groupsNameSearched)) {
+			&& in_array($newGroupName, $groupsNameSearched, true)) {
 			return new JSONResponse(
 				'This group already exists. Please, use another name',
 				Http::STATUS_CONFLICT
@@ -486,7 +486,7 @@ class GroupController extends Controller {
 			});
 		}
 
-		$groups = array_filter($groups, fn ($group) => !in_array($group->getGID(), $groupsPresents));
+		$groups = array_filter($groups, fn ($group) => !in_array($group->getGID(), $groupsPresents, true));
 
 		$groupsFormatted = GroupFormatter::formatGroups($groups);
 
