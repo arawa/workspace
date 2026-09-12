@@ -11,7 +11,7 @@ OC.L10N.register(
     "Add" : "Guardar",
     "Users" : "Usuarios",
     "Save" : "Guardar",
-    "Loading..." : "Cargando...",
-    "or" : "o"
+    "or" : "o",
+    "Loading..." : "Cargando..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

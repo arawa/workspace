@@ -21,8 +21,9 @@
     "Remove user" : "사용자 제거",
     "Appearance" : "외형",
     "Save" : "저장",
-    "Loading..." : "불러오는 중...",
+    "Loading …" : "로딩 중 …",
     "or" : "또는",
-    "Delete user" : "사용자 지우기"
+    "Delete user" : "사용자 지우기",
+    "Loading..." : "불러오는 중..."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

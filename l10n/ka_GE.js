@@ -12,7 +12,7 @@ OC.L10N.register(
     "Users" : "მომხმარებლები",
     "Groups" : "ჯგუფები",
     "Save" : "შენახვა",
-    "Loading..." : "იტვირთება…",
-    "or" : "ან"
+    "or" : "ან",
+    "Loading..." : "იტვირთება…"
 },
 "nplurals=2; plural=(n!=1);");
