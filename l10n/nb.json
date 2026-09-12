@@ -23,8 +23,8 @@
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
     "Save" : "Lagre",
-    "Loading..." : "Laster…",
     "or" : "eller",
-    "Delete user" : "Slett bruker"
+    "Delete user" : "Slett bruker",
+    "Loading..." : "Laster…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

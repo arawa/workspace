@@ -26,8 +26,9 @@ OC.L10N.register(
     "unlimited" : "illimitato",
     "Appearance" : "Aspetto",
     "Save" : "Salva",
-    "Loading..." : "Caricamento in corso...",
+    "Loading …" : "Caricamento in corso...",
     "or" : "o",
-    "Delete user" : "Elimina utente"
+    "Delete user" : "Elimina utente",
+    "Loading..." : "Caricamento in corso..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

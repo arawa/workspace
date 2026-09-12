@@ -24,6 +24,7 @@ OC.L10N.register(
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
     "Save" : "Сними",
+    "Loading …" : "Се вчитува …",
     "or" : "или",
     "Delete user" : "Избриши корисник"
 },

@@ -22,8 +22,8 @@ OC.L10N.register(
     "unlimited" : "ensin llende",
     "Appearance" : "Aspeutu",
     "Save" : "Guardar",
-    "Loading..." : "Cargando...",
     "or" : "o",
-    "Delete user" : "Desaniciar l'usuariu"
+    "Delete user" : "Desaniciar l'usuariu",
+    "Loading..." : "Cargando..."
 },
 "nplurals=2; plural=(n != 1);");
