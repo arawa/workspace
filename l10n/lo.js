@@ -56,7 +56,7 @@ OC.L10N.register(
     "Appearance" : "ຮູບລັກ",
     "Set quota" : "ກຳນົດໂຄຕ້າ",
     "Save" : "ບັນທຶກ",
-    "Loading..." : "ກຳລັງໂຫລດ...",
+    "Loading …" : "ກຳລັງໂຫຼດ …",
     "return to home" : "ກັບໄປໜ້າຫຼັກ",
     "Can't load workspace users" : "ບໍ່ສາມາດໂຫຼດຜູ້ໃຊ້ຂອງພື້ນທີ່ວຽກໄດ້",
     "or" : "ຫຼື",
@@ -65,6 +65,7 @@ OC.L10N.register(
     "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "ເກີດຂໍ້ຜິດພາດດ້ານເຄືອຂ່າຍຂະນະພະຍາຍາມປ່ຽນສີພື້ນທີ່ວຽກ.<br>ຂໍ້ຜິດພາດຄື: {error}",
     "Rename space" : "ປ່ຽນຊື່ພື້ນທີ່ວຽກ",
     "Space name" : "ຊື່ພື້ນທີ່ວຽກ",
-    "Delete user" : "ລຶບຜູ້ໃຊ້"
+    "Delete user" : "ລຶບຜູ້ໃຊ້",
+    "Loading..." : "ກຳລັງໂຫລດ..."
 },
 "nplurals=1; plural=0;");

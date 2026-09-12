@@ -27,7 +27,6 @@ OC.L10N.register(
     "Error" : "Virhe",
     "New workspace" : "Uusi työtila",
     "All workspaces" : "Kaikki työtilat",
-    "Search workspaces..." : "Etsi työtiloja...",
     "Settings" : "Asetukset",
     "Convert Team folders" : "Muunna tiimikansiot",
     "Network error" : "Verkkovirhe",
@@ -55,12 +54,14 @@ OC.L10N.register(
     "Rename your workspace" : "Nimeä työtila uudelleen",
     "Set quota" : "Aseta kiintiö",
     "Save" : "Tallenna",
-    "Loading..." : "Ladataan...",
+    "Loading …" : "Ladataan …",
     "Can't load workspace users" : "Työtilan käyttäjiä ei voi ladata",
     "or" : "tai",
     "Error 403" : "Virhe 403",
     "Rename space" : "Nimeä tila uudelleen",
     "Space name" : "Tilan nimi",
-    "Delete user" : "Poista käyttäjä"
+    "Delete user" : "Poista käyttäjä",
+    "Search workspaces..." : "Etsi työtiloja...",
+    "Loading..." : "Ladataan..."
 },
 "nplurals=2; plural=(n != 1);");
