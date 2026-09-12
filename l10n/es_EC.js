@@ -73,7 +73,6 @@ OC.L10N.register(
     "Set quota" : "Establecer cuota",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "Ten en cuenta que la cuota que seleccionaste es menor que el espacio actualmente usado por tu espacio de trabajo. Ya no podrás agregar o modificar archivos.",
     "Save" : "Guardar",
-    "Loading..." : "Cargando...",
     "return to home" : "volver al inicio",
     "Can't load workspace users" : "No se pueden cargar usuarios del espacio de trabajo",
     "An error occurred while trying to add user" : "Ocurrió un error al intentar agregar usuario",
@@ -94,6 +93,7 @@ OC.L10N.register(
     "Rename space" : "Renombrar espacio",
     "Space name" : "Nombre del espacio",
     "Delete user" : "Eliminar usuario",
-    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}"
+    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}",
+    "Loading..." : "Cargando..."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
