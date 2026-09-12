@@ -22,6 +22,7 @@ OC.L10N.register(
     "Remove user" : "Xóa người dùng",
     "Appearance" : "Giao diện",
     "Save" : "Lưu",
+    "Loading …" : "Đang tải …",
     "or" : "hoặc",
     "Delete user" : "Xóa người dùng"
 },

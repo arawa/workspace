@@ -28,8 +28,9 @@ OC.L10N.register(
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
-    "Loading..." : "Laden....",
+    "Loading …" : "Aan het laden...",
     "or" : "of",
-    "Delete user" : "Verwijder gebruiker"
+    "Delete user" : "Verwijder gebruiker",
+    "Loading..." : "Laden...."
 },
 "nplurals=2; plural=(n != 1);");

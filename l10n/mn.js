@@ -23,6 +23,7 @@ OC.L10N.register(
     "Remove user" : "Хэрэглэгч хасах",
     "Appearance" : "Гадаад төрх",
     "Save" : "Хадгалах",
+    "Loading …" : "Ачаалж байна …",
     "or" : "эсвэл"
 },
 "nplurals=2; plural=(n != 1);");

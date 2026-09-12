@@ -32,7 +32,6 @@
     "Error" : "خاتالىق",
     "New workspace" : "يېڭى خىزمەت بوشلۇقى",
     "All workspaces" : "بارلىق خىزمەت بوشلۇقى",
-    "Search workspaces..." : "خىزمەت بوشلۇقى ئىزدە...",
     "Settings" : "تەڭشەكلەر",
     "Convert Team folders" : "ئەتىرەت قىسقۇچىنى ئايلاندۇر",
     "An error occurred while trying to lookup users.<br>Error: {error}" : "ئىشلەتكۈچىنى ئىزدەۋاتقاندا بىر خاتالىق يۈز بەردى. <br> خاتالىق: {error}",
@@ -82,9 +81,8 @@
     "Set quota" : "چەك بېكىت",
     "Please note that the quota you have selected is less than the space currently used by your workspace. You will no longer be able to add or modify files." : "سىز تاللىغان بوشلۇقنىڭ خىزمەت بوشلۇقىڭىز ھازىر ئىشلىتىۋاتقان بوشلۇقتىن ئاز ئىكەنلىكىنى ئۇنۇتماڭ. ئەمدى ھۆججەت قوشالمايسىز ياكى ئۆزگەرتەلمەيسىز.",
     "Save" : "ساقلاش",
-    "Loading..." : "يۈكلەۋاتىدۇ…",
+    "Loading …" : "يۈكلەۋاتىدۇ ...",
     "return to home" : "باشبەتكە قايت",
-    "{number} workspaces..." : "{number} خىزمەت بوشلۇقى...",
     "Can't load workspace users" : "خىزمەت بوشلۇقى ئىشلەتكۈچىلىرىنى يۈكلىيەلمىدى",
     "An error occurred while trying to add user" : "ئىشلەتكۈچى قېتىۋاتقاندا بىر خاتالىق يۈز بەردى",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "{user_name} نى خىزمەت بوشلۇقىغا قېتىۋاتقاندا بىر تور خاتالىقى يۈز بەردى. 1 خاتالىق: {error}",
@@ -105,6 +103,9 @@
     "Rename space" : "بوشلۇقنىڭ نامىنى ئۆزگەرت",
     "Space name" : "بوشلۇق نامى",
     "Delete user" : "ئىشلەتكۈچىنى ئۆچۈرۈڭ",
-    "You use <b>{size}</b> of {quota}" : "سىز {quota} نىڭ <b>{size}</b> نى ئىشلەتتىڭىز"
+    "You use <b>{size}</b> of {quota}" : "سىز {quota} نىڭ <b>{size}</b> نى ئىشلەتتىڭىز",
+    "Search workspaces..." : "خىزمەت بوشلۇقى ئىزدە...",
+    "Loading..." : "يۈكلەۋاتىدۇ…",
+    "{number} workspaces..." : "{number} خىزمەت بوشلۇقى..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
