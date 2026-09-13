@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - v4.4.1 [#1665](https://github.com/arawa/workspace/pull/1665) 
 
+### Changed
+
+- Add a Upgrade guideline section ( [#911](chore/inform-users-refresh-browser) )
+
 ### Fixed
 
 - Use correct string delimiters in query conditions for PostgreSQL by @ThibautPlg , @zak39 in [#1660](https://github.com/arawa/workspace/pull/1660)
