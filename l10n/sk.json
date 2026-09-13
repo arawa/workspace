@@ -5,7 +5,7 @@
     "Error in CSV file content" : "Chyba v obsahu súboru CSV",
     "Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>" : "Používatelia tohto CSV súboru sú neznámi a nemôžu byť importovaní. Skontrolujte nasledujúcich používateľov a proces opakujte: <br>",
     "Error: unknown users" : "Chyba: neznámi používatelia",
-    "- <b>%1$s</b> has the <b>%2$s</b> role" : "- <b>%1$s</b> má <b>%2$s</b> úloh",
+    "- <b>%1$s</b> has the <b>%2$s</b> role" : "- <b>%1$s</b> má rolu <b>%2$s</b>",
     "Error: unknown role" : "Chyba: neznáma úloha",
     "Error in file format" : "Chyba vo formáte súboru",
     "The file must be in <b>CSV format</b>." : "Súbor musí byť vo <b>CSV formáte</b>.",
