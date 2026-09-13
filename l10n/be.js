@@ -24,6 +24,7 @@ OC.L10N.register(
     "Remove from group" : "Выдаліць з групы",
     "Appearance" : "Знешні выгляд",
     "Save" : "Захаваць",
+    "Loading …" : "Загрузка …",
     "or" : "або",
     "Error 403" : "Памылка 403",
     "Delete user" : "Выдаліць карыстальніка",
