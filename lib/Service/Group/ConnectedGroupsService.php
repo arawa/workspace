@@ -59,7 +59,7 @@ class ConnectedGroupsService {
 		$linkedSpaceGroupsByUserGroups = [];
 		$linkedSpaceGroupsByUserGroups = array_filter($linkedSpaceGroups, function ($spaceGid) use ($gids, $linkedSpaceGroups) {
 			foreach ($gids as $gid) {
-				if (isset($linkedSpaceGroups[$spaceGid]) && in_array($gid, $linkedSpaceGroups[$spaceGid])) {
+				if (isset($linkedSpaceGroups[$spaceGid]) && in_array($gid, $linkedSpaceGroups[$spaceGid], true)) {
 					return true;
 				}
 			}
@@ -100,7 +100,7 @@ class ConnectedGroupsService {
 
 		foreach ($spaceGids as $spaceGid) {
 			if (isset($linkedSpaceGroups[$spaceGid])) {
-				return in_array($gid, $linkedSpaceGroups[$spaceGid]);
+				return in_array($gid, $linkedSpaceGroups[$spaceGid], true);
 			}
 		}
 		return false;
@@ -156,7 +156,7 @@ class ConnectedGroupsService {
 		if (!is_null($gidUserGroup)) {
 			$values = $linkedSpaceGroups[$gidUserGroup];
 			if (!is_null($values)) {
-				return in_array($gid, $values);
+				return in_array($gid, $values, true);
 			}
 			return false;
 		}
@@ -183,10 +183,10 @@ class ConnectedGroupsService {
 	 * @param string $uid user UID
 	 * @param string $spaceUserGid space-u group
 	 */
-	public function isStrictSpaceUser(string $uid, string $spaceUserGid) {
+	public function isStrictSpaceUser(string $uid, string $spaceUserGid): bool {
 		if (!isset($this->strictSpaceUsers[$spaceUserGid])) {
 			$this->strictSpaceUsers[$spaceUserGid] = $this->mapper->getStrictSpaceUserIds($spaceUserGid);
 		}
-		return in_array($uid, $this->strictSpaceUsers[$spaceUserGid]);
+		return in_array($uid, $this->strictSpaceUsers[$spaceUserGid], true);
 	}
 }

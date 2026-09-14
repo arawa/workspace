@@ -29,7 +29,7 @@ class UserFormatter {
 		// Gets the workspace subgroups the user is member of
 		$groups = [];
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($space['groups']))) {
+			if (in_array($group->getGID(), array_keys($space['groups']), true)) {
 				array_push($groups, $group->getGID());
 			}
 		}

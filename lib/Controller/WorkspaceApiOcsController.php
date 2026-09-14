@@ -519,7 +519,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$gids = array_keys($space['groups']);
 		$spacename = $space['name'];
 
-		if (!in_array($gid, $gids)) {
+		if (!in_array($gid, $gids, true)) {
 			throw new OCSException("Group {$gid} does not belongs to the {$spacename} workspace.");
 		}
 
@@ -599,7 +599,7 @@ class WorkspaceApiOcsController extends OCSController {
 		$gids = array_keys($workspace['groups']);
 		$spacename = $workspace['name'];
 
-		if (!in_array($gid, $gids)) {
+		if (!in_array($gid, $gids, true)) {
 			throw new OCSForbiddenException("Group {$gid} does not belongs to the {$spacename} workspace.");
 		}
 

@@ -83,7 +83,7 @@ class UserService {
 		}
 
 		foreach ($this->groupManager->getUserGroups($user) as $group) {
-			if (in_array($group->getGID(), array_keys($space['groups'])) || $this->connectedGroups->isConnectedToWorkspace($group->getGID(), array_keys($space['groups']))) {
+			if (in_array($group->getGID(), array_keys($space['groups']), true) || $this->connectedGroups->isConnectedToWorkspace($group->getGID(), array_keys($space['groups']))) {
 				array_push($groups, $group->getGID());
 			}
 		}

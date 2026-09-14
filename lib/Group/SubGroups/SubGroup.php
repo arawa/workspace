@@ -73,7 +73,7 @@ class SubGroup {
 		$groupnames = array_map(fn ($group) => $group->getDisplayName(), $groupsSearched);
 
 		if (!is_null($group)) {
-			if (in_array($displayName, $groupnames)) {
+			if (in_array($displayName, $groupnames, true)) {
 				throw new GroupException("Group with display name $displayName already exists.", Http::STATUS_CONFLICT);
 			}
 		}
