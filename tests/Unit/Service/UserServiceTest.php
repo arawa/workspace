@@ -31,6 +31,7 @@ use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
@@ -49,7 +50,7 @@ class UserServiceTest extends TestCase {
 	private MockObject&IURLGenerator $urlGenerator;
 	private MockObject&UserGroup $userGroup;
 	private MockObject&GroupFoldersGroupsMapper $groupfoldersGroupsMapper;
-	private MockObject&SpaceMapper $spaceMapper;
+	private MockObject&IAppConfig $appConfig;
 
 	public function setUp(): void {
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -58,7 +59,7 @@ class UserServiceTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->userGroup = $this->createMock(UserGroup::class);
 		$this->groupfoldersGroupsMapper = $this->createMock(GroupFoldersGroupsMapper::class);
-		$this->spaceMapper = $this->createMock(SpaceMapper::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -121,7 +122,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -154,7 +155,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
@@ -187,7 +188,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
@@ -231,7 +232,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -265,7 +266,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([
@@ -304,7 +305,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([

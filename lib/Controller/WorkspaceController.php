@@ -27,7 +27,6 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
-use OCA\Workspace\Exceptions\Middleware\ForbiddenException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
@@ -95,12 +94,6 @@ class WorkspaceController extends Controller {
 			= $this->userService->isSpaceManager()
 			&& $this->appConfig->getAppValueBool('allow_wm_workspace_creation', false)
 		;
-
-		if ($this->userService->isSpaceManager()) {
-			if ($workspaceManagersCanCreateWorkspace === false) {
-				throw new ForbiddenException('You can not create a workspace.');
-			}
-		}
 
 		$workspace = $this->spaceManager->create($spaceName);
 
@@ -204,6 +197,9 @@ class WorkspaceController extends Controller {
 		url: '/workspaces/count'
 	)]
 	public function countWorkspaces(?string $search = null): JSONResponse {
+		// return new JSONResponse([
+		// 	'count' => 0
+		// ]);
 		$currentUser = $this->userSession->getUser();
 		$generalManagerGroup = $this->groupManager->get(ManagersWorkspace::GENERAL_MANAGER);
 
