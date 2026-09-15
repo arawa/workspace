@@ -167,17 +167,17 @@ class UserServiceTest extends TestCase {
 	 * is a space manager
 	 */
 	public function testIsSpaceManager(): void {
-		// Let's say user is in a space manager group
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user)
+		;
+
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), 'SPACE-GE-Test')
-			->willReturn(true);
-		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-			->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('SPACE-GE-')
-			->willReturn([$groups]);
+			->with($this->user->getUID(), 'WorkspacesManagers')
+			->willReturn(true)
+		;
 
 		// Instantiates our service
 		$userService = new UserService(
@@ -189,11 +189,6 @@ class UserServiceTest extends TestCase {
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
 			$this->appConfig);
-
-		$this->userSession->expects($this->once())
-			->method('getUser')
-			->with()
-			->willReturn($this->user);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -206,22 +201,17 @@ class UserServiceTest extends TestCase {
 	 * is not a space manager
 	 */
 	public function testIsNotSpaceManager(): void {
-		// Let's say user is in a space manager group
-		$this->groupManager->expects($this->once())
-			->method('isInGroup')
-			->with($this->user->getUID(), 'SPACE-GE-Test')
-			->willReturn(true);
-		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-			->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('SPACE-GE-')
-			->willReturn([$groups]);
-
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->with()
-			->willReturn($this->user);
+			->willReturn($this->user)
+		;
+
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($this->user->getUID(), 'WorkspacesManagers')
+			->willReturn(false)
+		;
 
 		// Instantiates our service
 		$userService = new UserService(
@@ -237,7 +227,7 @@ class UserServiceTest extends TestCase {
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
-		$this->assertEquals(true, $result);
+		$this->assertEquals(false, $result);
 	}
 
 	/**
