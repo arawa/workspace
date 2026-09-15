@@ -88,7 +88,7 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(RequireExistingSpaceMiddleware::class);
 		$context->registerMiddleware(RequireExistingUsersMiddleware::class);
 		$context->registerMiddleware(RequireExistingGroupMiddleware::class);
-		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class);
+		$context->registerMiddleware(WorkspaceAccessControlMiddleware::class); // Be careful, this middleware impacts all the routes of the app
 		$context->registerMiddleware(IsSpaceAdminMiddleware::class);
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);

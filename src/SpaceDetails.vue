@@ -36,7 +36,8 @@
 				</NcCounterBubble>
 			</div>
 			<div class="space-actions">
-				<NcActions ref="ncAction" default-icon="icon-add">
+				<NcActions v-if="showActionButtons()"
+					ref="ncAction" default-icon="icon-add">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
 						@click="toggleShowSelectUsersModal">
@@ -280,6 +281,11 @@ export default {
 		toggleShowEditWorkspaceModal() {
 			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
 		},
+		showActionButtons() {
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const user = space.users[this.$root.$data.userSession]
+			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === 'true'
+		}
 	},
 }
 </script>

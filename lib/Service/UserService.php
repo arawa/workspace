@@ -30,6 +30,7 @@ use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
 use OCP\IUser;
@@ -45,6 +46,7 @@ class UserService {
 		private IURLGenerator $urlGenerator,
 		private UserGroup $userGroup,
 		private GroupFoldersGroupsMapper $groupFoldersGroupsMapper,
+		private IAppConfig $appConfig,
 	) {
 	}
 
@@ -114,12 +116,11 @@ class UserService {
 	 * @return boolean true if user is a space manager, false otherwise
 	 */
 	public function isSpaceManager(): bool {
-		$workspaceAdminGroups = $this->groupManager->search(WorkspaceManagerGroup::getPrefix());
-		foreach ($workspaceAdminGroups as $group) {
-			if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), $group->getGID())) {
-				return true;
-			}
+		$user = $this->userSession->getUser();
+		if ($this->groupManager->isInGroup($user->getUID(), ManagersWorkspace::WORKSPACES_MANAGERS)) {
+			return true;
 		}
+
 		return false;
 	}
 
@@ -160,6 +161,11 @@ class UserService {
 	 */
 	public function canRemoveWorkspaceManagers(IUser $user): bool {
 		$canRemove = false;
+
+		if ($this->appConfig->getAppValueBool('allow_wm_workspace_creation', false)) {
+			return false;
+		}
+
 		$groups = $this->groupManager->getUserGroups($user);
 		$allManagersGroups = array_filter(
 			$groups,
