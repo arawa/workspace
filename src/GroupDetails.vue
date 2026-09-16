@@ -79,11 +79,11 @@
 			<AddUsersTabs @close-sidebar="toggleShowSelectUsersModal" />
 		</NcDialog>
 		<AlertRemoveGroup v-if="showRemoveConnectedGroupModal"
-			:message="t('workspace', 'Warning, after removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another Added Group<br>- users manually added from the Workspace <b>{spacename}</b>', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: getSpaceName }, null, { escape: false })"
+			:message="t('workspace', '<b>Warning!</b> After removal of group <b>{groupname}</b>, its users will lose access to the <b>{spacename}</b> workspace, with the exception of:<br><br>- Workspace Managers (<b>WM-{spacename}</b>)<br>- users who are members of <b>Workspace groups</b> (prefixed <b>G-</b>)<br>- users who are members of another <b>added Group</b><br>- users manually added from the Workspace <b>{spacename}</b>', { groupname: decodeURIComponent(decodeURIComponent($route.params.slug)), spacename: getSpaceName }, null, { escape: false })"
 			@cancel="closeConnectedGroupModal"
 			@remove-group="removeConnectedGroup" />
 		<AlertRemoveGroup v-if="showRemoveGroupModal"
-			:message="t('workspace', 'Please note that after deleting the {groupname} group, its users will retain access to the {spacename} workspace', { groupname: getDisplaynameGroup, spacename: getSpaceName })"
+			:message="t('workspace', '<b>Warning!</b> After deleting the {groupname} group, its users will retain access to the <b>{spacename}</b> workspace', { groupname: getDisplaynameGroup, spacename: getSpaceName })"
 			@cancel="closeRemoveGroupModal"
 			@remove-group="deleteGroup" />
 	</div>
