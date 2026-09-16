@@ -299,7 +299,20 @@ export default {
 		},
 		showActionButtons() {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			console.debug({space})
+			console.debug({'users' : space.users})
+			console.debug({'user_session': this.$root.$data.userSession})
 			const user = space.users[this.$root.$data.userSession]
+			console.debug({user})
+			console.debug({'user_alice': space.users['alice']})
+			if (user === undefined && this.$root.$data.isUserGeneralAdmin === 'true') {
+				return true
+			}
+
+			if (user === undefined) {
+				return false
+			}
+
 			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === 'true'
 		}
 	},
