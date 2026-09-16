@@ -26,7 +26,6 @@
 namespace OCA\Workspace\Tests\Unit\Service;
 
 use OCA\Workspace\Db\GroupFoldersGroupsMapper;
-use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
