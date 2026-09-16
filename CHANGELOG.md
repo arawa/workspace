@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.5.0 - 2026-09-16
+
+### Changed
+
+- Remove space before questionmark by @rakekniven in https://github.com/arawa/workspace/pull/1693
+- Changes to follow guidelines by @rakekniven in https://github.com/arawa/workspace/pull/1694
+
+
+### Added
+
+- Add workspace creation permission for workspace managers by @zak39 in [#1674](https://github.com/arawa/workspace/pull/1674), [#1681](https://github.com/arawa/workspace/pull/1681), [#1690](https://github.com/arawa/workspace/pull/1690), [#1683](https://github.com/arawa/workspace/pull/1683), [#1696](https://github.com/arawa/workspace/pull/1696), [#1699](https://github.com/arawa/workspace/pull/1699)
+- Support Nextcloud 35 by @zak39 in [#1687](https://github.com/arawa/workspace/pull/1687)
+- Add logging for workspace creation with user ID by @zak39 in [#1679](https://github.com/arawa/workspace/pull/1679)
+
 ## 4.4.1 - 2026-05-02
 
 ### Changed
@@ -661,7 +675,8 @@ Thanks to [zak#39](https://github.com/zak39), [smarinier](https://github.com/sma
 - Define users' roles (GeneralManager and WorkspacesManager)
 
 
-[Unreleased]: https://github.com/arawa/workspace/compare/v4.4.1...main
+[Unreleased]: https://github.com/arawa/workspace/compare/v4.5.0...main
+[4.5.0]: https://github.com/arawa/workspace/compare/v4.4.1...4.5.0
 [4.4.1]: https://github.com/arawa/workspace/compare/v4.4.0...4.4.1
 [4.4.0]: https://github.com/arawa/workspace/compare/v4.3.1...4.4.0
 [4.3.1]: https://github.com/arawa/workspace/compare/v4.3.0...4.3.1
