@@ -76,7 +76,7 @@ occ config:app:set workspace added_group_disabled --value true
 Run the following occ command to let Workspace Managers create new Workspaces:
 
 ```shell
-occ config:app:set workspace allow_wm_workspace_creation --value true
+occ config:app:set workspace allow_wm_workspace_creation --value true --type boolean
 ```
 
 >[!INFO]

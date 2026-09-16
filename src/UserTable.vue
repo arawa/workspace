@@ -79,13 +79,13 @@
 									@click="viewProfile(user)">
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
-								<NcActionButton v-if="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
+								<NcActionButton v-if="showActionButtons() && $store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-close"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									{{ t('workspace', 'Remove WM rights') }}
 								</NcActionButton>
-								<NcActionButton v-else-if="!$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
+								<NcActionButton v-else-if="showActionButtons() && !$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space))"
 									:close-after-click="true"
 									@click="toggleUserRole(user)">
 									<template #icon>
@@ -93,7 +93,7 @@
 									</template>
 									{{ t('workspace', 'Assign as WM') }}
 								</NcActionButton>
-								<NcActionButton v-if="!$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
+								<NcActionButton v-if="showActionButtons() && !$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-delete"
 									:close-after-click="true"
 									@click="deleteUser(user)">
@@ -189,7 +189,7 @@ export default {
 			return groupsSorted.map(group => this.$store.getters.groupName(space.name, group)).join(', ')
 		},
 		isCurrentUserWorkspaceManager(user) {
-			return this.$root.$data.isUserGeneralAdmin === false && (this.$root.$data.userSession === user.uid)
+			return this.$root.$data.userSession === user.uid
 		},
 		sortedGroups(groups, space) {
 			groups.sort((groupCurrent, groupNext) => {
@@ -297,6 +297,19 @@ export default {
 		viewProfile(user) {
 			window.location.href = user.profile
 		},
+		showActionButtons() {
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const user = space.users[this.$root.$data.userSession]
+			if (user === undefined && this.$root.$data.isUserGeneralAdmin === 'true') {
+				return true
+			}
+
+			if (user === undefined) {
+				return false
+			}
+
+			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === 'true'
+		}
 	},
 }
 </script>

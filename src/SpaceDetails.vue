@@ -45,9 +45,9 @@
 					</template>
 				</NcPopover>
 			</div>
-			<div v-if="!$store.getters.getSpaceByNameOrId($route.params.space).currentUserIsSimpleUser"
-				class="space-actions">
-				<NcActions ref="ncAction" default-icon="icon-add">
+			<div class="space-actions">
+				<NcActions v-if="showActionButtons()"
+					ref="ncAction" default-icon="icon-add">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
 						@click="toggleShowSelectUsersModal">
@@ -289,6 +289,19 @@ export default {
 		toggleShowEditWorkspaceModal() {
 			this.showEditWorkspaceModal = !this.showEditWorkspaceModal
 		},
+		showActionButtons() {
+			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const user = space.users[this.$root.$data.userSession]
+			if (user === undefined && this.$root.$data.isUserGeneralAdmin === 'true') {
+				return true
+			}
+
+			if (user === undefined) {
+				return false
+			}
+
+			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === 'true'
+		}
 	},
 }
 </script>

@@ -73,6 +73,7 @@ export const getters = {
 		if (!space) {
 			return false
 		}
+
 		return user.groups.includes(ManagerGroup.getGid(space))
 	},
 	// Test whether a user if from and added group from the space

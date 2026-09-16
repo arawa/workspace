@@ -26,11 +26,11 @@
 namespace OCA\Workspace\Tests\Unit\Service;
 
 use OCA\Workspace\Db\GroupFoldersGroupsMapper;
-use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\UserService;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
@@ -49,7 +49,7 @@ class UserServiceTest extends TestCase {
 	private MockObject&IURLGenerator $urlGenerator;
 	private MockObject&UserGroup $userGroup;
 	private MockObject&GroupFoldersGroupsMapper $groupfoldersGroupsMapper;
-	private MockObject&SpaceMapper $spaceMapper;
+	private MockObject&IAppConfig $appConfig;
 
 	public function setUp(): void {
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -58,7 +58,7 @@ class UserServiceTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->userGroup = $this->createMock(UserGroup::class);
 		$this->groupfoldersGroupsMapper = $this->createMock(GroupFoldersGroupsMapper::class);
-		$this->spaceMapper = $this->createMock(SpaceMapper::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
 
 		// Sets up the user'session
 		$this->userSession = $this->createMock(IUserSession::class);
@@ -121,7 +121,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
@@ -154,7 +154,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 		// Runs the method to be tested
 		$result = $userService->isUserGeneralAdmin();
 
@@ -166,17 +166,17 @@ class UserServiceTest extends TestCase {
 	 * is a space manager
 	 */
 	public function testIsSpaceManager(): void {
-		// Let's say user is in a space manager group
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->with()
+			->willReturn($this->user)
+		;
+
 		$this->groupManager->expects($this->once())
 			->method('isInGroup')
-			->with($this->user->getUID(), 'SPACE-GE-Test')
-			->willReturn(true);
-		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-			->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('SPACE-GE-')
-			->willReturn([$groups]);
+			->with($this->user->getUID(), 'WorkspacesManagers')
+			->willReturn(true)
+		;
 
 		// Instantiates our service
 		$userService = new UserService(
@@ -187,12 +187,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
-
-		$this->userSession->expects($this->once())
-			->method('getUser')
-			->with()
-			->willReturn($this->user);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
@@ -205,22 +200,17 @@ class UserServiceTest extends TestCase {
 	 * is not a space manager
 	 */
 	public function testIsNotSpaceManager(): void {
-		// Let's say user is in a space manager group
-		$this->groupManager->expects($this->once())
-			->method('isInGroup')
-			->with($this->user->getUID(), 'SPACE-GE-Test')
-			->willReturn(true);
-		$groups = $this->createTestGroup('SPACE-GE-Test', 'GE-Test', [$this->user]);
-		$this->groupManager->expects($this->once())
-			->method('search')
-			// TODO Use global constant instead of 'GE-'
-			->with('SPACE-GE-')
-			->willReturn([$groups]);
-
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->with()
-			->willReturn($this->user);
+			->willReturn($this->user)
+		;
+
+		$this->groupManager->expects($this->once())
+			->method('isInGroup')
+			->with($this->user->getUID(), 'WorkspacesManagers')
+			->willReturn(false)
+		;
 
 		// Instantiates our service
 		$userService = new UserService(
@@ -231,12 +221,12 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManager();
 
-		$this->assertEquals(true, $result);
+		$this->assertEquals(false, $result);
 	}
 
 	/**
@@ -265,7 +255,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([
@@ -304,7 +294,7 @@ class UserServiceTest extends TestCase {
 			$this->urlGenerator,
 			$this->userGroup,
 			$this->groupfoldersGroupsMapper,
-			$this->spaceMapper);
+			$this->appConfig);
 
 		// Runs the method to be tested
 		$result = $userService->isSpaceManagerOfSpace([
