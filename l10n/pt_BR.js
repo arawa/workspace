@@ -106,7 +106,7 @@ OC.L10N.register(
     "Error while removing group as manager ACL" : "Erro ao remover o grupo como ACL de gerenciador",
     "Impossible to remove group from the advanced permissions." : "Não é possível remover o grupo das permissões avançadas.",
     "Can't load workspace users" : "Não é possível carregar usuários do espaço de trabalho",
-    "Impossible to attach the {gid} group to workspace. May be a problem with the connection?" : "Não foi possível anexar o grupo {gid} ao espaço de trabalho. Será que é algum problema com a conexão?",
+    "Impossible to attach the {gid} group to workspace. May be a problem with the connection?" : "Não foi possível anexar o grupo {gid} ao espaço de trabalho. Será que é um problema com a conexão?",
     "Error to create a workspace" : "Erro ao criar um espaço de trabalho",
     "An error occurred while trying to add user" : "Ocorreu um erro ao tentar adicionar o usuário",
     "A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}" : "Ocorreu um erro de rede ao tentar adicionar o usuário {user_name} ao espaço de trabalho.<br>Erro: {error}",
