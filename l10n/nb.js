@@ -11,6 +11,7 @@ OC.L10N.register(
     "Choose from Files" : "Velg fra Files",
     "Rename group" : "Gi nytt navn til gruppen",
     "Group name" : "Gruppenavn",
+    "Delete group" : "Slett gruppe",
     "Error" : "Feil",
     "Settings" : "Innstillinger",
     "Network error" : "Nettverksfeil",
