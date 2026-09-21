@@ -85,7 +85,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@nextcloud/axios": "^2.5.1",
+    "@nextcloud/axios": "^2.6.0",
     "@nextcloud/dialogs": "^6.3.1",
     "@nextcloud/l10n": "^3.4.0",
     "@nextcloud/router": "^3.0.1",
@@ -107,14 +107,17 @@
     "testEnvironment": "jest-environment-jsdom",
     "moduleFileExtensions": [
       "js",
-      "vue"
+      "vue",
+      "mjs"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|less)$": "identity-obj-proxy",
       "^uuid$": "<rootDir>/node_modules/uuid/dist/index.js",
       "^@vue/test-utils": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js",
-      "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js"
+      "^(.*)\\.svg\\?raw$": "<rootDir>/src/tests/__mocks__/svgRawMock.js",
+      "^@nextcloud/axios$": "<rootDir>/src/tests/__mocks__/axios.js",
+      "^@nextcloud/dialogs$": "<rootDir>/src/tests/__mocks__/nextcloudDialogsMock.js"
     },
     "snapshotSerializers": [
       "<rootDir>/node_modules/jest-serializer-vue"
