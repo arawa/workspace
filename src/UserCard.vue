@@ -69,13 +69,11 @@ export default {
 			default: () => {},
 		},
 	},
-	data() {
-		return {
-			disabled: false,
-		}
-	},
-	beforeMount() {
-		this.disabled = this.isWorkspaceManager(this.user.role)
+	computed: {
+		disabled() {
+			return this.$store.getters.isMember(this.$route.params.space, this.user)
+				&& this.isWorkspaceManager(this.user.role)
+		},
 	},
 	methods: {
 		defineWorkspaceManagerShortcut() {
