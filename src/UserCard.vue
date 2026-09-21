@@ -64,19 +64,17 @@ export default {
 		NcActionButton,
 		NcCheckboxRadioSwitch,
 	},
-	data() {
-		return {
-			disabled: false
-		}
-	},
 	props: {
 		user: {
 			type: Object,
 			default: () => {},
 		},
 	},
-	beforeMount() {
-		this.disabled = this.isWorkspaceManager(this.user.role)
+	computed: {
+		disabled() {
+			return this.$store.getters.isMember(this.$route.params.space, this.user)
+				&& this.isWorkspaceManager(this.user.role)
+		},
 	},
 	methods: {
 		defineWorkspaceManagerShortcut() {
