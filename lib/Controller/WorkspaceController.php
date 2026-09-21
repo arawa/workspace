@@ -30,6 +30,7 @@ use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
@@ -165,11 +166,14 @@ class WorkspaceController extends Controller {
 		}
 
 		$spaces = [];
+
+		// Same batching as SpaceManager::findAll() (see there for why).
+		$foldersById = $this->folderHelper->getAllFoldersWithSize();
+		// Return value unused: this just warms IGroupManager's request cache so get() below hits it.
+		$this->groupManager->search(GroupsWorkspace::getGidPrefix());
+
 		foreach ($workspaces as $workspace) {
-			$folderInfo = $this->folderHelper->getFolder(
-				$workspace['groupfolder_id'],
-				$this->rootFolder->getRootFolderStorageId()
-			);
+			$folderInfo = $foldersById[$workspace['groupfolder_id']] ?? null;
 
 			if ($folderInfo === null) {
 				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");

@@ -68,6 +68,19 @@ class GroupfolderHelper {
 		}
 	}
 
+	/**
+	 * Fetch every groupfolder (with its size) in a single batch, instead of one call per folder.
+	 *
+	 * @return array<int, FolderWithMappingsAndCache> keyed by folder_id
+	 */
+	public function getAllFoldersWithSize(): array {
+		try {
+			return $this->folderManager->getAllFoldersWithSize();
+		} catch (\Exception $e) {
+			throw new GroupFolderFunctionException($e->getMessage() . 'Cannot use the getAllFoldersWithSize function from FolderManager.');
+		}
+	}
+
 	public function setFolderAcl(int $folderId, bool $acl): void {
 		try {
 			$this->folderManager->setFolderAcl($folderId, $acl);
