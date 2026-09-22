@@ -921,9 +921,9 @@ class SpaceManagerTest extends TestCase {
 		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
 
 		$this->folderHelper
-			->expects($this->any())
-			->method('getFolder')
-			->willReturnOnConsecutiveCalls($folderDefinition)
+			->expects($this->once())
+			->method('getAllFoldersWithSize')
+			->willReturn([1 => $folderDefinition])
 		;
 
 		$folderDefinition

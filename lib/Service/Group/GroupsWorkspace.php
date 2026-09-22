@@ -57,6 +57,14 @@ abstract class GroupsWorkspace {
 		return self::$DISPLAY_PREFIX_USER_GROUP;
 	}
 
+	/**
+	 * Common gid prefix shared by every workspace-owned group (manager, user, subgroups).
+	 * Used to bulk-preload groups via IGroupManager::search() instead of fetching them one by one.
+	 */
+	public static function getGidPrefix(): string {
+		return self::GID_SPACE;
+	}
+
 	public static function isWorkspaceUserGroupId(string $gid): bool {
 		return str_starts_with($gid, self::PREFIX_GID_USERS);
 	}

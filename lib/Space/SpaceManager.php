@@ -43,6 +43,7 @@ use OCA\Workspace\Service\ColorCode;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
+use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
@@ -558,15 +559,14 @@ class SpaceManager {
 
 		$spaces = [];
 
+		// Batches what used to be one query per workspace (was O(workspaces × groups)).
+		$foldersById = $this->folderHelper->getAllFoldersWithSize();
+		// Return value unused: this just warms IGroupManager's request cache so get() below hits it.
+		$this->groupManager->search(GroupsWorkspace::getGidPrefix());
+
 		foreach ($workspaces as $workspace) {
-			$folderInfo = $this->folderHelper
-				->getFolder(
-					$workspace['groupfolder_id'],
-					$this->rootFolder->getRootFolderStorageId()
-				)
-				->toArray()
-			;
-			$space = ($folderInfo !== false) ? array_merge(
+			$folderInfo = ($foldersById[$workspace['groupfolder_id']] ?? null)?->toArray();
+			$space = ($folderInfo !== null) ? array_merge(
 				$folderInfo,
 				$workspace
 			) : $workspace;
