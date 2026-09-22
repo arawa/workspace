@@ -128,9 +128,9 @@ export default {
 					}
 				})
 				.catch((e) => {
-					const text = t('workspace', 'A network error occurred while trying to lookup users.<br>Error: {error}', { error: e })
-					showNotificationError(t('workspace', 'Network error'), text, 3000)
 					console.error('Problem to search users', e)
+					const text = t('workspace', 'Unable to search for users. Please try again or contact your administrator.')
+					showNotificationError(t('workspace', 'Network error'), text, 3000)
 				})
 				.finally(() => {
 					this.isLookingUpUsers = false
