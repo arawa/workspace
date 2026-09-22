@@ -21,31 +21,43 @@
 -->
 
 <template>
-	<div class="error403">
-		<h1 class="h-400">
-			{{ t('workspace', 'Error 403') }}
-		</h1>
-		<p class="p-400">
-			{{ t('workspace', 'You aren\'t allowed to access into this application !') }}
-		</p>
-		<p class="p-400">
-			<span>
-				<a class="link-to-home" :href="linkInstance">{{ t('workspace', 'return to home') }}</a>
-			</span>
-		</p>
-	</div>
+	<NcEmptyContent
+		:name="t('workspace', 'Error 403')"
+		:description="t('workspace', 'You aren\'t allowed to access into this application !')">
+		<template #icon>
+			<NcIconSvgWrapper :path="mdiLockAlert" />
+		</template>
+		<template #action>
+			<NcButton :href="linkInstance" variant="primary">
+				{{ t('workspace', 'Return to home') }}
+				<template #icon>
+					<Home :size="20" />
+				</template>
+			</NcButton>
+		</template>
+	</NcEmptyContent>
 </template>
 
 <script>
 import { generateUrl } from '@nextcloud/router'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import Home from 'vue-material-design-icons/Home.vue'
+import { mdiLockAlert } from '@mdi/js'
 
 export default ({
 	name: 'Error403',
 	components: {
+		NcButton,
+		NcEmptyContent,
+		NcIconSvgWrapper,
+		Home,
 	},
 	data() {
 		return {
 			linkInstance: 'https',
+			mdiLockAlert,
 		}
 	},
 	created() {
@@ -54,31 +66,3 @@ export default ({
 	},
 })
 </script>
-
-<style scoped>
-
-.error403 {
-	height: auto;
-	width: auto;
-	text-align: center;
-	margin: 100px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.h-400 {
-	font-size: 40px;
-	font-weight: bold;
-}
-
-.p-400 {
-	margin-top: 30px;
-	font-size: 20px;
-	font-style: italic;
-}
-
-.link-to-home {
-	text-decoration: underline;
-	color: var(--color-primary);
-}
-</style>
