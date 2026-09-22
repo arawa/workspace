@@ -390,7 +390,7 @@ class GroupController extends Controller {
 	 */
 	public function attachGroupToSpace(int $spaceId, string $gid) {
 		$workspace = $this->spaceManager->get($spaceId);
-		$this->spaceManager->attachGroup($workspace['groupfolder_id'], $gid);
+		$this->spaceManager->attachGroup($workspace['groupfolderId'], $gid);
 
 		return new JSONResponse([
 			'message' => sprintf('The %s group is attached to the %s workspace (i.e groupfolder)', $gid, $workspace['name']),
