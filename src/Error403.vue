@@ -22,7 +22,7 @@
 
 <template>
 	<NcEmptyContent
-		:name="t('workspace', 'Error 403')"
+		:name="t('workspace', 'Access denied')"
 		:description="t('workspace', 'You aren\'t allowed to access into this application !')">
 		<template #icon>
 			<NcIconSvgWrapper :path="mdiLockAlert" />
