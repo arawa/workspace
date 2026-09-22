@@ -150,7 +150,7 @@ export default {
 		users() {
 			let result = []
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-			const group = decodeURIComponent(this.$route.params.slug)
+			const group = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
 			if (this.$route.params.slug !== undefined) {
 				// We are showing a group's users, so we have to filter the users
 				result = Object.values(space.users)

@@ -136,12 +136,11 @@ export default {
 	computed: {
 		// The title to display at the top of the page
 		isAddedGroup() {
-			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(this.$route.params.slug))
+			return this.$store.getters.isSpaceAddedGroup(this.$route.params.space, decodeURIComponent(decodeURIComponent(this.$route.params.slug)))
 		},
 		getDisplaynameGroup() {
-			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const gid = decodeURIComponent(decodeURIComponent(this.$route.params.slug))
-			return space.groups[gid].displayName
+			return this.$store.getters.groupName(this.$route.params.space, gid)
 		},
 		getSpaceName() {
 			return this.$store.getters.getSpaceByNameOrId(this.$route.params.space).name
