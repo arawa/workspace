@@ -72,7 +72,7 @@ export default {
 			console.error('e.lineNumber', e.lineNumber)
 			console.error('e.columnNumber', e.columnNumber)
 			console.error('e.stack', e.stack)
-			const text = t('workspace', 'A network error occurred while trying to add user {user_name} to workspace.<br>Error: {error}', { user_name: user.name, error: e })
+			const text = t('workspace', 'Unable to add {user_name} to the workspace. Please try again or contact your administrator.', { user_name: user.name })
 			showNotificationError(t('workspace', 'Network error'), text, 4000)
 		})
 	},
@@ -215,8 +215,9 @@ export default {
 				}
 			})
 			.catch((e) => {
+				console.error('Error deleting group', gid, e)
 				context.commit('addGroupToSpace', { space, gid })
-				const text = t('workspace', 'Network error occurred while trying to delete group {group}<br>Error: {error}', { group: gid, error: e })
+				const text = t('workspace', 'Unable to delete the group. Please try again or contact your administrator.')
 				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
@@ -248,7 +249,8 @@ export default {
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			const text = t('workspace', 'Network error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: e })
+			console.error('Error removing user from group', user.name, gid, e)
+			const text = t('workspace', 'Unable to remove {user} from the workspace. Please try again or contact your administrator.', { user: user.name })
 			showNotificationError(t('workspace', 'Error'), text, 4000)
 			if (gid === UserGroup.getGid(space)) {
 				backupGroups.forEach(group =>
@@ -291,7 +293,8 @@ export default {
 				context.commit('addUserToGroup', { name, gid, user })
 			}
 		}).catch((e) => {
-			const text = t('workspace', 'Network error occurred while removing user from group {group}<br>Error: {error}', { group: gid, error: e })
+			console.error('Error removing user from group', user.name, gid, e)
+			const text = t('workspace', 'Unable to remove {user} from the group. Please try again or contact your administrator.', { user: user.name })
 			showNotificationError(t('workspace', 'Error'), text, 4000)
 			if (gid === UserGroup.getGid(space)) {
 				backupGroups.forEach(group =>
@@ -396,7 +399,8 @@ export default {
 					user.groups.push(ManagerGroup.getGid(space))
 				}
 				context.commit('updateUser', { name, user })
-				const text = t('workspace', 'Network error occurred while trying to change the role of user {user}.<br>Error: {error}', { user: user.name, error: e })
+				console.error('Error changing role of user', user.name, e)
+				const text = t('workspace', 'Unable to change the role of {user}. Please try again or contact your administrator.', { user: user.name })
 				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
@@ -479,7 +483,8 @@ export default {
 			.catch((e) => {
 				// Reverts change made in the frontend in case of error
 				context.commit('setSpaceQuota', { name, oldQuota })
-				const text = t('workspace', 'Network error occurred while trying to update the workspace\'s quota.<br>Error: {error}', { error: e })
+				console.error('Error updating workspace quota', e)
+				const text = t('workspace', 'Unable to update the workspace\'s quota. Please try again or contact your administrator.')
 				showNotificationError(t('workspace', 'Network error'), text, 3000)
 			})
 	},
