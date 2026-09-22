@@ -40,7 +40,7 @@ export const WorkspacesLoader = {
 						})
 						.catch((e) => {
 							console.error('Problem to load spaces only', e)
-							const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
+							const text = t('workspace', 'Unable to load more workspaces. Please try again or contact your administrator.')
 							showNotificationError(t('workspace', 'Network error'), text, 5000)
 						})
 				}
