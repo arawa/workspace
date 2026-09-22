@@ -81,7 +81,7 @@ export default {
 				})
 				.catch((e) => {
 					console.error('Problem to load spaces only', e)
-					const text = t('workspace', 'A network error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: e })
+					const text = t('workspace', 'Unable to load the workspaces. Please try again or contact your administrator.')
 					showNotificationError(t('workspace', 'Network error'), text, 5000)
 					this.$store.state.loading = false
 				})
