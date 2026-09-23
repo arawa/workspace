@@ -49,11 +49,11 @@ OC.L10N.register(
     "Appearance" : "Mwonekano",
     "Save" : "Hifadhi",
     "Loading …" : "Inapakia  …",
-    "return to home" : "kurudi nyumbani",
     "or" : "au",
     "Caution, users highlighted in red are not yet member of this workspace. They will be automatically added." : "Tahadhari, watumiaji walioangaziwa kwa rangi nyekundu bado si washiriki wa nafasi hii ya kazi. Wataongezwa kiotomatiki.",
     "Error 403" : "Hitilafu 403",
     "You aren't allowed to access into this application !" : "Huruhusiwi kufikia katika programu hii !",
+    "return to home" : "kurudi nyumbani",
     "Delete user" : "Futa mtumiaji",
     "Search workspaces..." : "Search workspaces...",
     "Loading..." : "Inapakia..."
