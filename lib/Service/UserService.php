@@ -143,6 +143,14 @@ class UserService {
 	}
 
 	/**
+	 * @param array $space The space
+	 * @return boolean true if user is member of the user group of the specified workspace, false otherwise
+	 */
+	public function isUserOfSpace(array $space): bool {
+		return $this->groupManager->isInGroup($this->userSession->getUser()->getUID(), UserGroup::get($space['id']));
+	}
+
+	/**
 	 * @param array $id The space id
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
