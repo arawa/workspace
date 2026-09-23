@@ -700,6 +700,44 @@ class SpaceManagerTest extends TestCase {
 		$this->assertInstanceOf(IGroup::class, $actual, "The createSubGroup function doesn't return a IGroup instance.");
 	}
 
+	public function testThrowsNotFoundExceptionWhenFindingGroupsWithGroupfolderReturningNull(): void {
+		$spaceId = 4;
+		$folderId = 4;
+
+		/** @var Space&MockObject */
+		$space = $this->createMock(Space::class);
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$space
+			->expects($this->any())
+			->method('getGroupfolderId')
+			->willReturn($folderId)
+		;
+
+		$this->rootFolder
+			->expects($this->any())
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(null)
+		;
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage("Failed loading groupfolder with the folderId {$folderId}");
+
+		$this->spaceManager->findGroupsBySpaceId($spaceId);
+	}
+
 	public function testFindGroupsBySpaceId(): void {
 		$spaceId = 1;
 		$groupfolder

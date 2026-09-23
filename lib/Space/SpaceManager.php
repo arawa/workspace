@@ -175,8 +175,14 @@ class SpaceManager {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
+
+		if ($groupfolder === null) {
+			$folderId = $space->getGroupfolderId();
+			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
+			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
+		}
 
 		$gids = array_keys($groupfolder['groups']);
 		$groups = array_map(fn ($gid) => $this->groupManager->get($gid), $gids);
@@ -238,7 +244,7 @@ class SpaceManager {
 			?->toArray()
 		;
 
-		if ($groupfolder === false || is_null($groupfolder)) {
+		if (is_null($groupfolder)) {
 			$folderId = $space->getGroupfolderId();
 			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
 			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
@@ -247,10 +253,7 @@ class SpaceManager {
 		$workspace = $this->workspaceFormatter
 			->format(
 				$space->jsonSerialize(),
-				$this->folderHelper->getFolder(
-					$space->getGroupfolderId(),
-					$this->rootFolder->getRootFolderStorageId()
-				)->toArray()
+				$groupfolder
 			)
 		;
 
@@ -338,7 +341,9 @@ class SpaceManager {
 
 		$folderId = $space['groupfolder_id'];
 		$folder = $this->folderHelper->getFolder($folderId, $this->rootFolder->getRootFolderStorageId());
-		$this->folderStorageManagerHelper->deleteStoragesForFolder($folder);
+		if ($folder !== null) {
+			$this->folderStorageManagerHelper->deleteStoragesForFolder($folder);
+		}
 		$this->folderHelper->removeFolder($folderId);
 	}
 
@@ -393,10 +398,10 @@ class SpaceManager {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
 
-		if ($groupfolder === false || is_null($groupfolder)) {
+		if (is_null($groupfolder)) {
 			$folderId = $space->getGroupfolderId();
 			$this->logger->error("Failed loading groupfolder with the folderId {$folderId}");
 			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
@@ -560,9 +565,9 @@ class SpaceManager {
 					$workspace['groupfolder_id'],
 					$this->rootFolder->getRootFolderStorageId()
 				)
-				->toArray()
+				?->toArray()
 			;
-			$space = ($folderInfo !== false) ? array_merge(
+			$space = ($folderInfo !== null) ? array_merge(
 				$folderInfo,
 				$workspace
 			) : $workspace;
@@ -677,9 +682,9 @@ class SpaceManager {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
-		if ($groupfolder === false) {
+		if ($groupfolder === null) {
 			throw new NotFoundException("The groupfolder {$space->getGroupfolderId()} does not exist");
 		}
 

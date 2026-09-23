@@ -228,10 +228,10 @@ class WorkspaceController extends Controller {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
 
-		if ($groupfolder === false) {
+		if ($groupfolder === null) {
 			return new JSONResponse(
 				[
 					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
@@ -258,10 +258,10 @@ class WorkspaceController extends Controller {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
 
-		if ($groupfolder === false) {
+		if ($groupfolder === null) {
 			return new JSONResponse(
 				[
 					'message' => 'Failed loading groupfolder ' . $space->getGroupfolderId(),
