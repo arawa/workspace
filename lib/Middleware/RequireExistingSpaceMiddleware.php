@@ -48,10 +48,10 @@ class RequireExistingSpaceMiddleware extends Middleware {
 				$space->getGroupfolderId(),
 				$this->rootFolder->getRootFolderStorageId()
 			)
-			->toArray()
+			?->toArray()
 		;
 
-		if ($groupfolder === false) {
+		if ($groupfolder === null) {
 			$this->logger->error('Failed loading groupfolder ' . $space->getGroupfolderId());
 			throw new NotFoundException('Failed loading groupfolder ' . $space->getGroupfolderId());
 		}
