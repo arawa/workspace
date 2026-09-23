@@ -21,13 +21,12 @@
 <template>
 	<NcAppNavigationItem
 		:key="space.id"
-		:class="'workspace-sidebar '+($route.params.space === spaceName ? 'space-selected' : '')"
+		:class="'workspace-sidebar '+(isActiveRoute ? 'space-selected' : '')"
 		:allow-collapse="true"
-		:open="open"
+		:open="isOpen"
 		:name="spaceName"
 		:to="{name: 'hub.home', params: { spaceId: space.id }}"
-		@click="openMenu"
-		@update:open="isOpen = $event">
+		@update:open="onToggleOpen">
 		<template #icon>
 			<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		</template>
@@ -159,26 +158,28 @@ export default {
 		return {
 			workspaceGroups: [],
 			connectedGroups: [],
-			isOpen: false,
+			// Explicitly toggled open via the collapse arrow, independently of navigation.
+			// Stays open across route changes, unlike the active-route state.
+			manuallyOpen: false,
 			captionOpened: false,
 			// Added groups
 			isAddGroupModalOpen: false,
 		}
 	},
 	computed: {
-		open() {
+		// True while this workspace's hub (or one of its groups) is the current route,
+		// regardless of how navigation got here (sidebar click, workspace table, ...).
+		isActiveRoute() {
 			const id = this.space.id.toString()
-			return this.$route.params.space === id
+			return this.$route.params.spaceId === id || this.$route.params.space === id
+		},
+		isOpen() {
+			return this.manuallyOpen || this.isActiveRoute
 		},
 	},
-	created() {
-		if (this.open) {
-			this.isOpen = true
-		}
-	},
 	methods: {
-		openMenu() {
-			this.isOpen = true
+		onToggleOpen(value) {
+			this.manuallyOpen = value
 		},
 		openCaption() {
 			this.captionOpened = true
