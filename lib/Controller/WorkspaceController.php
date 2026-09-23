@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Controller;
 
+use OCA\Workspace\Attribute\WorkspaceMemberRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
 use OCA\Workspace\Folder\RootFolder;
@@ -211,6 +212,7 @@ class WorkspaceController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 */
+	#[WorkspaceMemberRequired]
 	public function getUsers(int $spaceId): JSONResponse {
 
 		$space = $this->spaceMapper->find($spaceId);
@@ -241,6 +243,7 @@ class WorkspaceController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 */
+	#[WorkspaceMemberRequired]
 	public function getAdmins(int $spaceId): JSONResponse {
 
 		$space = $this->spaceMapper->find($spaceId);

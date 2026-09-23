@@ -38,6 +38,7 @@ use OCA\Workspace\Middleware\SpaceIdNumberMiddleware;
 use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
+use OCA\Workspace\Middleware\WorkspaceMemberAccessMiddleware;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\App;
@@ -93,6 +94,7 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(IsGeneralManagerMiddleware::class);
 		$context->registerMiddleware(GeneralManagerAccessMiddleware::class);
 		$context->registerMiddleware(WorkspaceManagerAccessMiddleware::class);
+		$context->registerMiddleware(WorkspaceMemberAccessMiddleware::class);
 		$context->registerMiddleware(NotificationMiddleware::class);
 		$context->registerMiddleware(DuplicateSpacenameMiddleware::class);
 		$context->registerMiddleware(SpacenameForbiddenCharactersMiddleware::class);
