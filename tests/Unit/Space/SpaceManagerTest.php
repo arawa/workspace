@@ -513,6 +513,63 @@ class SpaceManagerTest extends TestCase {
 		);
 	}
 
+	public function testCreateWorkspaceWithoutUserSession(): void {
+		$this->folderHelper
+			->method('createFolder')
+			->willReturn(1)
+		;
+
+		$folderDefinition = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+		$folderDefinition
+			->method('toArray')
+			->willReturn([
+				'id' => 1,
+				'mount_point' => 'Espace01',
+				'groups' => [],
+				'quota' => -3,
+				'size' => 0,
+				'acl' => true,
+				'manage' => [],
+				'group_details' => [],
+			])
+		;
+
+		$this->rootFolder
+			->method('getRootFolderStorageId')
+			->willReturn(1)
+		;
+
+		$this->folderHelper
+			->method('getFolder')
+			->willReturn($folderDefinition)
+		;
+
+		$workspaceManagerGroupMock = $this->createMock(IGroup::class);
+		$workspaceManagerGroupMock->method('getGID')->willReturn('SPACE-GE-1');
+		$userGroupMock = $this->createMock(IGroup::class);
+		$userGroupMock->method('getGID')->willReturn('SPACE-U-1');
+
+		$this->workspaceManagerGroup->method('create')->willReturn($workspaceManagerGroupMock);
+		$this->userGroup->method('create')->willReturn($userGroupMock);
+
+		// occ runs without a logged-in user
+		$this->userSession
+			->expects($this->once())
+			->method('getUser')
+			->willReturn(null)
+		;
+
+		$this->logger
+			->expects($this->once())
+			->method('info')
+			->with('Workspace Espace01 created by an admin user from the command line')
+		;
+
+		$space = $this->spaceManager->create('Espace01');
+
+		$this->assertSame('Espace01', $space['name']);
+	}
+
 	public function testBlankException(): void {
 		$this->expectException(BadRequestException::class);
 		$this->expectExceptionMessage('spaceName must be provided');
