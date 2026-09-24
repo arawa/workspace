@@ -292,7 +292,7 @@ export default {
 		showActionButtons() {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const user = space.users[this.$root.$data.userSession]
-			if (user === undefined && this.$root.$data.isUserGeneralAdmin === 'true') {
+			if (user === undefined && this.$root.$data.isUserGeneralAdmin === true) {
 				return true
 			}
 
@@ -300,7 +300,7 @@ export default {
 				return false
 			}
 
-			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === 'true'
+			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === true
 		}
 	},
 }
