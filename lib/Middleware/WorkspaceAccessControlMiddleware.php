@@ -31,12 +31,14 @@ use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Middleware;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 use OCP\Util;
 
 class WorkspaceAccessControlMiddleware extends Middleware {
 	public function __construct(
 		private IURLGenerator $urlGenerator,
 		private UserService $userService,
+		private IUserSession $userSession,
 	) {
 	}
 
@@ -60,7 +62,15 @@ class WorkspaceAccessControlMiddleware extends Middleware {
 			Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 			Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
 
-			return new TemplateResponse('workspace', 'index', ['isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(), 'canAccessApp' => false ]);
+			return new TemplateResponse('workspace', 'index', [
+				'userSession' => $this->userSession->getUser()?->getUID(),
+				'isUserGeneralAdmin' => false,
+				'canAccessApp' => false,
+				'aclInheritPerUser' => false,
+				'addedGroupDisabled' => false,
+				'isSpaceManager' => false,
+				'allowWmWorkspaceCreation' => false,
+			]);
 		}
 
 		throw $exception;

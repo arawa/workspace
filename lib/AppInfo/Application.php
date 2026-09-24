@@ -50,6 +50,7 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'workspace';
@@ -63,7 +64,8 @@ class Application extends App implements IBootstrap {
 		$context->registerService(WorkspaceAccessControlMiddleware::class, function ($c) {
 			return new WorkspaceAccessControlMiddleware(
 				$c->query(IURLGenerator::class),
-				$c->query(UserService::class)
+				$c->query(UserService::class),
+				$c->query(IUserSession::class),
 			);
 		});
 

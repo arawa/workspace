@@ -29,7 +29,10 @@ use OCA\Workspace\Middleware\Exceptions\AccessDeniedException;
 use OCA\Workspace\Middleware\WorkspaceAccessControlMiddleware;
 use OCA\Workspace\Service\UserService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IUrlGenerator;
+use OCP\IUser;
+use OCP\IUserSession;
 use PHPUnit\Framework\TestCase;
 
 class WorkspaceAccessControlMiddlewareTest extends TestCase {
@@ -45,8 +48,9 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 
 		// Instantiates our middleware
 		$middleware = new WorkspaceAccessControlMiddleware(
-			$this->createMock(IURLGenerator::class),
-			$userService);
+			$this->createMock(IUrlGenerator::class),
+			$userService,
+			$this->createMock(IUserSession::class));
 
 		// Runs the beforeController method
 		$result = $middleware->beforeController(
@@ -73,8 +77,9 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 
 		// Instantiates our middleware
 		$middleware = new WorkspaceAccessControlMiddleware(
-			$this->createMock(IURLGenerator::class),
-			$userService);
+			$this->createMock(IUrlGenerator::class),
+			$userService,
+			$this->createMock(IUserSession::class));
 
 		// Runs the beforeController method
 		$result = $middleware->beforeController(
@@ -101,14 +106,51 @@ class WorkspaceAccessControlMiddlewareTest extends TestCase {
 
 		// Instantiates our middleware
 		$middleware = new WorkspaceAccessControlMiddleware(
-			$this->createMock(IURLGenerator::class),
-			$userService);
+			$this->createMock(IUrlGenerator::class),
+			$userService,
+			$this->createMock(IUserSession::class));
 
 		// Runs the beforeController method
 		$this->expectException(AccessDeniedException::class);
-		$result = $middleware->beforeController(
+		$middleware->beforeController(
 			$this->createMock(Controller::class),
 			'dummy',
 		);
+	}
+
+	/**
+	 * This test makes sure that the access denied page provides every key
+	 * read by templates/index.php, so that no "Undefined array key" warning is logged
+	 */
+	public function testAccessDeniedProvidesEveryTemplateKey(): void {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('alice');
+		$userSession = $this->createMock(IUserSession::class);
+		$userSession->method('getUser')->willReturn($user);
+
+		// Instantiates our middleware
+		$middleware = new WorkspaceAccessControlMiddleware(
+			$this->createMock(IUrlGenerator::class),
+			$this->createMock(UserService::class),
+			$userSession);
+
+		// Runs the afterException method
+		$response = $middleware->afterException(
+			$this->createMock(Controller::class),
+			'dummy',
+			new AccessDeniedException(),
+		);
+
+		$this->assertInstanceOf(TemplateResponse::class, $response);
+		$this->assertSame('index', $response->getTemplateName());
+		$this->assertSame([
+			'userSession' => 'alice',
+			'isUserGeneralAdmin' => false,
+			'canAccessApp' => false,
+			'aclInheritPerUser' => false,
+			'addedGroupDisabled' => false,
+			'isSpaceManager' => false,
+			'allowWmWorkspaceCreation' => false,
+		], $response->getParams());
 	}
 }
