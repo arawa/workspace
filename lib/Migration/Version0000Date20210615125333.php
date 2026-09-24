@@ -53,6 +53,12 @@ class Version0000Date20210615125333 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 		$schema = $schemaClosure();
 
+		// work_spaces references the group_folders table, which only exists
+		// once the Team folders (groupfolders) app has been installed.
+		if (!$schema->hasTable('group_folders')) {
+			throw new \RuntimeException('Workspace requires the Team folders (groupfolders) app. Please install and enable Team folders before enabling Workspace.');
+		}
+
 		if ($schema->hasTable('work_spaces')) {
 			$schema->dropTable('work_spaces');
 		}
