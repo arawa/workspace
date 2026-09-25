@@ -43,7 +43,7 @@ class UserFormatter {
 			'subtitle' => $user->getEmailAddress(),
 			'groups' => $groups,
 			'is_connected' => !$this->connectedGroupsService->isStrictSpaceUser($user->getUID(), $spaceUserGid),
-			'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
+			'profile' => $this->urlGenerator->linkToRouteAbsolute('profile.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 			'role' => $role
 		];
 	}
