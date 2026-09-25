@@ -26,7 +26,6 @@ namespace OCA\Workspace\Service\Group;
 
 use OCA\Workspace\Service\Slugger;
 use OCP\IGroup;
-use OCP\Server;
 
 class GroupFormatter {
 	/**
@@ -49,9 +48,13 @@ class GroupFormatter {
 				$backendnames
 			);
 
-			$usersCount = UserGroup::isWorkspaceGroup($group)
-				? $group->count()
-				: Server::get(GroupUsersCounter::class)->countEnabledUsers($group);
+			$usersCount = $group->count();
+
+			if (!UserGroup::isWorkspaceGroup($group)) {
+				$users = $group->getUsers();
+				$users = array_filter($users, fn ($user) => $user->isEnabled());
+				$usersCount = count($users);
+			}
 
 			$groupsFormat[$group->getGID()] = [
 				'gid' => $group->getGID(),
