@@ -64,6 +64,17 @@ class SpaceMapper extends QBMapper {
 		return $this->findEntity($query);
 	}
 
+	public function findByName(string $name): Space|null {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('space_name', $qb->createNamedParameter($name, $qb::PARAM_STR))
+			);
+		
+		return $this->findEntity($query);
+	}
+
 	/**
 	 * @param int|null $offset to paginate the workspaces returned
 	 * @param int|null $limit to limit the number of workspaces returned
