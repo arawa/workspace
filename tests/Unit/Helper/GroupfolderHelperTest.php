@@ -82,4 +82,28 @@ class GroupfolderHelperTest extends TestCase {
 
 		$this->folderHelper->createFolder('Espace01');
 	}
+
+	public function testAddApplicableGroupAddsTheGroupToTheFolder(): void {
+		$this->folderManager
+			->expects($this->once())
+			->method('addApplicableGroup')
+			->with(42, 'SPACE-U-1')
+		;
+
+		$this->folderHelper->addApplicableGroup(42, 'SPACE-U-1');
+	}
+
+	public function testAddApplicableGroupThrowsGroupFolderFunctionExceptionWhenFolderManagerFails(): void {
+		$this->folderManager
+			->expects($this->once())
+			->method('addApplicableGroup')
+			->with(42, 'SPACE-U-1')
+			->willThrowException(new \Exception('Database error. '))
+		;
+
+		$this->expectException(GroupFolderFunctionException::class);
+		$this->expectExceptionMessage('Database error. Cannot use the addApplicableGroup function from FolderManager.');
+
+		$this->folderHelper->addApplicableGroup(42, 'SPACE-U-1');
+	}
 }
