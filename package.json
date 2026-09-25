@@ -65,7 +65,7 @@
     "@nextcloud/eslint-config": "^8.4.2",
     "@nextcloud/stylelint-config": "^3.1.0",
     "@nextcloud/webpack-vue-config": "^7.0.2",
-    "@vue/compiler-dom": "^3.4.21",
+    "@vue/compiler-dom": "^3.5.43",
     "@vue/test-utils": "^2.4.6",
     "@vue/vue3-jest": "^29.2.6",
     "babel-core": "^7.0.0-bridge.0",
