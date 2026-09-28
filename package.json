@@ -128,7 +128,7 @@
       "<rootDir>/node_modules/jest-serializer-vue"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@nextcloud|@ckeditor|splitpanes)).+\\.js$"
+      "/node_modules/(?!(@nextcloud|@ckeditor|splitpanes|debounce)).+\\.js$"
     ],
     "testEnvironmentOptions": {
       "customExportConditions": [
