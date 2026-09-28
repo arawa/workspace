@@ -139,7 +139,7 @@
       ]
     },
     "transform": {
-      ".*\\.js$": "babel-jest",
+      ".*\\.m?js$": "babel-jest",
       ".*\\.(vue)$": "@vue/vue3-jest"
     },
     "testPathIgnorePatterns": [
