@@ -91,8 +91,8 @@ If you would like to contribute by making a bug report or suggest a functionalit
 
 ## Development and Build
 ### Requirements
-- npm v10.0.0
-- node v20.0
+- npm v11.3.0
+- node v24.0
 - php v8.0
 - composer v2.0.13
 - make v3.82
