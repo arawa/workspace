@@ -22,8 +22,11 @@
 		<NcAppContent>
 			<NcEmptyContent :name="t('workspace', 'Team folders is not enabled')">
 				<template #description>
-					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span ref="description" v-html="description" />
+					{{ descriptionParts.textBeforeLink }}<a v-if="descriptionParts.linkText"
+						href="https://apps.nextcloud.com/apps/groupfolders"
+						class="external"
+						target="_blank"
+						rel="noopener noreferrer">{{ descriptionParts.linkText }}</a>{{ descriptionParts.textAfterLink }}
 				</template>
 				<template #icon>
 					<NcIconSvgWrapper :svg="GroupfoldersOff" />
@@ -82,24 +85,18 @@ export default {
 		}
 	},
 	computed: {
-		description() {
-			return t(
+		descriptionParts() {
+			// Keep the placeholders in the translated text and split around them,
+			// so the link is rendered by the template instead of v-html
+			const text = t(
 				'workspace',
 				'Workspace requires the {linkStart}Team folders{linkEnd} app. Please contact your Nextcloud administrator to install and enable it.',
-				{
-					linkStart: '<a href="https://apps.nextcloud.com/apps/groupfolders" class="external">',
-					linkEnd: '</a>',
-				},
 				undefined,
-				{ escape: false },
+				{ sanitize: false },
 			)
+			const [textBeforeLink, linkText = '', textAfterLink = ''] = text.split(/{linkStart}|{linkEnd}/)
+			return { textBeforeLink, linkText, textAfterLink }
 		},
-	},
-	mounted() {
-		// The translation sanitizer strips target, so open the external link in a new tab here
-		const link = this.$refs.description.querySelector('a')
-		link.target = '_blank'
-		link.rel = 'noopener noreferrer'
 	},
 }
 </script>
