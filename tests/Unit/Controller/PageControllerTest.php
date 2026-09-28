@@ -27,6 +27,7 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\PageController;
 use OCA\Workspace\Service\UserService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\IConfig;
@@ -41,25 +42,50 @@ class PageControllerTest extends TestCase {
 	private MockObject&IConfig $config;
 	private MockObject&IUserSession $session;
 	private MockObject&IAppConfig $appConfig;
+	private MockObject&IAppManager $appManager;
 
 	public function setUp(): void {
 		$this->userService = $this->createMock(UserService::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->session = $this->createMock(IUserSession::class);
 		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->appManager = $this->createMock(IAppManager::class);
 
 		$this->controller = new PageController(
 			$this->userService,
 			$this->config,
 			$this->session,
 			$this->appConfig,
+			$this->appManager,
 		);
 	}
 
 	public function testIndex(): void {
+		$this->appManager
+			->expects($this->once())
+			->method('isEnabledForAnyone')
+			->with('groupfolders')
+			->willReturn(true)
+		;
+
 		$result = $this->controller->index();
 
 		$this->assertEquals('index', $result->getTemplateName());
 		$this->assertTrue($result instanceof TemplateResponse);
+		$this->assertTrue($result->getParams()['isGroupfoldersEnabled']);
+	}
+
+	public function testIndexWhenGroupfoldersIsDisabled(): void {
+		$this->appManager
+			->expects($this->once())
+			->method('isEnabledForAnyone')
+			->with('groupfolders')
+			->willReturn(false)
+		;
+
+		$result = $this->controller->index();
+
+		$this->assertEquals('index', $result->getTemplateName());
+		$this->assertFalse($result->getParams()['isGroupfoldersEnabled']);
 	}
 }

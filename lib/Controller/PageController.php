@@ -28,6 +28,7 @@ namespace OCA\Workspace\Controller;
 use OCA\Workspace\AppInfo\Application;
 use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\UserService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IAppConfig;
@@ -41,6 +42,7 @@ class PageController extends Controller {
 		private IConfig $config,
 		private IUserSession $session,
 		private IAppConfig $appConfig,
+		private IAppManager $appManager,
 	) {
 	}
 
@@ -65,6 +67,9 @@ class PageController extends Controller {
 			'workspace',
 			'index',
 			[
+				// Without Team folders (groupfolders), every workspace call fails:
+				// the frontend renders an error page instead
+				'isGroupfoldersEnabled' => $this->appManager->isEnabledForAnyone('groupfolders'),
 				'userSession' => $this->session->getUser()?->getUID(),
 				'isUserGeneralAdmin' => $this->userService->isUserGeneralAdmin(),
 				'canAccessApp' => $this->userService->canAccessApp(),

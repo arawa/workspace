@@ -21,6 +21,7 @@
 -->
 
 <div id="content"></div>
+<input type="hidden" id="isGroupfoldersEnabled" value="<?php p($_['isGroupfoldersEnabled'] ? 'true' : 'false'); ?>">
 <input type="hidden" id="isUserGeneralAdmin" value="<?php p($_['isUserGeneralAdmin'] ? 'true' : 'false'); ?>">
 <input type="hidden" id="canAccessApp" value="<?php p($_['canAccessApp'] ? 'true': 'false'); ?>">
 <input type="hidden" id="aclInheritPerUser" value="<?php p($_['aclInheritPerUser'] ? 'true': 'false'); ?>">

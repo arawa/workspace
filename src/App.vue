@@ -21,12 +21,23 @@
 -->
 
 <template>
-	<router-view />
+	<GroupfoldersDisabled v-if="!isGroupfoldersEnabled" />
+	<router-view v-else />
 </template>
 
 <script>
+import GroupfoldersDisabled from './GroupfoldersDisabled.vue'
+
 export default {
 	name: 'App',
+	components: {
+		GroupfoldersDisabled,
+	},
+	data() {
+		return {
+			isGroupfoldersEnabled: document.getElementById('isGroupfoldersEnabled').value === 'true',
+		}
+	},
 	created() {
 		this.$root.$data.isUserGeneralAdmin = document.getElementById('isUserGeneralAdmin').value
 		this.$root.$data.canAccessApp = document.getElementById('canAccessApp').value
