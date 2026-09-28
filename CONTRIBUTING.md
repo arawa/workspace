@@ -132,8 +132,8 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/arawa/
 #### Requirements
 
 
-- npm v10.0.0
-- node v20.0.0
+- npm v11.3.0
+- node v24.0.0
 - php v8.0
 - composer v2.0.13
 - make v3.82
