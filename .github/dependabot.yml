@@ -24,6 +24,11 @@ updates:
       - "zak39"
     commit-message:
       prefix: "Composer"
+    ignore:
+      # PHPUnit follows the major version used by nextcloud/server (vendor-bin/phpunit),
+      # which also has to run on the lowest PHP version tested by the CI.
+      - dependency-name: "phpunit/phpunit"
+        update-types: ["version-update:semver-major"]
     labels:
       - "composer"
       - "dependencies"

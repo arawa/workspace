@@ -4,5 +4,6 @@ js/*
 build/
 .php-cs-fixer.cache
 tests/.phpunit.result.cache
+tests/.phpunit.cache/
 scripts/api-test.conf
 scripts/package-lock.json

@@ -72,10 +72,10 @@ class UserServiceTest extends TestCase {
 		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue($id));
+			->willReturn($id);
 		$mockUser->expects($this->any())
 			->method('getDisplayName')
-			->will($this->returnValue($name));
+			->willReturn($name);
 		$mockUser->expects($this->any())
 			->method('getEMailAddress')
 			->willReturn($email);
@@ -86,10 +86,10 @@ class UserServiceTest extends TestCase {
 		$mockGroup = $this->createMock(IGroup::class);
 		$mockGroup->expects($this->any())
 			->method('getGID')
-			->will($this->returnValue($id));
+			->willReturn($id);
 		$mockGroup->expects($this->any())
 			->method('getDisplayName')
-			->will($this->returnValue($name));
+			->willReturn($name);
 		$mockGroup->expects($this->any())
 			->method('getUsers')
 			->willReturn($users);
