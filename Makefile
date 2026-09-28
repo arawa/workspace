@@ -127,7 +127,7 @@ source:
 	--exclude="../$(app_name)/*.log" \
 	--exclude="../$(app_name)/js/*.log" \
 	--exclude="../$(app_name)/README.md" \
-	--exclude="../$(app_name)/.eslintrc.js" \
+	--exclude="../$(app_name)/eslint.config.js" \
 	--exclude="../$(app_name)/.vscode" \
 	--exclude="../$(app_name)/.github" \
 	--exclude="../$(app_name)/webpack.*.js" \
