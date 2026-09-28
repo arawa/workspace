@@ -28,6 +28,7 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use OCA\Workspace\Controller\PageController;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
@@ -49,6 +50,7 @@ class PageControllerTest extends TestCase {
 	private MockObject&IGroupManager $groupManager;
 	private MockObject&IUserSession $session;
 	private MockObject&IAppConfig $appConfig;
+	private MockObject&IAppManager $appManager;
 
 	public function setUp(): void {
 		$this->userService = $this->createMock(UserService::class);
@@ -58,6 +60,7 @@ class PageControllerTest extends TestCase {
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->appManager = $this->createMock(IAppManager::class);
 
 		$this->controller = new PageController(
 			$this->userService,
@@ -67,12 +70,20 @@ class PageControllerTest extends TestCase {
 			$this->spaceManager,
 			$this->groupManager,
 			$this->appConfig,
+			$this->appManager,
 		);
 	}
 
 	public function testIndex(): void {
 		$gid = 'GeneralManager';
 		$user = $this->createMock(IUser::class);
+
+		$this->appManager
+			->expects($this->once())
+			->method('isEnabledForAnyone')
+			->with('groupfolders')
+			->willReturn(true)
+		;
 
 		$this->session
 			->expects($this->exactly(2))
@@ -106,6 +117,31 @@ class PageControllerTest extends TestCase {
 			->expects($this->once())
 			->method('countWorkspaces')
 			->willReturn(5)
+		;
+
+		$result = $this->controller->index();
+
+		$this->assertEquals('index', $result->getTemplateName());
+		$this->assertTrue($result instanceof TemplateResponse);
+	}
+
+	public function testIndexWhenGroupfoldersIsDisabled(): void {
+		$this->appManager
+			->expects($this->once())
+			->method('isEnabledForAnyone')
+			->with('groupfolders')
+			->willReturn(false)
+		;
+
+		$this->initialState
+			->expects($this->once())
+			->method('provideInitialState')
+			->with('isGroupfoldersEnabled', false)
+		;
+
+		$this->spaceManager
+			->expects($this->never())
+			->method('countWorkspaces')
 		;
 
 		$result = $this->controller->index();
