@@ -95,7 +95,7 @@
     "@nextcloud/router": "^3.2.0",
     "@nextcloud/vue": "^9.4.0",
     "@vueuse/components": "^14.1.0",
-    "debounce": "^2.2.0",
+    "debounce": "^3.0.0",
     "ramda": "^0.30.1",
     "vue": "^3.5.29",
     "vue-material-design-icons": "^5.2.0",
