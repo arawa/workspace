@@ -21,23 +21,34 @@
 -->
 
 <template>
-	<div>
+	<GroupfoldersDisabled v-if="!isGroupfoldersEnabled" />
+	<div v-else>
 		<router-view />
 	</div>
 </template>
 
 <script>
 import { loadState } from '@nextcloud/initial-state'
+import GroupfoldersDisabled from './views/errors/GroupfoldersDisabled.vue'
 
 export default {
 	name: 'App',
+	components: {
+		GroupfoldersDisabled,
+	},
 	data() {
 		return {
+			isGroupfoldersEnabled: loadState('workspace', 'isGroupfoldersEnabled', true),
 			isUserGeneralAdmin: false,
 			spaces: {},
 		}
 	},
 	created() {
+		// The server provides nothing else when Team folders is disabled
+		if (!this.isGroupfoldersEnabled) {
+			return
+		}
+
 		const isUserGeneralAdmin = loadState('workspace', 'isUserGeneralAdmin')
 		const aclInheritPerUser = loadState('workspace', 'aclInheritPerUser')
 		const userSession = loadState('workspace', 'userSession')

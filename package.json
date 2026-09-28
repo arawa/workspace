@@ -88,6 +88,7 @@
   },
   "dependencies": {
     "@jambonn/vue-lazyload": "^1.0.10",
+    "@nextcloud/auth": "^2.6.0",
     "@nextcloud/axios": "^2.6.0",
     "@nextcloud/dialogs": "^7.5.0",
     "@nextcloud/files": "^4.1.0",

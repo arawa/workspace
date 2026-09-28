@@ -30,6 +30,7 @@ use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Space\SpaceManager;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IAppConfig;
@@ -48,6 +49,7 @@ class PageController extends Controller {
 		private SpaceManager $spaceManager,
 		private IGroupManager $groupManager,
 		private IAppConfig $appConfig,
+		private IAppManager $appManager,
 	) {
 	}
 
@@ -66,6 +68,17 @@ class PageController extends Controller {
 
 		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
 		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
+
+		// Without Team folders (groupfolders), every workspace call fails:
+		// only tell the frontend so that it renders an error page.
+		$isGroupfoldersEnabled = $this->appManager->isEnabledForAnyone('groupfolders');
+		$this->initialState->provideInitialState('isGroupfoldersEnabled', $isGroupfoldersEnabled);
+		if (!$isGroupfoldersEnabled) {
+			return new TemplateResponse(
+				'workspace',
+				'index'
+			);
+		}
 
 		$this->initialState->provideInitialState('userSession', $this->session->getUser()?->getUID());
 		$this->initialState->provideInitialState('isUserGeneralAdmin', $this->userService->isUserGeneralAdmin());
