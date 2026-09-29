@@ -27,15 +27,25 @@ namespace OCA\Workspace\Service\Group;
 use OCA\Workspace\Service\Slugger;
 use OCP\IGroup;
 
+/**
+ * @psalm-type FormattedGroup = array{
+ *     gid: string,
+ *     displayName: string,
+ *     types: list<string>,
+ *     usersCount: int,
+ *     slug: string,
+ * }
+ */
 class GroupFormatter {
 	/**
 	 * @param IGroup[] $groups
-	 * @return array [
-	 *               'gid' => string,
-	 *               'displayName' => string,
-	 *               'types' => string[],
-	 *               'is_ldap' => boolean
-	 *               ]
+	 * @return array<string, array{
+	 *     gid: string,
+	 *     displayName: string,
+	 *     types: list<string>,
+	 *     usersCount: int,
+	 *     slug: string,
+	 * }> keyed by gid
 	 */
 	public static function formatGroups(array $groups): array {
 		$groupsFormat = [];

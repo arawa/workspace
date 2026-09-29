@@ -3,26 +3,45 @@
 namespace OCA\Workspace\Service\Formatter;
 
 use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceGroupsResolver;
 use OCA\Workspace\Service\UserService;
-use OCP\IGroupManager;
-use Psr\Log\LoggerInterface;
 
+/**
+ * Formats a workspace for the Vue front (routes of appinfo/routes.php).
+ *
+ * Not the shape of the public OCS API: see Ocs\WorkspaceOcsFormatter.
+ *
+ * @psalm-import-type FormattedGroup from GroupFormatter
+ */
 class WorkspaceFormatter {
 
 	public const NO_USERS = 0;
 
 	public function __construct(
-		private LoggerInterface $logger,
-		private IGroupManager $groupManager,
+		private WorkspaceGroupsResolver $groupsResolver,
 		private UserService $userService,
 	) {
 	}
 
 	/**
-	 * @param array $workspace
-	 * @param array $folderInfo
-	 * @return array
+	 * @param array{id: int, groupfolder_id: int, name: string, color_code: string} $workspace a row of the work_spaces table
+	 * @param array $folderInfo the groupfolder, as returned by FolderWithMappingsAndCache::toArray()
+	 * @return array{
+	 *     id: ?int,
+	 *     color: ?string,
+	 *     groupfolderId: ?int,
+	 *     isOpen: false,
+	 *     name: ?string,
+	 *     quota: ?int,
+	 *     size: ?int,
+	 *     managers: null,
+	 *     users: \stdClass,
+	 *     usersCount: int,
+	 *     currentUserIsSimpleUser: bool,
+	 *     groups: array<string, FormattedGroup>,
+	 *     added_groups: \stdClass,
+	 * } `added_groups` is an object keyed by gid holding FormattedGroup values,
+	 *   so that it serializes as `{}` and not `[]` when empty
 	 */
 	public function format(array $workspace, array $folderInfo): array {
 		$space = [
@@ -39,35 +58,14 @@ class WorkspaceFormatter {
 			'currentUserIsSimpleUser' => $this->userService->isSimpleUserOfSpace($workspace),
 		];
 
-		$wsGroups = [];
-		$addedGroups = [];
-		$gids = array_keys($folderInfo['groups'] ?? []);
+		$groups = $this->groupsResolver->resolve(array_keys($folderInfo['groups'] ?? []));
 
-		foreach ($gids as $gid) {
-			$group = $this->groupManager->get($gid);
-
-			if (is_null($group)) {
-				$this->logger->warning(
-					"Be careful, the $gid group does not exist in the oc_groups table."
-					. ' The group is still present in the oc_group_folders_groups table.'
-					. ' To fix this inconsistency, recreate the group using occ commands.'
-				);
-				continue;
-			}
-
-			if (UserGroup::isWorkspaceGroup($group)) {
-				$wsGroups[] = $group;
-			} else {
-				$addedGroups[] = $group;
-			}
-
-			if (UserGroup::isWorkspaceUserGroupId($gid)) {
-				$space['usersCount'] = $group->count();
-			}
+		if (!is_null($groups['userGroup'])) {
+			$space['usersCount'] = $groups['userGroup']->count();
 		}
 
-		$space['groups'] = GroupFormatter::formatGroups($wsGroups);
-		$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
+		$space['groups'] = GroupFormatter::formatGroups($groups['workspaceGroups']);
+		$space['added_groups'] = (object)GroupFormatter::formatGroups($groups['addedGroups']);
 
 		return $space;
 	}
