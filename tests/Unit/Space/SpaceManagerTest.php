@@ -1935,46 +1935,14 @@ class SpaceManagerTest extends TestCase {
 		$folderId = 10;
 		$newSpaceName = 'SpaceOne';
 
-		/**
-		 * @var MockObject&SpaceManager
-		 *
-		 * Mock only the get method.
-		 */
-		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
-			->setConstructorArgs([
-				$this->folderHelper,
-				$this->rootFolder,
-				$this->workspaceCheck,
-				$this->userGroup,
-				$this->adminGroup,
-				$this->adminUserGroup,
-				$this->addedGroups,
-				$this->folderStorageManagerHelper,
-				$this->subGroup,
-				$this->userManager,
-				$this->userWorkspaceGroup,
-				$this->spaceMapper,
-				$this->conntectedGroupService,
-				$this->logger,
-				$this->userFormatter,
-				$this->userService,
-				$this->groupManager,
-				$this->workspaceManagerGroup,
-				$this->workspaceService,
-				$this->colorCode,
-				$this->userSession,
-				$this->workspaceFormatter
-			])
-			->onlyMethods(['get'])
-			->getMock()
-		;
+		$space = $this->createMock(Space::class);
+		$space->method('getGroupfolderId')->willReturn($folderId);
 
-		$spaceManagerPartial->expects($this->once())
-			->method('get')
-			->willReturn([
-				// other data...
-				'groupfolder_id' => $folderId
-			])
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
 		;
 
 		$this->workspaceCheck
@@ -2003,54 +1971,18 @@ class SpaceManagerTest extends TestCase {
 			->with($newSpaceName, $spaceId)
 		;
 
-		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+		$this->spaceManager->rename($spaceId, $newSpaceName);
 	}
 
 	public function testRenameWorkspaceWithSpecialCharacter(): void {
 		$spaceId = 1;
-		$folderId = 10;
 		$newSpaceName = 'Space/One';
 
-		/**
-		 * @var MockObject&SpaceManager
-		 *
-		 * Mock only the get method.
-		 */
-		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
-			->setConstructorArgs([
-				$this->folderHelper,
-				$this->rootFolder,
-				$this->workspaceCheck,
-				$this->userGroup,
-				$this->adminGroup,
-				$this->adminUserGroup,
-				$this->addedGroups,
-				$this->folderStorageManagerHelper,
-				$this->subGroup,
-				$this->userManager,
-				$this->userWorkspaceGroup,
-				$this->spaceMapper,
-				$this->conntectedGroupService,
-				$this->logger,
-				$this->userFormatter,
-				$this->userService,
-				$this->groupManager,
-				$this->workspaceManagerGroup,
-				$this->workspaceService,
-				$this->colorCode,
-				$this->userSession,
-				$this->workspaceFormatter
-			])
-			->onlyMethods(['get'])
-			->getMock()
-		;
-
-		$spaceManagerPartial->expects($this->once())
-			->method('get')
-			->willReturn([
-				// other data...
-				'groupfolder_id' => $folderId
-			])
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($this->createMock(Space::class))
 		;
 
 		$this->workspaceCheck
@@ -2063,54 +1995,18 @@ class SpaceManagerTest extends TestCase {
 		$this->expectException(WorkspaceNameSpecialCharException::class);
 		$this->expectExceptionMessage('');
 		$this->expectExceptionCode(Http::STATUS_BAD_REQUEST);
-		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+		$this->spaceManager->rename($spaceId, $newSpaceName);
 	}
 
 	public function testRenameWorkspaceWithDuplicateName(): void {
 		$spaceId = 1;
-		$folderId = 10;
 		$newSpaceName = 'SpaceOne';
 
-		/**
-		 * @var MockObject&SpaceManager
-		 *
-		 * Mock only the get method.
-		 */
-		$spaceManagerPartial = $this->getMockBuilder(SpaceManager::class)
-			->setConstructorArgs([
-				$this->folderHelper,
-				$this->rootFolder,
-				$this->workspaceCheck,
-				$this->userGroup,
-				$this->adminGroup,
-				$this->adminUserGroup,
-				$this->addedGroups,
-				$this->folderStorageManagerHelper,
-				$this->subGroup,
-				$this->userManager,
-				$this->userWorkspaceGroup,
-				$this->spaceMapper,
-				$this->conntectedGroupService,
-				$this->logger,
-				$this->userFormatter,
-				$this->userService,
-				$this->groupManager,
-				$this->workspaceManagerGroup,
-				$this->workspaceService,
-				$this->colorCode,
-				$this->userSession,
-				$this->workspaceFormatter
-			])
-			->onlyMethods(['get'])
-			->getMock()
-		;
-
-		$spaceManagerPartial->expects($this->once())
-			->method('get')
-			->willReturn([
-				// other data...
-				'groupfolder_id' => $folderId
-			])
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn($this->createMock(Space::class))
 		;
 
 		$this->workspaceCheck
@@ -2130,6 +2026,127 @@ class SpaceManagerTest extends TestCase {
 		$this->expectException(SpacenameExistException::class);
 		$this->expectExceptionMessage('');
 		$this->expectExceptionCode(Http::STATUS_CONFLICT);
-		$spaceManagerPartial->rename($spaceId, $newSpaceName);
+		$this->spaceManager->rename($spaceId, $newSpaceName);
+	}
+
+	public function testRenameWorkspaceThatDoesNotExist(): void {
+		$spaceId = 1;
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('find')
+			->with($spaceId)
+			->willReturn(null)
+		;
+
+		$this->folderHelper
+			->expects($this->never())
+			->method('renameFolder')
+		;
+
+		$this->expectException(NotFoundException::class);
+		$this->spaceManager->rename($spaceId, 'SpaceOne');
+	}
+
+	/**
+	 * get() is not mocked: remove() must read the groupfolder id
+	 * from what WorkspaceFormatter really returns.
+	 */
+	public function testRemoveWorkspace(): void {
+		$spaceId = 1;
+		$folderId = 10;
+
+		$space = new Space();
+		$space->setSpaceId($spaceId);
+		$space->setGroupfolderId($folderId);
+		$space->setSpaceName('Espace01');
+		$space->setColorCode('#46221f');
+
+		$this->spaceMapper
+			->method('find')
+			->with($spaceId)
+			->willReturn($space)
+		;
+
+		$this->rootFolder
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$folder = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+		$folder
+			->method('toArray')
+			->willReturn([
+				'groups' => [
+					'SPACE-GE-1' => 31,
+					'SPACE-U-1' => 31,
+				],
+				'root_cache_entry' => null,
+			])
+		;
+
+		$this->folderHelper
+			->method('getFolder')
+			->with($folderId, 2)
+			->willReturn($folder)
+		;
+
+		$groups = [];
+		foreach (['SPACE-GE-1', 'SPACE-U-1'] as $gid) {
+			$group = $this->createMock(IGroup::class);
+			$group->method('getGID')->willReturn($gid);
+			$group->expects($this->once())->method('delete');
+			$groups[] = [$gid, $group];
+		}
+
+		$this->groupManager
+			->method('get')
+			->willReturnMap($groups)
+		;
+
+		$this->spaceMapper
+			->expects($this->once())
+			->method('deleteSpace')
+			->with($spaceId)
+		;
+
+		$this->folderStorageManagerHelper
+			->expects($this->once())
+			->method('deleteStoragesForFolder')
+			->with($folder)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('removeFolder')
+			->with($folderId)
+		;
+
+		$spaceManager = new SpaceManager(
+			$this->folderHelper,
+			$this->rootFolder,
+			$this->workspaceCheck,
+			$this->userGroup,
+			$this->adminGroup,
+			$this->adminUserGroup,
+			$this->addedGroups,
+			$this->folderStorageManagerHelper,
+			$this->subGroup,
+			$this->userManager,
+			$this->userWorkspaceGroup,
+			$this->spaceMapper,
+			$this->conntectedGroupService,
+			$this->logger,
+			$this->userFormatter,
+			$this->userService,
+			$this->groupManager,
+			$this->workspaceManagerGroup,
+			$this->workspaceService,
+			$this->colorCode,
+			$this->userSession,
+			new WorkspaceFormatter($this->logger, $this->groupManager, $this->userService)
+		);
+
+		$spaceManager->remove((string)$spaceId);
 	}
 }
