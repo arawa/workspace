@@ -306,4 +306,29 @@ class UserServiceTest extends TestCase {
 
 		$this->assertEquals(false, $result);
 	}
+
+	/**
+	 * occ commands run without a user session: formatting a workspace
+	 * (WorkspaceFormatter) must not crash on a null user.
+	 */
+	public function testWithoutUserSession(): void {
+		$userSession = $this->createMock(IUserSession::class);
+		$userSession->method('getUser')->willReturn(null);
+
+		$this->groupManager->expects($this->never())->method('isInGroup');
+
+		$userService = new UserService(
+			$this->groupManager,
+			$userSession,
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator,
+			$this->userGroup,
+			$this->groupfoldersGroupsMapper,
+			$this->appConfig);
+
+		$this->assertFalse($userService->isUserGeneralAdmin());
+		$this->assertFalse($userService->isSpaceManagerOfSpace(['id' => 1]));
+		$this->assertTrue($userService->isSimpleUserOfSpace(['id' => 1]));
+	}
 }
