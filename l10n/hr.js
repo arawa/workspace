@@ -26,8 +26,7 @@ OC.L10N.register(
     "Appearance" : "Izgled",
     "Save" : "Spremi",
     "Loading …" : "Učitavanje …",
-    "or" : "ili",
-    "Delete user" : "Izbriši korisnika",
-    "Loading..." : "Učitavanje..."
+    "Loading..." : "Učitavanje...",
+    "Access denied" : "Pristup odbijen"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

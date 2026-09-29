@@ -58,14 +58,10 @@ OC.L10N.register(
     "Save" : "ບັນທຶກ",
     "Loading …" : "ກຳລັງໂຫຼດ …",
     "Can't load workspace users" : "ບໍ່ສາມາດໂຫຼດຜູ້ໃຊ້ຂອງພື້ນທີ່ວຽກໄດ້",
-    "or" : "ຫຼື",
     "Error 403" : "ຜິດພາດ 403",
     "You aren't allowed to access into this application !" : "ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຂົ້າເຖິງແອັບພລິເຄຊັນນີ້!",
     "return to home" : "ກັບໄປໜ້າຫຼັກ",
-    "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "ເກີດຂໍ້ຜິດພາດດ້ານເຄືອຂ່າຍຂະນະພະຍາຍາມປ່ຽນສີພື້ນທີ່ວຽກ.<br>ຂໍ້ຜິດພາດຄື: {error}",
-    "Rename space" : "ປ່ຽນຊື່ພື້ນທີ່ວຽກ",
-    "Space name" : "ຊື່ພື້ນທີ່ວຽກ",
-    "Delete user" : "ລຶບຜູ້ໃຊ້",
-    "Loading..." : "ກຳລັງໂຫລດ..."
+    "Loading..." : "ກຳລັງໂຫລດ...",
+    "Access denied" : "ການເຂົ້າເຖິງຖືກປະຕິເສດ"
 },
 "nplurals=1; plural=0;");

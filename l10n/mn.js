@@ -24,6 +24,6 @@ OC.L10N.register(
     "Appearance" : "Гадаад төрх",
     "Save" : "Хадгалах",
     "Loading …" : "Ачаалж байна …",
-    "or" : "эсвэл"
+    "Access denied" : "Хандалт татгалзсан"
 },
 "nplurals=2; plural=(n != 1);");

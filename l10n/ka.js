@@ -22,7 +22,6 @@ OC.L10N.register(
     "View profile" : "View profile",
     "Remove user" : "Remove user",
     "Save" : "დამახსოვრება",
-    "or" : "or",
-    "Delete user" : "Delete user"
+    "Access denied" : "Access denied"
 },
 "nplurals=2; plural=(n!=1);");

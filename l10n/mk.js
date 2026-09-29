@@ -25,7 +25,6 @@ OC.L10N.register(
     "Appearance" : "Изглед",
     "Save" : "Сними",
     "Loading …" : "Се вчитува …",
-    "or" : "или",
-    "Delete user" : "Избриши корисник"
+    "Access denied" : "Забранет пристап"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

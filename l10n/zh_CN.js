@@ -27,8 +27,7 @@ OC.L10N.register(
     "Appearance" : "外观",
     "Save" : "保存",
     "Loading …" : "正在加载 …",
-    "or" : "或",
-    "Delete user" : "删除用户",
-    "Loading..." : "载入中..."
+    "Loading..." : "载入中...",
+    "Access denied" : "访问被拒绝"
 },
 "nplurals=1; plural=0;");
