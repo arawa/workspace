@@ -23,9 +23,7 @@ OC.L10N.register(
     "View profile" : "Skatīt profilu",
     "Appearance" : "Izskats",
     "Save" : "Saglabāt",
-    "or" : "vai",
-    "Rename space" : "Pārdēvēt vietu",
-    "Space name" : "Vietas nosaukums",
-    "Loading..." : "Notiek ielāde..."
+    "Loading..." : "Notiek ielāde...",
+    "Access denied" : "Piekļuve liegta"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

@@ -75,23 +75,19 @@
     "An error occurred while removing user from group {group}<br>Error: {error}" : "Ocurrió un error al eliminar usuario del grupo {group}<br>Error: {error}",
     "An error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Ocurrió un error al intentar cambiar el rol del usuario {user}.<br>Error: {error}",
     "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocurrió un error al intentar actualizar la cuota del espacio de trabajo.<br>Error: {error}",
-    "or" : "o",
     "Caution, users highlighted in red are not yet member of this workspace. They will be automatically added." : "Cuidado, los usuarios resaltados en rojo aún no son miembros de este espacio de trabajo. Serán agregados automáticamente.",
     "Error 403" : "Error 403",
     "You aren't allowed to access into this application !" : "¡No tienes permitido acceder a esta aplicación!",
     "return to home" : "volver al inicio",
     "A network error occurred while trying to lookup users.<br>Error: {error}" : "Ocurrió un error de red al buscar usuarios.<br>Error: {error}",
-    "A network error occured when trying to change the workspace's color.<br>The error is: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>El error es: {error}",
-    "Rename space" : "Renombrar espacio",
-    "Space name" : "Nombre del espacio",
-    "Delete user" : "Eliminar usuario",
     "A network error occurred while trying to retrieve workspaces.<br>Error: {error}" : "Ocurrió un error de red al intentar recuperar espacios de trabajo.<br>Error: {error}",
+    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}",
+    "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>Error: {error}",
+    "Loading..." : "Cargando...",
     "Network error occurred while trying to delete group {group}<br>Error: {error}" : "Ocurrió un error de red al intentar eliminar el grupo {group}<br>Error: {error}",
     "Network error occurred while removing user from group {group}<br>Error: {error}" : "Ocurrió un error de red al eliminar usuario del grupo {group}<br>Error: {error}",
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Ocurrió un error de red al intentar cambiar el rol del usuario {user}.<br>Error: {error}",
     "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Ocurrió un error de red al intentar actualizar la cuota del espacio de trabajo.<br>Error: {error}",
-    "You use <b>{size}</b> of {quota}" : "Usas <b>{size}</b> de {quota}",
-    "A network error occurred when trying to change the workspace's color.<br>Error: {error}" : "Ocurrió un error de red al intentar cambiar el color del espacio de trabajo.<br>Error: {error}",
-    "Loading..." : "Cargando..."
+    "Access denied" : "Acceso denegado"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

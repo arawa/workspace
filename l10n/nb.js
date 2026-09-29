@@ -26,8 +26,7 @@ OC.L10N.register(
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
     "Save" : "Lagre",
-    "or" : "eller",
-    "Delete user" : "Slett bruker",
-    "Loading..." : "Laster…"
+    "Loading..." : "Laster…",
+    "Access denied" : "Tilgang nektet"
 },
 "nplurals=2; plural=(n != 1);");

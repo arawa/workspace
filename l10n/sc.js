@@ -20,8 +20,6 @@ OC.L10N.register(
     "Remove user" : "Boga utente",
     "unlimited" : "illacanadu",
     "Appearance" : "Aspetu",
-    "Save" : "Sarva",
-    "or" : "o",
-    "Delete user" : "Cantzella utente"
+    "Save" : "Sarva"
 },
 "nplurals=2; plural=(n != 1);");

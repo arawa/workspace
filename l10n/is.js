@@ -24,8 +24,7 @@ OC.L10N.register(
     "Appearance" : "Útlit",
     "Save" : "Vista",
     "Loading …" : "Hleð inn…",
-    "or" : "eða",
-    "Delete user" : "Eyða notanda",
-    "Loading..." : "Hleð..."
+    "Loading..." : "Hleð...",
+    "Access denied" : "Aðgangur ekki leyfður"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

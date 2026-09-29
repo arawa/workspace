@@ -13,7 +13,6 @@ OC.L10N.register(
     "Groups" : "Grupoj",
     "View profile" : "Vidi profilon",
     "Save" : "Konservi",
-    "or" : "aŭ",
-    "Delete user" : "Forigi uzanton"
+    "Access denied" : "Aliro malpermesata"
 },
 "nplurals=2; plural=(n != 1);");

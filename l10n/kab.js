@@ -15,6 +15,6 @@ OC.L10N.register(
     "Groups" : "Igrawen",
     "Appearance" : "Udem",
     "Save" : "Sekles",
-    "or" : "neɣ"
+    "Access denied" : "Addaf yugwi"
 },
 "nplurals=2; plural=(n != 1);");

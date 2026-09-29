@@ -12,7 +12,7 @@ OC.L10N.register(
     "Quota" : "Cuota",
     "Users" : "Usuarios",
     "Save" : "Guardar",
-    "or" : "o",
-    "Loading..." : "Cargando..."
+    "Loading..." : "Cargando...",
+    "Access denied" : "Acceso denegado"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -56,12 +56,9 @@ OC.L10N.register(
     "Save" : "Tallenna",
     "Loading …" : "Ladataan …",
     "Can't load workspace users" : "Työtilan käyttäjiä ei voi ladata",
-    "or" : "tai",
     "Error 403" : "Virhe 403",
-    "Rename space" : "Nimeä tila uudelleen",
-    "Space name" : "Tilan nimi",
-    "Delete user" : "Poista käyttäjä",
     "Search workspaces..." : "Etsi työtiloja...",
-    "Loading..." : "Ladataan..."
+    "Loading..." : "Ladataan...",
+    "Access denied" : "Pääsy estetty"
 },
 "nplurals=2; plural=(n != 1);");

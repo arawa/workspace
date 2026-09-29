@@ -27,8 +27,7 @@ OC.L10N.register(
     "Appearance" : "Itxura",
     "Save" : "Gorde",
     "Loading …" : "Kargatzen …",
-    "or" : "edo",
-    "Delete user" : "Ezabatu erabiltzailea",
-    "Loading..." : "Kargatzen..."
+    "Loading..." : "Kargatzen...",
+    "Access denied" : "Sarbidea ukatua"
 },
 "nplurals=2; plural=(n != 1);");
