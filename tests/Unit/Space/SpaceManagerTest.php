@@ -42,10 +42,12 @@ use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
+use OCA\Workspace\Service\Group\WorkspaceGroupsResolver;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\UserService;
@@ -88,6 +90,7 @@ class SpaceManagerTest extends TestCase {
 	private MockObject&WorkspaceService $workspaceService;
 	private MockObject&IUserSession $userSession;
 	private MockObject&WorkspaceFormatter $workspaceFormatter;
+	private WorkspaceOcsFormatter $workspaceOcsFormatter;
 
 	private SpaceManager $spaceManager;
 
@@ -119,6 +122,9 @@ class SpaceManagerTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->workspaceFormatter = $this->createMock(WorkspaceFormatter::class);
+		$this->workspaceOcsFormatter = new WorkspaceOcsFormatter(
+			new WorkspaceGroupsResolver($this->groupManager, $this->logger)
+		);
 
 		$this->spaceManager = new SpaceManager(
 			$this->folderHelper,
@@ -142,7 +148,8 @@ class SpaceManagerTest extends TestCase {
 			$this->workspaceService,
 			$this->colorCode,
 			$this->userSession,
-			$this->workspaceFormatter
+			$this->workspaceFormatter,
+			$this->workspaceOcsFormatter
 		);
 	}
 
@@ -232,8 +239,7 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$workspaceFormatter = new WorkspaceFormatter(
-			$this->logger,
-			$this->groupManager,
+			new WorkspaceGroupsResolver($this->groupManager, $this->logger),
 			$this->userService,
 		);
 
@@ -261,7 +267,8 @@ class SpaceManagerTest extends TestCase {
 			$this->workspaceService,
 			$this->colorCode,
 			$this->userSession,
-			$workspaceFormatter
+			$workspaceFormatter,
+			$this->workspaceOcsFormatter
 		);
 
 		$actual = $spaceManager->get($spaceId);
@@ -1267,7 +1274,8 @@ class SpaceManagerTest extends TestCase {
 				$this->workspaceService,
 				$this->colorCode,
 				$this->userSession,
-				$this->workspaceFormatter
+				$this->workspaceFormatter,
+				$this->workspaceOcsFormatter
 			])
 			->onlyMethods(['get'])
 			->getMock()
@@ -2198,7 +2206,11 @@ class SpaceManagerTest extends TestCase {
 			$this->workspaceService,
 			$this->colorCode,
 			$this->userSession,
-			new WorkspaceFormatter($this->logger, $this->groupManager, $this->userService)
+			new WorkspaceFormatter(
+				new WorkspaceGroupsResolver($this->groupManager, $this->logger),
+				$this->userService,
+			),
+			$this->workspaceOcsFormatter
 		);
 
 		$spaceManager->remove((string)$spaceId);

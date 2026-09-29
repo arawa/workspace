@@ -40,6 +40,7 @@ use OCA\Workspace\Group\User\UserGroup as UserWorkspaceGroup;
 use OCA\Workspace\Helper\FolderStorageManagerHelper;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\ColorCode;
+use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
 use OCA\Workspace\Service\Group\GroupFormatter;
@@ -83,6 +84,7 @@ class SpaceManager {
 		private ColorCode $colorCode,
 		private IUserSession $userSession,
 		private WorkspaceFormatter $workspaceFormatter,
+		private WorkspaceOcsFormatter $workspaceOcsFormatter,
 	) {
 	}
 
@@ -216,21 +218,9 @@ class SpaceManager {
 	}
 
 	/**
-	 *  @return array<{
-	 * 	id: int,
-	 * 	mount_point: string,
-	 * 	groups: array,
-	 * 	quota: int,
-	 * 	size: int,
-	 * 	acl: bool,
-	 *  manage: array<Object>
-	 * 	groupfolder_id: int,
-	 * 	name: string,
-	 * 	color_code: string,
-	 *  usersCount: int,
-	 *  users: array<Object>
-	 *  added_groups: array<Object>
-	 * }
+	 * Returns a workspace formatted for the front, see WorkspaceFormatter::format().
+	 *
+	 * @throws NotFoundException when the groupfolder cannot be loaded
 	 */
 	public function get(int $spaceId): ?array {
 
@@ -576,40 +566,7 @@ class SpaceManager {
 				)
 				?->toArray()
 			;
-			$space = ($folderInfo !== null) ? array_merge(
-				$folderInfo,
-				$workspace
-			) : $workspace;
-
-			$gids = array_keys($space['groups'] ?? []);
-			$wsGroups = [];
-			$addedGroups = [];
-
-			foreach ($gids as $gid) {
-				$group = $this->groupManager->get($gid);
-				if (is_null($group)) {
-					$this->logger->warning(
-						"Be careful, the $gid group does not exist in the oc_groups table."
-						. ' The group is still present in the oc_group_folders_groups table.'
-						. ' To fix this inconsistency, recreate the group using occ commands.'
-					);
-					continue;
-				}
-				if (UserGroup::isWorkspaceGroup($group)) {
-					$wsGroups[] = $group;
-				} else {
-					$addedGroups[] = $group;
-				}
-
-				if (UserGroup::isWorkspaceUserGroupId($gid)) {
-					$space['usersCount'] = $group->count();
-				}
-			}
-
-			$space['groups'] = GroupFormatter::formatGroups($wsGroups);
-			$space['added_groups'] = (object)GroupFormatter::formatGroups($addedGroups);
-
-			$spaces[] = $space;
+			$spaces[] = $this->workspaceOcsFormatter->format($workspace, $folderInfo);
 		}
 
 		return $spaces;
