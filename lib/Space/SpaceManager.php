@@ -165,7 +165,7 @@ class SpaceManager {
 			]),
 			'added_groups' => (object)[],
 			'quota' => $groupfolder['quota'],
-			'size' => $groupfolder['size'],
+			'size' => ($groupfolder['root_cache_entry'] ?? null)?->getSize(),
 			'acl' => $groupfolder['acl'],
 			'manage' => $groupfolder['manage'],
 			'usersCount' => 0
