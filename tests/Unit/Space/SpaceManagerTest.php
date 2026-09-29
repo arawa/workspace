@@ -54,6 +54,7 @@ use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\OCS\OCSBadRequestException;
+use OCP\Files\Cache\ICacheEntry;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -362,6 +363,9 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testArrayAfterCreatedTheEspace01Workspace(): void {
+		$rootCacheEntry = $this->createMock(ICacheEntry::class);
+		$rootCacheEntry->method('getSize')->willReturn(2048);
+
 		$groupfolder = [
 			'id' => 1,
 			'mount_point' => 'Espace01',
@@ -370,7 +374,7 @@ class SpaceManagerTest extends TestCase {
 				'SPACE-U-1' => 31,
 			],
 			'quota' => -3,
-			'size' => 0,
+			'root_cache_entry' => $rootCacheEntry,
 			'acl' => true,
 			'manage' => [
 				0 => [
@@ -499,7 +503,7 @@ class SpaceManagerTest extends TestCase {
 				],
 				'added_groups' => (object)[],
 				'quota' => -3,
-				'size' => 0,
+				'size' => 2048,
 				'acl' => true,
 				'manage' => [
 					0 => [
