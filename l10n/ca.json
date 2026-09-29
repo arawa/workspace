@@ -21,8 +21,8 @@
     "unlimited" : "il·limitada",
     "Appearance" : "Aparença",
     "Save" : "Desar",
+    "Loading …" : "S'està carregant ...",
     "Loading..." : "Carregant...",
-    "or" : "o",
-    "Delete user" : "Suprimeix l'usuari"
+    "Access denied" : "Accés denegat"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

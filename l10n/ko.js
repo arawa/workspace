@@ -23,8 +23,8 @@ OC.L10N.register(
     "Remove user" : "사용자 제거",
     "Appearance" : "외형",
     "Save" : "저장",
+    "Loading …" : "로딩 중 …",
     "Loading..." : "불러오는 중...",
-    "or" : "또는",
-    "Delete user" : "사용자 지우기"
+    "Access denied" : "접근이 거부됨"
 },
 "nplurals=1; plural=0;");

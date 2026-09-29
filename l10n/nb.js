@@ -11,6 +11,7 @@ OC.L10N.register(
     "Choose from Files" : "Velg fra Files",
     "Rename group" : "Gi nytt navn til gruppen",
     "Group name" : "Gruppenavn",
+    "Delete group" : "Slett gruppe",
     "Error" : "Feil",
     "Settings" : "Innstillinger",
     "Network error" : "Nettverksfeil",
@@ -26,7 +27,6 @@ OC.L10N.register(
     "Appearance" : "Utseende",
     "Save" : "Lagre",
     "Loading..." : "Laster…",
-    "or" : "eller",
-    "Delete user" : "Slett bruker"
+    "Access denied" : "Tilgang nektet"
 },
 "nplurals=2; plural=(n != 1);");

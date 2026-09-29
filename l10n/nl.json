@@ -26,8 +26,8 @@
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
+    "Loading …" : "Aan het laden...",
     "Loading..." : "Laden....",
-    "or" : "of",
-    "Delete user" : "Verwijder gebruiker"
+    "Access denied" : "Toegang geweigerd"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

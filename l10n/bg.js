@@ -23,7 +23,6 @@ OC.L10N.register(
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
     "Save" : "Запиши",
-    "or" : "или",
-    "Delete user" : "Изтриване"
+    "Access denied" : "Отказан достъп"
 },
 "nplurals=2; plural=(n != 1);");

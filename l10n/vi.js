@@ -22,7 +22,6 @@ OC.L10N.register(
     "Remove user" : "Xóa người dùng",
     "Appearance" : "Giao diện",
     "Save" : "Lưu",
-    "or" : "hoặc",
-    "Delete user" : "Xóa người dùng"
+    "Loading …" : "Đang tải …"
 },
 "nplurals=1; plural=0;");

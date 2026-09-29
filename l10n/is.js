@@ -2,6 +2,7 @@ OC.L10N.register(
     "workspace",
     {
     "Unknown error" : "Óþekkt villa",
+    "Add users" : "Bæta við notendum",
     "Search users" : "Leita að notendum",
     "Cancel" : "Cancel",
     "Confirm" : "Staðfesta",
@@ -16,13 +17,14 @@ OC.L10N.register(
     "No users" : "Engir notendur",
     "Quota" : "Kvóti",
     "Users" : "Notendur",
+    "Role" : "Hlutverk",
     "Groups" : "Hópar",
     "View profile" : "Skoða notandasnið",
     "unlimited" : "ótakmarkað",
     "Appearance" : "Útlit",
     "Save" : "Vista",
+    "Loading …" : "Hleð inn…",
     "Loading..." : "Hleð...",
-    "or" : "eða",
-    "Delete user" : "Eyða notanda"
+    "Access denied" : "Aðgangur ekki leyfður"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

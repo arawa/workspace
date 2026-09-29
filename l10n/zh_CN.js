@@ -18,6 +18,7 @@ OC.L10N.register(
     "Add" : "添加",
     "No users" : "无用户",
     "Quota" : "配额",
+    "Users" : "用户",
     "Role" : "角色",
     "Groups" : "用户组",
     "View profile" : "查看个人资料",
@@ -25,8 +26,8 @@ OC.L10N.register(
     "unlimited" : "无限制",
     "Appearance" : "外观",
     "Save" : "保存",
+    "Loading …" : "正在加载 …",
     "Loading..." : "载入中...",
-    "or" : "或",
-    "Delete user" : "删除用户"
+    "Access denied" : "访问被拒绝"
 },
 "nplurals=1; plural=0;");

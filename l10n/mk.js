@@ -24,7 +24,7 @@ OC.L10N.register(
     "unlimited" : "неограничено",
     "Appearance" : "Изглед",
     "Save" : "Сними",
-    "or" : "или",
-    "Delete user" : "Избриши корисник"
+    "Loading …" : "Се вчитува …",
+    "Access denied" : "Забранет пристап"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

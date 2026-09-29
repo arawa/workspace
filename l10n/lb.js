@@ -10,6 +10,7 @@ OC.L10N.register(
     "Add" : "Dobäisetzen",
     "Quota" : "Quota",
     "Users" : "Benotzer",
+    "Role" : "Roll",
     "Groups" : "Gruppen",
     "Save" : "Späicheren"
 },

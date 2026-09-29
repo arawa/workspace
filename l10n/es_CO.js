@@ -12,6 +12,6 @@ OC.L10N.register(
     "Groups" : "Grupos",
     "Save" : "Guardar",
     "Loading..." : "Cargando...",
-    "or" : "o"
+    "Access denied" : "Acceso denegado"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

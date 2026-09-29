@@ -24,8 +24,6 @@ OC.L10N.register(
     "Appearance" : "Izskats",
     "Save" : "Saglabāt",
     "Loading..." : "Notiek ielāde...",
-    "or" : "vai",
-    "Rename space" : "Pārdēvēt vietu",
-    "Space name" : "Vietas nosaukums"
+    "Access denied" : "Piekļuve liegta"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

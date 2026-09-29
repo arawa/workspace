@@ -24,8 +24,8 @@
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
     "Save" : "Gorde",
+    "Loading …" : "Kargatzen …",
     "Loading..." : "Kargatzen...",
-    "or" : "edo",
-    "Delete user" : "Ezabatu erabiltzailea"
+    "Access denied" : "Sarbidea ukatua"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

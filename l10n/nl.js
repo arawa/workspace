@@ -28,8 +28,8 @@ OC.L10N.register(
     "unlimited" : "ongelimiteerd",
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
+    "Loading …" : "Aan het laden...",
     "Loading..." : "Laden....",
-    "or" : "of",
-    "Delete user" : "Verwijder gebruiker"
+    "Access denied" : "Toegang geweigerd"
 },
 "nplurals=2; plural=(n != 1);");

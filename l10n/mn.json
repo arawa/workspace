@@ -21,6 +21,7 @@
     "Remove user" : "Хэрэглэгч хасах",
     "Appearance" : "Гадаад төрх",
     "Save" : "Хадгалах",
-    "or" : "эсвэл"
+    "Loading …" : "Ачаалж байна …",
+    "Access denied" : "Хандалт татгалзсан"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

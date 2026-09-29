@@ -26,8 +26,8 @@ OC.L10N.register(
     "unlimited" : "mugagabea",
     "Appearance" : "Itxura",
     "Save" : "Gorde",
+    "Loading …" : "Kargatzen …",
     "Loading..." : "Kargatzen...",
-    "or" : "edo",
-    "Delete user" : "Ezabatu erabiltzailea"
+    "Access denied" : "Sarbidea ukatua"
 },
 "nplurals=2; plural=(n != 1);");

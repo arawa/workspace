@@ -23,8 +23,8 @@ OC.L10N.register(
     "unlimited" : "il·limitada",
     "Appearance" : "Aparença",
     "Save" : "Desar",
+    "Loading …" : "S'està carregant ...",
     "Loading..." : "Carregant...",
-    "or" : "o",
-    "Delete user" : "Suprimeix l'usuari"
+    "Access denied" : "Accés denegat"
 },
 "nplurals=2; plural=(n != 1);");
