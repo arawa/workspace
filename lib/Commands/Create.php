@@ -28,7 +28,6 @@ use OCA\Workspace\Exceptions\SpacenameExistException;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\User\UserGroup;
 use OCA\Workspace\Group\User\UserGroupManager;
-use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Space\SpaceManager;
 use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\User\UserPresenceChecker;
@@ -52,7 +51,6 @@ class Create extends Command {
 		private UserGroup $userGroup,
 		private UserPresenceChecker $userChecker,
 		private UserFinder $userFinder,
-		private GroupfolderHelper $groupfolderHelper,
 	) {
 		parent::__construct();
 	}
@@ -173,7 +171,7 @@ class Create extends Command {
 
 			$bytes = $this->convertToByte($value);
 
-			$this->groupfolderHelper->setFolderQuota($workspace['folder_id'], $bytes);
+			$this->spaceManager->setQuota((int)$workspace['id'], $bytes);
 
 		}
 

@@ -103,10 +103,11 @@ class UserService {
 	}
 
 	/**
-	 * @return boolean true if user is general admin, false otherwise
+	 * @return boolean true if user is general admin, false otherwise (or without a user session, e.g. in occ)
 	 */
 	public function isUserGeneralAdmin(): bool {
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), ManagersWorkspace::GENERAL_MANAGER)) {
+		$user = $this->userSession->getUser();
+		if ($user !== null && $this->groupManager->isInGroup($user->getUID(), ManagersWorkspace::GENERAL_MANAGER)) {
 			return true;
 		}
 		return false;
@@ -155,7 +156,8 @@ class UserService {
 	 * @return boolean true if user is space manager of the specified workspace, false otherwise
 	 */
 	public function isSpaceManagerOfSpace(array $space): bool {
-		if ($this->groupManager->isInGroup($this->userSession->getUser()->getUID(), WorkspaceManagerGroup::get($space['id']))) {
+		$user = $this->userSession->getUser();
+		if ($user !== null && $this->groupManager->isInGroup($user->getUID(), WorkspaceManagerGroup::get($space['id']))) {
 			return true;
 		}
 		return false;
