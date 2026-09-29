@@ -20,7 +20,6 @@
     "View profile" : "View profile",
     "Remove user" : "Remove user",
     "Save" : "დამახსოვრება",
-    "or" : "or",
-    "Delete user" : "Delete user"
+    "Access denied" : "Access denied"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

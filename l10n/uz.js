@@ -13,7 +13,6 @@ OC.L10N.register(
     "View profile" : "View profile",
     "Appearance" : "Tashqi ko'rinish",
     "Save" : "Saqlash",
-    "Loading …" : "Yuklanmoqda...",
-    "or" : "yoki"
+    "Loading …" : "Yuklanmoqda..."
 },
 "nplurals=1; plural=0;");

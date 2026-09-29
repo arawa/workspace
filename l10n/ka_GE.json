@@ -10,7 +10,7 @@
     "Users" : "მომხმარებლები",
     "Groups" : "ჯგუფები",
     "Save" : "შენახვა",
-    "or" : "ან",
-    "Loading..." : "იტვირთება…"
+    "Loading..." : "იტვირთება…",
+    "Access denied" : "წვდომა არაა დაშვებული"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

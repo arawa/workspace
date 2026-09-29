@@ -29,8 +29,7 @@ OC.L10N.register(
     "Appearance" : "Uiterlijk",
     "Save" : "Opslaan",
     "Loading …" : "Aan het laden...",
-    "or" : "of",
-    "Delete user" : "Verwijder gebruiker",
-    "Loading..." : "Laden...."
+    "Loading..." : "Laden....",
+    "Access denied" : "Toegang geweigerd"
 },
 "nplurals=2; plural=(n != 1);");

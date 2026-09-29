@@ -12,7 +12,7 @@ OC.L10N.register(
     "Users" : "მომხმარებლები",
     "Groups" : "ჯგუფები",
     "Save" : "შენახვა",
-    "or" : "ან",
-    "Loading..." : "იტვირთება…"
+    "Loading..." : "იტვირთება…",
+    "Access denied" : "წვდომა არაა დაშვებული"
 },
 "nplurals=2; plural=(n!=1);");

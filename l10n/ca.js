@@ -24,8 +24,7 @@ OC.L10N.register(
     "Appearance" : "Aparença",
     "Save" : "Desar",
     "Loading …" : "S'està carregant ...",
-    "or" : "o",
-    "Delete user" : "Suprimeix l'usuari",
-    "Loading..." : "Carregant..."
+    "Loading..." : "Carregant...",
+    "Access denied" : "Accés denegat"
 },
 "nplurals=2; plural=(n != 1);");

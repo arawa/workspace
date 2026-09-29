@@ -20,7 +20,6 @@ OC.L10N.register(
     "unlimited" : "ללא הגבלה",
     "Appearance" : "מראה",
     "Save" : "שמירה",
-    "or" : "או",
-    "Delete user" : "מחיקת משתמש"
+    "Access denied" : "הגישה נדחתה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

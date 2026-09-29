@@ -27,8 +27,7 @@ OC.L10N.register(
     "Appearance" : "表示",
     "Save" : "保存する",
     "Loading …" : "読み込み中…",
-    "or" : "或いは",
-    "Delete user" : "ユーザーを削除",
-    "Loading..." : "読み込み中…"
+    "Loading..." : "読み込み中…",
+    "Access denied" : "アクセス拒否"
 },
 "nplurals=1; plural=0;");

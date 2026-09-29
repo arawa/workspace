@@ -25,8 +25,7 @@
     "Appearance" : "Itxura",
     "Save" : "Gorde",
     "Loading …" : "Kargatzen …",
-    "or" : "edo",
-    "Delete user" : "Ezabatu erabiltzailea",
-    "Loading..." : "Kargatzen..."
+    "Loading..." : "Kargatzen...",
+    "Access denied" : "Sarbidea ukatua"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -12,7 +12,6 @@ OC.L10N.register(
     "Users" : "ผู้ใช้",
     "Groups" : "กลุ่ม",
     "Appearance" : "ลักษณะที่ปรากฏ",
-    "Save" : "บันทึก",
-    "Delete user" : "ลบผู้ใช้"
+    "Save" : "บันทึก"
 },
 "nplurals=1; plural=0;");
