@@ -31,8 +31,10 @@ use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\GroupException;
 use OCA\Workspace\Exceptions\InvalidParamException;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
+use OCA\Workspace\Service\Group\WorkspaceGroupsResolver;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
@@ -42,6 +44,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
+use OCP\Files\Cache\ICacheEntry;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IRequest;
@@ -93,6 +96,9 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 			$this->userSession,
 			$this->spaceMapper,
 			$this->userService,
+			new WorkspaceOcsFormatter(
+				new WorkspaceGroupsResolver($this->groupManager, $this->logger)
+			),
 			$this->appName
 		);
 	}
@@ -101,114 +107,104 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		Mockery::close();
 	}
 
-	public function testFindReturnsValidDataResponse(): void {
-		$spaceId = 4;
+	/**
+	 * Mocks SpaceManager::load() with a folderInfo mirroring FolderWithMappingsAndCache::toArray(),
+	 * undocumented keys included, and returns the WorkspaceSpace the API must answer with.
+	 */
+	private function mockLoadedSpace(int $id, string $name, string $color, int $quota): array {
+		$rootCacheEntry = $this->createMock(ICacheEntry::class);
+		$rootCacheEntry->method('getSize')->willReturn(1024);
 
-		/** @var array space mocked */
-		$space = [
-			'id' => 4,
-			'mount_point' => 'Espace04',
-			'groups' => [
-				'SPACE-GE-4' => [
-					'gid' => 'SPACE-GE-4',
-					'displayName' => 'WM-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-GE-4'
-				],
-				'SPACE-U-4' => [
-					'gid' => 'SPACE-U-4',
-					'displayName' => 'U-Espace04',
-					'types' => [
-						'Database'
-					],
-					'usersCount' => 0,
-					'slug' => 'SPACE-U-4'
-				]
-			],
-			'quota' => -3,
-			'size' => 0,
-			'acl' => true,
-			'manage' => [
-				[
-					'type' => 'group',
-					'id' => 'SPACE-GE-4',
-					'displayname' => 'WM-Espace04'
-				]
-			],
-			'groupfolder_id' => 4,
-			'name' => 'Espace04',
-			'color_code' => '#93b250',
-			'users' => (object)[],
-			'usersCount' => 0,
-			'added_groups' => (object)[]
+		$manage = [
+			[
+				'type' => 'group',
+				'id' => "SPACE-GE-{$id}",
+				'displayname' => "WM-{$name}"
+			]
 		];
 
 		$this->spaceManager
 			->expects($this->once())
-			->method('get')
-			->with($spaceId)
-			->willReturn($space)
+			->method('load')
+			->with($id)
+			->willReturn([
+				'workspace' => [
+					'id' => $id,
+					'groupfolder_id' => $id,
+					'name' => $name,
+					'color_code' => $color,
+				],
+				'folderInfo' => [
+					'id' => $id,
+					'mount_point' => $name,
+					'quota' => $quota,
+					'acl' => true,
+					'acl_default_no_permission' => false,
+					'storage_id' => 3,
+					'root_id' => 1493,
+					'root_cache_entry' => $rootCacheEntry,
+					'groups' => [
+						"SPACE-GE-{$id}" => 31,
+						"SPACE-U-{$id}" => 31,
+					],
+					'manage' => $manage,
+					'options' => ['separate-storage' => true],
+				],
+			])
 		;
+
+		$groups = [];
+		$groupMap = [];
+		foreach (["SPACE-GE-{$id}" => "WM-{$name}", "SPACE-U-{$id}" => "U-{$name}"] as $gid => $displayName) {
+			$group = $this->createMock(IGroup::class);
+			$group->method('getGID')->willReturn($gid);
+			$group->method('getDisplayName')->willReturn($displayName);
+			$group->method('getBackendNames')->willReturn(['Database']);
+			$group->method('count')->willReturn(0);
+			$groupMap[] = [$gid, $group];
+
+			$groups[$gid] = [
+				'gid' => $gid,
+				'displayName' => $displayName,
+				'types' => ['Database'],
+				'usersCount' => 0,
+				'slug' => $gid,
+			];
+		}
+
+		$this->groupManager
+			->method('get')
+			->willReturnMap($groupMap)
+		;
+
+		return [
+			'id' => $id,
+			'mount_point' => $name,
+			'groups' => (object)$groups,
+			'quota' => $quota,
+			'size' => 1024,
+			'acl' => true,
+			'manage' => $manage,
+			'groupfolder_id' => $id,
+			'name' => $name,
+			'color_code' => $color,
+			'usersCount' => 0,
+			'added_groups' => (object)[],
+		];
+	}
+
+	public function testFindReturnsValidDataResponse(): void {
+		$spaceId = 4;
+
+		$expected = $this->mockLoadedSpace($spaceId, 'Espace04', '#93b250', -3);
 
 		$actual = $this->controller->find($spaceId);
 
-		$expected = new DataResponse(
-			[
-				'id' => 4,
-				'mount_point' => 'Espace04',
-				'groups' => [
-					'SPACE-GE-4' => [
-						'gid' => 'SPACE-GE-4',
-						'displayName' => 'WM-Espace04',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-GE-4'
-					],
-					'SPACE-U-4' => [
-						'gid' => 'SPACE-U-4',
-						'displayName' => 'U-Espace04',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-U-4'
-					]
-				],
-				'quota' => -3,
-				'size' => 0,
-				'acl' => true,
-				'manage' => [
-					[
-						'type' => 'group',
-						'id' => 'SPACE-GE-4',
-						'displayname' => 'WM-Espace04'
-					]
-				],
-				'groupfolder_id' => 4,
-				'name' => 'Espace04',
-				'color_code' => '#93b250',
-				'users' => (object)[],
-				'usersCount' => 0,
-				'added_groups' => (object)[]
-			],
-			Http::STATUS_OK
-		);
-
-		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
-			return;
-		}
-
-		$this->assertEquals($expected, $actual);
-		$this->assertEquals($expected->getData(), $actual->getData());
-		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
-		$this->assertInstanceOf(Response::class, $actual);
 		$this->assertInstanceOf(DataResponse::class, $actual, 'Response must be a DataResponse for OCS API');
+		$this->assertEquals($expected, $actual->getData());
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
+
 	public function testRemoveUserFromGroup(): void {
 		$id = 1;
 		$gid = 'SPACE-U-1';
@@ -362,6 +358,8 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 	public function testCreateReturnsValidDataResponse(): void {
 		$spacename = 'Space01';
 
+		// SpaceManager::create() returns the shape used by the front,
+		// the OCS API only takes the id from it.
 		$this->spaceManager
 			->expects($this->once())
 			->method('create')
@@ -372,94 +370,15 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 				'id_space' => 1,
 				'folder_id' => 1,
 				'color' => '#413160',
-				'groups' => [
-					'SPACE-GE-1' => [
-						'gid' => 'SPACE-GE-1',
-						'displayName' => 'WM-Space01',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-GE-1'
-					],
-					'SPACE-U-1' => [
-						'gid' => 'SPACE-U-1',
-						'displayName' => 'U-Space01',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-U-1'
-					]
-				],
-				'added_groups' => [],
-				'quota' => -3,
-				'size' => 0,
-				'acl' => true,
-				'manage' => [
-					[
-						'type' => 'group',
-						'id' => 'SPACE-GE-1',
-						'displayname' => 'WM-Space01'
-					]
-				],
-				'usersCount' => 0
-			]
-			)
+				'usersCount' => 0,
+			])
 		;
+
+		$expected = $this->mockLoadedSpace(1, 'Space01', '#413160', -3);
 
 		$actual = $this->controller->create($spacename);
 
-		$expected = new DataResponse(
-			[
-				'name' => 'Space01',
-				'id' => 1,
-				'id_space' => 1,
-				'folder_id' => 1,
-				'color' => '#413160',
-				'groups' => [
-					'SPACE-GE-1' => [
-						'gid' => 'SPACE-GE-1',
-						'displayName' => 'WM-Space01',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-GE-1'
-					],
-					'SPACE-U-1' => [
-						'gid' => 'SPACE-U-1',
-						'displayName' => 'U-Space01',
-						'types' => [
-							'Database'
-						],
-						'usersCount' => 0,
-						'slug' => 'SPACE-U-1'
-					]
-				],
-				'added_groups' => [],
-				'quota' => -3,
-				'size' => 0,
-				'acl' => true,
-				'manage' => [
-					[
-						'type' => 'group',
-						'id' => 'SPACE-GE-1',
-						'displayname' => 'WM-Space01'
-					]
-				],
-				'usersCount' => 0
-			],
-			Http::STATUS_CREATED
-		)
-		;
-
-		if (!($actual instanceof DataResponse) || !($expected instanceof DataResponse)) {
-			return;
-		}
-
-		$this->assertEquals($expected, $actual);
-		$this->assertEquals($expected->getData(), $actual->getData());
+		$this->assertEquals($expected, $actual->getData());
 		$this->assertEquals(Http::STATUS_CREATED, $actual->getStatus());
 	}
 
@@ -1013,13 +932,29 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
 	}
 
+	public function testFindThrowsOCSNotFoundExceptionWhenWorkspaceDoesNotExist(): void {
+		$spaceId = 4;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('load')
+			->with($spaceId)
+			->willReturn(null)
+		;
+
+		$this->expectException(OCSNotFoundException::class);
+		$this->expectExceptionMessage("No workspace found with id {$spaceId}");
+
+		$this->controller->find($spaceId);
+	}
+
 	public function testThrowsOCSNotFoundExceptionWhenGroupfolderNotFound(): void {
 		$spaceId = 4;
 		$folderId = 4;
 
 		$this->spaceManager
 			->expects($this->once())
-			->method('get')
+			->method('load')
 			->with($spaceId)
 			->willThrowException(new NotFoundException("Failed loading groupfolder with folderId {$folderId}"));
 		;
@@ -1103,7 +1038,7 @@ class WorkspaceApiOcsControllerTest extends TestCase {
 
 		$this->spaceManager
 			->expects($this->once())
-			->method('get')
+			->method('load')
 			->with($spaceId)
 			->willThrowException(new InvalidParamException('Error'));
 		;
