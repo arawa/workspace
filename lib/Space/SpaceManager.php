@@ -343,7 +343,7 @@ class SpaceManager {
 
 		$this->spaceMapper->deleteSpace($spaceId);
 
-		$folderId = $space['groupfolder_id'];
+		$folderId = $space['groupfolderId'];
 		$folder = $this->folderHelper->getFolder($folderId, $this->rootFolder->getRootFolderStorageId());
 		if ($folder !== null) {
 			$this->folderStorageManagerHelper->deleteStoragesForFolder($folder);
@@ -356,7 +356,12 @@ class SpaceManager {
 	 * @param string $newSpaceName related to the  new space name.
 	 */
 	public function rename(int $spaceId, string $newSpaceName): void {
-		$space = $this->get($spaceId);
+		$space = $this->spaceMapper->find($spaceId);
+
+		if (is_null($space)) {
+			throw new NotFoundException("The workspace {$spaceId} does not exist.");
+		}
+
 		$newSpaceName = $this->deleteBlankSpaceName($newSpaceName);
 
 		if ($this->workspaceCheck->containSpecialChar($newSpaceName)) {
@@ -367,7 +372,7 @@ class SpaceManager {
 			throw new SpacenameExistException();
 		}
 
-		$this->folderHelper->renameFolder($space['groupfolder_id'], $newSpaceName);
+		$this->folderHelper->renameFolder($space->getGroupfolderId(), $newSpaceName);
 		$this->spaceMapper->updateSpaceName($newSpaceName, $spaceId);
 	}
 
