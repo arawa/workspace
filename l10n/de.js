@@ -99,6 +99,9 @@ OC.L10N.register(
     "No workspace found" : "Kein Arbeitsbereich gefunden",
     "You aren't in any workspaces. Please contact a General Manager." : "Du bist nicht Teil eines Arbeitsbereichs. Bitte wende dich an einen Allgemeinen Manager.",
     "Return to home" : "Zurück zum Start",
+    "Workspace requires the {linkStart}Team folders{linkEnd} app. Please contact your Nextcloud administrator to install and enable it." : "Workspace benötigt die {linkStart}Team-Ordner-App{linkEnd}. Bitte an die Nextcloud-Administration wenden, um sie zu installieren und zu aktivieren.",
+    "Team folders is not enabled" : "Team-Ordner sind nicht aktiviert",
+    "Open Team folders in the app store" : "\"Team Folders\" im App-Store öffnen",
     "{number} workspaces …" : "{number} Arbeitsbereiche …",
     "Unable to load more workspaces. Please try again or contact your administrator." : "Weitere Arbeitsbereiche konnten nicht geladen werden. Bitte erneut versuchen oder an die Administration wenden.",
     "This workspace or group folder already exists.\nPlease note that workspace names are not case sensitive.\nFor example: if a workspace named “human resources” already exists, you will not be able to create a workspace named “Human Resources.”\nAlso check that a group folder with the name you have just entered does not already exist." : "Dieser Arbeitsbereich oder Gruppenordner existiert bereits.\nBitte beachten, dass bei Arbeitsbereichsnamen zwischen Groß- und Kleinschreibung nicht unterschieden wird.\nBeispiel: Wenn bereits ein Arbeitsbereich mit dem Namen “Personalwesen” vorhanden ist, kann kein Arbeitsbereich mit dem Namen “Personalwesen” erstellt werden\nBitte auch überprüfen, dass ein Gruppenordner mit dem Namen, der gerade eingegeben wurde, noch nicht existiert.",
@@ -143,6 +146,7 @@ OC.L10N.register(
     "Network error occurred while trying to delete group {group}<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Löschen der Gruppe {group} aufgetreten<br> Fehler: {error}",
     "Network error occurred while removing user from group {group}<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Entfernen des Benutzers aus der Gruppe {group} aufgetreten.<br>Fehler: {error}",
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Ändern der Rolle des Benutzers {user} aufgetreten. <br>Fehler: {error}",
-    "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Netzwerkfehler beim Aktualisieren des Arbeitsbereichskontigents. <br>Fehler: {error}"
+    "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Netzwerkfehler beim Aktualisieren des Arbeitsbereichskontigents. <br>Fehler: {error}",
+    "Access denied" : "Zugriff verweigert"
 },
 "nplurals=2; plural=(n != 1);");
