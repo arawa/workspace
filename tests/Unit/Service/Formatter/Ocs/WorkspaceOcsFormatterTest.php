@@ -4,6 +4,7 @@ namespace OCA\Workspace\Tests\Unit\Service\Formatter\Ocs;
 
 use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Group\WorkspaceGroupsResolver;
+use OCP\Files\Cache\ICacheEntry;
 use OCP\IGroup;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +36,42 @@ class WorkspaceOcsFormatterTest extends TestCase {
 		return $group;
 	}
 
-	public function testMergesGroupfolderAndWorkspace(): void {
+	/**
+	 * Mirrors FolderWithMappingsAndCache::toArray(), undocumented keys included.
+	 */
+	private function folderInfo(): array {
+		$rootCacheEntry = $this->createMock(ICacheEntry::class);
+		$rootCacheEntry->method('getSize')->willReturn(2048);
+
+		return [
+			'id' => 4,
+			'mount_point' => 'Espace01',
+			'quota' => -3,
+			'acl' => true,
+			'acl_default_no_permission' => false,
+			'storage_id' => 3,
+			'root_id' => 1493,
+			'root_cache_entry' => $rootCacheEntry,
+			'groups' => ['SPACE-GE-1' => 31, 'SPACE-U-1' => 31, 'marketing' => 31],
+			'manage' => [
+				['type' => 'group', 'id' => 'SPACE-GE-1', 'displayname' => 'WM-Espace01'],
+			],
+			'options' => ['separate-storage' => true],
+			'team_circle_id' => null,
+		];
+	}
+
+	private function formattedGroup(string $gid, string $displayName, int $usersCount): array {
+		return [
+			'gid' => $gid,
+			'displayName' => $displayName,
+			'types' => ['Database'],
+			'usersCount' => $usersCount,
+			'slug' => $gid,
+		];
+	}
+
+	public function testReturnsOnlyTheDocumentedKeys(): void {
 		$manager = $this->group('SPACE-GE-1', 'WM-Espace01', 1);
 		$user = $this->group('SPACE-U-1', 'U-Espace01', 3);
 		$added = $this->group('marketing', 'Marketing', 0);
@@ -50,46 +86,40 @@ class WorkspaceOcsFormatterTest extends TestCase {
 				'userGroup' => $user,
 			]);
 
-		$actual = $this->formatter->format(self::WORKSPACE, [
-			'id' => 4,
-			'mount_point' => 'Espace01',
-			'groups' => ['SPACE-GE-1' => 31, 'SPACE-U-1' => 31, 'marketing' => 31],
-			'quota' => -3,
-			'acl' => true,
-			'manage' => [],
-		]);
+		$actual = $this->formatter->format(self::WORKSPACE, $this->folderInfo());
 
-		// The workspace row wins over the groupfolder on conflicting keys.
-		$this->assertSame(1, $actual['id']);
-		$this->assertSame(4, $actual['groupfolder_id']);
-		$this->assertSame('Espace01', $actual['mount_point']);
-		$this->assertSame('#46221f', $actual['color_code']);
-		$this->assertTrue($actual['acl']);
-		$this->assertSame(3, $actual['usersCount']);
-		$this->assertSame(['SPACE-GE-1', 'SPACE-U-1'], array_keys($actual['groups']));
-		$this->assertEquals((object)[
-			'marketing' => [
-				'gid' => 'marketing',
-				'displayName' => 'Marketing',
-				'types' => ['Database'],
-				'usersCount' => 0,
-				'slug' => 'marketing',
+		$this->assertEquals([
+			'id' => 1,
+			'mount_point' => 'Espace01',
+			'groups' => (object)[
+				'SPACE-GE-1' => $this->formattedGroup('SPACE-GE-1', 'WM-Espace01', 1),
+				'SPACE-U-1' => $this->formattedGroup('SPACE-U-1', 'U-Espace01', 3),
 			],
-		], $actual['added_groups']);
+			'quota' => -3,
+			'size' => 2048,
+			'acl' => true,
+			'manage' => [
+				['type' => 'group', 'id' => 'SPACE-GE-1', 'displayname' => 'WM-Espace01'],
+			],
+			'groupfolder_id' => 4,
+			'name' => 'Espace01',
+			'color_code' => '#46221f',
+			'usersCount' => 3,
+			'added_groups' => (object)[
+				'marketing' => $this->formattedGroup('marketing', 'Marketing', 0),
+			],
+		], $actual);
 	}
 
-	public function testWithoutGroupfolder(): void {
+	public function testWithoutUserGroupCountsNoUsers(): void {
 		$this->groupsResolver
-			->expects($this->once())
 			->method('resolve')
-			->with([])
 			->willReturn(['workspaceGroups' => [], 'addedGroups' => [], 'userGroup' => null]);
 
-		$actual = $this->formatter->format(self::WORKSPACE, null);
+		$actual = $this->formatter->format(self::WORKSPACE, $this->folderInfo());
 
-		$this->assertEquals(self::WORKSPACE + [
-			'groups' => [],
-			'added_groups' => (object)[],
-		], $actual);
+		$this->assertSame(WorkspaceOcsFormatter::NO_USERS, $actual['usersCount']);
+		$this->assertEquals((object)[], $actual['groups']);
+		$this->assertEquals((object)[], $actual['added_groups']);
 	}
 }
