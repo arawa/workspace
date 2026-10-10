@@ -83,7 +83,7 @@
     "regenerator-runtime": "^0.14.1",
     "terser-webpack-plugin": "^5.6.1",
     "vue-loader": "^17.4.2",
-    "webpack": "^5.104.1",
+    "webpack": "^5.111.1",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
