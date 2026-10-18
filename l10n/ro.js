@@ -8,7 +8,9 @@ OC.L10N.register(
     "Confirm" : "Confirmă",
     "Upload new files" : "Încarcă noi fișiere",
     "File to share" : "Fișier de partajat",
+    "Rename group" : "Redenumește grupul",
     "Group name" : "Numele grupului",
+    "Delete group" : "Șterge grupul",
     "Error" : "Eroare",
     "Settings" : "Setări",
     "Network error" : "Eroare de rețea",
@@ -19,6 +21,7 @@ OC.L10N.register(
     "View profile" : "Vezi profilul",
     "Appearance" : "Aspect",
     "Save" : "Salvează",
+    "Loading …" : "Se încarcă …",
     "Access denied" : "Acces interzis"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");
