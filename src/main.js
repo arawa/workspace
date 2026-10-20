@@ -30,6 +30,8 @@ import { vElementVisibility } from '@vueuse/components'
 import { generateFilePath } from '@nextcloud/router'
 import VueLazyload from '@jambonn/vue-lazyload'
 
+import '@nextcloud/dialogs/style.css'
+
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 
