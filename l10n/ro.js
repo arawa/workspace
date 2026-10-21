@@ -17,6 +17,7 @@ OC.L10N.register(
     "Add" : "Adaugă",
     "Quota" : "Procent",
     "Users" : "Utilizatori",
+    "Role" : "Rol",
     "Groups" : "Grupuri",
     "View profile" : "Vezi profilul",
     "Appearance" : "Aspect",
