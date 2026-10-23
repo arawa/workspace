@@ -29,7 +29,7 @@ OC.L10N.register(
     "Add these users" : "Tilføj disse brugere",
     "Cancel" : "Annullér",
     "Confirm" : "Bekræft",
-    "Upload new files" : "Upload nye filer",
+    "Upload new files" : "Overfør nye filer",
     "File to share" : "Fil til deling",
     "Choose from Files" : "Vælg fra Filer",
     "Rename group" : "Omdøb gruppe",
