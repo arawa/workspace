@@ -325,7 +325,7 @@ export default {
 }
 
 .quota-bubble {
-	margin-left: 20px !important;
+	margin-inline-start: 20px !important;
 	min-width: 100px;
 	max-width: 100px;
 	font-size: var(--default-font-size) !important;
@@ -334,7 +334,7 @@ export default {
 }
 
 .quota-bubble-esr {
-	margin-left: 20px !important;
+	margin-inline-start: 20px !important;
 	min-width: 100px;
 	max-width: 100% !important;
 	font-size: var(--default-font-size) !important;

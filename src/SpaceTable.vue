@@ -211,7 +211,7 @@ td, td div {
 }
 
 .workspace-managers-th {
-	text-align: left;
+	text-align: start;
 }
 
 .total-workspaces-information {

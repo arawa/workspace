@@ -196,7 +196,7 @@ export default {
 	padding: 10px;
 	font-weight: bold;
 	align-self: start;
-	margin-left: 16px;
+	margin-inline-start: 16px;
 }
 
 .header-select-groups h1 {
@@ -260,7 +260,7 @@ export default {
 }
 
 .groupname {
-	margin-left: 14px;
+	margin-inline-start: 14px;
 }
 
 .select-group-list {

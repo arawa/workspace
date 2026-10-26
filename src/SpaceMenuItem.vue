@@ -249,7 +249,7 @@ export default {
 
 <style>
 .action.space-text {
-	padding-left: 44px;
+	padding-inline-start: 44px;
 }
 
 .action.ws-modal-action.active {

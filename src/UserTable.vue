@@ -342,7 +342,7 @@ export default {
 
 .user-info {
 	width: 30%;
-	padding-left: 8px;
+	padding-inline-start: 8px;
 }
 
 .user-name {

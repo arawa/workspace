@@ -80,7 +80,7 @@ tbody > .workspace-tr:hover {
 }
 
 .user-counter {
-	margin-right: 5px;
+	margin-inline-end: 5px;
 }
 
 /* hooks navigation NC 27 */
@@ -90,7 +90,7 @@ tbody > .workspace-tr:hover {
 }
 
 .workspace-sidebar .app-navigation-entry__title .app-navigation-entry__utils {
-	margin-right: 30px;
+	margin-inline-end: 30px;
 }
 
 /* hooks nc31 */
@@ -110,7 +110,7 @@ tbody > .workspace-tr:hover {
 }
 
 .space-color-picker {
-	margin-right: 8px;
+	margin-inline-end: 8px;
 }
 
 /**
