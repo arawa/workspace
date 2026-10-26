@@ -21,17 +21,14 @@
  *
  */
 
-const { merge } = require('webpack-merge')
-const webpackConfig = require('@nextcloud/webpack-vue-config')
+import { createAppConfig } from '@nextcloud/vite-config'
+import { join } from 'node:path'
 
-module.exports = merge(webpackConfig, {
-	module: {
-		rules: [
-			{
-				test: /\.svg$/i,
-				resourceQuery: /raw/,
-				type: 'asset/source',
-			},
-		]
-	}
+// Builds js/workspace-main.mjs and css/workspace-main.css
+export default createAppConfig({
+	main: join(import.meta.dirname, 'src', 'main.js'),
+}, {
+	emptyOutputDirectory: {
+		additionalDirectories: ['css'],
+	},
 })

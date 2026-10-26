@@ -21,17 +21,15 @@
  *
  */
 
+// Imported first so that component styles still take precedence over it
+import './css/workspace-style.css'
 import { createApp } from 'vue'
 import router from './router.js'
 import store from './store/index.js'
 import App from './App.vue'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { vElementVisibility } from '@vueuse/components'
-import { generateFilePath } from '@nextcloud/router'
 import VueLazyload from '@jambonn/vue-lazyload'
-
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath('workspace', '', 'js/')
 
 const app = createApp(App)
 

@@ -1,3 +1,3 @@
-const babelConfig = require('@nextcloud/babel-config')
+import babelConfig from '@nextcloud/babel-config'
 
-module.exports = babelConfig
+export default babelConfig

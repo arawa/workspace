@@ -66,8 +66,8 @@ class PageController extends Controller {
 			throw new NotFoundException('Not found');
 		}
 
-		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.js
-		Util::addStyle(Application::APP_ID, 'workspace-style');		// css/workspace-style.css
+		Util::addScript(Application::APP_ID, 'workspace-main');		// js/workspace-main.mjs
+		Util::addStyle(Application::APP_ID, 'workspace-main');		// css/workspace-main.css
 
 		// Without Team folders (groupfolders), every workspace call fails:
 		// only tell the frontend so that it renders an error page.

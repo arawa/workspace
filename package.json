@@ -4,15 +4,15 @@
   "description": "Place this app in **nextcloud/apps/**",
   "main": "main.js",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "webpack --node-env production --progress",
-    "dev": "webpack --node-env development --progress",
-    "watch": "webpack --node-env development --progress --watch",
-    "serve": "webpack --node-env development serve --progress",
+    "build": "vite --configLoader runner --mode production build",
+    "dev": "vite --configLoader runner --mode development build",
+    "watch": "vite --configLoader runner --mode development build --watch",
     "test": "jest",
     "lint": "eslint --ext .js,.vue src",
-    "stylelint": "stylelint css/*.css css/*.scss src/**/*.vue",
-    "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.vue --fix"
+    "stylelint": "stylelint src/css/*.css src/**/*.vue",
+    "stylelint:fix": "stylelint src/css/*.css src/**/*.vue --fix"
   },
   "repository": {
     "type": "git",
@@ -42,21 +42,6 @@
   "browserslist": [
     "extends @nextcloud/browserslist-config"
   ],
-  "Comments": {
-    "devDependencies": [
-      "The @nextcloud/eslint-config's version 7.0.2 triggers a problem when we run `npm install`.",
-      "We must define the `--force` flag to install these devDependencies.",
-      "But, when we run `npm test`, we have an error on the conflicts on the eslint package as peerDependency.",
-      "I created an issue on this : https://github.com/nextcloud/eslint-config/issues/294.",
-      "One solutions is downgraded theses packages :",
-      "- @nextcloud/eslint-config@6.1.2",
-      "- @nextcloud/webpack-vue-config@3.1.10",
-      "Note: Look at this issue for webpack-vue-config package: https://github.com/nextcloud/nextcloud-vue/issues/2478",
-      "",
-      "Add this line '/node_modules/(?!(splitpanes)).+\\.js$'",
-      "To ignore the error related to splitpanes.css"
-    ]
-  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@mdi/js": "^7.4.47",
@@ -64,7 +49,7 @@
     "@nextcloud/browserslist-config": "^3.0.1",
     "@nextcloud/eslint-config": "^9.0.1",
     "@nextcloud/stylelint-config": "^3.1.0",
-    "@nextcloud/webpack-vue-config": "^7.0.4",
+    "@nextcloud/vite-config": "^2.5.4",
     "@vue/compiler-dom": "^3.4.21",
     "@vue/test-utils": "^2.4.6",
     "@vue/vue3-jest": "^29.2.6",
@@ -81,10 +66,8 @@
     "jsdom-global": "^3.0.2",
     "prettier": "^3.9.9",
     "regenerator-runtime": "^0.14.1",
-    "terser-webpack-plugin": "^5.6.1",
-    "vue-loader": "^17.4.2",
-    "webpack": "^5.104.1",
-    "webpack-node-externals": "^3.0.0"
+    "sass": "^1.106.1",
+    "vite": "^7.3.7"
   },
   "dependencies": {
     "@jambonn/vue-lazyload": "^1.0.10",

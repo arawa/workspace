@@ -46,7 +46,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import Home from 'vue-material-design-icons/Home.vue'
 import { mdiFolderAlert } from '@mdi/js'
 
-export default ({
+export default {
 	name: 'Error404',
 	components: {
 		NcButton,
@@ -64,5 +64,5 @@ export default ({
 		const url = generateUrl('/')
 		this.linkInstance = url
 	},
-})
+}
 </script>
