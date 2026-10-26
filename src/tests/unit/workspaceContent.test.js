@@ -21,14 +21,13 @@
  *
  */
 
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
 import { createSpace } from '../../services/spaceService.js'
 import axios from '@nextcloud/axios'
 import WorkspaceContent from '../../WorkspaceContent.vue'
 import LeftSidebar from '../../LeftSidebar.vue'
 import store from '../../store/index.js'
-
-jest.mock('axios')
 
 const wrappedHome = shallowMount(WorkspaceContent, {
 	global: {
@@ -39,7 +38,7 @@ const wrappedHome = shallowMount(WorkspaceContent, {
 				path: '/apps/workspace/',
 			},
 			$router: {
-				push: jest.fn(),
+				push: vi.fn(),
 			},
 		},
 		stubs: {
@@ -100,7 +99,7 @@ describe('Creating spaces with different entries', () => {
 	})
 
 	it('Home.methods.createSpace has been called', () => {
-		const mockCreateSpace = jest.spyOn(LeftSidebar.methods, 'createSpace')
+		const mockCreateSpace = vi.spyOn(LeftSidebar.methods, 'createSpace')
 
 		mockCreateSpace('44_Sri_Lanka')
 

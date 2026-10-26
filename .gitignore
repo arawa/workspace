@@ -1,8 +1,9 @@
 node_modules/
 vendor/
-js/*
+/js/
 build/
 .php-cs-fixer.cache
 tests/.phpunit.result.cache
 scripts/api-test.conf
 scripts/package-lock.json
+/css/

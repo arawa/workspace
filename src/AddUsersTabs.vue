@@ -440,8 +440,7 @@ section.app-sidebar__tab--active {
 	min-width: calc(100% - #{$modal-padding * 2});
 	position: relative;
 	top: 0;
-	left: 0;
-	right: 0;
+	inset-inline: 0;
 	max-width: calc(100% - #{$modal-padding * 2});
 	padding: 0 14px;
 	height: auto; // retirer le mode auto
@@ -489,7 +488,7 @@ section.app-sidebar__tab--active {
 
 .user-entry {
 	justify-content: space-between;
-	padding-left: 5px;
+	padding-inline-start: 5px;
 }
 
 .user-entry {
@@ -519,7 +518,7 @@ section.app-sidebar__tab--active {
 .information-import {
 	position: absolute;
 	top: 56px;
-	right: 66px;
+	inset-inline-end: 66px;
 	z-index: 9999;
 }
 

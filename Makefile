@@ -88,6 +88,7 @@ fullclean: clean
 	rm -rf vendor \
 	node_modules \
 	js \
+	css \
 	package-lock.json \
 	composer.lock
 
@@ -130,7 +131,7 @@ source:
 	--exclude="../$(app_name)/eslint.config.js" \
 	--exclude="../$(app_name)/.vscode" \
 	--exclude="../$(app_name)/.github" \
-	--exclude="../$(app_name)/webpack.*.js" \
+	--exclude="../$(app_name)/vite.config.js" \
 	--exclude="../$(app_name)/tests" \
 	--exclude="../$(app_name)/src/tests" \
 	--exclude="../$(app_name)/phpunit.xml" \
@@ -139,7 +140,7 @@ source:
 	--exclude="../$(app_name)/.phpcs-fixer.dist.cache" \
 	--exclude="../$(app_name)/dependabot.yml" \
 	--exclude="../$(app_name)/notes" \
-	--exclude="../$(app_name)/babel.config.js" \
+	--exclude="../$(app_name)/vitest.config.js" \
 	--exclude="../$(app_name)/composer.json" \
 	--exclude="../$(app_name)/composer.lock" \
 	--exclude="../$(app_name)/stylelint.config.js" \

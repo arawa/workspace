@@ -203,7 +203,7 @@ export default {
 }
 
 .input-new-item :deep(.app-navigation-entry-button .app-navigation-entry-icon) {
-	margin-right: 4px;
+	margin-inline-end: 4px;
 }
 
 .btn-light :deep(.app-navigation-entry-button) {
@@ -220,11 +220,13 @@ export default {
 }
 
 .app-navigation-entry {
-	padding-right: 0px;
+	padding-inline-end: 0px;
 }
+
 .ws-navigation-header {
 	padding: var(--app-navigation-padding);
 }
+
 .ws-navigation-spacer {
 	height: var(--app-navigation-padding);
 }

@@ -21,6 +21,7 @@
  *
  */
 
+import { beforeEach, describe, expect, it } from 'vitest'
 import { curry, mapObjIndexed } from 'ramda'
 import { getters } from '../../store/getters.js'
 import mutations from '../../store/mutations.js'

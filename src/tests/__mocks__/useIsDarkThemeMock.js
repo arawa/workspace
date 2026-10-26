@@ -1,1 +1,3 @@
-export const useIsDarkTheme = jest.fn()
+import { vi } from 'vitest'
+
+export const useIsDarkTheme = vi.fn()

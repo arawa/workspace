@@ -100,6 +100,7 @@ export default {
 .remove-modal {
 	min-height: 8rem;
 }
+
 .remove-space-actions {
 	margin-top: 1.5rem;
 	display: flex;

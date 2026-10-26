@@ -1,10 +1,6 @@
-import 'core-js/stable/index.js'
-/* eslint-disable-next-line */
-import 'regenerator-runtime/runtime.js'
-/* eslint-disable-next-line */
-import { OC } from './OC.js'
+import './OC.js'
 import { config } from '@vue/test-utils'
-import mockAxios from 'jest-mock-axios'
+import { vi } from 'vitest'
 
 document.title = 'Standard Nextcloud title'
 
@@ -24,12 +20,10 @@ global.n = config.global.mocks.$n
 
 global.console = {
 	...console,
-	error: jest.fn(),
-	debug: jest.fn(),
+	error: vi.fn(),
+	debug: vi.fn(),
 }
 
 global.appName = 'workspace'
 
 global.OCA = {}
-
-jest.mock('@nextcloud/axios', () => mockAxios)

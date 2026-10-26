@@ -110,13 +110,13 @@ export default {
 }
 
 .user-name {
-	margin-left: 10px;
+	margin-inline-start: 10px;
 	max-width: 440px;
 }
 
 .icon-member {
 	position: relative;
-	left: 10px;
+	inset-inline-start: 10px;
 	top: -10px;
 	z-index: 10;
 	width: 20px;
