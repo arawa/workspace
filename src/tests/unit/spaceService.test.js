@@ -20,10 +20,9 @@
  *
  */
 
+import { beforeEach, describe, expect, it } from 'vitest'
 import { transferUsersToUserGroup } from '../../services/spaceService.js'
 import axios from '@nextcloud/axios'
-
-jest.mock('axios')
 
 describe('transferUsersToUserGroup method', () => {
 	beforeEach(() => {

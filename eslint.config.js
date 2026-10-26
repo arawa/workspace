@@ -21,16 +21,9 @@
  */
 
 import { recommendedJavascript } from '@nextcloud/eslint-config'
-import globals from 'globals'
 
 export default [
 	...recommendedJavascript,
-	{
-		files: ['src/tests/**'],
-		languageOptions: {
-			globals: globals.jest,
-		},
-	},
 	// @nextcloud/eslint-config 9 is stricter than 8 and enforces a new code style.
 	// Until the codebase is migrated to it, keep the level of @nextcloud/eslint-config 8:
 	// same settings for the rules it already had, new rules disabled.
@@ -61,7 +54,7 @@ export default [
 		files: ['**/*.js', '**/*.vue'],
 		ignores: ['src/tests/**'],
 		rules: {
-			'jsdoc/check-tag-names': ['warn', { definedTags: ['jest-environment'] }],
+			'jsdoc/check-tag-names': 'warn',
 		},
 	},
 	{

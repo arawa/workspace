@@ -21,6 +21,7 @@
  *
  */
 
+import { describe, expect, it, vi } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
 import AddUsersTabs from '../../AddUsersTabs.vue'
 import store from '../../store/index.js'
@@ -34,7 +35,7 @@ const wrappedSelectUsers = shallowMount(AddUsersTabs, {
 				path: '/apps/workspace/',
 			},
 			$router: {
-				push: jest.fn(),
+				push: vi.fn(),
 			},
 		},
 		stubs: {

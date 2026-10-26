@@ -1,9 +1,11 @@
-export const showError = jest.fn()
-export const showSuccess = jest.fn()
-export const showWarning = jest.fn()
-export const getFilePickerBuilder = jest.fn(() => ({
-	setMultiSelect: jest.fn().mockReturnThis(),
-	setType: jest.fn().mockReturnThis(),
-	allowDirectories: jest.fn().mockReturnThis(),
-	build: jest.fn(),
+import { vi } from 'vitest'
+
+export const showError = vi.fn()
+export const showSuccess = vi.fn()
+export const showWarning = vi.fn()
+export const getFilePickerBuilder = vi.fn(() => ({
+	setMultiSelect: vi.fn().mockReturnThis(),
+	setType: vi.fn().mockReturnThis(),
+	allowDirectories: vi.fn().mockReturnThis(),
+	build: vi.fn(),
 }))

@@ -140,7 +140,7 @@ source:
 	--exclude="../$(app_name)/.phpcs-fixer.dist.cache" \
 	--exclude="../$(app_name)/dependabot.yml" \
 	--exclude="../$(app_name)/notes" \
-	--exclude="../$(app_name)/babel.config.js" \
+	--exclude="../$(app_name)/vitest.config.js" \
 	--exclude="../$(app_name)/composer.json" \
 	--exclude="../$(app_name)/composer.lock" \
 	--exclude="../$(app_name)/stylelint.config.js" \

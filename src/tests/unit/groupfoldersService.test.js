@@ -20,14 +20,13 @@
  *
  */
 
-import { expect } from '@jest/globals'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getAll, formatGroups, formatUsers, checkGroupfolderNameExist, enableAcl, addGroupToGroupfolder, removeGroupToManageACLForGroupfolder, createGroupfolder, destroy, rename } from '../../services/groupfoldersService.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-jest.mock('axios')
-jest.mock('../../services/Notifications/NotificationError')
-jest.mock('../../Errors/Groupfolders/CheckGroupfolderNameError')
+vi.mock('../../services/Notifications/NotificationError')
+vi.mock('../../Errors/Groupfolders/CheckGroupfolderNameError')
 
 const responseValue = {
 	data: {
@@ -77,7 +76,7 @@ describe('getAll function', () => {
 		axios.mockClear()
 	})
 	it('calls axios.get method', () => {
-		const getSpy = jest.spyOn(axios, 'get')
+		const getSpy = vi.spyOn(axios, 'get')
 		getAll()
 		expect(getSpy).toBeCalled()
 	})
@@ -102,7 +101,7 @@ describe('formatGroups function', () => {
 		axios.mockClear()
 	})
 	it('calls axios.post method', async () => {
-		const spy = jest.spyOn(axios, 'post')
+		const spy = vi.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
 		await formatGroups({})
 		expect(spy).toHaveBeenCalled()
@@ -138,7 +137,7 @@ describe('checkGroupfolderNameExist function', () => {
 		axios.mockClear()
 	})
 	it('does call to axios.get method', () => {
-		const getSpy = jest.spyOn(axios, 'get')
+		const getSpy = vi.spyOn(axios, 'get')
 		axios.get.mockResolvedValue(responseValue)
 		checkGroupfolderNameExist('foobar')
 		expect(getSpy).toBeCalled()
@@ -177,7 +176,7 @@ describe('addGroupToGroupfolder', () => {
 		axios.mockClear()
 	})
 	it('calls axios.post method', () => {
-		const spy = jest.spyOn(axios, 'post')
+		const spy = vi.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
 		addGroupToGroupfolder(1, 'SPACE-U-1')
 		expect(spy).toBeCalled()
@@ -202,7 +201,7 @@ describe('removeGroupToManageACLForGroupfolder', () => {
 		axios.mockClear()
 	})
 	it('calls axios.post method', () => {
-		const spy = jest.spyOn(axios, 'post')
+		const spy = vi.spyOn(axios, 'post')
 		axios.post.mockResolvedValue(responseValue)
 		removeGroupToManageACLForGroupfolder(5, 'SPACE-U-5')
 		expect(spy).toBeCalled()
@@ -252,7 +251,7 @@ describe('destroy', () => {
 		axios.mockClear()
 	})
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 	it('calls axios.delete method with proper parameters', async () => {
 		const workspace = { id: 1, groupfolderId: 1 }
@@ -306,14 +305,14 @@ describe('rename', () => {
 		axios.mockClear()
 	})
 	it('the requests relative to the rename function should be called', async () => {
-		const spyPatch = jest.spyOn(axios, 'patch')
+		const spyPatch = vi.spyOn(axios, 'patch')
 		axios.patch.mockResolvedValue({
 			data: {
 				statuscode: 204,
 				space: {},
 			},
 		})
-		const spyPost = jest.spyOn(axios, 'post')
+		const spyPost = vi.spyOn(axios, 'post')
 		axios.post.mockResolvedValue({})
 		await rename(workspace, 'new')
 		expect(spyPatch).toBeCalled()
