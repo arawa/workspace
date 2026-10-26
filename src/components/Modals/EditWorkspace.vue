@@ -344,6 +344,7 @@ h2 {
 	width: 300px !important;
 	margin: 8px 0 8px 0 !important;
 }
+
 .max-contrast {
 	color: var(--color-text-maxcontrast);
 }

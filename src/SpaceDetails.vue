@@ -352,6 +352,7 @@ export default {
 .user-actions {
 	flex-flow: row-reverse;
 }
+
 .modal-wrapper--small .modal-container {
 	min-height: 12rem !important;
 }

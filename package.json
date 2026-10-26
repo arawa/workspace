@@ -11,8 +11,8 @@
     "watch": "vite --configLoader runner --mode development build --watch",
     "test": "vitest run --configLoader runner",
     "lint": "eslint --ext .js,.vue src",
-    "stylelint": "stylelint src/css/*.css src/**/*.vue",
-    "stylelint:fix": "stylelint src/css/*.css src/**/*.vue --fix"
+    "stylelint": "stylelint src/css/*.css 'src/**/*.vue'",
+    "stylelint:fix": "stylelint src/css/*.css 'src/**/*.vue' --fix"
   },
   "repository": {
     "type": "git",

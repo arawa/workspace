@@ -222,9 +222,11 @@ export default {
 .app-navigation-entry {
 	padding-right: 0px;
 }
+
 .ws-navigation-header {
 	padding: var(--app-navigation-padding);
 }
+
 .ws-navigation-spacer {
 	height: var(--app-navigation-padding);
 }
