@@ -26,6 +26,7 @@ import {
 	randomName,
 	saveEditModal,
 	searchAccountsGroups,
+	serverPath,
 	spaceGroups,
 	teamFolderRow,
 	workspaceNavigation,
@@ -66,7 +67,7 @@ for (const [language, label] of Object.entries(labels)) {
 
 			// 2. The modal closes and the page of the same workspace shows its new name
 			saveEditModal(language)
-			cy.url().should('match', new RegExp(`/apps/workspace/workspace/${space.id}$`))
+			cy.location('pathname').should('equal', serverPath(`/apps/workspace/workspace/${space.id}`))
 			cy.get('.space-name .titles-for-space').should('contain', newName)
 
 			// 3. The navigation lists the workspace under its new name, the old one is gone
@@ -78,7 +79,7 @@ for (const [language, label] of Object.entries(labels)) {
 			// while its GID, in the URL, does not change
 			for (const group of spaceGroups(space.id, newName)) {
 				cy.get('@navigation').findByRole('link', { name: group.name }).click()
-				cy.url().should('match', new RegExp(`/apps/workspace/group/${space.id}/${group.gid}$`))
+				cy.location('pathname').should('equal', serverPath(`/apps/workspace/group/${space.id}/${group.gid}`))
 				cy.get('.group-name .titles-for-space').should('have.text', group.name)
 			}
 		})
@@ -92,8 +93,7 @@ for (const [language, label] of Object.entries(labels)) {
 			for (const group of spaceGroups(space.id, newName)) {
 				cy.findByRole('link', { name: group.name })
 					.should('be.visible')
-					.and('have.attr', 'href')
-					.and('match', new RegExp(`/settings/users/${group.gid}$`))
+					.and('have.prop', 'pathname', serverPath(`/settings/users/${group.gid}`))
 			}
 
 			// No group keeps the old workspace name, neither on the server nor on the page

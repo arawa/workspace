@@ -25,6 +25,9 @@ export const admin = new User('admin', 'admin')
 // argument, so occ sees "group:adduser GeneralManager bob" as the command name
 const occ = (...args) => cy.runCommand(['php', 'occ', ...args], { verbose: true })
 
+// The path of a page of the server, behind the /index.php of baseUrl
+export const serverPath = (path) => `${new URL(Cypress.config('baseUrl')).pathname}${path}`
+
 // A random suffix keeps a test independent from any other spec creating workspaces
 export const randomSuffix = () => Math.random().toString(36).slice(2, 10)
 export const randomName = () => `Workspace ${randomSuffix()}`
