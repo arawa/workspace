@@ -21,6 +21,7 @@
  */
 
 import { recommendedJavascript } from '@nextcloud/eslint-config'
+import pluginCypress from 'eslint-plugin-cypress'
 
 export default [
 	...recommendedJavascript,
@@ -52,10 +53,14 @@ export default [
 	{
 		// Documentation rules, which @nextcloud/eslint-config does not apply to tests
 		files: ['**/*.js', '**/*.vue'],
-		ignores: ['src/tests/**'],
+		ignores: ['src/tests/**', '**/*.cy.*'],
 		rules: {
 			'jsdoc/check-tag-names': 'warn',
 		},
+	},
+	{
+		...pluginCypress.configs.recommended,
+		files: ['cypress/**/*.js'],
 	},
 	{
 		files: ['**/*.vue'],

@@ -7,3 +7,7 @@ tests/.phpunit.result.cache
 scripts/api-test.conf
 scripts/package-lock.json
 /css/
+cypress/downloads/
+cypress/screenshots/
+cypress/videos/
+cypress/logs/
