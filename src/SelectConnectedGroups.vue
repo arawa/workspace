@@ -1,7 +1,6 @@
 <template>
 	<NcModal class="modal-connected-groups"
 		name="select connected groups"
-		label-id="select connected groups"
 		@close="close()">
 		<div class="container-select-groups">
 			<header class="header-select-groups">
@@ -13,14 +12,13 @@
 				<NcSelect
 					class="searchbar-groups"
 					aria-label-combobox="searchbar groups"
-					track-by="gid"
 					label="displayName"
 					:limit="10"
 					:options="groupsSelectable"
 					:placeholder="t('workspace', 'Start typing text to search for groups')"
 					:loading="loadingGroups"
-					:append-to-body="false"
-					:user-select="true"
+					:appendToBody="false"
+					:userSelect="true"
 					@option:selected="addGroupToBatch"
 					@search="debounceLookGroups"
 					@close="groupsSelectable=[]">
@@ -30,9 +28,9 @@
 					<template #option="option">
 						<div class="option-content">
 							<NcAvatar
-								:display-name="option.displayName"
-								:hide-status="false"
-								:is-no-user="true" />
+								:displayName="option.displayName"
+								:hideStatus="false"
+								:isNoUser="true" />
 							<div class="option-text">
 								<p>{{ option.displayName }}</p>
 							</div>
@@ -48,9 +46,9 @@
 						class="group-item">
 						<div class="group-avatar">
 							<NcAvatar
-								:display-name="group.displayName"
-								:hide-status="false"
-								:is-no-user="true" />
+								:displayName="group.displayName"
+								:hideStatus="false"
+								:isNoUser="true" />
 							<div class="groupname">
 								<span>{{ group.displayName }}</span>
 							</div>

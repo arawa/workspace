@@ -73,8 +73,6 @@ describe('Vuex store tests', () => {
 			users: [],
 		})
 
-		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
-		/* eslint-disable-next-line no-unused-expressions */
 		expect(state.spaces['test-space']).not.toBe(undefined)
 	})
 
@@ -101,8 +99,6 @@ describe('Vuex store tests', () => {
 			group: 'test-group',
 		})
 
-		/* https://github.com/standard/standard/issues/690#issuecomment-278533482 */
-		/* eslint-disable-next-line no-unused-expressions */
 		expect(state.spaces['test-space'].groups['test-group']).toBe(undefined)
 	})
 

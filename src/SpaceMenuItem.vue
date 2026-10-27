@@ -22,7 +22,7 @@
 	<NcAppNavigationItem
 		:key="space.id"
 		:class="'workspace-sidebar '+(isActiveRoute ? 'space-selected' : '')"
-		:allow-collapse="true"
+		:allowCollapse="true"
 		:open="isOpen"
 		:name="spaceName"
 		:to="{name: 'hub.home', params: { spaceId: space.id }}"
@@ -63,8 +63,8 @@
 						ref="createGroupInput"
 						:class="'ws-modal-action'"
 						icon="icon-group"
-						:close-after-click="true"
-						:show-trailing-button="true"
+						:closeAfterClick="true"
+						:showTrailingButton="true"
 						@submit="onNewWorkspaceGroup" />
 				</template>
 			</NcAppNavigationCaption>
@@ -74,8 +74,8 @@
 				:key="group.gid"
 				:group="group"
 				:count="group.usersCount"
-				:space-id="space.id"
-				:space-name="spaceName" />
+				:spaceId="space.id"
+				:spaceName="spaceName" />
 			<NcAppNavigationCaption v-if="$root.$data.addedGroupDisabled === false || Object.keys(space.added_groups).length > 0"
 				:name="t('workspace', 'Added groups')">
 				<template v-if="!space.currentUserIsSimpleUser" #actions>
@@ -104,10 +104,10 @@
 				v-for="group in sortedGroups(Object.values(space.added_groups ?? []), spaceName)"
 				:key="group.gid"
 				:group="group"
-				:space-id="space.id"
-				:space-name="spaceName"
+				:spaceId="space.id"
+				:spaceName="spaceName"
 				:count="group.usersCount"
-				:added-group="true" />
+				:addedGroup="true" />
 		</div>
 	</NcAppNavigationItem>
 </template>

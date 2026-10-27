@@ -44,7 +44,7 @@
 					:class="$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) ? 'list user-admin workspace-tr' : 'list user-simple workspace-tr'">
 					<td class="avatar workspace-td">
 						<lazy-component :key="user.uid+ '-avatar'">
-							<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
+							<NcAvatar :displayName="user.name" :user="user.uid" :showUserStatus="false" />
 						</lazy-component>
 					</td>
 					<td class="workspace-td user-info">
@@ -66,27 +66,27 @@
 							<NcActions v-if="$store.getters.getSpaceByNameOrId($route.params.space).currentUserIsSimpleUser">
 								<NcActionButton v-if="user.profile !== undefined"
 									icon="icon-user"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="viewProfile(user)">
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
 							</NcActions>
 							<NcActions v-else>
-								:force-menu="true">
+								:forceMenu="true">
 								<NcActionButton v-if="user.profile !== undefined"
 									icon="icon-user"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="viewProfile(user)">
 									{{ t('workspace', 'View profile') }}
 								</NcActionButton>
 								<NcActionButton v-if="showActionButtons() && $store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-close"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="toggleUserRole(user)">
 									{{ t('workspace', 'Remove WM rights') }}
 								</NcActionButton>
 								<NcActionButton v-else-if="showActionButtons() && !$store.getters.isSpaceAdmin(user, $store.getters.getSpaceByNameOrId($route.params.space))"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="toggleUserRole(user)">
 									<template #icon>
 										<AccountCog :size="20" />
@@ -95,13 +95,13 @@
 								</NcActionButton>
 								<NcActionButton v-if="showActionButtons() && !$store.getters.isFromAddedGroups(user, $store.getters.getSpaceByNameOrId($route.params.space)) && !isCurrentUserWorkspaceManager(user)"
 									icon="icon-delete"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="deleteUser(user)">
 									{{ t('workspace', 'Remove user') }}
 								</NcActionButton>
 								<NcActionButton v-if="$route.params.slug !== undefined && isSubgroup"
 									icon="icon-close"
-									:close-after-click="true"
+									:closeAfterClick="true"
 									@click="removeFromGroup(user)">
 									{{ t('workspace', 'Remove from group') }}
 								</NcActionButton>
@@ -309,7 +309,7 @@ export default {
 			}
 
 			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === true
-		}
+		},
 	},
 }
 </script>

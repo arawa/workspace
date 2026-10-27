@@ -21,7 +21,7 @@
 -->
 
 <template>
-	<NcContent app-name="workspace">
+	<NcContent appName="workspace">
 		<LeftSidebar />
 		<WorkspaceContent />
 	</NcContent>

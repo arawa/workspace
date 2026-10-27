@@ -29,7 +29,7 @@
 				:name="titleSearch"
 				:order="1">
 				<MultiSelectUsers class="input-select-users"
-					:all-selected-users="allSelectedUsers"
+					:allSelectedUsers="allSelectedUsers"
 					@change="addUserToBatch" />
 				<template #icon>
 					<span />
@@ -39,9 +39,9 @@
 				:name="titleImport"
 				:order="2">
 				<div class="buttons-import-groups">
-					<ButtonUploadLocalFile :all-selected-users="allSelectedUsers"
+					<ButtonUploadLocalFile :allSelectedUsers="allSelectedUsers"
 						@push="pushUsersFromButton" />
-					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
+					<ButtonUploadShareFiles :allSelectedUsers="allSelectedUsers"
 						@push="pushUsersFromButton" />
 				</div>
 				<template #icon>
@@ -60,7 +60,7 @@
 				<div class="popover">
 					<p>{{ informCsvStructureMessage }}</p>
 					<br>
-					<NcRichText :use-markdown="true"
+					<NcRichText :useMarkdown="true"
 						:text="csvTemplateMarkdown" />
 				</div>
 			</NcPopover>

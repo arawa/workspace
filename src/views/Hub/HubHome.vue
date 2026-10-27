@@ -1,5 +1,5 @@
 <template>
-	<NcAppContent app-name="hub">
+	<NcAppContent>
 		<div class="hub-home">
 			<h1 class="titles-for-space space-title">
 				{{ space.name }}
@@ -8,7 +8,7 @@
 				class="readme-content">
 				<NcRichText class="markdown-content"
 					:text="readmeContent"
-					:use-markdown="true" />
+					:useMarkdown="true" />
 			</div>
 			<div class="container-hub">
 				<HubItem
@@ -21,7 +21,7 @@
 				<HubItem
 					:path="`/workspace/${spaceId}`"
 					:title="t('workspace', 'Users')"
-					:path-icon="mdiAccountMultiple" />
+					:pathIcon="mdiAccountMultiple" />
 			</div>
 		</div>
 	</NcAppContent>

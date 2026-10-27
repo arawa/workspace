@@ -23,16 +23,15 @@
 	<div class="multiselect-area">
 		<NcSelect ref="userSelectInput"
 			class="select-users-input"
-			:filter-by="filterSearched"
+			:filterBy="filterSearched"
 			aria-label-combobox="select users"
 			label="name"
-			:custom-label="displayForSearching"
 			:loading="isLookingUpUsers"
 			:multiple="false"
 			:options="selectableUsers"
 			:placeholder="t('workspace', 'Start typing to lookup users')"
-			:append-to-body="false"
-			:user-select="true"
+			:appendToBody="false"
+			:userSelect="true"
 			@option:selected="$emit('change', $event)"
 			@close="selectableUsers=[]"
 			@search="debounceLookupUsers">
@@ -44,10 +43,10 @@
 					<NcAvatar
 						class="option-avatar"
 						:type="user"
-						:display-name="option.name"
+						:displayName="option.name"
 						:uid="option.uid"
 						:title="option.name"
-						:show-user-status="false" />
+						:showUserStatus="false" />
 					<div class="option-text">
 						<p>{{ option.name }}</p>
 						<small>{{ option.email }}</small>
@@ -94,9 +93,6 @@ export default {
 		}, 100)
 	},
 	methods: {
-		displayForSearching({ name, email, uid }) {
-			return `${name} - ${email} - ${uid}`
-		},
 		debounceLookupUsers: debounce(function(term) {
 			this.lookupUsers(term)
 		}, 500),

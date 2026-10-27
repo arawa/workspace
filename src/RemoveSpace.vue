@@ -22,7 +22,6 @@
 <template>
 	<NcModal class="remove-modal"
 		name="remove space"
-		label-id="remove space"
 		size="small"
 		@close="close()">
 		<div class="modal__content">
