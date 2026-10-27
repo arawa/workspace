@@ -5,6 +5,7 @@ OC.L10N.register(
     "Cancel" : "Poništi",
     "Error" : "Greška",
     "Settings" : "Поставке",
+    "Add" : "Dodaj",
     "Groups" : "Grupe",
     "View profile" : "Vidi profil",
     "Appearance" : "Izgled",
