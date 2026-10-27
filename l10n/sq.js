@@ -12,6 +12,7 @@ OC.L10N.register(
     "Quota" : "Kuota",
     "Users" : "Përdoruesit",
     "Groups" : "Grupet",
+    "Appearance" : "Pamja",
     "Save" : "Ruaje",
     "Loading..." : "Po ngarkohet"
 },
