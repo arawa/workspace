@@ -14,6 +14,7 @@ OC.L10N.register(
     "Users" : "Usuarios",
     "Role" : "Rol",
     "Groups" : "Grupos",
+    "Appearance" : "Apariencia",
     "Save" : "Guardar",
     "Loading..." : "Cargando..."
 },
