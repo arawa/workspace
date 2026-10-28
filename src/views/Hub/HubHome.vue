@@ -1,6 +1,6 @@
 <template>
 	<NcAppContent app-name="hub">
-		<div class="hub-home">
+		<div v-if="space" class="hub-home">
 			<h1 class="titles-for-space space-title">
 				{{ space.name }}
 			</h1>
@@ -72,8 +72,20 @@ export default {
 		}
 	},
 	created() {
-		if (this.space === null) {
+		this.loadHub()
+	},
+	updated() {
+		this.loadHub()
+	},
+	methods: {
+		// Loads the hub of the workspace. One the user is not a member of is missing from the
+		// workspaces of the store: its hub, opened from its URL, gives way to the list of workspaces
+		loadHub() {
 			this.space = this.$store.getters.getSpaceByNameOrId(this.spaceId)
+			if (this.space === undefined) {
+				this.$router.replace({ name: 'space.table' })
+				return
+			}
 
 			getReadme(this.space.name)
 				.then((result) => {
@@ -104,40 +116,7 @@ export default {
 					this.teamfolderIcon = null
 					this.teamfolderDarkIcon = null
 				})
-		}
-	},
-	updated() {
-		this.space = this.$store.getters.getSpaceByNameOrId(this.spaceId)
-
-		getReadme(this.space.name)
-			.then((result) => {
-				this.readmeContent = result
-			})
-			.catch(() => {
-				this.readmeContent = null
-			})
-
-		getFolderUrl(this.spaceId)
-			.then((response) => {
-				this.urlToFolder = response.url
-				this.userNotInSpace = !response.user_in_group
-			})
-			.catch((error) => {
-				console.error(error.message, error)
-				this.urlToFolder = null
-				this.userNotInSpace = false
-			})
-
-		getAppIcon('groupfolders')
-			.then((response) => {
-				this.teamfolderIcon = response.icon_path
-				this.teamfolderDarkIcon = response.dark_icon_path
-			})
-			.catch((error) => {
-				console.error(error.message, error)
-				this.teamfolderIcon = null
-				this.teamfolderDarkIcon = null
-			})
+		},
 	},
 }
 </script>
