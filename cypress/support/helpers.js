@@ -32,28 +32,56 @@ export const serverPath = (path) => `${new URL(Cypress.config('baseUrl')).pathna
 export const randomSuffix = () => Math.random().toString(36).slice(2, 10)
 export const randomName = () => `Workspace ${randomSuffix()}`
 
-// cy.request() as the given user on the OCS API of the app, yields ocs.data
-const ocs = (user, method, path, body) => cy.request({
-	method,
-	// baseUrl ends with /index.php, OCS lives next to it
-	url: Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`),
-	auth: { user: user.userId, pass: user.password },
-	headers: { 'OCS-APIRequest': 'true', Accept: 'application/json' },
-	body,
-}).its('body.ocs.data')
+// The URL of a route of the OCS API of the app: baseUrl ends with /index.php, OCS lives next to it
+const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
 
-// A new General Manager who reads the app in the given language ("en" or "fr")
-export const createGeneralManager = (language) => cy.createRandomUser().then((generalManager) => {
+// cy.request() as the given user. The OCS-APIRequest header also lets the routes of
+// appinfo/routes.php skip their CSRF check. Nextcloud picks the session cookie left by a
+// previous request over the Basic auth, so the cookies are cleared first: this also logs
+// out the page of a cy.login(), so call it before cy.login(), never after
+const request = (user, method, url, body) => {
+	cy.clearAllCookies()
+	return cy.request({
+		method,
+		url,
+		auth: { user: user.userId, pass: user.password },
+		headers: { 'OCS-APIRequest': 'true', Accept: 'application/json' },
+		body,
+	})
+}
+
+// cy.request() as the given user on the OCS API of the app, yields ocs.data
+const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
+
+// A new user, with no role and in no workspace, who reads the app in the given language ("en" or "fr")
+export const createUser = (language) => cy.createRandomUser().then((user) => {
+	cy.modifyUser(user, 'language', language)
+	return cy.wrap(user)
+})
+
+// A new General Manager who reads the app in the given language
+export const createGeneralManager = (language) => createUser(language).then((generalManager) => {
 	occ('group:adduser', 'GeneralManager', generalManager.userId)
-	cy.modifyUser(generalManager, 'language', language)
 	return cy.wrap(generalManager)
 })
 
-// A new General Manager, in the given language, with a workspace and a "maison" subgroup in it,
-// created through the OCS API since the creation itself is covered by creation.cy.js.
+// A new workspace, created through the OCS API since the creation itself is covered by
+// creation.cy.js. Yields the workspace, with its id and name
+export const createSpace = (generalManager) => ocs(generalManager, 'POST', '/spaces', { name: randomName() })
+
+// Adds the user to the user group of the workspace
+export const addSpaceMember = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/users`, { uids: [user.userId] })
+
+// A new user, in the given language, added to the user group of the workspace
+export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
+	addSpaceMember(generalManager, space, member)
+	return cy.wrap(member)
+})
+
+// A new General Manager, in the given language, with a workspace and a "maison" subgroup in it.
 // Yields { generalManager, space }
 export const createGeneralManagerWithSpace = (language) => createGeneralManager(language).then((generalManager) => {
-	return ocs(generalManager, 'POST', '/spaces', { name: randomName() }).then((space) => {
+	return createSpace(generalManager).then((space) => {
 		// A subgroup, whose display name also carries the workspace name
 		ocs(generalManager, 'POST', `/spaces/${space.id}/groups`, { name: 'maison' })
 		return cy.wrap({ generalManager, space })
