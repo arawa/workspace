@@ -133,6 +133,9 @@ source:
 	--exclude="../$(app_name)/.github" \
 	--exclude="../$(app_name)/vite.config.js" \
 	--exclude="../$(app_name)/tests" \
+	--exclude="../$(app_name)/cypress" \
+	--exclude="../$(app_name)/cypress.config.js" \
+	--exclude="../$(app_name)/tsconfig.json" \
 	--exclude="../$(app_name)/src/tests" \
 	--exclude="../$(app_name)/phpunit.xml" \
 	--exclude="../$(app_name)/phpunit.integration.xml" \
@@ -165,6 +168,9 @@ appstore:
 	--exclude="../$(app_name)/.git" \
 	--exclude="../$(app_name)/build" \
 	--exclude="../$(app_name)/tests" \
+	--exclude="../$(app_name)/cypress" \
+	--exclude="../$(app_name)/cypress.config.js" \
+	--exclude="../$(app_name)/tsconfig.json" \
 	--exclude="../$(app_name)/Makefile" \
 	--exclude="../$(app_name)/*.log" \
 	--exclude="../$(app_name)/phpunit*xml" \
@@ -186,7 +192,7 @@ appstore:
 	--exclude="../$(app_name)/js/.*" \
 	../$(app_name)
 	zip -r "$(appstore_package_name).zip" ../$(app_name) \
-	--exclude "../$(app_name)/.git/*" "../$(app_name)/build/*" "../$(app_name)/tests/*" \
+	--exclude "../$(app_name)/.git/*" "../$(app_name)/build/*" "../$(app_name)/tests/*" "../$(app_name)/cypress/*" "../$(app_name)/cypress.config.js" "../$(app_name)/tsconfig.json" \
 	"../$(app_name)/Makefile" "../$(app_name)/*.log" "../$(app_name)/phpunit*xml" \
 	"../$(app_name)/composer.*" "../$(app_name)/js/node_modules/*" "../$(app_name)/js/tests/*" \
 	"../$(app_name)/js/test/*" "../$(app_name)/js/*.log" "../$(app_name)/js/package.json" \
