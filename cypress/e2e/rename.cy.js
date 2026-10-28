@@ -70,6 +70,10 @@ for (const [language, label] of Object.entries(labels)) {
 			cy.location('pathname').should('equal', serverPath(`/apps/workspace/workspace/${space.id}`))
 			cy.get('.space-name .titles-for-space').should('contain', newName)
 
+			// The page renames the groups before the server answers: reloaded so the next
+			// steps check the names the server saved
+			cy.reload()
+
 			// 3. The navigation lists the workspace under its new name, the old one is gone
 			workspaceNavigation().as('navigation')
 			cy.get('@navigation').findByRole('link', { name: space.name }).should('not.exist')
