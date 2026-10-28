@@ -26,6 +26,7 @@ OC.L10N.register(
     "unlimited" : "ubegrenset",
     "Appearance" : "Utseende",
     "Save" : "Lagre",
+    "Loading …" : "Laster inn ...",
     "Loading..." : "Laster…",
     "Access denied" : "Tilgang nektet"
 },
