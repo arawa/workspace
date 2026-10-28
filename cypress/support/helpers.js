@@ -33,13 +33,13 @@ export const randomSuffix = () => Math.random().toString(36).slice(2, 10)
 export const randomName = () => `Workspace ${randomSuffix()}`
 
 // The URL of a route of the OCS API of the app: baseUrl ends with /index.php, OCS lives next to it
-const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
+export const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
 
 // cy.request() as the given user. The OCS-APIRequest header also lets the routes of
 // appinfo/routes.php skip their CSRF check. Nextcloud picks the session cookie left by a
 // previous request over the Basic auth, so the cookies are cleared first: this also logs
 // out the page of a cy.login(), so call it before cy.login(), never after
-const request = (user, method, url, body) => {
+const request = (user, method, url, body, options) => {
 	cy.clearAllCookies()
 	return cy.request({
 		method,
@@ -47,8 +47,12 @@ const request = (user, method, url, body) => {
 		auth: { user: user.userId, pass: user.password },
 		headers: { 'OCS-APIRequest': 'true', Accept: 'application/json' },
 		body,
+		...options,
 	})
 }
+
+// cy.request() as the given user, without failing on an error status
+export const requestAs = (user, method, url, body) => request(user, method, url, body, { failOnStatusCode: false })
 
 // cy.request() as the given user on the OCS API of the app, yields ocs.data
 const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
@@ -68,6 +72,15 @@ export const createGeneralManager = (language) => createUser(language).then((gen
 // A new workspace, created through the OCS API since the creation itself is covered by
 // creation.cy.js. Yields the workspace, with its id and name
 export const createSpace = (generalManager) => ocs(generalManager, 'POST', '/spaces', { name: randomName() })
+
+// The workspace as the server saved it, read by a General Manager
+export const findSpace = (generalManager, space) => ocs(generalManager, 'GET', `/spaces/${space.id}`)
+
+// The workspaces whose name matches, read by a General Manager. The OCS API answers null
+// rather than an empty list when none matches
+export const searchSpaces = (generalManager, name) => request(generalManager, 'GET', ocsUrl('/spaces'), undefined, { qs: { name } })
+	.its('body.ocs')
+	.then(({ data }) => data ?? [])
 
 // Adds the user to the user group of the workspace
 export const addSpaceMember = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/users`, { uids: [user.userId] })
