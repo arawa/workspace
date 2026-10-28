@@ -18,7 +18,7 @@
 -->
 
 <template>
-	<NcContent app-name="workspace">
+	<NcContent appName="workspace">
 		<NcAppContent>
 			<NcEmptyContent :name="t('workspace', 'Team folders is not enabled')">
 				<template #description>

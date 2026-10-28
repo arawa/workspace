@@ -47,9 +47,10 @@
 			</div>
 			<div class="space-actions">
 				<NcActions v-if="showActionButtons()"
-					ref="ncAction" default-icon="icon-add">
+					ref="ncAction"
+					defaultIcon="icon-add">
 					<NcActionButton icon="icon-user"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click="toggleShowSelectUsersModal">
 						{{ t('workspace', 'Add users') }}
 					</NcActionButton>
@@ -62,8 +63,8 @@
 					</NcActionButton>
 					<NcActionInput v-show="createGroup"
 						ref="createGroupInput"
-						:close-after-click="true"
-						:show-trailing-button="true"
+						:closeAfterClick="true"
+						:showTrailingButton="true"
 						@submit="onNewGroup">
 						<template #icon>
 							<NcIconSvgWrapper name="icon-group" :path="mdiAccountMultiple" />
@@ -71,7 +72,7 @@
 						{{ t('workspace', 'Group name') }}
 					</NcActionInput>
 					<NcActionButton v-if="$root.$data.addedGroupDisabled === false"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click="toggleShowConnectedGroups">
 						<template #icon>
 							<NcIconSvgWrapper v-if="isDarkTheme"
@@ -93,7 +94,7 @@
 				</NcActions>
 				<NcActions v-if="$root.$data.isUserGeneralAdmin">
 					<NcActionButton icon="icon-delete"
-						:close-after-click="true"
+						:closeAfterClick="true"
 						@click="toggleShowDelWorkspaceModal">
 						{{ t('workspace', 'Delete space') }}
 					</NcActionButton>
@@ -112,7 +113,7 @@
 		</NcEmptyContent>
 		<UserTable v-else
 			:key="'user-' + $route.params.space"
-			:space-name="$route.params.space" />
+			:spaceName="$route.params.space" />
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
@@ -124,7 +125,7 @@
 			:space="space"
 			@close="toggleShowConnectedGroups" />
 		<RemoveSpace v-if="showDelWorkspaceModal"
-			:space-name="title"
+			:spaceName="title"
 			@close="toggleShowDelWorkspaceModal"
 			@handle-cancel="toggleShowDelWorkspaceModal"
 			@handle-delete="deleteSpace" />
@@ -301,7 +302,7 @@ export default {
 			}
 
 			return this.$store.getters.isSpaceAdmin(user, space) || this.$root.$data.isUserGeneralAdmin === true
-		}
+		},
 	},
 }
 </script>

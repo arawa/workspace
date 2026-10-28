@@ -18,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import axios from '@nextcloud/axios'
@@ -224,6 +223,7 @@ export function renameSpace(spaceId, newSpaceName) {
 
 /**
  * Get the folder URL for accessing files
+ *
  * @param {number} spaceId is id for space
  * @return {object} { url: String, user_in_group: Bool }, Folder information : folder url and group membership
  */

@@ -2,6 +2,7 @@ import { getClient, defaultRootPath, resultToNode } from '@nextcloud/files/dav'
 
 /**
  * Get the content of the README.md file for a workspace
+ *
  * @param {string} foldername is the Team Folder name.
  */
 export function getReadme(foldername) {

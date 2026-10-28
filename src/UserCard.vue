@@ -23,7 +23,7 @@
 	<div class="user-card">
 		<div class="avatar">
 			<div class="icon-member" :class="$store.getters.isMember($route.params.space, user) ? 'is-member' : ''" />
-			<NcAvatar :display-name="user.name" :user="user.uid" :show-user-status="false" />
+			<NcAvatar :displayName="user.name" :user="user.uid" :showUserStatus="false" />
 			<div class="user-name">
 				<span>{{ user.name }}</span>
 			</div>
@@ -32,7 +32,7 @@
 			<div v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))">
 				<NcCheckboxRadioSwitch type="checkbox"
 					class="role-toggle"
-					:model-value="isWorkspaceManager(user.role)"
+					:modelValue="isWorkspaceManager(user.role)"
 					:disabled="disabled"
 					@update:modelValue="toggleUserRole(user)">
 					<!-- TRANSLATORS WM = Is an abbreviation for "Workspace Manager" -->

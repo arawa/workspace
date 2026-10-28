@@ -1,7 +1,6 @@
 <template>
 	<NcModal
 		name="edit workspace"
-		label-id="edit workspace"
 		size="large"
 		class="modal"
 		@close="close">
@@ -30,7 +29,7 @@
 				<NcSelect v-model="getQuota"
 					aria-label-combobox="set quota"
 					class="quota-input"
-					:clear-search-on-select="true"
+					:clearSearchOnSelect="true"
 					:taggable="true"
 					:disabled="$root.$data.isUserGeneralAdmin === false"
 					:placeholder="t('workspace', 'Set quota')"

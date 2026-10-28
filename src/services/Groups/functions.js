@@ -1,5 +1,6 @@
 /**
  * Checks if a group with the same displayName already exists in the space
+ *
  * @param {object} space Space object
  * @param {string} displayName name of the group to check
  * @return {undefined|object}
@@ -10,6 +11,7 @@ export function alreadyExistsGroupName(space, displayName) {
 }
 /**
  * Checks if a group with the same gid already exists in the space
+ *
  * @param {object} space Space object
  * @param {string} gid gid of the group to check
  * @return {boolean}

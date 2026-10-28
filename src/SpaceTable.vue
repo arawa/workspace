@@ -63,9 +63,9 @@
 									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
 										:key="user.uid"
 										:style="{ marginRight: 2 + 'px' }"
-										:display-name="user.name"
-										:disable-menu="true"
-										:show-user-status="false"
+										:displayName="user.name"
+										:disableMenu="true"
+										:showUserStatus="false"
 										:user="user.uid" />
 									<div v-if="workspaceManagers(space).length > 10"
 										class="bubble-more-users">

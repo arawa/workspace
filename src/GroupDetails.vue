@@ -35,9 +35,9 @@
 			</div>
 			<div class="group-actions">
 				<div v-if="!isAddedGroup">
-					<NcActions default-icon="icon-add">
+					<NcActions defaultIcon="icon-add">
 						<NcActionButton icon="icon-add"
-							:close-after-click="true"
+							:closeAfterClick="true"
 							@click="toggleShowSelectUsersModal">
 							{{ t('workspace', 'Add users') }}
 						</NcActionButton>
@@ -70,7 +70,7 @@
 				</NcActions>
 			</div>
 		</div>
-		<UserTable :space-name="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
+		<UserTable :spaceName="decodeURIComponent(decodeURIComponent($route.params.slug))" :editable="!isAddedGroup" />
 		<NcDialog v-if="showSelectUsersModal"
 			:name="t('workspace', 'Add users')"
 			size="normal"
