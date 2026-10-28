@@ -64,21 +64,27 @@ for (const [language, label] of Object.entries(labels)) {
 			picker().should('be.visible')
 		}
 
-		// Confirms the color in the picker, saves the modal, then checks the workspace shows
-		// the color both in its page header and in the navigation
-		const chooseAndSave = (color) => {
-			picker().findByRole('button', { name: label.choose }).click()
-			picker().should('not.exist')
-			colorDot().should('have.css', 'background-color', color)
-
-			saveEditModal(language)
-
+		// Checks the workspace shows the color both in its page header and in the navigation
+		const checkColor = (color) => {
 			cy.get('.space-name .color-dot').should('have.css', 'background-color', color)
 			workspaceNavigation()
 				.findByRole('link', { name: space.name })
 				.closest('.app-navigation-entry')
 				.find('.app-navigation-entry__icon-bullet > div')
 				.should('have.css', 'background-color', color)
+		}
+
+		// Confirms the color in the picker, saves the modal, then checks the color, after a
+		// reload too since the page shows it before the server answers
+		const chooseAndSave = (color) => {
+			picker().findByRole('button', { name: label.choose }).click()
+			picker().should('not.exist')
+			colorDot().should('have.css', 'background-color', color)
+
+			saveEditModal(language)
+			checkColor(color)
+			cy.reload()
+			checkColor(color)
 		}
 
 		it('lets a General Manager pick a color of the palette', () => {
