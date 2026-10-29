@@ -554,8 +554,6 @@ export default {
 			})
 			.catch(error => {
 				console.error(error)
-				context.commit('SET_LOADING_USERS_WAITTING', ({ activated: false }))
-				context.commit('SET_NO_USERS', ({ activated: true }))
 			})
 	},
 	addUserManager(context, { spaceName, user }) {
