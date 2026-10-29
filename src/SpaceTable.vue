@@ -55,8 +55,7 @@
 							{{ getQuota(space.quota) }}
 						</td>
 						<td class="workspace-td">
-							<lazy-component v-if="space.managers && Object.keys(space.managers).length > 0"
-								:key="space.id + '-avatars'"
+							<lazy-component :key="space.id + '-avatars'"
 								class="admin-avatars"
 								@show="initAdmins(space.id, space.name)">
 								<div class="container-avatars">
@@ -120,6 +119,13 @@ export default {
 			return this.$store.state.countWorkspaces === this.$store.getters.countTotalWorkspacesByQuery
 		},
 	},
+	watch: {
+		// A search or the next page replaces the workspaces with ones whose managers are not
+		// loaded, and the rows already shown do not ask for them again until the page scrolls
+		'$store.state.spaces': function() {
+			this.$nextTick(() => this.$Lazyload.lazyLoadHandler())
+		},
+	},
 	beforeMount() {
 		if (this.$store.getters.countWorkspaces < this.$store.getters.countTotalWorkspacesByQuery) {
 			this.showNextPage()
@@ -148,7 +154,7 @@ export default {
 		initAdmins(id, name) {
 			const space = this.$store.getters.getSpaceById(id)
 			if (space !== null) {
-				if (space.managers !== null || space.users.length > 0) {
+				if (space.managers !== null || Object.keys(space.users).length > 0) {
 					return
 				}
 				this.$store.dispatch('loadAdmins', { space })
