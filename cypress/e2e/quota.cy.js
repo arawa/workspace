@@ -21,12 +21,11 @@ import {
 	admin,
 	createGeneralManagerWithSpace,
 	editModal,
+	GB,
 	openEditModal,
 	saveEditModal,
 	teamFolderRow,
 } from '../support/helpers.js'
-
-const GB = 1024 ** 3
 
 // What a General Manager reads, in each language the tests run in.
 // Sizes keep their English units in French, as the app writes them itself.

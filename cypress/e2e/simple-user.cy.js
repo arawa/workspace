@@ -27,6 +27,7 @@ import {
 	createSpaceMember,
 	createUser,
 	findSpace,
+	GB,
 	ocsUrl,
 	randomName,
 	requestAs,
@@ -130,7 +131,7 @@ for (const [language, label] of Object.entries(labels)) {
 // actions, which does not stop a request. Runs once, the language changes nothing there
 describe('Simple user on the server', () => {
 	const color = '#ff0000'
-	const quota = 1073741824
+	const quota = GB
 	let member
 	// The fields of the workspace the requests would change, as the server saved them before
 	// the request of the member. The other fields, such as its size, change on their own

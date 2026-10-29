@@ -32,6 +32,9 @@ export const serverPath = (path) => `${new URL(Cypress.config('baseUrl')).pathna
 export const randomSuffix = () => Math.random().toString(36).slice(2, 10)
 export const randomName = () => `Workspace ${randomSuffix()}`
 
+// One gigabyte, in the bytes the server counts a quota in
+export const GB = 1024 ** 3
+
 // The URL of a route of the OCS API of the app: baseUrl ends with /index.php, OCS lives next to it
 export const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
 
@@ -57,9 +60,16 @@ export const requestAs = (user, method, url, body) => request(user, method, url,
 // cy.request() as the given user on the OCS API of the app, yields ocs.data
 const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
 
-// A new user, with no role and in no workspace, who reads the app in the given language ("en" or "fr")
-export const createUser = (language) => cy.createRandomUser().then((user) => {
+// Changes the language of the user ("en" or "fr"). cy.modifyUser logs in as the user, which
+// the session cookie of an earlier request would otherwise override
+export const setLanguage = (user, language) => {
+	cy.clearAllCookies()
 	cy.modifyUser(user, 'language', language)
+}
+
+// A new user, with no role and in no workspace, who reads the app in the given language
+export const createUser = (language) => cy.createRandomUser().then((user) => {
+	setLanguage(user, language)
 	return cy.wrap(user)
 })
 
@@ -71,7 +81,10 @@ export const createGeneralManager = (language) => createUser(language).then((gen
 
 // A new workspace, created through the OCS API since the creation itself is covered by
 // creation.cy.js. Yields the workspace, with its id and name
-export const createSpace = (generalManager) => ocs(generalManager, 'POST', '/spaces', { name: randomName() })
+export const createSpace = (generalManager, name = randomName()) => ocs(generalManager, 'POST', '/spaces', { name })
+
+// Changes the name, color or quota of the workspace
+export const editSpace = (generalManager, space, changes) => ocs(generalManager, 'PATCH', `/spaces/${space.id}`, changes)
 
 // The workspace as the server saved it, read by a General Manager
 export const findSpace = (generalManager, space) => ocs(generalManager, 'GET', `/spaces/${space.id}`)
@@ -84,6 +97,9 @@ export const searchSpaces = (generalManager, name) => request(generalManager, 'G
 
 // Adds the user to the user group of the workspace
 export const addSpaceMember = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/users`, { uids: [user.userId] })
+
+// Makes the user a Workspace Manager of the workspace
+export const addSpaceManager = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/workspace-manager`, { uid: user.userId })
 
 // A new user, in the given language, added to the user group of the workspace
 export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
