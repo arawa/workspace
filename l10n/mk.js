@@ -17,6 +17,7 @@ OC.L10N.register(
     "Add" : "Додади",
     "No users" : "Нема корисници",
     "Quota" : "Квота",
+    "Users" : "Корисници",
     "Role" : "Улога",
     "Groups" : "Групи",
     "View profile" : "Прегледај профил",
