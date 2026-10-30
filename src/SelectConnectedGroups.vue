@@ -1,11 +1,10 @@
 <template>
 	<NcModal class="modal-connected-groups"
-		name="select connected groups"
-		label-id="select connected groups"
+		label-id="select-connected-groups-title"
 		@close="close()">
 		<div class="container-select-groups">
 			<header class="header-select-groups">
-				<h1>
+				<h1 id="select-connected-groups-title">
 					{{ t('workspace', 'Add a group') }}
 				</h1>
 			</header>
