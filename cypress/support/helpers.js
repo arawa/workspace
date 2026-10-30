@@ -107,12 +107,17 @@ export const createSpaceMember = (generalManager, space, language) => createUser
 	return cy.wrap(member)
 })
 
-// A new General Manager, in the given language, with a workspace and a "maison" subgroup in it.
+// The name of the subgroup the tests create in a workspace
+export const SUBGROUP = 'maison'
+
+// A new subgroup of the workspace, whose display name also carries the workspace name
+export const createSubgroup = (generalManager, space, name) => ocs(generalManager, 'POST', `/spaces/${space.id}/groups`, { name })
+
+// A new General Manager, in the given language, with a workspace and a SUBGROUP subgroup in it.
 // Yields { generalManager, space }
 export const createGeneralManagerWithSpace = (language) => createGeneralManager(language).then((generalManager) => {
 	return createSpace(generalManager).then((space) => {
-		// A subgroup, whose display name also carries the workspace name
-		ocs(generalManager, 'POST', `/spaces/${space.id}/groups`, { name: 'maison' })
+		createSubgroup(generalManager, space, SUBGROUP)
 		return cy.wrap({ generalManager, space })
 	})
 })
@@ -122,16 +127,56 @@ export const createGeneralManagerWithSpace = (language) => createGeneralManager(
 export const managerGroupName = (spaceName) => `${Cypress.expose('displayPrefixManagerGroup')}${spaceName}`
 export const userGroupName = (spaceName) => `${Cypress.expose('displayPrefixUserGroup')}${spaceName}`
 
-// The three groups of a workspace created by createGeneralManagerWithSpace():
+// The three groups of a workspace with a SUBGROUP subgroup, as createGeneralManagerWithSpace() creates:
 // display names follow the workspace name, GIDs its id
 export const spaceGroups = (spaceId, spaceName) => [
 	{ name: managerGroupName(spaceName), gid: `SPACE-GE-${spaceId}` },
 	{ name: userGroupName(spaceName), gid: `SPACE-U-${spaceId}` },
-	{ name: `G-maison-${spaceName}`, gid: `SPACE-G-maison-${spaceId}` },
+	{ name: `G-${SUBGROUP}-${spaceName}`, gid: `SPACE-G-${SUBGROUP}-${spaceId}` },
 ]
 
 // The navigation of the app, whose label is not translated
 export const workspaceNavigation = () => cy.findByRole('navigation', { name: 'workspace navigation' })
+
+// The row of an entry of the navigation, found by its name, with its icon, counter and arrow
+export const navigationEntry = (name) => workspaceNavigation()
+	.findByRole('link', { name })
+	.closest('.app-navigation-entry')
+
+// The color bullet of the entry of a workspace in the navigation
+export const navigationBullet = (spaceName) => navigationEntry(spaceName).find('.app-navigation-entry__icon-bullet > div')
+
+// The apps menu of the header and the search of the navigation, in each language the tests run in.
+// The apps menu belongs to the server
+const navigationLabels = {
+	en: {
+		openAppsMenu: 'Open apps menu',
+		// Testing Library turns the non-breaking space of the label into a space
+		searchWorkspaces: 'Search workspaces …', // eslint-disable-line @nextcloud/l10n-non-breaking-space
+	},
+	fr: {
+		openAppsMenu: 'Ouvrir le menu des applications',
+		searchWorkspaces: 'Rechercher des workspaces…',
+	},
+}
+
+// Opens the app from the apps menu of the header, from the Files app
+export const openWorkspaceApp = (language) => {
+	cy.visit('/apps/files')
+	cy.findByRole('button', { name: navigationLabels[language].openAppsMenu }).click()
+	cy.findByRole('menuitem', { name: 'Workspace' }).click()
+	cy.location('pathname').should('equal', serverPath('/apps/workspace/'))
+}
+
+// A General Manager sees the workspaces of every spec: searching from the navigation keeps
+// those of a test. Waited for, since the search leaves after a delay and would otherwise
+// answer the next test, logged out
+export const searchWorkspaces = (language, search) => {
+	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/workspaces/count', query: { search } }).as('countSearch')
+	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/spaces', query: { search } }).as('spacesSearch')
+	workspaceNavigation().findByLabelText(navigationLabels[language].searchWorkspaces).type(search)
+	cy.wait(['@countSearch', '@spacesSearch'])
+}
 
 // Searches the groups of the Accounts page, which loads them 25 at a time: without a search,
 // a group further down the list would not show. Yields the groups the server found.

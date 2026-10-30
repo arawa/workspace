@@ -24,46 +24,22 @@ import {
 	createSpace,
 	editSpace,
 	GB,
+	openWorkspaceApp,
 	randomSuffix,
-	serverPath,
+	searchWorkspaces,
 	setLanguage,
-	workspaceNavigation,
 } from '../support/helpers.js'
 
-// What a General Manager or a Workspace Manager reads, in each language the tests run in.
-// The apps menu belongs to the server
+// What a General Manager or a Workspace Manager reads, in each language the tests run in
 const labels = {
 	en: {
-		openAppsMenu: 'Open apps menu',
-		// Testing Library turns the non-breaking space of the label into a space
-		searchWorkspaces: 'Search workspaces …', // eslint-disable-line @nextcloud/l10n-non-breaking-space
 		columns: ['', 'Workspace name', 'Quota', 'Workspace Managers'],
 		unlimited: 'unlimited',
 	},
 	fr: {
-		openAppsMenu: 'Ouvrir le menu des applications',
-		searchWorkspaces: 'Rechercher des workspaces…',
 		columns: ['', 'Nom du workspace', 'Quota', 'Workspace Managers'],
 		unlimited: 'illimité',
 	},
-}
-
-// Opens the app from the apps menu of the header, from the Files app
-const openWorkspaceApp = (label) => {
-	cy.visit('/apps/files')
-	cy.findByRole('button', { name: label.openAppsMenu }).click()
-	cy.findByRole('menuitem', { name: 'Workspace' }).click()
-	cy.location('pathname').should('equal', serverPath('/apps/workspace/'))
-}
-
-// A General Manager sees the workspaces of every spec: searching from the navigation keeps
-// those of a test. Waited for, since the search leaves after a delay and would otherwise
-// answer the next test, logged out
-const searchWorkspaces = (label, search) => {
-	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/workspaces/count', query: { search } }).as('countSearch')
-	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/spaces', query: { search } }).as('spacesSearch')
-	workspaceNavigation().findByLabelText(label.searchWorkspaces).type(search)
-	cy.wait(['@countSearch', '@spacesSearch'])
 }
 
 // The rows of the table of all workspaces, and the row of one of them
@@ -144,16 +120,16 @@ for (const [language, label] of Object.entries(labels)) {
 
 		it('lists every workspace to a General Manager', () => {
 			cy.login(generalManager)
-			openWorkspaceApp(label)
+			openWorkspaceApp(language)
 
-			searchWorkspaces(label, tag)
+			searchWorkspaces(language, tag)
 			workspaceRows().should('have.length', 2)
 			checkTable()
 		})
 
 		it('lists their workspaces to a Workspace Manager', () => {
 			cy.login(anna)
-			openWorkspaceApp(label)
+			openWorkspaceApp(language)
 
 			workspaceRows().should('have.length', 2)
 			checkTable()

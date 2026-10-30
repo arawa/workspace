@@ -20,9 +20,9 @@
 import {
 	createGeneralManagerWithSpace,
 	editModal,
+	navigationBullet,
 	openEditModal,
 	saveEditModal,
-	workspaceNavigation,
 } from '../support/helpers.js'
 
 // What a General Manager reads, in each language the tests run in. The color picker
@@ -67,11 +67,7 @@ for (const [language, label] of Object.entries(labels)) {
 		// Checks the workspace shows the color both in its page header and in the navigation
 		const checkColor = (color) => {
 			cy.get('.space-name .color-dot').should('have.css', 'background-color', color)
-			workspaceNavigation()
-				.findByRole('link', { name: space.name })
-				.closest('.app-navigation-entry')
-				.find('.app-navigation-entry__icon-bullet > div')
-				.should('have.css', 'background-color', color)
+			navigationBullet(space.name).should('have.css', 'background-color', color)
 		}
 
 		// Confirms the color in the picker, saves the modal, then checks the color, after a
