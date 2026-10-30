@@ -28,6 +28,7 @@ import {
 	randomSuffix,
 	searchWorkspaces,
 	setLanguage,
+	shouldHaveColumns,
 } from '../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in
@@ -107,9 +108,7 @@ for (const [language, label] of Object.entries(labels)) {
 		// The table lists both workspaces with their quota, and the avatars of their
 		// Workspace Managers sorted by UID
 		const checkTable = () => {
-			cy.get('.table-spaces th').then(($columns) => {
-				expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(label.columns)
-			})
+			shouldHaveColumns('.table-spaces', label.columns)
 
 			workspaceRow(first).find('td').eq(QUOTA).should('have.text', '1 GB')
 			shouldListManagers(first, ['Zélie', 'Ada'])
