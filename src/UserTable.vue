@@ -332,14 +332,6 @@ export default {
 	background-color: var(--color-primary-light);
 }
 
-.user-admin:hover {
-	background-color: #f5f5f5 !important;
-}
-
-.user-simple:hover {
-	background-color: #f5f5f5 !important;
-}
-
 .user-info {
 	width: 30%;
 	padding-inline-start: 8px;
