@@ -108,8 +108,10 @@ for (const [language, label] of Object.entries(labels)) {
 			workspaceNavigation().findByRole('button', { name: label.newWorkspace }).should('be.visible')
 
 			// 2. "All workspaces" opens the table of the workspaces. From the hub of a workspace,
-			// since the app already opened on that table
-			cy.visit(`/apps/workspace/hub/${spaces.alpha.id}`)
+			// since the app already opened on that table. The app only loads the first workspaces
+			// of the server: searching first finds those of this spec, for the next steps too
+			searchWorkspaces(language, tag)
+			workspaceNavigation().findByRole('link', { name: spaces.alpha.name }).click()
 			cy.get('.hub-home').should('be.visible')
 			workspaceNavigation().findByRole('link', { name: label.allWorkspaces }).click()
 			cy.location('pathname').should('equal', serverPath('/apps/workspace/'))
@@ -126,7 +128,6 @@ for (const [language, label] of Object.entries(labels)) {
 			cy.findByRole('button', { name: label.closeNavigation }).should('be.visible')
 
 			// 5. Each workspace shows its color, its name, its number of members and an arrow
-			searchWorkspaces(language, tag)
 			for (const [name, count] of Object.entries(memberCounts)) {
 				const space = spaces[name]
 				navigationBullet(space.name).should('have.css', 'background-color', rgb(space.color))
