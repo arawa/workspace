@@ -120,7 +120,7 @@ export default {
 		},
 		removeGroupFromBatch(group) {
 			this.groupsSelected = this.groupsSelected.filter((g) => {
-				return g.displayName !== group.displayName
+				return g.gid !== group.gid
 			})
 		},
 		debounceLookGroups: debounce(function(term) {
@@ -133,7 +133,7 @@ export default {
 
 			this.loadingGroups = true
 			const space = this.space
-			const groupsPresents = Object.keys(space.added_groups) || []
+			const groupsPresents = Object.keys(space.added_groups ?? {})
 
 			axios.get(generateUrl('/apps/workspace/groups'), {
 				params: {
@@ -149,8 +149,8 @@ export default {
 						groups.push(response.data[key])
 					}
 
-					const groupnames = this.groupsSelected.map((group) => group.displayName)
-					groups = groups.filter((group) => !groupnames.includes(group.displayName))
+					const gids = this.groupsSelected.map((group) => group.gid)
+					groups = groups.filter((group) => !gids.includes(group.gid))
 
 					this.groupsSelectable = groups
 				})

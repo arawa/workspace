@@ -152,9 +152,9 @@ const editModalLabels = {
 	fr: { title: 'Éditer le workspace', save: 'Enregistrer' },
 }
 
-// Queried each time rather than aliased: the color picker and the quota select open
-// a second dialog or a listbox outside the modal
-export const editModal = (language) => cy.contains('[role="dialog"]', editModalLabels[language].title)
+// Named by its title. Queried each time rather than aliased: the color picker and the
+// quota select open a second dialog or a listbox outside the modal
+export const editModal = (language) => cy.findByRole('dialog', { name: editModalLabels[language].title })
 
 // Opens the edit modal from the pencil in the header of the workspace page
 export const openEditModal = (generalManager, space, language) => {

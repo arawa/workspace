@@ -1,12 +1,13 @@
 <template>
 	<NcModal
-		name="edit workspace"
-		label-id="edit workspace"
+		label-id="edit-workspace-title"
 		size="large"
 		class="modal"
 		@close="close">
 		<div class="modal__container">
-			<h1>{{ t('workspace', 'Edit the workspace') }}</h1>
+			<h1 id="edit-workspace-title">
+				{{ t('workspace', 'Edit the workspace') }}
+			</h1>
 			<h2>{{ t('workspace', 'Appearance') }}</h2>
 			<div class="content-appearance">
 				<NcColorPicker ref="colorPicker"

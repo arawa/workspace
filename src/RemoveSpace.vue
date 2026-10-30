@@ -21,12 +21,11 @@
 -->
 <template>
 	<NcModal class="remove-modal"
-		name="remove space"
-		label-id="remove space"
+		label-id="remove-space-title"
 		size="small"
 		@close="close()">
 		<div class="modal__content">
-			<h2>
+			<h2 id="remove-space-title">
 				{{ t('workspace', 'Are you sure you want to delete the {space} workspace?', { space }) }}
 			</h2>
 			<div class="remove-space-actions">
