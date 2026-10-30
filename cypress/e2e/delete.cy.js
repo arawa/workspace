@@ -62,8 +62,8 @@ for (const [language, label] of Object.entries(labels)) {
 				.findByRole('button', { name: label.deleteSpace })
 				.click()
 
-			// 1. The modal asks to confirm the deletion of this workspace
-			cy.findByRole('dialog').as('modal')
+			// 1. The modal, named by its question, asks to confirm the deletion of this workspace
+			cy.findByRole('dialog', { name: label.question(space.name) }).as('modal')
 			cy.get('@modal')
 				.findByRole('heading', { name: label.question(space.name) })
 				.should('be.visible')
