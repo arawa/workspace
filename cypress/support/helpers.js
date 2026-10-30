@@ -101,6 +101,18 @@ export const addSpaceMember = (generalManager, space, user) => ocs(generalManage
 // Makes the user a Workspace Manager of the workspace
 export const addSpaceManager = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/workspace-manager`, { uid: user.userId })
 
+// Adds the user to a group of the workspace, such as one of its subgroups
+export const addGroupMember = (generalManager, space, gid, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/groups/${gid}/users`, { uids: [user.userId] })
+
+// A new Nextcloud group with the user in it, which belongs to no workspace
+export const createGroup = (gid, user) => {
+	occ('group:add', gid)
+	occ('group:adduser', gid, user.userId)
+}
+
+// Adds an existing Nextcloud group to the workspace, as an added group. The OCS API has no route for it
+export const addConnectedGroup = (generalManager, space, gid) => request(generalManager, 'POST', `/apps/workspace/spaces/${space.id}/connected-groups`, { gid })
+
 // A new user, in the given language, added to the user group of the workspace
 export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
 	addSpaceMember(generalManager, space, member)
@@ -132,6 +144,12 @@ export const spaceGroups = (spaceId, spaceName) => [
 
 // The navigation of the app, whose label is not translated
 export const workspaceNavigation = () => cy.findByRole('navigation', { name: 'workspace navigation' })
+
+// Opens the page of a group of the workspace from the navigation, given an entry of spaceGroups()
+export const openGroupPage = (space, group) => {
+	workspaceNavigation().findByRole('link', { name: group.name }).click()
+	cy.location('pathname').should('equal', serverPath(`/apps/workspace/group/${space.id}/${group.gid}`))
+}
 
 // Searches the groups of the Accounts page, which loads them 25 at a time: without a search,
 // a group further down the list would not show. Yields the groups the server found.
