@@ -32,6 +32,9 @@ export const serverPath = (path) => `${new URL(Cypress.config('baseUrl')).pathna
 export const randomSuffix = () => Math.random().toString(36).slice(2, 10)
 export const randomName = () => `Workspace ${randomSuffix()}`
 
+// A hex color, such as that of a workspace, as the browser computes it in CSS
+export const rgb = (hex) => `rgb(${hex.match(/[0-9a-f]{2}/gi).map((byte) => parseInt(byte, 16)).join(', ')})`
+
 // One gigabyte, in the bytes the server counts a quota in
 export const GB = 1024 ** 3
 
@@ -60,12 +63,20 @@ export const requestAs = (user, method, url, body) => request(user, method, url,
 // cy.request() as the given user on the OCS API of the app, yields ocs.data
 const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
 
-// Changes the language of the user ("en" or "fr"). cy.modifyUser logs in as the user, which
-// the session cookie of an earlier request would otherwise override
-export const setLanguage = (user, language) => {
+// Changes a field of the user, such as "email" or "displayname". cy.modifyUser logs in as
+// the user, which the session cookie of an earlier request would otherwise override
+export const modifyUser = (user, key, value) => {
 	cy.clearAllCookies()
-	cy.modifyUser(user, 'language', language)
+	return cy.modifyUser(user, key, value)
 }
+
+// Changes the language of the user ("en" or "fr")
+export const setLanguage = (user, language) => modifyUser(user, 'language', language)
+
+// Checks the texts of the column headers of the table, in their order
+export const shouldHaveColumns = (table, columns) => cy.get(`${table} th`).should(($columns) => {
+	expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(columns)
+})
 
 // A new user, with no role and in no workspace, who reads the app in the given language
 export const createUser = (language) => cy.createRandomUser().then((user) => {
@@ -107,12 +118,20 @@ export const createSpaceMember = (generalManager, space, language) => createUser
 	return cy.wrap(member)
 })
 
-// A new General Manager, in the given language, with a workspace and a "maison" subgroup in it.
+// The name of the subgroup the tests create in a workspace
+export const SUBGROUP = 'maison'
+
+// A new subgroup of the workspace, whose display name also carries the workspace name
+export const createSubgroup = (generalManager, space, name) => ocs(generalManager, 'POST', `/spaces/${space.id}/groups`, { name })
+
+// Adds the user to a group of the workspace, such as a subgroup created by createSubgroup()
+export const addGroupMember = (generalManager, space, gid, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/groups/${gid}/users`, { uids: [user.userId] })
+
+// A new General Manager, in the given language, with a workspace and a SUBGROUP subgroup in it.
 // Yields { generalManager, space }
 export const createGeneralManagerWithSpace = (language) => createGeneralManager(language).then((generalManager) => {
 	return createSpace(generalManager).then((space) => {
-		// A subgroup, whose display name also carries the workspace name
-		ocs(generalManager, 'POST', `/spaces/${space.id}/groups`, { name: 'maison' })
+		createSubgroup(generalManager, space, SUBGROUP)
 		return cy.wrap({ generalManager, space })
 	})
 })
@@ -121,17 +140,59 @@ export const createGeneralManagerWithSpace = (language) => createGeneralManager(
 // prefixes, which cypress.config.js reads from the server
 export const managerGroupName = (spaceName) => `${Cypress.expose('displayPrefixManagerGroup')}${spaceName}`
 export const userGroupName = (spaceName) => `${Cypress.expose('displayPrefixUserGroup')}${spaceName}`
+// The display name of a subgroup, which carries the workspace name too
+export const subgroupName = (name, spaceName) => `G-${name}-${spaceName}`
 
-// The three groups of a workspace created by createGeneralManagerWithSpace():
+// The three groups of a workspace with a SUBGROUP subgroup, as createGeneralManagerWithSpace() creates:
 // display names follow the workspace name, GIDs its id
 export const spaceGroups = (spaceId, spaceName) => [
 	{ name: managerGroupName(spaceName), gid: `SPACE-GE-${spaceId}` },
 	{ name: userGroupName(spaceName), gid: `SPACE-U-${spaceId}` },
-	{ name: `G-maison-${spaceName}`, gid: `SPACE-G-maison-${spaceId}` },
+	{ name: subgroupName(SUBGROUP, spaceName), gid: `SPACE-G-${SUBGROUP}-${spaceId}` },
 ]
 
 // The navigation of the app, whose label is not translated
 export const workspaceNavigation = () => cy.findByRole('navigation', { name: 'workspace navigation' })
+
+// The row of an entry of the navigation, found by its name, with its icon, counter and arrow
+export const navigationEntry = (name) => workspaceNavigation()
+	.findByRole('link', { name })
+	.closest('.app-navigation-entry')
+
+// The color bullet of the entry of a workspace in the navigation
+export const navigationBullet = (spaceName) => navigationEntry(spaceName).find('.app-navigation-entry__icon-bullet > div')
+
+// The apps menu of the header and the search of the navigation, in each language the tests run in.
+// The apps menu belongs to the server
+const navigationLabels = {
+	en: {
+		openAppsMenu: 'Open apps menu',
+		// Testing Library turns the non-breaking space of the label into a space
+		searchWorkspaces: 'Search workspaces …', // eslint-disable-line @nextcloud/l10n-non-breaking-space
+	},
+	fr: {
+		openAppsMenu: 'Ouvrir le menu des applications',
+		searchWorkspaces: 'Rechercher des workspaces…',
+	},
+}
+
+// Opens the app from the apps menu of the header, from the Files app
+export const openWorkspaceApp = (language) => {
+	cy.visit('/apps/files')
+	cy.findByRole('button', { name: navigationLabels[language].openAppsMenu }).click()
+	cy.findByRole('menuitem', { name: 'Workspace' }).click()
+	cy.location('pathname').should('equal', serverPath('/apps/workspace/'))
+}
+
+// A General Manager sees the workspaces of every spec: searching from the navigation keeps
+// those of a test. Waited for, since the search leaves after a delay and would otherwise
+// answer the next test, logged out
+export const searchWorkspaces = (language, search) => {
+	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/workspaces/count', query: { search } }).as('countSearch')
+	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/spaces', query: { search } }).as('spacesSearch')
+	workspaceNavigation().findByLabelText(navigationLabels[language].searchWorkspaces).type(search)
+	cy.wait(['@countSearch', '@spacesSearch'])
+}
 
 // Searches the groups of the Accounts page, which loads them 25 at a time: without a search,
 // a group further down the list would not show. Yields the groups the server found.
