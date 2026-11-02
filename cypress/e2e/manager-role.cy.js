@@ -55,7 +55,8 @@ const labels = {
 const TRANSPARENT = 'rgba(0, 0, 0, 0)'
 
 // The row of a user in the table of users, found by their whole display name
-const userRow = (name) => cy.contains('.table-space-detail tbody .user-name', new RegExp(`^\\s*${name}\\s*$`))
+const userRow = (name) => cy.get('.table-space-detail tbody .user-name')
+	.filter((index, element) => element.textContent.trim() === name)
 	.closest('tr')
 
 // Clicks an action of the menu of the user, and waits for the server to change their role
