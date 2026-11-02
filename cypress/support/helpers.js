@@ -181,6 +181,8 @@ export const managerGroupName = (spaceName) => `${Cypress.expose('displayPrefixM
 export const userGroupName = (spaceName) => `${Cypress.expose('displayPrefixUserGroup')}${spaceName}`
 // The display name of a subgroup, which carries the workspace name too
 export const subgroupName = (name, spaceName) => `G-${name}-${spaceName}`
+// The GID of a subgroup, which carries the id of the workspace
+export const subgroupGid = (name, spaceId) => `SPACE-G-${name}-${spaceId}`
 
 // GIDs of the manager and user groups of a workspace, which follow its id
 export const managerGroupGid = (spaceId) => `SPACE-GE-${spaceId}`
@@ -194,7 +196,7 @@ export const WORKSPACES_MANAGERS = 'WorkspacesManagers'
 export const spaceGroups = (spaceId, spaceName) => [
 	{ name: managerGroupName(spaceName), gid: managerGroupGid(spaceId) },
 	{ name: userGroupName(spaceName), gid: userGroupGid(spaceId) },
-	{ name: subgroupName(SUBGROUP, spaceName), gid: `SPACE-G-${SUBGROUP}-${spaceId}` },
+	{ name: subgroupName(SUBGROUP, spaceName), gid: subgroupGid(SUBGROUP, spaceId) },
 ]
 
 // The navigation of the app, whose label is not translated
@@ -219,6 +221,9 @@ export const visitGroupPage = (user, space, group) => {
 	openGroupPage(space, group)
 }
 
+// A button of the header of the workspace page, next to its name
+export const spaceAction = (name) => cy.get('.space-actions').findByRole('button', { name })
+
 // A button of the header of the page of a group, next to its name
 export const groupButton = (name) => cy.get('.group-actions').findByRole('button', { name })
 
@@ -231,6 +236,13 @@ export const shouldShowGroupTitle = (name) => cy.get('.group-name .titles-for-sp
 // The entries of an open "+" or "···" menu that also holds a text field: @nextcloud/vue then makes
 // it a dialog of buttons rather than a menu of menu items
 export const menuButtons = () => cy.get('.action-button:visible')
+
+// Clicks an entry of an open "+" or "···" menu that also holds a text field, see menuButtons()
+export const clickMenuButton = (text) => menuButtons().contains(text).click()
+
+// The warning that asks to confirm the removal of a group. The "···" menu that opened it stays
+// open behind it and hides it from Testing Library: the warning is found by its class
+export const warningModal = () => cy.get('.modal-container')
 
 // The display names in the table of users of a workspace or of a group
 export const userNames = () => cy.get('.table-space-detail tbody .user-name')
