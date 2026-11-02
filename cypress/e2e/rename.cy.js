@@ -23,6 +23,7 @@ import {
 	editModal,
 	managerGroupName,
 	openEditModal,
+	openGroupPage,
 	randomName,
 	saveEditModal,
 	searchAccountsGroups,
@@ -82,8 +83,7 @@ for (const [language, label] of Object.entries(labels)) {
 			// 4. Each group takes the new name in the navigation and as the title of its page,
 			// while its GID, in the URL, does not change
 			for (const group of spaceGroups(space.id, newName)) {
-				cy.get('@navigation').findByRole('link', { name: group.name }).click()
-				cy.location('pathname').should('equal', serverPath(`/apps/workspace/group/${space.id}/${group.gid}`))
+				openGroupPage(space, group)
 				cy.get('.group-name .titles-for-space').should('have.text', group.name)
 			}
 		})
