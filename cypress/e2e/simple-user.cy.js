@@ -28,6 +28,7 @@ import {
 	createUser,
 	findSpace,
 	GB,
+	navigationEntry,
 	ocsUrl,
 	randomName,
 	requestAs,
@@ -53,10 +54,7 @@ const labels = {
 }
 
 // The counter of the "All workspaces" entry of the navigation
-const allWorkspacesCount = (allWorkspaces) => workspaceNavigation()
-	.findByRole('link', { name: allWorkspaces })
-	.closest('.app-navigation-entry')
-	.find('.counter-bubble__counter')
+const allWorkspacesCount = (allWorkspaces) => navigationEntry(allWorkspaces).find('.counter-bubble__counter')
 
 // Shared by every test. The General Manager only sets up the workspaces, so its language does not matter
 let generalManager
