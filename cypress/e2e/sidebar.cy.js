@@ -26,6 +26,7 @@ import {
 	navigationEntry,
 	openWorkspaceApp,
 	randomSuffix,
+	rgb,
 	searchWorkspaces,
 	serverPath,
 	setLanguage,
@@ -56,9 +57,6 @@ const labels = {
 		workspaceGroups: 'Groupes workspace',
 	},
 }
-
-// The color of the bullet, as the browser computes it from the hex color of the workspace
-const rgb = (hex) => `rgb(${hex.match(/[0-9a-f]{2}/gi).map((byte) => parseInt(byte, 16)).join(', ')})`
 
 // Shared by the names of the workspaces, so the search keeps those of this spec
 const tag = randomSuffix()
