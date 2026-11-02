@@ -23,7 +23,16 @@ import { addCommands } from '@nextcloud/e2e-test-server/cypress'
 addCommands()
 
 // Known Cypress-only noise, see https://github.com/cypress-io/cypress/issues/20341
-Cypress.on('uncaught:exception', (err) => !err.message.includes('ResizeObserver loop'))
+const isResizeObserverLoop = (err) => err.message.includes('ResizeObserver loop')
+
+// The request of the avatars of @nextcloud/vue for the user status, aborted when a test leaves the
+// page, ends in an error handler that reads the status of the missing response (e.response.status
+// instead of e.response?.status in NcAvatar's fetchUserStatus)
+const isAbortedUserStatus = (err) => err.name === 'TypeError'
+	&& err.message.includes('status')
+	&& Boolean(err.stack?.includes('fetchUserStatus'))
+
+Cypress.on('uncaught:exception', (err) => !isResizeObserverLoop(err) && !isAbortedUserStatus(err))
 
 // cypress open keeps the sessions of cy.login() across reruns, which the server may no
 // longer accept: start each spec with fresh ones, as cypress run does

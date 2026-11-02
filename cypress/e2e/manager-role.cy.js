@@ -23,6 +23,7 @@
 import {
 	addSpaceManager,
 	admin,
+	clickUserAction,
 	createGeneralManager,
 	createSpace,
 	createSpaceMember,
@@ -33,6 +34,8 @@ import {
 	shouldNotListInAccountsGroup,
 	userGroupGid,
 	userGroupName,
+	userRow,
+	visitSpacePage,
 	WORKSPACES_MANAGERS,
 } from '../support/helpers.js'
 
@@ -54,18 +57,11 @@ const labels = {
 // The background of a row that has none
 const TRANSPARENT = 'rgba(0, 0, 0, 0)'
 
-// The row of a user in the table of users, found by their whole display name
-const userRow = (name) => cy.get('.table-space-detail tbody .user-name')
-	.filter((index, element) => element.textContent.trim() === name)
-	.closest('tr')
+// The request that changes the role of a user
+const CHANGE_ROLE = { method: 'PATCH', pathname: '**/apps/workspace/api/space/*/user/*' }
 
 // Clicks an action of the menu of the user, and waits for the server to change their role
-const clickAction = (label, name, action) => {
-	cy.intercept({ method: 'PATCH', pathname: '**/apps/workspace/api/space/*/user/*' }).as('changeRole')
-	userRow(name).findByRole('button', { name: label.actions }).click()
-	cy.findByRole('menuitem', { name: action }).click()
-	cy.wait('@changeRole').its('response.statusCode').should('equal', 200)
-}
+const clickAction = (label, name, action) => clickUserAction(label, name, action, CHANGE_ROLE)
 
 // The display names of the highlighted rows of the Workspace Managers, in their order
 const shouldListManagers = (names) => cy.get('.table-space-detail tbody tr.user-admin .user-name')
@@ -130,10 +126,7 @@ for (const [language, label] of Object.entries(labels)) {
 			describe(`as ${role}`, () => {
 				before(setUp)
 
-				const openSpace = () => {
-					cy.login(user())
-					cy.visit(`/apps/workspace/workspace/${space.id}`)
-				}
+				const openSpace = () => visitSpacePage(user(), space)
 
 				it('assigns a member as Workspace Manager', () => {
 					openSpace()

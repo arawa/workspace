@@ -81,9 +81,12 @@ export const shouldHaveColumns = (table, columns) => cy.get(`${table} th`).shoul
 	expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(columns)
 })
 
-// A new user, with no role and in no workspace, who reads the app in the given language
+// A new user, with no role and in no workspace, who reads the app in the given language. A user
+// who never logs in needs none
 export const createUser = (language) => cy.createRandomUser().then((user) => {
-	setLanguage(user, language)
+	if (language) {
+		setLanguage(user, language)
+	}
 	return cy.wrap(user)
 })
 
@@ -124,7 +127,7 @@ export const createGroup = (gid, user) => {
 // Adds an existing Nextcloud group to the workspace, as an added group. The OCS API has no route for it
 export const addConnectedGroup = (generalManager, space, gid) => request(generalManager, 'POST', `/apps/workspace/spaces/${space.id}/connected-groups`, { gid })
 
-// A new user, in the given language, added to the user group of the workspace
+// A new user, in the given language if any, added to the user group of the workspace
 export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
 	addSpaceMember(generalManager, space, member)
 	return cy.wrap(member)
@@ -179,10 +182,60 @@ export const openGroupPage = (space, group) => {
 	cy.location('pathname').should('equal', serverPath(`/apps/workspace/group/${space.id}/${group.gid}`))
 }
 
+// Logs in and opens the page of the workspace
+export const visitSpacePage = (user, space) => {
+	cy.login(user)
+	cy.visit(`/apps/workspace/workspace/${space.id}`)
+}
+
+// Logs in and opens the page of a group from the workspace page. A link straight to it would not
+// do: the app opens the workspace page of a user who sees a single workspace
+export const visitGroupPage = (user, space, group) => {
+	visitSpacePage(user, space)
+	openGroupPage(space, group)
+}
+
+// The display names in the table of users of a workspace or of a group
+export const userNames = () => cy.get('.table-space-detail tbody .user-name')
+
+// The row of a user in the table of users, found by their whole display name
+export const userRow = (name) => userNames()
+	.filter((index, element) => element.textContent.trim() === name)
+	.closest('tr')
+
+// Clicks an action of the menu of a user, found by their display name, and waits for the server
+// to apply it
+export const clickUserAction = (label, name, action, request) => {
+	cy.intercept(request).as('userAction')
+	userRow(name).findByRole('button', { name: label.actions }).click()
+	cy.findByRole('menuitem', { name: action }).click()
+	cy.wait('@userAction').its('response.statusCode').should('equal', 200)
+}
+
+// Checks that the table of users no longer lists the user, whose display name is their UID
+export const shouldNotListUser = (user) => userNames().should(($names) => {
+	expect([...$names].map((name) => name.textContent.trim())).not.to.include(user.userId)
+})
+
 // The row of an entry of the navigation, found by its name, with its icon, counter and arrow
 export const navigationEntry = (name) => workspaceNavigation()
 	.findByRole('link', { name })
 	.closest('.app-navigation-entry')
+
+// Checks the user counter of an entry of the navigation, a workspace or one of its groups
+export const shouldCountUsers = (name, count) => navigationEntry(name)
+	.find('.user-counter')
+	.should(($counter) => expect($counter.text().trim()).to.equal(String(count)))
+
+// Checks the user counters of a workspace made by createGeneralManagerWithSpace() and of its
+// groups in the navigation: the workspace and its user group count its users
+export const shouldCountSpaceUsers = (space, { users, managers, subgroupMembers }) => {
+	const [managerGroup, userGroup, subgroup] = spaceGroups(space.id, space.name)
+	shouldCountUsers(space.name, users)
+	shouldCountUsers(userGroup.name, users)
+	shouldCountUsers(managerGroup.name, managers)
+	shouldCountUsers(subgroup.name, subgroupMembers)
+}
 
 // The color bullet of the entry of a workspace in the navigation
 export const navigationBullet = (spaceName) => navigationEntry(spaceName).find('.app-navigation-entry__icon-bullet > div')
@@ -271,8 +324,7 @@ export const editModal = (language) => cy.contains('[role="dialog"]', editModalL
 
 // Opens the edit modal from the pencil in the header of the workspace page
 export const openEditModal = (generalManager, space, language) => {
-	cy.login(generalManager)
-	cy.visit(`/apps/workspace/workspace/${space.id}`)
+	visitSpacePage(generalManager, space)
 
 	cy.get('.space-actions')
 		.findByRole('button', { name: editModalLabels[language].title })
