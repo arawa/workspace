@@ -76,6 +76,20 @@ export const setLanguage = (user, language) => modifyUser(user, 'language', lang
 // Changes the display name of the user, which is their UID until then
 export const setDisplayName = (user, displayName) => modifyUser(user, 'displayname', displayName)
 
+// The background of a row of a member, who is no Workspace Manager, in a table of users
+export const TRANSPARENT = 'rgba(0, 0, 0, 0)'
+
+// The background of a row of a Workspace Manager in a table of users: the light primary color
+// of the theme, as the browser computes it
+export const primaryLight = () => cy.document().then((doc) => {
+	const probe = doc.createElement('div')
+	probe.style.backgroundColor = 'var(--color-primary-light)'
+	doc.body.appendChild(probe)
+	const color = doc.defaultView.getComputedStyle(probe).backgroundColor
+	probe.remove()
+	return color
+})
+
 // Checks the texts of the column headers of the table, in their order
 export const shouldHaveColumns = (table, columns) => cy.get(`${table} th`).should(($columns) => {
 	expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(columns)
@@ -118,10 +132,13 @@ export const addSpaceMember = (generalManager, space, user) => ocs(generalManage
 // Makes the user a Workspace Manager of the workspace
 export const addSpaceManager = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/workspace-manager`, { uid: user.userId })
 
+// Adds the user to a Nextcloud group
+export const addNextcloudGroupMember = (gid, user) => occ('group:adduser', gid, user.userId)
+
 // A new Nextcloud group with the user in it, which belongs to no workspace
 export const createGroup = (gid, user) => {
 	occ('group:add', gid)
-	occ('group:adduser', gid, user.userId)
+	addNextcloudGroupMember(gid, user)
 }
 
 // Adds an existing Nextcloud group to the workspace, as an added group. The OCS API has no route for it
@@ -132,6 +149,13 @@ export const createSpaceMember = (generalManager, space, language) => createUser
 	addSpaceMember(generalManager, space, member)
 	return cy.wrap(member)
 })
+
+// A new Workspace Manager of the workspace, in the given language if any
+export const createSpaceManager = (generalManager, space, language) => createSpaceMember(generalManager, space, language)
+	.then((manager) => {
+		addSpaceManager(generalManager, space, manager)
+		return cy.wrap(manager)
+	})
 
 // The name of the subgroup the tests create in a workspace
 export const SUBGROUP = 'maison'
@@ -194,6 +218,19 @@ export const visitGroupPage = (user, space, group) => {
 	visitSpacePage(user, space)
 	openGroupPage(space, group)
 }
+
+// A button of the header of the page of a group, next to its name
+export const groupButton = (name) => cy.get('.group-actions').findByRole('button', { name })
+
+// Checks the name of the page of a group
+export const shouldShowGroupTitle = (name) => cy.get('.group-name .titles-for-space')
+	.invoke('text')
+	.invoke('trim')
+	.should('equal', name)
+
+// The entries of an open "+" or "···" menu that also holds a text field: @nextcloud/vue then makes
+// it a dialog of buttons rather than a menu of menu items
+export const menuButtons = () => cy.get('.action-button:visible')
 
 // The display names in the table of users of a workspace or of a group
 export const userNames = () => cy.get('.table-space-detail tbody .user-name')

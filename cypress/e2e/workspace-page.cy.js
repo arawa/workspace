@@ -27,6 +27,7 @@ import {
 	createSubgroup,
 	managerGroupName,
 	modifyUser,
+	primaryLight,
 	randomSuffix,
 	rgb,
 	searchWorkspaces,
@@ -140,17 +141,6 @@ const groupsOf = ({ manager, subgroups }) => [
 	...(manager ? [managerGroupName(space.name)] : []),
 	...subgroups.map((name) => subgroupName(name, space.name)),
 ].join(', ')
-
-// The background of a row of a Workspace Manager: the light primary color of the theme, as
-// the browser computes it
-const primaryLight = () => cy.document().then((doc) => {
-	const probe = doc.createElement('div')
-	probe.style.backgroundColor = 'var(--color-primary-light)'
-	doc.body.appendChild(probe)
-	const color = doc.defaultView.getComputedStyle(probe).backgroundColor
-	probe.remove()
-	return color
-})
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Workspace page (${language})`, () => {

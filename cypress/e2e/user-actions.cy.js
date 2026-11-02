@@ -22,15 +22,16 @@
 import {
 	addConnectedGroup,
 	addGroupMember,
-	addSpaceManager,
 	createGeneralManagerWithSpace,
 	createGroup,
+	createSpaceManager,
 	createSpaceMember,
 	createUser,
 	randomSuffix,
 	serverPath,
 	setLanguage,
 	spaceGroups,
+	userRow,
 	visitGroupPage,
 	visitSpacePage,
 } from '../support/helpers.js'
@@ -59,7 +60,7 @@ const labels = {
 }
 
 // Opens the actions menu of the user, in the table of users
-const openActionsMenu = (label, user) => cy.contains('.table-space-detail tbody tr', user.userId)
+const openActionsMenu = (label, user) => userRow(user.userId)
 	.findByRole('button', { name: label.actions })
 	.click()
 
@@ -97,20 +98,19 @@ before(() => {
 		({ generalManager, space } = created)
 		;[managerGroup, userGroup, subgroup] = spaceGroups(space.id, space.name)
 
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		// Only the Workspace Manager who logs in needs a language
+		createSpaceManager(generalManager, space, 'en').then((user) => {
 			manager = user
-			addSpaceManager(generalManager, space, manager)
 		})
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		createSpaceManager(generalManager, space).then((user) => {
 			otherManager = user
-			addSpaceManager(generalManager, space, otherManager)
 			addGroupMember(generalManager, space, subgroup.gid, otherManager)
 		})
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		createSpaceMember(generalManager, space).then((user) => {
 			member = user
 			addGroupMember(generalManager, space, subgroup.gid, member)
 		})
-		createUser('en').then((user) => {
+		createUser().then((user) => {
 			guest = user
 			createGroup(addedGroup.gid, guest)
 			addConnectedGroup(generalManager, space, addedGroup.gid)
