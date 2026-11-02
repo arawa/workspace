@@ -73,6 +73,9 @@ export const modifyUser = (user, key, value) => {
 // Changes the language of the user ("en" or "fr")
 export const setLanguage = (user, language) => modifyUser(user, 'language', language)
 
+// Changes the display name of the user, which is their UID until then
+export const setDisplayName = (user, displayName) => modifyUser(user, 'displayname', displayName)
+
 // Checks the texts of the column headers of the table, in their order
 export const shouldHaveColumns = (table, columns) => cy.get(`${table} th`).should(($columns) => {
 	expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(columns)
@@ -152,11 +155,18 @@ export const userGroupName = (spaceName) => `${Cypress.expose('displayPrefixUser
 // The display name of a subgroup, which carries the workspace name too
 export const subgroupName = (name, spaceName) => `G-${name}-${spaceName}`
 
+// GIDs of the manager and user groups of a workspace, which follow its id
+export const managerGroupGid = (spaceId) => `SPACE-GE-${spaceId}`
+export const userGroupGid = (spaceId) => `SPACE-U-${spaceId}`
+
+// The group of the Workspace Managers of every workspace
+export const WORKSPACES_MANAGERS = 'WorkspacesManagers'
+
 // The three groups of a workspace with a SUBGROUP subgroup, as createGeneralManagerWithSpace() creates:
 // display names follow the workspace name, GIDs its id
 export const spaceGroups = (spaceId, spaceName) => [
-	{ name: managerGroupName(spaceName), gid: `SPACE-GE-${spaceId}` },
-	{ name: userGroupName(spaceName), gid: `SPACE-U-${spaceId}` },
+	{ name: managerGroupName(spaceName), gid: managerGroupGid(spaceId) },
+	{ name: userGroupName(spaceName), gid: userGroupGid(spaceId) },
 	{ name: subgroupName(SUBGROUP, spaceName), gid: `SPACE-G-${SUBGROUP}-${spaceId}` },
 ]
 
@@ -217,6 +227,33 @@ export const searchAccountsGroups = (search) => {
 	cy.get('@accountsSearch').clear()
 	cy.get('@accountsSearch').type(search)
 	return cy.wait('@groupSearch').its('response.body.ocs.data.groups')
+}
+
+// Opens the page of a group in the Accounts page and searches the user among its members, which
+// the page loads 25 at a time. The group must have other members: the search only filters
+// a list that already shows them. Waits for the server to answer the search
+const searchAccountsGroupMembers = (gid, user) => {
+	cy.intercept({ method: 'GET', pathname: `**/cloud/groups/${gid}/users/details`, query: { search: user.userId } }).as('memberSearch')
+	cy.visit(`/settings/users/${gid}`)
+	cy.get('[data-cy-user-row]').should('exist')
+	cy.findByLabelText('Search accounts and groups…').type(user.userId)
+	cy.wait('@memberSearch')
+}
+
+// Checks that the Accounts page lists the user among the members of the group
+export const shouldListInAccountsGroup = (gid, user) => {
+	searchAccountsGroupMembers(gid, user)
+	cy.get('[data-cy-user-row]').should(($rows) => {
+		expect([...$rows].map((row) => row.dataset.cyUserRow)).to.deep.equal([user.userId])
+	})
+}
+
+// Checks that the Accounts page does not list the user among the members of the group. The page
+// empties the list while it searches: "No accounts" only shows once the search found nobody
+export const shouldNotListInAccountsGroup = (gid, user) => {
+	searchAccountsGroupMembers(gid, user)
+	cy.contains('No accounts').should('be.visible')
+	cy.get('[data-cy-user-row]').should('not.exist')
 }
 
 // The row of a folder in the Team folders admin settings
