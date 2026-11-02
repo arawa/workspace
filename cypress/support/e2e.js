@@ -24,3 +24,9 @@ addCommands()
 
 // Known Cypress-only noise, see https://github.com/cypress-io/cypress/issues/20341
 Cypress.on('uncaught:exception', (err) => !err.message.includes('ResizeObserver loop'))
+
+// cypress open keeps the sessions of cy.login() across reruns, which the server may no
+// longer accept: start each spec with fresh ones, as cypress run does
+before(() => {
+	Cypress.session.clearAllSavedSessions()
+})
