@@ -29,12 +29,13 @@ import {
 	createUser,
 	openGroupPage,
 	randomSuffix,
+	serverPath,
 	setLanguage,
 	spaceGroups,
 } from '../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
-// The trigger of the menu belongs to @nextcloud/vue
+// The trigger of the menu belongs to @nextcloud/vue, the profile page to the server
 const labels = {
 	en: {
 		actions: 'Actions',
@@ -43,6 +44,7 @@ const labels = {
 		removeManager: 'Remove WM rights',
 		removeUser: 'Remove user',
 		removeFromGroup: 'Remove from group',
+		emptyProfile: (name) => `${name} has not added any info yet`,
 	},
 	fr: {
 		actions: 'Actions',
@@ -51,14 +53,18 @@ const labels = {
 		removeManager: 'Retirer les droits de WM',
 		removeUser: 'Retirer l\'utilisateur',
 		removeFromGroup: 'Retirer du groupe',
+		emptyProfile: (name) => `${name} n’a pas ajouté d’informations pour le moment`,
 	},
 }
 
+// Opens the actions menu of the user, in the table of users
+const openActionsMenu = (label, user) => cy.contains('.table-space-detail tbody tr', user.userId)
+	.findByRole('button', { name: label.actions })
+	.click()
+
 // Opens the actions menu of the user and checks its entries, in their order, then closes it
 const shouldOfferActions = (label, user, actions) => {
-	cy.contains('.table-space-detail tbody tr', user.userId)
-		.findByRole('button', { name: label.actions })
-		.click()
+	openActionsMenu(label, user)
 	cy.findByRole('menu').findAllByRole('menuitem').should(($items) => {
 		expect([...$items].map((item) => item.textContent.trim())).to.deep.equal(actions)
 	})
@@ -146,6 +152,19 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldOfferActions(label, member, memberActions)
 					shouldOfferActions(label, otherManager, managerActions)
 					shouldOfferActions(label, guest, guestActions)
+				})
+
+				it('opens the profile of a user from the workspace page', () => {
+					cy.login(user())
+					cy.visit(`/apps/workspace/workspace/${space.id}`)
+
+					openActionsMenu(label, member)
+					cy.findByRole('menuitem', { name: label.viewProfile }).click()
+
+					// The display name of a user made by the tests is their UID
+					cy.location('pathname').should('equal', serverPath(`/u/${member.userId}`))
+					cy.findByRole('heading', { level: 2, name: member.userId }).should('be.visible')
+					cy.contains(label.emptyProfile(member.userId)).should('be.visible')
 				})
 
 				it('offers the same actions on the page of the user group', () => {
