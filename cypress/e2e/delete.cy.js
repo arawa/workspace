@@ -19,9 +19,13 @@
 
 import {
 	admin,
-	createGeneralManagerWithSpace,
+	createGeneralManager,
+	createSpace,
+	createSubgroup,
+	randomSuffix,
 	searchAccountsGroups,
 	spaceGroups,
+	SUBGROUP,
 	teamFolderRow,
 	workspaceNavigation,
 } from '../support/helpers.js'
@@ -48,9 +52,14 @@ for (const [language, label] of Object.entries(labels)) {
 		let generalManager
 		let space
 
+		// A name with an "&", which the question of the modal must show as it is, not escaped
 		before(() => {
-			createGeneralManagerWithSpace(language).then((created) => {
-				({ generalManager, space } = created)
+			createGeneralManager(language).then((user) => {
+				generalManager = user
+				createSpace(generalManager, `R&D ${randomSuffix()}`).then((created) => {
+					space = created
+					createSubgroup(generalManager, space, SUBGROUP)
+				})
 			})
 		})
 
@@ -62,8 +71,8 @@ for (const [language, label] of Object.entries(labels)) {
 				.findByRole('button', { name: label.deleteSpace })
 				.click()
 
-			// 1. The modal asks to confirm the deletion of this workspace
-			cy.findByRole('dialog').as('modal')
+			// 1. The modal, named by its question, asks to confirm the deletion of this workspace
+			cy.findByRole('dialog', { name: label.question(space.name) }).as('modal')
 			cy.get('@modal')
 				.findByRole('heading', { name: label.question(space.name) })
 				.should('be.visible')
