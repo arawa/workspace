@@ -22,16 +22,18 @@
 import {
 	addConnectedGroup,
 	addGroupMember,
-	addSpaceManager,
 	createGeneralManagerWithSpace,
 	createGroup,
+	createSpaceManager,
 	createSpaceMember,
 	createUser,
-	openGroupPage,
 	randomSuffix,
 	serverPath,
 	setLanguage,
 	spaceGroups,
+	userRow,
+	visitGroupPage,
+	visitSpacePage,
 } from '../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
@@ -58,7 +60,7 @@ const labels = {
 }
 
 // Opens the actions menu of the user, in the table of users
-const openActionsMenu = (label, user) => cy.contains('.table-space-detail tbody tr', user.userId)
+const openActionsMenu = (label, user) => userRow(user.userId)
 	.findByRole('button', { name: label.actions })
 	.click()
 
@@ -91,33 +93,24 @@ let member
 // A member of an added group only
 let guest
 
-// Opens the page of a group from the workspace page. A link straight to it would not do:
-// the app opens the workspace page of a user who sees a single workspace
-const visitGroupPage = (user, group) => {
-	cy.login(user)
-	cy.visit(`/apps/workspace/workspace/${space.id}`)
-	openGroupPage(space, group)
-}
-
 before(() => {
 	createGeneralManagerWithSpace('en').then((created) => {
 		({ generalManager, space } = created)
 		;[managerGroup, userGroup, subgroup] = spaceGroups(space.id, space.name)
 
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		// Only the Workspace Manager who logs in needs a language
+		createSpaceManager(generalManager, space, 'en').then((user) => {
 			manager = user
-			addSpaceManager(generalManager, space, manager)
 		})
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		createSpaceManager(generalManager, space).then((user) => {
 			otherManager = user
-			addSpaceManager(generalManager, space, otherManager)
 			addGroupMember(generalManager, space, subgroup.gid, otherManager)
 		})
-		createSpaceMember(generalManager, space, 'en').then((user) => {
+		createSpaceMember(generalManager, space).then((user) => {
 			member = user
 			addGroupMember(generalManager, space, subgroup.gid, member)
 		})
-		createUser('en').then((user) => {
+		createUser().then((user) => {
 			guest = user
 			createGroup(addedGroup.gid, guest)
 			addConnectedGroup(generalManager, space, addedGroup.gid)
@@ -146,8 +139,7 @@ for (const [language, label] of Object.entries(labels)) {
 		for (const [role, user] of Object.entries(roles)) {
 			describe(`as ${role}`, () => {
 				it('offers the actions of each user on the workspace page', () => {
-					cy.login(user())
-					cy.visit(`/apps/workspace/workspace/${space.id}`)
+					visitSpacePage(user(), space)
 
 					shouldOfferActions(label, member, memberActions)
 					shouldOfferActions(label, otherManager, managerActions)
@@ -155,8 +147,7 @@ for (const [language, label] of Object.entries(labels)) {
 				})
 
 				it('opens the profile of a user from the workspace page', () => {
-					cy.login(user())
-					cy.visit(`/apps/workspace/workspace/${space.id}`)
+					visitSpacePage(user(), space)
 
 					openActionsMenu(label, member)
 					cy.findByRole('menuitem', { name: label.viewProfile }).click()
@@ -168,27 +159,27 @@ for (const [language, label] of Object.entries(labels)) {
 				})
 
 				it('offers the same actions on the page of the user group', () => {
-					visitGroupPage(user(), userGroup)
+					visitGroupPage(user(), space, userGroup)
 
 					shouldOfferActions(label, member, memberActions)
 					shouldOfferActions(label, otherManager, managerActions)
 				})
 
 				it('offers to remove the rights of a Workspace Manager on the page of the manager group', () => {
-					visitGroupPage(user(), managerGroup)
+					visitGroupPage(user(), space, managerGroup)
 
 					shouldOfferActions(label, otherManager, managerActions)
 				})
 
 				it('also offers to remove a user from the group on the page of a subgroup', () => {
-					visitGroupPage(user(), subgroup)
+					visitGroupPage(user(), space, subgroup)
 
 					shouldOfferActions(label, member, [...memberActions, label.removeFromGroup])
 					shouldOfferActions(label, otherManager, [...managerActions, label.removeFromGroup])
 				})
 
 				it('never offers to remove a user on the page of an added group', () => {
-					visitGroupPage(user(), addedGroup)
+					visitGroupPage(user(), space, addedGroup)
 
 					shouldOfferActions(label, guest, guestActions)
 				})

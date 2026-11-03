@@ -38,8 +38,12 @@ export const rgb = (hex) => `rgb(${hex.match(/[0-9a-f]{2}/gi).map((byte) => pars
 // One gigabyte, in the bytes the server counts a quota in
 export const GB = 1024 ** 3
 
-// The URL of a route of the OCS API of the app: baseUrl ends with /index.php, OCS lives next to it
-export const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
+// The URL of a path of the server outside index.php, such as OCS or WebDAV: baseUrl ends with
+// /index.php, they live next to it
+const serverUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, path)
+
+// The URL of a route of the OCS API of the app
+export const ocsUrl = (path) => serverUrl(`/ocs/v2.php/apps/workspace/api/v1${path}`)
 
 // cy.request() as the given user. The OCS-APIRequest header also lets the routes of
 // appinfo/routes.php skip their CSRF check. Nextcloud picks the session cookie left by a
@@ -63,6 +67,9 @@ export const requestAs = (user, method, url, body) => request(user, method, url,
 // cy.request() as the given user on the OCS API of the app, yields ocs.data
 const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
 
+// Saves a file at the root of the files of the user, through WebDAV
+export const uploadFile = (user, name, content) => request(user, 'PUT', serverUrl(`/remote.php/dav/files/${user.userId}/${name}`), content)
+
 // Changes a field of the user, such as "email" or "displayname". cy.modifyUser logs in as
 // the user, which the session cookie of an earlier request would otherwise override
 export const modifyUser = (user, key, value) => {
@@ -76,14 +83,31 @@ export const setLanguage = (user, language) => modifyUser(user, 'language', lang
 // Changes the display name of the user, which is their UID until then
 export const setDisplayName = (user, displayName) => modifyUser(user, 'displayname', displayName)
 
+// The background of a row of a member, who is no Workspace Manager, in a table of users
+export const TRANSPARENT = 'rgba(0, 0, 0, 0)'
+
+// The background of a row of a Workspace Manager in a table of users: the light primary color
+// of the theme, as the browser computes it
+export const primaryLight = () => cy.document().then((doc) => {
+	const probe = doc.createElement('div')
+	probe.style.backgroundColor = 'var(--color-primary-light)'
+	doc.body.appendChild(probe)
+	const color = doc.defaultView.getComputedStyle(probe).backgroundColor
+	probe.remove()
+	return color
+})
+
 // Checks the texts of the column headers of the table, in their order
 export const shouldHaveColumns = (table, columns) => cy.get(`${table} th`).should(($columns) => {
 	expect([...$columns].map((column) => column.textContent.trim())).to.deep.equal(columns)
 })
 
-// A new user, with no role and in no workspace, who reads the app in the given language
+// A new user, with no role and in no workspace, who reads the app in the given language. A user
+// who never logs in needs none
 export const createUser = (language) => cy.createRandomUser().then((user) => {
-	setLanguage(user, language)
+	if (language) {
+		setLanguage(user, language)
+	}
 	return cy.wrap(user)
 })
 
@@ -115,20 +139,30 @@ export const addSpaceMember = (generalManager, space, user) => ocs(generalManage
 // Makes the user a Workspace Manager of the workspace
 export const addSpaceManager = (generalManager, space, user) => ocs(generalManager, 'POST', `/spaces/${space.id}/workspace-manager`, { uid: user.userId })
 
+// Adds the user to a Nextcloud group
+export const addNextcloudGroupMember = (gid, user) => occ('group:adduser', gid, user.userId)
+
 // A new Nextcloud group with the user in it, which belongs to no workspace
 export const createGroup = (gid, user) => {
 	occ('group:add', gid)
-	occ('group:adduser', gid, user.userId)
+	addNextcloudGroupMember(gid, user)
 }
 
 // Adds an existing Nextcloud group to the workspace, as an added group. The OCS API has no route for it
 export const addConnectedGroup = (generalManager, space, gid) => request(generalManager, 'POST', `/apps/workspace/spaces/${space.id}/connected-groups`, { gid })
 
-// A new user, in the given language, added to the user group of the workspace
+// A new user, in the given language if any, added to the user group of the workspace
 export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
 	addSpaceMember(generalManager, space, member)
 	return cy.wrap(member)
 })
+
+// A new Workspace Manager of the workspace, in the given language if any
+export const createSpaceManager = (generalManager, space, language) => createSpaceMember(generalManager, space, language)
+	.then((manager) => {
+		addSpaceManager(generalManager, space, manager)
+		return cy.wrap(manager)
+	})
 
 // The name of the subgroup the tests create in a workspace
 export const SUBGROUP = 'maison'
@@ -154,6 +188,8 @@ export const managerGroupName = (spaceName) => `${Cypress.expose('displayPrefixM
 export const userGroupName = (spaceName) => `${Cypress.expose('displayPrefixUserGroup')}${spaceName}`
 // The display name of a subgroup, which carries the workspace name too
 export const subgroupName = (name, spaceName) => `G-${name}-${spaceName}`
+// The GID of a subgroup, which carries the id of the workspace
+export const subgroupGid = (name, spaceId) => `SPACE-G-${name}-${spaceId}`
 
 // GIDs of the manager and user groups of a workspace, which follow its id
 export const managerGroupGid = (spaceId) => `SPACE-GE-${spaceId}`
@@ -167,7 +203,7 @@ export const WORKSPACES_MANAGERS = 'WorkspacesManagers'
 export const spaceGroups = (spaceId, spaceName) => [
 	{ name: managerGroupName(spaceName), gid: managerGroupGid(spaceId) },
 	{ name: userGroupName(spaceName), gid: userGroupGid(spaceId) },
-	{ name: subgroupName(SUBGROUP, spaceName), gid: `SPACE-G-${SUBGROUP}-${spaceId}` },
+	{ name: subgroupName(SUBGROUP, spaceName), gid: subgroupGid(SUBGROUP, spaceId) },
 ]
 
 // The navigation of the app, whose label is not translated
@@ -179,10 +215,83 @@ export const openGroupPage = (space, group) => {
 	cy.location('pathname').should('equal', serverPath(`/apps/workspace/group/${space.id}/${group.gid}`))
 }
 
+// Logs in and opens the page of the workspace
+export const visitSpacePage = (user, space) => {
+	cy.login(user)
+	cy.visit(`/apps/workspace/workspace/${space.id}`)
+}
+
+// Logs in and opens the page of a group from the workspace page. A link straight to it would not
+// do: the app opens the workspace page of a user who sees a single workspace
+export const visitGroupPage = (user, space, group) => {
+	visitSpacePage(user, space)
+	openGroupPage(space, group)
+}
+
+// A button of the header of the workspace page, next to its name
+export const spaceAction = (name) => cy.get('.space-actions').findByRole('button', { name })
+
+// A button of the header of the page of a group, next to its name
+export const groupButton = (name) => cy.get('.group-actions').findByRole('button', { name })
+
+// Checks the name of the page of a group
+export const shouldShowGroupTitle = (name) => cy.get('.group-name .titles-for-space')
+	.invoke('text')
+	.invoke('trim')
+	.should('equal', name)
+
+// The entries of an open "+" or "···" menu that also holds a text field: @nextcloud/vue then makes
+// it a dialog of buttons rather than a menu of menu items
+export const menuButtons = () => cy.get('.action-button:visible')
+
+// Clicks an entry of an open "+" or "···" menu that also holds a text field, see menuButtons()
+export const clickMenuButton = (text) => menuButtons().contains(text).click()
+
+// The warning that asks to confirm the removal of a group. The "···" menu that opened it stays
+// open behind it and hides it from Testing Library: the warning is found by its class
+export const warningModal = () => cy.get('.modal-container')
+
+// The display names in the table of users of a workspace or of a group
+export const userNames = () => cy.get('.table-space-detail tbody .user-name')
+
+// The row of a user in the table of users, found by their whole display name
+export const userRow = (name) => userNames()
+	.filter((index, element) => element.textContent.trim() === name)
+	.closest('tr')
+
+// Clicks an action of the menu of a user, found by their display name, and waits for the server
+// to apply it
+export const clickUserAction = (label, name, action, request) => {
+	cy.intercept(request).as('userAction')
+	userRow(name).findByRole('button', { name: label.actions }).click()
+	cy.findByRole('menuitem', { name: action }).click()
+	cy.wait('@userAction').its('response.statusCode').should('equal', 200)
+}
+
+// Checks that the table of users no longer lists the user, whose display name is their UID
+export const shouldNotListUser = (user) => userNames().should(($names) => {
+	expect([...$names].map((name) => name.textContent.trim())).not.to.include(user.userId)
+})
+
 // The row of an entry of the navigation, found by its name, with its icon, counter and arrow
 export const navigationEntry = (name) => workspaceNavigation()
 	.findByRole('link', { name })
 	.closest('.app-navigation-entry')
+
+// Checks the user counter of an entry of the navigation, a workspace or one of its groups
+export const shouldCountUsers = (name, count) => navigationEntry(name)
+	.find('.user-counter')
+	.should(($counter) => expect($counter.text().trim()).to.equal(String(count)))
+
+// Checks the user counters of a workspace made by createGeneralManagerWithSpace() and of its
+// groups in the navigation: the workspace and its user group count its users
+export const shouldCountSpaceUsers = (space, { users, managers, subgroupMembers }) => {
+	const [managerGroup, userGroup, subgroup] = spaceGroups(space.id, space.name)
+	shouldCountUsers(space.name, users)
+	shouldCountUsers(userGroup.name, users)
+	shouldCountUsers(managerGroup.name, managers)
+	shouldCountUsers(subgroup.name, subgroupMembers)
+}
 
 // The color bullet of the entry of a workspace in the navigation
 export const navigationBullet = (spaceName) => navigationEntry(spaceName).find('.app-navigation-entry__icon-bullet > div')
@@ -271,8 +380,7 @@ export const editModal = (language) => cy.contains('[role="dialog"]', editModalL
 
 // Opens the edit modal from the pencil in the header of the workspace page
 export const openEditModal = (generalManager, space, language) => {
-	cy.login(generalManager)
-	cy.visit(`/apps/workspace/workspace/${space.id}`)
+	visitSpacePage(generalManager, space)
 
 	cy.get('.space-actions')
 		.findByRole('button', { name: editModalLabels[language].title })

@@ -27,12 +27,14 @@ import {
 	createSubgroup,
 	managerGroupName,
 	modifyUser,
+	primaryLight,
 	randomSuffix,
 	rgb,
 	searchWorkspaces,
 	serverPath,
 	setLanguage,
 	shouldHaveColumns,
+	spaceAction,
 	subgroupName,
 	userGroupName,
 	workspaceNavigation,
@@ -122,9 +124,6 @@ before(() => {
 	})
 })
 
-// A button of the header of the workspace page, next to its name
-const spaceAction = (name) => cy.get('.space-actions').findByRole('button', { name })
-
 // The rows of the table of users, and their cells in the order of the columns: avatar,
 // user, role, groups, actions
 const userRows = () => cy.get('.table-space-detail tbody tr')
@@ -140,17 +139,6 @@ const groupsOf = ({ manager, subgroups }) => [
 	...(manager ? [managerGroupName(space.name)] : []),
 	...subgroups.map((name) => subgroupName(name, space.name)),
 ].join(', ')
-
-// The background of a row of a Workspace Manager: the light primary color of the theme, as
-// the browser computes it
-const primaryLight = () => cy.document().then((doc) => {
-	const probe = doc.createElement('div')
-	probe.style.backgroundColor = 'var(--color-primary-light)'
-	doc.body.appendChild(probe)
-	const color = doc.defaultView.getComputedStyle(probe).backgroundColor
-	probe.remove()
-	return color
-})
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Workspace page (${language})`, () => {
