@@ -21,7 +21,7 @@
  */
 
 import { beforeEach, describe, expect, it } from 'vitest'
-import { transferUsersToUserGroup } from '../../services/spaceService.js'
+import { getSpace, transferUsersToUserGroup } from '../../services/spaceService.js'
 import axios from '@nextcloud/axios'
 
 describe('transferUsersToUserGroup method', () => {
@@ -166,5 +166,26 @@ describe('transferUsersToUserGroup method', () => {
 		const result = transferUsersToUserGroup('1', responseGroupfolder)
 
 		expect(result).not.toBe(undefined)
+	})
+})
+
+describe('getSpace method', () => {
+	beforeEach(() => {
+		axios.get.mockClear()
+	})
+
+	it('Returns the workspace keyed by its name', async () => {
+		axios.get.mockResolvedValue({ data: { Espace01: { id: 42, name: 'Espace01' } } })
+
+		const result = await getSpace(42)
+
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+		expect(result).toEqual({ Espace01: { id: 42, name: 'Espace01' } })
+	})
+
+	it('Rejects when the server does not find the workspace', async () => {
+		axios.get.mockRejectedValue(new Error('Request failed with status code 404'))
+
+		await expect(getSpace(42)).rejects.toThrow('404')
 	})
 })

@@ -125,6 +125,14 @@ class UserService {
 		return false;
 	}
 
+	/**
+	 * @return boolean true if user is a member of the user group of the specified workspace, false otherwise
+	 */
+	public function isMemberOfSpace(int $spaceId): bool {
+		$user = $this->userSession->getUser();
+		return $user !== null && $this->groupManager->isInGroup($user->getUID(), UserGroup::get($spaceId));
+	}
+
 	public function isSimpleUserOfSpace(array $space): bool {
 		if ($this->isUserGeneralAdmin() || $this->isSpaceManagerOfSpace($space)) {
 			return false;

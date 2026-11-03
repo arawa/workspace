@@ -143,3 +143,68 @@ describe('Creating spaces with different entries', () => {
 		expect(result.statuscode).toEqual(201)
 	})
 })
+
+describe('Loading the workspace the URL asks for', () => {
+	const space = { id: 42, name: 'Espace42' }
+
+	// A component opened on a URL, with a store that holds the workspace or not
+	const component = (params, storedSpace = undefined) => ({
+		...WorkspaceContent.methods,
+		$route: { params },
+		$store: {
+			getters: { getSpaceById: vi.fn(() => storedSpace) },
+			commit: vi.fn(),
+		},
+	})
+
+	beforeEach(() => {
+		axios.get.mockClear()
+	})
+
+	it('Adds a workspace missing from the store to it', async () => {
+		axios.get.mockResolvedValue({ data: { Espace42: space } })
+		const vm = component({ space: '42' })
+
+		await vm.loadRequestedSpace()
+
+		expect(vm.$store.getters.getSpaceById).toHaveBeenCalledWith(42)
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+		expect(vm.$store.commit).toHaveBeenCalledWith('addSpaces', { spaces: { Espace42: space } })
+	})
+
+	it('Reads the id of the hub page too', async () => {
+		axios.get.mockResolvedValue({ data: { Espace42: space } })
+		const vm = component({ spaceId: '42' })
+
+		await vm.loadRequestedSpace()
+
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+	})
+
+	it('Leaves a workspace already in the store', async () => {
+		const vm = component({ space: '42' }, space)
+
+		await vm.loadRequestedSpace()
+
+		expect(axios.get).not.toHaveBeenCalled()
+		expect(vm.$store.commit).not.toHaveBeenCalled()
+	})
+
+	it('Looks up nothing on a page without a workspace, or with a name instead of an id', async () => {
+		for (const params of [{}, { space: 'Espace42' }]) {
+			await component(params).loadRequestedSpace()
+		}
+
+		expect(axios.get).not.toHaveBeenCalled()
+	})
+
+	it('Leaves the store as it is when the server does not give the workspace', async () => {
+		axios.get.mockRejectedValue(new Error('Request failed with status code 404'))
+		const vm = component({ space: '42' })
+		vi.spyOn(console, 'error').mockImplementation(() => {})
+
+		await vm.loadRequestedSpace()
+
+		expect(vm.$store.commit).not.toHaveBeenCalled()
+	})
+})

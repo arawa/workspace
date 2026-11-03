@@ -40,6 +40,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
+import { getSpace } from './services/spaceService.js'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcAppContentDetails from '@nextcloud/vue/components/NcAppContentDetails'
 import LoadingUsers from './LoadingUsers.vue'
@@ -60,7 +61,7 @@ export default {
 					limit: LIMIT_WORKSPACES_PER_PAGE,
 				},
 			})
-				.then(resp => {
+				.then(async resp => {
 					// Checks for application errors
 					if (resp.status !== 200) {
 						const text = t('workspace', 'An error occurred while trying to retrieve workspaces.<br>Error: {error}', { error: resp.statusText })
@@ -71,11 +72,13 @@ export default {
 
 					const spaces = resp.data
 					this.$store.commit('setSpaces', { spaces })
-					this.$store.dispatch('setCountWorkspaces', { count: Object.values(spaces).length })
+					await this.loadRequestedSpace()
+					this.$store.dispatch('setCountWorkspaces', { count: Object.keys(this.$store.state.spaces).length })
 
 					this.$store.state.loading = false
 
-					if (Object.values(spaces).length === 1) {
+					// A user who sees a single workspace lands on its page, unless the URL asks for one
+					if (Object.values(spaces).length === 1 && this.requestedSpaceId() === undefined) {
 						this.$router.push({ name: 'space.show', params: { space: Object.values(spaces)[0].id } })
 					}
 				})
@@ -86,6 +89,26 @@ export default {
 					this.$store.state.loading = false
 				})
 		}
+	},
+	methods: {
+		// The workspace the URL asks for: that of the page of a workspace, of a group or of a hub
+		requestedSpaceId() {
+			return this.$route.params.space ?? this.$route.params.spaceId
+		},
+		// Loads the workspace the page was opened on, from its URL, when it is not on the first
+		// page of the list, which the navigation loads alone. Only an id can be looked up
+		async loadRequestedSpace() {
+			const spaceId = this.requestedSpaceId()
+			if (!/^\d+$/.test(spaceId) || this.$store.getters.getSpaceById(Number(spaceId)) !== undefined) {
+				return
+			}
+
+			try {
+				this.$store.commit('addSpaces', { spaces: await getSpace(spaceId) })
+			} catch (e) {
+				console.error('Problem to load the workspace', spaceId, e)
+			}
+		},
 	},
 }
 </script>

@@ -27,6 +27,7 @@ namespace OCA\Workspace\Controller;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\BadRequestException;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
@@ -186,6 +187,33 @@ class WorkspaceController extends Controller {
 		}
 
 		return new JSONResponse($spaces);
+	}
+
+	/**
+	 * Returns a workspace that the connected user may use, keyed by its name as in findAll(),
+	 * for a page opened on a workspace beyond the first page of the list.
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/spaces/{spaceId}'
+	)]
+	public function find(int $spaceId): JSONResponse {
+		if (!$this->userService->isUserGeneralAdmin() && !$this->userService->isMemberOfSpace($spaceId)) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		try {
+			$space = $this->spaceManager->get($spaceId);
+		} catch (NotFoundException) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		if ($space === null) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+
+		return new JSONResponse([$space['name'] => $space]);
 	}
 
 	/**

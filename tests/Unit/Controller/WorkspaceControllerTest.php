@@ -29,6 +29,7 @@ namespace OCA\Workspace\Tests\Unit\Controller;
 use OCA\Workspace\Controller\WorkspaceController;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\GroupFolderFunctionException;
+use OCA\Workspace\Exceptions\NotFoundException;
 use OCA\Workspace\Folder\RootFolder;
 use OCA\Workspace\Helper\GroupfolderHelper;
 use OCA\Workspace\Service\Formatter\WorkspaceFormatter;
@@ -424,5 +425,99 @@ class WorkspaceControllerTest extends TestCase {
 		$this->expectExceptionMessage('Database error');
 
 		$this->controller->findAll();
+	}
+
+	/**
+	 * Whether the connected user is a General Manager, and a member of the workspace.
+	 */
+	private function mockAccess(bool $isGeneralManager, bool $isMember): void {
+		$this->userService
+			->expects($this->any())
+			->method('isUserGeneralAdmin')
+			->willReturn($isGeneralManager)
+		;
+
+		$this->userService
+			->expects($this->any())
+			->method('isMemberOfSpace')
+			->with(3)
+			->willReturn($isMember)
+		;
+	}
+
+	public function testFindAsGeneralManagerReturnsTheWorkspaceKeyedByName(): void {
+		$this->mockAccess(true, false);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with(3)
+			->willReturn(['id' => 3, 'name' => 'Espace03'])
+		;
+
+		$actual = $this->controller->find(3);
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals(['Espace03' => ['id' => 3, 'name' => 'Espace03']], $actual->getData());
+	}
+
+	public function testFindAsMemberReturnsTheWorkspace(): void {
+		$this->mockAccess(false, true);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with(3)
+			->willReturn(['id' => 3, 'name' => 'Espace03'])
+		;
+
+		$actual = $this->controller->find(3);
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals(['Espace03'], array_keys($actual->getData()));
+	}
+
+	public function testFindAsNonMemberReturnsNotFound(): void {
+		$this->mockAccess(false, false);
+
+		$this->spaceManager
+			->expects($this->never())
+			->method('get')
+		;
+
+		$actual = $this->controller->find(3);
+
+		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
+		$this->assertEquals([], $actual->getData());
+	}
+
+	public function testFindReturnsNotFoundForAMissingWorkspace(): void {
+		$this->mockAccess(true, false);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with(3)
+			->willReturn(null)
+		;
+
+		$actual = $this->controller->find(3);
+
+		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
+	}
+
+	public function testFindReturnsNotFoundForAWorkspaceWithoutGroupfolder(): void {
+		$this->mockAccess(true, false);
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('get')
+			->with(3)
+			->willThrowException(new NotFoundException('Failed loading groupfolder with the folderId 3'))
+		;
+
+		$actual = $this->controller->find(3);
+
+		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
 	}
 }
