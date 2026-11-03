@@ -86,6 +86,17 @@ export function getUsers(spaceId) {
 }
 
 /**
+ * Get a workspace the user may use, as the list of workspaces gives it
+ *
+ * @param {number} spaceId id of space
+ * @return {Promise<object>} the workspace, keyed by its name
+ */
+export function getSpace(spaceId) {
+	return axios.get(generateUrl('/apps/workspace/spaces/{spaceId}', { spaceId }))
+		.then(resp => resp.data)
+}
+
+/**
 	* @param {string} spacename it's the name of the space which will create
 	* @return {string}
 	*/

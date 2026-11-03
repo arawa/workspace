@@ -329,6 +329,35 @@ class UserServiceTest extends TestCase {
 
 		$this->assertFalse($userService->isUserGeneralAdmin());
 		$this->assertFalse($userService->isSpaceManagerOfSpace(['id' => 1]));
+		$this->assertFalse($userService->isMemberOfSpace(1));
 		$this->assertTrue($userService->isSimpleUserOfSpace(['id' => 1]));
+	}
+
+	/**
+	 * isMemberOfSpace() tells whether the connected user is in the user group of the workspace.
+	 */
+	public function testIsMemberOfSpace(): void {
+		foreach ([true, false] as $isMember) {
+			$groupManager = $this->createMock(IGroupManager::class);
+			$groupManager->expects($this->once())
+				->method('isInGroup')
+				->with($this->user->getUID(), 'SPACE-U-1')
+				->willReturn($isMember);
+
+			$userSession = $this->createMock(IUserSession::class);
+			$userSession->method('getUser')->willReturn($this->user);
+
+			$userService = new UserService(
+				$groupManager,
+				$userSession,
+				$this->logger,
+				$this->connectedGroupService,
+				$this->urlGenerator,
+				$this->userGroup,
+				$this->groupfoldersGroupsMapper,
+				$this->appConfig);
+
+			$this->assertSame($isMember, $userService->isMemberOfSpace(1));
+		}
 	}
 }
