@@ -34,6 +34,7 @@ import {
 	serverPath,
 	setLanguage,
 	shouldHaveColumns,
+	spaceAction,
 	subgroupName,
 	userGroupName,
 	workspaceNavigation,
@@ -122,9 +123,6 @@ before(() => {
 		})
 	})
 })
-
-// A button of the header of the workspace page, next to its name
-const spaceAction = (name) => cy.get('.space-actions').findByRole('button', { name })
 
 // The rows of the table of users, and their cells in the order of the columns: avatar,
 // user, role, groups, actions
