@@ -1,21 +1,18 @@
 <template>
 	<NcModal
-		name="alert remove group"
-		label-id="alert remove group"
+		label-id="alert-remove-group-message"
 		size="normal">
 		<div class="container-modal-remove">
-			<NcNoteCard type="warning">
+			<NcNoteCard id="alert-remove-group-message" type="warning">
 				<p v-html="message" />
 			</NcNoteCard>
 			<div class="container-buttons-remove">
 				<NcButton
-					aria-label="cancel"
 					variant="secondary"
 					@click="cancel()">
 					{{ t('workspace', 'Cancel') }}
 				</NcButton>
 				<NcButton
-					aria-label="confirm"
 					variant="primary"
 					@click="removeGroup()">
 					{{ t('workspace', 'Confirm') }}
