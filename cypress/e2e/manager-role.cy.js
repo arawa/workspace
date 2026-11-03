@@ -32,6 +32,7 @@ import {
 	setDisplayName,
 	shouldListInAccountsGroup,
 	shouldNotListInAccountsGroup,
+	TRANSPARENT,
 	userGroupGid,
 	userGroupName,
 	userRow,
@@ -53,9 +54,6 @@ const labels = {
 		removeManager: 'Retirer les droits de WM',
 	},
 }
-
-// The background of a row that has none
-const TRANSPARENT = 'rgba(0, 0, 0, 0)'
 
 // The request that changes the role of a user
 const CHANGE_ROLE = { method: 'PATCH', pathname: '**/apps/workspace/api/space/*/user/*' }
