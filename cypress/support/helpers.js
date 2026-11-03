@@ -38,8 +38,12 @@ export const rgb = (hex) => `rgb(${hex.match(/[0-9a-f]{2}/gi).map((byte) => pars
 // One gigabyte, in the bytes the server counts a quota in
 export const GB = 1024 ** 3
 
-// The URL of a route of the OCS API of the app: baseUrl ends with /index.php, OCS lives next to it
-export const ocsUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, `/ocs/v2.php/apps/workspace/api/v1${path}`)
+// The URL of a path of the server outside index.php, such as OCS or WebDAV: baseUrl ends with
+// /index.php, they live next to it
+const serverUrl = (path) => Cypress.config('baseUrl').replace(/\/index\.php\/?$/, path)
+
+// The URL of a route of the OCS API of the app
+export const ocsUrl = (path) => serverUrl(`/ocs/v2.php/apps/workspace/api/v1${path}`)
 
 // cy.request() as the given user. The OCS-APIRequest header also lets the routes of
 // appinfo/routes.php skip their CSRF check. Nextcloud picks the session cookie left by a
@@ -62,6 +66,9 @@ export const requestAs = (user, method, url, body) => request(user, method, url,
 
 // cy.request() as the given user on the OCS API of the app, yields ocs.data
 const ocs = (user, method, path, body) => request(user, method, ocsUrl(path), body).its('body.ocs.data')
+
+// Saves a file at the root of the files of the user, through WebDAV
+export const uploadFile = (user, name, content) => request(user, 'PUT', serverUrl(`/remote.php/dav/files/${user.userId}/${name}`), content)
 
 // Changes a field of the user, such as "email" or "displayname". cy.modifyUser logs in as
 // the user, which the session cookie of an earlier request would otherwise override
