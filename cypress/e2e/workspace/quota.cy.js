@@ -25,7 +25,7 @@ import {
 	openEditModal,
 	saveEditModal,
 	teamFolderRow,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager reads, in each language the tests run in.
 // Sizes keep their English units in French, as the app writes them itself.

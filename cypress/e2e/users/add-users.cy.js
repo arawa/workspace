@@ -37,7 +37,7 @@ import {
 	visitGroupPage,
 	visitSpacePage,
 	WORKSPACES_MANAGERS,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
 // The "+" menu is named by @nextcloud/vue, the buttons of the file picker by @nextcloud/dialogs

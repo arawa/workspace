@@ -26,7 +26,7 @@ import {
 	searchWorkspaces,
 	setLanguage,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
 // The arrow of an entry belongs to @nextcloud/vue

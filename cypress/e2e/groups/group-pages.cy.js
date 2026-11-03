@@ -41,7 +41,7 @@ import {
 	userNames,
 	userRow,
 	visitGroupPage,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
 // The "···" menu and the actions menu of a user are named by @nextcloud/vue
@@ -111,7 +111,7 @@ before(() => {
 	})
 })
 
-// Checks the users the table lists, whatever their order, which workspace-page.cy.js checks:
+// Checks the users the table lists, whatever their order, which navigation/workspace-page.cy.js checks:
 // the row of a Workspace Manager has the light primary color, and each row has an actions menu.
 // The row of the user who logs in may only offer to view their profile: @nextcloud/vue then
 // shows that single action as a button, without a menu

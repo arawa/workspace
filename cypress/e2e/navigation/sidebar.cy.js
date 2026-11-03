@@ -33,7 +33,7 @@ import {
 	spaceGroups,
 	SUBGROUP,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager reads in the navigation, in each language the tests run in.
 // The toggle of the navigation and the arrow of an entry belong to @nextcloud/vue

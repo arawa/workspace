@@ -35,7 +35,7 @@ import {
 	searchSpaces,
 	serverPath,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a simple user reads, in each language the tests run in
 const labels = {
