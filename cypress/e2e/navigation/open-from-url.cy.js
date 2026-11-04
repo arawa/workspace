@@ -20,7 +20,7 @@
 // A General Manager who sees more workspaces than the navigation loads at first opens the pages
 // of one beyond them from their URL, as from a link or a reload
 
-import { LIMIT_WORKSPACES_PER_PAGE } from '../../src/constants.js'
+import { LIMIT_WORKSPACES_PER_PAGE } from '../../../src/constants.js'
 import {
 	createGeneralManager,
 	createSpace,
@@ -28,7 +28,7 @@ import {
 	serverPath,
 	userGroupGid,
 	userGroupName,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 let generalManager
 let space

@@ -43,7 +43,7 @@ import {
 	visitSpacePage,
 	warningModal,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
 // The "+" and "···" menus are named by @nextcloud/vue

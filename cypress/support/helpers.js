@@ -118,7 +118,7 @@ export const createGeneralManager = (language) => createUser(language).then((gen
 })
 
 // A new workspace, created through the OCS API since the creation itself is covered by
-// creation.cy.js. Yields the workspace, with its id and name
+// workspace/creation.cy.js. Yields the workspace, with its id and name
 export const createSpace = (generalManager, name = randomName()) => ocs(generalManager, 'POST', '/spaces', { name })
 
 // Changes the name, color or quota of the workspace

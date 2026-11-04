@@ -18,7 +18,7 @@
  */
 
 // A General Manager or a Workspace Manager adds Nextcloud groups to a workspace, from the "+" of
-// its page and from the navigation, then removes one of them. add-group.cy.js checks the modal
+// its page and from the navigation, then removes one of them. groups/add-group.cy.js checks the modal
 // opens from the navigation
 
 import {
@@ -46,7 +46,7 @@ import {
 	visitSpacePage,
 	warningModal,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager or a Workspace Manager reads, in each language the tests run in.
 // The "+" and "···" menus are named by @nextcloud/vue. The warning is read without its line

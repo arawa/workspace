@@ -31,7 +31,7 @@ import {
 	spaceGroups,
 	teamFolderRow,
 	workspaceNavigation,
-} from '../support/helpers.js'
+} from '../../support/helpers.js'
 
 // What a General Manager reads, in each language the tests run in
 const labels = {
