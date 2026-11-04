@@ -116,6 +116,10 @@ const shouldListUsers = (users) => userNames().should(($names) => {
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Added groups (${language})`, () => {
+		// The pages of the server (Accounts, Team folders) are not translated by the app: the tests
+		// that only read them run in English, and are pending in the other languages
+		const itEnglishOnly = language === 'en' ? it : it.skip
+
 		let generalManager
 		let space
 		// The subgroup of the workspace, see spaceGroups()
@@ -235,7 +239,7 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount(7)
 				})
 
-				it('lists the added groups in the Team folders admin settings', () => {
+				itEnglishOnly('lists the added groups in the Team folders admin settings', () => {
 					cy.login(admin)
 					cy.visit('/settings/admin/groupfolders')
 
@@ -282,7 +286,7 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldListUsers([alphaManager, alphaSubgroupMember, alphaBetaMember, alphaMember])
 				})
 
-				it('keeps the removed group and its members in Nextcloud, out of the team folder', () => {
+				itEnglishOnly('keeps the removed group and its members in Nextcloud, out of the team folder', () => {
 					cy.login(admin)
 
 					shouldListInAccountsGroup(alpha.gid, alphaOnly)

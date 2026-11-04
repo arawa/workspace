@@ -349,11 +349,24 @@ const searchAccountsGroupMembers = (gid, user) => {
 	cy.wait('@memberSearch')
 }
 
+// The UIDs of the users the Accounts page lists
+const accountsRowUids = ($rows) => [...$rows].map((row) => row.dataset.cyUserRow)
+
+// Checks that the Accounts page lists exactly these users as the members of the group, in a
+// single visit. The page only renders the rows that fit its height, about 17 at the viewport of
+// the tests, so the group must have fewer members
+export const shouldListOnlyInAccountsGroup = (gid, users) => {
+	cy.visit(`/settings/users/${gid}`)
+	cy.get('[data-cy-user-row]').should(($rows) => {
+		expect(accountsRowUids($rows)).to.have.members(users.map((user) => user.userId))
+	})
+}
+
 // Checks that the Accounts page lists the user among the members of the group
 export const shouldListInAccountsGroup = (gid, user) => {
 	searchAccountsGroupMembers(gid, user)
 	cy.get('[data-cy-user-row]').should(($rows) => {
-		expect([...$rows].map((row) => row.dataset.cyUserRow)).to.deep.equal([user.userId])
+		expect(accountsRowUids($rows)).to.deep.equal([user.userId])
 	})
 }
 

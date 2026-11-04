@@ -85,6 +85,10 @@ const NEW_NAME = 'Réunion/équipe'
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Subgroups (${language})`, () => {
+		// The pages of the server (Accounts, Team folders) are not translated by the app: the tests
+		// that only read them run in English, and are pending in the other languages
+		const itEnglishOnly = language === 'en' ? it : it.skip
+
 		let generalManager
 		let space
 		// The user group of the workspace, see spaceGroups()
@@ -177,7 +181,7 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldShowGroupTitle(renamed.name)
 				})
 
-				it('lists the renamed subgroup on the Accounts page and in the Team folders admin settings', () => {
+				itEnglishOnly('lists the renamed subgroup on the Accounts page and in the Team folders admin settings', () => {
 					const renamed = createdGroup(NEW_NAME).name
 					cy.login(admin)
 
@@ -227,7 +231,7 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCountSpaceUsers(space, { users: 2, managers: 1, subgroupMembers: 0 })
 				})
 
-				it('removes the deleted subgroup from the Accounts page and from the Team folders admin settings', () => {
+				itEnglishOnly('removes the deleted subgroup from the Accounts page and from the Team folders admin settings', () => {
 					const deleted = createdGroup(CREATED_FROM_PAGE).name
 					cy.login(admin)
 
