@@ -69,6 +69,10 @@ const shouldListManagers = (names) => cy.get('.table-space-detail tbody tr.user-
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Workspace Manager role (${language})`, () => {
+		// The Accounts page of the server is not translated by the app: the tests that only read it
+		// run in English, and are pending in the other languages
+		const itEnglishOnly = language === 'en' ? it : it.skip
+
 		let generalManager
 		let space
 		let otherSpace
@@ -140,7 +144,7 @@ for (const [language, label] of Object.entries(labels)) {
 						.should('have.text', `${userGroupName(space.name)}, ${managerGroupName(space.name)}`)
 				})
 
-				it('lists the new Workspace Manager in the manager group and in WorkspacesManagers', () => {
+				itEnglishOnly('lists the new Workspace Manager in the manager group and in WorkspacesManagers', () => {
 					cy.login(admin)
 
 					shouldListInAccountsGroup(userGroupGid(space.id), cleo)
@@ -160,7 +164,7 @@ for (const [language, label] of Object.entries(labels)) {
 					userRow('Cleo').find('.group-list').should('have.text', userGroupName(space.name))
 				})
 
-				it('removes them from the manager group and from WorkspacesManagers', () => {
+				itEnglishOnly('removes them from the manager group and from WorkspacesManagers', () => {
 					cy.login(admin)
 
 					shouldListInAccountsGroup(userGroupGid(space.id), cleo)
@@ -168,11 +172,15 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldNotListInAccountsGroup(WORKSPACES_MANAGERS, cleo)
 				})
 
-				it('keeps in WorkspacesManagers a Workspace Manager of another workspace', () => {
+				it('removes the rights of a Workspace Manager of two workspaces', () => {
 					openSpace()
 					clickAction(label, 'Eve', label.removeManager)
+					shouldListManagers(['Bea', 'Dan', 'Zoé'])
+				})
 
+				itEnglishOnly('keeps in WorkspacesManagers a Workspace Manager of another workspace', () => {
 					cy.login(admin)
+
 					shouldNotListInAccountsGroup(managerGroupGid(space.id), eve)
 					shouldListInAccountsGroup(managerGroupGid(otherSpace.id), eve)
 					shouldListInAccountsGroup(WORKSPACES_MANAGERS, eve)

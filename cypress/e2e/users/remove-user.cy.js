@@ -32,6 +32,7 @@ import {
 	managerGroupGid,
 	shouldCountSpaceUsers,
 	shouldListInAccountsGroup,
+	shouldListOnlyInAccountsGroup,
 	shouldNotListInAccountsGroup,
 	shouldNotListUser,
 	spaceGroups,
@@ -67,6 +68,10 @@ const clickAction = (label, user, action, request) => clickUserAction(label, use
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`User removal (${language})`, () => {
+		// The Accounts page of the server is not translated by the app: the tests that only read it
+		// run in English, and are pending in the other languages
+		const itEnglishOnly = language === 'en' ? it : it.skip
+
 		let generalManager
 		let space
 		let otherSpace
@@ -157,13 +162,6 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 6, managers: 6, subgroupMembers: 5 })
 				})
 
-				it('removes the member from the user group and from the subgroup', () => {
-					cy.login(admin)
-
-					shouldNotListInAccountsGroup(userGroup.gid, ana)
-					shouldNotListInAccountsGroup(subgroup.gid, ana)
-				})
-
 				it('removes a Workspace Manager from the workspace page', () => {
 					openSpace()
 					clickAction(label, ben, label.removeUser, REMOVE_USER)
@@ -172,27 +170,12 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 5, managers: 5, subgroupMembers: 4 })
 				})
 
-				it('removes them from every group, WorkspacesManagers included', () => {
-					cy.login(admin)
-
-					shouldNotListInAccountsGroup(userGroup.gid, ben)
-					shouldNotListInAccountsGroup(subgroup.gid, ben)
-					shouldNotListInAccountsGroup(managerGroup.gid, ben)
-					shouldNotListInAccountsGroup(WORKSPACES_MANAGERS, ben)
-				})
-
-				it('keeps in WorkspacesManagers a removed Workspace Manager of another workspace', () => {
+				it('removes a Workspace Manager of another workspace from the workspace page', () => {
 					openSpace()
 					clickAction(label, eve, label.removeUser, REMOVE_USER)
 
 					shouldNotListUser(eve)
 					shouldCount({ users: 4, managers: 4, subgroupMembers: 4 })
-
-					cy.login(admin)
-					shouldNotListInAccountsGroup(userGroup.gid, eve)
-					shouldNotListInAccountsGroup(managerGroup.gid, eve)
-					shouldListInAccountsGroup(managerGroupGid(otherSpace.id), eve)
-					shouldListInAccountsGroup(WORKSPACES_MANAGERS, eve)
 				})
 
 				it('removes the rights of a Workspace Manager from the page of the manager group', () => {
@@ -203,30 +186,12 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 4, managers: 3, subgroupMembers: 4 })
 				})
 
-				it('keeps the former Workspace Manager in the user group and in the subgroup', () => {
-					cy.login(admin)
-
-					shouldNotListInAccountsGroup(managerGroup.gid, cleo)
-					shouldNotListInAccountsGroup(WORKSPACES_MANAGERS, cleo)
-					shouldListInAccountsGroup(userGroup.gid, cleo)
-					shouldListInAccountsGroup(subgroup.gid, cleo)
-				})
-
 				it('removes a Workspace Manager from the workspace from the page of the user group', () => {
 					openGroup(userGroup)
 					clickAction(label, dan, label.removeUser, REMOVE_USER)
 
 					shouldNotListUser(dan)
 					shouldCount({ users: 3, managers: 2, subgroupMembers: 3 })
-				})
-
-				it('removes them from every group of the workspace, and from WorkspacesManagers', () => {
-					cy.login(admin)
-
-					shouldNotListInAccountsGroup(userGroup.gid, dan)
-					shouldNotListInAccountsGroup(subgroup.gid, dan)
-					shouldNotListInAccountsGroup(managerGroup.gid, dan)
-					shouldNotListInAccountsGroup(WORKSPACES_MANAGERS, dan)
 				})
 
 				it('removes a Workspace Manager from the page of the subgroup', () => {
@@ -237,13 +202,26 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 3, managers: 2, subgroupMembers: 2 })
 				})
 
-				it('keeps them in the other groups of the workspace and in WorkspacesManagers', () => {
+				// Checked once, after all the removals: each group of the workspace keeps only the
+				// members left in it
+				itEnglishOnly('keeps in each group of the workspace only the members left in it', () => {
 					cy.login(admin)
 
-					shouldNotListInAccountsGroup(subgroup.gid, fay)
-					shouldListInAccountsGroup(userGroup.gid, fay)
-					shouldListInAccountsGroup(managerGroup.gid, fay)
-					shouldListInAccountsGroup(WORKSPACES_MANAGERS, fay)
+					shouldListOnlyInAccountsGroup(userGroup.gid, [manager, cleo, fay])
+					shouldListOnlyInAccountsGroup(managerGroup.gid, [manager, fay])
+					shouldListOnlyInAccountsGroup(subgroup.gid, [manager, cleo])
+				})
+
+				itEnglishOnly('keeps in WorkspacesManagers only the users who still manage a workspace', () => {
+					cy.login(admin)
+
+					shouldListInAccountsGroup(managerGroupGid(otherSpace.id), eve)
+					for (const removed of [ben, cleo, dan]) {
+						shouldNotListInAccountsGroup(WORKSPACES_MANAGERS, removed)
+					}
+					for (const kept of [eve, fay]) {
+						shouldListInAccountsGroup(WORKSPACES_MANAGERS, kept)
+					}
 				})
 			})
 		}

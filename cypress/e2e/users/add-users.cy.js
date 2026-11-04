@@ -29,7 +29,7 @@ import {
 	groupButton,
 	shouldCountSpaceUsers,
 	shouldListInAccountsGroup,
-	shouldNotListInAccountsGroup,
+	shouldListOnlyInAccountsGroup,
 	spaceAction,
 	spaceGroups,
 	uploadFile,
@@ -131,6 +131,10 @@ const shouldListUsers = (members, managers) => {
 
 for (const [language, label] of Object.entries(labels)) {
 	describe(`Add users (${language})`, () => {
+		// The Accounts page of the server is not translated by the app: the tests that only read it
+		// run in English, and are pending in the other languages
+		const itEnglishOnly = language === 'en' ? it : it.skip
+
 		let generalManager
 		let space
 		// The groups of the workspace, see spaceGroups()
@@ -283,18 +287,16 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 8, managers: 4, subgroupMembers: 1 })
 				})
 
-				it('lists the added users in the groups of the workspace on the Accounts page', () => {
+				// Hal, taken back from the selection, is in none of the groups
+				itEnglishOnly('lists the added users in the groups of the workspace on the Accounts page', () => {
 					cy.login(admin)
 
-					for (const member of [ana, cleo, dan, fay]) {
-						shouldListInAccountsGroup(userGroup.gid, member)
-					}
-					shouldListInAccountsGroup(maison.gid, cleo)
+					shouldListOnlyInAccountsGroup(userGroup.gid, [manager, ana, ben, cleo, dan, eve, fay, gus])
+					shouldListOnlyInAccountsGroup(managerGroup.gid, [manager, ben, eve, gus])
+					shouldListOnlyInAccountsGroup(maison.gid, [cleo])
 					for (const added of [ben, eve, gus]) {
-						shouldListInAccountsGroup(managerGroup.gid, added)
 						shouldListInAccountsGroup(WORKSPACES_MANAGERS, added)
 					}
-					shouldNotListInAccountsGroup(userGroup.gid, hal)
 				})
 			})
 		}
