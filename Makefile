@@ -48,7 +48,7 @@ ifneq (,$(wildcard $(CURDIR)/composer.json))
 	make composer
 endif
 ifneq (,$(wildcard $(CURDIR)/package.json))
-	npm install -f --no-optional
+	npm install -f
 	make npm-$(flavor)
 endif
 
