@@ -54,6 +54,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 /**
  * @todo rename to import csv users : ImportCsvUsersUploaderController
@@ -76,6 +77,7 @@ class FileCSVController extends Controller {
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
 		private ValuesValidator $valuesValidator,
+		private LoggerInterface $logger,
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -120,8 +122,6 @@ class FileCSVController extends Controller {
 
 		$names = $this->csvParser->parser($file);
 
-		$usernames = array_map(fn ($user) => $user->uid, $names);
-
 		$uids = array_map(fn ($user) => $user->uid, $names);
 
 		$emails = array_values(
@@ -134,6 +134,12 @@ class FileCSVController extends Controller {
 		$usernames = array_values(
 			array_diff($uids, $emails)
 		);
+
+		// Only on a miss: mapping an LDAP account is slow (~0.1 s each).
+		if (!$this->userChecker->checkUsersExist($usernames)
+		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
+			$this->mapUnknownUsers($uids);
+		}
 
 		if (!$this->userChecker->checkUsersExist($usernames)
 		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
@@ -219,6 +225,29 @@ class FileCSVController extends Controller {
 		);
 
 		return $data;
+	}
+
+	/**
+	 * LDAP users stay unknown to Nextcloud until a search maps them (user_ldap).
+	 *
+	 * @param string[] $uids uids or emails from the CSV file
+	 */
+	private function mapUnknownUsers(array $uids): void {
+		$unknown = array_filter(
+			array_unique($uids),
+			fn ($uid) => $uid !== ''
+				&& !$this->userManager->userExists($uid)
+				&& !$this->userManager->getByEmail($uid)
+		);
+
+		foreach ($unknown as $uid) {
+			try {
+				$this->userManager->searchDisplayName($uid, 10);
+			} catch (\Exception $e) {
+				// Best effort: the user is reported as unknown below.
+				$this->logger->warning('Could not look up CSV user ' . $uid, ['exception' => $e]);
+			}
+		}
 	}
 
 	/**
