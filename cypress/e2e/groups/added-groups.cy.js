@@ -95,9 +95,10 @@ const REMOVE_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/spaces/*/c
 const addGroupModal = (label) => cy.findByRole('dialog', { name: label.addGroup })
 
 // Searches the groups in the modal, and selects one among those it offers. An option is found by
-// its text: its accessible name also holds the initial of its avatar
+// its text: its accessible name also holds the initial of its avatar. The search is typed once the
+// modal has focused it: before, the text is lost
 const selectGroup = (label, search, group) => {
-	addGroupModal(label).findByPlaceholderText(label.searchGroups).type(search)
+	addGroupModal(label).findByPlaceholderText(label.searchGroups).should('have.focus').type(search)
 	cy.contains('[role="option"]', group.gid).click()
 }
 
