@@ -21,7 +21,7 @@
  *
  */
 
-import { getUsers, addGroupToWorkspace } from '../services/spaceService.js'
+import { getUsers, addGroupToWorkspace, removeWorkspace } from '../services/spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
@@ -108,6 +108,9 @@ export default {
 	},
 	incrementCountTotalWorkspacesByQuery(context) {
 		context.commit('INCREMENT_COUNT_TOTAL_WORKSPACES_BY_QUERY')
+	},
+	decrementCountTotalWorkspacesByQuery(context) {
+		context.commit('DECREMENT_COUNT_TOTAL_WORKSPACES_BY_QUERY')
 	},
 	decrementCountTotalWorkspaces(context) {
 		context.commit('DECREMENT_COUNT_TOTAL_WORKSPACES')
@@ -226,6 +229,20 @@ export default {
 		context.commit('deleteSpace', {
 			space,
 		})
+	},
+	// Deletes the workspace on the server, then from the store. Returns true when it is deleted.
+	async deleteWorkspace(context, { space }) {
+		const resp = await removeWorkspace(space.id)
+		if (resp?.http?.statuscode !== 200) {
+			showNotificationError(t('workspace', 'Error'), t('workspace', 'Unable to delete the workspace. Please try again or contact your administrator.'), 5000)
+			return false
+		}
+
+		context.dispatch('removeSpace', { space })
+		context.dispatch('decrementCountWorkspaces')
+		context.dispatch('decrementCountTotalWorkspaces')
+		context.dispatch('decrementCountTotalWorkspacesByQuery')
+		return true
 	},
 	// Remove a user from a workspace
 	removeUserFromWorkspace(context, { name, gid, user }) {

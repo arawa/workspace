@@ -25,7 +25,8 @@
 		<div class="header" />
 		<div v-if="Object.keys($store.state.spaces).length"
 			class="table-container">
-			<table class="table-spaces">
+			<table class="table-spaces"
+				:class="{ 'with-actions': $root.$data.isUserGeneralAdmin }">
 				<thead>
 					<tr class="">
 						<th class="workspace-th" />
@@ -37,6 +38,9 @@
 						</th>
 						<th class="workspace-th workspace-managers-th">
 							{{ t('workspace', 'Workspace Managers') }}
+						</th>
+						<th v-if="$root.$data.isUserGeneralAdmin" class="workspace-th">
+							{{ t('workspace', 'Actions') }}
 						</th>
 					</tr>
 				</thead>
@@ -73,6 +77,28 @@
 								</div>
 							</lazy-component>
 						</td>
+						<td v-if="$root.$data.isUserGeneralAdmin"
+							class="workspace-td"
+							@click.stop>
+							<NcActions>
+								<NcActionButton
+									:close-after-click="true"
+									@click="editedSpace = space">
+									<template #icon>
+										<NcIconSvgWrapper :path="mdiPencil" />
+									</template>
+									{{ t('workspace', 'Edit the workspace') }}
+								</NcActionButton>
+								<NcActionButton
+									:close-after-click="true"
+									@click="deletedSpace = space">
+									<template #icon>
+										<NcIconSvgWrapper :path="mdiDelete" />
+									</template>
+									{{ t('workspace', 'Delete space') }}
+								</NcActionButton>
+							</NcActions>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -86,6 +112,14 @@
 				</div>
 			</div>
 		</div>
+		<EditWorkspace v-if="editedSpace"
+			:space="editedSpace"
+			@close="editedSpace = null" />
+		<RemoveSpace v-if="deletedSpace"
+			:space-name="deletedSpace.name"
+			@close="deletedSpace = null"
+			@handle-cancel="deletedSpace = null"
+			@handle-delete="deleteSpace" />
 		<WorkspaceContentEmpty v-if="noWorkspaceForSearch"
 			:message="t('workspace', 'No workspaces found')" />
 		<WorkspaceContentEmpty v-else-if="hasNoWorkspaces"
@@ -94,7 +128,13 @@
 </template>
 
 <script>
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import { mdiDelete, mdiPencil } from '@mdi/js'
+import EditWorkspace from './components/Modals/EditWorkspace.vue'
+import RemoveSpace from './RemoveSpace.vue'
 import PageLoader from './components/PageLoader.vue'
 import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEmpty.vue'
@@ -102,11 +142,24 @@ import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEm
 export default {
 	name: 'SpaceTable',
 	components: {
+		EditWorkspace,
+		NcActionButton,
+		NcActions,
 		NcAvatar,
+		NcIconSvgWrapper,
 		PageLoader,
+		RemoveSpace,
 		WorkspaceContentEmpty,
 	},
 	mixins: [WorkspacesLoader],
+	data() {
+		return {
+			mdiDelete,
+			mdiPencil,
+			editedSpace: null,
+			deletedSpace: null,
+		}
+	},
 	computed: {
 		noWorkspaceForSearch() {
 			return this.$store.state.countTotalWorkspaces === 0
@@ -132,6 +185,11 @@ export default {
 		}
 	},
 	methods: {
+		async deleteSpace() {
+			const space = this.deletedSpace
+			this.deletedSpace = null
+			await this.$store.dispatch('deleteWorkspace', { space })
+		},
 		getQuota(quota) {
 			return this.$store.getters.convertQuotaForFrontend(quota)
 		},
@@ -218,6 +276,14 @@ td, td div {
 
 .workspace-managers-th {
 	text-align: start;
+}
+
+.with-actions .workspace-managers-th {
+	text-align: end;
+}
+
+.with-actions .admin-avatars {
+	justify-content: flex-end;
 }
 
 .total-workspaces-information {

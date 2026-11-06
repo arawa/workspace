@@ -166,6 +166,12 @@ export default {
 	INCREMENT_COUNT_TOTAL_WORKSPACES_BY_QUERY(state) {
 		state.countTotalWorkspacesByQuery++
 	},
+	DECREMENT_COUNT_TOTAL_WORKSPACES_BY_QUERY(state) {
+		if (state.countTotalWorkspacesByQuery === 0) {
+			return
+		}
+		state.countTotalWorkspacesByQuery--
+	},
 	DECREMENT_COUNT_TOTAL_WORKSPACES(state) {
 		if (state.countTotalWorkspaces === 0) {
 			return
