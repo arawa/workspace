@@ -21,7 +21,7 @@
 -->
 
 <template>
-	<div v-if="!$store.state.loadingUsersWaiting">
+	<div v-if="!$store.state.loadingUsersWaiting && space">
 		<div class="header">
 			<div class="space-name">
 				<div class="space-color-picker color-dot"
@@ -144,7 +144,6 @@ import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import RemoveSpace from './RemoveSpace.vue'
 import UserTable from './UserTable.vue'
-import { removeWorkspace } from './services/spaceService.js'
 import AddUsersTabs from './AddUsersTabs.vue'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
@@ -220,6 +219,10 @@ export default {
 	},
 	beforeUpdate() {
 		this.space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+		// The space leaves the store a moment before the route changes
+		if (!this.space) {
+			return
+		}
 		if (Object.keys(this.space.users).length === 0) {
 			this.$store.dispatch('loadUsers', { space: this.space })
 		} else {
@@ -234,20 +237,12 @@ export default {
 	},
 	methods: {
 		// Deletes a space
-		deleteSpace() {
+		async deleteSpace() {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-			removeWorkspace(space.id)
-				.then(resp => {
-					if (resp.http.statuscode === 200) {
-						this.$store.dispatch('removeSpace', {
-							space,
-						})
-						this.$store.dispatch('decrementCountWorkspaces')
-						this.$store.dispatch('decrementCountTotalWorkspaces')
-						this.$store.dispatch('decrementCountTotalWorkspacesByQuery')
-						this.$router.push({ name: 'space.table' })
-					}
-				})
+			this.showDelWorkspaceModal = false
+			if (await this.$store.dispatch('deleteWorkspace', { space })) {
+				this.$router.push({ name: 'space.table' })
+			}
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
