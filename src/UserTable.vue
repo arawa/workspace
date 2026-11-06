@@ -337,12 +337,9 @@ export default {
 	padding-inline-start: 8px;
 }
 
-.user-name {
-	font-size: large;
-}
-
 .user-email {
-	color: gray;
+	font-size: smaller;
+	color: var(--color-text-maxcontrast);
 }
 
 .table-space-detail {
