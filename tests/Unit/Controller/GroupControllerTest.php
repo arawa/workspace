@@ -313,4 +313,66 @@ class GroupControllerTest extends TestCase {
 
 		$this->controller->removeUserFromWorkspace($this->workspace(), 'SPACE-U-1', 'user01');
 	}
+
+	/**
+	 * The collaborator search finds $gids, the group manager resolves those
+	 * listed in $groups and returns null for the others.
+	 *
+	 * @param array<string, IGroup&MockObject> $groups
+	 */
+	private function mockSearch(array $gids, array $groups): void {
+		$this->collaboratorSearch
+			->expects($this->once())
+			->method('search')
+			->willReturn([
+				[
+					'groups' => array_map(fn (string $gid) => ['value' => ['shareWith' => $gid]], $gids),
+					'exact' => ['groups' => []],
+				],
+				false,
+			])
+		;
+
+		$this->groupManager
+			->expects($this->any())
+			->method('get')
+			->willReturnCallback(fn (string $gid) => $groups[$gid] ?? null)
+		;
+	}
+
+	/**
+	 * A searched group must never load its members, which is slow on large LDAP groups.
+	 */
+	private function mockSearchedGroup(string $gid): IGroup&MockObject {
+		$group = $this->createMock(IGroup::class);
+		$group->method('getGID')->willReturn($gid);
+		$group->method('getDisplayName')->willReturn($gid);
+		$group->method('getBackendNames')->willReturn(['LDAP']);
+		$group->expects($this->never())->method('count');
+		$group->expects($this->never())->method('getUsers');
+
+		return $group;
+	}
+
+	public function testSearchDoesNotCountGroupMembers(): void {
+		$this->mockSearch(['Robots 1', 'Robots 0'], [
+			'Robots 1' => $this->mockSearchedGroup('Robots 1'),
+			'Robots 0' => $this->mockSearchedGroup('Robots 0'),
+		]);
+
+		$actual = $this->controller->search('Robot', true)->getData();
+
+		$this->assertSame(['Robots 0', 'Robots 1'], array_keys($actual));
+		$this->assertArrayNotHasKey('usersCount', $actual['Robots 0']);
+	}
+
+	public function testSearchSkipsGroupsThatNoLongerExist(): void {
+		$this->mockSearch(['deleted', 'marketing'], [
+			'marketing' => $this->mockSearchedGroup('marketing'),
+		]);
+
+		$actual = $this->controller->search('e', true)->getData();
+
+		$this->assertSame(['marketing'], array_keys($actual));
+	}
 }
