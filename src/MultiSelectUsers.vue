@@ -109,8 +109,9 @@ export default {
 			const spaceId = space.id
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
+			axios.post(generateUrl(`/apps/workspace/workspaces/${spaceId}/users/search`),
 				{
+					term,
 					space,
 				})
 				.then((resp) => {

@@ -18,3 +18,14 @@ export function alreadyExistsGroupId(space, gid) {
 	// check if a group with the same displayName already exists in the space
 	return Object.keys(space.groups).includes(gid)
 }
+
+/**
+ * Encodes a gid for a {gid} segment of a route: generateUrl() encodes it a second time, so that
+ * an encoded "/" gets past Apache (AllowEncodedSlashes Off). The controller decodes it once
+ *
+ * @param {string} gid the gid of a group
+ * @return {string}
+ */
+export function encodeGid(gid) {
+	return encodeURIComponent(gid)
+}

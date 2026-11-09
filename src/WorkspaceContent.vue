@@ -56,7 +56,7 @@ export default {
 	created() {
 		if (Object.entries(this.$store.state.spaces).length === 0) {
 			this.$store.state.loading = true
-			axios.get(generateUrl('/apps/workspace/spaces'), {
+			axios.get(generateUrl('/apps/workspace/workspaces'), {
 				params: {
 					limit: LIMIT_WORKSPACES_PER_PAGE,
 				},

@@ -124,6 +124,7 @@ class ConnectedGroupController extends Controller {
 	 * @SpaceAdminRequired
 	 */
 	public function removeGroup(int $spaceId, string $gid) {
+		$gid = rawurldecode($gid);
 		if (!$this->groupManager->groupExists($gid)) {
 			$message = sprintf('The group %s does not exist', $gid);
 

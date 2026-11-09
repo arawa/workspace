@@ -43,20 +43,6 @@ class SpaceController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 */
-	public function find(int $id): DataResponse {
-		return new DataResponse($this->spaceService->find($id));
-	}
-
-	/**
-	 * @NoAdminRequired
-	 */
-	public function findAll(): DataResponse {
-		return new DataResponse($this->spaceService->findAll());
-	}
-
-	/**
-	 * @NoAdminRequired
 	 * @SpaceAdminRequired
 	 */
 	public function updateColorCode(string $colorCode, int $spaceId): DataResponse {

@@ -67,12 +67,15 @@ for (const [language, label] of Object.entries(labels)) {
 			cy.get('@nameField').type(newName)
 
 			// 2. The modal closes and the page of the same workspace shows its new name
+			cy.intercept({ method: 'PATCH', pathname: `**/apps/workspace/workspaces/${space.id}/groups/*` }).as('renameGroup')
 			saveEditModal(language)
 			cy.location('pathname').should('equal', serverPath(`/apps/workspace/workspace/${space.id}`))
 			cy.get('.space-name .titles-for-space').should('contain', newName)
 
-			// The page renames the groups before the server answers: reloaded so the next
-			// steps check the names the server saved
+			// The page renames the groups before the server answers: reloaded once the server
+			// renamed each of them, so the next steps check the names it saved. A reload sooner
+			// aborts the renames still running
+			cy.wait(spaceGroups(space.id, newName).map(() => '@renameGroup'))
 			cy.reload()
 
 			// 3. The navigation lists the workspace under its new name, the old one is gone

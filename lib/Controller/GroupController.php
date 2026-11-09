@@ -25,15 +25,11 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCA\Workspace\Service\Group\GroupFolder\GroupFolderManage;
 use OCA\Workspace\Service\Group\GroupFormatter;
-use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Service\Slugger;
-use OCA\Workspace\Service\User\UserFormatter;
-use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
 use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
@@ -55,15 +51,12 @@ class GroupController extends Controller {
 	];
 
 	public function __construct(
-		private GroupsWorkspaceService $groupsWorkspace,
 		private IGroupManager $groupManager,
 		private SpaceManager $spaceManager,
 		private IUserManager $userManager,
 		private ISearch $collaboratorSearch,
 		private LoggerInterface $logger,
-		private UserFormatter $userFormatter,
 		private UserService $userService,
-		private UserWorkspace $userWorkspace,
 		private GroupMembersOnlyChecker $groupMembersOnlyChecker,
 		private ShareMembersOnlyFilter $shareMembersOnlyFilter,
 	) {
@@ -80,7 +73,6 @@ class GroupController extends Controller {
 	 *            "gid" => 'Space01',
 	 *            "displayName" => 'Space01'
 	 *            ]
-	 * @var string $spaceId for Middleware
 	 *
 	 */
 	public function create(array $data = []): JSONResponse {
@@ -124,7 +116,7 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function delete(string $gid, int $spaceId): JSONResponse {
-		$gid = urldecode(urldecode($gid));
+		$gid = rawurldecode($gid);
 
 		// TODO Use groupfolder api to retrieve workspace group.
 		if (substr($gid, -strlen($spaceId)) != $spaceId) {
@@ -161,6 +153,7 @@ class GroupController extends Controller {
 	public function rename(string $newGroupName,
 		string $gid,
 		int $spaceId): JSONResponse {
+		$gid = rawurldecode($gid);
 		$groups = $this->groupManager->search($newGroupName);
 		$groups = array_filter($groups, function ($group) {
 			return UserGroup::isWorkspaceGroup($group);
@@ -203,6 +196,7 @@ class GroupController extends Controller {
 	 *
 	 */
 	public function addUser(string $spaceId, string $gid, string $user): JSONResponse {
+		$gid = rawurldecode($gid);
 		// Makes sure group exist
 		$NCGroup = $this->groupManager->get($gid);
 		if (is_null($NCGroup)) {
@@ -245,13 +239,11 @@ class GroupController extends Controller {
 	 * @SpaceAdminRequired
 	 *
 	 * @param array|string $space
-	 * @param string $gid
 	 * @param string $user
 	 * @return JSONResponse
 	 */
 	public function removeUserFromWorkspace(
 		array|string $space,
-		string $gid,
 		string $user,
 	): JSONResponse {
 		if (gettype($space) === 'string') {
@@ -315,6 +307,7 @@ class GroupController extends Controller {
 		array|string $space,
 		string $gid,
 		string $user): JSONResponse {
+		$gid = rawurldecode($gid);
 		$cascade = $request->getParam('cascade', false);
 
 		$NcUser = $this->userManager->get($user);
@@ -389,58 +382,13 @@ class GroupController extends Controller {
 	 * @SpaceAdminRequired
 	 */
 	public function attachGroupToSpace(int $spaceId, string $gid) {
+		$gid = rawurldecode($gid);
 		$workspace = $this->spaceManager->get($spaceId);
 		$this->spaceManager->attachGroup($workspace['groupfolderId'], $gid);
 
 		return new JSONResponse([
 			'message' => sprintf('The %s group is attached to the %s workspace (i.e groupfolder)', $gid, $workspace['name']),
 		], Http::STATUS_ACCEPTED);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @GeneralManagerRequired
-	 * @param string|array $groupfolder
-	 *
-	 */
-	public function transferUsersToGroups(string $spaceId,
-		string|array $groupfolder): JSONResponse {
-		if (gettype($groupfolder) === 'string') {
-			$groupfolder = json_decode($groupfolder, true);
-		}
-
-		$groupsName = array_keys($groupfolder['groups']);
-
-		$groups = GroupFormatter::formatGroups(
-			array_merge(
-				[
-					$this->groupsWorkspace->getWorkspaceManagerGroup($spaceId),
-					$this->groupsWorkspace->getUserGroup($spaceId)
-				],
-				array_map(function ($groupName) {
-					return $this->groupManager->get($groupName);
-				}, $groupsName)
-			)
-		);
-
-		$groupsNameFromAdvancedPermissions = GroupFolderManage::filterGroup($groupfolder);
-
-		$allUsers = $this->userWorkspace->getUsersFromGroup($groupsName);
-		$usersFromAdvancedPermissions = $this->userWorkspace->getUsersFromGroup($groupsNameFromAdvancedPermissions);
-
-		$this->groupsWorkspace
-			->transferUsersToGroup($allUsers, $this->groupsWorkspace->getUserGroup($spaceId));
-		$this->groupsWorkspace
-			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupsWorkspace->getWorkspaceManagerGroup($spaceId));
-		$this->groupsWorkspace
-			->transferUsersToGroup($usersFromAdvancedPermissions, $this->groupManager->get(ManagersWorkspace::WORKSPACES_MANAGERS));
-
-		$users = $this->userFormatter->formatUsers($allUsers, $groupfolder, $spaceId);
-
-		return new JSONResponse([
-			'groups' => $groups,
-			'users' => (object)$users
-		], Http::STATUS_OK);
 	}
 
 	/**

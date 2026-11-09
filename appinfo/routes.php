@@ -31,6 +31,9 @@
  * The controller class has to be registered in the application.php file since
  * it's instantiated in there
  */
+// A {gid} reaches its controller still encoded once, which the controller decodes: the front
+// end encodes it twice (encodeGid() in src/services/Groups/functions.js), so that an encoded "/"
+// in a gid gets past Apache (AllowEncodedSlashes Off)
 return [
 	'routes' => [
 		[
@@ -39,162 +42,133 @@ return [
 			'verb' => 'GET',
 		],
 		[
-			'name' => 'connectedGroup#addConnectedGroup',
-			'url' => '/spaces/{spaceId}/connected-group',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'connectedGroup#getConnectedGroupsFromSpaceId',
-			'url' => '/spaces/{spaceId}/connected-group',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'connectedGroup#getConnectedGroups',
-			'url' => '/connected-group',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'workspace#addGroupsInfo',
-			'url' => '/api/workspace/formatGroups',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'workspace#addUsersInfo',
-			'url' => '/api/workspace/formatUsers',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'workspace#updateQuota',
-			'url' => '/spaces/{spaceId}/quota',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'workspace#lookupUsers',
-			'url' => '/api/autoComplete/{term}/{spaceId}',
-			'verb' => 'POST'
+			'name' => 'workspace#findAll',
+			'url' => '/workspaces',
+			'verb' => 'GET',
 		],
 		[
 			'name' => 'workspace#createWorkspace',
-			'url' => '/spaces',
-			'verb' => 'POST'
-		],
-		/**
-		 * @todo Decomment these lines to convert a groupfolder to workspace.
-		 * This may be possible from NC25 or NC26.
-		 */
-		// [
-		// 	'name' => 'group#transferUsersToGroups',
-		// 	'url' => '/spaces/{spaceId}/transfer-users',
-		// 	'verb' => 'POST'
-		// ],
-		[
-			'name' => 'space#find',
-			'url' => '/workspaces/{id}',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'space#findAll',
 			'url' => '/workspaces',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'connectedGroup#addGroup',
-			'url' => '/spaces/{spaceId}/connected-groups',
 			'verb' => 'POST',
-		],
-		[
-			'name' => 'connectedGroup#removeGroup',
-			'url' => '/spaces/{spaceId}/connected-groups/{gid}',
-			'verb' => 'DELETE'
-		],
-		[
-			'name' => 'workspace#findAll',
-			'url' => '/spaces',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'workspace#destroy',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'workspace#renameSpace',
-			'url' => '/spaces/{spaceId}',
-			'verb' => 'PATCH'
+			'url' => '/workspaces/{spaceId}',
+			'verb' => 'PATCH',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'workspace#destroy',
+			'url' => '/workspaces/{spaceId}',
+			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'space#updateColorCode',
+			'url' => '/workspaces/{spaceId}/color',
+			'verb' => 'PATCH',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'workspace#updateQuota',
+			'url' => '/workspaces/{spaceId}/quota',
+			'verb' => 'PATCH',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'workspace#getUsers',
+			'url' => '/workspaces/{spaceId}/users',
+			'verb' => 'GET',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'workspace#lookupUsers',
+			'url' => '/workspaces/{spaceId}/users/search',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
 		],
 		[
 			'name' => 'workspace#changeUserRole',
-			'url' => '/api/space/{spaceId}/user/{userId}',
-			'verb' => 'PATCH'
+			'url' => '/workspaces/{spaceId}/users/{userId}/role',
+			'verb' => 'PATCH',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'group#removeUserFromWorkspace',
+			'url' => '/workspaces/{spaceId}/users/{user}',
+			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'workspace#getAdmins',
+			'url' => '/workspaces/{spaceId}/managers',
+			'verb' => 'GET',
+			'requirements' => ['spaceId' => '\d+'],
 		],
 		[
 			'name' => 'group#create',
-			'url' => '/api/group',
+			'url' => '/workspaces/{spaceId}/groups',
 			'verb' => 'POST',
-		],
-		[
-			'name' => 'group#attachGroupToSpace',
-			'url' => '/spaces/{spaceId}/group-attach',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'group#delete',
-			'url' => '/api/group/{gid}',
-			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
 		],
 		[
 			'name' => 'group#rename',
-			'url' => '/api/group/{gid}',
+			'url' => '/workspaces/{spaceId}/groups/{gid}',
 			'verb' => 'PATCH',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'group#delete',
+			'url' => '/workspaces/{spaceId}/groups/{gid}',
+			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'group#attachGroupToSpace',
+			'url' => '/workspaces/{spaceId}/groups/{gid}/attach',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'group#addUser',
+			'url' => '/workspaces/{spaceId}/groups/{gid}/users',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'group#removeUser',
+			'url' => '/workspaces/{spaceId}/groups/{gid}/users/{user}',
+			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'connectedGroup#addGroup',
+			'url' => '/workspaces/{spaceId}/connected-groups',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'connectedGroup#removeGroup',
+			'url' => '/workspaces/{spaceId}/connected-groups/{gid}',
+			'verb' => 'DELETE',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'fileCSV#import',
+			'url' => '/workspaces/{spaceId}/import-users/local',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
+		],
+		[
+			'name' => 'fileCSV#getFromFiles',
+			'url' => '/workspaces/{spaceId}/import-users/files',
+			'verb' => 'POST',
+			'requirements' => ['spaceId' => '\d+'],
 		],
 		[
 			'name' => 'group#search',
 			'url' => '/groups',
 			'verb' => 'GET',
-		],
-		[
-			'name' => 'group#addUser',
-			/**
-			 * @todo Rewrite this route
-			 * I should write : /groups/{gid}/users
-			 */
-			'url' => '/api/group/addUser/{spaceId}',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'fileCSV#import',
-			'url' => '/space/{spaceId}/import-users/local',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'fileCSV#getFromFiles',
-			'url' => '/space/{spaceId}/import-users/files',
-			'verb' => 'POST',
-		],
-		[
-			'name' => 'space#updateColorCode',
-			'url' => '/workspaces/{spaceId}/color',
-			'verb' => 'POST'
-		],
-		[
-			'name' => 'group#removeUser',
-			'url' => '/api/group/delUser/{spaceId}',
-			'verb' => 'PATCH',
-		],
-		[
-			'name' => 'workspace#getUsers',
-			'url' => '/spaces/{spaceId}/users',
-			'verb' => 'GET',
-		],
-		[
-			'name' => 'workspace#getAdmins',
-			'url' => '/space/{spaceId}/admin-users',
-			'verb' => 'GET',
-		],
-		[
-			'name' => 'group#removeUserFromWorkspace',
-			'url' => '/spaces/{spaceId}/users/{user}/groups',
-			'verb' => 'PATCH',
 		],
 		// The following route is there to prevent redirection to NC's general homepage
 		// when reloading a page in the application (If we don't add it all pages that

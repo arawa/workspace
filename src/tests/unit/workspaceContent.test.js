@@ -168,7 +168,7 @@ describe('Loading the workspace the URL asks for', () => {
 		await vm.loadRequestedSpace()
 
 		expect(vm.$store.getters.getSpaceById).toHaveBeenCalledWith(42)
-		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/workspaces/42'))
 		expect(vm.$store.commit).toHaveBeenCalledWith('addSpaces', { spaces: { Espace42: space } })
 	})
 
@@ -178,7 +178,7 @@ describe('Loading the workspace the URL asks for', () => {
 
 		await vm.loadRequestedSpace()
 
-		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/workspaces/42'))
 	})
 
 	it('Leaves a workspace already in the store', async () => {
