@@ -218,12 +218,17 @@ class SpaceManager {
 	}
 
 	/**
-	 * Returns a workspace formatted for the front, see WorkspaceFormatter::format().
+	 * Loads a workspace and its groupfolder, without formatting them.
+	 * Callers choose the formatter matching their audience (front or OCS API).
 	 *
+	 * @return array{
+	 *     workspace: array{id: int, groupfolder_id: int, name: string, color_code: string},
+	 *     folderInfo: array,
+	 * }|null null when the workspace does not exist.
+	 *   `folderInfo` is FolderWithMappingsAndCache::toArray(), its keys depend on the groupfolders version.
 	 * @throws NotFoundException when the groupfolder cannot be loaded
 	 */
-	public function get(int $spaceId): ?array {
-
+	public function load(int $spaceId): ?array {
 		$space = $this->spaceMapper->find($spaceId);
 
 		if (is_null($space)) {
@@ -244,14 +249,25 @@ class SpaceManager {
 			throw new NotFoundException("Failed loading groupfolder with the folderId {$folderId}");
 		}
 
-		$workspace = $this->workspaceFormatter
-			->format(
-				$space->jsonSerialize(),
-				$groupfolder
-			)
-		;
+		return [
+			'workspace' => $space->jsonSerialize(),
+			'folderInfo' => $groupfolder,
+		];
+	}
 
-		return $workspace;
+	/**
+	 * Returns a workspace formatted for the front, see WorkspaceFormatter::format().
+	 *
+	 * @throws NotFoundException when the groupfolder cannot be loaded
+	 */
+	public function get(int $spaceId): ?array {
+		$loaded = $this->load($spaceId);
+
+		if (is_null($loaded)) {
+			return null;
+		}
+
+		return $this->workspaceFormatter->format($loaded['workspace'], $loaded['folderInfo']);
 	}
 
 	public function getByName(string $spacename): array {
@@ -566,6 +582,12 @@ class SpaceManager {
 				)
 				?->toArray()
 			;
+
+			if (is_null($folderInfo)) {
+				$this->logger->warning("The groupfolder associated with {$workspace['name']} does not seem to exist.");
+				continue;
+			}
+
 			$spaces[] = $this->workspaceOcsFormatter->format($workspace, $folderInfo);
 		}
 

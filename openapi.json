@@ -136,9 +136,9 @@
                         "type": "string"
                     },
                     "groups": {
-                        "type": "array",
-                        "items": {
-                            "type": "object"
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/GroupInfo"
                         }
                     },
                     "quota": {
@@ -155,7 +155,23 @@
                     "manage": {
                         "type": "array",
                         "items": {
-                            "type": "object"
+                            "type": "object",
+                            "required": [
+                                "type",
+                                "id",
+                                "displayname"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "id": {
+                                    "type": "string"
+                                },
+                                "displayname": {
+                                    "type": "string"
+                                }
+                            }
                         }
                     },
                     "groupfolder_id": {
@@ -173,10 +189,33 @@
                         "format": "int64"
                     },
                     "added_groups": {
-                        "type": "array",
-                        "items": {
-                            "type": "object"
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/GroupInfo"
                         }
+                    }
+                }
+            },
+            "SpaceEdit": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "color",
+                    "quota"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "quota": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
                     }
                 }
             },
@@ -712,7 +751,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Workspace returned",
+                        "description": "Edited fields returned, null for the fields left unchanged",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -732,7 +771,7 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "$ref": "#/components/schemas/Space"
+                                                    "$ref": "#/components/schemas/SpaceEdit"
                                                 }
                                             }
                                         }

@@ -5,6 +5,7 @@ namespace OCA\Workspace\Tests\Unit\Middleware;
 use OCA\Workspace\Controller\WorkspaceApiOcsController;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Middleware\RequireExistingUsersMiddleware;
+use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Service\Validator\WorkspaceEditParamsValidator;
@@ -44,6 +45,7 @@ class RequireExistingUsersMiddlewareTest extends TestCase {
 			$this->createMock(IUserSession::class),
 			$this->createMock(SpaceMapper::class),
 			$this->createMock(UserService::class),
+			$this->createMock(WorkspaceOcsFormatter::class),
 			'workspace',
 		);
 
