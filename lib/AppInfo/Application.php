@@ -25,6 +25,7 @@ namespace OCA\Workspace\AppInfo;
 
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Group\GroupBackend;
+use OCA\Workspace\Listener\RestrictAppToManagerGroupsListener;
 use OCA\Workspace\Middleware\DuplicateSpacenameMiddleware;
 use OCA\Workspace\Middleware\GeneralManagerAccessMiddleware;
 use OCA\Workspace\Middleware\IsGeneralManagerMiddleware;
@@ -39,6 +40,7 @@ use OCA\Workspace\Middleware\SpacenameForbiddenCharactersMiddleware;
 use OCA\Workspace\Middleware\WorkspaceManagerAccessMiddleware;
 use OCA\Workspace\Service\SpaceService;
 use OCA\Workspace\Service\UserService;
+use OCP\App\Events\AppEnableEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -87,6 +89,8 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(SpacenameForbiddenCharactersMiddleware::class);
 
 		$context->registerCapability(Capabilities::class);
+
+		$context->registerEventListener(AppEnableEvent::class, RestrictAppToManagerGroupsListener::class);
 
 		$container = $this->getContainer();
 

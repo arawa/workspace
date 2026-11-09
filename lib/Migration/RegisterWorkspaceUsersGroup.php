@@ -25,7 +25,9 @@
 
 namespace OCA\Workspace\Migration;
 
+use OCA\Workspace\Listener\RestrictAppToManagerGroupsListener;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -34,6 +36,7 @@ use Psr\Log\LoggerInterface;
 class RegisterWorkspaceUsersGroup implements IRepairStep {
 	public function __construct(
 		private IGroupManager $groupManager,
+		private IAppConfig $appConfig,
 		private LoggerInterface $logger,
 	) {
 		$this->logger->debug('RegisterWorkspaceUsersGroup repair step initialised');
@@ -58,5 +61,8 @@ class RegisterWorkspaceUsersGroup implements IRepairStep {
 		} else {
 			$this->logger->debug('Group ' . ManagersWorkspace::GENERAL_MANAGER . ' already exists. No need to create it.');
 		}
+
+		// The server resets the "enabled" value after this step, so the restriction is applied on AppEnableEvent
+		$this->appConfig->setAppValueBool(RestrictAppToManagerGroupsListener::PENDING_KEY, true, lazy: true);
 	}
 }
