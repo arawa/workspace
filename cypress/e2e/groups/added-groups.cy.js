@@ -88,8 +88,8 @@ const labels = {
 }
 
 // The requests that add a group to a workspace and remove it
-const ADD_GROUP = { method: 'POST', pathname: '**/apps/workspace/spaces/*/connected-groups' }
-const REMOVE_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/spaces/*/connected-groups/*' }
+const ADD_GROUP = { method: 'POST', pathname: '**/apps/workspace/workspaces/*/connected-groups' }
+const REMOVE_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/workspaces/*/connected-groups/*' }
 
 // The modal to add a group, named by its title
 const addGroupModal = (label) => cy.findByRole('dialog', { name: label.addGroup })

@@ -29,7 +29,7 @@ import showNotificationError from '../services/Notifications/NotificationError.j
 import ManagerGroup from '../services/Groups/ManagerGroup.js'
 import router from '../router.js'
 import UserGroup from '../services/Groups/UserGroup.js'
-import { alreadyExistsGroupName, alreadyExistsGroupId } from '../services/Groups/functions.js'
+import { alreadyExistsGroupName, alreadyExistsGroupId, encodeGid } from '../services/Groups/functions.js'
 import { t } from '@nextcloud/l10n'
 
 export default {
@@ -42,11 +42,9 @@ export default {
 
 		// Update backend and revert frontend changes if something fails
 		const space = context.getters.getSpaceByNameOrId(name)
-		const url = generateUrl('/apps/workspace/api/group/addUser/{spaceId}', { spaceId: space.id })
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/groups/{gid}/users', { spaceId: space.id, gid: encodeGid(gid) })
 		axios.post(url, {
-			gid,
 			user: user.uid,
-			workspace: space,
 		}).then((resp) => {
 			if (resp.status === 201) {
 				// Everything went well, we can thus also add this user to the UGroup in the frontend
@@ -139,7 +137,6 @@ export default {
 	// Creates a group and navigates to its details page
 	createGroup(context, { space, gid }) {
 		// Groups must be postfixed with the ID of the space they belong
-		const spaceId = space.id
 		const displayName = `${PREFIX_DISPLAYNAME_SUBGROUP_SPACE}${gid}-${space.name}`
 		let newGid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}-${space.id}`
 
@@ -155,14 +152,12 @@ export default {
 			newGid = `${PREFIX_GID_SUBGROUP_SPACE}${gid}${incGid}-${space.id}`
 		}
 		// Creates group in backend
-		axios.post(generateUrl('/apps/workspace/api/group'),
+		axios.post(generateUrl('/apps/workspace/workspaces/{spaceId}/groups', { spaceId: space.id }),
 			{
 				data: {
-					spaceId,
 					gid: newGid,
 					displayName,
 				},
-				spaceId: space.id,
 			})
 			.then((resp) => {
 				addGroupToWorkspace(space.id, resp.data.group.gid)
@@ -192,7 +187,6 @@ export default {
 	// Deletes a group
 	deleteGroup(context, { name, gid }) {
 		const space = context.getters.getSpaceByNameOrId(name)
-		const gidEncoded = encodeURIComponent(encodeURIComponent(gid))
 
 		// Deletes group from frontend
 		context.commit('removeGroupFromSpace', { name, gid })
@@ -203,7 +197,7 @@ export default {
 		})
 
 		// Deletes group from backend
-		axios.delete(generateUrl(`/apps/workspace/api/group/${gidEncoded}`), { data: { spaceId: space.id } })
+		axios.delete(generateUrl('/apps/workspace/workspaces/{spaceId}/groups/{gid}', { spaceId: space.id, gid: encodeGid(gid) }))
 			.then((resp) => {
 				if (resp.status === 200) {
 					// eslint-disable-next-line no-console
@@ -234,11 +228,9 @@ export default {
 
 		context.commit('removeUserFromWorkspace', { name, user })
 
-		const url = generateUrl('/apps/workspace/spaces/{spaceId}/users/{user}/groups', { spaceId: space.id, user: user.uid })
-		axios.patch(url, {
-			space,
-			gid,
-			user: user.uid,
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/users/{user}', { spaceId: space.id, user: user.uid })
+		axios.delete(url, {
+			data: { space },
 		}).then((resp) => {
 			if (resp.data.statuscode === 204) {
 				// eslint-disable-next-line no-console
@@ -274,15 +266,13 @@ export default {
 			context.commit('removeUserFromGroup', { name, gid, user })
 		}
 		// Update backend and revert frontend changes if something fails
-		let ressource = '/apps/workspace/api/group/delUser/{spaceId}'
+		let ressource = '/apps/workspace/workspaces/{spaceId}/groups/{gid}/users/{user}'
 		if (gid.startsWith('SPACE-U')) {
 			ressource += '?cascade=true'
 		}
-		const url = generateUrl(ressource, { spaceId: space.id })
-		axios.patch(url, {
-			space,
-			gid,
-			user: user.uid,
+		const url = generateUrl(ressource, { spaceId: space.id, gid: encodeGid(gid), user: user.uid })
+		axios.delete(url, {
+			data: { space },
 		}).then((resp) => {
 			if (resp.data.statuscode === 204) {
 				// eslint-disable-next-line no-console
@@ -315,7 +305,7 @@ export default {
 		}
 
 		// Creates group in backend
-		axios.patch(generateUrl(`/apps/workspace/api/group/${gid}`), { spaceId: space.id, newGroupName })
+		axios.patch(generateUrl('/apps/workspace/workspaces/{spaceId}/groups/{gid}', { spaceId: space.id, gid: encodeGid(gid) }), { newGroupName })
 			.then((resp) => {
 				if (resp.status === 200) {
 					// Navigates to the group's details page
@@ -371,10 +361,9 @@ export default {
 		const spaceId = space.id
 		const userId = user.uid
 		context.commit('updateUser', { name, user })
-		axios.patch(generateUrl(`/apps/workspace/api/space/${spaceId}/user/${userId}`),
+		axios.patch(generateUrl('/apps/workspace/workspaces/{spaceId}/users/{userId}/role', { spaceId, userId }),
 			{
 				space,
-				userId,
 			})
 			.then((resp) => {
 				if (resp.status === 200) {
@@ -408,7 +397,7 @@ export default {
 		context.commit('updateSpace', space)
 	},
 	removeConnectedGroup(context, { spaceId, gid, name }) {
-		axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}/connected-groups/${gid}`))
+		axios.delete(generateUrl('/apps/workspace/workspaces/{spaceId}/connected-groups/{gid}', { spaceId, gid: encodeGid(gid) }))
 			.then((resp) => {
 			})
 			.catch((e) => {
@@ -424,7 +413,7 @@ export default {
 		})
 	},
 	addConnectedGroupToWorkspace(context, { space, group }) {
-		const result = axios.post(generateUrl(`/apps/workspace/spaces/${space.id}/connected-groups`), {
+		const result = axios.post(generateUrl('/apps/workspace/workspaces/{spaceId}/connected-groups', { spaceId: space.id }), {
 			gid: group.gid,
 		})
 			.then(resp => {
@@ -470,8 +459,8 @@ export default {
 		context.commit('setSpaceQuota', { name, quota })
 
 		// Updates backend
-		const url = generateUrl(`/apps/workspace/spaces/${space.id}/quota`)
-		axios.post(url, { quota })
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/quota', { spaceId: space.id })
+		axios.patch(url, { quota })
 			.then(resp => {
 				if (resp.status !== 200) {
 					// Reverts change made in the frontend in case of error
@@ -498,7 +487,7 @@ export default {
 		context.commit('UPDATE_GROUPFOLDERS', { groupfolder })
 	},
 	async addUsersFromCSV(context, { formData, spaceId }) {
-		const url = generateUrl(`/apps/workspace/space/${spaceId}/import-users/local`)
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/import-users/local', { spaceId })
 		const resp = await axios({
 			method: 'POST',
 			url,
@@ -507,7 +496,7 @@ export default {
 		return resp.data
 	},
 	async importCsvFromFiles(context, { formData, spaceId }) {
-		const url = generateUrl(`/apps/workspace/space/${spaceId}/import-users/files`)
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/import-users/files', { spaceId })
 		const resp = await axios({
 			method: 'POST',
 			url,
@@ -547,7 +536,7 @@ export default {
 		context.commit('SET_NO_USERS', ({ activated }))
 	},
 	async loadAdmins(context, { space }) {
-		const url = generateUrl(`/apps/workspace/space/${space.id}/admin-users`)
+		const url = generateUrl('/apps/workspace/workspaces/{spaceId}/managers', { spaceId: space.id })
 		axios.get(url)
 			.then(response => {
 				context.commit('addSpaceAdminUsers', { name: space.name, managers: response.data })

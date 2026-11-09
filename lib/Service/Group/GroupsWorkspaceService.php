@@ -88,19 +88,6 @@ class GroupsWorkspaceService {
 		return $groups;
 	}
 
-	/**
-	 * @param IUser[] $users
-	 */
-	public function transferUsersToGroup(array $users, IGroup $group): void {
-		if (is_null($group)) {
-			throw new GroupException('Error parameter, $group is null.');
-		}
-
-		foreach ($users as $user) {
-			$group->addUser($user);
-		}
-	}
-
 	public function removeGroup(IGroup $group): void {
 		$gid = $group->getGID();
 

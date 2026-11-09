@@ -27,9 +27,6 @@ declare(strict_types=1);
 namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\GroupController;
-use OCA\Workspace\Service\Group\GroupsWorkspaceService;
-use OCA\Workspace\Service\User\UserFormatter;
-use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
 use OCA\Workspace\Share\Group\ShareMembersOnlyFilter;
@@ -46,15 +43,12 @@ use Psr\Log\LoggerInterface;
 
 class GroupControllerTest extends TestCase {
 
-	private MockObject&GroupsWorkspaceService $groupsWorkspace;
 	private MockObject&IGroupManager $groupManager;
 	private MockObject&SpaceManager $spaceManager;
 	private MockObject&IUserManager $userManager;
 	private MockObject&ISearch $collaboratorSearch;
 	private MockObject&LoggerInterface $logger;
-	private MockObject&UserFormatter $userFormatter;
 	private MockObject&UserService $userService;
-	private MockObject&UserWorkspace $userWorkspace;
 	private MockObject&GroupMembersOnlyChecker $groupMembersOnlyChecker;
 	private MockObject&ShareMembersOnlyFilter $shareMembersOnlyFilter;
 
@@ -63,28 +57,22 @@ class GroupControllerTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->groupsWorkspace = $this->createMock(GroupsWorkspaceService::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->spaceManager = $this->createMock(SpaceManager::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->collaboratorSearch = $this->createMock(ISearch::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->userFormatter = $this->createMock(UserFormatter::class);
 		$this->userService = $this->createMock(UserService::class);
-		$this->userWorkspace = $this->createMock(UserWorkspace::class);
 		$this->groupMembersOnlyChecker = $this->createMock(GroupMembersOnlyChecker::class);
 		$this->shareMembersOnlyFilter = $this->createMock(ShareMembersOnlyFilter::class);
 
 		$this->controller = new GroupController(
-			$this->groupsWorkspace,
 			$this->groupManager,
 			$this->spaceManager,
 			$this->userManager,
 			$this->collaboratorSearch,
 			$this->logger,
-			$this->userFormatter,
 			$this->userService,
-			$this->userWorkspace,
 			$this->groupMembersOnlyChecker,
 			$this->shareMembersOnlyFilter,
 		);
@@ -204,7 +192,7 @@ class GroupControllerTest extends TestCase {
 			->method('removeGEFromWM')
 		;
 
-		$actual = $this->controller->removeUserFromWorkspace($this->workspace(), 'SPACE-U-1', 'user01');
+		$actual = $this->controller->removeUserFromWorkspace($this->workspace(), 'user01');
 
 		$this->assertEquals(
 			[
@@ -235,7 +223,7 @@ class GroupControllerTest extends TestCase {
 			->willReturn(false)
 		;
 
-		$actual = $this->controller->removeUserFromWorkspace(json_encode($this->workspace()), 'SPACE-U-1', 'user01');
+		$actual = $this->controller->removeUserFromWorkspace(json_encode($this->workspace()), 'user01');
 
 		$this->assertEquals(
 			[
@@ -278,7 +266,7 @@ class GroupControllerTest extends TestCase {
 			->with($user)
 		;
 
-		$actual = $this->controller->removeUserFromWorkspace($this->workspace(), 'SPACE-GE-1', 'user01');
+		$actual = $this->controller->removeUserFromWorkspace($this->workspace(), 'user01');
 
 		$this->assertEquals(
 			[
@@ -311,6 +299,39 @@ class GroupControllerTest extends TestCase {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('The SPACE-G-HR-1 group does not exist');
 
-		$this->controller->removeUserFromWorkspace($this->workspace(), 'SPACE-U-1', 'user01');
+		$this->controller->removeUserFromWorkspace($this->workspace(), 'user01');
+	}
+
+	// The front end encodes a gid twice so that a "/" gets past Apache: the controller receives it
+	// encoded once
+	public function testAttachGroupToSpaceDecodesAGidWithASlash(): void {
+		$this->spaceManager
+			->method('get')
+			->with(1)
+			->willReturn(['groupfolderId' => 3, 'name' => 'Espace01'])
+		;
+
+		$this->spaceManager
+			->expects($this->once())
+			->method('attachGroup')
+			->with(3, 'SPACE-G-R&D/Ops-1')
+		;
+
+		$this->controller->attachGroupToSpace(1, 'SPACE-G-R%26D%2FOps-1');
+	}
+
+	public function testDeleteKeepsThePlusSignsOfAGid(): void {
+		$group = $this->createMock(IGroup::class);
+		$group->expects($this->once())->method('delete');
+
+		$this->groupManager
+			->method('get')
+			->with('SPACE-G-C++-1')
+			->willReturn($group)
+		;
+
+		$actual = $this->controller->delete('SPACE-G-C%2B%2B-1', 1);
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getData()['status']);
 	}
 }

@@ -154,9 +154,9 @@ describe('Simple user on the server', () => {
 	// Each change through the routes of appinfo/routes.php, used by the pages, then through the OCS API
 	const changes = {
 		'the pages': {
-			'rename the workspace': () => ['PATCH', `/apps/workspace/spaces/${space.id}`, { newSpaceName: randomName() }],
-			'change the color of the workspace': () => ['POST', `/apps/workspace/workspaces/${space.id}/color`, { colorCode: color }],
-			'change the quota of the workspace': () => ['POST', `/apps/workspace/spaces/${space.id}/quota`, { quota }],
+			'rename the workspace': () => ['PATCH', `/apps/workspace/workspaces/${space.id}`, { newSpaceName: randomName() }],
+			'change the color of the workspace': () => ['PATCH', `/apps/workspace/workspaces/${space.id}/color`, { colorCode: color }],
+			'change the quota of the workspace': () => ['PATCH', `/apps/workspace/workspaces/${space.id}/quota`, { quota }],
 		},
 		'the OCS API': {
 			'rename the workspace': () => ['PATCH', ocsUrl(`/spaces/${space.id}`), { name: randomName() }],
@@ -177,7 +177,7 @@ describe('Simple user on the server', () => {
 	// The deletion of a workspace made for each test, so one the server wrongly deletes leaves
 	// the other tests their workspace
 	const deletions = {
-		'the pages': (id) => ['DELETE', `/apps/workspace/spaces/${id}`],
+		'the pages': (id) => ['DELETE', `/apps/workspace/workspaces/${id}`],
 		'the OCS API': (id) => ['DELETE', ocsUrl(`/spaces/${id}`)],
 	}
 

@@ -37,10 +37,6 @@ class SpaceService {
 	) {
 	}
 
-	public function findAll(): array {
-		return $this->spaceMapper->findAll();
-	}
-
 	public function find($id): ?Space {
 		return $this->spaceMapper->find($id);
 	}
