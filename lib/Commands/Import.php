@@ -24,6 +24,7 @@
 
 namespace OCA\Workspace\Commands;
 
+use OCA\Workspace\Exceptions\Notifications\EmailDoesntUniqueException;
 use OCA\Workspace\Files\MassiveWorkspaceCreation\Csv;
 use OCA\Workspace\Group\Admin\AdminGroup;
 use OCA\Workspace\Group\Admin\AdminGroupManager;
@@ -252,22 +253,34 @@ class Import extends Command {
 
 	private function getUsersArentExist(array $dataResponse): ?string {
 		$usersAreNotExist = [];
-		$message = '';
+		$emailsShared = [];
 
 		foreach ($dataResponse as $data) {
-			if (!$this->userChecker->checkUserExist($data['user_uid'])) {
-				$usersAreNotExist[] = $data['user_uid'];
+			try {
+				if (!$this->userChecker->checkUserExist($data['user_uid'])) {
+					$usersAreNotExist[] = $data['user_uid'];
+				}
+			} catch (EmailDoesntUniqueException) {
+				$emailsShared[] = $data['user_uid'];
 			}
 		}
 
+		$message = '';
 		if (!empty($usersAreNotExist)) {
-			$usersAreNotExist = array_map(fn ($username) => "  - $username\n", $usersAreNotExist);
-			$message .= "Following users do not exist:\n" . implode('', $usersAreNotExist);
-
-			return $message;
+			$message .= "Following users do not exist:\n" . $this->listItems($usersAreNotExist);
+		}
+		if (!empty($emailsShared)) {
+			$message .= "Following email addresses are linked to multiple users:\n" . $this->listItems($emailsShared);
 		}
 
-		return null;
+		return $message === '' ? null : $message;
+	}
+
+	/**
+	 * @param string[] $items
+	 */
+	private function listItems(array $items): string {
+		return implode('', array_map(fn ($item) => "  - $item\n", $items));
 	}
 
 	private function getWorkspacesWithCharacterSpecials(array $dataResponse): ?string {
