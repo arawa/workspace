@@ -84,7 +84,6 @@ export default {
 						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData, spaceId: space.id })
 						let usersToDisplay = this.filterAlreadyPresentUsers(users)
 						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
-						// this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 						this.$emit('push', [...this.allSelectedUsers, ...usersToDisplay])
 					} catch (err) {
 						let duration = 10000

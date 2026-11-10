@@ -42,19 +42,16 @@ use OCA\Workspace\Files\FileUploader;
 use OCA\Workspace\Files\NextcloudFile;
 use OCA\Workspace\Notifications\ToastMessager;
 use OCA\Workspace\Response\ErrorResponseFormatter;
-use OCA\Workspace\Service\WorkspaceService;
 use OCA\Workspace\Space\SpaceManager;
+use OCA\Workspace\User\UserFinder;
 use OCA\Workspace\Users\UserFormatter;
-use OCA\Workspace\Users\UsersExistCheck;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\IUserManager;
 use OCP\IUserSession;
-use Psr\Log\LoggerInterface;
 
 /**
  * @todo rename to import csv users : ImportCsvUsersUploaderController
@@ -65,10 +62,8 @@ class FileCSVController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		private IUserManager $userManager,
-		private WorkspaceService $workspaceService,
+		private UserFinder $userFinder,
 		private UserFormatter $userFormatter,
-		private UsersExistCheck $userChecker,
 		private CheckMimeType $csvCheckMimeType,
 		private HeaderValidator $headerValidator,
 		private Parser $csvParser,
@@ -77,7 +72,6 @@ class FileCSVController extends Controller {
 		private IL10N $translate,
 		private IRootFolder $rootFolder,
 		private ValuesValidator $valuesValidator,
-		private LoggerInterface $logger,
 	) {
 		parent::__construct($appName, $request);
 		$this->currentUser = $userSession->getUser();
@@ -122,50 +116,19 @@ class FileCSVController extends Controller {
 
 		$names = $this->csvParser->parser($file);
 
-		$uids = array_map(fn ($user) => $user->uid, $names);
-
-		$emails = array_values(
-			array_filter(
-				$uids,
-				fn ($uid) => filter_var($uid, FILTER_VALIDATE_EMAIL)
-			)
-		);
-
-		$usernames = array_values(
-			array_diff($uids, $emails)
-		);
-
-		// Only on a miss: mapping an LDAP account is slow (~0.1 s each).
-		if (!$this->userChecker->checkUsersExist($usernames)
-		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
-			$this->mapUnknownUsers($uids);
+		$users = [];
+		foreach ($names as $user) {
+			// array_key_exists, not ??=: a user not found is stored as null.
+			if (!array_key_exists($user->uid, $users)) {
+				$users[$user->uid] = $this->userFinder->findUser($user->uid);
+			}
 		}
 
-		if (!$this->userChecker->checkUsersExist($usernames)
-		|| !$this->userChecker->checkUsersExistByEmail($emails)) {
+		$usersUnknown = array_keys(array_filter($users, fn ($user) => $user === null));
 
-			$usernamesUnknown = array_filter(
-				$usernames,
-				function ($name) {
-					return !$this->userChecker->checkUserExist($name);
-				}
-			);
-
-			$emailsUnknown = array_filter(
-				$emails,
-				fn ($email) => !$this->userChecker->checkUserExistByEmail($email)
-			);
-
-			$usersUnknown = array_merge($usernamesUnknown, $emailsUnknown);
-
-			$usersUnknown = array_map(
-				fn ($name) => "- $name",
-				$usersUnknown
-			);
-
-			$usersUnknown = implode('<br>', $usersUnknown);
-			$errorMessage = $this->translate->t('Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>');
-			$errorMessage .= $usersUnknown;
+		if ($usersUnknown !== []) {
+			$errorMessage = $this->translate->t('Users of this CSV file are unknown and cannot be imported. Check the following users and repeat the process:<br>')
+				. '- ' . implode('<br>- ', $usersUnknown);
 
 			throw new UserDoesntExistException(
 				$this->translate->t('Error: unknown users'),
@@ -203,51 +166,10 @@ class FileCSVController extends Controller {
 			);
 		}
 
-		$data = [];
-		foreach ($names as $user) {
-			$uid = $user->uid;
-
-			if ($this->userChecker->checkUserExistByEmail($uid)) {
-				$uid = $this->userManager->getByEmail($user->uid)[0];
-			} else {
-				$uid = $this->userManager->get($user->uid);
-			}
-
-			$data[] = [
-				'user' => $uid,
-				'role' => $user->role
-			];
-		}
-
-		$data = array_map(
-			fn ($user) => $this->userFormatter->formatUser($user['user'], $space, $user['role']),
-			$data
+		return array_map(
+			fn ($user) => $this->userFormatter->formatUser($users[$user->uid], $space, $user->role),
+			$names
 		);
-
-		return $data;
-	}
-
-	/**
-	 * LDAP users stay unknown to Nextcloud until a search maps them (user_ldap).
-	 *
-	 * @param string[] $uids uids or emails from the CSV file
-	 */
-	private function mapUnknownUsers(array $uids): void {
-		$unknown = array_filter(
-			array_unique($uids),
-			fn ($uid) => $uid !== ''
-				&& !$this->userManager->userExists($uid)
-				&& !$this->userManager->getByEmail($uid)
-		);
-
-		foreach ($unknown as $uid) {
-			try {
-				$this->userManager->searchDisplayName($uid, 10);
-			} catch (\Exception $e) {
-				// Best effort: the user is reported as unknown below.
-				$this->logger->warning('Could not look up CSV user ' . $uid, ['exception' => $e]);
-			}
-		}
 	}
 
 	/**
