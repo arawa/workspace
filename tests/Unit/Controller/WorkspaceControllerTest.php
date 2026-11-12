@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Workspace\Tests\Unit\Controller;
 
 use OCA\Workspace\Controller\WorkspaceController;
+use OCA\Workspace\Db\Space;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\GroupFolderFunctionException;
 use OCA\Workspace\Exceptions\NotFoundException;
@@ -41,6 +42,7 @@ use OCA\Workspace\Space\SpaceManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Services\IAppConfig;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -519,5 +521,139 @@ class WorkspaceControllerTest extends TestCase {
 		$actual = $this->controller->find(3);
 
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $actual->getStatus());
+	}
+
+	/**
+	 * @param array<int, string[]> $uidsBySpaceId the uids of the manager group of each workspace
+	 */
+	private function mockManagers(array $uidsBySpaceId): void {
+		$this->groupManager
+			->method('get')
+			->willReturnCallback(function (string $gid) use ($uidsBySpaceId) {
+				$group = $this->createMock(IGroup::class);
+				// Like IGroup::getUsers(): keyed by uid
+				$users = [];
+				foreach ($uidsBySpaceId[(int)substr($gid, strlen('SPACE-GE-'))] as $uid) {
+					$user = $this->createMock(IUser::class);
+					$user->method('getUID')->willReturn($uid);
+					$user->method('getDisplayName')->willReturn(ucfirst($uid));
+					$users[$uid] = $user;
+				}
+				$group->method('getUsers')->willReturn($users);
+
+				return $group;
+			})
+		;
+	}
+
+	private function space(int $id): Space {
+		$space = new Space();
+		$space->setSpaceId($id);
+
+		return $space;
+	}
+
+	public function testFindManagersReturnsTheManagersKeyedByWorkspaceId(): void {
+		$this->userService->method('isUserGeneralAdmin')->willReturn(true);
+		$this->userService->expects($this->never())->method('filterMemberSpaceIds');
+		$this->spaceMapper->method('findAll')->with(null, null, null, null, [1, 2])->willReturn([$this->space(1), $this->space(2)]);
+
+		$this->mockManagers([1 => ['alice', 'bob'], 2 => []]);
+
+		$this->folderHelper->expects($this->never())->method('getFolder');
+		$this->userFormatter->expects($this->never())->method('formatUsers');
+
+		$actual = $this->controller->findManagers('1,2');
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertSame(
+			'{"1":[{"uid":"alice","name":"Alice"},{"uid":"bob","name":"Bob"}],"2":[]}',
+			json_encode($actual->getData())
+		);
+	}
+
+	public function testFindManagersLoadsTheWorkspacesWithASingleQuery(): void {
+		$this->userService->method('isUserGeneralAdmin')->willReturn(true);
+		$this->spaceMapper->expects($this->once())->method('findAll')->with(null, null, null, null, [1, 3])->willReturn([$this->space(1)]);
+		$this->spaceMapper->expects($this->never())->method('find');
+		$this->mockManagers([1 => ['alice']]);
+
+		$actual = $this->controller->findManagers('1,1,3');
+
+		$this->assertEquals([1 => [['uid' => 'alice', 'name' => 'Alice']]], $actual->getData());
+	}
+
+	public function testFindManagersAsksOnlyForTheWorkspacesTheUserIsMemberOf(): void {
+		$this->userService->method('isUserGeneralAdmin')->willReturn(false);
+		$this->userService->expects($this->once())->method('filterMemberSpaceIds')->with([1, 2])->willReturn([1]);
+		$this->spaceMapper->expects($this->once())->method('findAll')->with(null, null, null, null, [1])->willReturn([$this->space(1)]);
+		$this->mockManagers([1 => ['alice']]);
+
+		$actual = $this->controller->findManagers('1,2');
+
+		$this->assertEquals([1 => [['uid' => 'alice', 'name' => 'Alice']]], $actual->getData());
+	}
+
+	public function testFindManagersDoesNotQueryWhenTheUserSeesNoWorkspace(): void {
+		$this->userService->method('isUserGeneralAdmin')->willReturn(false);
+		$this->userService->method('filterMemberSpaceIds')->willReturn([]);
+		$this->spaceMapper->expects($this->never())->method('findAll');
+
+		$actual = $this->controller->findManagers('1,2');
+
+		$this->assertEquals(Http::STATUS_OK, $actual->getStatus());
+		$this->assertEquals([], $actual->getData());
+	}
+
+	public function testFindManagersRejectsAnIdThatIsNotANumber(): void {
+		$this->spaceMapper->expects($this->never())->method('findAll');
+
+		$actual = $this->controller->findManagers('1,abc');
+
+		$this->assertEquals(Http::STATUS_BAD_REQUEST, $actual->getStatus());
+	}
+
+	public function testFindManagersRejectsTooManyIds(): void {
+		$this->spaceMapper->expects($this->never())->method('findAll');
+
+		$actual = $this->controller->findManagers(implode(',', range(1, 101)));
+
+		$this->assertEquals(Http::STATUS_BAD_REQUEST, $actual->getStatus());
+	}
+
+	private function mockAdminsRequest(array $groupfolderGroups): void {
+		$this->spaceMapper->method('find')->willReturn($this->createMock(Space::class));
+		$folder = $this->createMock('OCA\GroupFolders\Folder\FolderWithMappingsAndCache');
+		$folder->method('toArray')->willReturn(['id' => 1, 'groups' => $groupfolderGroups]);
+		$this->folderHelper->method('getFolder')->willReturn($folder);
+		$this->mockManagers([1 => ['alice']]);
+	}
+
+	public function testGetAdminsFormatsTheManagersOfTheGroupfolder(): void {
+		$this->mockAdminsRequest(['SPACE-GE-1' => 31, 'SPACE-U-1' => 31]);
+
+		$this->userFormatter
+			->expects($this->once())
+			->method('formatUsers')
+			->with($this->callback(fn (array $users) => array_keys($users) === ['alice']))
+			->willReturn(['alice' => ['uid' => 'alice']])
+		;
+
+		$actual = $this->controller->getAdmins(1);
+
+		$this->assertEquals(['alice' => ['uid' => 'alice']], $actual->getData());
+	}
+
+	public function testGetAdminsIgnoresAManagerGroupDetachedFromTheGroupfolder(): void {
+		$this->mockAdminsRequest(['SPACE-U-1' => 31]);
+
+		$this->userFormatter
+			->expects($this->once())
+			->method('formatUsers')
+			->with([])
+			->willReturn([])
+		;
+
+		$this->assertEquals([], $this->controller->getAdmins(1)->getData());
 	}
 }

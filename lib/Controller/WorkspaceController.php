@@ -47,11 +47,14 @@ use OCP\AppFramework\Services\IAppConfig;
 use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class WorkspaceController extends Controller {
+
+	private const MAX_WORKSPACES_PER_REQUEST = 100;
 
 	public function __construct(
 		IRequest $request,
@@ -298,19 +301,57 @@ class WorkspaceController extends Controller {
 				Http::STATUS_BAD_REQUEST);
 		}
 
-		$adminUsers = [];
-		foreach ($groupfolder['groups'] as $gid => $groupInfo) {
-			if (WorkspaceManagerGroup::isWorkspaceAdminGroupId($gid)) {
-				$group = $this->groupManager->get($gid);
-				if ($group !== null) {
-					$users = $group->getUsers();
-					$adminUsers = $this->userFormatter->formatUsers($users, $groupfolder, (string)$spaceId);
-				}
-				break;
-			}
+		// The manager group may exist without being attached to the groupfolder
+		$users = isset($groupfolder['groups'][WorkspaceManagerGroup::get($spaceId)]) ? $this->getManagerUsers($spaceId) : [];
+
+		return new JSONResponse($this->userFormatter->formatUsers($users, $groupfolder, (string)$spaceId));
+	}
+
+	/**
+	 * Returns the Workspace Managers of several workspaces at once, keyed by workspace id.
+	 * The workspaces the connected user may not see are left out.
+	 *
+	 * @param string $workspaceIds comma-separated workspace ids, 100 at most
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(
+		verb: 'GET',
+		url: '/managers'
+	)]
+	public function findManagers(string $workspaceIds): JSONResponse {
+		$ids = explode(',', $workspaceIds);
+
+		if (count($ids) > self::MAX_WORKSPACES_PER_REQUEST || array_filter($ids, fn ($id) => !ctype_digit($id))) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		return new JSONResponse($adminUsers);
+		$spaceIds = array_values(array_unique(array_map('intval', $ids)));
+		if (!$this->userService->isUserGeneralAdmin()) {
+			$spaceIds = $this->userService->filterMemberSpaceIds($spaceIds);
+		}
+
+		if ($spaceIds === []) {
+			return new JSONResponse([]);
+		}
+
+		// A single query: it also leaves out the workspaces which do not exist
+		$managers = [];
+		foreach ($this->spaceMapper->findAll(ids: $spaceIds) as $space) {
+			// array_values: getUsers() is keyed by uid, which would serialize as an object
+			$managers[$space->getSpaceId()] = array_values(array_map(
+				fn (IUser $user) => ['uid' => $user->getUID(), 'name' => $user->getDisplayName()],
+				$this->getManagerUsers($space->getSpaceId())
+			));
+		}
+
+		return new JSONResponse($managers);
+	}
+
+	/**
+	 * @return IUser[] the members of the Workspace Managers group
+	 */
+	private function getManagerUsers(int $spaceId): array {
+		return $this->groupManager->get(WorkspaceManagerGroup::get($spaceId))?->getUsers() ?? [];
 	}
 
 	/**
