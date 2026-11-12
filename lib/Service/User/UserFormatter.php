@@ -66,7 +66,7 @@ class UserFormatter {
 				'subtitle' => $user->getEmailAddress(),
 				'groups' => $this->groupsWorkspace->getGroupsUserFromGroupfolder($user, $groupfolder, $spaceId),
 				'is_connected' => !$isStrictSpaceUser,
-				'profile' => $this->urlGenerator->linkToRouteAbsolute('core.ProfilePage.index', ['targetUserId' => $user->getUID()]),
+				'profile' => $this->urlGenerator->linkToRouteAbsolute('profile.ProfilePage.index', ['targetUserId' => $user->getUID()]),
 				'role' => $role
 			];
 		}
