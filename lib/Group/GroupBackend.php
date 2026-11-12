@@ -24,6 +24,7 @@
 namespace OCA\Workspace\Group;
 
 use OCA\Workspace\Service\Group\ConnectedGroupsService;
+use OCA\Workspace\Service\Group\GroupUsersCounter;
 use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\ICountUsersBackend;
 use OCP\Group\Backend\INamedBackend;
@@ -43,6 +44,7 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		protected IGroupManager $groupManager,
 		protected IUserManager $userManager,
 		private ConnectedGroupsService $connectedGroups,
+		private GroupUsersCounter $groupUsersCounter,
 	) {
 		$this->avoidRecurse_users = $this->avoidRecurse_groups = false;
 	}
@@ -159,26 +161,41 @@ class GroupBackend extends ABackend implements GroupInterface, INamedBackend, IC
 		return 'WorkspaceGroupBackend';
 	}
 
+	/**
+	 * Counts the enabled users brought by the connected groups that are not
+	 * already direct members of $gid (those are counted by their own backend).
+	 * Goes through GroupUsersCounter rather than IGroup::getUsers(), which would
+	 * check every member against the user backend, i.e. one LDAP request per LDAP user.
+	 */
 	public function countUsersInGroup(string $gid, string $search = ''): int {
-
-		$users = $this->usersInGroup($gid);
-		if (!is_array($users)) {
+		$groups = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
+		if ($groups === null) {
 			return 0;
 		}
 
-		// get database users first
-		$group = $this->groupManager->get($gid);
-		$this->avoidRecurse_users = true;
-		$usersDb = $group->getUsers();
-		$this->avoidRecurse_users = false;
-
-		$nbUsers = 0;
-		foreach ($users as $userId) {
-			if (!isset($usersDb[$userId])) {
-				$usersDb[$userId] = true;
-				$nbUsers ++;
-			}
+		$connectedUids = [];
+		foreach ($groups as $group) {
+			$connectedUids += $this->groupUsersCounter->getEnabledUids($group);
 		}
-		return $nbUsers;
+
+		if ($connectedUids === []) {
+			return 0;
+		}
+
+		$spaceGroup = $this->groupManager->get($gid);
+		if ($spaceGroup === null) {
+			return count($connectedUids);
+		}
+
+		// Direct members only: keep this backend from adding the connected users again.
+		$avoid = $this->avoidRecurse_users;
+		$this->avoidRecurse_users = true;
+		try {
+			$directUids = $this->groupUsersCounter->getUids($spaceGroup);
+		} finally {
+			$this->avoidRecurse_users = $avoid;
+		}
+
+		return count(array_diff_key($connectedUids, $directUids));
 	}
 };
