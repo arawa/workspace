@@ -43,9 +43,6 @@ jobs:
     - name: Install dependencies
       working-directory: nextcloud/apps/workspace
       run: composer install --prefer-dist --no-progress
-    - name: Check coding standards
-      working-directory: nextcloud/apps/workspace
-      run: composer run-script cs:check
     - name: Run test suite
       working-directory: nextcloud/apps/workspace
       run: composer run-script test

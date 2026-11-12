@@ -1,0 +1,32 @@
+name: PHP Lint
+
+on:
+  push:
+    branches: [ main, stable* ]
+  pull_request:
+    branches: [ main, stable* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [8.0]
+        include:
+            - php: 8.0
+    steps:
+    - name: Set up php${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+          extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
+          coverage: xdebug
+    - name: Checkout workspace
+      uses: actions/checkout@main
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    - name: Check coding standards
+      run: composer run-script cs:check
