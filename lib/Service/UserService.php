@@ -133,6 +133,21 @@ class UserService {
 		return $user !== null && $this->groupManager->isInGroup($user->getUID(), UserGroup::get($spaceId));
 	}
 
+	/**
+	 * @param int[] $spaceIds
+	 * @return int[] the workspaces whose user group the connected user is in, with a single group lookup
+	 */
+	public function filterMemberSpaceIds(array $spaceIds): array {
+		$user = $this->userSession->getUser();
+		if ($user === null) {
+			return [];
+		}
+
+		$gids = $this->groupManager->getUserGroupIds($user);
+
+		return array_values(array_filter($spaceIds, fn (int $spaceId) => in_array(UserGroup::get($spaceId), $gids, true)));
+	}
+
 	public function isSimpleUserOfSpace(array $space): bool {
 		if ($this->isUserGeneralAdmin() || $this->isSpaceManagerOfSpace($space)) {
 			return false;

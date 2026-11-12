@@ -21,7 +21,7 @@
  *
  */
 
-import { getUsers, addGroupToWorkspace } from '../services/spaceService.js'
+import { getUsers, getManagers, addGroupToWorkspace } from '../services/spaceService.js'
 import { generateUrl } from '@nextcloud/router'
 import { PREFIX_GID_SUBGROUP_SPACE, PREFIX_DISPLAYNAME_SUBGROUP_SPACE } from '../constants.js'
 import axios from '@nextcloud/axios'
@@ -555,6 +555,21 @@ export default {
 			.catch(error => {
 				console.error(error)
 			})
+	},
+	async loadManagers(context, { workspaceIds }) {
+		try {
+			const { data } = await getManagers(workspaceIds)
+			workspaceIds.forEach((id) => {
+				const space = context.getters.getSpaceById(id)
+				// Never overwrites managers loaded in the meantime, which are more complete.
+				// A workspace left out by the server (not visible) gets no manager.
+				if (space && space.managers === null) {
+					context.commit('addSpaceAdminUsers', { name: space.name, managers: data[id] ?? [] })
+				}
+			})
+		} catch (error) {
+			console.error(error)
+		}
 	},
 	addUserManager(context, { spaceName, user }) {
 		context.commit('ADD_USER_MANAGER', { spaceName, user })
