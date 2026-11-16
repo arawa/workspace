@@ -86,23 +86,24 @@ const IMPORT_FILES = { method: 'POST', pathname: '**/apps/workspace/space/*/impo
 // The modal to add users, named by its title
 const addUsersModal = (label) => cy.findByRole('dialog', { name: label.addUsers })
 
-// The card of a selected user in the modal, found by their display name, which is their UID
-const userCard = (user) => cy.contains('.user-card', user.userId)
+// The chip of a selected user in the open tab of the modal, found by their display name, which is their UID
+const userChip = (user) => cy.contains('[role="tabpanel"]:visible .nc-chip', user.userId)
 
 // Searches a user in the modal, and selects them among those it offers
 const selectUser = (label, user) => {
 	cy.intercept(LOOKUP_USERS).as('lookupUsers')
-	addUsersModal(label).findByPlaceholderText(label.searchUsers).type(user.userId)
+	addUsersModal(label).findByLabelText(label.searchUsers).clear().type(user.userId)
 	cy.wait('@lookupUsers')
 	cy.contains('[role="option"]', user.userId).click()
+	cy.contains('[role="option"]', user.userId).should('have.attr', 'aria-selected', 'true')
 }
 
 // Checks the users selected in the modal, and which of them are to be Workspace Managers
 const shouldSelect = (label, members, managers) => {
-	const managerBox = (user) => userCard(user).findByRole('checkbox', { name: label.manager })
-	cy.get('.user-card').should('have.length', members.length + managers.length)
-	members.forEach((user) => managerBox(user).should('not.be.checked'))
-	managers.forEach((user) => managerBox(user).should('be.checked'))
+	const managerButton = (user) => userChip(user).findByRole('button', { name: label.manager })
+	cy.get('[role="tabpanel"]:visible .nc-chip').should('have.length', members.length + managers.length)
+	members.forEach((user) => managerButton(user).should('have.attr', 'aria-pressed', 'false'))
+	managers.forEach((user) => managerButton(user).should('have.attr', 'aria-pressed', 'true'))
 }
 
 // Adds the selected users, and waits for the modal to close
@@ -195,19 +196,19 @@ for (const [language, label] of Object.entries(labels)) {
 					openSpace()
 					openAddUsers()
 
-					// Opens on the search, with no user selected
+					// Opens on the search, with no user selected, so nothing to add yet
 					addUsersModal(label).within(() => {
 						cy.findByRole('tab', { name: label.searchTab }).should('have.attr', 'aria-selected', 'true')
-						cy.findByPlaceholderText(label.searchUsers).should('be.visible')
-						cy.contains(label.noUsers).should('be.visible')
-						cy.contains('button', label.addTheseUsers).should('be.visible')
+						cy.findByLabelText(label.searchUsers).should('be.visible')
+						cy.contains('[role="tabpanel"]:visible p', label.noUsers).should('be.visible')
+						cy.contains('button', label.addTheseUsers).should('be.disabled')
 
 						// The import of a .csv file, whose structure the icon next to its tab tells
 						cy.findByRole('tab', { name: label.importTab }).click()
 						cy.contains('button', label.uploadFiles).should('be.visible')
 						cy.contains('button', label.chooseFromFiles).should('be.visible')
-						cy.contains(label.noUsers).should('be.visible')
-						cy.contains('button', label.addTheseUsers).should('be.visible')
+						cy.contains('[role="tabpanel"]:visible p', label.noUsers).should('be.visible')
+						cy.contains('button', label.addTheseUsers).should('be.disabled')
 						cy.get('.information-image').click()
 					})
 					cy.contains('.popover', label.csvStructure).within(() => {
@@ -222,12 +223,17 @@ for (const [language, label] of Object.entries(labels)) {
 					shouldCount({ users: 1, managers: 1, subgroupMembers: 0 })
 					openAddUsers()
 
-					// Each selected user has a box to make them Workspace Manager, and a trash
+					// A second click on a user found unselects them
+					selectUser(label, ana)
+					cy.contains('[role="option"]', ana.userId).click()
+					cy.contains('[role="option"]', ana.userId).should('have.attr', 'aria-selected', 'false')
 					selectUser(label, ana)
 					selectUser(label, ben)
 					selectUser(label, hal)
-					userCard(ben).findByRole('checkbox', { name: label.manager }).click({ force: true })
-					userCard(hal).findByRole('button', { name: label.unselect }).click()
+
+					// Each selected user has a chip, with a button to make them Workspace Manager and a cross
+					userChip(ben).findByRole('button', { name: label.manager }).click()
+					userChip(hal).findByRole('button', { name: label.unselect }).click()
 					shouldSelect(label, [ana], [ben])
 
 					addSelectedUsers(label)

@@ -135,4 +135,36 @@ describe('AddUsersTabs component tests', () => {
 		expect(count).toEqual(1)
 	},
 	)
+
+	it('toggleUserInBatch test: selects a user, then unselects them on a second click', () => {
+		const user = { uid: 'jane', name: 'Jane Doe', role: 'user' }
+		wrappedSelectUsers.vm.allSelectedUsers = []
+
+		wrappedSelectUsers.vm.toggleUserInBatch(user)
+		expect(wrappedSelectUsers.vm.allSelectedUsers.map(u => u.uid)).toEqual(['jane'])
+
+		wrappedSelectUsers.vm.toggleUserInBatch({ ...user })
+		expect(wrappedSelectUsers.vm.allSelectedUsers).toEqual([])
+	})
+
+	it('toggleUserRole test: switches between user and Workspace Manager, without touching the search result', () => {
+		const found = { uid: 'jane', name: 'Jane Doe', role: 'user' }
+		wrappedSelectUsers.vm.allSelectedUsers = []
+		wrappedSelectUsers.vm.toggleUserInBatch(found)
+
+		wrappedSelectUsers.vm.toggleUserRole({ uid: 'jane' })
+		expect(wrappedSelectUsers.vm.allSelectedUsers[0].role).toEqual('wm')
+		expect(found.role).toEqual('user')
+
+		wrappedSelectUsers.vm.toggleUserRole({ uid: 'jane' })
+		expect(wrappedSelectUsers.vm.allSelectedUsers[0].role).toEqual('user')
+	})
+
+	it('pushUsersFromButton test: lowercases the roles of a .csv file', () => {
+		wrappedSelectUsers.vm.pushUsersFromButton([
+			{ uid: 'jane', name: 'Jane Doe', role: 'WM' },
+			{ uid: 'john', name: 'John Doe', role: 'u' },
+		])
+		expect(wrappedSelectUsers.vm.allSelectedUsers.map(u => u.role)).toEqual(['wm', 'user'])
+	})
 })

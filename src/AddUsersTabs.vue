@@ -21,40 +21,40 @@
 
 <template>
 	<div class="select-users-wrapper">
-		<NcAppSidebar
-			name="select users"
-			class="my-sidebar"
-			@update:active="toggleImportTab">
-			<NcAppSidebarTab id="search"
-				:name="titleSearch"
-				:order="1">
-				<MultiSelectUsers class="input-select-users"
-					:all-selected-users="allSelectedUsers"
-					@change="addUserToBatch" />
-				<template #icon>
-					<span />
-				</template>
-			</NcAppSidebarTab>
-			<NcAppSidebarTab id="import"
-				:name="titleImport"
-				:order="2">
-				<div class="buttons-import-groups">
-					<ButtonUploadLocalFile :all-selected-users="allSelectedUsers"
-						@push="pushUsersFromButton" />
-					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
-						@push="pushUsersFromButton" />
-				</div>
-				<template #icon>
-					<span />
-				</template>
-			</NcAppSidebarTab>
-		</NcAppSidebar>
-		<div class="information-import">
+		<div class="tabs">
+			<!-- The arrows go from one tab to the other, as the ARIA tabs pattern expects -->
+			<div class="tabs__list"
+				role="tablist"
+				@keydown.left.prevent="selectTab(!importTab)"
+				@keydown.right.prevent="selectTab(!importTab)">
+				<button id="add-users-tab-search"
+					ref="searchTab"
+					type="button"
+					class="tabs__tab"
+					role="tab"
+					:tabindex="importTab ? -1 : 0"
+					:aria-selected="!importTab"
+					aria-controls="add-users-panel-search"
+					@click="importTab = false">
+					{{ titleSearch }}
+				</button>
+				<button id="add-users-tab-import"
+					ref="importTab"
+					type="button"
+					class="tabs__tab"
+					role="tab"
+					:tabindex="importTab ? 0 : -1"
+					:aria-selected="importTab"
+					aria-controls="add-users-panel-import"
+					@click="importTab = true">
+					{{ titleImport }}
+				</button>
+			</div>
 			<NcPopover>
 				<template #trigger="{attr}">
 					<InformationOutline v-bind="attr"
 						class="information-image"
-						:class="onImportTab"
+						:class="{ 'information-image--muted': !importTab }"
 						:size="17" />
 				</template>
 				<div class="popover">
@@ -65,22 +65,35 @@
 				</div>
 			</NcPopover>
 		</div>
-		<div class="select-users-list">
-			<div v-if="allSelectedUsers.length === 0"
-				class="select-users-list-empty">
-				<span>
-					{{ t('workspace', 'No users selected') }}
-				</span>
-			</div>
-			<div v-else>
-				<UserCard v-for="user in allSelectedUsers"
-					:key="user.name"
-					class="user-entry"
-					:class="$store.getters.isMember($route.params.space, user) || !$route.params.slug ? '' : 'user-not-member'"
-					:user="user"
+		<!-- v-show keeps the search and its results when going to the import and back -->
+		<div v-show="!importTab"
+			id="add-users-panel-search"
+			class="tab-panel"
+			role="tabpanel"
+			aria-labelledby="add-users-tab-search">
+			<MultiSelectUsers :all-selected-users="allSelectedUsers"
+				@toggle="toggleUserInBatch">
+				<SelectedUsersChips :users="allSelectedUsers"
 					@toggle-role="toggleUserRole"
 					@remove-user="removeUserFromBatch" />
+			</MultiSelectUsers>
+		</div>
+		<div v-show="importTab"
+			id="add-users-panel-import"
+			class="tab-panel"
+			role="tabpanel"
+			aria-labelledby="add-users-tab-import">
+			<div class="buttons-import-groups">
+				<ButtonUploadLocalFile :all-selected-users="allSelectedUsers"
+					@push="pushUsersFromButton" />
+				<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
+					@push="pushUsersFromButton" />
 			</div>
+			<SelectedUsersChips v-if="importTab"
+				class="import-chips"
+				:users="allSelectedUsers"
+				@toggle-role="toggleUserRole"
+				@remove-user="removeUserFromBatch" />
 		</div>
 		<NcNoteCard v-if="$route.params.slug && addingUsersToWorkspace"
 			type="info"
@@ -90,7 +103,8 @@
 			</p>
 		</NcNoteCard>
 		<div class="buttons-groups">
-			<NcButton
+			<NcButton variant="primary"
+				:disabled="allSelectedUsers.length === 0"
 				@click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add these users') }}
 			</NcButton>
@@ -104,13 +118,11 @@ import ButtonUploadShareFiles from './ButtonUploadShareFiles.vue'
 import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import ManagerGroup from './services/Groups/ManagerGroup.js'
 import MultiSelectUsers from './MultiSelectUsers.vue'
-import NcAppSidebar from '@nextcloud/vue/components/NcAppSidebar'
-import NcAppSidebarTab from '@nextcloud/vue/components/NcAppSidebarTab'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
 import NcRichText from '@nextcloud/vue/components/NcRichText'
-import UserCard from './UserCard.vue'
+import SelectedUsersChips from './SelectedUsersChips.vue'
 import UserGroup from './services/Groups/UserGroup.js'
 
 export default {
@@ -120,12 +132,10 @@ export default {
 		ButtonUploadShareFiles,
 		InformationOutline,
 		MultiSelectUsers,
-		NcAppSidebar,
-		NcAppSidebarTab,
 		NcButton,
 		NcPopover,
 		NcRichText,
-		UserCard,
+		SelectedUsersChips,
 		NcNoteCard,
 	},
 	data() {
@@ -135,9 +145,6 @@ export default {
 		}
 	},
 	computed: {
-		title() {
-			return t('workspace', 'Add users')
-		},
 		titleImport() {
 			return t('workspace', 'Import a .csv file')
 		},
@@ -155,14 +162,6 @@ export default {
 				christine.dupont@nextcloud.fr,wm
 				jdoe@nextcloud.com,user`
 		},
-		onImportTab() {
-			let cssClass = 'onImportTab'
-
-			if (this.importTab) {
-				cssClass = ''
-			}
-			return cssClass
-		},
 		// Returns true when at least 1 selected user is not yet member of the workspace
 		addingUsersToWorkspace() {
 			return !this.allSelectedUsers.every(user => {
@@ -171,9 +170,6 @@ export default {
 		},
 	},
 	methods: {
-		closeSidebar() {
-			this.$emit('close-sidebar')
-		},
 		addUsersToWorkspaceOrGroup() {
 			this.$emit('close-sidebar')
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
@@ -337,46 +333,39 @@ export default {
 				spaceName: space.name,
 			})
 		},
-		// Adds user to the batch when user selects user in the MultiSelect
-		addUserToBatch(user) {
-			const isUser = !!user.uid
-
-			if (!isUser) {
+		// Selects a user found by the search, or unselects them when already selected
+		toggleUserInBatch(user) {
+			if (!user.uid) {
 				return
 			}
-
-			this.allSelectedUsers.push(user)
+			if (this.allSelectedUsers.some(u => u.uid === user.uid)) {
+				this.removeUserFromBatch(user)
+				return
+			}
+			this.allSelectedUsers.push(this.toBatchUser(user))
 		},
-		isWorkspaceManager(role) {
-			role = role.toLowerCase()
-			return role === 'wm'
+		// A copy, so a role picked here never sticks to the search results,
+		// with the role in lowercase as the add paths compare it strictly ('WM' in a CSV file)
+		toBatchUser(user) {
+			return { ...user, role: user.role?.toLowerCase() === 'wm' ? 'wm' : 'user' }
+		},
+		selectTab(importTab) {
+			this.importTab = importTab
+			this.$nextTick(() => this.$refs[importTab ? 'importTab' : 'searchTab'].focus())
 		},
 		// Removes a user from the batch
 		removeUserFromBatch(user) {
 			this.allSelectedUsers = this.allSelectedUsers.filter((u) => {
-				return u.name !== user.name
+				return u.uid !== user.uid
 			})
 		},
 		// Changes the role of a user
 		toggleUserRole(user) {
-			this.allSelectedUsers = this.allSelectedUsers.map(u => {
-				if (u.name === user.name) {
-					u.role = u.role === 'user' ? 'wm' : 'user'
-					return u
-				} else {
-					return u
-				}
-			})
-		},
-		toggleImportTab(active) {
-			if (active === 'import') {
-				this.importTab = true
-			} else {
-				this.importTab = false
-			}
+			const selected = this.allSelectedUsers.find(u => u.uid === user.uid)
+			selected.role = selected.role === 'wm' ? 'user' : 'wm'
 		},
 		pushUsersFromButton(element) {
-			this.allSelectedUsers = element
+			this.allSelectedUsers = element.map(this.toBatchUser)
 		},
 	},
 }
@@ -384,142 +373,75 @@ export default {
 
 <style lang="scss" scoped>
 
-section.app-sidebar__tab--active {
-	min-height: auto !important;
-	display: flex !important;
-	flex-direction: column !important;
-	height: 13% !important;
-	justify-content: center !important;
-	align-items: center !important;
-	overflow: visible !important;
-}
-
-.select-users-wrapper :deep(.app-sidebar-tabs) {
-	margin-top: -10px !important;
-	flex: 1 1 120px !important;
-}
-
-.select-users-wrapper :deep(header.app-sidebar-header) {
-	display: none !important;
-}
-
-// Change the height of the modal container
-// to make space for the NcNoteCard
-.modal-container {
-	max-height: 900px !important;
-}
-
 @media only screen and (max-height: 700px) {
-	.select-users-list-empty {
-		line-height: 150px !important;
-	}
-
-	.select-users-list {
-		height: 160px !important;
-		margin: 0 !important;
-	}
-
 	.note-card {
 		font-size: 12px !important;
 	}
 
 }
 
-// Fix : tabs implies a min-height of 256 that overlaps the user list
-.select-users-wrapper :deep(.app-sidebar-tabs__content) {
-	min-height: 60px !important;
-	height: auto !important;
-	padding-top: 20px;
-}
-
-// FIXME: Obivously we should at some point not randomly reuse the sidebar component
-// since this is not oficially supported
-.modal-container .app-sidebar {
-	$modal-padding: 14px;
-	border: 0;
-	min-width: calc(100% - #{$modal-padding * 2});
-	position: relative;
-	top: 0;
-	inset-inline: 0;
-	max-width: calc(100% - #{$modal-padding * 2});
-	padding: 0 14px;
-	height: auto; // retirer le mode auto
-	overflow: initial;
-	user-select: text;
-	-webkit-user-select: text;
-}
-
-.content-tab {
-	width: 100%;
-}
-
 .select-users-wrapper {
 	display: flex;
-	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-}
-
-.select-users-list {
-	flex-grow: 1;
-	margin: 25px 0;
-	border-style: solid;
-	border-width: 1px;
-	border-color: transparent;
-	width: 82%;
-	overflow: scroll;
-	height: 330px;
-	padding: 8px;
-}
-
-.select-users-list-empty {
-	text-align: center;
-	line-height: 300px;
-	width: 100%;
-}
-
-.select-users-wrapper {
-	display: flex;
-	flex-grow: 1;
-	flex-direction: column;
-	align-items: center;
-}
-
-.user-entry {
-	justify-content: space-between;
-	padding-inline-start: 5px;
-}
-
-.user-entry {
-	align-items: center;
-	display: flex;
-	flex-flow: row;
-}
-
-.user-not-member {
-	background-color: rgba(var(--color-error-rgb), 0.5);
+	// A fixed height keeps the buttons in view, only the lists of users scroll
+	height: min(700px, 75vh);
 }
 
 .buttons-import-groups {
 	display: flex;
-	width: 560px;
 	justify-content: space-around;
-	margin-top: 15px;
 }
 
-.input-select-users {
+.tabs {
 	display: flex;
-	justify-content: center;
-	width: 100%;
+	align-items: center;
+	gap: 8px;
+	width: 90%;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.tabs__list {
+	display: flex;
+	flex: 1;
+}
+
+.tabs__tab {
+	flex: 1;
+	margin: 0;
+	padding: 12px;
+	border: 0;
+	border-bottom: 3px solid transparent;
+	border-radius: 0;
+	background: none;
+	color: var(--color-main-text);
+	cursor: pointer;
+}
+
+.tabs__tab:hover {
+	background-color: var(--color-background-hover);
+}
+
+.tabs__tab[aria-selected="true"] {
+	border-bottom-color: var(--color-primary-element);
+	font-weight: bold;
+}
+
+.tab-panel {
+	display: flex;
+	flex: 1 1 0;
+	flex-direction: column;
+	gap: 15px;
+	min-height: 0;
+	width: 90%;
 	margin-top: 15px;
 }
 
-.information-import {
-	position: absolute;
-	top: 56px;
-	inset-inline-end: 66px;
-	z-index: 9999;
+.import-chips {
+	flex: 1 1 0;
+	min-height: 0;
+	overflow-y: auto;
 }
 
 .information-image {
@@ -530,7 +452,7 @@ section.app-sidebar__tab--active {
 	padding: 15px;
 }
 
-.onImportTab {
+.information-image--muted {
 	color: grey;
 }
 
@@ -539,6 +461,10 @@ section.app-sidebar__tab--active {
 }
 
 .buttons-groups {
+	display: flex;
+	flex-shrink: 0;
+	justify-content: flex-end;
+	width: 90%;
 	margin: 25px 0 25px 0;
 }
 
