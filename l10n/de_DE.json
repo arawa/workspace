@@ -122,7 +122,7 @@
     "Unable to remove {user} from the group. Please try again or contact your administrator." : "{user} konnte nicht aus der Gruppe entfernt werden. Bitte erneut versuchen oder an die Administration wenden.",
     "An error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Es ist ein Fehler beim Ändern der Rolle des Benutzers {user} aufgetreten. <br>Fehler: {error}",
     "Unable to change the role of {user}. Please try again or contact your administrator." : "Die Rolle von {user} konnte nicht geändert werden. Bitte erneut versuchen oder an die Administration wenden.",
-    "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Es ist ein Fehler beim Aktualisieren des Arbeitsbereichskontigents aufgetreten. <br>Fehler: {error}",
+    "An error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Es ist ein Fehler beim Aktualisieren des Arbeitsbereichskontingents aufgetreten. <br>Fehler: {error}",
     "Unable to update the workspace's quota. Please try again or contact your administrator." : "Kontingent des Arbeitsbereichs konnte nicht aktualisiert werden. Bitte erneut versuchen oder an die Administration wenden.",
     "Caution, users highlighted in red are not yet member of this workspace. They will be automatically added." : "Achtung, rot hervorgehobene Benutzer sind noch nicht Mitglied dieses Arbeitsbereichs. Sie werden automatisch hinzugefügt.",
     "Error 403" : "Fehler 403",
@@ -144,7 +144,7 @@
     "Network error occurred while trying to delete group {group}<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Löschen der Gruppe {group} aufgetreten<br> Fehler: {error}",
     "Network error occurred while removing user from group {group}<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Entfernen des Benutzers aus der Gruppe {group} aufgetreten.<br>Fehler: {error}",
     "Network error occurred while trying to change the role of user {user}.<br>Error: {error}" : "Es ist ein Netzwerkfehler beim Ändern der Rolle des Benutzers {user} aufgetreten. <br>Fehler: {error}",
-    "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Netzwerkfehler beim Aktualisieren des Arbeitsbereichskontigents. <br>Fehler: {error}",
+    "Network error occurred while trying to update the workspace's quota.<br>Error: {error}" : "Netzwerkfehler beim Aktualisieren des Arbeitsbereichskontingents. <br>Fehler: {error}",
     "Access denied" : "Zugriff verweigert"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
