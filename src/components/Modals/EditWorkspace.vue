@@ -151,7 +151,7 @@ export default {
 			this.$emit('close')
 		},
 		async save() {
-			const oldSpace = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			const oldSpace = this.space
 			const oldSpaceName = oldSpace.name
 			const space = { ...oldSpace }
 

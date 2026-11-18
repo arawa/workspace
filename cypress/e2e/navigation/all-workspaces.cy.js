@@ -35,10 +35,12 @@ import {
 const labels = {
 	en: {
 		columns: ['', 'Workspace name', 'Quota', 'Workspace Managers'],
+		actions: 'Actions',
 		unlimited: 'unlimited',
 	},
 	fr: {
 		columns: ['', 'Nom du workspace', 'Quota', 'Workspace Managers'],
+		actions: 'Actions',
 		unlimited: 'illimité',
 	},
 }
@@ -47,7 +49,8 @@ const labels = {
 const workspaceRows = () => cy.get('.table-spaces tbody tr')
 const workspaceRow = (space) => cy.contains('.table-spaces tr', space.name)
 
-// The cells of a row, in the order of the columns: color, name, quota, Workspace Managers
+// The cells of a row, in the order of the columns: color, name, quota, Workspace Managers, and
+// the actions, which only a General Manager gets
 const QUOTA = 2
 const MANAGERS = 3
 
@@ -107,8 +110,8 @@ for (const [language, label] of Object.entries(labels)) {
 
 		// The table lists both workspaces with their quota, and the avatars of their
 		// Workspace Managers sorted by UID
-		const checkTable = () => {
-			shouldHaveColumns('.table-spaces', label.columns)
+		const checkTable = (columns) => {
+			shouldHaveColumns('.table-spaces', columns)
 
 			workspaceRow(first).find('td').eq(QUOTA).should('have.text', '1 GB')
 			shouldListManagers(first, ['Zélie', 'Ada'])
@@ -123,7 +126,7 @@ for (const [language, label] of Object.entries(labels)) {
 
 			searchWorkspaces(language, tag)
 			workspaceRows().should('have.length', 2)
-			checkTable()
+			checkTable([...label.columns, label.actions])
 		})
 
 		it('lists their workspaces to a Workspace Manager', () => {
@@ -131,7 +134,7 @@ for (const [language, label] of Object.entries(labels)) {
 			openWorkspaceApp(language)
 
 			workspaceRows().should('have.length', 2)
-			checkTable()
+			checkTable(label.columns)
 		})
 	})
 }
