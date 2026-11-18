@@ -57,7 +57,7 @@
 						<td class="workspace-td">
 							<lazy-component :key="space.id + '-avatars'"
 								class="admin-avatars"
-								@show="initAdmins(space.id, space.name)">
+								@show="initAdmins(space.id)">
 								<div class="container-avatars">
 									<NcAvatar v-for="user in getFirstTenWorkspaceManagerUsers(space.name)"
 										:key="user.uid"
@@ -99,6 +99,8 @@ import PageLoader from './components/PageLoader.vue'
 import { WorkspacesLoader } from './mixins/WorkspacesLoader.mixin.js'
 import WorkspaceContentEmpty from './components/Content/Empty/WorkspaceContentEmpty.vue'
 
+const MANAGERS_BATCH_DELAY = 250
+
 export default {
 	name: 'SpaceTable',
 	components: {
@@ -126,6 +128,15 @@ export default {
 			this.$nextTick(() => this.$Lazyload.lazyLoadHandler())
 		},
 	},
+	created() {
+		this.pendingWorkspaceIds = new Set()
+		// Ids queued or awaiting an answer: a refresh of the lazy loading must not ask for them again
+		this.requestedWorkspaceIds = new Set()
+		this.flushTimer = null
+	},
+	beforeUnmount() {
+		clearTimeout(this.flushTimer)
+	},
 	beforeMount() {
 		if (this.$store.getters.countWorkspaces < this.$store.getters.countTotalWorkspacesByQuery) {
 			this.showNextPage()
@@ -151,14 +162,23 @@ export default {
 				},
 			})
 		},
-		initAdmins(id, name) {
+		initAdmins(id) {
 			const space = this.$store.getters.getSpaceById(id)
-			if (space !== null) {
-				if (space.managers !== null || Object.keys(space.users).length > 0) {
-					return
-				}
-				this.$store.dispatch('loadAdmins', { space })
+			if (!space || space.managers !== null || Object.keys(space.users).length > 0 || this.requestedWorkspaceIds.has(id)) {
+				return
 			}
+			this.requestedWorkspaceIds.add(id)
+			this.pendingWorkspaceIds.add(id)
+			// The window opens at the first row shown and does not restart: the rows
+			// shown together share one request, and none waits more than MANAGERS_BATCH_DELAY
+			this.flushTimer ??= setTimeout(() => this.loadPendingManagers(), MANAGERS_BATCH_DELAY)
+		},
+		loadPendingManagers() {
+			this.flushTimer = null
+			const workspaceIds = [...this.pendingWorkspaceIds]
+			this.pendingWorkspaceIds.clear()
+			this.$store.dispatch('loadManagers', { workspaceIds })
+				.finally(() => workspaceIds.forEach((id) => this.requestedWorkspaceIds.delete(id)))
 		},
 		getFirstTenWorkspaceManagerUsers(spacename) {
 			return this.$store.getters.getFirstTenWorkspaceManagerUsers(spacename)

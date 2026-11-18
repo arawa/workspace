@@ -29,6 +29,16 @@ import showNotificationError, { showCreatingWorkspaceNotification } from './Noti
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
 
 /**
+ * @param {number[]} workspaceIds the workspaces to load the Workspace Managers of
+ * @return {Promise} resolves with the managers keyed by workspace id
+ */
+export function getManagers(workspaceIds) {
+	return axios.get(generateUrl('/apps/workspace/managers'), {
+		params: { workspaceIds: workspaceIds.join(',') },
+	})
+}
+
+/**
 	* @param {string} spaceName it's a name for the space to create
 	* @param {object} vueInstance it's an instance of vue
 	* @return {object}

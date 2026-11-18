@@ -360,4 +360,27 @@ class UserServiceTest extends TestCase {
 			$this->assertSame($isMember, $userService->isMemberOfSpace(1));
 		}
 	}
+
+	/**
+	 * filterMemberSpaceIds() keeps the workspaces whose user group the connected user is in,
+	 * with a single lookup of its groups.
+	 */
+	public function testFilterMemberSpaceIds(): void {
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->with($this->user)
+			->willReturn(['SPACE-U-1', 'SPACE-GE-2', 'SPACE-U-3', 'admin']);
+
+		$userService = new UserService(
+			$this->groupManager,
+			$this->userSession,
+			$this->logger,
+			$this->connectedGroupService,
+			$this->urlGenerator,
+			$this->userGroup,
+			$this->groupfoldersGroupsMapper,
+			$this->appConfig);
+
+		$this->assertSame([1, 3], $userService->filterMemberSpaceIds([1, 2, 3, 4]));
+	}
 }
