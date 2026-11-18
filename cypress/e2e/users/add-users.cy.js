@@ -55,6 +55,7 @@ const labels = {
 		addTheseUsers: 'Add these users',
 		// Without its ":", behind a non-breaking space in French, which cy.contains() reads as a space
 		csvStructure: 'Your CSV file must follow this structure',
+		csvStructureButton: 'CSV file structure',
 		uploadFiles: 'Upload new files',
 		chooseFromFiles: 'Choose from Files',
 		choose: (file) => `Choose ${file}`,
@@ -72,6 +73,8 @@ const labels = {
 		addTheseUsers: 'Ajouter ces utilisateurs',
 		// Without its ":", behind a non-breaking space in French, which cy.contains() reads as a space
 		csvStructure: 'Votre fichier CSV doit respecter cette structure',
+		// New string: fails until Transifex delivers its translation
+		csvStructureButton: 'Structure du fichier CSV',
 		uploadFiles: 'Téléverser de nouveaux fichiers',
 		chooseFromFiles: 'Choisir depuis Fichiers',
 		choose: (file) => `Choisir ${file}`,
@@ -202,13 +205,13 @@ for (const [language, label] of Object.entries(labels)) {
 						cy.contains(label.noUsers).should('be.visible')
 						cy.contains('button', label.addTheseUsers).should('be.visible')
 
-						// The import of a .csv file, whose structure the icon next to its tab tells
+						// The import of a .csv file, whose structure the button next to the upload buttons tells
 						cy.findByRole('tab', { name: label.importTab }).click()
 						cy.contains('button', label.uploadFiles).should('be.visible')
 						cy.contains('button', label.chooseFromFiles).should('be.visible')
 						cy.contains(label.noUsers).should('be.visible')
 						cy.contains('button', label.addTheseUsers).should('be.visible')
-						cy.get('.information-image').click()
+						cy.contains('button', label.csvStructureButton).click()
 					})
 					cy.contains('.popover', label.csvStructure).within(() => {
 						for (const line of ['user, role', 'pierre.quiroul,user', 'awang,wm', 'radjiv.velasquez,u', 'christine.dupont@nextcloud.fr,wm', 'jdoe@nextcloud.com,user']) {
