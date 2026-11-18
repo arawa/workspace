@@ -464,25 +464,20 @@ export default {
 		return result
 	},
 	setSpaceQuota(context, { name, quota }) {
-		// Updates frontend
 		const space = context.getters.getSpaceByNameOrId(name)
-		const oldQuota = space.quota
-		context.commit('setSpaceQuota', { name, quota })
 
-		// Updates backend
+		// Updates frontend only once the backend has accepted the new quota
 		const url = generateUrl(`/apps/workspace/spaces/${space.id}/quota`)
-		axios.post(url, { quota })
+		return axios.post(url, { quota })
 			.then(resp => {
-				if (resp.status !== 200) {
-					// Reverts change made in the frontend in case of error
-					context.commit('setSpaceQuota', { name, oldQuota })
+				if (resp.status === 200) {
+					context.commit('setSpaceQuota', { name, quota })
+				} else {
 					const text = t('workspace', 'An error occurred while trying to update the workspace\'s quota.<br>Error: {error}', { error: resp.statusText })
 					showNotificationError(t('workspace', 'Error'), text, 3000)
 				}
 			})
 			.catch((e) => {
-				// Reverts change made in the frontend in case of error
-				context.commit('setSpaceQuota', { name, oldQuota })
 				console.error('Error updating workspace quota', e)
 				const text = t('workspace', 'Unable to update the workspace\'s quota. Please try again or contact your administrator.')
 				showNotificationError(t('workspace', 'Network error'), text, 3000)
