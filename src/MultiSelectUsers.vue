@@ -20,41 +20,44 @@
 -->
 
 <template>
-	<div class="multiselect-area">
-		<NcSelect ref="userSelectInput"
-			class="select-users-input"
-			:filter-by="filterSearched"
-			aria-label-combobox="select users"
-			label="name"
-			:custom-label="displayForSearching"
-			:loading="isLookingUpUsers"
-			:multiple="false"
-			:options="selectableUsers"
-			:placeholder="t('workspace', 'Start typing to lookup users')"
-			:append-to-body="false"
-			:user-select="true"
-			@option:selected="$emit('change', $event)"
-			@close="selectableUsers=[]"
-			@search="debounceLookupUsers">
-			<template #no-options>
-				<span />
+	<div class="search-users">
+		<NcTextField ref="searchInput"
+			v-model="term"
+			:label="t('workspace', 'Start typing to lookup users')"
+			:show-trailing-button="term !== ''"
+			@trailing-button-click="term = ''">
+			<template #icon>
+				<Magnify :size="20" />
 			</template>
-			<template #option="option">
-				<div class="option-content">
-					<NcAvatar
-						class="option-avatar"
-						:type="user"
-						:display-name="option.name"
-						:uid="option.uid"
-						:title="option.name"
-						:show-user-status="false" />
-					<div class="option-text">
-						<p>{{ option.name }}</p>
-						<small>{{ option.email }}</small>
-					</div>
-				</div>
-			</template>
-		</NcSelect>
+		</NcTextField>
+		<!-- The selected users, between the search and its results as in Talk -->
+		<div class="search-users__selection">
+			<slot />
+		</div>
+		<NcLoadingIcon v-if="isLookingUpUsers" class="search-users__loading" />
+		<!-- v-show keeps the rows mounted while a lookup runs -->
+		<ul v-show="!isLookingUpUsers"
+			class="search-users__results"
+			role="listbox"
+			aria-multiselectable="true"
+			:aria-label="t('workspace', 'Search users')">
+			<li v-for="user in selectableUsers"
+				:key="user.uid"
+				class="search-users__option"
+				role="option"
+				tabindex="0"
+				:aria-selected="isSelected(user)"
+				@click="$emit('toggle', user)"
+				@keydown.enter.space.prevent="$emit('toggle', user)">
+				<NcListItemIcon :name="user.name"
+					:subname="user.email"
+					:user="user.uid"
+					:search="term"
+					:show-user-status="false">
+					<Check v-if="isSelected(user)" :size="20" />
+				</NcListItemIcon>
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -62,16 +65,22 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import showNotificationError from './services/Notifications/NotificationError.js'
-import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
+import Check from 'vue-material-design-icons/Check.vue'
+import Magnify from 'vue-material-design-icons/Magnify.vue'
+import NcListItemIcon from '@nextcloud/vue/components/NcListItemIcon'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import debounce from 'debounce'
 import { t } from '@nextcloud/l10n'
 
 export default {
 	name: 'MultiSelectUsers',
 	components: {
-		NcAvatar,
-		NcSelect,
+		Check,
+		Magnify,
+		NcListItemIcon,
+		NcLoadingIcon,
+		NcTextField,
 	},
 	props: {
 		allSelectedUsers: {
@@ -79,41 +88,64 @@ export default {
 			default: () => [], // All selected users from all searches
 		},
 	},
+	emits: ['toggle'],
 	data() {
 		return {
 			isLookingUpUsers: false, // True when we are looking up users
 			selectableUsers: [], // Users matching a search term
+			term: '',
 		}
 	},
-	mounted() {
-		setTimeout(() => {
-			const inputElement = this.$refs.userSelectInput.$el.querySelector('input')
-			this.$nextTick(() => {
-				inputElement.focus()
-			})
-		}, 100)
-	},
-	methods: {
-		displayForSearching({ name, email, uid }) {
-			return `${name} - ${email} - ${uid}`
+	computed: {
+		selectedUids() {
+			return new Set(this.allSelectedUsers.map(user => user.uid))
 		},
-		debounceLookupUsers: debounce(function(term) {
-			this.lookupUsers(term)
-		}, 500),
-		lookupUsers(term) {
-			// safeguard for initialisation
-			if (term === undefined || term === '') {
+	},
+	watch: {
+		term(term) {
+			if (term.trim() === '') {
+				this.debounceLookupUsers.clear()
+				this.lookupCount++ // drops the answer of a lookup still running
+				this.isLookingUpUsers = false
+				this.selectableUsers = []
 				return
 			}
+			this.debounceLookupUsers(term)
+		},
+	},
+	created() {
+		// One timer per instance, cleared when the dialog closes
+		this.debounceLookupUsers = debounce(this.lookupUsers, 500)
+		// Counts the lookups, so that only the answer of the latest one is shown
+		this.lookupCount = 0
+	},
+	beforeUnmount() {
+		this.debounceLookupUsers.clear()
+		clearTimeout(this.focusTimer)
+	},
+	mounted() {
+		// Waits for the dialog to take the focus first
+		this.focusTimer = setTimeout(() => this.$refs.searchInput?.focus(), 100)
+	},
+	methods: {
+		isSelected(user) {
+			return this.selectedUids.has(user.uid)
+		},
+		lookupUsers(term) {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			const spaceId = space.id
 			// TODO: limit max results?
+			const lookup = ++this.lookupCount
+			const isLatest = () => lookup === this.lookupCount
 			this.isLookingUpUsers = true
-			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
+			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${encodeURIComponent(term)}/${spaceId}`),
 				{
 					space,
 				})
 				.then((resp) => {
+					if (!isLatest()) {
+						return
+					}
 					if (resp.status === 200) {
 						const users = this.removeDuplicatedUsers(resp.data)
 						const usersToDisplay = this.filterAlreadyPresentUsers(users)
@@ -124,14 +156,18 @@ export default {
 					}
 				})
 				.catch((e) => {
+					if (!isLatest()) {
+						return
+					}
 					console.error('Problem to search users', e)
 					const text = t('workspace', 'Unable to search for users. Please try again or contact your administrator.')
 					showNotificationError(t('workspace', 'Network error'), text, 3000)
 				})
 				.finally(() => {
-					this.isLookingUpUsers = false
+					if (isLatest()) {
+						this.isLookingUpUsers = false
+					}
 				})
-			this.isLookingUpUsers = false
 		},
 		removeDuplicatedUsers(users) {
 			const usersWithoutDuplicated = Array.from(
@@ -149,79 +185,52 @@ export default {
 				}
 			})
 		},
-		// When adding users to a space, show only those users who are not already member of the space
+		// When adding users to a space, show only those users who are not already member of the space.
+		// Selected users stay listed, checked, so that a click unselects them
 		filterAlreadyPresentUsers(recvUsers) {
-			let users = []
-			const group = this.$route.params.slug
-			if (group === undefined) {
+			const slug = this.$route.params.slug
+			if (slug === undefined) {
 				const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
-				users = recvUsers.filter(user => {
-					return (!(user.uid in space.users))
-				}, space)
-			} else {
-				users = recvUsers.filter(user => {
-					return (!(user.groups.includes(group)))
-				})
+				return recvUsers.filter(user => !(user.uid in space.users))
 			}
-			// Filters user that are already selected
-			return users.filter(newUser => {
-				return this.allSelectedUsers.every(user => {
-					return newUser.uid !== user.uid
-				})
-			})
-		},
-		filterSearched(option, label, search) {
-			const uid = option.uid.toLowerCase()
-			const name = option.name.toLowerCase()
-			const email = option.email?.toLowerCase()
-			const searchTerm = search.toLowerCase()
-
-			return uid.includes(searchTerm)
-				|| name.includes(searchTerm)
-				|| email?.includes(searchTerm)
+			const gid = decodeURIComponent(decodeURIComponent(slug))
+			return recvUsers.filter(user => !user.groups.includes(gid))
 		},
 	},
 }
 </script>
 
 <style scoped>
-.select-users-input {
-	width: 80%;
-}
-
-.multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
-	border-bottom: rgb(0,0,0,0);
-}
-
-.multiselect-area:hover :deep(.v-select.select .vs__dropdown-toggle) {
-	border-color: var(--color-primary);
-}
-
-.multiselect-area:hover :deep(.v-select.select.vs--open) .vs__dropdown-menu {
-	border-color: var(--color-primary) !important;
-}
-
-.multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-menu) {
-	border-width: 2px !important;
-	border-color: var(--color-border-dark) !important;
-}
-
-.multiselect-area :deep(.v-select.select .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
-}
-
-.option-content {
+.search-users {
 	display: flex;
-	align-items: center;
-	justify-content: start;
-	gap: 12px;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+	height: 100%;
 }
 
-.option-content, .option-text, .option-avatar {
+/* The selected users and the users found share the height, half each */
+.search-users__selection,
+.search-users__results,
+.search-users__loading {
+	flex: 1 1 0;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+.search-users__selection {
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.search-users__option {
+	border-radius: var(--border-radius-element);
 	cursor: pointer;
 }
 
+.search-users__option:hover,
+.search-users__option:focus-visible,
+.search-users__option[aria-selected="true"] {
+	background-color: var(--color-background-hover);
+}
 </style>
