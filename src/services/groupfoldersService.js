@@ -153,7 +153,7 @@ export function addGroupToGroupfolder(folderId, gid) {
 		})
 		.catch(error => {
 			showNotificationError(
-				t('workspace', 'Error groups'),
+				t('workspace', 'Error adding group'),
 				t('workspace', 'Impossible to attach the {gid} group to groupfolder. May be a problem with the connection?', { gid }),
 				5000)
 			console.error(`Impossible to attach the ${gid} group to groupfolder. May be a problem with the connection?`, error)
