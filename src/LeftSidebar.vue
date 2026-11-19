@@ -170,7 +170,7 @@ export default {
 				name,
 				quota: workspace.quota,
 				users: {},
-				userCount: workspace.userCount,
+				userCount: workspace.usersCount,
 				managers: null,
 			})
 			this.$store.dispatch('incrementCountWorkspaces')
