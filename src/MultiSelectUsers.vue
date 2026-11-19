@@ -43,9 +43,8 @@
 				<div class="option-content">
 					<NcAvatar
 						class="option-avatar"
-						:type="user"
 						:display-name="option.name"
-						:uid="option.uid"
+						:user="option.uid"
 						:title="option.name"
 						:show-user-status="false" />
 					<div class="option-text">
