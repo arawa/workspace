@@ -156,7 +156,7 @@ export default {
 			const space = { ...oldSpace }
 
 			if (this.color !== space.color) {
-				axios.post(generateUrl(`/apps/workspace/workspaces/${oldSpace.id}/color`),
+				axios.patch(generateUrl(`/apps/workspace/workspaces/${oldSpace.id}/color`),
 					{
 						colorCode: this.color,
 					})

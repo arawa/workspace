@@ -149,7 +149,7 @@ export const createGroup = (gid, user) => {
 }
 
 // Adds an existing Nextcloud group to the workspace, as an added group. The OCS API has no route for it
-export const addConnectedGroup = (generalManager, space, gid) => request(generalManager, 'POST', `/apps/workspace/spaces/${space.id}/connected-groups`, { gid })
+export const addConnectedGroup = (generalManager, space, gid) => request(generalManager, 'POST', `/apps/workspace/workspaces/${space.id}/connected-groups`, { gid })
 
 // A new user, in the given language if any, added to the user group of the workspace
 export const createSpaceMember = (generalManager, space, language) => createUser(language).then((member) => {
@@ -323,7 +323,7 @@ export const openWorkspaceApp = (language) => {
 // answer the next test, logged out
 export const searchWorkspaces = (language, search) => {
 	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/workspaces/count', query: { search } }).as('countSearch')
-	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/spaces', query: { search } }).as('spacesSearch')
+	cy.intercept({ method: 'GET', pathname: '**/apps/workspace/workspaces', query: { search } }).as('spacesSearch')
 	workspaceNavigation().findByLabelText(navigationLabels[language].searchWorkspaces).type(search)
 	cy.wait(['@countSearch', '@spacesSearch'])
 }

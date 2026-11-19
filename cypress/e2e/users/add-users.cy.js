@@ -79,9 +79,9 @@ const labels = {
 }
 
 // The requests that look up users and read a .csv file
-const LOOKUP_USERS = { method: 'POST', pathname: '**/apps/workspace/api/autoComplete/**' }
-const IMPORT_LOCAL = { method: 'POST', pathname: '**/apps/workspace/space/*/import-users/local' }
-const IMPORT_FILES = { method: 'POST', pathname: '**/apps/workspace/space/*/import-users/files' }
+const LOOKUP_USERS = { method: 'POST', pathname: '**/apps/workspace/workspaces/*/users/search' }
+const IMPORT_LOCAL = { method: 'POST', pathname: '**/apps/workspace/workspaces/*/import-users/local' }
+const IMPORT_FILES = { method: 'POST', pathname: '**/apps/workspace/workspaces/*/import-users/files' }
 
 // The modal to add users, named by its title
 const addUsersModal = (label) => cy.findByRole('dialog', { name: label.addUsers })

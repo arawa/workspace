@@ -132,7 +132,7 @@ export default {
 					this.$store.dispatch('setCountTotalWorkspacesByQuery', { count })
 				})
 
-			axios.get(generateUrl('/apps/workspace/spaces'), {
+			axios.get(generateUrl('/apps/workspace/workspaces'), {
 				params: {
 					search: this.$store.getters.searchWorkspace,
 					limit: LIMIT_WORKSPACES_PER_PAGE,

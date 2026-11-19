@@ -18,7 +18,7 @@ export const WorkspacesLoader = {
 
 			if (visible) {
 				if (this.$store.getters.workspaceCurrentPage <= pageMax) {
-					axios.get(generateUrl('/apps/workspace/spaces'), {
+					axios.get(generateUrl('/apps/workspace/workspaces'), {
 						params: {
 							offset: this.$store.getters.workspaceCurrentPage,
 							search: this.$store.getters.searchWorkspace,

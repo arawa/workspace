@@ -26,8 +26,6 @@
 namespace OCA\Workspace\Service;
 
 use OCA\Workspace\Db\SpaceMapper;
-use OCA\Workspace\Service\Group\ConnectedGroupsService;
-use OCA\Workspace\Service\Group\GroupFormatter;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCA\Workspace\Share\Group\GroupMembersOnlyChecker;
@@ -51,7 +49,6 @@ class WorkspaceService {
 		private UserService $userService,
 		private ShareMembersOnlyFilter $shareMembersFilter,
 		private GroupMembersOnlyChecker $memberGroupOnlyChecker,
-		private ConnectedGroupsService $connectedGroups,
 		private ISearch $collaboratorSearch,
 	) {
 	}
@@ -211,35 +208,5 @@ class WorkspaceService {
 		}
 
 		return (object)$users;
-	}
-
-	/**
-	 *
-	 * Adds groups information to a workspace
-	 *
-	 * @param array|string The workspace to which we want to add groups info
-	 * @return array assoc $workspace
-	 *
-	 */
-	public function addGroupsInfo(array|string $workspace): array {
-		if (!isset($workspace['groups'])) {
-			return $workspace;
-		}
-		$groups = array_map(
-			fn ($gid) => $this->groupManager->get($gid),
-			array_keys($workspace['groups'])
-		);
-		$addedGroups = [];
-		foreach (array_keys($workspace['groups']) as $gid) {
-			$addedToGroup = $this->connectedGroups->getConnectedGroupsToSpaceGroup($gid);
-			if ($addedToGroup !== null) {
-				$addedGroups = array_merge($addedGroups, $addedToGroup);
-			}
-		}
-
-		$workspace['groups'] = GroupFormatter::formatGroups($groups);
-		$workspace['added_groups'] = GroupFormatter::formatGroups($addedGroups);
-
-		return $workspace;
 	}
 }

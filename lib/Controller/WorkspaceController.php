@@ -196,7 +196,8 @@ class WorkspaceController extends Controller {
 	#[NoAdminRequired]
 	#[FrontpageRoute(
 		verb: 'GET',
-		url: '/spaces/{spaceId}'
+		url: '/workspaces/{spaceId}',
+		requirements: ['spaceId' => '\d+'],
 	)]
 	public function find(int $spaceId): JSONResponse {
 		if (!$this->userService->isUserGeneralAdmin() && !$this->userService->isMemberOfSpace($spaceId)) {
@@ -341,25 +342,6 @@ class WorkspaceController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @param string|array $workspace
-	 */
-	public function addGroupsInfo(string|array $workspace): JSONResponse {
-		return new JSONResponse($this->workspaceService->addGroupsInfo($workspace));
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @param string|array $workspace
-	 */
-	public function addUsersInfo(string|array $workspace): JSONResponse {
-		if (gettype($workspace) === 'string') {
-			$workspace = json_decode($workspace, true);
-		}
-		return new JSONResponse($this->workspaceService->addUsersInfo($workspace));
-	}
-
-	/**
 	 * Returns a list of users whose name matches $term
 	 *
 	 * @NoAdminRequired
@@ -380,7 +362,8 @@ class WorkspaceController extends Controller {
 
 	#[FrontpageRoute(
 		verb: 'GET',
-		url: '/{spaceId}/folder'
+		url: '/workspaces/{spaceId}/folder',
+		requirements: ['spaceId' => '\d+'],
 	)]
 	#[NoAdminRequired]
 	public function getFolderUrl(int $spaceId): JSONResponse {

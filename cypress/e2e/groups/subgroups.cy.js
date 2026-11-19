@@ -73,9 +73,9 @@ const labels = {
 }
 
 // The requests that create, rename and delete a subgroup
-const CREATE_GROUP = { method: 'POST', pathname: '**/apps/workspace/api/group' }
-const RENAME_GROUP = { method: 'PATCH', pathname: '**/apps/workspace/api/group/*' }
-const DELETE_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/api/group/*' }
+const CREATE_GROUP = { method: 'POST', pathname: '**/apps/workspace/workspaces/*/groups' }
+const RENAME_GROUP = { method: 'PATCH', pathname: '**/apps/workspace/workspaces/*/groups/*' }
+const DELETE_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/workspaces/*/groups/*' }
 
 // The names of the subgroups the tests create, then the new name of the second one, with an
 // accent and a slash

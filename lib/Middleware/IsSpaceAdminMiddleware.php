@@ -47,10 +47,6 @@ class IsSpaceAdminMiddleware extends Middleware {
 		if ($this->reflector->hasAnnotation('SpaceAdminRequired')) {
 			$spaceId = $this->request->getParam('spaceId');
 			if ($spaceId === null) {
-				$data = $this->request->getParam('data');
-				$spaceId = $data ? $data['spaceId'] : null;
-			}
-			if ($spaceId === null) {
 				throw new AccessDeniedException();
 			}
 			$space = $this->spaceService->find($spaceId);

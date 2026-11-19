@@ -27,6 +27,7 @@ import { generateUrl } from '@nextcloud/router'
 import BadCreateError from '../Errors/BadCreateError.js'
 import showNotificationError, { showCreatingWorkspaceNotification } from './Notifications/NotificationError.js'
 import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfolderError.js'
+import { encodeGid } from './Groups/functions.js'
 
 /**
 	* @param {string} spaceName it's a name for the space to create
@@ -34,7 +35,7 @@ import AddGroupToGroupfolderError from '../Errors/Groupfolders/AddGroupToGroupfo
 	* @return {object}
 	*/
 export function createSpace(spaceName, vueInstance = undefined) {
-	const result = axios.post(generateUrl('/apps/workspace/spaces'),
+	const result = axios.post(generateUrl('/apps/workspace/workspaces'),
 		{
 			spaceName,
 		})
@@ -69,7 +70,7 @@ export function createSpace(spaceName, vueInstance = undefined) {
  * @return {object}
  */
 export function getUsers(spaceId) {
-	const result = axios.get(generateUrl(`/apps/workspace/spaces/${spaceId}/users`))
+	const result = axios.get(generateUrl(`/apps/workspace/workspaces/${spaceId}/users`))
 		.then(resp => {
 			return resp.data
 		})
@@ -92,7 +93,7 @@ export function getUsers(spaceId) {
  * @return {Promise<object>} the workspace, keyed by its name
  */
 export function getSpace(spaceId) {
-	return axios.get(generateUrl('/apps/workspace/spaces/{spaceId}', { spaceId }))
+	return axios.get(generateUrl('/apps/workspace/workspaces/{spaceId}', { spaceId }))
 		.then(resp => resp.data)
 }
 
@@ -102,25 +103,6 @@ export function getSpace(spaceId) {
 	*/
 export function deleteBlankSpacename(spacename) {
 	return spacename.trim()
-}
-
-/**
- * @param {string} spaceId - workspace id as identifier
- * @param {object} groupfolder - groupfolder object
- * @return {object}
- */
-export function transferUsersToUserGroup(spaceId, groupfolder) {
-	const result = axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/transfer-users`),
-		{
-			groupfolder,
-		})
-		.then(resp => {
-			return resp.data
-		})
-		.catch(error => {
-			console.error('Error to transfer users', error)
-		})
-	return result
 }
 
 /**
@@ -150,9 +132,7 @@ export function isSpaceUsers(group) {
  * @throws {AddGroupToGroupfolderError}
  */
 export function addGroupToWorkspace(spaceId, gid) {
-	return axios.post(generateUrl(`/apps/workspace/spaces/${spaceId}/group-attach`), {
-		gid,
-	})
+	return axios.post(generateUrl('/apps/workspace/workspaces/{spaceId}/groups/{gid}/attach', { spaceId, gid: encodeGid(gid) }))
 		.then(resp => {
 			return resp.data
 		})
@@ -171,7 +151,7 @@ export function addGroupToWorkspace(spaceId, gid) {
  * @return {Promise}
  */
 export function removeWorkspace(spaceId) {
-	const result = axios.delete(generateUrl(`/apps/workspace/spaces/${spaceId}`))
+	const result = axios.delete(generateUrl(`/apps/workspace/workspaces/${spaceId}`))
 		.then(resp => {
 			console.info(`The workspace with the ${spaceId} id, is deleted.`)
 			return resp.data
@@ -197,7 +177,7 @@ export function renameSpace(spaceId, newSpaceName) {
 
 	newSpaceName = deleteBlankSpacename(newSpaceName)
 
-	const respFormatFinal = axios.patch(generateUrl(`/apps/workspace/spaces/${spaceId}`),
+	const respFormatFinal = axios.patch(generateUrl(`/apps/workspace/workspaces/${spaceId}`),
 		{
 			newSpaceName,
 		})
@@ -239,7 +219,7 @@ export function renameSpace(spaceId, newSpaceName) {
  * @return {object} { url: String, user_in_group: Bool }, Folder information : folder url and group membership
  */
 export function getFolderUrl(spaceId) {
-	const result = axios.get(generateUrl(`/apps/workspace/${spaceId}/folder`))
+	const result = axios.get(generateUrl(`/apps/workspace/workspaces/${spaceId}/folder`))
 		.then(resp => {
 			return resp.data
 		})

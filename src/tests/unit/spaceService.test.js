@@ -21,153 +21,8 @@
  */
 
 import { beforeEach, describe, expect, it } from 'vitest'
-import { getSpace, transferUsersToUserGroup } from '../../services/spaceService.js'
+import { getSpace } from '../../services/spaceService.js'
 import axios from '@nextcloud/axios'
-
-describe('transferUsersToUserGroup method', () => {
-	beforeEach(() => {
-		axios.mockClear()
-	})
-
-	const responseGroupfolder = {
-		id: 1,
-		mount_point: 'TeamA',
-		groups: {
-			dev: 31,
-			sysadmin: 31,
-		},
-		quota: 5368709120,
-		size: 0,
-		acl: true,
-		manage: [
-			{
-				type: 'group',
-				id: 'dev',
-				displayname: 'dev',
-			},
-			{
-				type: 'user',
-				id: 'user3',
-				displayname: 'user3',
-			},
-			{
-				type: 'user',
-				id: 'user4',
-				displayname: 'user4',
-			},
-		],
-	}
-
-	const responseMockedValue = {
-		data: {
-			groups: {
-				'SPACE-GE1': {
-					gid: 'SPACE-GE-1',
-					displayName: 'GE-1',
-				},
-				'SPACE-U1': {
-					gid: 'SPACE-U-1',
-					displayName: 'U-1',
-				},
-				dev: {
-					gid: 'dev',
-					displayName: 'dev',
-				},
-				sysadmin: {
-					gid: 'sysadmin',
-					displayName: 'sysadmin',
-				},
-			},
-			users: {
-				alice: {
-					uid: 'alice',
-					name: 'alice',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-GE-1',
-						'SPACE-U-1',
-						'dev',
-					],
-					role: 'wm',
-				},
-				bob: {
-					uid: 'bob',
-					name: 'bob',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-GE-1',
-						'SPACE-U-1',
-						'dev',
-					],
-					role: 'wm',
-				},
-				jane: {
-					uid: 'jane',
-					name: 'jane',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-GE-1',
-						'SPACE-U-1',
-						'dev',
-					],
-					role: 'wm',
-				},
-				user2: {
-					uid: 'user2',
-					name: 'user2',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-U-1',
-						'sysadmin',
-					],
-					role: 'user',
-				},
-				user3: {
-					uid: 'user3',
-					name: 'user3',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-U-1',
-						'sysadmin',
-					],
-					role: 'user',
-				},
-				user4: {
-					uid: 'user4',
-					name: 'user4',
-					email: null,
-					subtitle: null,
-					groups: [
-						'SPACE-U-1',
-						'sysadmin',
-					],
-					role: 'user',
-				},
-			},
-		},
-	}
-
-	it('Return object type', async () => {
-
-		axios.post.mockResolvedValue(responseMockedValue)
-		const result = await transferUsersToUserGroup('1', responseGroupfolder)
-
-		expect(typeof (result)).toEqual('object')
-	})
-
-	it('Is not undefined', () => {
-		axios.post.mockResolvedValue(responseMockedValue)
-
-		const result = transferUsersToUserGroup('1', responseGroupfolder)
-
-		expect(result).not.toBe(undefined)
-	})
-})
 
 describe('getSpace method', () => {
 	beforeEach(() => {
@@ -179,7 +34,7 @@ describe('getSpace method', () => {
 
 		const result = await getSpace(42)
 
-		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/spaces/42'))
+		expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/apps/workspace/workspaces/42'))
 		expect(result).toEqual({ Espace01: { id: 42, name: 'Espace01' } })
 	})
 

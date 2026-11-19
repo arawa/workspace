@@ -57,7 +57,7 @@ describe('Open a workspace from its URL', () => {
 	// another one: the app must not open the page of that single workspace instead
 	const visitBeyondFirstPage = (path) => {
 		cy.intercept(
-			{ method: 'GET', pathname: '**/apps/workspace/spaces', query: { limit: String(LIMIT_WORKSPACES_PER_PAGE) } },
+			{ method: 'GET', pathname: '**/apps/workspace/workspaces', query: { limit: String(LIMIT_WORKSPACES_PER_PAGE) } },
 			// Changed in place: Cypress ignores a new body
 			(req) => req.continue((res) => {
 				Object.keys(res.body)
@@ -95,7 +95,7 @@ describe('Open a workspace from its URL', () => {
 	})
 
 	it('gives the workspace to a General Manager and not to a user who is not a member', () => {
-		const url = `/apps/workspace/spaces/${space.id}`
+		const url = `/apps/workspace/workspaces/${space.id}`
 		requestAs(generalManager, 'GET', url).then(({ status, body }) => {
 			expect(status).to.equal(200)
 			expect(Object.keys(body)).to.deep.equal([space.name])

@@ -59,9 +59,9 @@ const labels = {
 }
 
 // The requests each action sends
-const REMOVE_USER = { method: 'PATCH', pathname: '**/apps/workspace/spaces/*/users/*/groups' }
-const REMOVE_MANAGER = { method: 'PATCH', pathname: '**/apps/workspace/api/space/*/user/*' }
-const REMOVE_FROM_GROUP = { method: 'PATCH', pathname: '**/apps/workspace/api/group/delUser/*' }
+const REMOVE_USER = { method: 'DELETE', pathname: '**/apps/workspace/workspaces/*/users/*' }
+const REMOVE_MANAGER = { method: 'PATCH', pathname: '**/apps/workspace/workspaces/*/users/*/role' }
+const REMOVE_FROM_GROUP = { method: 'DELETE', pathname: '**/apps/workspace/workspaces/*/groups/*/users/*' }
 
 // Clicks an action of the menu of the user, whose display name is their UID
 const clickAction = (label, user, action, request) => clickUserAction(label, user.userId, action, request)

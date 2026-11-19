@@ -56,7 +56,7 @@ const labels = {
 }
 
 // The request that changes the role of a user
-const CHANGE_ROLE = { method: 'PATCH', pathname: '**/apps/workspace/api/space/*/user/*' }
+const CHANGE_ROLE = { method: 'PATCH', pathname: '**/apps/workspace/workspaces/*/users/*/role' }
 
 // Clicks an action of the menu of the user, and waits for the server to change their role
 const clickAction = (label, name, action) => clickUserAction(label, name, action, CHANGE_ROLE)
