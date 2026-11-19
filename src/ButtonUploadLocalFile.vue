@@ -21,9 +21,10 @@
 
 <template>
 	<div>
-		<NcButton @click="uploadNewFile()">
+		<NcButton :disabled="disabled" @click="uploadNewFile()">
 			<template #icon>
-				<Upload :size="20" />
+				<NcLoadingIcon v-if="isLookingUpUsers" :size="20" />
+				<Upload v-else :size="20" />
 			</template>
 			{{ t('workspace', 'Upload new files') }}
 		</NcButton>
@@ -36,6 +37,7 @@
 
 <script>
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import Upload from 'vue-material-design-icons/Upload.vue'
 import showNotificationError from './services/Notifications/NotificationError.js'
 
@@ -43,6 +45,7 @@ export default {
 	name: 'ButtonUploadLocalFile',
 	components: {
 		NcButton,
+		NcLoadingIcon,
 		Upload,
 	},
 	props: {
@@ -50,11 +53,21 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
+	emits: ['push', 'loading'],
 	data() {
 		return {
 			isLookingUpUsers: false, // True when we are looking up users
 		}
+	},
+	watch: {
+		isLookingUpUsers(value) {
+			this.$emit('loading', value)
+		},
 	},
 	methods: {
 		uploadNewFile() {
@@ -88,9 +101,10 @@ export default {
 					const text = err.response.data.data.message
 					showNotificationError(title, text, duration)
 					console.error(err.response.data.exception)
+				} finally {
+					this.isLookingUpUsers = false
+					event.target.value = ''
 				}
-				this.isLookingUpUsers = false
-				event.target.value = ''
 			}
 		},
 		// When adding users to a space, show only those users who are not already member of the space

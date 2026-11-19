@@ -40,8 +40,12 @@
 				:order="2">
 				<div class="buttons-import-groups">
 					<ButtonUploadLocalFile :all-selected-users="allSelectedUsers"
+						:disabled="isImporting"
+						@loading="isImporting = $event"
 						@push="pushUsersFromButton" />
 					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
+						:disabled="isImporting"
+						@loading="isImporting = $event"
 						@push="pushUsersFromButton" />
 				</div>
 				<template #icon>
@@ -91,6 +95,7 @@
 		</NcNoteCard>
 		<div class="buttons-groups">
 			<NcButton
+				:disabled="isImporting || allSelectedUsers.length === 0"
 				@click="addUsersToWorkspaceOrGroup()">
 				{{ t('workspace', 'Add these users') }}
 			</NcButton>
@@ -132,6 +137,7 @@ export default {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
 			importTab: false,
+			isImporting: false, // True while a CSV import is running
 		}
 	},
 	computed: {

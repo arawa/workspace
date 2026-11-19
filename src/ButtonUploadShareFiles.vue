@@ -21,9 +21,10 @@
 
 <template>
 	<div>
-		<NcButton @click="shareCsvFromFiles()">
+		<NcButton :disabled="disabled" @click="shareCsvFromFiles()">
 			<template #icon>
-				<Folder :size="20" />
+				<NcLoadingIcon v-if="isLookingUpUsers" :size="20" />
+				<Folder v-else :size="20" />
 			</template>
 			{{ t('workspace', 'Choose from Files') }}
 		</NcButton>
@@ -33,6 +34,7 @@
 <script>
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import showNotificationError from './services/Notifications/NotificationError.js'
 import Folder from 'vue-material-design-icons/Folder.vue'
 
@@ -46,12 +48,28 @@ export default {
 	name: 'ButtonUploadShareFiles',
 	components: {
 		NcButton,
+		NcLoadingIcon,
 		Folder,
 	},
 	props: {
 		allSelectedUsers: {
 			type: Array,
 			default: () => [],
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	emits: ['push', 'loading'],
+	data() {
+		return {
+			isLookingUpUsers: false,
+		}
+	},
+	watch: {
+		isLookingUpUsers(value) {
+			this.$emit('loading', value)
 		},
 	},
 	methods: {
@@ -61,11 +79,11 @@ export default {
 					const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 					const bodyFormData = new FormData()
 					bodyFormData.append('path', path)
+					this.isLookingUpUsers = true
 					try {
 						const users = await this.$store.dispatch('importCsvFromFiles', { formData: bodyFormData, spaceId: space.id })
 						let usersToDisplay = this.filterAlreadyPresentUsers(users)
 						usersToDisplay = this.addSubtitleToUsers(usersToDisplay)
-						// this.allSelectedUsers = [...this.allSelectedUsers, ...usersToDisplay]
 						this.$emit('push', [...this.allSelectedUsers, ...usersToDisplay])
 					} catch (err) {
 						let duration = 10000
@@ -80,6 +98,8 @@ export default {
 						const text = err.response.data.data.message
 						showNotificationError(title, text, duration)
 						console.error(err.response.data.exception)
+					} finally {
+						this.isLookingUpUsers = false
 					}
 				})
 		},

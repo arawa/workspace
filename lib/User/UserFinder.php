@@ -24,21 +24,39 @@
 
 namespace OCA\Workspace\User;
 
+use OCA\Workspace\Exceptions\Notifications\EmailDoesntUniqueException;
+use OCP\IL10N;
 use OCP\IUser;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class UserFinder {
 	public function __construct(
 		private IUserManager $userManager,
+		private IL10N $translate,
+		private LoggerInterface $logger,
 	) {
 	}
 
 	/**
 	 * @param string $email
+	 * @throws EmailDoesntUniqueException when several users share this email
 	 */
 	public function findByEmail(string $email): ?IUser {
 		$users = $this->userManager->getByEmail($email);
-		return $users[0];
+
+		if (count($users) > 1) {
+			throw new EmailDoesntUniqueException(
+				'Email address is not unique',
+				$this->translate->t(
+					'Email address %s is linked to multiple users.'
+					. ' Impossible to know which user to choose.',
+					$email
+				)
+			);
+		}
+
+		return $users[0] ?? null;
 	}
 
 	/**
@@ -50,17 +68,34 @@ class UserFinder {
 	}
 
 	/**
-	 * @param string $pattern
+	 * LDAP users stay unknown to Nextcloud until a search maps them (user_ldap),
+	 * so a miss triggers one search before giving up.
+	 *
+	 * @param string $pattern username or email
 	 */
 	public function findUser(string $pattern): ?IUser {
-		$REGEX_FULL_MAIL = '/^[a-zA-Z0-9_.+-].+@[a-zA-Z0-9_.+-]/';
-
-		if (preg_match($REGEX_FULL_MAIL, $pattern) === 1) {
-			$user = $this->findByEmail($pattern);
-		} else {
-			$user = $this->findByUID($pattern);
+		$user = $this->findKnownUser($pattern);
+		if ($user !== null || $pattern === '') {
+			return $user;
 		}
 
-		return $user;
+		try {
+			$this->userManager->searchDisplayName($pattern, 10);
+		} catch (\Exception $e) {
+			// Best effort: the user is reported as unknown.
+			$this->logger->warning('Could not look up user ' . $pattern, ['exception' => $e]);
+		}
+
+		return $this->findKnownUser($pattern);
+	}
+
+	/**
+	 * Email first: since Nextcloud 31 the local backend's get() also accepts an
+	 * email and silently returns the first matching user, which would skip the
+	 * uniqueness check. Some UIDs contain an "@" (SAML, OIDC), so the shape of
+	 * the pattern cannot tell a UID from an email.
+	 */
+	private function findKnownUser(string $pattern): ?IUser {
+		return $this->findByEmail($pattern) ?? $this->findByUID($pattern);
 	}
 }
