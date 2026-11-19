@@ -2,17 +2,16 @@
 
 namespace OCA\Workspace\Controller;
 
-use OCP\App\IAppManager;
+use OCA\Workspace\Service\Hub\AppIconService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\IURLGenerator;
 
 class HubController extends Controller {
 	public function __construct(
-		private IAppManager $appManager,
-		private IURLGenerator $urlGenerator,
+		private AppIconService $appIconService,
 	) {
 	}
 
@@ -22,15 +21,12 @@ class HubController extends Controller {
 	)]
 	#[NoAdminRequired]
 	public function getAppIcon(string $appName): JSONResponse {
-		$iconPath = $this->appManager->getAppIcon($appName);
-		$darkIconPath = $this->appManager->getAppIcon($appName, true);
+		$icons = $this->appIconService->getIcons($appName);
 
-		$iconFullPath = file_get_contents($this->urlGenerator->getAbsoluteURL($iconPath));
-		$darkIconFullPath = file_get_contents($this->urlGenerator->getAbsoluteURL($darkIconPath));
+		if ($icons === null) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
 
-		return new JSONResponse([
-			'icon_path' => $iconFullPath,
-			'dark_icon_path' => $darkIconFullPath
-		]);
+		return new JSONResponse($icons);
 	}
 }
