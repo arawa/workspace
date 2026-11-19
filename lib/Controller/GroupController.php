@@ -31,7 +31,6 @@ use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\ManagersWorkspace;
 use OCA\Workspace\Service\Group\UserGroup;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
-use OCA\Workspace\Service\Slugger;
 use OCA\Workspace\Service\User\UserFormatter;
 use OCA\Workspace\Service\User\UserWorkspace;
 use OCA\Workspace\Service\UserService;
@@ -102,13 +101,7 @@ class GroupController extends Controller {
 		}
 
 		return new JSONResponse([
-			'group' => [
-				'gid' => $NCGroup->getGID(),
-				'displayName' => $NCGroup->getDisplayName(),
-				'types' => $NCGroup->getBackendNames(),
-				'usersCount' => 0,
-				'slug' => Slugger::slugger($NCGroup->getGID())
-			]
+			'group' => GroupFormatter::formatNewGroup($NCGroup),
 		]);
 	}
 
@@ -475,6 +468,8 @@ class GroupController extends Controller {
 		$groups = array_merge($groupsSearching, $groupsExact);
 
 		$groups = array_map(fn ($group) => $this->groupManager->get($group), $groups);
+		// A group returned by the search may no longer exist
+		$groups = array_filter($groups, fn ($group) => !is_null($group));
 
 		if (!is_null($ignoreSpaces) && (bool)$ignoreSpaces) {
 			$groups = array_filter($groups, function ($group) {
@@ -488,7 +483,7 @@ class GroupController extends Controller {
 
 		$groups = array_filter($groups, fn ($group) => !in_array($group->getGID(), $groupsPresents, true));
 
-		$groupsFormatted = GroupFormatter::formatGroups($groups);
+		$groupsFormatted = GroupFormatter::formatGroupsWithoutUsersCount($groups);
 
 		uksort($groupsFormatted, 'strcasecmp');
 
