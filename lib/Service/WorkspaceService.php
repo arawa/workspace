@@ -78,12 +78,11 @@ class WorkspaceService {
 
 		$users = array_merge($exactUsersFound, $usersFound);
 
-		$users = array_map(
+		// userManager->get() returns null for a result without a local account (e.g. unmapped LDAP)
+		return array_filter(array_map(
 			fn ($user) => $this->userManager->get($user['uuid']),
 			$users
-		);
-
-		return $users;
+		));
 	}
 
 	/**

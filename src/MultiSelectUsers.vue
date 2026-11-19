@@ -83,6 +83,7 @@ export default {
 		return {
 			isLookingUpUsers: false, // True when we are looking up users
 			selectableUsers: [], // Users matching a search term
+			lastLookupId: 0, // Identifies the latest lookup, to ignore the answers of older ones
 		}
 	},
 	mounted() {
@@ -106,14 +107,21 @@ export default {
 				return
 			}
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
+			if (!space) {
+				return
+			}
 			const spaceId = space.id
+			const lookupId = ++this.lastLookupId
 			// TODO: limit max results?
 			this.isLookingUpUsers = true
-			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${term}/${spaceId}`),
+			axios.post(generateUrl(`/apps/workspace/api/autoComplete/${encodeURIComponent(term)}/${spaceId}`),
 				{
 					space,
 				})
 				.then((resp) => {
+					if (lookupId !== this.lastLookupId) {
+						return
+					}
 					if (resp.status === 200) {
 						const users = this.removeDuplicatedUsers(resp.data)
 						const usersToDisplay = this.filterAlreadyPresentUsers(users)
@@ -129,9 +137,10 @@ export default {
 					showNotificationError(t('workspace', 'Network error'), text, 3000)
 				})
 				.finally(() => {
-					this.isLookingUpUsers = false
+					if (lookupId === this.lastLookupId) {
+						this.isLookingUpUsers = false
+					}
 				})
-			this.isLookingUpUsers = false
 		},
 		removeDuplicatedUsers(users) {
 			const usersWithoutDuplicated = Array.from(
