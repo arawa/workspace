@@ -36,16 +36,22 @@ namespace OCA\Workspace;
  * @psalm-type WorkspaceSpace = array{
  *		id: int,
  * 		mount_point: string,
- * 		groups: list<array{}>,
+ * 		groups: array<string, WorkspaceGroupInfo>,
  * 		quota: int,
  * 		size: int,
  * 		acl: bool,
- * 		manage: list<array{}>,
+ * 		manage: list<array{type: string, id: string, displayname: string}>,
  * 		groupfolder_id: int,
  * 		name: string,
  * 		color_code: string,
  * 		usersCount: int,
- * 		added_groups: list<array{}>
+ * 		added_groups: array<string, WorkspaceGroupInfo>
+ * }
+ *
+ * @psalm-type WorkspaceSpaceEdit = array{
+ * 		name: ?string,
+ * 		color: ?string,
+ * 		quota: ?int
  * }
  *
  * @psalm-type WorkspaceGroupInfo = array{

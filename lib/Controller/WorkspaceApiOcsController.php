@@ -32,6 +32,7 @@ use OCA\Workspace\Attribute\SpaceIdNumber;
 use OCA\Workspace\Attribute\WorkspaceManagerRequired;
 use OCA\Workspace\Db\SpaceMapper;
 use OCA\Workspace\Exceptions\NotFoundException;
+use OCA\Workspace\Service\Formatter\Ocs\WorkspaceOcsFormatter;
 use OCA\Workspace\Service\Group\GroupsWorkspace;
 use OCA\Workspace\Service\Group\GroupsWorkspaceService;
 use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
@@ -58,6 +59,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type WorkspaceSpace from ResponseDefinitions
+ * @psalm-import-type WorkspaceSpaceEdit from ResponseDefinitions
  * @psalm-import-type WorkspaceFindGroups from ResponseDefinitions
  * @psalm-import-type WorkspaceConfirmationMessage from ResponseDefinitions
  * @psalm-import-type WorkspaceUsersList from ResponseDefinitions
@@ -76,6 +78,7 @@ class WorkspaceApiOcsController extends OCSController {
 		private IUserSession $userSession,
 		private SpaceMapper $spaceMapper,
 		private UserService $userService,
+		private WorkspaceOcsFormatter $workspaceOcsFormatter,
 		public $appName,
 	) {
 		parent::__construct($appName, $request);
@@ -131,7 +134,7 @@ class WorkspaceApiOcsController extends OCSController {
 	)]
 	public function find(int $id): DataResponse {
 		try {
-			$space = $this->spaceManager->get($id);
+			$loaded = $this->spaceManager->load($id);
 		} catch (\Exception $e) {
 			if ($e instanceof NotFoundException) {
 				throw new OCSNotFoundException($e->getMessage());
@@ -140,9 +143,11 @@ class WorkspaceApiOcsController extends OCSController {
 			throw new OCSException($e->getMessage());
 		}
 
-		if (empty($space)) {
+		if (is_null($loaded)) {
 			throw new OCSNotFoundException('No workspace found with id ' . $id);
 		}
+
+		$space = $this->workspaceOcsFormatter->format($loaded['workspace'], $loaded['folderInfo']);
 
 		return new DataResponse($space, Http::STATUS_OK);
 	}
@@ -154,11 +159,11 @@ class WorkspaceApiOcsController extends OCSController {
 	 * @param string|null $name Optional - Workspace name.
 	 * @param string|null $color Optional - Workspace color in hexadecimal format (example: #f91616).
 	 * @param int|null $quota Optional - Workspace quota in bytes; e.g., 5368709120 for 5GB, or -3 for unlimited.
-	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpace, array{}>
+	 * @return DataResponse<Http::STATUS_OK, WorkspaceSpaceEdit, array{}>
 	 * @throws OCSNotFoundException when no groupfolder is associated with the given space ID
 	 * @throws OCSException for all unknown errors
 	 *
-	 * 200: Workspace returned
+	 * 200: Edited fields returned, null for the fields left unchanged
 	 * 404: Workspace not found
 	 *
 	 */
@@ -251,8 +256,11 @@ class WorkspaceApiOcsController extends OCSController {
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'POST', url: '/api/v1/spaces')]
 	public function create(string $name): DataResponse {
-		$space = $this->spaceManager->create($name);
+		$created = $this->spaceManager->create($name);
 		$this->logger->info("Workspace {$name} has been created");
+
+		$loaded = $this->spaceManager->load($created['id']);
+		$space = $this->workspaceOcsFormatter->format($loaded['workspace'], $loaded['folderInfo']);
 
 		return new DataResponse($space, Http::STATUS_CREATED);
 	}

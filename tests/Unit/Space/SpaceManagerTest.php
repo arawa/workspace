@@ -977,6 +977,9 @@ class SpaceManagerTest extends TestCase {
 	}
 
 	public function testFindAll(): void {
+		$rootCacheEntry = $this->createMock(ICacheEntry::class);
+		$rootCacheEntry->method('getSize')->willReturn(0);
+
 		$groupfolder
 			= [
 				'id' => 1,
@@ -986,7 +989,7 @@ class SpaceManagerTest extends TestCase {
 					'SPACE-U-1' => 31
 				],
 				'quota' => -3,
-				'size' => 0,
+				'root_cache_entry' => $rootCacheEntry,
 				'acl' => true,
 				'manage' => [
 					[
@@ -1122,7 +1125,7 @@ class SpaceManagerTest extends TestCase {
 				[
 					'id' => 1,
 					'mount_point' => 'Espace01',
-					'groups' => [
+					'groups' => (object)[
 						'SPACE-GE-1' => [
 							'gid' => 'SPACE-GE-1',
 							'displayName' => 'WM-Espace01',
@@ -1162,6 +1165,40 @@ class SpaceManagerTest extends TestCase {
 		;
 
 		$this->assertEquals($expected, $actual);
+	}
+
+	public function testFindAllSkipsWorkspaceWithoutGroupfolder(): void {
+		$this->workspaceService
+			->expects($this->once())
+			->method('getAll')
+			->willReturn([
+				[
+					'id' => 1,
+					'groupfolder_id' => 1,
+					'name' => 'Espace01',
+					'color_code' => '#46221f'
+				]
+			])
+		;
+
+		$this->rootFolder
+			->method('getRootFolderStorageId')
+			->willReturn(2)
+		;
+
+		$this->folderHelper
+			->expects($this->once())
+			->method('getFolder')
+			->willReturn(null)
+		;
+
+		$this->logger
+			->expects($this->once())
+			->method('warning')
+			->with($this->stringContains('Espace01'))
+		;
+
+		$this->assertSame([], $this->spaceManager->findAll());
 	}
 
 	public function testRemoveUsersFromWorkspace(): void {
