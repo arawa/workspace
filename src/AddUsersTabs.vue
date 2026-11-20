@@ -498,7 +498,7 @@ section.app-sidebar__tab--active {
 }
 
 .user-not-member {
-	background-color: rgba(var(--color-error-rgb), 0.5);
+	background-color: var(--color-error);
 }
 
 .buttons-import-groups {
