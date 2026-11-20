@@ -189,16 +189,6 @@ export default {
 	width: 80%;
 }
 
-.multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
-	border-bottom: rgb(0,0,0,0);
-}
-
-.multiselect-area:hover :deep(.v-select.select .vs__dropdown-toggle) {
-	border-color: var(--color-primary);
-}
-
 .multiselect-area:hover :deep(.v-select.select.vs--open) .vs__dropdown-menu {
 	border-color: var(--color-primary) !important;
 }
@@ -206,11 +196,6 @@ export default {
 .multiselect-area :deep(.v-select.select.vs--open .vs__dropdown-menu) {
 	border-width: 2px !important;
 	border-color: var(--color-border-dark) !important;
-}
-
-.multiselect-area :deep(.v-select.select .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
 }
 
 .option-content {

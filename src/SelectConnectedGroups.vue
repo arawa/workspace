@@ -212,16 +212,6 @@ export default {
 	width: 500px;
 }
 
-.body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
-	border-bottom: rgb(0,0,0,0);
-}
-
-.body-select-groups:hover :deep(.v-select.select .vs__dropdown-toggle) {
-	border-color: var(--color-primary);
-}
-
 .body-select-groups:hover :deep(.v-select.select.vs--open) .vs__dropdown-menu {
 	border-color: var(--color-primary) !important;
 }
@@ -229,11 +219,6 @@ export default {
 .body-select-groups :deep(.v-select.select.vs--open .vs__dropdown-menu) {
 	border-width: 2px !important;
 	border-color: var(--color-border-dark) !important;
-}
-
-.body-select-groups :deep(.v-select.select .vs__dropdown-toggle) {
-	border-width: 2px;
-	border-color: var(--color-border-dark);
 }
 
 .content-group-list {
