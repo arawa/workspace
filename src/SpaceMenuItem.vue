@@ -31,7 +31,11 @@
 			<NcAppNavigationIconBullet slot="icon" :color="space.color" />
 		</template>
 		<template #counter>
-			<NcCounterBubble :count="$store.getters.getSpaceUserCount(spaceName)" class="user-counter" />
+			<span class="space-user-count user-counter"
+				:title="n('workspace', '%n user', '%n users', userCount)">
+				<NcIconSvgWrapper :path="mdiAccountMultiple" :size="16" />
+				<span>{{ compactUserCount }}</span>
+			</span>
 		</template>
 		<MenuItemSelector />
 		<div v-if="isOpen">
@@ -114,7 +118,7 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import { getLocale } from '@nextcloud/l10n'
+import { getCanonicalLocale, getLocale } from '@nextcloud/l10n'
 import GroupMenuItem from './GroupMenuItem.vue'
 import MenuItemSelector from './MenuItemSelector.vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -123,7 +127,8 @@ import NcActionText from '@nextcloud/vue/components/NcActionText'
 import NcAppNavigationCaption from '@nextcloud/vue/components/NcAppNavigationCaption'
 import NcAppNavigationIconBullet from '@nextcloud/vue/components/NcAppNavigationIconBullet'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
-import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import { mdiAccountMultiple } from '@mdi/js'
 import Plus from 'vue-material-design-icons/Plus.vue'
 import SelectConnectedGroups from './SelectConnectedGroups.vue'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
@@ -139,7 +144,7 @@ export default {
 		NcAppNavigationCaption,
 		NcAppNavigationIconBullet,
 		NcAppNavigationItem,
-		NcCounterBubble,
+		NcIconSvgWrapper,
 		Plus,
 		SelectConnectedGroups,
 		NcPopover,
@@ -156,6 +161,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiAccountMultiple,
 			workspaceGroups: [],
 			connectedGroups: [],
 			// Explicitly toggled open via the collapse arrow, independently of navigation.
@@ -167,6 +173,13 @@ export default {
 		}
 	},
 	computed: {
+		userCount() {
+			return this.$store.getters.getSpaceUserCount(this.spaceName)
+		},
+		// Same humanization as NcCounterBubble (1500 -> 1.5K), the exact count stays in the title
+		compactUserCount() {
+			return new Intl.NumberFormat(getCanonicalLocale(), { notation: 'compact' }).format(this.userCount)
+		},
 		// True while this workspace's hub (or one of its groups) is the current route,
 		// regardless of how navigation got here (sidebar click, workspace table, ...).
 		isActiveRoute() {
@@ -258,5 +271,20 @@ export default {
 
 .popover-content {
 	padding: 8px;
+}
+
+/* NcCounterBubble has no slot for an icon: this pill reuses its base colors and sizes only,
+   not its active/highlighted/outlined variants */
+.space-user-count {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	height: 22px;
+	padding: 0 calc(1.5 * var(--default-grid-baseline));
+	border-radius: 11px;
+	background-color: var(--color-primary-element-light);
+	color: var(--color-primary-element-light-text);
+	font-size: var(--font-size-small, 13px);
+	font-weight: bold;
 }
 </style>

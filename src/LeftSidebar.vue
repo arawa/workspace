@@ -34,7 +34,7 @@
 				:name="t('workspace', 'All workspaces')"
 				:to="{ name: 'space.table' }">
 				<template #counter>
-					<NcCounterBubble :count="$store.state.countTotalWorkspaces" />
+					<NcCounterBubble :count="$store.state.countTotalWorkspaces" type="highlighted" />
 				</template>
 			</NcAppNavigationItem>
 		</ul>
