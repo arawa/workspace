@@ -47,14 +47,16 @@
 			</div>
 			<div class="space-actions">
 				<NcActions v-if="showActionButtons()"
-					ref="ncAction" default-icon="icon-add">
+					ref="ncAction"
+					default-icon="icon-add"
+					@closed="createGroup = false">
 					<NcActionButton icon="icon-user"
 						:close-after-click="true"
 						@click="toggleShowSelectUsersModal">
 						{{ t('workspace', 'Add users') }}
 					</NcActionButton>
 					<NcActionButton v-show="!createGroup"
-						@click="toggleCreateGroup">
+						@click="openCreateGroupInput">
 						<template #icon>
 							<NcIconSvgWrapper name="icon-group" :path="mdiAccountMultiple" />
 						</template>
@@ -179,7 +181,6 @@ export default {
 	data() {
 		return {
 			createGroup: false, // true to display 'Create Group' ActionInput
-			renameSpace: false, // true to display 'Rename space' ActionInput
 			showSelectUsersModal: false, // true to display user selection Modal windows
 			showDelWorkspaceModal: false,
 			showSelectConnectedGroups: false,
@@ -251,7 +252,7 @@ export default {
 		},
 		onNewGroup(e) {
 			// Hides ActionInput
-			this.toggleCreateGroup()
+			this.createGroup = false
 			// Hide popup menu
 			this.$refs.ncAction.opened = false
 
@@ -265,17 +266,11 @@ export default {
 			const space = this.$store.getters.getSpaceByNameOrId(this.$route.params.space)
 			this.$store.dispatch('createGroup', { space, gid })
 		},
-		toggleCreateGroup() {
-			this.createGroup = !this.createGroup
-			if (this.createGroup === true) {
-				this.$refs.createGroupInput.$el.focus()
-			}
-		},
-		toggleRenameSpace() {
-			this.renameSpace = !this.renameSpace
-			if (this.renameSpace === true) {
-				this.$refs.renameSpaceInput.$el.focus()
-			}
+		async openCreateGroupInput() {
+			this.createGroup = true
+			// The input is hidden by v-show until the next render, and $el is its <li> wrapper
+			await this.$nextTick()
+			this.$refs.createGroupInput.$el.querySelector('input').focus()
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal

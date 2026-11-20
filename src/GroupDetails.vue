@@ -43,11 +43,11 @@
 						</NcActionButton>
 					</NcActions>
 				</div>
-				<NcActions ref="ncAction">
+				<NcActions ref="ncAction" @closed="showRenameGroupInput = false">
 					<NcActionButton v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug))) && !isAddedGroup"
 						v-show="!showRenameGroupInput"
 						icon="icon-rename"
-						@click="toggleShowRenameGroupInput">
+						@click="openRenameGroupInput">
 						{{ t('workspace', 'Rename group') }}
 					</NcActionButton>
 					<NcActionInput v-if="!$store.getters.isGEorUGroup($route.params.space, decodeURIComponent(decodeURIComponent($route.params.slug)))"
@@ -219,7 +219,7 @@ export default {
 		},
 		onRenameGroup(e) {
 			// Hides NcActionInput
-			this.toggleShowRenameGroupInput()
+			this.showRenameGroupInput = false
 			this.$refs.ncAction.opened = false
 
 			// Don't accept empty names
@@ -251,11 +251,11 @@ export default {
 				newGroupName: group,
 			})
 		},
-		toggleShowRenameGroupInput() {
-			this.showRenameGroupInput = !this.showRenameGroupInput
-			if (this.showRenameGroupInput === true) {
-				this.$refs.renameGroupInput.$el.focus()
-			}
+		async openRenameGroupInput() {
+			this.showRenameGroupInput = true
+			// The input is hidden by v-show until the next render, and $el is its <li> wrapper
+			await this.$nextTick()
+			this.$refs.renameGroupInput.$el.querySelector('input').focus()
 		},
 		toggleShowSelectUsersModal() {
 			this.showSelectUsersModal = !this.showSelectUsersModal
