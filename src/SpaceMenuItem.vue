@@ -256,7 +256,4 @@ export default {
 	background-color: transparent !important;
 }
 
-.popover-content {
-	padding: 8px;
-}
 </style>

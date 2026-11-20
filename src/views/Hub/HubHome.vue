@@ -123,9 +123,9 @@ export default {
 
 <style>
 .hub-home {
-	margin: 12px auto;
+	margin: calc(var(--default-grid-baseline) * 3) auto;
 	width: 46rem;
-	padding: 8px;
+	padding: calc(var(--default-grid-baseline) * 2);
 }
 
 .space-title {

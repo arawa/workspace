@@ -395,7 +395,7 @@ section.app-sidebar__tab--active {
 }
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
-	margin-top: -10px !important;
+	margin-top: calc(var(--default-grid-baseline) * -2) !important;
 	flex: 1 1 120px !important;
 }
 
@@ -429,7 +429,7 @@ section.app-sidebar__tab--active {
 .select-users-wrapper :deep(.app-sidebar-tabs__content) {
 	min-height: 60px !important;
 	height: auto !important;
-	padding-top: 20px;
+	padding-top: calc(var(--default-grid-baseline) * 5);
 }
 
 // FIXME: Obivously we should at some point not randomly reuse the sidebar component
@@ -442,7 +442,7 @@ section.app-sidebar__tab--active {
 	top: 0;
 	inset-inline: 0;
 	max-width: calc(100% - #{$modal-padding * 2});
-	padding: 0 14px;
+	padding: 0 calc(var(--default-grid-baseline) * 3);
 	height: auto; // retirer le mode auto
 	overflow: initial;
 	user-select: text;
@@ -463,14 +463,14 @@ section.app-sidebar__tab--active {
 
 .select-users-list {
 	flex-grow: 1;
-	margin: 25px 0;
+	margin: calc(var(--default-grid-baseline) * 6) 0;
 	border-style: solid;
 	border-width: 1px;
 	border-color: transparent;
 	width: 82%;
 	overflow: scroll;
 	height: 330px;
-	padding: 8px;
+	padding: calc(var(--default-grid-baseline) * 2);
 }
 
 .select-users-list-empty {
@@ -488,7 +488,7 @@ section.app-sidebar__tab--active {
 
 .user-entry {
 	justify-content: space-between;
-	padding-inline-start: 5px;
+	padding-inline-start: var(--default-grid-baseline);
 }
 
 .user-entry {
@@ -505,14 +505,14 @@ section.app-sidebar__tab--active {
 	display: flex;
 	width: 560px;
 	justify-content: space-around;
-	margin-top: 15px;
+	margin-top: calc(var(--default-grid-baseline) * 4);
 }
 
 .input-select-users {
 	display: flex;
 	justify-content: center;
 	width: 100%;
-	margin-top: 15px;
+	margin-top: calc(var(--default-grid-baseline) * 4);
 }
 
 .information-import {
@@ -527,7 +527,7 @@ section.app-sidebar__tab--active {
 }
 
 .popover {
-	padding: 15px;
+	padding: calc(var(--default-grid-baseline) * 4);
 }
 
 .onImportTab {
@@ -539,7 +539,7 @@ section.app-sidebar__tab--active {
 }
 
 .buttons-groups {
-	margin: 25px 0 25px 0;
+	margin: calc(var(--default-grid-baseline) * 6) 0;
 }
 
 </style>

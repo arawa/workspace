@@ -334,7 +334,7 @@ export default {
 
 .user-info {
 	width: 30%;
-	padding-inline-start: 8px;
+	padding-inline-start: calc(var(--default-grid-baseline) * 2);
 }
 
 .user-name {

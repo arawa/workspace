@@ -222,13 +222,13 @@ td, td div {
 
 .total-workspaces-information {
 	width: 250px;
-	padding: 16px;
+	padding: calc(var(--default-grid-baseline) * 4);
 }
 
 .total-workspaces-information-element {
 	display: flex;
 	justify-content: left;
 	align-items: center;
-	gap: 8px;
+	gap: calc(var(--default-grid-baseline) * 2);
 }
 </style>

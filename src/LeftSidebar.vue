@@ -203,7 +203,7 @@ export default {
 }
 
 .input-new-item :deep(.app-navigation-entry-button .app-navigation-entry-icon) {
-	margin-inline-end: 4px;
+	margin-inline-end: var(--default-grid-baseline);
 }
 
 .btn-light :deep(.app-navigation-entry-button) {

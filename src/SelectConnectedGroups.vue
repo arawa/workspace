@@ -192,15 +192,15 @@ export default {
 
 .header-select-groups {
 	display: flex;
-	padding: 10px;
+	padding: calc(var(--default-grid-baseline) * 2);
 	font-weight: bold;
 	align-self: start;
-	margin-inline-start: 16px;
+	margin-inline-start: calc(var(--default-grid-baseline) * 4);
 }
 
 .header-select-groups h1 {
-	margin: 10px;
-	margin-bottom: 16px;
+	margin: calc(var(--default-grid-baseline) * 2);
+	margin-bottom: calc(var(--default-grid-baseline) * 4);
 	font-size: 20px;
 }
 
@@ -239,8 +239,8 @@ export default {
 .content-group-list {
 	width: 80%;
 	height: 400px;
-	padding: 8px;
-	margin-top: 16px;
+	padding: calc(var(--default-grid-baseline) * 2);
+	margin-top: calc(var(--default-grid-baseline) * 4);
 }
 
 .content-group-list-empty {
@@ -255,11 +255,11 @@ export default {
 }
 
 .btn-add-groups {
-	margin: 24px 0 24px 0;
+	margin: calc(var(--default-grid-baseline) * 6) 0;
 }
 
 .groupname {
-	margin-inline-start: 14px;
+	margin-inline-start: calc(var(--default-grid-baseline) * 3);
 }
 
 .select-group-list {
@@ -284,7 +284,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: start;
-	gap: 12px;
+	gap: calc(var(--default-grid-baseline) * 3);
 }
 
 </style>
