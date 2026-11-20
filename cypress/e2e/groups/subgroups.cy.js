@@ -28,6 +28,7 @@ import {
 	createSpaceManager,
 	createSpaceMember,
 	groupButton,
+	menuButtons,
 	openGroupPage,
 	searchAccountsGroups,
 	serverPath,
@@ -51,6 +52,7 @@ const labels = {
 	en: {
 		actions: 'Actions',
 		workspaceGroups: 'Workspace groups',
+		addUsers: 'Add users',
 		createGroup: 'Create a workspace group',
 		groupName: 'Group name',
 		renameGroup: 'Rename group',
@@ -62,6 +64,7 @@ const labels = {
 	fr: {
 		actions: 'Actions',
 		workspaceGroups: 'Groupes workspace',
+		addUsers: 'Ajouter des utilisateurs',
 		createGroup: 'Créer un groupe workspace',
 		groupName: 'Nom du groupe',
 		renameGroup: 'Renommer le groupe',
@@ -140,9 +143,17 @@ for (const [language, label] of Object.entries(labels)) {
 					openSpace()
 					cy.intercept(CREATE_GROUP).as('createGroup')
 
+					// Closing the menu without submitting gives the button back
 					spaceAction(label.actions).click()
 					clickMenuButton(label.createGroup)
-					cy.findByPlaceholderText(label.groupName).type(`${CREATED_FROM_PAGE}{enter}`)
+					cy.findByPlaceholderText(label.groupName).should('have.focus').type('{esc}')
+					spaceAction(label.actions).click()
+					clickMenuButton(label.createGroup)
+
+					// The field gets the focus and keeps it when the mouse moves to another action
+					cy.findByPlaceholderText(label.groupName).should('have.focus')
+					menuButtons().contains(label.addUsers).trigger('mouseover').trigger('mousemove')
+					cy.findByPlaceholderText(label.groupName).should('have.focus').type(`${CREATED_FROM_PAGE}{enter}`)
 
 					shouldOpenNewGroup(CREATED_FROM_PAGE)
 				})
@@ -166,10 +177,10 @@ for (const [language, label] of Object.entries(labels)) {
 					visitGroupPage(user(), space, group)
 					cy.intercept(RENAME_GROUP).as('renameGroup')
 
-					// The field of the new name opens empty
+					// The field of the new name opens empty and focused
 					groupButton(label.actions).click()
 					clickMenuButton(label.renameGroup)
-					cy.findByPlaceholderText(label.groupName).should('have.value', '').type(`${NEW_NAME}{enter}`)
+					cy.findByPlaceholderText(label.groupName).should('have.value', '').and('have.focus').type(`${NEW_NAME}{enter}`)
 					cy.wait('@renameGroup').its('response.statusCode').should('equal', 200)
 
 					// Opened again from the workspace page, so the navigation and the page show the name
