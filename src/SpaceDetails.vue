@@ -325,21 +325,21 @@ export default {
 }
 
 .quota-bubble {
-	margin-inline-start: 20px !important;
+	margin-inline-start: calc(var(--default-grid-baseline) * 5) !important;
 	min-width: 100px;
 	max-width: 100px;
 	font-size: var(--default-font-size) !important;
 	line-height: 32px !important;
-	padding: 0 12px !important;
+	padding: 0 calc(var(--default-grid-baseline) * 3) !important;
 }
 
 .quota-bubble-esr {
-	margin-inline-start: 20px !important;
+	margin-inline-start: calc(var(--default-grid-baseline) * 5) !important;
 	min-width: 100px;
 	max-width: 100% !important;
 	font-size: var(--default-font-size) !important;
 	line-height: 32px !important;
-	padding: 0 12px !important;
+	padding: 0 calc(var(--default-grid-baseline) * 3) !important;
 }
 
 .space-name {
@@ -357,7 +357,4 @@ export default {
 	min-height: 12rem !important;
 }
 
-.popover-content {
-	padding: 8px;
-}
 </style>

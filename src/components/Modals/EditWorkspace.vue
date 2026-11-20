@@ -297,19 +297,19 @@ export default {
 <style scoped>
 .modal :deep(.modal-wrapper .modal-container) {
 	min-height: auto;
-	padding: 16px;
+	padding: calc(var(--default-grid-baseline) * 4);
 	width: 700px;
 }
 
 .modal__container {
 	display: flex;
 	flex-direction: column;
-	margin: 10px;
+	margin: calc(var(--default-grid-baseline) * 2);
 }
 
 .btn-save {
 	align-self: end;
-	margin: 8px;
+	margin: calc(var(--default-grid-baseline) * 2);
 }
 
 h1 {
@@ -319,8 +319,8 @@ h1 {
 
 h2 {
 	font-size: 16px;
-	margin-top: 24px;
-	margin-bottom: 12px;
+	margin-top: calc(var(--default-grid-baseline) * 6);
+	margin-bottom: calc(var(--default-grid-baseline) * 3);
 }
 
 .input-spacename :deep(div input) {
@@ -338,12 +338,12 @@ h2 {
 
 .quota-input {
 	width: 200px;
-	margin: 16px 0 16px 0 !important;
+	margin: calc(var(--default-grid-baseline) * 4) 0 !important;
 }
 
 .progress-bar {
 	width: 300px !important;
-	margin: 8px 0 8px 0 !important;
+	margin: calc(var(--default-grid-baseline) * 2) 0 !important;
 }
 
 .max-contrast {

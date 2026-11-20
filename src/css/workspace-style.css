@@ -27,18 +27,18 @@
 
 .workspace-th {
 	color: grey;
-	padding: 5px;
+	padding: var(--default-grid-baseline);
 	border-bottom: 1px solid lightgray;
 }
 
 .workspace-td {
-	padding: 5px;
+	padding: var(--default-grid-baseline);
 	border-bottom: 1px solid lightgray;
 }
 
 .workspace-tr {
 	height: 52px;
-	padding: 5px;
+	padding: var(--default-grid-baseline);
 }
 
 tbody > .workspace-tr:hover {
@@ -80,7 +80,7 @@ tbody > .workspace-tr:hover {
 }
 
 .user-counter {
-	margin-inline-end: 5px;
+	margin-inline-end: var(--default-grid-baseline);
 }
 
 /* hooks navigation NC 27 */
@@ -90,7 +90,7 @@ tbody > .workspace-tr:hover {
 }
 
 .workspace-sidebar .app-navigation-entry__title .app-navigation-entry__utils {
-	margin-inline-end: 30px;
+	margin-inline-end: calc(var(--default-grid-baseline) * 8);
 }
 
 /* hooks nc31 */
@@ -110,7 +110,7 @@ tbody > .workspace-tr:hover {
 }
 
 .space-color-picker {
-	margin-inline-end: 8px;
+	margin-inline-end: calc(var(--default-grid-baseline) * 2);
 }
 
 /**
@@ -118,4 +118,8 @@ tbody > .workspace-tr:hover {
 */
 .empty-content {
 	height: 85vh;
+}
+
+.popover-content {
+	padding: calc(var(--default-grid-baseline) * 2);
 }

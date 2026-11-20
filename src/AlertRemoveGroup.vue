@@ -55,12 +55,12 @@ export default {
 .container-buttons-remove {
 	display: flex;
 	justify-content: space-between;
-	margin-top: 24px;
+	margin-top: calc(var(--default-grid-baseline) * 6);
 }
 
 .container-modal-remove {
-	padding: 24px;
-	margin-top: 20px;
+	padding: calc(var(--default-grid-baseline) * 6);
+	margin-top: calc(var(--default-grid-baseline) * 5);
 }
 
 </style>

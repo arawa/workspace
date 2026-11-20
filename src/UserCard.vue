@@ -104,13 +104,13 @@ export default {
 
 .user-card {
 	display: flex;
-	margin-bottom: 8px;
+	margin-bottom: calc(var(--default-grid-baseline) * 2);
 	border-radius: var(--border-radius-element);
-	padding: 4px;
+	padding: var(--default-grid-baseline);
 }
 
 .user-name {
-	margin-inline-start: 10px;
+	margin-inline-start: calc(var(--default-grid-baseline) * 2);
 	max-width: 440px;
 }
 

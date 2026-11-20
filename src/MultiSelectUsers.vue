@@ -217,7 +217,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: start;
-	gap: 12px;
+	gap: calc(var(--default-grid-baseline) * 3);
 }
 
 .option-content, .option-text, .option-avatar {
