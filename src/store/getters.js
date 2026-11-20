@@ -43,17 +43,11 @@ export const getters = {
 		}
 		return '[' + gid + ']'
 	},
-	getGroupUserCount: (state, getters) => (spaceNameOrId, gid) => {
-		return getters.getSpaceByNameOrId(spaceNameOrId).groups[gid].usersCount
-	},
 	getSpaceUserCount: (state, getters) => (spaceNameOrId) => {
 		return getters.getSpaceByNameOrId(spaceNameOrId).usersCount
 	},
 	getSpaceById: state => (spaceId) => {
 		return Object.values(state.spaces).find((space) => space.id === spaceId)
-	},
-	getSpaceByName: state => (spaceName) => {
-		return state.spaces[spaceName]
 	},
 	getSpaceByNameOrId: (state, getters) => spaceName => {
 		return state.spaces[spaceName] || getters.getSpaceById(Number(spaceName))
@@ -138,9 +132,6 @@ export const getters = {
 		quota = (quota === t('workspace', 'unlimited')) ? -3 : quota
 
 		return quota
-	},
-	getSpacename: state => name => {
-		return state.spaces[name].name
 	},
 	// Returns the number of users in a space
 	spaceUserCount: (state, getters) => space => {
