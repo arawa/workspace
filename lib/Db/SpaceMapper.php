@@ -25,6 +25,7 @@
 
 namespace OCA\Workspace\Db;
 
+use OCA\Workspace\Service\Group\WorkspaceManagerGroup;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
@@ -67,6 +68,8 @@ class SpaceMapper extends QBMapper {
 	/**
 	 * @param int|null $offset to paginate the workspaces returned
 	 * @param int|null $limit to limit the number of workspaces returned
+	 * @param string|null $name to filter the workspaces by name
+	 * @param string|null $uid to return only the workspaces this user manages (member of SPACE-GE-<id>)
 	 * @return Space[]
 	 */
 	public function findAll(?int $offset = null, ?int $limit = null, ?string $name = null, ?string $uid = null): array {
@@ -99,7 +102,10 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					"gu.gid like 'SPACE-U-%'"
+					$qb->expr()->like(
+						'gu.gid',
+						$qb->createNamedParameter($this->db->escapeLikeParameter(WorkspaceManagerGroup::getPrefix()) . '%')
+					)
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
@@ -180,6 +186,10 @@ class SpaceMapper extends QBMapper {
 		return $row;
 	}
 
+	/**
+	 * @param string|null $name to filter the workspaces by name
+	 * @param string|null $uid to count only the workspaces this user manages (member of SPACE-GE-<id>)
+	 */
 	public function countSpaces(?string $name, ?string $uid = null): int {
 		$qb = $this->db->getQueryBuilder();
 		$name = $name ? strtolower($name) : null;
@@ -210,7 +220,10 @@ class SpaceMapper extends QBMapper {
 					$qb->expr()->eq('gfg.group_id', 'gu.gid')
 				)
 				->andWhere(
-					"gu.gid like 'SPACE-U-%'"
+					$qb->expr()->like(
+						'gu.gid',
+						$qb->createNamedParameter($this->db->escapeLikeParameter(WorkspaceManagerGroup::getPrefix()) . '%')
+					)
 				)
 				->andWhere('gu.uid = :uid')
 				->setParameter('uid', $uid)
