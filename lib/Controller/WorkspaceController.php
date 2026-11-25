@@ -148,7 +148,8 @@ class WorkspaceController extends Controller {
 
 	/**
 	 *
-	 * Returns a list of all the workspaces that the connected user may use.
+	 * Returns a list of the workspaces managed by the connected user,
+	 * or of all the workspaces for a General Manager.
 	 *
 	 * @param string|null $search filter workspaces by name
 	 * @param int|null $offset is the page (offset) number for pagination.
