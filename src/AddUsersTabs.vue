@@ -43,14 +43,14 @@
 					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
 						@push="pushUsersFromButton" />
 					<NcPopover>
-						<template #trigger="{ attrs }">
-							<NcButton v-bind="attrs"
-								variant="tertiary"
-								class="button-csv-structure">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								class="button-csv-structure"
+								:aria-label="titleCsvStructure"
+								:title="titleCsvStructure">
 								<template #icon>
 									<InformationOutline :size="20" />
 								</template>
-								{{ t('workspace', 'CSV file structure') }}
 							</NcButton>
 						</template>
 						<div class="popover">
@@ -143,6 +143,9 @@ export default {
 		},
 		titleSearch() {
 			return t('workspace', 'Search users')
+		},
+		titleCsvStructure() {
+			return t('workspace', 'CSV file structure')
 		},
 		csvTemplateMarkdown() {
 			return `> **user, role**
@@ -367,13 +370,19 @@ export default {
 <style lang="scss" scoped>
 
 section.app-sidebar__tab--active {
-	// min-height, not height: a tab whose buttons wrap must grow instead of overflowing onto the tabs
-	min-height: 13% !important;
+	// Lift NcAppSidebarTab's height cap: a tab whose buttons wrap must grow instead of overflowing onto the tabs
+	min-height: auto !important;
+	max-height: none;
 	display: flex !important;
 	flex-direction: column !important;
 	justify-content: center !important;
 	align-items: center !important;
 	overflow: visible !important;
+}
+
+// Drop the import tab's side padding so its 3 buttons fit on one line in the normal-size dialog
+section#tab-import {
+	padding-inline: 0;
 }
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
@@ -486,20 +495,20 @@ section.app-sidebar__tab--active {
 .buttons-import-groups {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 12px;
+	gap: 8px;
 	justify-content: center;
 	margin-top: 15px;
 }
 
-// NcButton has no info variant: tint a tertiary one with the server's info colors
-.button-csv-structure.button-vue {
-	background-color: rgba(var(--color-info-rgb), 0.15);
+// NcButton has no info variant: color a tertiary one like NcNoteCard's info type.
+// The parent class outranks NcButton's own tertiary hover rule.
+.buttons-import-groups .button-csv-structure.button-vue {
+	background-color: var(--color-info);
 	color: var(--color-info-text);
-}
 
-// The parent class outranks NcButton's own tertiary hover rule
-.buttons-import-groups .button-csv-structure.button-vue:hover:not(:disabled) {
-	background-color: rgba(var(--color-info-rgb), 0.25);
+	&:hover:not(:disabled) {
+		background-color: var(--color-info-hover);
+	}
 }
 
 .input-select-users {
