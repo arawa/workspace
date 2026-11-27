@@ -23,8 +23,7 @@
 	<div class="select-users-wrapper">
 		<NcAppSidebar
 			name="select users"
-			class="my-sidebar"
-			@update:active="toggleImportTab">
+			class="my-sidebar">
 			<NcAppSidebarTab id="search"
 				:name="titleSearch"
 				:order="1">
@@ -43,28 +42,30 @@
 						@push="pushUsersFromButton" />
 					<ButtonUploadShareFiles :all-selected-users="allSelectedUsers"
 						@push="pushUsersFromButton" />
+					<NcPopover>
+						<template #trigger>
+							<NcButton variant="tertiary"
+								class="button-csv-structure"
+								:aria-label="titleCsvStructure"
+								:title="titleCsvStructure">
+								<template #icon>
+									<InformationOutline :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<div class="popover">
+							<p>{{ t('workspace', 'Your CSV file must follow this structure:') }}</p>
+							<br>
+							<NcRichText :use-markdown="true"
+								:text="csvTemplateMarkdown" />
+						</div>
+					</NcPopover>
 				</div>
 				<template #icon>
 					<span />
 				</template>
 			</NcAppSidebarTab>
 		</NcAppSidebar>
-		<div class="information-import">
-			<NcPopover>
-				<template #trigger="{attr}">
-					<InformationOutline v-bind="attr"
-						class="information-image"
-						:class="onImportTab"
-						:size="17" />
-				</template>
-				<div class="popover">
-					<p>{{ informCsvStructureMessage }}</p>
-					<br>
-					<NcRichText :use-markdown="true"
-						:text="csvTemplateMarkdown" />
-				</div>
-			</NcPopover>
-		</div>
 		<div class="select-users-list">
 			<div v-if="allSelectedUsers.length === 0"
 				class="select-users-list-empty">
@@ -131,7 +132,6 @@ export default {
 	data() {
 		return {
 			allSelectedUsers: [], // All selected users from all searches
-			importTab: false,
 		}
 	},
 	computed: {
@@ -144,8 +144,8 @@ export default {
 		titleSearch() {
 			return t('workspace', 'Search users')
 		},
-		informCsvStructureMessage() {
-			return t('workspace', 'Your CSV file must follow this structure:')
+		titleCsvStructure() {
+			return t('workspace', 'CSV file structure')
 		},
 		csvTemplateMarkdown() {
 			return `> **user, role**
@@ -154,14 +154,6 @@ export default {
 				radjiv.velasquez,u
 				christine.dupont@nextcloud.fr,wm
 				jdoe@nextcloud.com,user`
-		},
-		onImportTab() {
-			let cssClass = 'onImportTab'
-
-			if (this.importTab) {
-				cssClass = ''
-			}
-			return cssClass
 		},
 		// Returns true when at least 1 selected user is not yet member of the workspace
 		addingUsersToWorkspace() {
@@ -368,13 +360,6 @@ export default {
 				}
 			})
 		},
-		toggleImportTab(active) {
-			if (active === 'import') {
-				this.importTab = true
-			} else {
-				this.importTab = false
-			}
-		},
 		pushUsersFromButton(element) {
 			this.allSelectedUsers = element
 		},
@@ -385,13 +370,19 @@ export default {
 <style lang="scss" scoped>
 
 section.app-sidebar__tab--active {
+	// Lift NcAppSidebarTab's height cap: a tab whose buttons wrap must grow instead of overflowing onto the tabs
 	min-height: auto !important;
+	max-height: none;
 	display: flex !important;
 	flex-direction: column !important;
-	height: 13% !important;
 	justify-content: center !important;
 	align-items: center !important;
 	overflow: visible !important;
+}
+
+// Drop the import tab's side padding so its 3 buttons fit on one line in the normal-size dialog
+section#tab-import {
+	padding-inline: 0;
 }
 
 .select-users-wrapper :deep(.app-sidebar-tabs) {
@@ -503,9 +494,21 @@ section.app-sidebar__tab--active {
 
 .buttons-import-groups {
 	display: flex;
-	width: 560px;
-	justify-content: space-around;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
 	margin-top: 15px;
+}
+
+// NcButton has no info variant: color a tertiary one like NcNoteCard's info type.
+// The parent class outranks NcButton's own tertiary hover rule.
+.buttons-import-groups .button-csv-structure.button-vue {
+	background-color: var(--color-info);
+	color: var(--color-info-text);
+
+	&:hover:not(:disabled) {
+		background-color: var(--color-info-hover);
+	}
 }
 
 .input-select-users {
@@ -515,23 +518,8 @@ section.app-sidebar__tab--active {
 	margin-top: 15px;
 }
 
-.information-import {
-	position: absolute;
-	top: 56px;
-	inset-inline-end: 66px;
-	z-index: 9999;
-}
-
-.information-image {
-	cursor: pointer;
-}
-
 .popover {
 	padding: 15px;
-}
-
-.onImportTab {
-	color: grey;
 }
 
 .note-card {
